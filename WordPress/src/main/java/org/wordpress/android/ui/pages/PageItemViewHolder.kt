@@ -13,6 +13,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
+import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -118,17 +119,29 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         }
     }
 
-    class EmptyViewHolder(parentView: ViewGroup) : PageItemViewHolder(parentView, layout.page_empty_item) {
-        private val emptyView = itemView.findViewById<TextView>(id.empty_view)
+    class EmptyViewHolder(
+        parentView: ViewGroup,
+        private val onActionButtonClicked: () -> Unit
+    ) : PageItemViewHolder(parentView, layout.page_empty_item) {
+        private val emptyView = itemView.findViewById<ActionableEmptyView>(id.actionable_empty_view)
 
         @Suppress("DEPRECATION")
         override fun onBind(pageItem: PageItem) {
             if (pageItem is Empty) {
-                emptyView.text = emptyView.resources.getText(pageItem.textResource)
-                emptyView.setCompoundDrawablesWithIntrinsicBounds(null,
-                        pageItem.imageRes?.let { parent.resources.getDrawable(pageItem.imageRes) },
-                        null,
-                        null)
+                emptyView.title.text = emptyView.resources.getString(pageItem.textResource)
+
+                if (pageItem.isButtonVisible) {
+                    emptyView.button.setOnClickListener {
+                        onActionButtonClicked()
+                    }
+                    emptyView.button.visibility = View.VISIBLE
+                } else {
+                    emptyView.button.visibility = View.GONE
+                }
+
+                emptyView.image.visibility = if (pageItem.isImageVisible) View.VISIBLE else View.GONE
+
+                emptyView.updateLayoutForSearch(pageItem.isSearching, 0)
             }
         }
     }

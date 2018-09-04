@@ -1,0 +1,4 @@
+10.6:
+* Dziennik aktywności teraz dostępny na darmowych witryn WordPress.com.
+* Ogólne usprawnienia wsparcia plików Gif.
+* Duża ilość poprawek błędów. 

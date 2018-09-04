@@ -59,6 +59,10 @@ class PageListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
+    fun onEmptyListNewPageButtonTapped() {
+        pagesViewModel.onNewPageButtonTapped()
+    }
+
     private val refreshPagesObserver = Observer<Unit> {
         loadPagesAsync()
     }
@@ -77,12 +81,19 @@ class PageListViewModel
 
         if (newPages.isEmpty()) {
             if (isStarting) {
-                _pages.postValue(listOf(Empty(string.pages_fetching)))
+                _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
-                _pages.postValue(listOf(Empty(string.pages_empty_list_suggestion)))
+                when (pageType) {
+                    PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
+                    SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
+                    DRAFT -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
+                    TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
+                }
             }
         } else {
-            _pages.postValue(newPages)
+            val pagesWithBottomGap = newPages.toMutableList()
+            pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
+            _pages.postValue(pagesWithBottomGap)
         }
     }
 

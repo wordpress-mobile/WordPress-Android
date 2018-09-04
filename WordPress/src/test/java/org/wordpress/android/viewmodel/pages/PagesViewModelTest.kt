@@ -24,6 +24,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.test
 import java.util.Date
@@ -56,7 +57,7 @@ class PagesViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(searchResultObserver.await(), listOf(Empty(string.empty_list_default)))
+        assertEquals(searchResultObserver.await(), listOf(Empty(string.pages_search_suggestion, true)))
 
         val listStates = listStateObserver.awaitValues(2)
 
@@ -87,7 +88,7 @@ class PagesViewModelTest {
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
         initSearch()
         val query = "query"
-        val pageItems = listOf(Empty(string.pages_empty_search_result))
+        val pageItems = listOf(Empty(string.pages_empty_search_result, true))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
 
         val data = viewModel.searchResult.test()
@@ -103,7 +104,7 @@ class PagesViewModelTest {
     fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
         initSearch()
         val query = ""
-        val pageItems = listOf(Empty(string.empty_list_default))
+        val pageItems = listOf(Empty(string.pages_search_suggestion, true))
 
         val data = viewModel.searchResult.test()
 
@@ -112,6 +113,21 @@ class PagesViewModelTest {
         val result = data.await()
 
         assertThat(result).isEqualTo(pageItems)
+    }
+
+    @Test
+    fun onSiteWithoutPages() = runBlocking<Unit> {
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        val listStateObserver = viewModel.listState.test()
+        val refreshPagesObserver = viewModel.refreshPageLists.test()
+
+        viewModel.start(site)
+
+        val listStates = listStateObserver.awaitValues(2)
+
+        assertThat(listStates).containsExactly(FETCHING, DONE)
+        refreshPagesObserver.awaitNullableValues(2)
     }
 
     private suspend fun initSearch() {

@@ -344,11 +344,12 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         try {
-            String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                                            URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
-                                            URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
-                                            URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-                                           );
+            String postData = String.format(
+                    "log=%s&pwd=%s&redirect_to=%s",
+                    URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
+                    URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
+                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
+            );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)

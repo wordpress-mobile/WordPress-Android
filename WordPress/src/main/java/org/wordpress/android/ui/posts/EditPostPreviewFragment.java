@@ -126,7 +126,7 @@ public class EditPostPreviewFragment extends Fragment {
                         getActivity(),
                         mPost,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
-                                                  );
+                );
             } else {
                 String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
                                   + "type=\"text/css\" href=\"webview.css\" /></head><body><div "

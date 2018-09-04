@@ -9,7 +9,6 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -52,6 +51,7 @@ import java.util.Date
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
+import kotlin.properties.Delegates
 
 class PagesViewModel
 @Inject constructor(
@@ -75,6 +75,9 @@ class PagesViewModel
     private val _refreshPageLists = SingleLiveEvent<Unit>()
     val refreshPageLists: LiveData<Unit> = _refreshPageLists
 
+    private val _isNewPageButtonVisible = SingleLiveEvent<Boolean>()
+    val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
+
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
 
@@ -87,20 +90,27 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pages: MutableMap<Long, PageModel> = mutableMapOf()
+    private var _pages: MutableMap<Long, PageModel>
+        by Delegates.observable(mutableMapOf()) { _, _, _ ->
+            checkIfNewPageButtonShouldBeVisible()
+        }
     val pages: Map<Long, PageModel>
         get() = _pages
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var site: SiteModel
+    private lateinit var _site: SiteModel
+    val site: SiteModel
+        get() = _site
+
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
+    private var currentPageType = PageStatus.PUBLISHED
 
     fun start(site: SiteModel) {
-        this.site = site
+        _site = site
 
         clearSearch()
         reloadPagesAsync()
@@ -132,7 +142,7 @@ class PagesViewModel
             newState = ERROR
             _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
-        } else if (result.rowsAffected > 0) {
+        } else {
             refreshPages()
             newState = DONE
         }
@@ -159,18 +169,22 @@ class PagesViewModel
         pageUpdateContinuation.remove(pageId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
-    }
-
     fun onPageParentSet(pageId: Long, parentId: Long) {
         launch {
             pages[pageId]?.let { page ->
                 setParent(page, parentId)
             }
         }
+    }
+
+    fun onPageTypeChanged(type: PageStatus) {
+        currentPageType = type
+        checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun checkIfNewPageButtonShouldBeVisible() {
+        val isNotEmpty = _pages.values.any { it.status == currentPageType }
+        _isNewPageButtonVisible.postValue(isNotEmpty)
     }
 
     fun onSearch(searchQuery: String) {
@@ -184,10 +198,7 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(
-                                Empty(string.pages_empty_search_result,
-                                R.drawable.img_illustration_empty_results_216dp))
-                        )
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
                     }
                 }
             }
@@ -405,6 +416,12 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion)))
+        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
+        pageUpdateContinuation[0]?.resume(Unit)
     }
 }

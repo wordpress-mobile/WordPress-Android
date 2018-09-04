@@ -85,7 +85,6 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 
@@ -246,7 +245,7 @@ public class ReaderPostDetailFragment extends Fragment
                         updatePost();
                     }
                 }
-                                                         );
+        );
 
         mScrollView = view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -935,7 +934,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersDivider.setVisibility(View.VISIBLE);
         mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
-        mLikingUsersView.showLikingUsers(mPost);
+        mLikingUsersView.showLikingUsers(mPost, mAccountStore.getAccount().getUserId());
     }
 
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
@@ -1168,12 +1167,6 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
-                        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-                            // passcode screen was launched already (when ReaderPostPagerActivity got resumed) so reset
-                            // the timeout to let the passcode screen come up for the ReaderCommentListActivity.
-                            // See https://github.com/wordpress-mobile/WordPress-Android/issues/4887
-                            AppLockManager.getInstance().getAppLock().forcePasswordLock();
-                        }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();

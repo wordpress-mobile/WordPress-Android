@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.pages
 
-import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.annotation.StringRes
 import org.wordpress.android.R
@@ -57,11 +56,17 @@ sealed class PageItem(open val type: Type) {
 
     data class Empty(
         @StringRes val textResource: Int = R.string.empty_list_default,
-        @DrawableRes val imageRes: Int? = R.drawable.img_illustration_pages_104dp
+        val isSearching: Boolean = false,
+        val isButtonVisible: Boolean = true,
+        val isImageVisible: Boolean = true
     ) : PageItem(EMPTY)
 
     enum class Type(val viewType: Int) {
-        PAGE(1), DIVIDER(2), EMPTY(3), PARENT(4), TOP_LEVEL_PARENT(5)
+        PAGE(1),
+        DIVIDER(2),
+        EMPTY(3),
+        PARENT(4),
+        TOP_LEVEL_PARENT(5)
     }
 
     enum class Action(@IdRes val itemId: Int) {

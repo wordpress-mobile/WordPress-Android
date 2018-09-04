@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-07 06:54:06+0000
+Translation-Revision-Date: 2018-08-21 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="themes_empty_list">검색과 일치하는 테마 없음</string>
+    <string name="reader_label_post_search_explainer">무엇을 찾길 원하세요?</string>
+    <string name="site_settings_tags_empty_title_search">검색과 일치하는 태그 없음</string>
+    <string name="site_settings_tags_empty_title">태그가 없음</string>
+    <string name="site_settings_tags_empty_subtitle">게시글에 태그를 지정할 때 빠르게 선택할 수 있도록 자주 사용하는 태그를 추가하세요.</string>
+    <string name="site_settings_tags_empty_button">태그 만들기</string>
+    <string name="media_empty_search_list">검색과 일치하는 미디어 없음</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">워드프레스에서 로그아웃하시겠습니까?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">게시글에 대한 변경 사항이 아직 사이트에 업로드되지 않았습니다. 지금 로그아웃하면 장치에서 변경한 내용이 삭제됩니다. 그래도 로그아웃하시겠습니까?</string>
     <string name="people_empty_list_filtered_viewers">아직 방문자 없음</string>
     <string name="people_empty_list_filtered_email_followers">아직 이메일 팔로워 없음</string>
     <string name="people_empty_list_filtered_followers">아직 팔로워 없음</string>
@@ -58,7 +67,6 @@ Language: ko_KR
     <string name="reader_save_posts_locally_dialog_title">나중에 보기 위해 글 저장</string>
     <string name="reader_empty_search_request_failed">검색을 수행할 수 없음</string>
     <string name="reader_empty_search_title">일치하는 결과 없음</string>
-    <string name="reader_label_post_search_explainer">워드프레스 검색\n사이트 또는 글</string>
     <string name="comment_read_source_post">원글 읽기</string>
     <string name="sites">사이트</string>
     <string name="signup_magic_link_title">매직 링크가 전송됨</string>
@@ -147,7 +155,6 @@ Language: ko_KR
     <string name="notification_channel_general_title">일반</string>
     <string name="photo_picker_use_photo">이 사진 사용</string>
     <string name="media_preview_title">%1$d/%2$d</string>
-    <string name="stock_media_picker_empty_results">일치사항 없음</string>
     <string name="stock_media_picker_initial_empty_subtext">사진 제공: %s</string>
     <string name="stock_media_picker_initial_empty_text">무료 사진을 검색하여 미디어 라이브러리에 추가</string>
     <string name="stock_media_picker_search_hint">무료 사진 라이브러리 검색</string>
@@ -179,7 +186,6 @@ Language: ko_KR
     <string name="stats_tab_tap_content_description">%s 표시</string>
     <string name="stats_legend">통계 그래프 범례</string>
     <string name="fab_create_desc">작성</string>
-    <string name="fab_add_tag_desc">태그 작성</string>
     <string name="stats_bar_week_desc">%s 주</string>
     <string name="stats_bar_date_value_desc">%s, %d번 조회</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -431,7 +437,6 @@ Language: ko_KR
     <string name="site_settings_tags_hint">사이트의 태그 관리</string>
     <string name="dlg_saving_tag">저장 중</string>
     <string name="dlg_deleting_tag">삭제 중</string>
-    <string name="dlg_confirm_delete_tag">\'%s\'을(를) 영구 삭제하시겠습니까?</string>
     <string name="error_tag_exists">이 이름의 태그가 이미 존재합니다.</string>
     <string name="add_new_tag">새 태그 추가</string>
     <string name="tag_description_hint">설명</string>
@@ -450,7 +455,6 @@ Language: ko_KR
     <string name="site_settings_week_start_title">시작 요일</string>
     <string name="site_settings_tags_title">태그</string>
     <string name="site_settings_traffic_header">트래픽</string>
-    <string name="delete_no">삭제 안 함</string>
     <string name="delete_yes">삭제</string>
     <string name="plugin_external_link_icon_content_description">외부 링크</string>
     <string name="plugin_icon_content_description">플러그인 아이콘</string>
@@ -939,7 +943,6 @@ Language: ko_KR
     <string name="send_link">링크 전송</string>
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
-    <string name="reader_label_post_search_running">검색 중…</string>
     <string name="reader_title_related_post_detail">관련 글</string>
     <string name="preview_screen_links_disabled">미리보기 화면에서 링크가 비활성화되어 있습니다.</string>
     <string name="draft_explainer">이 글은 아직 발행되지 않은 임시글입니다.</string>
@@ -1285,7 +1288,6 @@ Language: ko_KR
     <string name="reader_label_new_posts_subtitle">눌러서 표시</string>
     <string name="my_site_header_configuration">설정</string>
     <string name="stats_unknown_author">알 수 없는 글쓴이</string>
-    <string name="sign_out_wpcom_confirm">로그아웃을 하면 사용중인 단말기에 저장된 @%s의 WordPress.com 자료와 임시글, 변경사항 등이 모두 삭제될 것입니다.</string>
     <string name="select_all">모두 선택</string>
     <string name="hide">숨기기</string>
     <string name="show">표시</string>

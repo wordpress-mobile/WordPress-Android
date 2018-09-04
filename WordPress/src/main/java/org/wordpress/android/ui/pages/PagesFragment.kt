@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
@@ -30,10 +31,15 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
+import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.DRAFTS
+import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.PUBLISHED
+import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.SCHEDULED
+import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.TRASH
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.util.AniUtils
@@ -70,19 +76,11 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
-
         val nonNullActivity = checkNotNull(activity)
-        val nonNullSite = checkNotNull(site)
-
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
-        initializeViewModels(nonNullActivity, nonNullSite)
+        initializeViewModels(nonNullActivity, savedInstanceState == null)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,6 +117,24 @@ class PagesFragment : Fragment() {
         newPageButton.setOnClickListener {
             viewModel.onNewPageButtonTapped()
         }
+
+        pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                val type = when (Type.getType(position)) {
+                    PUBLISHED -> PageStatus.PUBLISHED
+                    DRAFTS -> PageStatus.DRAFT
+                    SCHEDULED -> PageStatus.SCHEDULED
+                    TRASH -> PageStatus.TRASHED
+                }
+                viewModel.onPageTypeChanged(type)
+            }
+        })
     }
 
     private fun initializeSearchView() {
@@ -152,18 +168,21 @@ class PagesFragment : Fragment() {
         val searchEditFrame = actionMenuItem.actionView.findViewById<LinearLayout>(R.id.search_edit_frame)
         (searchEditFrame.layoutParams as LinearLayout.LayoutParams)
                 .apply { this.leftMargin = DisplayUtils.dpToPx(activity, -8) }
-                .apply { this.rightMargin = DisplayUtils.dpToPx(activity, -12) }
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel) {
+    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        setupObservers(activity, site)
+        setupObservers(activity)
 
-        viewModel.start(site)
+        if (isFirstStart) {
+            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+            val nonNullSite = checkNotNull(site)
+            viewModel.start(nonNullSite)
+        }
     }
 
-    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
+    private fun setupObservers(activity: FragmentActivity) {
         viewModel.searchResult.observe(this, Observer { result ->
             result?.let { setSearchResult(result) }
         })
@@ -181,7 +200,7 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.createNewPage.observe(this, Observer {
-            ActivityLauncher.addNewPageForResult(this, site)
+            ActivityLauncher.addNewPageForResult(this, viewModel.site)
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
@@ -211,6 +230,16 @@ class PagesFragment : Fragment() {
 
         viewModel.displayDeleteDialog.observe(this, Observer { page ->
             page?.let { displayDeleteDialog(page) }
+        })
+
+        viewModel.isNewPageButtonVisible.observe(this, Observer { isVisible ->
+            isVisible?.let {
+                if (isVisible) {
+                    newPageButton.show()
+                } else {
+                    newPageButton.hide()
+                }
+            }
         })
     }
 

@@ -114,8 +114,7 @@ public class Plan implements Serializable {
             JSONArray featuresHighlightSections = planJSONObject.getJSONArray("features_highlight");
             for (int i = 0; i < featuresHighlightSections.length(); i++) {
                 mFeaturesHighlightSections.add(
-                        new PlanFeaturesHighlightSection(featuresHighlightSections.getJSONObject(i))
-                                              );
+                        new PlanFeaturesHighlightSection(featuresHighlightSections.getJSONObject(i)));
             }
         }
 
