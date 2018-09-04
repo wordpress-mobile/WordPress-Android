@@ -281,10 +281,6 @@ class PagesFragment : Fragment() {
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
-        launch(UI) {
-            delay(300)
-            AniUtils.scaleIn(newPageButton, AniUtils.Duration.MEDIUM)
-        }
     }
 
     private fun showSearchList(myActionMenuItem: MenuItem) {
@@ -294,7 +290,6 @@ class PagesFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-        AniUtils.scaleOut(newPageButton, AniUtils.Duration.MEDIUM)
     }
 
     private fun setSearchResult(pages: List<PageItem>) {

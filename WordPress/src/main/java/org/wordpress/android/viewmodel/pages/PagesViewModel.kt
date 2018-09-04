@@ -234,11 +234,18 @@ class PagesViewModel
 
     fun onSearchExpanded(): Boolean {
         _isSearchExpanded.postValue(true)
+        _isNewPageButtonVisible.postValue(false)
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
         _isSearchExpanded.postValue(false)
+        clearSearch()
+
+        launch {
+            delay(500)
+            checkIfNewPageButtonShouldBeVisible()
+        }
         return true
     }
 
@@ -314,6 +321,7 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
+        _lastSearchQuery = ""
         _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
     }
 
