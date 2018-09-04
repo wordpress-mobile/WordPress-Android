@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import java.util.Date
 
 val ACTIVITY_RESPONSE = ActivityLogRestClient.ActivitiesResponse.ActivityResponse("activity",
-        FormattableContent("text"),
+        FormattableContent(text = "text"),
         "name",
         ActivityLogRestClient.ActivitiesResponse.Actor("author",
                 "John Smith",
