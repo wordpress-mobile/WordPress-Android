@@ -24,7 +24,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageListViewModel
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -73,7 +73,9 @@ class PageListFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(listStateKey, linearLayoutManager.onSaveInstanceState())
+        linearLayoutManager?.let {
+            outState.putParcelable(listStateKey, it.onSaveInstanceState())
+        }
         super.onSaveInstanceState(outState)
     }
 
