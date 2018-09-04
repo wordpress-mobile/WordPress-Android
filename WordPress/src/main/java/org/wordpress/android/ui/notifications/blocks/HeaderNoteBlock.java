@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -32,9 +32,8 @@ public class HeaderNoteBlock extends NoteBlock {
     public HeaderNoteBlock(Context context, JSONArray headerArray, ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
-                           ImageManager imageManager) {
-        super(new JSONObject(), imageManager, onNoteBlockTextClickListener);
-
+                           ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(new JSONObject(), imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
         mHeaderArray = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
@@ -58,7 +57,7 @@ public class HeaderNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
-        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
+        Spannable spannable = mNotificationsUtilsWrapper.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
         noteBlockHolder.mNameTextView.setText(spannable);
         if (mImageType == ImageType.AVATAR) {
             mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());

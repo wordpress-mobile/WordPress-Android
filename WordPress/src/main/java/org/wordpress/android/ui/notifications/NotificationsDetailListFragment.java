@@ -40,6 +40,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
@@ -73,6 +74,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private NoteBlockAdapter mNoteBlockAdapter;
 
     @Inject ImageManager mImageManager;
+    @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
 
     public NotificationsDetailListFragment() {
     }
@@ -341,7 +343,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
-                        mImageManager
+                        mImageManager,
+                        mNotificationsUtilsWrapper
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
@@ -379,7 +382,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
-                                        mImageManager
+                                        mImageManager,
+                                        mNotificationsUtilsWrapper
                                 );
                                 pingbackUrl = noteBlock.getMetaSiteUrl();
 
@@ -394,21 +398,24 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
-                                        mImageManager
+                                        mImageManager,
+                                        mNotificationsUtilsWrapper
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
                             FormattableContent formattableContent = new FormattableContentMapper(new Gson())
                                     .mapToFormattableContent(noteObject.toString());
 
-                            noteBlock = new FooterNoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
+                            noteBlock = new FooterNoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                    mOnNoteBlockTextClickListener);
                             if (formattableContent.getRanges() != null && formattableContent.getRanges().size() > 0) {
                                 FormattableRange range =
                                         formattableContent.getRanges().get(formattableContent.getRanges().size() - 1);
                                 ((FooterNoteBlock) noteBlock).setClickableSpan(range, mNote.getType());
                             }
                         } else {
-                            noteBlock = new NoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
+                            noteBlock = new NoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                    mOnNoteBlockTextClickListener);
                         }
 
                         // Badge notifications apply different colors and formatting
@@ -471,6 +478,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             return new GeneratedNoteBlock(
                     message,
                     mImageManager,
+                    mNotificationsUtilsWrapper,
                     onNoteBlockTextClickListener,
                     pingbackUrl);
         }

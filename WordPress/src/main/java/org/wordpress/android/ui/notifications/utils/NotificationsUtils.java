@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
@@ -166,18 +165,18 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
-    public static Spannable getSpannableContentForRanges(JSONObject subject) {
-        return getSpannableContentForRanges(subject, null, null, false);
+    static Spannable getSpannableContentForRanges(FormattableContentMapper formattableContentMapper,
+                                                  JSONObject subject) {
+        return getSpannableContentForRanges(formattableContentMapper, subject, null, null, false);
     }
 
-    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener
-                                                                 onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
-        // TODO inject FormattableContentMapper
-        return getSpannableContentForRanges(
-                new FormattableContentMapper(new Gson()).mapToFormattableContent(blockObject.toString()), textView,
-                onNoteBlockTextClickListener, isFooter);
+    static Spannable getSpannableContentForRanges(
+            FormattableContentMapper formattableContentMapper,
+            JSONObject blockObject, TextView textView,
+            final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+            boolean isFooter) {
+        return getSpannableContentForRanges(formattableContentMapper.mapToFormattableContent(blockObject.toString()),
+                textView, onNoteBlockTextClickListener, isFooter);
     }
 
     /**
@@ -189,7 +188,7 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    public static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
+    static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
                                                          final NoteBlock.OnNoteBlockTextClickListener
                                                                  onNoteBlockTextClickListener,
                                                          boolean isFooter) {
@@ -203,8 +202,7 @@ public class NotificationsUtils {
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        // TODO media span commented out
-//        addImageSpansForBlockMedia(textView, formattableContent, spannableStringBuilder);
+        addImageSpansForBlockMedia(textView, formattableContent, spannableStringBuilder);
 
         // Process Ranges to add links and text formatting
         List<FormattableRange> rangesArray = formattableContent.getRanges();

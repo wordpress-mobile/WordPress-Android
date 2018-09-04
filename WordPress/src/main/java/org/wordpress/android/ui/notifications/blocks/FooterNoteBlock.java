@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FormattableRange;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -18,8 +18,9 @@ public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
     public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager,
+                           NotificationsUtilsWrapper notificationsUtilsWrapper,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, imageManager, onNoteBlockTextClickListener);
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
     }
 
     public void setClickableSpan(FormattableRange rangeObject, String noteType) {
@@ -52,8 +53,8 @@ public class FooterNoteBlock extends NoteBlock {
         final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder) view.getTag();
 
         // Note text
-        if (!TextUtils.isEmpty(getNoteText())) {
-            noteBlockHolder.getTextView().setText(getNoteText());
+        if (!TextUtils.isEmpty(getNoteText(mNotificationsUtilsWrapper))) {
+            noteBlockHolder.getTextView().setText(getNoteText(mNotificationsUtilsWrapper));
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
@@ -83,8 +84,8 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     @Override
-    Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
+    Spannable getNoteText(NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        return notificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
                                                                getOnNoteBlockTextClickListener(), true);
     }
 

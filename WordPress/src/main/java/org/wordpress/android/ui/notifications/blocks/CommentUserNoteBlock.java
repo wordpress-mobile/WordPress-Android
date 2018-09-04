@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -38,8 +38,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
                                 OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener,
-                                ImageManager imageManager) {
-        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager);
+                                ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
+                notificationsUtilsWrapper);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
@@ -61,7 +62,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
 
-        noteBlockHolder.mNameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
+        noteBlockHolder.mNameTextView
+                .setText(Html.fromHtml("<strong>" + getNoteText(mNotificationsUtilsWrapper).toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
                 WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
@@ -83,7 +85,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (hasImageMediaItem()) {
             imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setContentDescription(
-                    view.getContext().getString(R.string.profile_picture, getNoteText().toString()));
+                    view.getContext()
+                        .getString(R.string.profile_picture, getNoteText(mNotificationsUtilsWrapper).toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -107,7 +110,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
         mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
 
-        noteBlockHolder.mCommentTextView.setText(getCommentTextOfNotification(noteBlockHolder));
+        noteBlockHolder.mCommentTextView
+                .setText(getCommentTextOfNotification(mNotificationsUtilsWrapper, noteBlockHolder));
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -159,8 +163,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
-    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
-        String commentText = NotificationsUtils
+    private String getCommentTextOfNotification(NotificationsUtilsWrapper notificationsUtilsWrapper,
+                                                CommentUserNoteBlockHolder noteBlockHolder) {
+        String commentText = notificationsUtilsWrapper
                 .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
 
