@@ -20,8 +20,8 @@ import javax.inject.Singleton
 class NotificationsUtilsWrapper @Inject constructor() {
     @Inject protected lateinit var formattableContentMapper: FormattableContentMapper
 
-    fun getSpannableContentForRanges(subject: JSONObject): Spannable = NotificationsUtils.
-            getSpannableContentForRanges(formattableContentMapper, subject, null, null, false)
+    fun getSpannableContentForRanges(subject: JSONObject): Spannable = NotificationsUtils.getSpannableContentForRanges(
+            formattableContentMapper, subject, null, null, false)
 
     fun getSpannableContentForRanges(
         blockObject: JSONObject,
