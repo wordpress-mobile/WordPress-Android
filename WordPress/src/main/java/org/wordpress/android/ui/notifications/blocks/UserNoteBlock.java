@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -93,7 +93,7 @@ public class UserNoteBlock extends NoteBlock {
 
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             if (!TextUtils.isEmpty(getUserUrl())) {
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
@@ -145,15 +145,18 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     String getUserUrl() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.links.home", "");
+        return getMetaSiteUrl();
     }
 
     private String getUserBlogTitle() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.titles.home", "");
+        return getMetaHomeTitle();
     }
 
     private String getUserBlogTagline() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.titles.tagline", "");
+        if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getTitles() != null) {
+            return "";
+        }
+        return StringUtils.notNullStr(getNoteData2().getMeta().getTitles().getTagline());
     }
 
     private boolean hasUserUrl() {
@@ -201,11 +204,20 @@ public class UserNoteBlock extends NoteBlock {
     };
 
     protected void showBlogPreview() {
-        long siteId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.site", 0));
-        long userId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.user", 0));
+        Long siteId;
+        Long userId;
+        if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getIds() != null) {
+            siteId = null;
+            userId = null;
+        } else {
+            siteId = getNoteData2().getMeta().getIds().getSite();
+            userId = getNoteData2().getMeta().getIds().getUser();
+        }
+
         String siteUrl = getUserUrl();
         if (mGravatarClickedListener != null) {
-            mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
+            mGravatarClickedListener
+                    .onGravatarClicked(siteId == null ? 0 : siteId, userId == null ? 0 : userId, siteUrl);
         }
     }
 }

@@ -80,6 +80,10 @@ public class NoteBlock {
         return mNoteData;
     }
 
+    FormattableContent getNoteData2() {
+        return mNoteData2;
+    }
+
     Spannable getNoteText() {
         return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData2, null,
                                                                mOnNoteBlockTextClickListener, false);
