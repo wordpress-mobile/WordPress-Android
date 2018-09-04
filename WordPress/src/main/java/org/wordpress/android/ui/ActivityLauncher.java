@@ -221,6 +221,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(PostsListActivity.EXTRA_POST_TYPE, PostType.TypePost);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
     }
