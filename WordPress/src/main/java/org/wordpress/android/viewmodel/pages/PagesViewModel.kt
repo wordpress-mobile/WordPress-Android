@@ -104,6 +104,10 @@ class PagesViewModel
     val site: SiteModel
         get() = _site
 
+    private var _arePageActionsEnabled = true
+    val arePageActionsEnabled: Boolean
+        get() = _arePageActionsEnabled
+
     private var searchJob: Job? = null
     private var lastSearchQuery = ""
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
@@ -353,8 +357,11 @@ class PagesViewModel
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
             }
         }
+
         launch {
+            _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
+            _arePageActionsEnabled = true
         }
     }
 
@@ -396,8 +403,11 @@ class PagesViewModel
                     _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
-        launch {
+
+            launch {
+                _arePageActionsEnabled = false
                 actionPerfomer.performAction(action)
+                _arePageActionsEnabled = true
             }
         }
     }

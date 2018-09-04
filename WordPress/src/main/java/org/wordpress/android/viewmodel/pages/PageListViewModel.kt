@@ -72,10 +72,10 @@ class PageListViewModel
                 .filter { it.status == pageType }
                 .let {
                     when (pageType) {
-                        PUBLISHED -> preparePublishedPages(it)
-                        SCHEDULED -> prepareScheduledPages(it)
-                        DRAFT -> prepareDraftPages(it)
-                        TRASHED -> prepareTrashedPages(it)
+                        PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
+                        SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
+                        DRAFT -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                        TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
                     }
                 }
 
@@ -97,12 +97,12 @@ class PageListViewModel
         }
     }
 
-    private fun preparePublishedPages(pages: List<PageModel>): List<PageItem> {
+    private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         pages.forEach { clearNonPublishedParents(it) }
         return topologicalSort(pages)
                 .map {
                     val label = if (it.hasLocalChanges) string.local_changes else null
-                    PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it))
+                    PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it), actionsEnabled)
                 }
     }
 
@@ -115,10 +115,10 @@ class PageListViewModel
         }
     }
 
-    private fun prepareScheduledPages(pages: List<PageModel>): List<PageItem> {
+    private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
-                        results.map { ScheduledPage(it.remoteId, it.title) }
+                        results.map { ScheduledPage(it.remoteId, it.title, actionsEnabled) }
                 }
                 .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
                     acc.addAll(list)
@@ -126,16 +126,16 @@ class PageListViewModel
                 }
     }
 
-    private fun prepareDraftPages(pages: List<PageModel>): List<PageItem> {
+    private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
             val label = if (it.hasLocalChanges) string.local_draft else null
-            DraftPage(it.remoteId, it.title, label)
+            DraftPage(it.remoteId, it.title, label, actionsEnabled)
         }
     }
 
-    private fun prepareTrashedPages(pages: List<PageModel>): List<PageItem> {
+    private fun prepareTrashedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            TrashedPage(it.remoteId, it.title)
+            TrashedPage(it.remoteId, it.title, actionsEnabled)
         }
     }
 
