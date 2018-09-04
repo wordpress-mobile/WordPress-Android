@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.utils
+package org.wordpress.android.fluxc.list
 
 import com.yarolegovich.wellsql.WellSql
 import org.junit.Before
