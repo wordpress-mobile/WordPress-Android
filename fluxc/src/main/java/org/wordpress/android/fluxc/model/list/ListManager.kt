@@ -38,10 +38,16 @@ class ListManager<T>(
      *
      * @param position The index of the item
      * @param shouldFetchIfNull Indicates whether the [ListManager] should initiate a fetch
+     * @param shouldLoadMoreIfNecessary Indicates whether the [ListManager] should dispatch an action to load more data
+     * if the end of the list is closer than the [loadMoreOffset].
      * if [ListItemDataSource.getItem] returns `null`
      */
-    fun getRemoteItem(position: Int, shouldFetchIfNull: Boolean = true): T? {
-        if (position == size - loadMoreOffset) {
+    fun getRemoteItem(
+        position: Int,
+        shouldFetchIfNull: Boolean = true,
+        shouldLoadMoreIfNecessary: Boolean = true
+    ): T? {
+        if (shouldLoadMoreIfNecessary && position > size - loadMoreOffset) {
             loadMore()
         }
         val listItemModel = items[position]
@@ -73,7 +79,7 @@ class ListManager<T>(
      * @return whether the refresh action is dispatched
      */
     fun refresh() {
-        if (isFetchingFirstPage) {
+        if (!isFetchingFirstPage) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
         }
     }
@@ -85,7 +91,7 @@ class ListManager<T>(
      * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
      */
     private fun loadMore() {
-        if (isLoadingMore) {
+        if (!isLoadingMore) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
         }
     }
