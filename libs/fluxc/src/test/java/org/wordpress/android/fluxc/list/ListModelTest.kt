@@ -77,9 +77,9 @@ class ListModelTest {
     @Test
     fun testListModelSetListDescriptor() {
         assertSetListDescriptor(ListDescriptor(POST, 555, PostListFilter.ALL, BasicListOrder.ASC))
-        assertSetListDescriptor(ListDescriptor(POST, filter =  PostListFilter.ALL))
-        assertSetListDescriptor(ListDescriptor(POST, order =  BasicListOrder.ASC))
-        assertSetListDescriptor(ListDescriptor(POST, filter =  PostListFilter.ALL, order = BasicListOrder.ASC))
+        assertSetListDescriptor(ListDescriptor(POST, filter = PostListFilter.ALL))
+        assertSetListDescriptor(ListDescriptor(POST, order = BasicListOrder.ASC))
+        assertSetListDescriptor(ListDescriptor(POST, filter = PostListFilter.ALL, order = BasicListOrder.ASC))
     }
 
     private fun assertSetListDescriptor(listDescriptor: ListDescriptor) {

@@ -55,9 +55,9 @@ class ListSqlUtils @Inject constructor() {
                 .asModel
 
         return listModels.firstOrNull { list ->
-            list.localSiteIdDbValue == listDescriptor.localSiteId
-                    && list.filterDbValue == listDescriptor.filter?.value
-                    && list.orderDbValue == listDescriptor.order?.value
+            list.localSiteIdDbValue == listDescriptor.localSiteId &&
+                    list.filterDbValue == listDescriptor.filter?.value &&
+                    list.orderDbValue == listDescriptor.order?.value
         }
     }
 
