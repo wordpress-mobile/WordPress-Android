@@ -97,6 +97,24 @@ platform :android do
   end
 
   #####################################################################################
+  # rebuild_screenshot_devices
+  # -----------------------------------------------------------------------------------
+  # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
+  # this action will overwrite the following emulators:
+  #     - fastlane_screenshots_phone
+  #     - fastlane_screenshots_seven_inch
+  #     - fastlane_screenshots_ten_inch
+  # It will not overwrite any other devices.
+  #
+  # It will also create hardware profiles that match the screenshot sizes used.  Running
+  # this script will overwrite those hardware profiles if they already exist.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane rebuild_screenshot_devices
+  #
+  # Example:
+  # fastlane rebuild_screenshot_devices
+  #####################################################################################
   desc "Rebuild screenshot devices"
   lane :rebuild_screenshot_devices do |options|
 
