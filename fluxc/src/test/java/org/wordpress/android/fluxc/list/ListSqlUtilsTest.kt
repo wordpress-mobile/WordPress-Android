@@ -39,20 +39,16 @@ class ListSqlUtilsTest {
         val listDescriptor = ListDescriptor(POST, 333)
         /**
          * 1. Insert a test list
-         * 2. Verify that `dateCreated` and `lastModified` are equal since this is the first time it's created
-         * 3. Wait 1 second before the update to ensure `lastModified` value will be different
-         * 4. Insert the same list which should update instead
-         * 5. Verify the listDescriptors are the same
-         * 5. Verify the `dateCreated` and `lastModified` values are different since this is an update.
-         * 6. Verify the `dateCreated` field is unchanged
+         * 2. Wait 1 second before the update to ensure `lastModified` value will be different
+         * 3. Insert the same list which should update instead
+         * 4. Verify the listDescriptors are the same
+         * 5. Verify the `lastModified` values are different
          */
         val insertedList = insertOrUpdateAndThenAssertList(listDescriptor)
-        assertEquals(insertedList.dateCreated, insertedList.lastModified)
         Thread.sleep(1000)
         val updatedList = insertOrUpdateAndThenAssertList(listDescriptor)
         assertEquals(insertedList.listDescriptor, updatedList.listDescriptor)
-        assertNotEquals(updatedList.dateCreated, updatedList.lastModified)
-        assertEquals(insertedList.dateCreated, updatedList.dateCreated)
+        assertNotEquals(insertedList.lastModified, updatedList.lastModified)
     }
 
     @Test
