@@ -181,7 +181,7 @@ class PagesViewModel
 
     private fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = _pages.values.any { it.status == currentPageType }
-        _isNewPageButtonVisible.postValue(isNotEmpty && currentPageType != TRASHED)
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value == false)
     }
 
     fun onSearch(searchQuery: String) {
@@ -235,13 +235,13 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(): Boolean {
-        _isSearchExpanded.postValue(true)
-        _isNewPageButtonVisible.postValue(false)
+        _isSearchExpanded.value = true
+        _isNewPageButtonVisible.value = false
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        _isSearchExpanded.postValue(false)
+        _isSearchExpanded.value = false
         clearSearch()
 
         launch {
@@ -353,5 +353,12 @@ class PagesViewModel
 
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
         this.value = value
+    }
+
+    private fun <T> MutableLiveData<T>.postOnUi(value: T) {
+        val liveData = this
+        launch(uiContext) {
+            liveData.value = value
+        }
     }
 }
