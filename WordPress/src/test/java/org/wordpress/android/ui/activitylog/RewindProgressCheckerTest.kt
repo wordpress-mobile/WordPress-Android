@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
@@ -32,7 +33,7 @@ class RewindProgressCheckerTest {
     private lateinit var rewindProgressChecker: RewindProgressChecker
     @Before
     fun setUp() {
-        rewindProgressChecker = RewindProgressChecker(activityLogStore)
+        rewindProgressChecker = RewindProgressChecker(activityLogStore, Unconfined)
     }
 
     private val finishedRewind = Rewind("rewindId", restoreId, FINISHED, 100, "finished")
