@@ -181,7 +181,7 @@ class PagesViewModel
 
     private fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = _pages.values.any { it.status == currentPageType }
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value == false)
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String) {
