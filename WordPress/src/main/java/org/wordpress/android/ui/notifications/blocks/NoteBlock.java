@@ -19,7 +19,6 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
@@ -38,8 +37,7 @@ import org.wordpress.android.widgets.WPTextView;
  * This basic block can support a media item (image/video) and/or text.
  */
 public class NoteBlock {
-    private final JSONObject mNoteData; // TODO remove when NoteBlock's children are refactored to FormattableContent
-    private final FormattableContent mNoteData2;
+    private final FormattableContent mNoteData;
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     protected final ImageManager mImageManager;
     protected final NotificationsUtilsWrapper mNotificationsUtilsWrapper;
@@ -58,11 +56,10 @@ public class NoteBlock {
         void showSitePreview(long siteId, String siteUrl);
     }
 
-    public NoteBlock(JSONObject noteObject, ImageManager imageManager,
+    public NoteBlock(FormattableContent noteObject, ImageManager imageManager,
                      NotificationsUtilsWrapper notificationsUtilsWrapper,
                      OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
-        mNoteData2 = notificationsUtilsWrapper.mapJsonToFormattablbeContent(noteObject);
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
         mImageManager = imageManager;
         mNotificationsUtilsWrapper = notificationsUtilsWrapper;
@@ -76,37 +73,33 @@ public class NoteBlock {
         return BlockType.BASIC;
     }
 
-    JSONObject getNoteData() {
+    FormattableContent getNoteData() {
         return mNoteData;
     }
 
-    FormattableContent getNoteData2() {
-        return mNoteData2;
-    }
-
     Spannable getNoteText() {
-        return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData2, null,
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData, null,
                 mOnNoteBlockTextClickListener, false);
     }
 
     String getMetaHomeTitle() {
-        if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getTitles() != null) {
-            return StringUtils.notNullStr(mNoteData2.getMeta().getTitles().getHome());
+        if (mNoteData.getMeta() != null && mNoteData.getMeta().getTitles() != null) {
+            return StringUtils.notNullStr(mNoteData.getMeta().getTitles().getHome());
         }
         return "";
     }
 
     long getMetaSiteId() {
-        if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getIds() != null) {
-            Long siteId = mNoteData2.getMeta().getIds().getSite();
+        if (mNoteData.getMeta() != null && mNoteData.getMeta().getIds() != null) {
+            Long siteId = mNoteData.getMeta().getIds().getSite();
             return siteId == null ? -1 : siteId;
         }
         return -1;
     }
 
     public String getMetaSiteUrl() {
-        if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getLinks() != null) {
-            return StringUtils.notNullStr(mNoteData2.getMeta().getLinks().getHome());
+        if (mNoteData.getMeta() != null && mNoteData.getMeta().getLinks() != null) {
+            return StringUtils.notNullStr(mNoteData.getMeta().getLinks().getHome());
         }
         return "";
     }
@@ -120,7 +113,7 @@ public class NoteBlock {
     }
 
     FormattableMedia getNoteMediaItem() {
-        return (mNoteData2.getMedia() != null && mNoteData2.getMedia().size() > 0) ? mNoteData2.getMedia().get(0)
+        return (mNoteData.getMedia() != null && mNoteData.getMedia().size() > 0) ? mNoteData.getMedia().get(0)
                 : null;
     }
 
@@ -137,7 +130,7 @@ public class NoteBlock {
     }
 
     private boolean hasMediaArray() {
-        return mNoteData2.getMedia() != null && !mNoteData2.getMedia().isEmpty();
+        return mNoteData.getMedia() != null && !mNoteData.getMedia().isEmpty();
     }
 
     boolean hasImageMediaItem() {
@@ -154,8 +147,8 @@ public class NoteBlock {
     }
 
     public boolean containsBadgeMediaType() {
-        if (mNoteData2.getMedia() != null) {
-            for (FormattableMedia mediaObject : mNoteData2.getMedia()) {
+        if (mNoteData.getMedia() != null) {
+            for (FormattableMedia mediaObject : mNoteData.getMedia()) {
                 if ("badge".equals(mediaObject.getType())) {
                     return true;
                 }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
@@ -38,17 +37,15 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         void onCommentStatusChanged(CommentStatus newStatus);
     }
 
-    public CommentUserNoteBlock(Context context, JSONObject noteObject,
-                                JSONObject commentTextBlock,
+    public CommentUserNoteBlock(Context context, FormattableContent noteObject,
+                                FormattableContent commentTextBlock,
                                 long timestamp, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener,
                                 ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
         super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
                 notificationsUtilsWrapper);
 
-        mCommentData =
-                commentTextBlock != null ? notificationsUtilsWrapper.mapJsonToFormattablbeContent(commentTextBlock)
-                        : null;
+        mCommentData = commentTextBlock;
         mTimestamp = timestamp;
 
         if (context != null) {

@@ -9,8 +9,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
@@ -32,7 +32,7 @@ public class UserNoteBlock extends NoteBlock {
 
     public UserNoteBlock(
             Context context,
-            JSONObject noteObject,
+            FormattableContent noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
             ImageManager imageManager,
@@ -153,8 +153,8 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     private String getUserBlogTagline() {
-        if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getTitles() != null) {
-            return StringUtils.notNullStr(getNoteData2().getMeta().getTitles().getTagline());
+        if (getNoteData().getMeta() != null && getNoteData().getMeta().getTitles() != null) {
+            return StringUtils.notNullStr(getNoteData().getMeta().getTitles().getTagline());
         }
         return "";
     }
@@ -206,9 +206,9 @@ public class UserNoteBlock extends NoteBlock {
     protected void showBlogPreview() {
         Long siteId;
         Long userId;
-        if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getIds() != null) {
-            siteId = getNoteData2().getMeta().getIds().getSite();
-            userId = getNoteData2().getMeta().getIds().getUser();
+        if (getNoteData().getMeta() != null && getNoteData().getMeta().getIds() != null) {
+            siteId = getNoteData().getMeta().getIds().getSite();
+            userId = getNoteData().getMeta().getIds().getUser();
         } else {
             siteId = null;
             userId = null;

@@ -55,7 +55,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mId = range.getId() == null ? 0 : range.getId();
             mSiteId = range.getSiteId() == null ? 0 : range.getSiteId();
             mPostId = range.getPostId() == null ? 0 : range.getPostId();
-            mRangeType = range.getRangeType();
+            mRangeType = range.rangeType();
             mUrl = range.getUrl();
             mIndices = range.getIndices();
 

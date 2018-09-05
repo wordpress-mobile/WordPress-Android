@@ -6,9 +6,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.RtlUtils;
@@ -18,7 +18,7 @@ import org.wordpress.android.util.image.ImageManager;
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
-    public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager,
+    public FooterNoteBlock(FormattableContent noteObject, ImageManager imageManager,
                            NotificationsUtilsWrapper notificationsUtilsWrapper,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
@@ -78,8 +78,8 @@ public class FooterNoteBlock extends NoteBlock {
 
     @NotNull
     private String getNoticonGlyph() {
-        if (getNoteData2() != null && getNoteData2().getRanges() != null && getNoteData2().getRanges().size() != 0) {
-            return StringUtils.notNullStr(getNoteData2().getRanges().get(0).getValue());
+        if (getNoteData() != null && getNoteData().getRanges() != null && getNoteData().getRanges().size() != 0) {
+            return StringUtils.notNullStr(getNoteData().getRanges().get(0).getValue());
         }
         return "";
     }

@@ -44,7 +44,6 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -355,21 +354,22 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i = 0; i < bodyArray.length(); i++) {
                     try {
-                        JSONObject noteObject = bodyArray.getJSONObject(i);
+                        FormattableContent noteObject = mFormattableContentMapper
+                                .mapToFormattableContent(bodyArray.getJSONObject(i).toString());
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
-                        String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
 
-                        if (BlockType.fromString(noteBlockTypeString) == BlockType.USER) {
+                        if (BlockType.fromString(noteObject.getType()) == BlockType.USER) {
                             if (mNote.isCommentType()) {
                                 // Set comment position so we can target it later
                                 // See refreshBlocksForCommentStatus()
                                 mCommentListPosition = i + noteList.size();
 
-                                JSONObject commentTextBlock = null;
+                                FormattableContent commentTextBlock = null;
                                 // Next item in the bodyArray is comment text
                                 if (i + 1 < bodyArray.length()) {
-                                    commentTextBlock = bodyArray.getJSONObject(i + 1);
+                                    commentTextBlock = mFormattableContentMapper
+                                            .mapToFormattableContent(bodyArray.getJSONObject(i + 1).toString());
                                     i++;
                                 }
 
@@ -505,21 +505,23 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
-    private boolean isFooterBlock(JSONObject blockObject) {
+    private boolean isFooterBlock(FormattableContent blockObject) {
         if (mNote == null || blockObject == null) {
             return false;
         }
 
         if (mNote.isCommentType()) {
+            Long commentReplyId = blockObject.getRanges() != null && blockObject.getRanges().size() >= 2
+                    ? blockObject.getRanges().get(1).getId() : 0L;
             // Check if this is a comment notification that has been replied to
             // The block will not have a type, and its id will match the comment reply id in the Note.
-            return (JSONUtils.queryJSON(blockObject, "type", null) == null
-                    && mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
+            return (blockObject.getType() == null
+                    && mNote.getCommentReplyId() == commentReplyId);
         } else if (mNote.isFollowType() || mNote.isLikeType()
                    || mNote.isCommentLikeType() || mNote.isReblogType()) {
             // User list notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
-            return JSONUtils.queryJSON(blockObject, "type", null) == null;
+            return blockObject.getType() == null;
         }
 
         return false;

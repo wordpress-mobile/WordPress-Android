@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -33,7 +33,7 @@ public class HeaderNoteBlock extends NoteBlock {
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
                            ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
-        super(new JSONObject(), imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
+        super(new FormattableContent(), imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
         mHeaderArray = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
