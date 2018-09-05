@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.FormattableContentUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -36,8 +37,10 @@ public class UserNoteBlock extends NoteBlock {
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
             ImageManager imageManager,
-            NotificationsUtilsWrapper notificationsUtilsWrapper) {
-        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
+            NotificationsUtilsWrapper notificationsUtilsWrapper,
+            FormattableContentUtils formattableContentUtils) {
+        super(noteObject, imageManager, notificationsUtilsWrapper, formattableContentUtils,
+                onNoteBlockTextClickListener);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));

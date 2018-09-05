@@ -44,6 +44,8 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.FormattableContentUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -73,6 +75,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Inject ImageManager mImageManager;
     @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
     @Inject FormattableContentMapper mFormattableContentMapper;
+    @Inject FormattableContentUtils mFormattableContentUtils;
 
     public NotificationsDetailListFragment() {
     }
@@ -335,14 +338,25 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
                 ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
+                JSONArray headerArray = mNote.getHeader();
+                List<FormattableContent> headersList = new ArrayList<>(headerArray.length());
+                for (int i = 0; i < headerArray.length(); i++) {
+                    try {
+                        headersList.add(mFormattableContentMapper.mapToFormattableContent(
+                                headerArray.getJSONObject(i).toString()));
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Header array has invalid format.");
+                    }
+                }
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
-                        mNote.getHeader(),
+                        headersList,
                         imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
                         mImageManager,
-                        mNotificationsUtilsWrapper
+                        mNotificationsUtilsWrapper,
+                        mFormattableContentUtils
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
@@ -381,7 +395,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
                                         mImageManager,
-                                        mNotificationsUtilsWrapper
+                                        mNotificationsUtilsWrapper,
+                                        mFormattableContentUtils
                                 );
                                 pingbackUrl = noteBlock.getMetaSiteUrl();
 
@@ -397,7 +412,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
                                         mImageManager,
-                                        mNotificationsUtilsWrapper
+                                        mNotificationsUtilsWrapper,
+                                        mFormattableContentUtils
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
@@ -405,7 +421,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                     .mapToFormattableContent(noteObject.toString());
 
                             noteBlock = new FooterNoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
-                                    mOnNoteBlockTextClickListener);
+                                    mFormattableContentUtils, mOnNoteBlockTextClickListener);
                             if (formattableContent.getRanges() != null && formattableContent.getRanges().size() > 0) {
                                 FormattableRange range =
                                         formattableContent.getRanges().get(formattableContent.getRanges().size() - 1);
@@ -413,7 +429,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             }
                         } else {
                             noteBlock = new NoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
-                                    mOnNoteBlockTextClickListener);
+                                    mFormattableContentUtils, mOnNoteBlockTextClickListener);
                         }
 
                         // Badge notifications apply different colors and formatting
@@ -477,6 +493,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     message,
                     mImageManager,
                     mNotificationsUtilsWrapper,
+                    mFormattableContentUtils,
                     onNoteBlockTextClickListener,
                     pingbackUrl);
         }

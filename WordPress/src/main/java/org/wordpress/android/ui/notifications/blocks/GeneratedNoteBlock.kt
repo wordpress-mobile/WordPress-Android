@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
+import org.wordpress.android.util.FormattableContentUtils
 import org.wordpress.android.util.image.ImageManager
 
 @Deprecated("This should be removed once we start receiving Read the source block from the backend")
@@ -18,9 +19,10 @@ class GeneratedNoteBlock(
     val text: String,
     imageManager: ImageManager,
     notificationsUtilsWrapper: NotificationsUtilsWrapper,
+    formattableContentUtils: FormattableContentUtils,
     val clickListener: OnNoteBlockTextClickListener,
     val pingbackUrl: String
-) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, clickListener) {
+) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, formattableContentUtils, clickListener) {
     override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
 
