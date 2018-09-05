@@ -48,6 +48,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -257,7 +258,7 @@ class PagesViewModel
             SET_PARENT -> _setPageParent.postValue(pages[page.id])
             MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
-            PUBLISH_NOW -> changePageStatus(page.id, PUBLISHED)
+            PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
@@ -295,15 +296,21 @@ class PagesViewModel
         }
     }
 
+    private fun publishPageNow(remoteId: Long) {
+        pages[remoteId]?.let { page ->
+            page.date = Date()
+            changePageStatus(remoteId, PUBLISHED)
+        }
+    }
+
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        pages[remoteId]
-                ?.let { page ->
-                    launch {
-                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
-                        page.status = status
-                        uploadUtil.uploadPage(page)
-                    }
-                }
+        pages[remoteId]?.let { page ->
+            launch {
+                statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
+                page.status = status
+                uploadUtil.uploadPage(page)
+            }
+        }
     }
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
