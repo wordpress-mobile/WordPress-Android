@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * @param dataSource The data source which knows actions like how to query an item by `remoteItemId` or how to fetch it.
  * @param loadMoreOffset Tells how many items before last one should trigger loading more data
  * @param isFetchingFirstPage A helper property to be used to show/hide pull-to-refresh progress bar
- * @param isLoadingMore A helper property to be used to show/hid load more progress bar
+ * @param isLoadingMore A helper property to be used to show/hide load more progress bar
  *
  * @property size The number of items in the list
  *
