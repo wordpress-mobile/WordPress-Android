@@ -7,13 +7,19 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListFilter
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListOrder
+import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.ListState.ERROR
+import org.wordpress.android.fluxc.model.list.ListState.FETCHED
+import org.wordpress.android.fluxc.model.list.ListState.NEEDS_REFRESH
 import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.model.list.ListType.POST
 import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
 import org.wordpress.android.fluxc.model.list.PostListFilter
 import org.wordpress.android.fluxc.model.list.WooOrderListFilter
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class ListModelTest {
     /**
@@ -80,6 +86,45 @@ class ListModelTest {
         assertSetListDescriptor(ListDescriptor(POST, filter = PostListFilter.ALL))
         assertSetListDescriptor(ListDescriptor(POST, order = BasicListOrder.ASC))
         assertSetListDescriptor(ListDescriptor(POST, filter = PostListFilter.ALL, order = BasicListOrder.ASC))
+    }
+
+    /**
+     * Basic tests for [ListState.FETCHING_FIRST_PAGE].
+     */
+    @Test
+    fun testFetchingFirstPage() {
+        val listModel = ListModel()
+        listModel.stateDbValue = ListState.FETCHING_FIRST_PAGE.value
+        assertTrue(listModel.isFetchingFirstPage())
+        assertFalse(listModel.isLoadingMore())
+        assertFalse(listModel.canLoadMore())
+    }
+
+    /**
+     * Basic tests for [ListState.LOADING_MORE].
+     */
+    @Test
+    fun testLoadingMore() {
+        val listModel = ListModel()
+        listModel.stateDbValue = ListState.LOADING_MORE.value
+        assertFalse(listModel.isFetchingFirstPage())
+        assertTrue(listModel.isLoadingMore())
+        assertFalse(listModel.canLoadMore())
+    }
+
+    /**
+     * Basic tests for [ListState.NEEDS_REFRESH], [ListState.FETCHED], [ListState.ERROR]. Currently we don't have
+     * custom logic for these states, these tests should be expanded if/when we add custom implementation for them.
+     */
+    @Test
+    fun testNonSpecialStates() {
+        listOf(NEEDS_REFRESH, FETCHED, ERROR).forEach { state ->
+            val listModel = ListModel()
+            listModel.stateDbValue = state.value
+            assertFalse(listModel.isFetchingFirstPage())
+            assertFalse(listModel.isLoadingMore())
+            assertFalse(listModel.canLoadMore())
+        }
     }
 
     private fun assertSetListDescriptor(listDescriptor: ListDescriptor) {
