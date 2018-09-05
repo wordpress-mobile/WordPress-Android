@@ -129,7 +129,7 @@ public class HeaderNoteBlock extends NoteBlock {
     }
 
     private String getSnippet() {
-        return mFormattableContentUtils.getHeaderTextOrEmpty(getHeader(1));
+        return mFormattableContentUtils.getTextOrEmpty(getHeader(1));
     }
 
     @Override

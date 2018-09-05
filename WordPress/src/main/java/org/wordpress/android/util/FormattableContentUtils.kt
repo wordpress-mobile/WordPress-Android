@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FormattableContentUtils @Inject constructor() {
-    fun getHeaderTextOrEmpty(header: FormattableContent?): String? {
+    fun getTextOrEmpty(header: FormattableContent?): String {
         return header?.text ?: ""
     }
 
@@ -22,7 +22,7 @@ class FormattableContentUtils @Inject constructor() {
         return range?.id ?: 0L
     }
 
-    fun getRangeUrlOrEmpty(header: FormattableContent?, rangeIndex: Int): String? {
+    fun getRangeUrlOrEmpty(header: FormattableContent?, rangeIndex: Int): String {
         val range = getRangeOrNull(header, rangeIndex)
         return range?.url ?: ""
     }
@@ -33,7 +33,7 @@ class FormattableContentUtils @Inject constructor() {
         }
     }
 
-    fun getMediaUrlOrEmpty(header: FormattableContent?, mediaIndex: Int): String? {
+    fun getMediaUrlOrEmpty(header: FormattableContent?, mediaIndex: Int): String {
         val media = getMediaOrNull(header, mediaIndex)
         return media?.url ?: ""
     }
@@ -42,5 +42,31 @@ class FormattableContentUtils @Inject constructor() {
         return header?.media?.let {
             return if (mediaIndex < it.size) it[mediaIndex] else null
         }
+    }
+
+    fun getMetaTitlesHomeOrEmpty(content: FormattableContent?): String {
+        return content?.meta?.titles?.home ?: ""
+    }
+
+    fun getMetaLinksHomeOrEmpty(content: FormattableContent?): String {
+        return content?.meta?.links?.home ?: ""
+    }
+
+    fun getMetaTitlesTaglineOrEmpty(content: FormattableContent?): String {
+        return content?.meta?.titles?.tagline ?: ""
+    }
+
+    fun getRangeValueOrEmpty(content: FormattableContent?, rangeIndex: Int): String {
+        return if (content?.ranges != null && content.ranges!!.size < rangeIndex) {
+            content.ranges!![rangeIndex].value ?: ""
+        } else ""
+    }
+
+    fun getMetaIdsSiteIdOrZero(content: FormattableContent?): Long {
+        return content?.meta?.ids?.site ?: 0
+    }
+
+    fun getMetaIdsUserIdOrZero(content: FormattableContent?): Long {
+        return content?.meta?.ids?.user ?: 0
     }
 }

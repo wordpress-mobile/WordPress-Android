@@ -87,25 +87,20 @@ public class NoteBlock {
     }
 
     String getMetaHomeTitle() {
-        if (mNoteData.getMeta() != null && mNoteData.getMeta().getTitles() != null) {
-            return StringUtils.notNullStr(mNoteData.getMeta().getTitles().getHome());
-        }
-        return "";
+        return mFormattableContentUtils.getMetaTitlesHomeOrEmpty(mNoteData);
     }
 
     long getMetaSiteId() {
-        if (mNoteData.getMeta() != null && mNoteData.getMeta().getIds() != null) {
-            Long siteId = mNoteData.getMeta().getIds().getSite();
-            return siteId == null ? -1 : siteId;
+        long siteId = mFormattableContentUtils.getMetaIdsSiteIdOrZero(mNoteData);
+        if (siteId == 0) {
+            return -1;
+        } else {
+            return siteId;
         }
-        return -1;
     }
 
     public String getMetaSiteUrl() {
-        if (mNoteData.getMeta() != null && mNoteData.getMeta().getLinks() != null) {
-            return StringUtils.notNullStr(mNoteData.getMeta().getLinks().getHome());
-        }
-        return "";
+        return mFormattableContentUtils.getMetaLinksHomeOrEmpty(mNoteData);
     }
 
     private boolean isPingBack() {
@@ -117,8 +112,7 @@ public class NoteBlock {
     }
 
     FormattableMedia getNoteMediaItem() {
-        return (mNoteData.getMedia() != null && mNoteData.getMedia().size() > 0) ? mNoteData.getMedia().get(0)
-                : null;
+        return mFormattableContentUtils.getMediaOrNull(mNoteData, 0);
     }
 
     public void setIsBadge() {

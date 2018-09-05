@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.FormattableContentUtils;
 import org.wordpress.android.util.RtlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 public class FooterNoteBlock extends NoteBlock {
@@ -82,10 +81,7 @@ public class FooterNoteBlock extends NoteBlock {
 
     @NotNull
     private String getNoticonGlyph() {
-        if (getNoteData() != null && getNoteData().getRanges() != null && getNoteData().getRanges().size() != 0) {
-            return StringUtils.notNullStr(getNoteData().getRanges().get(0).getValue());
-        }
-        return "";
+        return mFormattableContentUtils.getRangeValueOrEmpty(getNoteData(), 0);
     }
 
     @Override

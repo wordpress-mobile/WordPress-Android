@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.FormattableContentUtils;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -156,10 +155,7 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     private String getUserBlogTagline() {
-        if (getNoteData().getMeta() != null && getNoteData().getMeta().getTitles() != null) {
-            return StringUtils.notNullStr(getNoteData().getMeta().getTitles().getTagline());
-        }
-        return "";
+        return mFormattableContentUtils.getMetaTitlesTaglineOrEmpty(getNoteData());
     }
 
     private boolean hasUserUrl() {
@@ -207,20 +203,11 @@ public class UserNoteBlock extends NoteBlock {
     };
 
     protected void showBlogPreview() {
-        Long siteId;
-        Long userId;
-        if (getNoteData().getMeta() != null && getNoteData().getMeta().getIds() != null) {
-            siteId = getNoteData().getMeta().getIds().getSite();
-            userId = getNoteData().getMeta().getIds().getUser();
-        } else {
-            siteId = null;
-            userId = null;
-        }
-
         String siteUrl = getUserUrl();
         if (mGravatarClickedListener != null) {
             mGravatarClickedListener
-                    .onGravatarClicked(siteId == null ? 0 : siteId, userId == null ? 0 : userId, siteUrl);
+                    .onGravatarClicked(mFormattableContentUtils.getMetaIdsSiteIdOrZero(getNoteData()),
+                            mFormattableContentUtils.getMetaIdsUserIdOrZero(getNoteData()), siteUrl);
         }
     }
 }
