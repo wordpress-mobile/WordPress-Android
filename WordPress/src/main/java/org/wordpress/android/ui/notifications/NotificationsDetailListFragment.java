@@ -366,19 +366,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 // See refreshBlocksForCommentStatus()
                                 mCommentListPosition = i + noteList.size();
 
-                                // We'll snag the next body array item for comment user blocks
+                                JSONObject commentTextBlock = null;
+                                // Next item in the bodyArray is comment text
                                 if (i + 1 < bodyArray.length()) {
-                                    JSONObject commentTextBlock = bodyArray.getJSONObject(i + 1);
-                                    noteObject.put("comment_text", commentTextBlock);
+                                    commentTextBlock = bodyArray.getJSONObject(i + 1);
                                     i++;
                                 }
-
-                                // Add timestamp to block for display
-                                noteObject.put("timestamp", mNote.getTimestamp());
 
                                 noteBlock = new CommentUserNoteBlock(
                                         getActivity(),
                                         noteObject,
+                                        commentTextBlock,
+                                        mNote.getTimestamp(),
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
                                         mImageManager,

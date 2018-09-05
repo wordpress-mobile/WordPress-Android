@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -31,16 +31,25 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     private boolean mStatusChanged;
 
+    private final FormattableContent mCommentData;
+    private final long mTimestamp;
+
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
     }
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
-                                OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                JSONObject commentTextBlock,
+                                long timestamp, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener,
                                 ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
         super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
                 notificationsUtilsWrapper);
+
+        mCommentData =
+                commentTextBlock != null ? notificationsUtilsWrapper.mapJsonToFormattablbeContent(commentTextBlock)
+                        : null;
+        mTimestamp = timestamp;
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
@@ -165,7 +174,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
         String commentText = mNotificationsUtilsWrapper
-                .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
+                .getSpannableContentForRanges(mCommentData,
                         noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
 
         return getStringWithNewlineInListsRemoved(commentText);
@@ -180,16 +189,11 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private long getTimestamp() {
-        return getNoteData().optInt("timestamp", 0);
+        return mTimestamp;
     }
 
     private boolean hasCommentNestingLevel() {
-        try {
-            JSONObject commentTextObject = getNoteData().getJSONObject("comment_text");
-            return commentTextObject.optInt("nest_level", 0) > 0;
-        } catch (JSONException e) {
-            return false;
-        }
+        return mCommentData.getNestLevel() != null && mCommentData.getNestLevel() > 0;
     }
 
     @Override
