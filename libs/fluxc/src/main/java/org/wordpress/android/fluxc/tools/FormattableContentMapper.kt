@@ -48,7 +48,8 @@ data class FormattableMeta(
     )
 
     data class Titles(
-        @SerializedName("home") val home: String? = null
+        @SerializedName("home") val home: String? = null,
+        @SerializedName("tagline") val tagline: String? = null
     )
 }
 
@@ -62,6 +63,7 @@ data class FormattableRange(
     @SerializedName("section") val section: String? = null,
     @SerializedName("intent") val intent: String? = null,
     @SerializedName("context") val context: String? = null,
+    @SerializedName("value") val value: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
     val rangeType by lazy { FormattableRangeType.fromString(type) }
