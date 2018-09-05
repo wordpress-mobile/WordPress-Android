@@ -83,7 +83,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setContentDescription(
                     view.getContext()
                         .getString(R.string.profile_picture, getNoteText().toString()));

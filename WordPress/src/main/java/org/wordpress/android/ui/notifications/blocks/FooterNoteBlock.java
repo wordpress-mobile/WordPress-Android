@@ -78,18 +78,16 @@ public class FooterNoteBlock extends NoteBlock {
 
     @NotNull
     private String getNoticonGlyph() {
-        if (getNoteData2() == null || getNoteData2().getRanges() == null || getNoteData2().getRanges().size() == 0) {
-            return "";
+        if (getNoteData2() != null && getNoteData2().getRanges() != null && getNoteData2().getRanges().size() != 0) {
+            return StringUtils.notNullStr(getNoteData2().getRanges().get(0).getValue());
         }
-
-
-        return StringUtils.notNullStr(getNoteData2().getRanges().get(0).getValue());
+        return "";
     }
 
     @Override
     Spannable getNoteText() {
         return mNotificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
-                                                               getOnNoteBlockTextClickListener(), true);
+                getOnNoteBlockTextClickListener(), true);
     }
 
     public Object getViewHolder(View view) {

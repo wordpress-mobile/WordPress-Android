@@ -154,9 +154,9 @@ public class UserNoteBlock extends NoteBlock {
 
     private String getUserBlogTagline() {
         if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getTitles() != null) {
-            return "";
+            return StringUtils.notNullStr(getNoteData2().getMeta().getTitles().getTagline());
         }
-        return StringUtils.notNullStr(getNoteData2().getMeta().getTitles().getTagline());
+        return "";
     }
 
     private boolean hasUserUrl() {
@@ -207,11 +207,11 @@ public class UserNoteBlock extends NoteBlock {
         Long siteId;
         Long userId;
         if (getNoteData2().getMeta() != null && getNoteData2().getMeta().getIds() != null) {
-            siteId = null;
-            userId = null;
-        } else {
             siteId = getNoteData2().getMeta().getIds().getSite();
             userId = getNoteData2().getMeta().getIds().getUser();
+        } else {
+            siteId = null;
+            userId = null;
         }
 
         String siteUrl = getUserUrl();

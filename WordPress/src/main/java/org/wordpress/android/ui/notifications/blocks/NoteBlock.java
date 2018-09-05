@@ -86,34 +86,35 @@ public class NoteBlock {
 
     Spannable getNoteText() {
         return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData2, null,
-                                                               mOnNoteBlockTextClickListener, false);
+                mOnNoteBlockTextClickListener, false);
     }
 
     String getMetaHomeTitle() {
         if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getTitles() != null) {
-            return "";
+            return StringUtils.notNullStr(mNoteData2.getMeta().getTitles().getHome());
         }
-        return StringUtils.notNullStr(mNoteData2.getMeta().getTitles().getHome());
+        return "";
     }
 
     long getMetaSiteId() {
         if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getIds() != null) {
-            return -1;
+            Long siteId = mNoteData2.getMeta().getIds().getSite();
+            return siteId == null ? -1 : siteId;
         }
-        Long siteId = mNoteData2.getMeta().getIds().getSite();
-        return siteId == null ? -1 : siteId;
+        return -1;
     }
 
     public String getMetaSiteUrl() {
         if (mNoteData2.getMeta() != null && mNoteData2.getMeta().getLinks() != null) {
-            return "";
+            return StringUtils.notNullStr(mNoteData2.getMeta().getLinks().getHome());
         }
-        return StringUtils.notNullStr(mNoteData2.getMeta().getLinks().getHome());
+        return "";
     }
 
     private boolean isPingBack() {
         return mIsPingback;
     }
+
     public void setIsPingback() {
         mIsPingback = true;
     }
@@ -147,9 +148,9 @@ public class NoteBlock {
 
     private boolean hasVideoMediaItem() {
         return hasMediaArray()
-                && !TextUtils.isEmpty(getNoteMediaItem().getType())
-                && getNoteMediaItem().getType().startsWith("video")
-                && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
+               && !TextUtils.isEmpty(getNoteMediaItem().getType())
+               && getNoteMediaItem().getType().startsWith("video")
+               && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
     }
 
     public boolean containsBadgeMediaType() {
