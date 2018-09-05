@@ -19,7 +19,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.ActivityLogAction.FETCHED_ACTIVITIES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
@@ -83,7 +82,7 @@ class ActivityLogViewModelTest {
     val activity = ActivityLogModel(
             "activityId",
             "",
-            "",
+            null,
             null,
             null,
             null,
@@ -292,7 +291,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun loadsNextPageOnScrollToBottom() {
-        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCHED_ACTIVITIES))
+        viewModel.onEventsUpdated(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -316,7 +315,7 @@ class ActivityLogViewModelTest {
         birthday.set(1985, 8, 27)
 
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel("", "", "", "", "", "",
+        val activity = ActivityLogModel("", "", null, "", "", "",
                 "", true, "", birthday.time)
         list.add(activity)
         list.add(activity.copy())

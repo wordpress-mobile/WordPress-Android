@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import java.util.Date
 
@@ -62,7 +63,7 @@ class RewindStatusServiceTest {
     private val activityLogModel = ActivityLogModel(
             activityID,
             "summary",
-            "text",
+            FormattableContent(text = "text"),
             null,
             null,
             null,
