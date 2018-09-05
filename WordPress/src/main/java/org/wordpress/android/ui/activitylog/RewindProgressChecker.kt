@@ -1,20 +1,29 @@
 package org.wordpress.android.ui.activitylog
 
+import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.NonCancellable.isActive
 import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
+import org.wordpress.android.modules.COMMON_POOL_CONTEXT
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.coroutineContext
 
 @Singleton
 class RewindProgressChecker
-@Inject constructor(private val activityLogStore: ActivityLogStore) {
+@Inject constructor(
+    private val activityLogStore: ActivityLogStore,
+    @param:Named(COMMON_POOL_CONTEXT) private val backgroundContext: CoroutineDispatcher
+) {
     companion object {
         const val CHECK_DELAY_MILLIS = 10000L
     }
@@ -28,7 +37,7 @@ class RewindProgressChecker
         restoreId: Long,
         now: Boolean = false,
         checkDelay: Long = CHECK_DELAY_MILLIS
-    ) = runBlocking(coroutineContext) {
+    ) = withContext(backgroundContext) {
         if (!now) {
             delay(checkDelay)
         }
@@ -36,9 +45,14 @@ class RewindProgressChecker
         while (isActive) {
             val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
             val rewind = rewindStatusForSite?.rewind
-            if (rewind != null && rewind.status == FINISHED && rewind.restoreId == restoreId) {
-                result = OnRewindStatusFetched(FETCH_REWIND_STATE)
-                break
+            if (rewind != null && rewind.restoreId == restoreId) {
+                if (rewind.status == FINISHED) {
+                    result = OnRewindStatusFetched(FETCH_REWIND_STATE)
+                    break
+                } else if (rewind.status == FAILED) {
+                    result = OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR, rewind.reason), FETCH_REWIND_STATE)
+                    break
+                }
             }
             result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
             if (result.isError) {
@@ -46,6 +60,6 @@ class RewindProgressChecker
             }
             delay(checkDelay)
         }
-        result
+        return@withContext result
     }
 }
