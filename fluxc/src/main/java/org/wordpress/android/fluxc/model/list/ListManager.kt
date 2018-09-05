@@ -68,22 +68,26 @@ class ListManager<T>(
      * `OnListChanged` should be used to observe changes to lists and a new instance should be requested from
      * `ListStore`.
      *
-     * IMPORTANT: There is no need to check [isFetchingFirstPage] before calling this function. `ListStore` will do
-     * that with some extra logic for handling edge cases.
+     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
+     *
+     * @return whether the refresh action is dispatched
      */
     fun refresh() {
-        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
+        if (isFetchingFirstPage) {
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
+        }
     }
 
     /**
      * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager]. See [getRemoteItem]
      * for more details.
      *
-     * IMPORTANT: There is no need to check [isLoadingMore] before calling this function. `ListStore` will do
-     * that with some extra logic for handling edge cases.
+     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
      */
     private fun loadMore() {
-        dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
+        if (isLoadingMore) {
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
+        }
     }
 
     /**
