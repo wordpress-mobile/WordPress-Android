@@ -51,6 +51,9 @@ class ListSqlUtilsTest {
         assertNotEquals(insertedList.lastModified, updatedList.lastModified)
     }
 
+    /**
+     * Inserts several different lists to test different combinations for [ListDescriptor]
+     */
     @Test
     fun testInsertSeveralDifferentLists() {
         insertOrUpdateAndThenAssertList(ListDescriptor(POST))
