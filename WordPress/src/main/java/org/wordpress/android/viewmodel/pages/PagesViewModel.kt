@@ -134,24 +134,20 @@ class PagesViewModel
     }
 
     private suspend fun refreshPages(state: PageListState = REFRESHING) {
-        updateListState(state)
+        _listState.setOnUi(state)
 
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            updateListState(ERROR)
+            _listState.setOnUi(ERROR)
             _showSnackbarMessage.postValue(
                     SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
             AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
 
-            updateListState(DONE)
+            _listState.setOnUi(DONE)
             _refreshPages.asyncCall()
         }
-    }
-
-    private suspend fun updateListState(newState: PageListState) = withContext(uiContext) {
-        _listState.value = newState
     }
 
     fun onPageEditFinished(pageId: Long) {
@@ -353,5 +349,9 @@ class PagesViewModel
                 }
             }
         }
+    }
+
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
+        this.value = value
     }
 }
