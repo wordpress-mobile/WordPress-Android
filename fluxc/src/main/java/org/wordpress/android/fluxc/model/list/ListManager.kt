@@ -52,9 +52,9 @@ class ListManager<T>(
         }
         val listItemModel = items[position]
         val remoteItemId = listItemModel.remoteItemId
-        val item = dataSource.getItem(remoteItemId)
+        val item = dataSource.getItem(listDescriptor, remoteItemId)
         if (item == null && shouldFetchIfNull) {
-            dataSource.fetchItem(remoteItemId)
+            dataSource.fetchItem(listDescriptor, remoteItemId)
         }
         return item
     }
