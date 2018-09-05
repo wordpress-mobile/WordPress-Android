@@ -212,8 +212,8 @@ class ListManagerTest {
         `when`(dataSource.getItem(listDescriptor, remoteItemId)).thenReturn(remoteItem)
         val listManager = ListManager(dispatcher, listDescriptor, listItems, dataSource, loadMoreOffset,
                 isFetchingFirstPage, isLoadingMore)
-        assertEquals(listManager.isFetchingFirstPage, isFetchingFirstPage)
-        assertEquals(listManager.isLoadingMore, isLoadingMore)
+        assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
+        assertEquals(isLoadingMore, listManager.isLoadingMore)
         assertEquals(numberOfItems, listManager.size)
         return listManager
     }
