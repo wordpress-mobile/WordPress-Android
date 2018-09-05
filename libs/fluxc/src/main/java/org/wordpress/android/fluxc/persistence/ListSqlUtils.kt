@@ -18,8 +18,6 @@ class ListSqlUtils @Inject constructor() {
      *
      * If there is an existing record, only the [ListModel.lastModified] and [ListModel.stateDbValue] will be updated.
      * If there is no existing record, a new [ListModel] will be created for [listDescriptor].
-     *
-     * The current [Date] will be assigned to both [ListModel.dateCreated] and [ListModel.lastModified].
      */
     fun insertOrUpdateList(
         listDescriptor: ListDescriptor,
@@ -42,7 +40,6 @@ class ListSqlUtils @Inject constructor() {
                     }.execute()
         } else {
             listModel.setListDescriptor(listDescriptor)
-            listModel.dateCreated = now
             WellSql.insert(listModel).execute()
         }
     }
