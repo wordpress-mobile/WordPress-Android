@@ -21,8 +21,8 @@ data class FormattableContent(
 )
 
 data class FormattableMedia(
-    @SerializedName("height") val height: Int? = null,
-    @SerializedName("width") val width: Int? = null,
+    @SerializedName("height") val height: String? = null,
+    @SerializedName("width") val width: String? = null,
     @SerializedName("type") val type: String? = null,
     @SerializedName("url") val url: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
