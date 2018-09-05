@@ -95,7 +95,7 @@ class ListManagerTest {
                 remoteItem = null
         )
         listManager.getRemoteItem(indexToGet, shouldFetchIfNull = true)
-        verify(dataSource).fetchItem(remoteItemId)
+        verify(dataSource).fetchItem(listDescriptor, remoteItemId)
     }
 
     /**
@@ -114,7 +114,7 @@ class ListManagerTest {
                 remoteItem = null
         )
         listManager.getRemoteItem(indexToGet, shouldFetchIfNull = false)
-        verify(dataSource, never()).fetchItem(remoteItemId)
+        verify(dataSource, never()).fetchItem(listDescriptor, remoteItemId)
     }
 
     /**
@@ -209,7 +209,7 @@ class ListManagerTest {
 
         `when`(listItems.size).thenReturn(numberOfItems)
         `when`(listItems[indexToGet]).thenReturn(listItemModel)
-        `when`(dataSource.getItem(remoteItemId)).thenReturn(remoteItem)
+        `when`(dataSource.getItem(listDescriptor, remoteItemId)).thenReturn(remoteItem)
         val listManager = ListManager(dispatcher, listDescriptor, listItems, dataSource, loadMoreOffset,
                 isFetchingFirstPage, isLoadingMore)
         assertEquals(listManager.isFetchingFirstPage, isFetchingFirstPage)
