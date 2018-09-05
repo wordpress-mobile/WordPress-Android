@@ -4,18 +4,17 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -28,12 +27,13 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import javax.inject.Inject
+import javax.inject.Named
 
 class ActivityLogViewModel @Inject constructor(
-    private val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    @param:Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -74,7 +74,7 @@ class ActivityLogViewModel @Inject constructor(
                 eventListStatus.value == ActivityLogListStatus.FETCHING
 
     private val isRewindProgressItemShown: Boolean
-        get() = _events.value?.getOrNull(0) is ActivityLogListItem.Progress
+        get() = _events.value?.containsProgressItem() == true
 
     private val isDone: Boolean
         get() = eventListStatus.value == DONE
@@ -100,10 +100,6 @@ class ActivityLogViewModel @Inject constructor(
 
     lateinit var site: SiteModel
 
-    init {
-        dispatcher.register(this)
-    }
-
     fun start(site: SiteModel) {
         if (isStarted) {
             return
@@ -124,8 +120,6 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        dispatcher.unregister(this)
-
         rewindStatusService.rewindAvailable.removeObserver(rewindAvailableObserver)
         rewindStatusService.rewindProgress.removeObserver(rewindProgressObserver)
         rewindStatusService.stop()
@@ -139,13 +133,13 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onItemClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
-            _showItemDetail.postValue(item)
+            _showItemDetail.value = item
         }
     }
 
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
-            _showRewindDialog.postValue(item)
+            _showRewindDialog.value = item
         }
     }
 
@@ -164,7 +158,6 @@ class ActivityLogViewModel @Inject constructor(
             reloadEvents(true, true)
         } else if (status != RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
-            showRewindFinishedMessage()
         }
     }
 
@@ -175,11 +168,13 @@ class ActivityLogViewModel @Inject constructor(
     ) {
         val eventList = activityLogStore.getActivityLogForSite(site, false)
         val items = mutableListOf<ActivityLogListItem>()
+        var moveToTop = false
+        val rewindFinished = isRewindProgressItemShown && !displayProgressItem
         if (displayProgressItem) {
             val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
             items.add(Header(resourceProvider.getString(string.now)))
             items.add(getRewindProgressItem(activityLogModel))
-            moveToTop()
+            moveToTop = eventListStatus.value != LOADING_MORE
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(model, disableActions)
@@ -194,13 +189,17 @@ class ActivityLogViewModel @Inject constructor(
         }
         areActionsEnabled = !disableActions
 
-        _events.postValue(items)
+        _events.value = items
+        if (moveToTop) {
+            _moveToTop.call()
+        }
+        if (rewindFinished) {
+            showRewindFinishedMessage()
+        }
     }
 
-    private fun moveToTop() {
-        if (eventListStatus.value != LOADING_MORE) {
-            _moveToTop.asyncCall()
-        }
+    private fun List<ActivityLogListItem>.containsProgressItem(): Boolean {
+        return this.find { it is ActivityLogListItem.Progress } != null
     }
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
@@ -216,9 +215,12 @@ class ActivityLogViewModel @Inject constructor(
     private fun requestEventsUpdate(isLoadingMore: Boolean) {
         if (canRequestEventsUpdate(isLoadingMore)) {
             val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
-            _eventListStatus.postValue(newStatus)
+            _eventListStatus.value = newStatus
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
-            dispatcher.dispatch(ActivityLogActionBuilder.newFetchActivitiesAction(payload))
+            launch(uiContext) {
+                val result = activityLogStore.fetchActivities(payload)
+                onActivityLogFetched(result, isLoadingMore)
+            }
         }
     }
 
@@ -233,10 +235,11 @@ class ActivityLogViewModel @Inject constructor(
     private fun showRewindStartedMessage() {
         rewindStatusService.rewindingActivity?.let {
             val event = Event(it)
-            _showSnackbarMessage.postValue(
-                    resourceProvider.getString(string.activity_log_rewind_started_snackbar_message,
-                            event.formattedDate,
-                            event.formattedTime))
+            _showSnackbarMessage.value = resourceProvider.getString(
+                    string.activity_log_rewind_started_snackbar_message,
+                    event.formattedDate,
+                    event.formattedTime
+            )
         }
     }
 
@@ -244,23 +247,19 @@ class ActivityLogViewModel @Inject constructor(
         val item = rewindStatusService.rewindingActivity
         if (item != null) {
             val event = Event(item)
-            _showSnackbarMessage.postValue(
+            _showSnackbarMessage.value =
                     resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message,
                             event.formattedDate,
-                            event.formattedTime))
+                            event.formattedTime)
         } else {
-            _showSnackbarMessage.postValue(
-                    resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message_no_dates))
+            _showSnackbarMessage.value =
+                    resourceProvider.getString(string.activity_log_rewind_finished_snackbar_message_no_dates)
         }
     }
 
-    // Network Callbacks
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onEventsUpdated(event: OnActivityLogFetched) {
+    private fun onActivityLogFetched(event: OnActivityLogFetched, loadingMore: Boolean) {
         if (event.isError) {
-            _eventListStatus.postValue(ActivityLogListStatus.ERROR)
+            _eventListStatus.value = ActivityLogListStatus.ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
             return
         }
@@ -271,14 +270,16 @@ class ActivityLogViewModel @Inject constructor(
                     rewindStatusService.isRewindInProgress,
                     !event.canLoadMore
             )
+            if (!loadingMore) {
+                moveToTop.call()
+            }
             rewindStatusService.requestStatusUpdate()
-            moveToTop()
         }
 
         if (event.canLoadMore) {
-            _eventListStatus.postValue(ActivityLogListStatus.CAN_LOAD_MORE)
+            _eventListStatus.value = ActivityLogListStatus.CAN_LOAD_MORE
         } else {
-            _eventListStatus.postValue(ActivityLogListStatus.DONE)
+            _eventListStatus.value = ActivityLogListStatus.DONE
         }
     }
 }
