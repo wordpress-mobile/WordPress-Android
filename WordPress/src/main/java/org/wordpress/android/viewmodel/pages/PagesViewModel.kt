@@ -274,6 +274,8 @@ class PagesViewModel
                 pageStore.deletePageFromServer(page)
                 refreshPages()
 
+                onSearch(lastSearchQuery)
+
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
             } else {
