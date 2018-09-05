@@ -23,6 +23,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 const val LIST_STATE_TIMEOUT = 60 * 1000 // 1 minute
+const val DEFAULT_LOAD_MORE_OFFSET = 10 // When we should load more data for a list
 
 @Singleton
 class ListStore @Inject constructor(
@@ -45,7 +46,11 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    fun <T> getListManager(listDescriptor: ListDescriptor, dataSource: ListItemDataSource<T>): ListManager<T> {
+    fun <T> getListManager(
+        listDescriptor: ListDescriptor,
+        dataSource: ListItemDataSource<T>,
+        loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
+    ): ListManager<T> {
         val listModel = getListModel(listDescriptor)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
@@ -55,6 +60,7 @@ class ListStore @Inject constructor(
                 listDescriptor,
                 listItems,
                 dataSource,
+                DEFAULT_LOAD_MORE_OFFSET,
                 listModel?.isFetchingFirstPage() ?: false,
                 listModel?.isLoadingMore() ?: false
         )
