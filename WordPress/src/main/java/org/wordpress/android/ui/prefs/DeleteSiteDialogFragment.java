@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -84,7 +83,10 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Fragment target = getTargetFragment();
+                // TODO: android.app.Fragment  is deprecated since Android P.
+                // Needs to be replaced with android.support.v4.app.Fragment
+                // See https://developer.android.com/reference/android/app/Fragment
+                android.app.Fragment target = getTargetFragment();
                 if (target != null) {
                     target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
                 }
