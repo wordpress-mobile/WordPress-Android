@@ -66,7 +66,7 @@ data class FormattableRange(
     @SerializedName("value") val value: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
-    val rangeType by lazy { FormattableRangeType.fromString(type) }
+    val rangeType = FormattableRangeType.fromString(type)
 }
 
 enum class FormattableRangeType {
