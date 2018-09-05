@@ -4,8 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -48,7 +49,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
-import kotlin.coroutines.experimental.CoroutineContext
+import javax.inject.Named
 
 class PagesViewModel
 @Inject constructor(
@@ -56,7 +57,7 @@ class PagesViewModel
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val uploadUtil: PageUploadUtil,
-    private val uiCoroutineContext: CoroutineContext = UI
+    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -149,7 +150,7 @@ class PagesViewModel
         }
     }
 
-    private suspend fun updateListState(newState: PageListState) = withContext(uiCoroutineContext) {
+    private suspend fun updateListState(newState: PageListState) = withContext(uiContext) {
         _listState.value = newState
     }
 
