@@ -15,6 +15,8 @@ data class FormattableContent(
     @SerializedName("media") val media: List<FormattableMedia>? = null,
     @SerializedName("meta") val meta: FormattableMeta? = null,
     @SerializedName("text") val text: String? = null,
+    @SerializedName("type") val type: String? = null,
+    @SerializedName("nest_level") val nestLevel: Int? = null,
     @SerializedName("ranges") val ranges: List<FormattableRange>? = null
 )
 
@@ -66,7 +68,7 @@ data class FormattableRange(
     @SerializedName("value") val value: String? = null,
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
-    val rangeType = FormattableRangeType.fromString(type)
+    fun rangeType() = FormattableRangeType.fromString(type)
 }
 
 enum class FormattableRangeType {
