@@ -29,6 +29,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FET
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.test
 import java.util.Date
+import kotlin.coroutines.experimental.coroutineContext
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest {
@@ -41,13 +42,11 @@ class PagesViewModelTest {
     @Mock lateinit var uploadUtil: PageUploadUtil
     @Mock lateinit var dispatcher: Dispatcher
     private lateinit var viewModel: PagesViewModel
-    @Before
-    fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil)
-    }
 
     @Test
     fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, coroutineContext)
+
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(
                 PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
         )
@@ -68,6 +67,8 @@ class PagesViewModelTest {
 
     @Test
     fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, coroutineContext)
+
         initSearch()
         whenever(resourceProvider.getString(string.pages_drafts)).thenReturn("Drafts")
         val query = "query"
@@ -87,6 +88,8 @@ class PagesViewModelTest {
 
     @Test
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, coroutineContext)
+
         initSearch()
         val query = "query"
         val pageItems = listOf(Empty(string.pages_empty_search_result, true))
@@ -103,6 +106,8 @@ class PagesViewModelTest {
 
     @Test
     fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, coroutineContext)
+
         initSearch()
         val query = ""
         val pageItems = listOf(Empty(string.pages_search_suggestion, true))
@@ -118,6 +123,8 @@ class PagesViewModelTest {
 
     @Test
     fun onSiteWithoutPages() = runBlocking<Unit> {
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, coroutineContext)
+
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
         val listStateObserver = viewModel.listState.test()

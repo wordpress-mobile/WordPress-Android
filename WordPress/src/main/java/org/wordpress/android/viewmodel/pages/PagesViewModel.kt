@@ -48,13 +48,15 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import javax.inject.Inject
+import kotlin.coroutines.experimental.CoroutineContext
 
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    private val uploadUtil: PageUploadUtil
+    private val uploadUtil: PageUploadUtil,
+    private val uiCoroutineContext: CoroutineContext = UI
 ) : ViewModel() {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -147,7 +149,7 @@ class PagesViewModel
         }
     }
 
-    private suspend fun updateListState(newState: PageListState) = withContext(UI) {
+    private suspend fun updateListState(newState: PageListState) = withContext(uiCoroutineContext) {
         _listState.value = newState
     }
 
