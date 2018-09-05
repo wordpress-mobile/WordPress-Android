@@ -100,7 +100,7 @@ class FormattableContentMapperTest {
         assertEquals("This site was created by Author", formattableContent.text)
         assertEquals(1, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
-            assertEquals(FormattableRangeType.USER, this.rangeType)
+            assertEquals(FormattableRangeType.USER, this.rangeType())
             assertEquals(123, this.siteId)
             assertEquals(111, this.id)
             assertEquals(url, this.url)
@@ -114,7 +114,7 @@ class FormattableContentMapperTest {
         assertEquals("Comment text", formattableContent.text)
         assertEquals(2, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
-            assertEquals(FormattableRangeType.UNKNOWN, this.rangeType)
+            assertEquals(FormattableRangeType.UNKNOWN, this.rangeType())
             assertEquals(123, this.siteId)
             assertEquals(111, this.id)
             assertEquals(url, this.url)
