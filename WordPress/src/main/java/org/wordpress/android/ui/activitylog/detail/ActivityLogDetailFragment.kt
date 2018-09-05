@@ -41,7 +41,7 @@ class ActivityLogDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.let {
+        activity?.let { it ->
             viewModel = ViewModelProviders.of(it, viewModelFactory)
                     .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
 
@@ -71,7 +71,9 @@ class ActivityLogDetailFragment : Fragment() {
                 activityCreatedDate.text = activityLogModel?.createdDate
                 activityCreatedTime.text = activityLogModel?.createdTime
 
-                activityRewindButton.setOnClickListener(activityLogModel?.rewindAction)
+                activityRewindButton.setOnClickListener{
+                    activityLogModel?.onClick()
+                }
             })
 
             viewModel.rewindAvailable.observe(this, Observer { available ->

@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -26,7 +27,8 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService
+    private val rewindStatusService: RewindStatusService,
+    private val notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -72,12 +74,12 @@ class ActivityLogDetailViewModel
                                         isRewindButtonVisible = it.rewindable ?: false,
                                         actorName = it.actor?.displayName,
                                         actorRole = it.actor?.role,
-                                        text = it.content?.text,
+                                        content = it.content?.apply { notificationsUtilsWrapper.getSpannableContentForRanges(it, ) },
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
                                         createdTime = it.published.printTime(),
                                         rewindAction = it.rewindID?.let {
-                                            { this.onRewindClicked() }
+                                            { model: ActivityLogDetailModel -> this.onRewindClicked(model) }
                                         } ?: {
                                             AppLog.e(
                                                     ACTIVITY_LOG,
@@ -95,8 +97,8 @@ class ActivityLogDetailViewModel
         rewindStatusService.stop()
     }
 
-    private fun onRewindClicked() {
-        _item.value?.let { _showRewindDialog.postValue(it) }
+    private fun onRewindClicked(model: ActivityLogDetailModel) {
+        _showRewindDialog.postValue(model)
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
