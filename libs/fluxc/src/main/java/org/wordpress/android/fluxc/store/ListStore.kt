@@ -52,6 +52,7 @@ class ListStore @Inject constructor(
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> {
         val listModel = getListModel(listDescriptor)
+        val isStateOutdated = listModel != null && isListStateOutdated(listModel)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
@@ -60,9 +61,9 @@ class ListStore @Inject constructor(
                 listDescriptor,
                 listItems,
                 dataSource,
-                DEFAULT_LOAD_MORE_OFFSET,
-                listModel?.isFetchingFirstPage() ?: false,
-                listModel?.isLoadingMore() ?: false
+                loadMoreOffset,
+                if (isStateOutdated) listModel?.isFetchingFirstPage() ?: false else false,
+                if (isStateOutdated) listModel?.isLoadingMore() ?: false else false
         )
     }
 
