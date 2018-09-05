@@ -17,12 +17,9 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DateTimeUtils
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val LIST_STATE_TIMEOUT = 60 * 1000 // 1 minute
 const val DEFAULT_LOAD_MORE_OFFSET = 10 // When we should load more data for a list
 
 @Singleton
@@ -52,7 +49,6 @@ class ListStore @Inject constructor(
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> {
         val listModel = getListModel(listDescriptor)
-        val isStateOutdated = listModel != null && isListStateOutdated(listModel)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
@@ -62,15 +58,12 @@ class ListStore @Inject constructor(
                 listItems,
                 dataSource,
                 loadMoreOffset,
-                if (isStateOutdated) listModel?.isFetchingFirstPage() ?: false else false,
-                if (isStateOutdated) listModel?.isLoadingMore() ?: false else false
+                listModel?.isFetchingFirstPage() ?: false,
+                listModel?.isLoadingMore() ?: false
         )
     }
 
     private fun fetchList(payload: FetchListPayload) {
-        val listModel = getListModel(payload.listDescriptor)
-        if (!shouldFetch(listModel, payload.loadMore)) return
-
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(payload.listDescriptor, null))
@@ -116,27 +109,6 @@ class ListStore @Inject constructor(
         getListModel(listDescriptor)?.let {
             listItemSqlUtils.deleteItems(it.id)
         }
-    }
-
-    private fun shouldFetch(listModel: ListModel?, loadMore: Boolean): Boolean =
-            (loadMore && shouldLoadMore(listModel)) || (!loadMore && shouldFetchFirstPage(listModel))
-
-    private fun shouldFetchFirstPage(listModel: ListModel?): Boolean =
-            listModel == null || isListStateOutdated(listModel) || !listModel.isFetchingFirstPage()
-
-    private fun shouldLoadMore(listModel: ListModel?): Boolean = listModel?.canLoadMore() ?: false
-
-    private fun isListStateOutdated(listModel: ListModel): Boolean {
-        /**
-         * If certain amount of time passed since the state last updated, we should always fetch the first page.
-         * For example, consider the case where we are fetching the first page of a list and the user closes the app.
-         * Since we keep the state in the DB, it'll preserve it until the next session even though there is not
-         * actually any request going on. This kind of check prevents such cases and also makes sure that we have
-         * proper timeout.
-         */
-        val lastModified = DateTimeUtils.dateUTCFromIso8601(listModel.lastModified)
-        val timePassed = (Date().time - lastModified.time)
-        return timePassed > LIST_STATE_TIMEOUT
     }
 
     class OnListChanged(
