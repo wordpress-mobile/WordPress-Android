@@ -95,6 +95,49 @@ platform :android do
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
   end
+
+  #####################################################################################
+  # rebuild_screenshot_devices
+  # -----------------------------------------------------------------------------------
+  # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
+  # this action will overwrite the following emulators:
+  #     - fastlane_screenshots_phone
+  #     - fastlane_screenshots_seven_inch
+  #     - fastlane_screenshots_ten_inch
+  # It will not overwrite any other devices.
+  #
+  # It will also create hardware profiles that match the screenshot sizes used.  Running
+  # this script will overwrite those hardware profiles if they already exist.
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane rebuild_screenshot_devices
+  #
+  # Example:
+  # fastlane rebuild_screenshot_devices
+  #####################################################################################
+  desc "Rebuild screenshot devices"
+  lane :rebuild_screenshot_devices do |options|
+
+    devices = [
+        Dir.pwd + "/devices/phone.xml",
+        Dir.pwd + "/devices/tablet-7.xml",
+        Dir.pwd + "/devices/tablet-10.xml",
+    ]
+
+    emulators = [
+        Dir.pwd + "/emulators/fastlane_screenshots_phone.ini",
+        Dir.pwd + "/emulators/fastlane_screenshots_seven_inch.ini",
+        Dir.pwd + "/emulators/fastlane_screenshots_ten_inch.ini",
+    ]
+
+    devices.each do |device_configuration|
+        sh("helpers/register-hardware-profile.sh '#{device_configuration}'")
+    end
+
+    emulators.each do |emulator_configuration|
+        sh("helpers/copy-device.sh '#{emulator_configuration}'")
+    end
+  end
 end
 #####################################################################################
 # update_ps_strings 
