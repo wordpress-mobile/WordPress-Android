@@ -25,7 +25,6 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
-import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
@@ -74,7 +73,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Inject ImageManager mImageManager;
     @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
-    @Inject FormattableContentMapper mFormattableContentMapper;
     @Inject FormattableContentUtils mFormattableContentUtils;
 
     public NotificationsDetailListFragment() {
@@ -338,19 +336,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
                 ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
-                JSONArray headerArray = mNote.getHeader();
-                List<FormattableContent> headersList = new ArrayList<>(headerArray.length());
-                for (int i = 0; i < headerArray.length(); i++) {
-                    try {
-                        headersList.add(mFormattableContentMapper.mapToFormattableContent(
-                                headerArray.getJSONObject(i).toString()));
-                    } catch (JSONException e) {
-                        AppLog.e(T.NOTIFS, "Header array has invalid format.");
-                    }
-                }
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
-                        headersList,
+                        transformToFormattableContentList(mNote.getHeader()),
                         imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
@@ -368,8 +356,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i = 0; i < bodyArray.length(); i++) {
                     try {
-                        FormattableContent noteObject = mFormattableContentMapper
-                                .mapToFormattableContent(bodyArray.getJSONObject(i).toString());
+                        FormattableContent noteObject = mNotificationsUtilsWrapper
+                                .mapJsonToFormattablbeContent(bodyArray.getJSONObject(i));
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
 
@@ -382,8 +370,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 FormattableContent commentTextBlock = null;
                                 // Next item in the bodyArray is comment text
                                 if (i + 1 < bodyArray.length()) {
-                                    commentTextBlock = mFormattableContentMapper
-                                            .mapToFormattableContent(bodyArray.getJSONObject(i + 1).toString());
+                                    commentTextBlock = mNotificationsUtilsWrapper
+                                            .mapJsonToFormattablbeContent(bodyArray.getJSONObject(i + 1));
                                     i++;
                                 }
 
@@ -417,14 +405,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
-                            FormattableContent formattableContent = mFormattableContentMapper
-                                    .mapToFormattableContent(noteObject.toString());
-
                             noteBlock = new FooterNoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
                                     mFormattableContentUtils, mOnNoteBlockTextClickListener);
-                            if (formattableContent.getRanges() != null && formattableContent.getRanges().size() > 0) {
+                            if (noteObject.getRanges() != null && noteObject.getRanges().size() > 0) {
                                 FormattableRange range =
-                                        formattableContent.getRanges().get(formattableContent.getRanges().size() - 1);
+                                        noteObject.getRanges().get(noteObject.getRanges().size() - 1);
                                 ((FooterNoteBlock) noteBlock).setClickableSpan(range, mNote.getType());
                             }
                         } else {
@@ -463,6 +448,21 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             return noteList;
+        }
+
+        @NonNull private List<FormattableContent> transformToFormattableContentList(JSONArray headerArray) {
+            List<FormattableContent> headersList = new ArrayList<>();
+            if (headerArray != null) {
+                for (int i = 0; i < headerArray.length(); i++) {
+                    try {
+                        headersList.add(mNotificationsUtilsWrapper.mapJsonToFormattablbeContent(
+                                headerArray.getJSONObject(i)));
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Header array has invalid format.");
+                    }
+                }
+            }
+            return headersList;
         }
 
         private boolean isPingback(Note note) {
@@ -528,8 +528,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         if (mNote.isCommentType()) {
-            Long commentReplyId = blockObject.getRanges() != null && blockObject.getRanges().size() >= 2
-                    ? blockObject.getRanges().get(1).getId() : 0L;
+            Long commentReplyId = mFormattableContentUtils.getRangeIdOrZero(blockObject, 1);
             // Check if this is a comment notification that has been replied to
             // The block will not have a type, and its id will match the comment reply id in the Note.
             return (blockObject.getType() == null

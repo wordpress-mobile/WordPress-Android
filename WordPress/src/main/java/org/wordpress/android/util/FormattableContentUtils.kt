@@ -8,38 +8,38 @@ import javax.inject.Singleton
 
 @Singleton
 class FormattableContentUtils @Inject constructor() {
-    fun getTextOrEmpty(header: FormattableContent?): String {
-        return header?.text ?: ""
+    fun getTextOrEmpty(content: FormattableContent?): String {
+        return content?.text ?: ""
     }
 
-    fun getRangeSiteIdOrZero(header: FormattableContent?, rangeIndex: Int): Long {
-        val range = getRangeOrNull(header, rangeIndex)
+    fun getRangeSiteIdOrZero(content: FormattableContent?, rangeIndex: Int): Long {
+        val range = getRangeOrNull(content, rangeIndex)
         return range?.siteId ?: 0L
     }
 
-    fun getRangeIdOrZero(header: FormattableContent?, rangeIndex: Int): Long {
-        val range = getRangeOrNull(header, rangeIndex)
+    fun getRangeIdOrZero(content: FormattableContent?, rangeIndex: Int): Long {
+        val range = getRangeOrNull(content, rangeIndex)
         return range?.id ?: 0L
     }
 
-    fun getRangeUrlOrEmpty(header: FormattableContent?, rangeIndex: Int): String {
-        val range = getRangeOrNull(header, rangeIndex)
+    fun getRangeUrlOrEmpty(content: FormattableContent?, rangeIndex: Int): String {
+        val range = getRangeOrNull(content, rangeIndex)
         return range?.url ?: ""
     }
 
-    fun getRangeOrNull(header: FormattableContent?, rangeIndex: Int): FormattableRange? {
-        return header?.ranges?.let {
+    fun getRangeOrNull(content: FormattableContent?, rangeIndex: Int): FormattableRange? {
+        return content?.ranges?.let {
             return if (rangeIndex < it.size) it[rangeIndex] else null
         }
     }
 
-    fun getMediaUrlOrEmpty(header: FormattableContent?, mediaIndex: Int): String {
-        val media = getMediaOrNull(header, mediaIndex)
+    fun getMediaUrlOrEmpty(content: FormattableContent?, mediaIndex: Int): String {
+        val media = getMediaOrNull(content, mediaIndex)
         return media?.url ?: ""
     }
 
-    fun getMediaOrNull(header: FormattableContent?, mediaIndex: Int): FormattableMedia? {
-        return header?.media?.let {
+    fun getMediaOrNull(content: FormattableContent?, mediaIndex: Int): FormattableMedia? {
+        return content?.media?.let {
             return if (mediaIndex < it.size) it[mediaIndex] else null
         }
     }

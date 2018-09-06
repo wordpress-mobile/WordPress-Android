@@ -50,5 +50,5 @@ class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper
             textView, onNoteBlockTextClickListener, isFooter)
 
     fun mapJsonToFormattablbeContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
-            .mapJsonToFormattablbeContent(formattableContentMapper, blockObject)
+            .mapJsonToFormattableContent(formattableContentMapper, blockObject)
 }

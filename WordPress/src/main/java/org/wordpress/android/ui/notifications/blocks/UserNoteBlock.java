@@ -147,11 +147,11 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     String getUserUrl() {
-        return getMetaSiteUrl();
+        return mFormattableContentUtils.getMetaLinksHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTitle() {
-        return getMetaHomeTitle();
+        return mFormattableContentUtils.getMetaTitlesHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTagline() {

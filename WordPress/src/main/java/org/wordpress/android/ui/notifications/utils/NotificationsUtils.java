@@ -166,7 +166,7 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
-    static FormattableContent mapJsonToFormattablbeContent(FormattableContentMapper mapper, JSONObject blockObject) {
+    static FormattableContent mapJsonToFormattableContent(FormattableContentMapper mapper, JSONObject blockObject) {
         return mapper.mapToFormattableContent(blockObject.toString());
     }
 
@@ -175,7 +175,7 @@ public class NotificationsUtils {
             JSONObject blockObject, TextView textView,
             final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             boolean isFooter) {
-        return getSpannableContentForRanges(formattableContentMapper.mapToFormattableContent(blockObject.toString()),
+        return getSpannableContentForRanges(mapJsonToFormattableContent(formattableContentMapper, blockObject),
                 textView, onNoteBlockTextClickListener, isFooter);
     }
 

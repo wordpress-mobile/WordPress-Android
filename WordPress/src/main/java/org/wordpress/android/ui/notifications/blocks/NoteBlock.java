@@ -91,12 +91,7 @@ public class NoteBlock {
     }
 
     long getMetaSiteId() {
-        long siteId = mFormattableContentUtils.getMetaIdsSiteIdOrZero(mNoteData);
-        if (siteId == 0) {
-            return -1;
-        } else {
-            return siteId;
-        }
+        return mFormattableContentUtils.getMetaIdsSiteIdOrZero(mNoteData);
     }
 
     public String getMetaSiteUrl() {
@@ -133,12 +128,15 @@ public class NoteBlock {
 
     boolean hasImageMediaItem() {
         return hasMediaArray()
+               && getNoteMediaItem() != null
+               && !TextUtils.isEmpty(getNoteMediaItem().getType())
                && (getNoteMediaItem().getType().startsWith("image") || getNoteMediaItem().getType().equals("badge"))
                && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
     }
 
     private boolean hasVideoMediaItem() {
         return hasMediaArray()
+               && getNoteMediaItem() != null
                && !TextUtils.isEmpty(getNoteMediaItem().getType())
                && getNoteMediaItem().getType().startsWith("video")
                && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
