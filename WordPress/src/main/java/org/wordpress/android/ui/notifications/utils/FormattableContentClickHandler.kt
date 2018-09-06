@@ -88,7 +88,11 @@ class FormattableContentClickHandler
         showStatsActivityForSite(activity, site, rangeType)
     }
 
-    private fun showStatsActivityForSite(activity: FragmentActivity, site: SiteModel, rangeType: FormattableRangeType) {
+    private fun showStatsActivityForSite(
+        activity: FragmentActivity,
+        site: SiteModel,
+        rangeType: FormattableRangeType
+    ) {
         if (rangeType == FormattableRangeType.FOLLOW) {
             val intent = Intent(activity, StatsViewAllActivity::class.java)
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS)
@@ -97,7 +101,10 @@ class FormattableContentClickHandler
             intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true)
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.id)
 
-            intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, activity.getString(R.string.stats_view_followers))
+            intent.putExtra(
+                    StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE,
+                    activity.getString(R.string.stats_view_followers)
+            )
             activity.startActivity(intent)
         } else {
             ActivityLauncher.viewBlogStats(activity, site)
