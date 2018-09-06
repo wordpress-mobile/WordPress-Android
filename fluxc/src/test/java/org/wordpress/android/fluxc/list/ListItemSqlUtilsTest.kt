@@ -13,7 +13,6 @@ import org.wordpress.android.fluxc.model.list.ListType.POST
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
-import java.util.Random
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -97,14 +96,15 @@ class ListItemSqlUtilsTest {
     @Test
     fun testDeleteItemsFromLists() {
         /**
-         * 1. Create random 20 lists and 300 random items for these lists
+         * 1. Create 20 lists and 300 items for these lists
          * 2. Insert the lists and the items in the DB
          * 3. Verify that they are inserted correctly
          */
-        val rand = Random()
-        val listIds = (1..20)
+        val listIds = (1..20).toList()
         val lists = listIds.map { insertTestList(ListDescriptor(POST, it)) }
-        val items = (1..300L).map { ListItemModel(listId = rand.nextInt(listIds.count()) + 1, remoteItemId = it) }
+        val items = (1..300L).mapIndexed { index, itemId ->
+            ListItemModel(listId = listIds[index % listIds.size], remoteItemId = itemId)
+        }
         listItemSqlUtils.insertItemList(items)
         items.groupBy { it.listId }.forEach { listId, insertedItems ->
             assertEquals(insertedItems.size, listItemSqlUtils.getListItems(listId).size)
@@ -117,8 +117,8 @@ class ListItemSqlUtilsTest {
          * deleted.
          * 4. Verify that the remaining items are unchanged for lists that are not picked to be deleted from.
          */
-        val remoteItemIdsToDelete = items.map { it.remoteItemId }.shuffled().take(100)
-        val listIdsToDeleteFrom = lists.map { it.id }.shuffled().take(10)
+        val remoteItemIdsToDelete = items.map { it.remoteItemId }.take(100)
+        val listIdsToDeleteFrom = lists.map { it.id }.take(10)
         listItemSqlUtils.deleteItemsFromLists(listIdsToDeleteFrom, remoteItemIdsToDelete)
         items.groupBy { it.listId }.forEach { (listId, itemList) ->
             val remainingItems = listItemSqlUtils.getListItems(listId)
