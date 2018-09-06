@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -213,55 +212,6 @@ public class PostRestClient extends BaseWPComRestClient {
         request.addQueryParameter("context", "edit");
 
         request.disableRetries();
-        add(request);
-    }
-
-    public void searchPosts(final SiteModel site, final String searchTerm, final boolean pages, final int offset) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
-
-        Map<String, String> params = new HashMap<>();
-
-        if (pages) {
-            params.put("type", "page");
-        }
-        params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
-        params.put("offset", String.valueOf(offset));
-        params.put("search", searchTerm);
-        params.put("status", "any");
-
-        final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                PostsResponse.class,
-                new Listener<PostsResponse>() {
-                    @Override
-                    public void onResponse(PostsResponse response) {
-                        List<PostModel> postArray = new ArrayList<>();
-                        PostModel post;
-                        for (PostWPComRestResponse postResponse : response.posts) {
-                            post = postResponseToPostModel(postResponse);
-                            post.setLocalSiteId(site.getId());
-                            postArray.add(post);
-                        }
-
-                        boolean loadedMore = offset > 0;
-                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
-                        PostsModel postsModel = new PostsModel(postArray);
-
-                        SearchPostsResponsePayload payload = new SearchPostsResponsePayload(
-                                postsModel, site, searchTerm, pages, loadedMore, canLoadMore);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        PostError postError = new PostError(error.apiError, error.message);
-                        SearchPostsResponsePayload payload =
-                                new SearchPostsResponsePayload(site, searchTerm, pages, postError);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
-                    }
-                }
-        );
-
         add(request);
     }
 
