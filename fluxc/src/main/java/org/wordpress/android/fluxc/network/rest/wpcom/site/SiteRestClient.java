@@ -14,8 +14,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
+import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -37,11 +39,27 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainMappabilityStatus;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartError;
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
+import org.wordpress.android.fluxc.store.SiteStore.PlansError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteError;
@@ -282,6 +300,29 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchPlans(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plans.getUrlV1_3();
+        final WPComGsonRequest<PlansResponse> request =
+                WPComGsonRequest.buildGetRequest(url, null, PlansResponse.class,
+                        new Listener<PlansResponse>() {
+                            @Override
+                            public void onResponse(PlansResponse response) {
+                                List<PlanModel> plans = response.getPlansList();
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedPlansAction(new FetchedPlansPayload(site, plans)));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                PlansError plansError = new PlansError(error.apiError, error.message);
+                                FetchedPlansPayload payload = new FetchedPlansPayload(site, plansError);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedPlansAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
     public void deleteSite(final SiteModel site) {
         String url = WPCOMREST.sites.site(site.getSiteId()).delete.getUrlV1_1();
         WPComGsonRequest<SiteWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -493,6 +534,112 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
+     * payload of type {@link DomainAvailabilityResponsePayload}.
+     *
+     * {@link DomainAvailabilityResponsePayload#isError()} can be used to check the request result.
+     */
+    public void checkDomainAvailability(@NonNull final String domainName) {
+        String url = WPCOMREST.domains.domainName(domainName).is_available.getUrlV1_3();
+        final WPComGsonRequest<DomainAvailabilityResponse> request =
+                WPComGsonRequest.buildGetRequest(url, null, DomainAvailabilityResponse.class,
+                        new Listener<DomainAvailabilityResponse>() {
+                            @Override
+                            public void onResponse(DomainAvailabilityResponse response) {
+                                DomainAvailabilityResponsePayload payload =
+                                        responseToDomainAvailabilityPayload(response);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Domain availability API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                                DomainAvailabilityError domainAvailabilityError = new DomainAvailabilityError(
+                                        DomainAvailabilityErrorType.GENERIC_ERROR, error.message);
+                                DomainAvailabilityResponsePayload payload =
+                                        new DomainAvailabilityResponsePayload(domainAvailabilityError);
+                                mDispatcher.dispatch(SiteActionBuilder.newCheckedDomainAvailabilityAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/supported-states/$countryCode endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_STATES} action is dispatched with a
+     * payload of type {@link DomainSupportedStatesResponsePayload}.
+     *
+     * {@link DomainSupportedStatesResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchSupportedStates(@NonNull final String countryCode) {
+        String url = WPCOMREST.domains.supported_states.countryCode(countryCode).getUrlV1_1();
+        final WPComGsonRequest<List<SupportedStateResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, null,
+                        new TypeToken<ArrayList<SupportedStateResponse>>() {}.getType(),
+                        new Listener<List<SupportedStateResponse>>() {
+                            @Override
+                            public void onResponse(List<SupportedStateResponse> response) {
+                                DomainSupportedStatesResponsePayload payload =
+                                        new DomainSupportedStatesResponsePayload(response);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                DomainSupportedStatesError domainSupportedStatesError = new DomainSupportedStatesError(
+                                        DomainSupportedStatesErrorType.fromString(error.apiError), error.message);
+                                DomainSupportedStatesResponsePayload payload =
+                                        new DomainSupportedStatesResponsePayload(domainSupportedStatesError);
+                                mDispatcher.dispatch(SiteActionBuilder.newFetchedDomainSupportedStatesAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
+    /**
+     * Performs an HTTP GET call to v1.1 /domains/supported-countries/ endpoint. Upon receiving a response
+     * (success or error) a {@link SiteAction#FETCHED_DOMAIN_SUPPORTED_COUNTRIES} action is dispatched with a
+     * payload of type {@link DomainSupportedCountriesResponsePayload}.
+     *
+     * {@link DomainSupportedCountriesResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchSupportedCountries() {
+        String url = WPCOMREST.domains.supported_countries.getUrlV1_1();
+        final WPComGsonRequest<ArrayList<SupportedCountryResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, null,
+                        new TypeToken<ArrayList<SupportedCountryResponse>>() {}.getType(),
+                        new Listener<ArrayList<SupportedCountryResponse>>() {
+                            @Override
+                            public void onResponse(ArrayList<SupportedCountryResponse> response) {
+                                DomainSupportedCountriesResponsePayload payload =
+                                        new DomainSupportedCountriesResponsePayload(response);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                                // Supported Countries API should always return a response for a valid,
+                                // authenticated user. Therefore, only GENERIC_ERROR is identified here.
+                                DomainSupportedCountriesError domainSupportedCountriesError =
+                                        new DomainSupportedCountriesError(
+                                                DomainSupportedCountriesErrorType.GENERIC_ERROR,
+                                                error.message);
+                                DomainSupportedCountriesResponsePayload payload =
+                                        new DomainSupportedCountriesResponsePayload(domainSupportedCountriesError);
+                                mDispatcher.dispatch(
+                                        SiteActionBuilder.newFetchedDomainSupportedCountriesAction(payload));
+                            }
+                        });
+        add(request);
+    }
+
     // Automated Transfers
 
     public void checkAutomatedTransferEligibility(@NonNull final SiteModel site) {
@@ -571,6 +718,34 @@ public class SiteRestClient extends BaseWPComRestClient {
                                         networkError.apiError, networkError.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferStatusAction(
                                         new AutomatedTransferStatusResponsePayload(site, error)));
+                            }
+                        });
+        add(request);
+    }
+
+    public void completeQuickStart(@NonNull final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).mobile_quick_start.getUrlV1_1();
+
+        final WPComGsonRequest<QuickStartCompletedResponse> request = WPComGsonRequest
+                .buildPostRequest(url, null, QuickStartCompletedResponse.class,
+                        new Listener<QuickStartCompletedResponse>() {
+                            @Override
+                            public void onResponse(QuickStartCompletedResponse response) {
+                                mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(
+                                         new QuickStartCompletedResponsePayload(site, response.success)));
+                            }
+                        },
+                        new WPComErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull WPComGsonNetworkError networkError) {
+                                QuickStartError error = new QuickStartError(
+                                        QuickStartErrorType.GENERIC_ERROR, networkError.message);
+
+                                QuickStartCompletedResponsePayload payload =
+                                        new QuickStartCompletedResponsePayload(site, false);
+                                payload.error = error;
+
+                                mDispatcher.dispatch(SiteActionBuilder.newCompletedQuickStartAction(payload));
                             }
                         });
         add(request);
@@ -703,5 +878,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         info.isWPCom = response.isWordPressDotCom; // CHECKSTYLE IGNORE
         info.urlAfterRedirects = response.urlAfterRedirects;
         return info;
+    }
+
+    private DomainAvailabilityResponsePayload responseToDomainAvailabilityPayload(DomainAvailabilityResponse response) {
+        DomainAvailabilityStatus status = DomainAvailabilityStatus.fromString(response.getStatus());
+        DomainMappabilityStatus mappable = DomainMappabilityStatus.fromString(response.getMappable());
+        boolean supportsPrivacy = response.getSupports_privacy();
+        return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
     }
 }

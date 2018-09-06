@@ -162,7 +162,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             default:
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
@@ -410,6 +410,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             if (!TextUtils.isEmpty(post.getPostFormat())) {
                 contentStruct.put("post_format", post.getPostFormat());
             }
+        } else {
+            contentStruct.put("parent", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");

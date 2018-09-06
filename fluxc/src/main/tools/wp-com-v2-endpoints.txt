@@ -6,5 +6,6 @@
 /sites/$site/rewind
 
 /sites/$site/stats/orders/
+/sites/$site/stats/top-earners
 
 /users/username/suggestions/

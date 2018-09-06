@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.action.AuthenticationAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.DomainContactModel;
 import org.wordpress.android.fluxc.model.SubscriptionModel;
 import org.wordpress.android.fluxc.model.SubscriptionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -27,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
@@ -72,17 +75,40 @@ public class AccountStore extends Store {
     }
 
     public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public AuthEmailPayloadScheme scheme;
         public AuthEmailPayloadFlow flow;
         public AuthEmailPayloadSource source;
         public String emailOrUsername;
         public boolean isSignup;
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
-                                AuthEmailPayloadSource source) {
+                                AuthEmailPayloadSource source, AuthEmailPayloadScheme scheme) {
             this.emailOrUsername = emailOrUsername;
             this.isSignup = isSignup;
             this.flow = flow;
             this.source = source;
+            this.scheme = scheme;
+        }
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
+                                AuthEmailPayloadSource source) {
+            this(emailOrUsername, isSignup, flow, source, null);
+        }
+    }
+
+    public enum AuthEmailPayloadScheme {
+        WORDPRESS("wordpress"),
+        WOOCOMMERCE("woocommerce");
+
+        private final String mString;
+
+        AuthEmailPayloadScheme(final String s) {
+            mString = s;
+        }
+
+        @Override
+        public String toString() {
+            return mString;
         }
     }
 
@@ -361,6 +387,15 @@ public class AccountStore extends Store {
         public List<String> suggestions;
     }
 
+    public static class OnDomainContactFetched extends OnChanged<DomainContactError> {
+        @Nullable public DomainContactModel contactModel;
+
+        public OnDomainContactFetched(@Nullable DomainContactModel contactModel, @Nullable DomainContactError error) {
+            this.contactModel = contactModel;
+            this.error = error;
+        }
+    }
+
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
@@ -615,6 +650,20 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class DomainContactError implements OnChangedError {
+        @NonNull public DomainContactErrorType type;
+        @Nullable public String message;
+
+        public DomainContactError(@NonNull DomainContactErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum DomainContactErrorType {
+        GENERIC_ERROR;
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;
@@ -829,6 +878,12 @@ public class AccountStore extends Store {
                 break;
             case UPDATED_SUBSCRIPTION:
                 handleUpdatedSubscription((SubscriptionResponsePayload) payload);
+                break;
+            case FETCH_DOMAIN_CONTACT:
+                mAccountRestClient.fetchDomainContact();
+                break;
+            case FETCHED_DOMAIN_CONTACT:
+                handleFetchedDomainContact((DomainContactPayload) payload);
                 break;
         }
     }
@@ -1197,5 +1252,9 @@ public class AccountStore extends Store {
             event.type = payload.type;
         }
         emitChange(event);
+    }
+
+    private void handleFetchedDomainContact(DomainContactPayload payload) {
+        emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
     }
 }
