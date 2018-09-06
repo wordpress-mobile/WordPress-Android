@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -44,6 +45,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import kotlin.coroutines.experimental.CoroutineContext;
+import kotlinx.coroutines.experimental.CommonPool;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -166,6 +169,22 @@ public class ReleaseNetworkModule {
                                                               WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public JetpackRestClient provideJetpackRestClient(Context appContext, Dispatcher dispatcher,
+                                                      @Named("regular") RequestQueue requestQueue,
+                                                      AccessToken token, UserAgent userAgent,
+                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new JetpackRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public CoroutineContext provideCoroutineContext() {
+        return CommonPool.INSTANCE;
     }
 
     @Singleton
