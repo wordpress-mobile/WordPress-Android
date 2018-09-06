@@ -54,7 +54,7 @@ class PagesViewModelTest {
         )
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
         val listStateObserver = viewModel.listState.test()
-        val refreshPagesObserver = viewModel.refreshPageLists.test()
+        val refreshPagesObserver = viewModel.pages.test()
         val searchResultObserver = viewModel.searchResult.test()
 
         viewModel.start(site)
@@ -122,7 +122,7 @@ class PagesViewModelTest {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
         val listStateObserver = viewModel.listState.test()
-        val refreshPagesObserver = viewModel.refreshPageLists.test()
+        val refreshPagesObserver = viewModel.pages.test()
 
         viewModel.start(site)
 

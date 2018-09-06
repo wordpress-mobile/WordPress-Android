@@ -79,8 +79,8 @@ class PagesViewModel
     private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
     val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
 
-    private val _refreshPageLists = SingleLiveEvent<Unit>()
-    val refreshPageLists: LiveData<Unit> = _refreshPageLists
+    private val _pages = MutableLiveData<List<PageModel>>()
+    val pages: LiveData<List<PageModel>> = _pages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -94,11 +94,14 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pages: MutableMap<Long, PageModel> = mutableMapOf()
-    val pages: Map<Long, PageModel>
+    private var _pageMap: MutableMap<Long, PageModel> = mutableMapOf()
+    private var pageMap: MutableMap<Long, PageModel>
         get() {
-            checkIfNewPageButtonShouldBeVisible()
-            return _pages
+            return _pageMap
+        }
+        set(value) {
+            _pageMap = value
+            _pages.postValue(pageMap.values.toList())
         }
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
@@ -138,9 +141,10 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(CommonPool) {
-        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
+        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
+        refreshPages()
 
-        val loadState = if (_pages.isEmpty()) FETCHING else REFRESHING
+        val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
         reloadPages(loadState)
     }
 
@@ -159,8 +163,7 @@ class PagesViewModel
     }
 
     private suspend fun refreshPages() {
-        _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
-        _refreshPageLists.asyncCall()
+        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
     }
 
     fun onPageEditFinished(pageId: Long) {
@@ -179,7 +182,7 @@ class PagesViewModel
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
         launch {
-            pages[pageId]?.let { page ->
+            pageMap[pageId]?.let { page ->
                 setParent(page, parentId)
             }
         }
@@ -190,8 +193,8 @@ class PagesViewModel
         checkIfNewPageButtonShouldBeVisible()
     }
 
-    private fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = _pages.values.any { it.status == currentPageType }
+    fun checkIfNewPageButtonShouldBeVisible() {
+        val isNotEmpty = pageMap.values.any { it.status == currentPageType }
         _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
@@ -267,8 +270,8 @@ class PagesViewModel
 
     fun onMenuAction(action: Action, page: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pages[page.id])
-            SET_PARENT -> _setPageParent.postValue(pages[page.id])
+            VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
+            SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
             MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
@@ -278,18 +281,18 @@ class PagesViewModel
     }
 
     private fun publishPageNow(remoteId: Long) {
-        pages[remoteId]?.date = Date()
+        pageMap[remoteId]?.date = Date()
         changePageStatus(remoteId, PUBLISHED)
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
         launch {
-            pages[remoteId]?.let { deletePage(it) }
+            pageMap[remoteId]?.let { deletePage(it) }
         }
     }
 
     fun onItemTapped(pageItem: Page) {
-        _editPage.postValue(pages[pageItem.id])
+        _editPage.postValue(pageMap[pageItem.id])
     }
 
     fun onNewPageButtonTapped() {
@@ -308,8 +311,8 @@ class PagesViewModel
         val action = PageAction(UPLOAD) {
             launch(CommonPool) {
                 if (page.parent?.remoteId != parentId) {
-                    page.parent = pages[parentId]
-                    _refreshPageLists.asyncCall()
+                    page.parent = pageMap[parentId]
+                    _pages.postValue(pageMap.values.toList())
 
                     pageStore.uploadPageToServer(page)
                 }
@@ -317,10 +320,12 @@ class PagesViewModel
         }
         action.undo = {
             launch(CommonPool) {
-                page.parent = pages[oldParent]
-                _refreshPageLists.asyncCall()
+                pageMap[page.remoteId]?.let { changed ->
+                    changed.parent = pageMap[oldParent]
+                    _pages.postValue(pageMap.values.toList())
 
-                pageStore.uploadPageToServer(page)
+                    pageStore.uploadPageToServer(changed)
+                }
             }
         }
         action.onSuccess = {
@@ -340,16 +345,19 @@ class PagesViewModel
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
+
         launch {
+            _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
+            _arePageActionsEnabled = true
         }
     }
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(REMOVE) {
             launch(CommonPool) {
-                _pages.remove(page.remoteId)
-                _refreshPageLists.asyncCall()
+                pageMap.remove(page.remoteId)
+                _pages.postValue(pageMap.values.toList())
 
                 checkIfNewPageButtonShouldBeVisible()
 
@@ -381,7 +389,7 @@ class PagesViewModel
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        pages[remoteId]?.let { page ->
+        pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
             val action = PageAction(UPLOAD) {
                 page.status = status
@@ -396,6 +404,7 @@ class PagesViewModel
                 page.status = oldStatus
                 launch(CommonPool) {
                     pageStore.updatePageInDb(page)
+                    onSearch(lastSearchQuery)
                     refreshPages()
 
                     pageStore.uploadPageToServer(page)

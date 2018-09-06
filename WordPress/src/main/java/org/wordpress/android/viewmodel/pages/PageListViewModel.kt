@@ -42,14 +42,13 @@ class PageListViewModel
 
         if (!isStarted) {
             isStarted = true
-            loadPagesAsync()
 
-            pagesViewModel.refreshPageLists.observeForever(refreshPagesObserver)
+            pagesViewModel.pages.observeForever(refreshPagesObserver)
         }
     }
 
     override fun onCleared() {
-        pagesViewModel.refreshPageLists.removeObserver(refreshPagesObserver)
+        pagesViewModel.pages.removeObserver(refreshPagesObserver)
     }
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
@@ -64,12 +63,16 @@ class PageListViewModel
         pagesViewModel.onNewPageButtonTapped()
     }
 
-    private val refreshPagesObserver = Observer<Unit> {
-        loadPagesAsync()
+    private val refreshPagesObserver = Observer<List<PageModel>> { pages ->
+        pages?.let {
+            loadPagesAsync(pages)
+
+            pagesViewModel.checkIfNewPageButtonShouldBeVisible()
+        }
     }
 
-    private fun loadPagesAsync() = launch {
-        val newPages = pagesViewModel.pages.values
+    private fun loadPagesAsync(pages: List<PageModel>) = launch {
+        val newPages = pages
                 .filter { it.status == pageType }
                 .let {
                     when (pageType) {
