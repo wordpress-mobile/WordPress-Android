@@ -67,7 +67,9 @@ class ActivityLogDetailFragment : Fragment() {
                 activityActorName.setTextOrHide(activityLogModel?.actorName)
                 activityActorRole.setTextOrHide(activityLogModel?.actorRole)
 
-                val spannable = activityLogModel?.content?.let { activityLogModel.spannableBuilder(it, activityMessage) }
+                val spannable = activityLogModel?.content?.let {
+                    activityLogModel.spannableBuilder(it, activityMessage)
+                }
 
                 activityMessage.setTextOrHide(spannable)
                 activityType.setTextOrHide(activityLogModel?.summary)
@@ -75,7 +77,7 @@ class ActivityLogDetailFragment : Fragment() {
                 activityCreatedDate.text = activityLogModel?.createdDate
                 activityCreatedTime.text = activityLogModel?.createdTime
 
-                activityRewindButton.setOnClickListener{
+                activityRewindButton.setOnClickListener {
                     activityLogModel?.onClick()
                 }
             })

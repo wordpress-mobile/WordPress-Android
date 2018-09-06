@@ -43,6 +43,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -277,6 +278,11 @@ public class NotificationsUtils {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder
                                 .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+
+                    if (onNoteBlockTextClickListener != null) {
+                        textView.setLinksClickable(true);
+                        textView.setMovementMethod(new NoteBlockLinkMovementMethod());
                     }
                 }
             }
