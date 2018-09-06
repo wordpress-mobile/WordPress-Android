@@ -17,8 +17,9 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -48,7 +49,7 @@ class ActivityLogDetailViewModelTest {
                     wpcomUserID = null
             ),
             type = "Type",
-            text = text,
+            content = FormattableContent(text = text),
             summary = summary,
             gridicon = null,
             name = null,
@@ -136,7 +137,8 @@ class ActivityLogDetailViewModelTest {
     fun emitsNewActivityOnDifferentActivityID() {
         val changedText = "new text"
         val activityID2 = "id2"
-        val secondActivity = activityLogModel.copy(activityID = activityID2, text = changedText)
+        val updatedContent = FormattableContent(text = changedText)
+        val secondActivity = activityLogModel.copy(activityID = activityID2, content = updatedContent)
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
 
         viewModel.start(site, activityID)

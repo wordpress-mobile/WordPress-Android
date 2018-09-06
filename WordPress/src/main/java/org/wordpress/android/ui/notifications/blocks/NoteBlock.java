@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +44,7 @@ public class NoteBlock {
     private final JSONObject mNoteData;
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     protected final ImageManager mImageManager;
+    protected final NotificationsUtilsWrapper mNotificationsUtilsWrapper;
     private JSONObject mMediaItem;
     private boolean mIsBadge;
     private boolean mIsPingback;
@@ -61,10 +62,12 @@ public class NoteBlock {
     }
 
     public NoteBlock(JSONObject noteObject, ImageManager imageManager,
+                     NotificationsUtilsWrapper notificationsUtilsWrapper,
                      OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
         mImageManager = imageManager;
+        mNotificationsUtilsWrapper = notificationsUtilsWrapper;
     }
 
     OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
@@ -80,7 +83,7 @@ public class NoteBlock {
     }
 
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData, null,
                                                                mOnNoteBlockTextClickListener, false);
     }
 

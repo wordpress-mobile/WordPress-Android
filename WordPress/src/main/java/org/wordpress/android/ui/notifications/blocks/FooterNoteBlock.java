@@ -8,7 +8,8 @@ import android.widget.TextView;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -17,11 +18,12 @@ public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
     public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager,
+                           NotificationsUtilsWrapper notificationsUtilsWrapper,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, imageManager, onNoteBlockTextClickListener);
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
     }
 
-    public void setClickableSpan(JSONObject rangeObject, String noteType) {
+    public void setClickableSpan(FormattableRange rangeObject, String noteType) {
         if (rangeObject == null) {
             return;
         }
@@ -83,7 +85,7 @@ public class FooterNoteBlock extends NoteBlock {
 
     @Override
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
                                                                getOnNoteBlockTextClickListener(), true);
     }
 

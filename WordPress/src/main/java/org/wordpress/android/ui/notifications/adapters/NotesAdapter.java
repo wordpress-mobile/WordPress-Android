@@ -14,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -28,6 +30,8 @@ import org.wordpress.android.widgets.NoticonTextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
     private final int mAvatarSz;
@@ -39,7 +43,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final OnLoadMoreListener mOnLoadMoreListener;
     private final ArrayList<Note> mNotes = new ArrayList<>();
     private final ArrayList<Note> mFilteredNotes = new ArrayList<>();
-    private final ImageManager mImageManager;
+    @Inject protected ImageManager mImageManager;
+    @Inject protected NotificationsUtilsWrapper mNotificationsUtilsWrapper;
 
     public enum FILTERS {
         FILTER_ALL, FILTER_LIKE, FILTER_COMMENT, FILTER_UNREAD,
@@ -58,11 +63,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private NotificationsListFragment.OnNoteClickListener mOnNoteClickListener;
 
-    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener,
-                        ImageManager imageManager) {
+    public NotesAdapter(Context context, DataLoadedListener dataLoadedListener, OnLoadMoreListener onLoadMoreListener) {
         super();
-
-        mImageManager = imageManager;
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         mDataLoadedListener = dataLoadedListener;
         mOnLoadMoreListener = onLoadMoreListener;
 
@@ -225,7 +228,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         // Subject is stored in db as html to preserve text formatting
-        CharSequence noteSubjectSpanned = note.getFormattedSubject();
+        CharSequence noteSubjectSpanned = note.getFormattedSubject(mNotificationsUtilsWrapper);
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
         noteViewHolder.mTxtSubject.setText(noteSubjectSpanned);

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -34,8 +35,9 @@ public class UserNoteBlock extends NoteBlock {
             JSONObject noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
-            ImageManager imageManager) {
-        super(noteObject, imageManager, onNoteBlockTextClickListener);
+            ImageManager imageManager,
+            NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
