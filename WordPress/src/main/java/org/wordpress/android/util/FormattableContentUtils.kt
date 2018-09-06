@@ -57,9 +57,7 @@ class FormattableContentUtils @Inject constructor() {
     }
 
     fun getRangeValueOrEmpty(content: FormattableContent?, rangeIndex: Int): String {
-        return if (content?.ranges != null && content.ranges!!.size < rangeIndex) {
-            content.ranges?.get(rangeIndex)?.value ?: ""
-        } else ""
+        return getRangeOrNull(content, rangeIndex)?.value ?: ""
     }
 
     fun getMetaIdsSiteIdOrZero(content: FormattableContent?): Long {
