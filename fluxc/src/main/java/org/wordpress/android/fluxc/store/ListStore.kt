@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
@@ -17,6 +18,8 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DateTimeUtils
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -69,13 +72,13 @@ class ListStore @Inject constructor(
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
         return ListManager(
-                mDispatcher,
-                listDescriptor,
-                listItems,
-                dataSource,
-                loadMoreOffset,
-                listModel?.isFetchingFirstPage() ?: false,
-                listModel?.isLoadingMore() ?: false
+                dispatcher = mDispatcher,
+                listDescriptor = listDescriptor,
+                items = listItems,
+                dataSource = dataSource,
+                loadMoreOffset = loadMoreOffset,
+                isFetchingFirstPage = if (listModel != null) getListState(listModel).isFetchingFirstPage() else false,
+                isLoadingMore = if (listModel != null) getListState(listModel).isLoadingMore() else false
         )
     }
 
@@ -149,6 +152,34 @@ class ListStore @Inject constructor(
         listSqlUtils.getList(listDescriptor)?.let {
             listItemSqlUtils.deleteItems(it.id)
         }
+    }
+
+    private fun getListState(listModel: ListModel): ListState =
+            if (isListStateOutdated(listModel)) {
+                ListState.defaultState
+            } else {
+                /**
+                 * If the state in the DB doesn't match any of the values, we want the app to crash so we can fix it.
+                 * That also means if we change the ListState values, we should write a migration to reset lists.
+                 */
+                ListState.values().firstOrNull { it.value == listModel.stateDbValue }!!
+            }
+
+    /**
+     * A helper function to returns whether it has been more than a certain time has passed since it's `lastModified`.
+     *
+     * Since we keep the state in the DB, in the case of application being closed during a fetch, it'll carry
+     * over to the next session. To prevent such cases, we use a timeout approach. If it has been more than a
+     * certain time since the list is last updated, we should ignore the state.
+     */
+    private fun isListStateOutdated(listModel: ListModel): Boolean {
+        listModel.lastModified?.let {
+            val lastModified = DateTimeUtils.dateUTCFromIso8601(it)
+            val timePassed = (Date().time - lastModified.time)
+            return timePassed > LIST_STATE_TIMEOUT
+        }
+        // If a list is null, it means we have never fetched it before, so it can't be outdated
+        return false
     }
 
     /**
