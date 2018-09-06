@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.notifications.utils
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.FragmentActivity
 import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
@@ -24,13 +24,14 @@ import javax.inject.Inject
 class FormattableContentClickHandler
 @Inject constructor(val siteStore: SiteStore) {
     private val domainWpCom = "wordpress.com"
-    fun onClick(activity: AppCompatActivity, clickedSpan: FormattableRange) {
+    fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
         if (activity.isFinishing) {
             return
         }
         val id = clickedSpan.id ?: 0
         val siteId = clickedSpan.siteId ?: 0
-        when (clickedSpan.rangeType()) {
+        val rangeType = clickedSpan.rangeType()
+        when (rangeType) {
             FormattableRangeType.SITE ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, id)
@@ -54,7 +55,7 @@ class FormattableContentClickHandler
             }
             FormattableRangeType.STAT, FormattableRangeType.FOLLOW ->
                 // We can open native stats if the site is a wpcom or Jetpack sites
-                showStatsActivityForSite(activity, siteId, clickedSpan.rangeType())
+                showStatsActivityForSite(activity, siteId, rangeType)
             FormattableRangeType.LIKE -> if (ReaderPostTable.postExists(siteId, id)) {
                 showReaderPostLikeUsers(activity, siteId, id)
             } else {
@@ -68,15 +69,15 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showBlogPreviewActivity(activity: AppCompatActivity, siteId: Long) {
+    private fun showBlogPreviewActivity(activity: FragmentActivity, siteId: Long) {
         ReaderActivityLauncher.showReaderBlogPreview(activity, siteId)
     }
 
-    private fun showPostActivity(activity: AppCompatActivity, siteId: Long, postId: Long) {
+    private fun showPostActivity(activity: FragmentActivity, siteId: Long, postId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(activity, siteId, postId)
     }
 
-    private fun showStatsActivityForSite(activity: AppCompatActivity, siteId: Long, rangeType: FormattableRangeType) {
+    private fun showStatsActivityForSite(activity: FragmentActivity, siteId: Long, rangeType: FormattableRangeType) {
         val site = siteStore.getSiteBySiteId(siteId)
         if (site == null) {
             // One way the site can be null: new site created, receive a notification from this site,
@@ -87,7 +88,7 @@ class FormattableContentClickHandler
         showStatsActivityForSite(activity, site, rangeType)
     }
 
-    private fun showStatsActivityForSite(activity: AppCompatActivity, site: SiteModel, rangeType: FormattableRangeType) {
+    private fun showStatsActivityForSite(activity: FragmentActivity, site: SiteModel, rangeType: FormattableRangeType) {
         if (rangeType == FormattableRangeType.FOLLOW) {
             val intent = Intent(activity, StatsViewAllActivity::class.java)
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS)
@@ -103,7 +104,7 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showWebViewActivityForUrl(activity: AppCompatActivity, url: String?) {
+    private fun showWebViewActivityForUrl(activity: FragmentActivity, url: String?) {
         if (url == null) {
             return
         }
@@ -115,11 +116,11 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showReaderPostLikeUsers(activity: AppCompatActivity, blogId: Long, postId: Long) {
+    private fun showReaderPostLikeUsers(activity: FragmentActivity, blogId: Long, postId: Long) {
         ReaderActivityLauncher.showReaderLikingUsers(activity, blogId, postId)
     }
 
-    private fun showReaderCommentsList(activity: AppCompatActivity, siteId: Long, postId: Long, commentId: Long) {
+    private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
         ReaderActivityLauncher.showReaderComments(activity, siteId, postId, commentId)
     }
 }

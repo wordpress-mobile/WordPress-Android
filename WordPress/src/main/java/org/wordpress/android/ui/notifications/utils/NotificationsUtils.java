@@ -57,6 +57,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
     public static final String ARG_PUSH_AUTH_TITLE = "arg_push_auth_title";
@@ -185,9 +188,58 @@ public class NotificationsUtils {
      * @return Spannable string with formatted content
      */
     static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener
-                                                                 onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                                  final NoteBlock.OnNoteBlockTextClickListener
+                                                          onNoteBlockTextClickListener,
+                                                  boolean isFooter) {
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        onNoteBlockTextClickListener.onNoteBlockTextClicked(noteBlockClickableSpan);
+                        return null;
+                    }
+                });
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param clickHandler - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                  TextView textView,
+                                                  final Function1<FormattableRange, Unit> clickHandler,
+                                                  boolean isFooter) {
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                        return null;
+                    }
+                });
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    private static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                          TextView textView,
+                                                          boolean isFooter,
+                                                          final Function1<NoteBlockClickableSpan, Unit>
+                                                                  onNoteBlockTextClickListener) {
         if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
@@ -209,7 +261,7 @@ public class NotificationsUtils {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
-                            onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                            onNoteBlockTextClickListener.invoke(this);
                         }
                     }
                 };

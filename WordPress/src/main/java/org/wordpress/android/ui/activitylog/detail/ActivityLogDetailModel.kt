@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.activitylog.detail
 
 import android.text.Spannable
+import android.widget.TextView
+import org.wordpress.android.fluxc.tools.FormattableContent
 
 data class ActivityLogDetailModel(
     val activityID: String,
@@ -10,7 +12,8 @@ data class ActivityLogDetailModel(
     val isRewindButtonVisible: Boolean,
     val actorName: String? = null,
     val actorRole: String? = null,
-    val content: Spannable? = null,
+    val content: FormattableContent? = null,
+    val spannableBuilder: (FormattableContent, TextView) -> Spannable,
     val summary: String? = null,
     val createdDate: String = "",
     val createdTime: String = "",

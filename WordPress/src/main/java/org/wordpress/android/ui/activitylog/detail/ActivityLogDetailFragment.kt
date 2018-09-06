@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Spannable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
@@ -41,11 +43,11 @@ class ActivityLogDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity?.let { it ->
-            viewModel = ViewModelProviders.of(it, viewModelFactory)
+        activity?.let { activity ->
+            viewModel = ViewModelProviders.of(activity, viewModelFactory)
                     .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
 
-            val intent = it.intent
+            val intent = activity.intent
             val (site, activityLogId) = when {
                 savedInstanceState != null -> {
                     val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
@@ -65,7 +67,9 @@ class ActivityLogDetailFragment : Fragment() {
                 activityActorName.setTextOrHide(activityLogModel?.actorName)
                 activityActorRole.setTextOrHide(activityLogModel?.actorRole)
 
-                activityMessage.setTextOrHide(activityLogModel?.text)
+                val spannable = activityLogModel?.content?.let { activityLogModel.spannableBuilder(it, activityMessage) }
+
+                activityMessage.setTextOrHide(spannable)
                 activityType.setTextOrHide(activityLogModel?.summary)
 
                 activityCreatedDate.text = activityLogModel?.createdDate
@@ -82,6 +86,12 @@ class ActivityLogDetailFragment : Fragment() {
 
             viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
                 it?.let { onRewindButtonClicked(it) }
+            })
+
+            viewModel.clickContent.observe(this, Observer<FormattableRange> { range ->
+                if (range != null) {
+                    viewModel.handleRangeClick(activity, range)
+                }
             })
 
             viewModel.start(site, activityLogId)
@@ -124,6 +134,15 @@ class ActivityLogDetailFragment : Fragment() {
     }
 
     private fun TextView.setTextOrHide(text: String?) {
+        if (text != null) {
+            this.text = text
+            this.visibility = View.VISIBLE
+        } else {
+            this.visibility = View.GONE
+        }
+    }
+
+    private fun TextView.setTextOrHide(text: Spannable?) {
         if (text != null) {
             this.text = text
             this.visibility = View.VISIBLE

@@ -5,12 +5,15 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.support.v4.app.FragmentActivity
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
@@ -28,7 +31,8 @@ class ActivityLogDetailViewModel
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
-    private val notificationsUtilsWrapper: NotificationsUtilsWrapper
+    private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
+    private val formattableContentClickHandler: FormattableContentClickHandler
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -36,6 +40,10 @@ class ActivityLogDetailViewModel
     private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
     val showRewindDialog: LiveData<ActivityLogDetailModel>
         get() = _showRewindDialog
+
+    private val _clickContent = SingleLiveEvent<FormattableRange>()
+    val clickContent: LiveData<FormattableRange>
+        get() = _clickContent
 
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
@@ -74,7 +82,10 @@ class ActivityLogDetailViewModel
                                         isRewindButtonVisible = it.rewindable ?: false,
                                         actorName = it.actor?.displayName,
                                         actorRole = it.actor?.role,
-                                        content = it.content?.apply { notificationsUtilsWrapper.getSpannableContentForRanges(it, ) },
+                                        content = it.content,
+                                        spannableBuilder = { content, textView -> notificationsUtilsWrapper.getSpannableContentForRanges(content, textView, {
+                                            clickedRange -> _clickContent.value = clickedRange
+                                        }, false) },
                                         summary = it.summary,
                                         createdDate = it.published.printDate(),
                                         createdTime = it.published.printTime(),
@@ -95,6 +106,10 @@ class ActivityLogDetailViewModel
 
     fun stop() {
         rewindStatusService.stop()
+    }
+
+    fun handleRangeClick(activity: FragmentActivity, range: FormattableRange) {
+        formattableContentClickHandler.onClick(activity, range)
     }
 
     private fun onRewindClicked(model: ActivityLogDetailModel) {
