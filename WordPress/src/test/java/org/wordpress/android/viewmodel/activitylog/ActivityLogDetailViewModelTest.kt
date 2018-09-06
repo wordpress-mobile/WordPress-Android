@@ -1,7 +1,9 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.support.v4.app.FragmentActivity
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -18,8 +20,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -30,6 +34,7 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
+    @Mock private lateinit var formattableContentClickHandler: FormattableContentClickHandler
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -63,7 +68,12 @@ class ActivityLogDetailViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore, rewindStatusService)
+        viewModel = ActivityLogDetailViewModel(
+                dispatcher,
+                activityLogStore,
+                rewindStatusService,
+                formattableContentClickHandler
+        )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
     }
 
@@ -150,7 +160,7 @@ class ActivityLogDetailViewModelTest {
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
             assertEquals(it.activityID, activityID2)
-            assertEquals(it.text, changedText)
+            assertEquals(it.content, updatedContent)
         }
     }
 
@@ -163,5 +173,25 @@ class ActivityLogDetailViewModelTest {
         viewModel.start(site, activityID)
 
         assertNull(lastEmittedItem)
+    }
+
+    @Test
+    fun onRangeClickPassesClickToCLickHandler() {
+        val range = mock<FormattableRange>()
+        val activity = mock<FragmentActivity>()
+
+        viewModel.onRangeClicked(activity, range)
+
+        verify(formattableContentClickHandler).onClick(activity, range)
+    }
+
+    @Test
+    fun onRewindClickTriggersRewindIfRewindIdNotNull() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn("123")
+
+        viewModel.onRewindClicked(model)
+
+        assertEquals(model, viewModel.showRewindDialog.value)
     }
 }

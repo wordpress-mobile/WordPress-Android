@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
@@ -27,6 +27,7 @@ import javax.inject.Inject
 class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
 
     private lateinit var viewModel: ActivityLogDetailViewModel
 
@@ -68,7 +69,9 @@ class ActivityLogDetailFragment : Fragment() {
                 activityActorRole.setTextOrHide(activityLogModel?.actorRole)
 
                 val spannable = activityLogModel?.content?.let {
-                    activityLogModel.spannableBuilder(it, activityMessage)
+                    notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
+                        viewModel.onRangeClicked(activity, range)
+                    }, false)
                 }
 
                 activityMessage.setTextOrHide(spannable)
@@ -77,8 +80,10 @@ class ActivityLogDetailFragment : Fragment() {
                 activityCreatedDate.text = activityLogModel?.createdDate
                 activityCreatedTime.text = activityLogModel?.createdTime
 
-                activityRewindButton.setOnClickListener {
-                    activityLogModel?.onClick()
+                if (activityLogModel != null) {
+                    activityRewindButton.setOnClickListener {
+                        viewModel.onRewindClicked(activityLogModel)
+                    }
                 }
             })
 
@@ -86,14 +91,8 @@ class ActivityLogDetailFragment : Fragment() {
                 activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
-            viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> {
-                it?.let { onRewindButtonClicked(it) }
-            })
-
-            viewModel.clickContent.observe(this, Observer<FormattableRange> { range ->
-                if (range != null) {
-                    viewModel.handleRangeClick(activity, range)
-                }
+            viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> { detailModel ->
+                detailModel?.let { onRewindButtonClicked(it) }
             })
 
             viewModel.start(site, activityLogId)
@@ -150,16 +149,6 @@ class ActivityLogDetailFragment : Fragment() {
             this.visibility = View.VISIBLE
         } else {
             this.visibility = View.GONE
-        }
-    }
-
-    private fun View.setOnClickListener(function: (() -> Unit)?) {
-        if (function != null) {
-            this.setOnClickListener {
-                function()
-            }
-        } else {
-            this.setOnClickListener(null)
         }
     }
 
