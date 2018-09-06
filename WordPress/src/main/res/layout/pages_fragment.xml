@@ -79,6 +79,7 @@
             android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed"
+            android:visibility="gone"
             android:layout_marginEnd="@dimen/fab_margin"/>
 
     </android.support.design.widget.CoordinatorLayout>

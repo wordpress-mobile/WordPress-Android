@@ -101,6 +101,8 @@ android {
 androidExtensions {
     experimental = true
 }
+// enable kotlin coroutines
+kotlin { experimental { coroutines "enable" } }
 
 kotlin { experimental { coroutines 'enable' } }
 

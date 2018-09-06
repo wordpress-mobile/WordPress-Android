@@ -9,7 +9,6 @@ import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import kotlinx.coroutines.experimental.withTimeoutOrNull
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
-import org.wordpress.android.fluxc.action.PostAction.REMOVE_POST
 import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType

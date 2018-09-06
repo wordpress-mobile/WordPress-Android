@@ -23,6 +23,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
 class PageListViewModel
@@ -41,7 +42,7 @@ class PageListViewModel
 
         if (!isStarted) {
             isStarted = true
-            loadPagesAsync(true)
+            loadPagesAsync()
 
             pagesViewModel.refreshPageLists.observeForever(refreshPagesObserver)
         }
@@ -67,7 +68,7 @@ class PageListViewModel
         loadPagesAsync()
     }
 
-    private fun loadPagesAsync(isStarting: Boolean = false) = launch {
+    private fun loadPagesAsync() = launch {
         val newPages = pagesViewModel.pages.values
                 .filter { it.status == pageType }
                 .let {
@@ -80,7 +81,7 @@ class PageListViewModel
                 }
 
         if (newPages.isEmpty()) {
-            if (isStarting) {
+            if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
                 when (pageType) {

@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -40,9 +41,10 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     private lateinit var viewModel: PagesViewModel
+
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, actionPerformer)
+        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, actionPerformer, Unconfined)
     }
 
     @Test

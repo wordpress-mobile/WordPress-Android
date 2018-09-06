@@ -4,9 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
@@ -20,6 +22,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
@@ -49,18 +52,19 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FET
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
-import kotlin.properties.Delegates
 
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    private val actionPerfomer: ActionPerformer
+    private val actionPerfomer: ActionPerformer,
+    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
-    private val _isSearchExpanded = SingleLiveEvent<Boolean>()
+    private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
@@ -72,11 +76,11 @@ class PagesViewModel
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
     val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
 
+    private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
+    val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
+
     private val _refreshPageLists = SingleLiveEvent<Unit>()
     val refreshPageLists: LiveData<Unit> = _refreshPageLists
-
-    private val _isNewPageButtonVisible = SingleLiveEvent<Boolean>()
-    val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -90,12 +94,12 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pages: MutableMap<Long, PageModel>
-        by Delegates.observable(mutableMapOf()) { _, _, _ ->
-            checkIfNewPageButtonShouldBeVisible()
-        }
+    private var _pages: MutableMap<Long, PageModel> = mutableMapOf()
     val pages: Map<Long, PageModel>
-        get() = _pages
+        get() {
+            checkIfNewPageButtonShouldBeVisible()
+            return _pages
+        }
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
@@ -108,8 +112,11 @@ class PagesViewModel
     val arePageActionsEnabled: Boolean
         get() = _arePageActionsEnabled
 
+    private var _lastSearchQuery = ""
+    val lastSearchQuery: String
+        get() = _lastSearchQuery
+
     private var searchJob: Job? = null
-    private var lastSearchQuery = ""
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
     private var currentPageType = PageStatus.PUBLISHED
 
@@ -138,20 +145,17 @@ class PagesViewModel
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
-        var newState = state
-        _listState.postValue(newState)
+        _listState.setOnUi(state)
 
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            newState = ERROR
+            _listState.setOnUi(ERROR)
             _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
-            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
+            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
+            _listState.setOnUi(DONE)
             refreshPages()
-            newState = DONE
         }
-
-        _listState.postValue(newState)
     }
 
     private suspend fun refreshPages() {
@@ -188,7 +192,7 @@ class PagesViewModel
 
     private fun checkIfNewPageButtonShouldBeVisible() {
         val isNotEmpty = _pages.values.any { it.status == currentPageType }
-        _isNewPageButtonVisible.postValue(isNotEmpty)
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String) {
@@ -212,7 +216,7 @@ class PagesViewModel
     }
 
     suspend fun search(searchQuery: String): MutableList<PageItem> {
-        lastSearchQuery = searchQuery
+        _lastSearchQuery = searchQuery
         return pageStore.groupedSearch(site, searchQuery)
                 .map { (status, results) ->
                     listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }
@@ -243,12 +247,21 @@ class PagesViewModel
 
     fun onSearchExpanded(): Boolean {
         clearSearch()
-        _isSearchExpanded.postValue(true)
+
+        _isSearchExpanded.value = true
+        _isNewPageButtonVisible.value = false
+
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        _isSearchExpanded.postValue(false)
+        _isSearchExpanded.value = false
+        clearSearch()
+
+        launch {
+            delay(500)
+            checkIfNewPageButtonShouldBeVisible()
+        }
         return true
     }
 
@@ -258,18 +271,20 @@ class PagesViewModel
             SET_PARENT -> _setPageParent.postValue(pages[page.id])
             MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
-            PUBLISH_NOW -> {
-                pages[page.id]?.date = Date()
-                changePageStatus(page.id, PUBLISHED)
-            }
+            PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
     }
 
+    private fun publishPageNow(remoteId: Long) {
+        pages[remoteId]?.date = Date()
+        changePageStatus(remoteId, PUBLISHED)
+    }
+
     fun onDeleteConfirmed(remoteId: Long) {
         launch {
-            pages[remoteId]?.let { deletePage(it)}
+            pages[remoteId]?.let { deletePage(it) }
         }
     }
 
@@ -428,6 +443,7 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
+        _lastSearchQuery = ""
         _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
     }
 
@@ -435,5 +451,16 @@ class PagesViewModel
     fun onPostUploaded(event: OnPostUploaded) {
         pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
         pageUpdateContinuation[0]?.resume(Unit)
+    }
+
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
+        this.value = value
+    }
+
+    private fun <T> MutableLiveData<T>.postOnUi(value: T) {
+        val liveData = this
+        launch(uiContext) {
+            liveData.value = value
+        }
     }
 }
