@@ -94,7 +94,7 @@ class ListStore @Inject constructor(
     private fun handleFetchList(payload: FetchListPayload) {
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListChanged(payload.listDescriptor, null))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), null))
 
         when (payload.listDescriptor.type) {
             ListType.POST -> TODO()
@@ -132,17 +132,18 @@ class ListStore @Inject constructor(
         } else {
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
-        emitChange(OnListChanged(payload.listDescriptor, payload.error))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), payload.error))
     }
 
     /**
      * Handles the [ListAction.DELETE_LIST_ITEMS] action.
      *
-     * It'll first find every list for the given [ListDescriptor]s and then remove the given items from each one.
+     * It'll find every list for the given [ListDescriptor]s, remove the given items from each one and emit the changes.
      */
     private fun handleDeleteListItems(payload: DeleteListItemsPayload) {
         val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
+        emitChange(OnListChanged(payload.listDescriptors, error = null))
     }
 
     /**
@@ -186,7 +187,7 @@ class ListStore @Inject constructor(
      * The event to be emitted when there is a change to a [ListModel] or its items.
      */
     class OnListChanged(
-        val listDescriptor: ListDescriptor,
+        val listDescriptors: List<ListDescriptor>,
         error: FetchedListItemsError?
     ) : Store.OnChanged<FetchedListItemsError>() {
         init {
