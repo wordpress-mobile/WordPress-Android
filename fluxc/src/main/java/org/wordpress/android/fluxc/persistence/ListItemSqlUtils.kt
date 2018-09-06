@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.ListItemModelTable
+import com.wellsql.generated.ListModelTable
+import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
-import org.wordpress.android.fluxc.model.ListItemModel
+import org.wordpress.android.fluxc.model.list.ListItemModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,6 +29,7 @@ class ListItemSqlUtils @Inject constructor() {
                     .where()
                     .equals(ListItemModelTable.LIST_ID, listId)
                     .endWhere()
+                    .orderBy(ListModelTable.ID, SelectQuery.ORDER_ASCENDING)
                     .asModel
 
     /**
@@ -37,6 +40,29 @@ class ListItemSqlUtils @Inject constructor() {
                 .where()
                 .isIn(ListItemModelTable.LIST_ID, listIds)
                 .equals(ListItemModelTable.REMOTE_ITEM_ID, remoteItemId)
+                .endWhere()
+                .execute()
+    }
+
+    /**
+     * This function deletes all [ListItemModel]s for a specific [listId].
+     */
+    fun deleteItems(listId: Int) {
+        WellSql.delete(ListItemModel::class.java)
+                .where()
+                .equals(ListItemModelTable.LIST_ID, listId)
+                .endWhere()
+                .execute()
+    }
+
+    /**
+     * This function deletes [ListItemModel]s for [remoteItemIds] in every lists with [listIds]
+     */
+    fun deleteItemsFromLists(listIds: List<Int>, remoteItemIds: List<Long>) {
+        WellSql.delete(ListItemModel::class.java)
+                .where()
+                .isIn(ListItemModelTable.LIST_ID, listIds)
+                .isIn(ListItemModelTable.REMOTE_ITEM_ID, remoteItemIds)
                 .endWhere()
                 .execute()
     }
