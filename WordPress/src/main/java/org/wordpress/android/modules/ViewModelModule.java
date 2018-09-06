@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
@@ -44,6 +45,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PageListViewModel.class)
     abstract ViewModel pageListViewModel(PageListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageParentViewModel.class)
+    abstract ViewModel pageParentViewModel(PageParentViewModel viewModel);
 
     @Binds
     @IntoMap

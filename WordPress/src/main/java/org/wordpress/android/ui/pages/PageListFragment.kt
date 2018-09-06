@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -25,7 +24,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageListViewModel
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    private var linearLayoutManager: LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -64,28 +63,23 @@ class PageListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
-
         val nonNullActivity = checkNotNull(activity)
-        val nonNullSite = checkNotNull(site)
         val type = checkNotNull(arguments?.getSerializable(typeKey) as Type?)
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, nonNullSite, type)
+        initializeViewModels(nonNullActivity, type)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(listStateKey, linearLayoutManager.onSaveInstanceState())
+        linearLayoutManager?.let {
+            outState.putParcelable(listStateKey, it.onSaveInstanceState())
+        }
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, site: SiteModel, type: Type) {
+    private fun initializeViewModels(activity: FragmentActivity, type: Type) {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get<PageListViewModel>(type.name, PageListViewModel::class.java)
 
@@ -126,7 +120,8 @@ class PageListFragment : Fragment() {
         if (recyclerView.adapter == null) {
             adapter = PagesAdapter(
                     { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) }
+                    { page -> viewModel.onItemTapped(page) },
+                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() }
             )
             recyclerView.adapter = adapter
         } else {

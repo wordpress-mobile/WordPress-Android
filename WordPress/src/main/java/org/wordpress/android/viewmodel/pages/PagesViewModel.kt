@@ -4,9 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
@@ -20,6 +22,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.networking.PageUploadUtil
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -45,68 +48,76 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
-    private val uploadUtil: PageUploadUtil
+    private val uploadUtil: PageUploadUtil,
+    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
-    private val _isSearchExpanded = SingleLiveEvent<Boolean>()
+    private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
 
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private val _listState = MutableLiveData<PageListState>()
-    val listState: LiveData<PageListState>
-        get() = _listState
+    val listState: LiveData<PageListState> = _listState
 
     private val _displayDeleteDialog = SingleLiveEvent<Page>()
-    val displayDeleteDialog: LiveData<Page>
-        get() = _displayDeleteDialog
+    val displayDeleteDialog: LiveData<Page> = _displayDeleteDialog
+
+    private val _isNewPageButtonVisible = MutableLiveData<Boolean>()
+    val isNewPageButtonVisible: LiveData<Boolean> = _isNewPageButtonVisible
 
     private val _refreshPages = SingleLiveEvent<Unit>()
-    val refreshPages: LiveData<Unit>
-        get() = _refreshPages
+    val refreshPages: LiveData<Unit> = _refreshPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
-    val createNewPage: LiveData<Unit>
-        get() = _createNewPage
+    val createNewPage: LiveData<Unit> = _createNewPage
 
     private val _editPage = SingleLiveEvent<PageModel?>()
-    val editPage: LiveData<PageModel?>
-        get() = _editPage
+    val editPage: LiveData<PageModel?> = _editPage
 
     private val _previewPage = SingleLiveEvent<PageModel?>()
-    val previewPage: LiveData<PageModel?>
-        get() = _previewPage
+    val previewPage: LiveData<PageModel?> = _previewPage
 
     private val _setPageParent = SingleLiveEvent<PageModel?>()
-    val setPageParent: LiveData<PageModel?>
-        get() = _setPageParent
+    val setPageParent: LiveData<PageModel?> = _setPageParent
 
     private var _pages: Map<Long, PageModel> = emptyMap()
     val pages: Map<Long, PageModel>
-        get() = _pages
+        get() {
+            checkIfNewPageButtonShouldBeVisible()
+            return _pages
+        }
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
-    val showSnackbarMessage: LiveData<SnackbarMessageHolder>
-        get() = _showSnackbarMessage
+    val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var site: SiteModel
+    private lateinit var _site: SiteModel
+    val site: SiteModel
+        get() = _site
+
+    private var _lastSearchQuery = ""
+    val lastSearchQuery: String
+        get() = _lastSearchQuery
+
     private var searchJob: Job? = null
-    private var lastSearchQuery = ""
     private var statusPageSnackbarMessage: SnackbarMessageHolder? = null
+    private var currentPageType = PageStatus.PUBLISHED
 
     init {
         dispatcher.register(this)
     }
 
     fun start(site: SiteModel) {
-        this.site = site
+        _site = site
 
         clearSearch()
         reloadPagesAsync()
@@ -123,23 +134,21 @@ class PagesViewModel
         refreshPages(loadState)
     }
 
-    suspend fun refreshPages(state: PageListState = REFRESHING) {
-        var newState = state
-        _listState.postValue(newState)
+    private suspend fun refreshPages(state: PageListState = REFRESHING) {
+        _listState.setOnUi(state)
 
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
-            newState = ERROR
+            _listState.setOnUi(ERROR)
             _showSnackbarMessage.postValue(
                     SnackbarMessageHolder(resourceProvider.getString(string.error_refresh_pages)))
-            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Pages")
-        } else if (result.rowsAffected > 0) {
+            AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
+        } else {
             _pages = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
-            _refreshPages.asyncCall()
-            newState = DONE
-        }
 
-        _listState.postValue(newState)
+            _listState.setOnUi(DONE)
+            _refreshPages.asyncCall()
+        }
     }
 
     fun onPageEditFinished(pageId: Long) {
@@ -148,6 +157,32 @@ class PagesViewModel
                 refreshPages()
             }
         }
+    }
+
+    fun onPageParentSet(pageId: Long, parentId: Long) {
+        launch {
+            pages[pageId]?.let { page ->
+                if (page.parent?.remoteId != parentId) {
+                    page.parent = pages[parentId]
+
+                    statusPageSnackbarMessage = SnackbarMessageHolder(
+                            resourceProvider.getString(string.page_parent_changed))
+
+                    uploadUtil.uploadPage(page)
+                    refreshPages()
+                }
+            }
+        }
+    }
+
+    fun onPageTypeChanged(type: PageStatus) {
+        currentPageType = type
+        checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun checkIfNewPageButtonShouldBeVisible() {
+        val isNotEmpty = _pages.values.any { it.status == currentPageType }
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
     fun onSearch(searchQuery: String) {
@@ -161,7 +196,7 @@ class PagesViewModel
                     if (result.isNotEmpty()) {
                         _searchResult.postValue(result)
                     } else {
-                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result)))
+                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
                     }
                 }
             }
@@ -171,7 +206,7 @@ class PagesViewModel
     }
 
     suspend fun search(searchQuery: String): MutableList<PageItem> {
-        lastSearchQuery = searchQuery
+        _lastSearchQuery = searchQuery
         return pageStore.groupedSearch(site, searchQuery)
                 .map { (status, results) ->
                     listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }
@@ -201,12 +236,19 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(): Boolean {
-        _isSearchExpanded.postValue(true)
+        _isSearchExpanded.value = true
+        _isNewPageButtonVisible.value = false
         return true
     }
 
     fun onSearchCollapsed(): Boolean {
-        _isSearchExpanded.postValue(false)
+        _isSearchExpanded.value = false
+        clearSearch()
+
+        launch {
+            delay(500)
+            checkIfNewPageButtonShouldBeVisible()
+        }
         return true
     }
 
@@ -216,7 +258,7 @@ class PagesViewModel
             SET_PARENT -> _setPageParent.postValue(pages[page.id])
             MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
-            PUBLISH_NOW -> changePageStatus(page.id, PUBLISHED)
+            PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
         return true
@@ -226,8 +268,10 @@ class PagesViewModel
         launch {
             val page = pages[remoteId]
             if (page != null) {
-                pageStore.deletePage(page)
+                pageStore.deletePageFromServer(page)
                 refreshPages()
+
+                onSearch(lastSearchQuery)
 
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(resourceProvider.getString(string.page_permanently_deleted)))
@@ -252,15 +296,21 @@ class PagesViewModel
         }
     }
 
+    private fun publishPageNow(remoteId: Long) {
+        pages[remoteId]?.let { page ->
+            page.date = Date()
+            changePageStatus(remoteId, PUBLISHED)
+        }
+    }
+
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
-        pages[remoteId]
-                ?.let { page ->
-                    launch {
-                        statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
-                        page.status = status
-                        uploadUtil.uploadPage(page)
-                    }
-                }
+        pages[remoteId]?.let { page ->
+            launch {
+                statusPageSnackbarMessage = prepareStatusChangeSnackbar(status, page)
+                page.status = status
+                uploadUtil.uploadPage(page)
+            }
+        }
     }
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, page: PageModel? = null): SnackbarMessageHolder {
@@ -282,24 +332,40 @@ class PagesViewModel
     }
 
     private fun clearSearch() {
-        _searchResult.postValue(listOf(Empty(string.empty_list_default)))
+        _lastSearchQuery = ""
+        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post.isPage) {
-            launch {
-                refreshPages()
-                onSearch(lastSearchQuery)
+            if (event.isError) {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(resourceProvider.getString(string.page_upload_error)))
+            } else {
+                launch {
+                    refreshPages()
+                    onSearch(lastSearchQuery)
 
-                if (statusPageSnackbarMessage != null) {
-                    _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
-                    statusPageSnackbarMessage = null
-                } else {
-                    _showSnackbarMessage.postValue(
-                            prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                    if (statusPageSnackbarMessage != null) {
+                        _showSnackbarMessage.postValue(statusPageSnackbarMessage!!)
+                        statusPageSnackbarMessage = null
+                    } else {
+                        _showSnackbarMessage.postValue(prepareStatusChangeSnackbar(PageModel(event.post, site).status))
+                    }
                 }
             }
+        }
+    }
+
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
+        this.value = value
+    }
+
+    private fun <T> MutableLiveData<T>.postOnUi(value: T) {
+        val liveData = this
+        launch(uiContext) {
+            liveData.value = value
         }
     }
 }

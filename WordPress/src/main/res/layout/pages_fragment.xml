@@ -55,9 +55,10 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="48dp"
                 android:layout_gravity="start"
                 android:background="@color/color_primary"
+                app:tabContentStart="72dp"
                 app:tabGravity="fill"
                 app:tabIndicatorColor="@color/white"
                 app:tabMode="scrollable"
@@ -78,6 +79,7 @@
             android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed"
+            android:visibility="gone"
             android:layout_marginEnd="@dimen/fab_margin"/>
 
     </android.support.design.widget.CoordinatorLayout>

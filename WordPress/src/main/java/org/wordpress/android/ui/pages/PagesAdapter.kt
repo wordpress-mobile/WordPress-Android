@@ -3,15 +3,22 @@ package org.wordpress.android.ui.pages
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.pages.PageItem.Divider
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.R
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
+import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
 class PagesAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean,
-    private val onItemTapped: (Page) -> Unit
+    private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
+    private val onItemTapped: (Page) -> Unit = { },
+    private val onParentSelected: (ParentPage) -> Unit = { },
+    private val onEmptyActionButtonTapped: () -> Unit = { }
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
@@ -19,8 +26,22 @@ class PagesAdapter(
         return when (viewType) {
             PageItem.Type.PAGE.viewType -> PageViewHolder(parent, onMenuAction, onItemTapped)
             PageItem.Type.DIVIDER.viewType -> PageDividerViewHolder(parent)
-            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent)
+            PageItem.Type.EMPTY.viewType -> EmptyViewHolder(parent, onEmptyActionButtonTapped)
+            PageItem.Type.PARENT.viewType -> PageParentViewHolder(parent,
+                    this::selectParent,
+                    R.layout.page_parent_list_item)
+            PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(parent,
+                    this::selectParent,
+                    R.layout.page_parent_top_level_item)
             else -> throw IllegalArgumentException("Unexpected view type")
+        }
+    }
+
+    private fun selectParent(parent: ParentPage) {
+        onParentSelected(parent)
+        launch(UI) {
+            delay(200) // let the selection animation play out before refreshing the list
+            notifyDataSetChanged()
         }
     }
 
@@ -47,8 +68,8 @@ class PagesAdapter(
             val newItem = result[newItemPosition]
             return oldItem.type == newItem.type && when (oldItem) {
                 is Page -> oldItem.id == (newItem as Page).id
-                is Divider -> oldItem == (newItem as Divider)
-                else -> false
+                is ParentPage -> oldItem.id == (newItem as ParentPage).id
+                else -> oldItem == newItem
             }
         }
 

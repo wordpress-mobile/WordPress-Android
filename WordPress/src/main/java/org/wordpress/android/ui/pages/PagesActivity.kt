@@ -9,6 +9,9 @@ import org.wordpress.android.R.id
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
+const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
+const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
+
 class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -16,6 +16,7 @@ import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.ERROR
 import org.wordpress.android.networking.PageUploadUtil.UploadRequestResult.SUCCESS
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -78,5 +79,6 @@ class PageUploadUtil @Inject constructor(
         this.status = page.status.toPostStatus().toString()
         this.parentId = page.parent?.remoteId ?: 0
         this.remotePostId = page.remoteId
+        this.dateCreated = DateTimeUtils.iso8601FromDate(page.date)
     }
 }
