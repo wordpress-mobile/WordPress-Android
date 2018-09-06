@@ -22,6 +22,11 @@ import javax.inject.Singleton
 
 const val DEFAULT_LOAD_MORE_OFFSET = 10 // When we should load more data for a list
 
+/**
+ * This Store is responsible for managing lists and their metadata. One of the designs goals for this Store is expose
+ * as little as possible to the consumers and make sure the exposed parts are immutable. This not only moves the
+ * responsibility of mutation to the Store but also makes it much easier to use the exposed data.
+ */
 @Singleton
 class ListStore @Inject constructor(
     private val listSqlUtils: ListSqlUtils,
@@ -33,9 +38,9 @@ class ListStore @Inject constructor(
         val actionType = action.type as? ListAction ?: return
 
         when (actionType) {
-            ListAction.FETCH_LIST -> fetchList(action.payload as FetchListPayload)
-            ListAction.UPDATE_LIST -> updateList(action.payload as UpdateListPayload)
-            ListAction.DELETE_LIST_ITEMS -> listItemsDeleted(action.payload as DeleteListItemsPayload)
+            ListAction.FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
+            ListAction.FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
+            ListAction.DELETE_LIST_ITEMS -> handleDeleteListItems(action.payload as DeleteListItemsPayload)
         }
     }
 
@@ -43,12 +48,23 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
+    /**
+     * This is the function that'll be used to consume lists.
+     *
+     * @property listDescriptor List to be consumed
+     * @property dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
+     * for more details.
+     * @property loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
+     *
+     * @return An immutable list manager that exposes enough information about a list to be used by adapters. See
+     * [ListManager] for more details.
+     */
     fun <T> getListManager(
         listDescriptor: ListDescriptor,
         dataSource: ListItemDataSource<T>,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> {
-        val listModel = getListModel(listDescriptor)
+        val listModel = listSqlUtils.getList(listDescriptor)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
@@ -63,7 +79,16 @@ class ListStore @Inject constructor(
         )
     }
 
-    private fun fetchList(payload: FetchListPayload) {
+    /**
+     * Handles the [ListAction.FETCH_LIST] action.
+     *
+     * This acts as an intermediary action. It will update the state and emit the change. Afterwards, depending on
+     * the type of the list, another action will be dispatched so the Store for that type can handle the fetch action
+     * and later use the [ListAction.FETCHED_LIST_ITEMS] action to let the [ListStore] know about it.
+     *
+     * See [handleFetchedListItems] for what happens after items are fetched.
+     */
+    private fun handleFetchList(payload: FetchListPayload) {
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(payload.listDescriptor, null))
@@ -74,16 +99,26 @@ class ListStore @Inject constructor(
         }
     }
 
-    private fun updateList(payload: UpdateListPayload) {
+    /**
+     * Handles the [ListAction.FETCHED_LIST_ITEMS] action.
+     *
+     * Here is how it works:
+     * 1. If there was an error, update the list's state and emit the change. Otherwise:
+     * 2. If the first page is fetched, delete the existing [ListItemModel]s.
+     * 3. Update the [ListModel]'s state depending on whether there is more data to be fetched
+     * 4. Insert the [ListItemModel]s and emit the change
+     *
+     * See [handleFetchList] to see how items are fetched.
+     */
+    private fun handleFetchedListItems(payload: FetchedListItemsPayload) {
         if (!payload.isError) {
             if (!payload.loadedMore) {
                 deleteListItems(payload.listDescriptor)
             }
             val state = if (payload.canLoadMore) ListState.CAN_LOAD_MORE else ListState.FETCHED
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, state)
-            val listModel = getListModel(payload.listDescriptor)
+            val listModel = listSqlUtils.getList(payload.listDescriptor)
             if (listModel != null) { // Sanity check
-                // Ensure the listId is set correctly for ListItemModels
                 listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
                     val listItemModel = ListItemModel()
                     listItemModel.listId = listModel.id
@@ -97,54 +132,89 @@ class ListStore @Inject constructor(
         emitChange(OnListChanged(payload.listDescriptor, payload.error))
     }
 
-    private fun listItemsDeleted(payload: DeleteListItemsPayload) {
+    /**
+     * Handles the [ListAction.DELETE_LIST_ITEMS] action.
+     *
+     * It'll first find every list for the given [ListDescriptor]s and then remove the given items from each one.
+     */
+    private fun handleDeleteListItems(payload: DeleteListItemsPayload) {
         val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
     }
 
-    private fun getListModel(listDescriptor: ListDescriptor): ListModel? =
-            listSqlUtils.getList(listDescriptor)
-
+    /**
+     * Deletes all the items for the given [ListDescriptor].
+     */
     private fun deleteListItems(listDescriptor: ListDescriptor) {
-        getListModel(listDescriptor)?.let {
+        listSqlUtils.getList(listDescriptor)?.let {
             listItemSqlUtils.deleteItems(it.id)
         }
     }
 
+    /**
+     * The event to be emitted when there is a change to a [ListModel] or its items.
+     */
     class OnListChanged(
         val listDescriptor: ListDescriptor,
-        error: UpdateListError?
-    ) : Store.OnChanged<UpdateListError>() {
+        error: FetchedListItemsError?
+    ) : Store.OnChanged<FetchedListItemsError>() {
         init {
             this.error = error
         }
     }
 
+    /**
+     * This is the payload for [ListAction.DELETE_LIST_ITEMS]. When an item is deleted, we'll need to remove it from
+     * several lists. It's the caller Stores responsibility to decide which lists an item should be deleted from.
+     *
+     * @property listDescriptors Lists to be deleted from.
+     * @property remoteItemIds Items to delete.
+     */
     class DeleteListItemsPayload(
         val listDescriptors: List<ListDescriptor>,
         val remoteItemIds: List<Long>
     ) : Payload<BaseNetworkError>()
 
+    /**
+     * This is the payload for [ListAction.FETCH_LIST].
+     *
+     * @property listDescriptor List to be fetched
+     * @property loadMore Indicates whether the first page should be fetched or more data should be loaded.
+     */
     class FetchListPayload(
         val listDescriptor: ListDescriptor,
         val loadMore: Boolean = false
     ) : Payload<BaseNetworkError>()
 
-    class UpdateListPayload(
+    /**
+     * This is the payload for [ListAction.FETCHED_LIST_ITEMS].
+     *
+     * @property listDescriptor List descriptor will be provided when the action to fetch items will be dispatched
+     * from other Stores. The same list descriptor will need to be used in this payload so [ListStore] can decide
+     * which list to update.
+     * @property remoteItemIds Fetched item ids
+     * @property loadedMore Indicates whether the first page is fetched or loaded more data
+     * @property canLoadMore Indicates whether there is more data to be loaded from the server. If it's false,
+     * [ListStore] will not trigger any more actions to load more data.
+     */
+    class FetchedListItemsPayload(
         val listDescriptor: ListDescriptor,
         val remoteItemIds: List<Long>,
         val loadedMore: Boolean,
         val canLoadMore: Boolean,
-        error: UpdateListError?
-    ) : Payload<UpdateListError>() {
+        error: FetchedListItemsError?
+    ) : Payload<FetchedListItemsError>() {
         init {
             this.error = error
         }
     }
 
-    class UpdateListError(val type: UpdateListErrorType, val message: String? = null) : Store.OnChangedError
+    class FetchedListItemsError(
+        val type: FetchedListItemsErrorType,
+        val message: String? = null
+    ) : Store.OnChangedError
 
-    enum class UpdateListErrorType {
+    enum class FetchedListItemsErrorType {
         GENERIC_ERROR
     }
 }
