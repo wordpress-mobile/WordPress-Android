@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 40;
+        return 41;
     }
 
     @Override
@@ -309,8 +309,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 37:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("CREATE TABLE QuickStartModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                db.execSQL("DROP TABLE IF EXISTS QuickStartModel");
+                db.execSQL("CREATE TABLE QuickStartTaskModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                            + "SITE_ID INTEGER,TASK_NAME TEXT,IS_DONE INTEGER,IS_SHOWN INTEGER)");
+                db.execSQL("CREATE TABLE QuickStartStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,IS_COMPLETED INTEGER,IS_NOTIFICATION_RECEIVED INTEGER)");
                 oldVersion++;
             case 38:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
@@ -325,6 +328,14 @@ public class WellSqlConfig extends DefaultWellConfig {
                 }
                 oldVersion++;
             case 39:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS QuickStartModel");
+                db.execSQL("CREATE TABLE IF NOT EXISTS QuickStartTaskModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,TASK_NAME TEXT,IS_DONE INTEGER,IS_SHOWN INTEGER)");
+                db.execSQL("CREATE TABLE IF NOT EXISTS QuickStartStatusModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "SITE_ID INTEGER,IS_COMPLETED INTEGER,IS_NOTIFICATION_RECEIVED INTEGER)");
+                oldVersion++;
+            case 40:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,TYPE_DB_VALUE INTEGER,"
                            + "LOCAL_SITE_ID_DB_VALUE INTEGER,FILTER_DB_VALUE TEXT,ORDER_DB_VALUE TEXT,"
