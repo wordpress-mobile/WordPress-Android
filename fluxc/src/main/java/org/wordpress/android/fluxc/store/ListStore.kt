@@ -120,15 +120,15 @@ class ListStore @Inject constructor(
             }
             val state = if (payload.canLoadMore) ListState.CAN_LOAD_MORE else ListState.FETCHED
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, state)
-            val listModel = listSqlUtils.getList(payload.listDescriptor)
-            if (listModel != null) { // Sanity check
-                listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
-                    val listItemModel = ListItemModel()
-                    listItemModel.listId = listModel.id
-                    listItemModel.remoteItemId = remoteItemId
-                    return@map listItemModel
-                })
+            val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+                "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
             }
+            listItemSqlUtils.insertItemList(payload.remoteItemIds.map { remoteItemId ->
+                val listItemModel = ListItemModel()
+                listItemModel.listId = listModel.id
+                listItemModel.remoteItemId = remoteItemId
+                return@map listItemModel
+            })
         } else {
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
@@ -159,11 +159,10 @@ class ListStore @Inject constructor(
             if (isListStateOutdated(listModel)) {
                 ListState.defaultState
             } else {
-                /**
-                 * If the state in the DB doesn't match any of the values, we want the app to crash so we can fix it.
-                 * That also means if we change the ListState values, we should write a migration to reset lists.
-                 */
-                ListState.values().firstOrNull { it.value == listModel.stateDbValue }!!
+                requireNotNull(ListState.values().firstOrNull { it.value == listModel.stateDbValue }) {
+                    "The stateDbValue of the ListModel didn't match any of the `ListState`s. This likely happened " +
+                            "because the ListState values were altered without a DB migration."
+                }
             }
 
     /**
