@@ -43,6 +43,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -56,6 +57,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
@@ -185,9 +189,62 @@ public class NotificationsUtils {
      * @return Spannable string with formatted content
      */
     static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener
-                                                                 onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                                  final NoteBlock.OnNoteBlockTextClickListener
+                                                          onNoteBlockTextClickListener,
+                                                  boolean isFooter) {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                onNoteBlockTextClickListener != null ? new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        onNoteBlockTextClickListener.onNoteBlockTextClicked(noteBlockClickableSpan);
+                        return null;
+                    }
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param clickHandler - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                  TextView textView,
+                                                  final Function1<FormattableRange, Unit> clickHandler,
+                                                  boolean isFooter) {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                        return null;
+                    }
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    private static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                          TextView textView,
+                                                          boolean isFooter,
+                                                          final Function1<NoteBlockClickableSpan, Unit>
+                                                                  onNoteBlockTextClickListener) {
         if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
@@ -209,7 +266,7 @@ public class NotificationsUtils {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
-                            onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                            onNoteBlockTextClickListener.invoke(this);
                         }
                     }
                 };
@@ -225,6 +282,11 @@ public class NotificationsUtils {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder
                                 .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+
+                    if (onNoteBlockTextClickListener != null && textView != null) {
+                        textView.setLinksClickable(true);
+                        textView.setMovementMethod(new NoteBlockLinkMovementMethod());
                     }
                 }
             }

@@ -24,6 +24,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private long mSiteId;
     private long mPostId;
     private FormattableRangeType mRangeType;
+    private FormattableRange mFormattableRange;
     private String mUrl;
     private List<Integer> mIndices;
     private boolean mPressed;
@@ -52,6 +53,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private void processRangeData(FormattableRange range) {
         if (range != null) {
+            mFormattableRange = range;
             mId = range.getId() == null ? 0 : range.getId();
             mSiteId = range.getSiteId() == null ? 0 : range.getSiteId();
             mPostId = range.getPostId() == null ? 0 : range.getPostId();
@@ -123,6 +125,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     public FormattableRangeType getRangeType() {
         return mRangeType;
+    }
+
+    public FormattableRange getFormattableRange() {
+        return mFormattableRange;
     }
 
     public List<Integer> getIndices() {

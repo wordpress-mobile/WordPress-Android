@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import java.util.Date
@@ -63,7 +64,11 @@ class ActivityLogDetailViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogDetailViewModel(dispatcher, activityLogStore, rewindStatusService)
+        viewModel = ActivityLogDetailViewModel(
+                dispatcher,
+                activityLogStore,
+                rewindStatusService
+        )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
     }
 
@@ -150,7 +155,7 @@ class ActivityLogDetailViewModelTest {
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
             assertEquals(it.activityID, activityID2)
-            assertEquals(it.text, changedText)
+            assertEquals(it.content, updatedContent)
         }
     }
 
@@ -163,5 +168,24 @@ class ActivityLogDetailViewModelTest {
         viewModel.start(site, activityID)
 
         assertNull(lastEmittedItem)
+    }
+
+    @Test
+    fun onRangeClickPassesClickToCLickHandler() {
+        val range = mock<FormattableRange>()
+
+        viewModel.onRangeClicked(range)
+
+        assertEquals(range, viewModel.handleFormattableRangeClick.value)
+    }
+
+    @Test
+    fun onRewindClickTriggersRewindIfRewindIdNotNull() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn("123")
+
+        viewModel.onRewindClicked(model)
+
+        assertEquals(model, viewModel.showRewindDialog.value)
     }
 }
