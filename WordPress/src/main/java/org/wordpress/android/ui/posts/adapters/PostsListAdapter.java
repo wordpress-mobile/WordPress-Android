@@ -73,7 +73,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final long ROW_ANIM_DURATION = 150;
     private static final int MAX_DISPLAYED_UPLOAD_PROGRESS = 90;
 
-    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
+    private static final int VIEW_TYPE_POST = 0;
     private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
 
     public interface OnPostButtonClickListener {
@@ -127,7 +127,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
-        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
+        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, 74);
 
         // on larger displays we can always show all buttons
         mShowAllButtons = displayWidth >= 1080;
@@ -171,7 +171,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (position == mPosts.size()) {
             return VIEW_TYPE_ENDLIST_INDICATOR;
         }
-        return VIEW_TYPE_POST_OR_PAGE;
+        return VIEW_TYPE_POST;
     }
 
     @Override
@@ -189,9 +189,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
             view.getLayoutParams().height = mEndlistIndicatorHeight;
             return new EndListViewHolder(view);
-        } else if (mIsPage) {
-            View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
-            return new PageViewHolder(view);
         } else {
             View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
             return new PostViewHolder(view);
@@ -270,52 +267,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             updateStatusTextAndImage(postHolder.mTxtStatus, postHolder.mImgStatus, post);
             updatePostUploadProgressBar(postHolder.mProgressBar, post);
             configurePostButtons(postHolder, post);
-        } else if (holder instanceof PageViewHolder) {
-            PageViewHolder pageHolder = (PageViewHolder) holder;
-            if (StringUtils.isNotEmpty(post.getTitle())) {
-                pageHolder.mTxtTitle.setText(post.getTitle());
-            } else {
-                pageHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
-            }
-
-            String dateStr = getPageDateHeaderText(context, post);
-            pageHolder.mTxtDate.setText(dateStr);
-
-            updateStatusTextAndImage(pageHolder.mTxtStatus, pageHolder.mImgStatus, post);
-            updatePostUploadProgressBar(pageHolder.mProgressBar, post);
-
-            // don't show date header if same as previous
-            boolean showDate;
-            if (position > 0) {
-                String prevDateStr = getPageDateHeaderText(context, mPosts.get(position - 1));
-                showDate = !prevDateStr.equals(dateStr);
-            } else {
-                showDate = true;
-            }
-            pageHolder.mDateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
-
-            // no "..." more button when uploading
-            pageHolder.mBtnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE : View.VISIBLE);
-            pageHolder.mBtnMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showPagePopupMenu(v, post);
-                }
-            });
-
-            // only show the top divider for the first item
-            pageHolder.mDividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-
-            if (UploadService.isPostUploading(post)) {
-                pageHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
-                pageHolder.mProgressBar.setIndeterminate(true);
-            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
-                // Editing posts with uploading media is only supported in Aztec
-                pageHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
-            } else {
-                pageHolder.mDisabledOverlay.setVisibility(View.GONE);
-                pageHolder.mProgressBar.setIndeterminate(false);
-            }
         }
 
         // load more posts when we near the end
@@ -357,63 +308,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    /*
-     * returns the caption to show in the date header for the passed page - pages with the same
-     * caption will be grouped together
-     * - if page is local draft, returns "Local draft"
-     * - if page is scheduled, returns formatted date w/o time
-     * - if created today or yesterday, returns "Today" or "Yesterday"
-     * - if created this month, returns the number of days ago
-     * - if created this year, returns the month name
-     * - if created before this year, returns the month name with year
-     */
-    private static String getPageDateHeaderText(Context context, PostModel page) {
-        if (page.isLocalDraft()) {
-            return context.getString(R.string.local_draft);
-        } else if (PostStatus.fromPost(page) == PostStatus.SCHEDULED) {
-            return DateUtils.formatDateTime(context, DateTimeUtils.timestampFromIso8601Millis(page.getDateCreated()),
-                                            DateUtils.FORMAT_ABBREV_ALL);
-        } else {
-            Date dtCreated = DateTimeUtils.dateUTCFromIso8601(page.getDateCreated());
-            Date dtNow = DateTimeUtils.nowUTC();
-            int daysBetween = DateTimeUtils.daysBetween(dtCreated, dtNow);
-            if (daysBetween == 0) {
-                return context.getString(R.string.today);
-            } else if (daysBetween == 1) {
-                return context.getString(R.string.yesterday);
-            } else if (DateTimeUtils.isSameMonthAndYear(dtCreated, dtNow)) {
-                return String.format(context.getString(R.string.days_ago), daysBetween);
-            } else if (DateTimeUtils.isSameYear(dtCreated, dtNow)) {
-                return new SimpleDateFormat("MMMM", Locale.getDefault()).format(dtCreated);
-            } else {
-                return new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(dtCreated);
-            }
-        }
-    }
-
-    /*
-     * user tapped "..." next to a page, show a popup menu of choices
-     */
-    private void showPagePopupMenu(View view, final PostModel page) {
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setAdapter(new PageMenuAdapter(context, page));
-        listPopup.setAnchorView(view);
-        listPopup.setModal(true);
-        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                listPopup.dismiss();
-                if (mOnPostButtonClickListener != null) {
-                    int buttonId = (int) id;
-                    mOnPostButtonClickListener.onPostButtonClicked(buttonId, page);
-                }
-            }
-        });
-        listPopup.show();
-    }
-
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
         if (!mUploadStore.isFailedPost(post)
             && (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
@@ -443,8 +337,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
-                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
-                                                             : R.string.error_media_recover_post);
+                    errorMessage = context.getString(R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
@@ -677,8 +570,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
                 if (viewHolder instanceof PostViewHolder) {
                     updatePostUploadProgressBar(((PostViewHolder) viewHolder).mProgressBar, post);
-                } else if (viewHolder instanceof PageViewHolder) {
-                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).mProgressBar, post);
                 }
             }
         }
@@ -696,11 +587,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mPosts.remove(position);
             if (mPosts.size() > 0) {
                 notifyItemRemoved(position);
-
-                // when page is removed update the next one in case we need to show a header
-                if (mIsPage) {
-                    notifyItemChanged(position);
-                }
             } else {
                 // we must call notifyDataSetChanged when the only post has been deleted - if we
                 // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
@@ -778,31 +664,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private class PageViewHolder extends RecyclerView.ViewHolder {
-        private final TextView mTxtTitle;
-        private final TextView mTxtDate;
-        private final TextView mTxtStatus;
-        private final ImageView mImgStatus;
-        private final ViewGroup mDateHeader;
-        private final View mBtnMore;
-        private final View mDividerTop;
-        private final View mDisabledOverlay;
-        private final ProgressBar mProgressBar;
-
-        PageViewHolder(View view) {
-            super(view);
-            mTxtTitle = view.findViewById(R.id.text_title);
-            mTxtStatus = view.findViewById(R.id.text_status);
-            mImgStatus = view.findViewById(R.id.image_status);
-            mBtnMore = view.findViewById(R.id.btn_more);
-            mDividerTop = view.findViewById(R.id.divider_top);
-            mDateHeader = view.findViewById(R.id.header_date);
-            mTxtDate = mDateHeader.findViewById(R.id.text_date);
-            mDisabledOverlay = view.findViewById(R.id.disabled_overlay);
-            mProgressBar = view.findViewById(R.id.post_upload_progress);
-        }
-    }
-
     private class EndListViewHolder extends RecyclerView.ViewHolder {
         EndListViewHolder(View view) {
             super(view);
@@ -853,11 +714,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            if (mIsPage) {
-                mTmpPosts = mPostStore.getPagesForSite(mSite);
-            } else {
-                mTmpPosts = mPostStore.getPostsForSite(mSite);
-            }
+            mTmpPosts = mPostStore.getPostsForSite(mSite);
 
             // Make sure we don't return any hidden posts
             if (mHiddenPosts.size() > 0) {
