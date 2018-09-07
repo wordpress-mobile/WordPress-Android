@@ -434,7 +434,7 @@ class PagesViewModel
 }
 
 @StringRes fun PageStatus.getTitle(): Int {
-    return when(this) {
+    return when (this) {
         PUBLISHED -> string.pages_published
         DRAFT -> string.pages_drafts
         SCHEDULED -> string.pages_scheduled
