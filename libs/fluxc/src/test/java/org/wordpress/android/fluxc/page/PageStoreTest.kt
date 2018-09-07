@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
@@ -189,10 +190,10 @@ class PageStoreTest {
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
         val event = OnPostChanged(0)
         event.causeOfChange = DELETE_POST
-        val page = PageModel(post, site, null)
+        val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
         launch {
-            result = store.deletePage(page)
+            result = store.deletePageFromServer(page)
         }
         delay(10)
         store.onPostChanged(event)
@@ -212,10 +213,10 @@ class PageStoreTest {
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(0)
         event.error = PostError(UNKNOWN_POST)
-        val page = PageModel(post, site, null)
+        val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
         launch {
-            result = store.deletePage(page)
+            result = store.deletePageFromServer(page)
         }
         delay(10)
         store.onPostChanged(event)
@@ -323,5 +324,10 @@ class PageStoreTest {
         }
         page.remotePostId = remoteId
         return page
+    }
+
+    private fun createPageFromPost(post: PostModel, site: SiteModel, parent: PageModel? = null): PageModel {
+        return PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
+                post.remotePostId, parent)
     }
 }
