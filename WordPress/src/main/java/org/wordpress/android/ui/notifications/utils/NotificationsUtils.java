@@ -280,7 +280,7 @@ public class NotificationsUtils {
                                 .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
 
-                    if (onNoteBlockTextClickListener != null) {
+                    if (onNoteBlockTextClickListener != null && textView != null) {
                         textView.setLinksClickable(true);
                         textView.setMovementMethod(new NoteBlockLinkMovementMethod());
                     }
