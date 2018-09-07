@@ -21,9 +21,10 @@ import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
+private const val DOMAIN_WP_COM = "wordpress.com"
+
 class FormattableContentClickHandler
 @Inject constructor(val siteStore: SiteStore) {
-    private val domainWpCom = "wordpress.com"
     fun onClick(activity: FragmentActivity, clickedSpan: FormattableRange) {
         if (activity.isFinishing) {
             return
@@ -116,7 +117,7 @@ class FormattableContentClickHandler
             return
         }
 
-        if (url.contains(domainWpCom)) {
+        if (url.contains(DOMAIN_WP_COM)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(activity, url)
         } else {
             WPWebViewActivity.openURL(activity, url)
