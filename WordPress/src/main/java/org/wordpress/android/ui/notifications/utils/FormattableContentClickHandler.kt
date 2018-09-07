@@ -8,6 +8,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.fluxc.tools.FormattableRangeType
+import org.wordpress.android.fluxc.tools.FormattableRangeType.BLOCKQUOTE
+import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
+import org.wordpress.android.fluxc.tools.FormattableRangeType.FOLLOW
+import org.wordpress.android.fluxc.tools.FormattableRangeType.LIKE
+import org.wordpress.android.fluxc.tools.FormattableRangeType.MATCH
+import org.wordpress.android.fluxc.tools.FormattableRangeType.NOTICON
+import org.wordpress.android.fluxc.tools.FormattableRangeType.PAGE
+import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
+import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
+import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
+import org.wordpress.android.fluxc.tools.FormattableRangeType.UNKNOWN
+import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -34,37 +46,37 @@ class FormattableContentClickHandler
         val siteId = clickedSpan.siteId ?: 0
         val rangeType = clickedSpan.rangeType()
         when (rangeType) {
-            FormattableRangeType.SITE ->
+            SITE ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, id)
-            FormattableRangeType.USER ->
+            USER ->
                 // Show blog preview
                 showBlogPreviewActivity(activity, siteId)
-            FormattableRangeType.POST ->
+            PAGE, POST ->
                 // Show post detail
                 showPostActivity(activity, siteId, id)
-            FormattableRangeType.COMMENT ->
-                // Load the comment in the reader list if it exists, otherwise show a webview
+            COMMENT ->
             {
-                val postId = clickedSpan.postId ?: 0
+                // Load the comment in the reader list if it exists, otherwise show a webview
+                val postId = clickedSpan.postId ?: clickedSpan.rootId ?: 0
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
                     showReaderCommentsList(activity, siteId, postId, id)
                 } else {
                     showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
             }
-            FormattableRangeType.STAT, FormattableRangeType.FOLLOW ->
+            STAT, FOLLOW ->
                 // We can open native stats if the site is a wpcom or Jetpack sites
                 showStatsActivityForSite(activity, siteId, rangeType)
-            FormattableRangeType.LIKE -> if (ReaderPostTable.postExists(siteId, id)) {
+            LIKE -> if (ReaderPostTable.postExists(siteId, id)) {
                 showReaderPostLikeUsers(activity, siteId, id)
             } else {
                 showPostActivity(activity, siteId, id)
             }
-            FormattableRangeType.BLOCKQUOTE,
-            FormattableRangeType.NOTICON,
-            FormattableRangeType.MATCH,
-            FormattableRangeType.UNKNOWN -> {
+            BLOCKQUOTE,
+            NOTICON,
+            MATCH,
+            UNKNOWN -> {
                 showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
             }
         }
@@ -94,7 +106,7 @@ class FormattableContentClickHandler
         site: SiteModel,
         rangeType: FormattableRangeType
     ) {
-        if (rangeType == FormattableRangeType.FOLLOW) {
+        if (rangeType == FOLLOW) {
             val intent = Intent(activity, StatsViewAllActivity::class.java)
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS)
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY)

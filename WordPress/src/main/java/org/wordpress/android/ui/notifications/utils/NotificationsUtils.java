@@ -192,15 +192,17 @@ public class NotificationsUtils {
                                                   final NoteBlock.OnNoteBlockTextClickListener
                                                           onNoteBlockTextClickListener,
                                                   boolean isFooter) {
-        return getSpannableContentForRanges(formattableContent,
-                textView,
-                isFooter,
-                new Function1<NoteBlockClickableSpan, Unit>() {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                onNoteBlockTextClickListener != null ? new Function1<NoteBlockClickableSpan, Unit>() {
                     @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
                         onNoteBlockTextClickListener.onNoteBlockTextClicked(noteBlockClickableSpan);
                         return null;
                     }
-                });
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
     }
 
     /**
@@ -216,15 +218,17 @@ public class NotificationsUtils {
                                                   TextView textView,
                                                   final Function1<FormattableRange, Unit> clickHandler,
                                                   boolean isFooter) {
-        return getSpannableContentForRanges(formattableContent,
-                textView,
-                isFooter,
-                new Function1<NoteBlockClickableSpan, Unit>() {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
                     @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
                         clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
                         return null;
                     }
-                });
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
     }
 
     /**
