@@ -1,9 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.support.v4.app.FragmentActivity
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -23,7 +21,6 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
-import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -34,7 +31,6 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
-    @Mock private lateinit var formattableContentClickHandler: FormattableContentClickHandler
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -71,8 +67,7 @@ class ActivityLogDetailViewModelTest {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
                 activityLogStore,
-                rewindStatusService,
-                formattableContentClickHandler
+                rewindStatusService
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
     }
@@ -178,11 +173,10 @@ class ActivityLogDetailViewModelTest {
     @Test
     fun onRangeClickPassesClickToCLickHandler() {
         val range = mock<FormattableRange>()
-        val activity = mock<FragmentActivity>()
 
-        viewModel.onRangeClicked(activity, range)
+        viewModel.onRangeClicked(range)
 
-        verify(formattableContentClickHandler).onClick(activity, range)
+        assertEquals(range, viewModel.handleFormattableRangeClick.value)
     }
 
     @Test

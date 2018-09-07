@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.image.ImageManager
@@ -28,6 +30,7 @@ class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+    @Inject lateinit var formattableContentClickHandler: FormattableContentClickHandler
 
     private lateinit var viewModel: ActivityLogDetailViewModel
 
@@ -70,7 +73,7 @@ class ActivityLogDetailFragment : Fragment() {
 
                 val spannable = activityLogModel?.content?.let {
                     notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
-                        viewModel.onRangeClicked(activity, range)
+                        viewModel.onRangeClicked(range)
                     }, false)
                 }
 
@@ -93,6 +96,12 @@ class ActivityLogDetailFragment : Fragment() {
 
             viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> { detailModel ->
                 detailModel?.let { onRewindButtonClicked(it) }
+            })
+
+            viewModel.handleFormattableRangeClick.observe(this, Observer<FormattableRange> { range ->
+                if (range != null) {
+                    formattableContentClickHandler.onClick(activity, range)
+                }
             })
 
             viewModel.start(site, activityLogId)

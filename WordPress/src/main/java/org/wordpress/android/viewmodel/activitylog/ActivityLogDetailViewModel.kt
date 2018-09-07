@@ -5,7 +5,6 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import android.support.v4.app.FragmentActivity
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
@@ -13,7 +12,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
-import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -29,8 +27,7 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService,
-    private val formattableContentClickHandler: FormattableContentClickHandler
+    private val rewindStatusService: RewindStatusService
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
@@ -38,6 +35,10 @@ class ActivityLogDetailViewModel
     private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
     val showRewindDialog: LiveData<ActivityLogDetailModel>
         get() = _showRewindDialog
+
+    private val _handleFormattableRangeClick = SingleLiveEvent<FormattableRange>()
+    val handleFormattableRangeClick: LiveData<FormattableRange>
+        get() = _handleFormattableRangeClick
 
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
@@ -89,8 +90,8 @@ class ActivityLogDetailViewModel
         rewindStatusService.stop()
     }
 
-    fun onRangeClicked(activity: FragmentActivity, range: FormattableRange) {
-        formattableContentClickHandler.onClick(activity, range)
+    fun onRangeClicked(range: FormattableRange) {
+        _handleFormattableRangeClick.value = range
     }
 
     fun onRewindClicked(model: ActivityLogDetailModel) {

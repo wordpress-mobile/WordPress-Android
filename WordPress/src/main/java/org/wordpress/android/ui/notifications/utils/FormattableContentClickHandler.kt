@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications.utils
 
 import android.content.Intent
 import android.support.v4.app.FragmentActivity
-import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.SiteModel
@@ -51,7 +50,7 @@ class FormattableContentClickHandler
                 if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
                     showReaderCommentsList(activity, siteId, postId, id)
                 } else {
-                    showWebViewActivityForUrl(activity, clickedSpan.url)
+                    showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
                 }
             }
             FormattableRangeType.STAT, FormattableRangeType.FOLLOW ->
@@ -62,13 +61,12 @@ class FormattableContentClickHandler
             } else {
                 showPostActivity(activity, siteId, id)
             }
-            else ->
-                // We don't know what type of id this is, let's see if it has a URL and push a webview
-                if (!TextUtils.isEmpty(clickedSpan.url)) {
-                    showWebViewActivityForUrl(activity, clickedSpan.url)
-                } else {
-                    AppLog.e(API, "Unexpected range type $rangeType without an url")
-                }
+            FormattableRangeType.BLOCKQUOTE,
+            FormattableRangeType.NOTICON,
+            FormattableRangeType.MATCH,
+            FormattableRangeType.UNKNOWN -> {
+                showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
+            }
         }
     }
 
@@ -114,8 +112,9 @@ class FormattableContentClickHandler
         }
     }
 
-    private fun showWebViewActivityForUrl(activity: FragmentActivity, url: String?) {
-        if (url == null) {
+    private fun showWebViewActivityForUrl(activity: FragmentActivity, url: String?, rangeType: FormattableRangeType) {
+        if (url == null || url.isEmpty()) {
+            AppLog.e(API, "Trying to open web view activity but the URL is missing for range type $rangeType")
             return
         }
 
