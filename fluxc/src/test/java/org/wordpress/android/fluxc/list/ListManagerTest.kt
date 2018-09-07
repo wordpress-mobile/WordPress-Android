@@ -3,11 +3,11 @@ package org.wordpress.android.fluxc.list
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -206,10 +206,9 @@ class ListManagerTest {
         val listItems: List<ListItemModel> = mock()
         val listItemModel = ListItemModel()
         listItemModel.remoteItemId = remoteItemId
-
-        `when`(listItems.size).thenReturn(numberOfItems)
-        `when`(listItems[indexToGet]).thenReturn(listItemModel)
-        `when`(dataSource.getItem(listDescriptor, remoteItemId)).thenReturn(remoteItem)
+        whenever(listItems.size).thenReturn(numberOfItems)
+        whenever(listItems[indexToGet]).thenReturn(listItemModel)
+        whenever(dataSource.getItem(listDescriptor, remoteItemId)).thenReturn(remoteItem)
         val listManager = ListManager(dispatcher, listDescriptor, listItems, dataSource, loadMoreOffset,
                 isFetchingFirstPage, isLoadingMore)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
