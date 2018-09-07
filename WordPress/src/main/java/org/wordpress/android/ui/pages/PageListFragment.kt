@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.viewmodel.pages.IListViewModel
+import org.wordpress.android.viewmodel.pages.IListViewModel.ListType
+import org.wordpress.android.viewmodel.pages.IListViewModel.ListType.SEARCH
 import org.wordpress.android.viewmodel.pages.PageListViewModel
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.viewmodel.pages.SearchListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -25,18 +27,28 @@ import javax.inject.Inject
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: PageListViewModel
+    private lateinit var viewModel: IListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
 
     companion object {
         private const val typeKey = "type_key"
+        private const val statusKey = "status_key"
 
-        fun newInstance(type: ListType): PageListFragment {
+        fun newPageListInstance(pageStatus: PageStatus): PageListFragment {
             val fragment = PageListFragment()
             val bundle = Bundle()
-            bundle.putSerializable(typeKey, type)
+            bundle.putSerializable(statusKey, pageStatus)
+            bundle.putSerializable(typeKey, ListType.PAGES)
+            fragment.arguments = bundle
+            return fragment
+        }
+
+        fun newSearchListInstance(): PageListFragment {
+            val fragment = PageListFragment()
+            val bundle = Bundle()
+            bundle.putSerializable(typeKey, ListType.SEARCH)
             fragment.arguments = bundle
             return fragment
         }
@@ -69,13 +81,18 @@ class PageListFragment : Fragment() {
         val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         if (type == SEARCH) {
-            viewModel = ViewModelProviders.of(this, viewModelFactory)
-                    .get<SearchListViewModel>(type.name, SearchListViewModel::class.java)
-            (viewModel as SearchListViewModel).start(pagesViewModel)
+            val searchListViewModel = ViewModelProviders.of(this, viewModelFactory)
+                    .get(SearchListViewModel::class.java)
+
+            viewModel = searchListViewModel
+            searchListViewModel.start(pagesViewModel)
         } else {
-            viewModel = ViewModelProviders.of(this, viewModelFactory)
-                    .get<PageListViewModel>(type.name, PageListViewModel::class.java)
-            viewModel.start(type, pagesViewModel)
+            val pageStatus = checkNotNull(arguments?.getSerializable(statusKey) as PageStatus?)
+            val pageListViewModel = ViewModelProviders.of(this, viewModelFactory)
+                    .get(pageStatus.name, PageListViewModel::class.java)
+
+            viewModel = pageListViewModel
+            pageListViewModel.start(pageStatus, pagesViewModel)
         }
 
         setupObservers()
@@ -101,11 +118,16 @@ class PageListFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) },
-                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() }
-            )
+            if (viewModel is PageListViewModel) {
+                adapter = PagesAdapter(
+                        { action, page -> viewModel.onMenuAction(action, page) },
+                        { page -> viewModel.onItemTapped(page) },
+                        { (viewModel as PageListViewModel).onEmptyListNewPageButtonTapped() })
+            } else {
+                adapter = PagesAdapter(
+                        { action, page -> viewModel.onMenuAction(action, page) },
+                        { page -> viewModel.onItemTapped(page) })
+            }
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter

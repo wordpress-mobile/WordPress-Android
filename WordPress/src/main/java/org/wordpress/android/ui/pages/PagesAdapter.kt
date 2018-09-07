@@ -14,13 +14,34 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.PageDividerViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageParentViewHolder
 import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 
-class PagesAdapter(
-    private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
-    private val onItemTapped: (Page) -> Unit = { },
-    private val onParentSelected: (ParentPage) -> Unit = { },
-    private val onEmptyActionButtonTapped: () -> Unit = { }
-) : Adapter<PageItemViewHolder>() {
+class PagesAdapter() : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
+    private var onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false }
+    private var onItemTapped: (Page) -> Unit = { }
+    private var onParentSelected: (ParentPage) -> Unit = { }
+    private var onEmptyActionButtonTapped: () -> Unit = { }
+
+    constructor(onParentSelected: (ParentPage) -> Unit) : this() {
+        this.onParentSelected = onParentSelected
+    }
+
+    constructor(
+        onMenuAction: (PageItem.Action, Page) -> Boolean,
+        onItemTapped: (Page) -> Unit
+    ) : this() {
+        this.onMenuAction = onMenuAction
+        this.onItemTapped = onItemTapped
+    }
+
+    constructor(
+        onMenuAction: (PageItem.Action, Page) -> Boolean,
+        onItemTapped: (Page) -> Unit,
+        onEmptyActionButtonTapped: () -> Unit
+    ) : this() {
+        this.onMenuAction = onMenuAction
+        this.onItemTapped = onItemTapped
+        this.onEmptyActionButtonTapped = onEmptyActionButtonTapped
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageItemViewHolder {
         return when (viewType) {
