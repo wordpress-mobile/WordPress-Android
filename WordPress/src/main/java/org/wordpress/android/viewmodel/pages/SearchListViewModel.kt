@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 class SearchListViewModel
 @Inject constructor(private val resourceProvider: ResourceProvider) : PageListViewModel() {
-
     fun start(pagesViewModel: PagesViewModel) {
         this.listType = SEARCH
         this.pagesViewModel = pagesViewModel
