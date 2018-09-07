@@ -33,7 +33,7 @@ class PagesAdapter(
             PageItem.Type.TOP_LEVEL_PARENT.viewType -> PageParentViewHolder(parent,
                     this::selectParent,
                     R.layout.page_parent_top_level_item)
-            else -> throw IllegalArgumentException("Unexpected view type")
+            else -> throw Throwable("Unexpected view type")
         }
     }
 

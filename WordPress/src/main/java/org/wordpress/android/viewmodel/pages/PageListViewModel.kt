@@ -9,10 +9,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -23,6 +19,11 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
@@ -32,23 +33,23 @@ class PageListViewModel
     val pages: LiveData<List<PageItem>> = _pages
 
     private var isStarted: Boolean = false
-    private lateinit var pageType: PageStatus
+    private lateinit var listType: ListType
 
     private lateinit var pagesViewModel: PagesViewModel
 
-    fun start(pageType: PageStatus, pagesViewModel: PagesViewModel) {
-        this.pageType = pageType
+    fun start(listType: ListType, pagesViewModel: PagesViewModel) {
+        this.listType = listType
         this.pagesViewModel = pagesViewModel
 
         if (!isStarted) {
             isStarted = true
 
-            pagesViewModel.pages.observeForever(refreshPagesObserver)
+            pagesViewModel.pages.observeForever(pagesObserver)
         }
     }
 
     override fun onCleared() {
-        pagesViewModel.pages.removeObserver(refreshPagesObserver)
+        pagesViewModel.pages.removeObserver(pagesObserver)
     }
 
     fun onMenuAction(action: Action, pageItem: Page): Boolean {
@@ -63,7 +64,7 @@ class PageListViewModel
         pagesViewModel.onNewPageButtonTapped()
     }
 
-    private val refreshPagesObserver = Observer<List<PageModel>> { pages ->
+    private val pagesObserver = Observer<List<PageModel>> { pages ->
         pages?.let {
             loadPagesAsync(pages)
 
@@ -72,26 +73,32 @@ class PageListViewModel
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
-        val newPages = pages
-                .filter { it.status == pageType }
+        val pageItems = pages
+                .filter { listType == SEARCH || listType.status == it.status }
                 .let {
-                    when (pageType) {
+                    when (listType) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
                         SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
-                        DRAFT -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                        DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
                         TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
+                        SEARCH -> listOf()
                     }
                 }
 
+        showMessageIfEmpty(pageItems)
+    }
+
+    private fun showMessageIfEmpty(newPages: List<PageItem>) {
         if (newPages.isEmpty()) {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
-                when (pageType) {
+                when (listType) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
-                    DRAFT -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
+                    DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
+                    SEARCH -> {}
                 }
             }
         } else {
@@ -113,7 +120,7 @@ class PageListViewModel
     private fun clearNonPublishedParents(page: PageModel?) {
         if (page != null) {
             clearNonPublishedParents(page.parent)
-            if (page.parent?.status != pageType) {
+            if (page.parent?.status != listType) {
                 page.parent = null
             }
         }
@@ -154,6 +161,14 @@ class PageListViewModel
 
     private fun getPageItemIndent(page: PageModel?): Int {
         return if (page == null) -1 else getPageItemIndent(page.parent) + 1
+    }
+
+    enum class ListType(val status: PageStatus?) {
+        PUBLISHED(PageStatus.PUBLISHED),
+        DRAFTS(PageStatus.DRAFT),
+        SCHEDULED(PageStatus.SCHEDULED),
+        TRASHED(PageStatus.TRASHED),
+        SEARCH(null),
     }
 
     enum class PageListState {
