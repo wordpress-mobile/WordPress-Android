@@ -113,11 +113,6 @@
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
-    <!-- timestamps for posts / pages -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="days_ago">%d days ago</string>
-
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
