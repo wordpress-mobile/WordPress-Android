@@ -18,6 +18,8 @@ import org.wordpress.android.ui.stats.StatsActivity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsViewAllActivity
 import org.wordpress.android.ui.stats.StatsViewType
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
@@ -46,10 +48,8 @@ class FormattableContentClickHandler
                 // Load the comment in the reader list if it exists, otherwise show a webview
             {
                 val postId = clickedSpan.postId ?: 0
-                if (ReaderUtils.postAndCommentExists(siteId, postId,
-                                id)) {
-                    showReaderCommentsList(activity, siteId, postId,
-                            id)
+                if (ReaderUtils.postAndCommentExists(siteId, postId, id)) {
+                    showReaderCommentsList(activity, siteId, postId, id)
                 } else {
                     showWebViewActivityForUrl(activity, clickedSpan.url)
                 }
@@ -66,6 +66,8 @@ class FormattableContentClickHandler
                 // We don't know what type of id this is, let's see if it has a URL and push a webview
                 if (!TextUtils.isEmpty(clickedSpan.url)) {
                     showWebViewActivityForUrl(activity, clickedSpan.url)
+                } else {
+                    AppLog.e(API, "Unexpected range type $rangeType without an url")
                 }
         }
     }
