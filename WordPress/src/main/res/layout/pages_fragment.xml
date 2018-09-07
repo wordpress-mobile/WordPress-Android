@@ -26,15 +26,13 @@
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/searchRecyclerView"
+        <FrameLayout
+            android:id="@+id/searchFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:visibility="visible"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"

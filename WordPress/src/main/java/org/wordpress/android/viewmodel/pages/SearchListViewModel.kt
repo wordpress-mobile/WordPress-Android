@@ -41,7 +41,7 @@ class SearchListViewModel
         }
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageStatus, List<PageModel>>)  = launch {
+    private fun loadFoundPages(pages: SortedMap<PageStatus, List<PageModel>>) = launch {
         if (pages.isNotEmpty()) {
             val pageItems = pages
                     .map { (status, results) ->

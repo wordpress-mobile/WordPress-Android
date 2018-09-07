@@ -4,9 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.ui.pages.PageItem
@@ -22,20 +22,45 @@ import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.PUBLISHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SCHEDULED
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
 import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import javax.inject.Inject
 
-class PageListViewModel
-@Inject constructor(val dispatcher: Dispatcher) : ViewModel() {
-    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
+open class PageListViewModel : ViewModel() {
+    protected val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
-    private var isStarted: Boolean = false
-    private lateinit var listType: ListType
+    protected var isStarted: Boolean = false
+    protected lateinit var listType: ListType
 
-    private lateinit var pagesViewModel: PagesViewModel
+    protected lateinit var pagesViewModel: PagesViewModel
+
+    enum class ListType(val status: PageStatus?, @StringRes val titleResource: Int) {
+        PUBLISHED(PageStatus.PUBLISHED, string.pages_published),
+        DRAFTS(PageStatus.DRAFT, string.pages_drafts),
+        SCHEDULED(PageStatus.SCHEDULED, string.pages_scheduled),
+        TRASHED(PageStatus.TRASHED, string.pages_trashed),
+        SEARCH(null, 0);
+
+        companion object {
+            fun fromPosition(position: Int): ListType {
+                if (position >= values().size) {
+                    throw Throwable("Selected position $position is out of range of page list types")
+                }
+                return values()[position]
+            }
+
+            fun fromStatus(status: PageStatus): ListType {
+                return values().first { it.status == status }
+            }
+        }
+    }
+
+    enum class PageListState {
+        DONE,
+        ERROR,
+        REFRESHING,
+        FETCHING
+    }
 
     fun start(listType: ListType, pagesViewModel: PagesViewModel) {
         this.listType = listType
@@ -74,21 +99,22 @@ class PageListViewModel
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .filter { listType == SEARCH || listType.status == it.status }
+                .filter { listType.status == it.status }
                 .let {
                     when (listType) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
                         SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
                         DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
                         TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
-                        SEARCH -> listOf()
+                        else ->
+                            throw IllegalArgumentException("Only published, scheduled, draft and trashed items allowed")
                     }
                 }
 
-        showMessageIfEmpty(pageItems)
+        displayListItems(pageItems)
     }
 
-    private fun showMessageIfEmpty(newPages: List<PageItem>) {
+    private fun displayListItems(newPages: List<PageItem>) {
         if (newPages.isEmpty()) {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
@@ -98,7 +124,7 @@ class PageListViewModel
                     SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
                     DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
-                    SEARCH -> {}
+                    else -> throw IllegalArgumentException("Only published, scheduled, draft and trashed items allowed")
                 }
             }
         } else {
@@ -109,21 +135,11 @@ class PageListViewModel
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        pages.forEach { clearNonPublishedParents(it) }
         return topologicalSort(pages)
                 .map {
                     val label = if (it.hasLocalChanges) string.local_changes else null
                     PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it), actionsEnabled)
                 }
-    }
-
-    private fun clearNonPublishedParents(page: PageModel?) {
-        if (page != null) {
-            clearNonPublishedParents(page.parent)
-            if (page.parent?.status != listType) {
-                page.parent = null
-            }
-        }
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
@@ -160,21 +176,15 @@ class PageListViewModel
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
-        return if (page == null) -1 else getPageItemIndent(page.parent) + 1
+        return if (page == null || page.status != PageStatus.PUBLISHED) -1 else getPageItemIndent(page.parent) + 1
     }
 
-    enum class ListType(val status: PageStatus?) {
-        PUBLISHED(PageStatus.PUBLISHED),
-        DRAFTS(PageStatus.DRAFT),
-        SCHEDULED(PageStatus.SCHEDULED),
-        TRASHED(PageStatus.TRASHED),
-        SEARCH(null),
-    }
-
-    enum class PageListState {
-        DONE,
-        ERROR,
-        REFRESHING,
-        FETCHING
+    protected fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
+        return when (status) {
+            PageStatus.PUBLISHED -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.DRAFT -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
+        }
     }
 }

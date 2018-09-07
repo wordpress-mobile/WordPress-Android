@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.pages.SearchListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -31,23 +33,7 @@ class PageListFragment : Fragment() {
     companion object {
         private const val typeKey = "type_key"
 
-        enum class Type(val text: Int) {
-            PUBLISHED(R.string.pages_published),
-            DRAFTS(R.string.pages_drafts),
-            SCHEDULED(R.string.pages_scheduled),
-            TRASH(R.string.pages_trashed);
-
-            companion object {
-                fun getType(position: Int): Type {
-                    if (position >= values().size) {
-                        throw Throwable("Selected position $position is out of range of page list types")
-                    }
-                    return values()[position]
-                }
-            }
-        }
-
-        fun newInstance(type: Type): PageListFragment {
+        fun newInstance(type: ListType): PageListFragment {
             val fragment = PageListFragment()
             val bundle = Bundle()
             bundle.putSerializable(typeKey, type)
@@ -64,7 +50,7 @@ class PageListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = checkNotNull(activity)
-        val type = checkNotNull(arguments?.getSerializable(typeKey) as Type?)
+        val type = checkNotNull(arguments?.getSerializable(typeKey) as ListType?)
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
@@ -79,14 +65,20 @@ class PageListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, type: Type) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PageListViewModel>(type.name, PageListViewModel::class.java)
+    private fun initializeViewModels(activity: FragmentActivity, type: ListType) {
+        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+
+        if (type == SEARCH) {
+            viewModel = ViewModelProviders.of(this, viewModelFactory)
+                    .get<SearchListViewModel>(type.name, SearchListViewModel::class.java)
+            (viewModel as SearchListViewModel).start(pagesViewModel)
+        } else {
+            viewModel = ViewModelProviders.of(this, viewModelFactory)
+                    .get<PageListViewModel>(type.name, PageListViewModel::class.java)
+            viewModel.start(type, pagesViewModel)
+        }
 
         setupObservers()
-
-        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -104,15 +96,6 @@ class PageListFragment : Fragment() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
         })
-    }
-
-    private fun getPageType(type: Type): PageStatus {
-        return when (type) {
-            Type.PUBLISHED -> PageStatus.PUBLISHED
-            Type.DRAFTS -> PageStatus.DRAFT
-            Type.SCHEDULED -> PageStatus.SCHEDULED
-            else -> PageStatus.TRASHED
-        }
     }
 
     private fun setPages(pages: List<PageItem>) {

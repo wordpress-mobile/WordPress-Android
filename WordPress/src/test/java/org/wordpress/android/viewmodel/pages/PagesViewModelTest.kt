@@ -44,7 +44,7 @@ class PagesViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, actionPerformer, Unconfined)
+        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined)
     }
 
     @Test

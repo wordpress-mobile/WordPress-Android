@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.UI_CONTEXT
-import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -31,16 +30,9 @@ import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
-import org.wordpress.android.ui.pages.PageItem.Divider
-import org.wordpress.android.ui.pages.PageItem.DraftPage
-import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.pages.PageItem.PublishedPage
-import org.wordpress.android.ui.pages.PageItem.ScheduledPage
-import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
@@ -51,6 +43,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import java.util.Date
+import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
@@ -60,15 +53,11 @@ class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
-    private val resourceProvider: ResourceProvider,
     private val actionPerfomer: ActionPerformer,
     @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
-
-    private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private val _listState = MutableLiveData<PageListState>()
     val listState: LiveData<PageListState> = _listState
@@ -81,6 +70,9 @@ class PagesViewModel
 
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
+
+    private val _searchPages: MutableLiveData<SortedMap<PageStatus, List<PageModel>>> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageStatus, List<PageModel>>> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -102,6 +94,10 @@ class PagesViewModel
         set(value) {
             _pageMap = value
             _pages.postValue(pageMap.values.toList())
+
+            if (isSearchExpanded.value == true) {
+                onSearch(lastSearchQuery)
+            }
         }
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
@@ -126,7 +122,6 @@ class PagesViewModel
     fun start(site: SiteModel) {
         _site = site
 
-        clearSearch()
         reloadPagesAsync()
     }
 
@@ -205,12 +200,9 @@ class PagesViewModel
                 delay(200)
                 searchJob = null
                 if (isActive) {
-                    val result = search(searchQuery)
-                    if (result.isNotEmpty()) {
-                        _searchResult.postValue(result)
-                    } else {
-                        _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
-                    }
+                    _lastSearchQuery = searchQuery
+                    val result = pageStore.groupedSearch(site, searchQuery)
+                    _searchPages.postValue(result)
                 }
             }
         } else {
@@ -218,38 +210,10 @@ class PagesViewModel
         }
     }
 
-    suspend fun search(searchQuery: String): MutableList<PageItem> {
-        _lastSearchQuery = searchQuery
-        return pageStore.groupedSearch(site, searchQuery)
-                .map { (status, results) ->
-                    listOf(Divider(resourceProvider.getString(status.toResource()))) + results.map { it.toPageItem() }
-                }
-                .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
-                    acc.addAll(list)
-                    return@fold acc
-                }
-    }
-
-    private fun PageModel.toPageItem(): PageItem {
-        return when (status) {
-            PUBLISHED -> PublishedPage(remoteId, title)
-            DRAFT -> DraftPage(remoteId, title)
-            TRASHED -> TrashedPage(remoteId, title)
-            SCHEDULED -> ScheduledPage(remoteId, title)
+    fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
+        if (!restorePreviousSearch) {
+            clearSearch()
         }
-    }
-
-    private fun PageStatus.toResource(): Int {
-        return when (this) {
-            PageStatus.PUBLISHED -> string.pages_published
-            PageStatus.DRAFT -> string.pages_drafts
-            PageStatus.TRASHED -> string.pages_trashed
-            PageStatus.SCHEDULED -> string.pages_scheduled
-        }
-    }
-
-    fun onSearchExpanded(): Boolean {
-        clearSearch()
 
         _isSearchExpanded.value = true
         _isNewPageButtonVisible.value = false
@@ -311,8 +275,8 @@ class PagesViewModel
         val action = PageAction(UPLOAD) {
             launch(CommonPool) {
                 if (page.parent?.remoteId != parentId) {
-                    page.parent = pageMap[parentId]
-                    _pages.postValue(pageMap.values.toList())
+                    page.parent = _pageMap[parentId]
+                    pageMap = _pageMap
 
                     pageStore.uploadPageToServer(page)
                 }
@@ -321,8 +285,8 @@ class PagesViewModel
         action.undo = {
             launch(CommonPool) {
                 pageMap[page.remoteId]?.let { changed ->
-                    changed.parent = pageMap[oldParent]
-                    _pages.postValue(pageMap.values.toList())
+                    changed.parent = _pageMap[oldParent]
+                    pageMap = _pageMap
 
                     pageStore.uploadPageToServer(changed)
                 }
@@ -331,7 +295,6 @@ class PagesViewModel
         action.onSuccess = {
             launch(CommonPool) {
                 reloadPages()
-                onSearch(lastSearchQuery)
 
                 delay(100)
                 _showSnackbarMessage.postValue(
@@ -356,8 +319,8 @@ class PagesViewModel
     private fun deletePage(page: PageModel) {
         val action = PageAction(REMOVE) {
             launch(CommonPool) {
-                pageMap.remove(page.remoteId)
-                _pages.postValue(pageMap.values.toList())
+                _pageMap.remove(page.remoteId)
+                pageMap = _pageMap
 
                 checkIfNewPageButtonShouldBeVisible()
 
@@ -368,7 +331,6 @@ class PagesViewModel
             launch(CommonPool) {
                 delay(100)
                 reloadPages()
-                onSearch(lastSearchQuery)
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
             }
@@ -382,9 +344,7 @@ class PagesViewModel
         }
 
         launch {
-            _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
-            _arePageActionsEnabled = true
         }
     }
 
@@ -404,7 +364,6 @@ class PagesViewModel
                 page.status = oldStatus
                 launch(CommonPool) {
                     pageStore.updatePageInDb(page)
-                    onSearch(lastSearchQuery)
                     refreshPages()
 
                     pageStore.uploadPageToServer(page)
@@ -414,7 +373,6 @@ class PagesViewModel
                 launch(CommonPool) {
                     delay(100)
                     reloadPages()
-                    onSearch(lastSearchQuery)
 
                     val message = prepareStatusChangeSnackbar(status, action.undo)
                     _showSnackbarMessage.postValue(message)
@@ -453,7 +411,7 @@ class PagesViewModel
 
     private fun clearSearch() {
         _lastSearchQuery = ""
-        _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
+        _searchPages.postValue(null)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
