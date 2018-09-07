@@ -95,7 +95,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mPhotonHeight;
     private final int mEndlistIndicatorHeight;
 
-    private final boolean mIsPage;
     private final boolean mIsStatsSupported;
     private final boolean mShowAllButtons;
 
@@ -114,10 +113,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject protected UploadStore mUploadStore;
     @Inject protected ImageManager mImageManager;
 
-    public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
+    public PostsListAdapter(Context context, @NonNull SiteModel site) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
-        mIsPage = isPage;
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;

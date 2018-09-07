@@ -96,7 +96,6 @@ public class PostsListFragment extends Fragment
     private ProgressBar mProgressLoadMore;
 
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage;
     private PostModel mTargetPost;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
@@ -110,11 +109,10 @@ public class PostsListFragment extends Fragment
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PostsListFragment newInstance(SiteModel site, boolean isPage, @Nullable PostModel targetPost) {
+    public static PostsListFragment newInstance(SiteModel site, @Nullable PostModel targetPost) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
         if (targetPost != null) {
             bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.getId());
         }
@@ -149,18 +147,15 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
             mTargetPost = mPostStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
         }
@@ -185,7 +180,7 @@ public class PostsListFragment extends Fragment
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
+        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -273,7 +268,7 @@ public class PostsListFragment extends Fragment
 
     private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -297,7 +292,7 @@ public class PostsListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, false, false);
     }
 
     public void onResume() {
@@ -352,12 +347,7 @@ public class PostsListFragment extends Fragment
         }
 
         FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
-
-        if (mIsPage) {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
-        } else {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
-        }
+        mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
     }
 
     private void showLoadMoreProgress() {
@@ -396,36 +386,33 @@ public class PostsListFragment extends Fragment
         int stringId;
         switch (emptyViewMessageType) {
             case LOADING:
-                stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                stringId = R.string.posts_fetching;
                 break;
             case NO_CONTENT:
-                stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                stringId = R.string.posts_empty_list;
                 break;
             case NETWORK_ERROR:
                 stringId = R.string.no_network_message;
                 break;
             case PERMISSION_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages
-                        : R.string.error_refresh_unauthorized_posts;
+                stringId = R.string.error_refresh_unauthorized_posts;
                 break;
             case GENERIC_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                stringId = R.string.error_refresh_posts;
                 break;
             default:
                 return;
         }
 
         boolean hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT;
-        mActionableEmptyView.image.setImageResource(mIsPage ? R.drawable.img_illustration_pages_104dp
-                : R.drawable.img_illustration_posts_75dp);
+        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_posts_75dp);
         mActionableEmptyView.image.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
         mActionableEmptyView.title.setText(stringId);
-        mActionableEmptyView.button.setText(mIsPage ? R.string.pages_empty_list_button
-                : R.string.posts_empty_list_button);
+        mActionableEmptyView.button.setText(R.string.posts_empty_list_button);
         mActionableEmptyView.button.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, false, false);
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
@@ -574,22 +561,20 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, false);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    String message = post.isPage() ? getString(R.string.dialog_confirm_delete_page)
-                            : getString(R.string.dialog_confirm_delete_post);
+                    String message = getString(R.string.dialog_confirm_delete_post);
 
                     if (post.isLocalDraft()) {
-                        message = post.isPage() ? getString(R.string.dialog_confirm_delete_permanently_page)
-                                : getString(R.string.dialog_confirm_delete_permanently_post);
+                        message = getString(R.string.dialog_confirm_delete_permanently_post);
                     }
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-                    builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
+                    builder.setTitle(getString(R.string.delete_post))
                             .setMessage(message)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
@@ -603,7 +588,7 @@ public class PostsListFragment extends Fragment
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-                    builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
+                    builder.setTitle(getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
@@ -623,8 +608,7 @@ public class PostsListFragment extends Fragment
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
-                                   : getString(R.string.dialog_confirm_publish_message_post))
+               .setMessage(getString(R.string.dialog_confirm_publish_message_post))
                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int i) {
@@ -667,12 +651,7 @@ public class PostsListFragment extends Fragment
         };
 
         // different undo text if this is a local draft since it will be deleted rather than trashed
-        String text;
-        if (post.isLocalDraft()) {
-            text = mIsPage ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
-        } else {
-            text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
-        }
+        String text = post.isLocalDraft() ? getString(R.string.post_deleted) : getString(R.string.post_trashed);
 
         Snackbar snackbar = Snackbar.make(mActionableEmptyView, text,
                 AccessibilityUtils.getSnackbarDuration(getActivity())).setAction(R.string.undo, undoListener);
@@ -719,7 +698,6 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
         mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
@@ -738,7 +716,6 @@ public class PostsListFragment extends Fragment
                 }
                 break;
             case FETCH_POSTS:
-            case FETCH_PAGES:
                 mIsFetchingPosts = false;
                 if (!isAdded()) {
                     return;
@@ -763,7 +740,7 @@ public class PostsListFragment extends Fragment
                 break;
             case DELETE_POST:
                 if (event.isError()) {
-                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
+                    String message = getString(R.string.error_deleting_post);
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }
