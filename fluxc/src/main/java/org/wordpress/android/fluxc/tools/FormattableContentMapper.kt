@@ -76,6 +76,7 @@ data class FormattableRange(
 enum class FormattableRangeType {
     POST,
     SITE,
+    PAGE,
     COMMENT,
     USER,
     STAT,
@@ -91,6 +92,7 @@ enum class FormattableRangeType {
             return when (value) {
                 "post" -> POST
                 "site" -> SITE
+                "page" -> PAGE
                 "comment" -> COMMENT
                 "user" -> USER
                 "stat" -> STAT
