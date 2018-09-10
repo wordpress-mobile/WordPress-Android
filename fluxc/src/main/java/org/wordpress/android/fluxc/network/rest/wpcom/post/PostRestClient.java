@@ -268,7 +268,6 @@ public class PostRestClient extends BaseWPComRestClient {
     }
 
     public void fetchRevisions(final PostModel post, final SiteModel site) {
-
         String url;
         if (post.isPage()) {
             url = WPCOMREST.sites.site(site.getSiteId()).post.item(post.getRemotePostId()).diffs.getUrlV1_1();

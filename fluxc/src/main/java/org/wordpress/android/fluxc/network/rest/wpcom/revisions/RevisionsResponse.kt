@@ -4,21 +4,23 @@ import com.google.gson.annotations.SerializedName
 
 class RevisionsResponse(
     val diffs: List<DiffDetails>,
-    val revisions: Map<String, Revision>) {
-
+    val revisions: Map<String, Revision>
+) {
     inner class DiffDetails(
         val from: Int,
         val to: Int,
-        val diff: Diff)
+        val diff: Diff
+    )
 
     inner class Diff(
         val post_title: PostTitle,
         val post_content: PostContent,
-        val total: Totals) {
-
+        val total: Totals
+    ) {
         inner class PostTitle(
             val op: DiffAction,
-            val value: String)
+            val value: String
+        )
 
         inner class PostContent(
             val op: DiffAction,
@@ -27,7 +29,8 @@ class RevisionsResponse(
 
         inner class Totals(
             val del: Int,
-            val add: Int)
+            val add: Int
+        )
     }
 
     enum class DiffAction {
@@ -48,8 +51,4 @@ class RevisionsResponse(
         val post_excerpt: String,
         val post_title: String
     )
-
 }
-
-
-
