@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -74,6 +76,16 @@ public class PostStore extends Store {
         public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
             this(site, searchTerm);
             this.offset = offset;
+        }
+    }
+
+    public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public SiteModel site;
+
+        public FetchRevisionsPayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
         }
     }
 
@@ -143,6 +155,16 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchRevisionsResponsePayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public RevisionsResponse revisionsResponse;
+
+        public FetchRevisionsResponsePayload(PostModel post, RevisionsResponse revisionsResponse) {
+            this.post = post;
+            this.revisionsResponse = revisionsResponse;
+        }
+    }
+
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
@@ -159,6 +181,16 @@ public class PostStore extends Store {
 
         public PostError(PostErrorType type) {
             this(type, "");
+        }
+    }
+
+    public static class RevisionError implements OnChangedError {
+        @NonNull public RevisionsErrorType type;
+        @Nullable public String message;
+
+        public RevisionError(@NonNull RevisionsErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -198,6 +230,16 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnRevisionsFetched extends OnChanged<RevisionError> {
+        public PostModel post;
+        public RevisionsResponse revisionsResponse;
+
+        public OnRevisionsFetched(PostModel post, RevisionsResponse revisionsResponse) {
+            this.post = post;
+            this.revisionsResponse = revisionsResponse;
+        }
+    }
+
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
@@ -216,6 +258,10 @@ public class PostStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum RevisionsErrorType {
+        GENERIC_ERROR
     }
 
     private final PostRestClient mPostRestClient;
@@ -330,8 +376,8 @@ public class PostStore extends Store {
      */
     public PostModel getPostByLocalPostId(int localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                .where().equals(PostModelTable.ID, localId).endWhere()
-                .getAsModel();
+                                        .where().equals(PostModelTable.ID, localId).endWhere()
+                                        .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -345,9 +391,9 @@ public class PostStore extends Store {
      */
     public PostModel getPostByRemotePostId(long remoteId, SiteModel site) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
-                .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
-                .getAsModel();
+                                        .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
+                                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
+                                        .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -417,6 +463,12 @@ public class PostStore extends Store {
             case SEARCHED_POSTS:
                 handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
                 break;
+            case FETCH_REVISIONS:
+                fetchRevisions((FetchRevisionsPayload) action.getPayload());
+                break;
+            case FETCHED_REVISIONS:
+                handleFetchedRevisions((FetchRevisionsResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -463,6 +515,24 @@ public class PostStore extends Store {
             onPostsSearched.error = error;
             emitChange(onPostsSearched);
         }
+    }
+
+    private void fetchRevisions(FetchRevisionsPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchRevisions(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+        }
+    }
+
+    private void handleFetchedRevisions(FetchRevisionsResponsePayload payload) {
+        OnRevisionsFetched onRevisionsFetched = new OnRevisionsFetched(payload.post, payload.revisionsResponse);
+
+        if (payload.isError()) {
+            onRevisionsFetched.error = new RevisionError(RevisionsErrorType.GENERIC_ERROR, payload.error.message);
+        }
+
+        emitChange(onRevisionsFetched);
     }
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
