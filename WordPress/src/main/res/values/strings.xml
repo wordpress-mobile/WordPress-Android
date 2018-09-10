@@ -1296,10 +1296,8 @@
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
     <string name="image_settings">Image settings</string>
-    <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
-    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
@@ -1361,7 +1359,6 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
-    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
 
     <!-- Post Error -->
@@ -1553,9 +1550,6 @@
     <string name="connectionbar_no_connection">No connection</string>
 
     <!-- NUX strings -->
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
-    <string name="creating_your_site">Creating your site</string>
-    <string name="required_field">Required field</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
@@ -2064,8 +2058,9 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <!-- Screen titles -->
