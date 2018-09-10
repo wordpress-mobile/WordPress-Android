@@ -118,15 +118,15 @@ class PageListFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
-            if (viewModel is PageListViewModel) {
-                adapter = PagesAdapter(
-                        { action, page -> viewModel.onMenuAction(action, page) },
-                        { page -> viewModel.onItemTapped(page) },
-                        { (viewModel as PageListViewModel).onEmptyListNewPageButtonTapped() })
+            adapter = if (viewModel is PageListViewModel) {
+                PagesAdapter(
+                    onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
+                    onItemTapped = { page -> viewModel.onItemTapped(page) },
+                    onEmptyActionButtonTapped = { (viewModel as PageListViewModel).onEmptyListNewPageButtonTapped() })
             } else {
-                adapter = PagesAdapter(
-                        { action, page -> viewModel.onMenuAction(action, page) },
-                        { page -> viewModel.onItemTapped(page) })
+                PagesAdapter(
+                    onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
+                    onItemTapped = { page -> viewModel.onItemTapped(page) })
             }
             recyclerView.adapter = adapter
         } else {
