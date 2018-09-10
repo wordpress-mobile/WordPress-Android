@@ -93,11 +93,10 @@ class ListModelTest {
      */
     @Test
     fun testFetchingFirstPage() {
-        val listModel = ListModel()
-        listModel.stateDbValue = ListState.FETCHING_FIRST_PAGE.value
-        assertTrue(listModel.isFetchingFirstPage())
-        assertFalse(listModel.isLoadingMore())
-        assertFalse(listModel.canLoadMore())
+        val listState = ListState.FETCHING_FIRST_PAGE
+        assertTrue(listState.isFetchingFirstPage())
+        assertFalse(listState.isLoadingMore())
+        assertFalse(listState.canLoadMore())
     }
 
     /**
@@ -105,11 +104,10 @@ class ListModelTest {
      */
     @Test
     fun testLoadingMore() {
-        val listModel = ListModel()
-        listModel.stateDbValue = ListState.LOADING_MORE.value
-        assertFalse(listModel.isFetchingFirstPage())
-        assertTrue(listModel.isLoadingMore())
-        assertFalse(listModel.canLoadMore())
+        val listState = ListState.LOADING_MORE
+        assertFalse(listState.isFetchingFirstPage())
+        assertTrue(listState.isLoadingMore())
+        assertFalse(listState.canLoadMore())
     }
 
     /**
@@ -118,12 +116,10 @@ class ListModelTest {
      */
     @Test
     fun testNonSpecialStates() {
-        listOf(NEEDS_REFRESH, FETCHED, ERROR).forEach { state ->
-            val listModel = ListModel()
-            listModel.stateDbValue = state.value
-            assertFalse(listModel.isFetchingFirstPage())
-            assertFalse(listModel.isLoadingMore())
-            assertFalse(listModel.canLoadMore())
+        listOf(NEEDS_REFRESH, FETCHED, ERROR).forEach { listState ->
+            assertFalse(listState.isFetchingFirstPage())
+            assertFalse(listState.isLoadingMore())
+            assertFalse(listState.canLoadMore())
         }
     }
 
