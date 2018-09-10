@@ -656,6 +656,11 @@
         </receiver>
 
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
+        <receiver android:name=".util.analytics.PackageFirstLaunchReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH" />
+            </intent-filter>
+        </receiver>
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">
