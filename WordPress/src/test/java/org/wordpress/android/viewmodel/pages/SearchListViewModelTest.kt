@@ -55,7 +55,7 @@ class SearchListViewModelTest {
         val expectedResult = listOf(Divider("Drafts"), DraftPage(1, title))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf(DRAFT to drafts))
 
-        val observer = viewModel.pages.test()
+        val observer = viewModel.searchResult.test()
 
         pagesViewModel.onSearch(query)
 
@@ -71,7 +71,7 @@ class SearchListViewModelTest {
         val pageItems = listOf(Empty(string.pages_empty_search_result, true))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
 
-        val observer = viewModel.pages.test()
+        val observer = viewModel.searchResult.test()
 
         pagesViewModel.onSearch(query)
 
@@ -86,7 +86,7 @@ class SearchListViewModelTest {
         val query = ""
         val pageItems = listOf(Empty(string.pages_search_suggestion, true))
 
-        val observer = viewModel.pages.test()
+        val observer = viewModel.searchResult.test()
 
         pagesViewModel.onSearch(query)
 
