@@ -48,6 +48,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
+import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.quickstart.QuickStartFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -415,6 +416,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PagesFragment object);
 
     void inject(PageListFragment object);
+
+    void inject(SearchListFragment object);
 
     void inject(PageParentFragment object);
 

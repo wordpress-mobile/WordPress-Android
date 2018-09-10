@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.Job
@@ -429,5 +430,14 @@ class PagesViewModel
         launch(uiContext) {
             liveData.value = value
         }
+    }
+}
+
+@StringRes fun PageStatus.getTitle(): Int {
+    return when (this) {
+        PUBLISHED -> string.pages_published
+        DRAFT -> string.pages_drafts
+        SCHEDULED -> string.pages_scheduled
+        TRASHED -> string.pages_trashed
     }
 }

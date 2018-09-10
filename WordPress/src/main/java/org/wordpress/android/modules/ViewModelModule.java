@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
@@ -44,7 +45,12 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(SearchListViewModel.class)
-    abstract ViewModel pageListViewModel(SearchListViewModel viewModel);
+    abstract ViewModel searchListViewModel(SearchListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageListViewModel.class)
+    abstract ViewModel pageListViewModel(PageListViewModel viewModel);
 
     @Binds
     @IntoMap

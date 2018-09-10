@@ -17,8 +17,8 @@ import org.wordpress.android.ui.pages.PageItemViewHolder.PageViewHolder
 class PagesAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
     private val onItemTapped: (Page) -> Unit = { },
-    private val onParentSelected: (ParentPage) -> Unit = { },
-    private val onEmptyActionButtonTapped: () -> Unit = { }
+    private val onEmptyActionButtonTapped: () -> Unit = { },
+    private val onParentSelected: (ParentPage) -> Unit = { }
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 

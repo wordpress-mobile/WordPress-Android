@@ -4,11 +4,14 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -19,41 +22,17 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.DRAFTS
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.PUBLISHED
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SCHEDULED
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import javax.inject.Inject
 
-open class PageListViewModel : ViewModel() {
-    protected val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
+class PageListViewModel @Inject constructor() : ViewModel() {
+    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
-    protected var isStarted: Boolean = false
-    protected lateinit var listType: ListType
+    private var isStarted: Boolean = false
+    private lateinit var pageStatus: PageStatus
 
-    protected lateinit var pagesViewModel: PagesViewModel
-
-    enum class ListType(val status: PageStatus?, @StringRes val titleResource: Int) {
-        PUBLISHED(PageStatus.PUBLISHED, string.pages_published),
-        DRAFTS(PageStatus.DRAFT, string.pages_drafts),
-        SCHEDULED(PageStatus.SCHEDULED, string.pages_scheduled),
-        TRASHED(PageStatus.TRASHED, string.pages_trashed),
-        SEARCH(null, 0);
-
-        companion object {
-            fun fromPosition(position: Int): ListType {
-                if (position >= values().size) {
-                    throw Throwable("Selected position $position is out of range of page list types")
-                }
-                return values()[position]
-            }
-
-            fun fromStatus(status: PageStatus): ListType {
-                return values().first { it.status == status }
-            }
-        }
-    }
+    private lateinit var pagesViewModel: PagesViewModel
 
     enum class PageListState {
         DONE,
@@ -62,8 +41,8 @@ open class PageListViewModel : ViewModel() {
         FETCHING
     }
 
-    fun start(listType: ListType, pagesViewModel: PagesViewModel) {
-        this.listType = listType
+    fun start(pageStatus: PageStatus, pagesViewModel: PagesViewModel) {
+        this.pageStatus = pageStatus
         this.pagesViewModel = pagesViewModel
 
         if (!isStarted) {
@@ -99,15 +78,13 @@ open class PageListViewModel : ViewModel() {
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .filter { listType.status == it.status }
+                .filter { pageStatus == it.status }
                 .let {
-                    when (listType) {
+                    when (pageStatus) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
                         SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
-                        DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                        DRAFT -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
                         TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
-                        else ->
-                            throw IllegalArgumentException("Only published, scheduled, draft and trashed items allowed")
                     }
                 }
 
@@ -119,12 +96,11 @@ open class PageListViewModel : ViewModel() {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
-                when (listType) {
+                when (pageStatus) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
-                    DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
+                    DRAFT -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
-                    else -> throw IllegalArgumentException("Only published, scheduled, draft and trashed items allowed")
                 }
             }
         } else {
@@ -184,14 +160,5 @@ open class PageListViewModel : ViewModel() {
 
     private fun getPageItemIndent(page: PageModel?): Int {
         return if (page == null || page.status != PageStatus.PUBLISHED) -1 else getPageItemIndent(page.parent) + 1
-    }
-
-    protected fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
-        return when (status) {
-            PageStatus.PUBLISHED -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.DRAFT -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
-        }
     }
 }

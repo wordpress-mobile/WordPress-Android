@@ -27,7 +27,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -36,15 +39,10 @@ import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.DRAFTS
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.PUBLISHED
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SCHEDULED
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
-import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.viewmodel.pages.getTitle
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -123,18 +121,11 @@ class PagesFragment : Fragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                val type = when (ListType.fromPosition(position)) {
-                    PUBLISHED -> PageStatus.PUBLISHED
-                    DRAFTS -> PageStatus.DRAFT
-                    SCHEDULED -> PageStatus.SCHEDULED
-                    TRASHED -> PageStatus.TRASHED
-                    else -> throw IllegalArgumentException("Only 4 types of page types are supported")
-                }
-                viewModel.onPageTypeChanged(type)
+                viewModel.onPageTypeChanged(PagesPagerAdapter.pageTypes[position])
             }
         })
 
-        val searchFragment = PageListFragment.newInstance(SEARCH)
+        val searchFragment = SearchListFragment.newInstance()
         activity.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.searchFrame, searchFragment)
@@ -300,16 +291,16 @@ class PagesFragment : Fragment() {
 
 class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        const val PAGE_TABS = 4
+        val pageTypes = listOf(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
     }
 
-    override fun getCount(): Int = PAGE_TABS
+    override fun getCount(): Int = pageTypes.size
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance(ListType.fromPosition(position))
+        return PageListFragment.newInstance(pageTypes[position])
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return ListType.fromPosition(position).titleResource.let { context.getString(it) }
+        return context.getString(pageTypes[position].getTitle())
     }
 }
