@@ -86,6 +86,9 @@
 
 /sites/$site/mobile-quick-start
 
+/sites/$site/post/$post_ID/diffs
+/sites/$site/page/$post_ID/diffs
+
 /users/new/
 /users/social/new
 
