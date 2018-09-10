@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.util.AppLog
@@ -35,6 +36,10 @@ class ActivityLogDetailViewModel
     val showRewindDialog: LiveData<ActivityLogDetailModel>
         get() = _showRewindDialog
 
+    private val _handleFormattableRangeClick = SingleLiveEvent<FormattableRange>()
+    val handleFormattableRangeClick: LiveData<FormattableRange>
+        get() = _handleFormattableRangeClick
+
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
@@ -59,34 +64,24 @@ class ActivityLogDetailViewModel
         this.activityLogId = activityLogId
 
         if (activityLogId != _item.value?.activityID) {
-            _item.postValue(
-                    activityLogStore
-                            .getActivityLogForSite(site)
-                            .find { it.activityID == activityLogId }
-                            ?.let {
-                                ActivityLogDetailModel(
-                                        activityID = it.activityID,
-                                        rewindId = it.rewindID,
-                                        actorIconUrl = it.actor?.avatarURL,
-                                        showJetpackIcon = it.actor?.showJetpackIcon(),
-                                        isRewindButtonVisible = it.rewindable ?: false,
-                                        actorName = it.actor?.displayName,
-                                        actorRole = it.actor?.role,
-                                        text = it.content?.text,
-                                        summary = it.summary,
-                                        createdDate = it.published.printDate(),
-                                        createdTime = it.published.printTime(),
-                                        rewindAction = it.rewindID?.let {
-                                            { this.onRewindClicked() }
-                                        } ?: {
-                                            AppLog.e(
-                                                    ACTIVITY_LOG,
-                                                    "Trying to rewind activity without rewind ID"
-                                            )
-                                        }
-                                )
-                            }
-            )
+            _item.value = activityLogStore
+                    .getActivityLogForSite(site)
+                    .find { it.activityID == activityLogId }
+                    ?.let {
+                        ActivityLogDetailModel(
+                                activityID = it.activityID,
+                                rewindId = it.rewindID,
+                                actorIconUrl = it.actor?.avatarURL,
+                                showJetpackIcon = it.actor?.showJetpackIcon(),
+                                isRewindButtonVisible = it.rewindable ?: false,
+                                actorName = it.actor?.displayName,
+                                actorRole = it.actor?.role,
+                                content = it.content,
+                                summary = it.summary,
+                                createdDate = it.published.printDate(),
+                                createdTime = it.published.printTime()
+                        )
+                    }
         }
         rewindStatusService.start(site)
     }
@@ -95,8 +90,19 @@ class ActivityLogDetailViewModel
         rewindStatusService.stop()
     }
 
-    private fun onRewindClicked() {
-        _item.value?.let { _showRewindDialog.postValue(it) }
+    fun onRangeClicked(range: FormattableRange) {
+        _handleFormattableRangeClick.value = range
+    }
+
+    fun onRewindClicked(model: ActivityLogDetailModel) {
+        if (model.rewindId != null) {
+            _showRewindDialog.value = model
+        } else {
+            AppLog.e(
+                    ACTIVITY_LOG,
+                    "Trying to rewind activity without rewind ID"
+            )
+        }
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {

@@ -5,6 +5,7 @@ import android.widget.TextView
 import org.json.JSONObject
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.NoteBlock
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,6 +49,14 @@ class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper
         isFooter: Boolean
     ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
             textView, onNoteBlockTextClickListener, isFooter)
+
+    fun getSpannableContentForRanges(
+        formattableContent: FormattableContent?,
+        textView: TextView,
+        clickHandler: (FormattableRange) -> Unit,
+        isFooter: Boolean
+    ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
+            textView, clickHandler, isFooter)
 
     fun mapJsonToFormattablbeContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
             .mapJsonToFormattableContent(formattableContentMapper, blockObject)
