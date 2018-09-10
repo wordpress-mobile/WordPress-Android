@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/view_page"
+        android:orderInCategory="100"
+        android:title="@string/pages_view"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/set_parent"
+        android:orderInCategory="100"
+        android:title="@string/pages_set_parent"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/publish_now"
+        android:orderInCategory="100"
+        android:title="@string/pages_publish_now"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/move_to_draft"
+        android:orderInCategory="100"
+        android:title="@string/pages_move_to_draft"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/move_to_trash"
+        android:orderInCategory="100"
+        android:title="@string/pages_move_to_trash"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/delete_permanently"
+        android:orderInCategory="100"
+        android:title="@string/pages_delete_permanently"
+        app:showAsAction="never"/>
+</menu>

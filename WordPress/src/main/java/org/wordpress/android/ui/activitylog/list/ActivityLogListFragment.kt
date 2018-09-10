@@ -154,15 +154,13 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setEvents(events: List<ActivityLogListItem>) {
-        context?.let {
-            val adapter: ActivityLogAdapter
-            if (log_list_view.adapter == null) {
-                adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
-                log_list_view.adapter = adapter
-            } else {
-                adapter = log_list_view.adapter as ActivityLogAdapter
-            }
-            adapter.updateList(events)
+        val adapter: ActivityLogAdapter
+        if (log_list_view.adapter == null) {
+            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
+            log_list_view.adapter = adapter
+        } else {
+            adapter = log_list_view.adapter as ActivityLogAdapter
         }
+        adapter.updateList(events)
     }
 }

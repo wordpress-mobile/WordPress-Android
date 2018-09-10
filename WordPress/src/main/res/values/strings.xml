@@ -229,6 +229,19 @@
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
+    <string name="pages">Pages</string>
+    <string name="set_parent">Set Parent</string>
+    <string name="page_delete_error">There was a problem deleting the page</string>
+    <string name="page_status_change_error">There was a problem changing the page status</string>
+    <string name="page_parent_change_error">There was a problem changing the page parent</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="top_level">Top level</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -2290,6 +2303,23 @@
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
+    <!-- Pages -->
+    <string name="pages_published" tools:ignore="UnusedResources">Published</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_view">View</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
+    <string name="pages_empty_search_result">No pages matching your search</string>
+    <string name="pages_search_suggestion">Search pages</string>
+    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_empty_drafts">You don\'t have any draft pages</string>
+    <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
+    <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->

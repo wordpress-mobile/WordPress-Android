@@ -47,6 +47,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
+import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -61,6 +62,9 @@ import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
+import org.wordpress.android.ui.pages.PageListFragment;
+import org.wordpress.android.ui.pages.PageParentFragment;
+import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -405,6 +409,14 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(QuickStartFragment object);
 
     void inject(MediaGridAdapter object);
+
+    void inject(PagesFragment object);
+
+    void inject(PageListFragment object);
+
+    void inject(SearchListFragment object);
+
+    void inject(PageParentFragment object);
 
     void inject(WPCustomImageGetter object);
 

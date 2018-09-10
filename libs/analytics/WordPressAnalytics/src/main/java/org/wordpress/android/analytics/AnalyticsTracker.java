@@ -201,6 +201,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_RECEIVED_PROCESSING_END,
         OPENED_POSTS,
         OPENED_PAGES,
+        OPENED_PAGE_PARENT,
         OPENED_COMMENTS,
         OPENED_VIEW_SITE,
         OPENED_VIEW_SITE_FROM_HEADER,
