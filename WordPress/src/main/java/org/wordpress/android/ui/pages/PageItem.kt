@@ -19,31 +19,36 @@ sealed class PageItem(open val type: Type) {
         open val title: String,
         open val labelRes: Int?,
         open var indent: Int,
-        open val actions: Set<Action>
+        open val actions: Set<Action>,
+        open var actionsEnabled: Boolean
     ) : PageItem(PAGE)
 
     data class PublishedPage(
         override val id: Long,
         override val title: String,
         override val labelRes: Int? = null,
-        override var indent: Int = 0
-    ) : Page(id, title, labelRes, indent, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
+        override var indent: Int = 0,
+        override var actionsEnabled: Boolean = true
+    ) : Page(id, title, labelRes, indent, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
 
     data class DraftPage(
         override val id: Long,
         override val title: String,
-        override val labelRes: Int? = null
-    ) : Page(id, title, labelRes, 0, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH))
+        override val labelRes: Int? = null,
+        override var actionsEnabled: Boolean = true
+    ) : Page(id, title, labelRes, 0, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH), actionsEnabled)
 
     data class ScheduledPage(
         override val id: Long,
-        override val title: String
-    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH))
+        override val title: String,
+        override var actionsEnabled: Boolean = true
+    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
 
     data class TrashedPage(
         override val id: Long,
-        override val title: String
-    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY))
+        override val title: String,
+        override var actionsEnabled: Boolean = true
+    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY), actionsEnabled)
 
     data class ParentPage(
         val id: Long,

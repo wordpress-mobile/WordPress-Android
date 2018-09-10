@@ -62,7 +62,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 itemView.setOnClickListener { onItemTapped(pageItem) }
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
-                pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
+                pageMore.visibility =
+                        if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
             }
         }
 

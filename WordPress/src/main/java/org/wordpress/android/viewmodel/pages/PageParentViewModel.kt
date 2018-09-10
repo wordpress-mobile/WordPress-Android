@@ -62,11 +62,9 @@ class PageParentViewModel
         val parentChoices = choices.filter { isNotChild(it, choices) }
         if (parentChoices.isNotEmpty()) {
             parents.add(Divider(resourceProvider.getString(R.string.pages)))
-            parents.addAll(
-                    parentChoices.map {
-                        ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
-                    }
-            )
+            parents.addAll(parentChoices.map {
+                ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+            })
         }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage

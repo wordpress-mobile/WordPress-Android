@@ -104,8 +104,6 @@ androidExtensions {
 // enable kotlin coroutines
 kotlin { experimental { coroutines "enable" } }
 
-kotlin { experimental { coroutines 'enable' } }
-
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;

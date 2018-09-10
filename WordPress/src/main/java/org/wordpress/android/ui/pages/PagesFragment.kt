@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.Menu
@@ -32,20 +31,20 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.DRAFTS
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.PUBLISHED
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.SCHEDULED
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.TRASH
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.SEARCH
+import org.wordpress.android.viewmodel.pages.PageListViewModel.ListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PagesViewModel
-import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -124,24 +123,28 @@ class PagesFragment : Fragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                val type = when (Type.getType(position)) {
+                val type = when (ListType.fromPosition(position)) {
                     PUBLISHED -> PageStatus.PUBLISHED
                     DRAFTS -> PageStatus.DRAFT
                     SCHEDULED -> PageStatus.SCHEDULED
-                    TRASH -> PageStatus.TRASHED
+                    TRASHED -> PageStatus.TRASHED
+                    else -> throw IllegalArgumentException("Only 4 types of page types are supported")
                 }
                 viewModel.onPageTypeChanged(type)
             }
         })
+
+        val searchFragment = PageListFragment.newInstance(SEARCH)
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.searchFrame, searchFragment)
+                .commit()
     }
 
     private fun initializeSearchView() {
-        searchRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        searchRecyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
-
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return viewModel.onSearchExpanded()
+                return viewModel.onSearchExpanded(restorePreviousSearch)
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
@@ -196,10 +199,6 @@ class PagesFragment : Fragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.searchResult.observe(this, Observer { result ->
-            result?.let { setSearchResult(result) }
-        })
-
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
         })
@@ -211,11 +210,11 @@ class PagesFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitle.isNullOrEmpty()) {
-                    Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitleRes == null) {
+                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG)
-                    snackbar.setAction(holder.buttonTitle) { _ -> holder.buttonAction() }
+                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
                     snackbar.show()
                 }
             }
@@ -273,7 +272,7 @@ class PagesFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
-        searchRecyclerView.visibility = View.GONE
+        searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
@@ -282,24 +281,10 @@ class PagesFragment : Fragment() {
     private fun showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
-        searchRecyclerView.visibility = View.VISIBLE
+        searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-    }
-
-    private fun setSearchResult(pages: List<PageItem>) {
-        val adapter: PagesAdapter
-        if (searchRecyclerView.adapter == null) {
-            adapter = PagesAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) }
-            )
-            searchRecyclerView.adapter = adapter
-        } else {
-            adapter = searchRecyclerView.adapter as PagesAdapter
-        }
-        adapter.update(pages)
     }
 
     private fun displayDeleteDialog(page: Page) {
@@ -321,10 +306,10 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
     override fun getCount(): Int = PAGE_TABS
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance(Type.getType(position))
+        return PageListFragment.newInstance(ListType.fromPosition(position))
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return Type.getType(position).text.let { context.getString(it) }
+        return ListType.fromPosition(position).titleResource.let { context.getString(it) }
     }
 }
