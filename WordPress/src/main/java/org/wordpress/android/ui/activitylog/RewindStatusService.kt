@@ -20,7 +20,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.modules.UI_CONTEXT
-import org.wordpress.android.util.AnalyticsUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
