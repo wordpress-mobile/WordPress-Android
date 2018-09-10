@@ -13,8 +13,8 @@ class RevisionsResponse(
     )
 
     inner class Diff(
-        val post_title: PostTitle,
-        val post_content: PostContent,
+        val post_title: List<PostTitle>,
+        val post_content: List<PostContent>,
         val total: Totals
     ) {
         inner class PostTitle(
