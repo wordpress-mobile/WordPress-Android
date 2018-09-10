@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -105,7 +106,10 @@ class ActivityLogListFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
-                Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
+                val snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG)
+                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+                snackbarText.maxLines = 2
+                snackbar.show()
             }
         })
 
