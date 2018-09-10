@@ -291,11 +291,10 @@ class PagesFragment : Fragment() {
 
 class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        const val PAGE_TABS = 4
         val pageTypes = listOf(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
     }
 
-    override fun getCount(): Int = PAGE_TABS
+    override fun getCount(): Int = pageTypes.size
 
     override fun getItem(position: Int): Fragment {
         return PageListFragment.newInstance(pageTypes[position])
