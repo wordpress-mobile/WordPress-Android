@@ -18,16 +18,13 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.pages.IListViewModel.ListType
 import java.util.SortedMap
 import javax.inject.Inject
 
 class SearchListViewModel
-@Inject constructor(private val resourceProvider: ResourceProvider) : ViewModel(), IListViewModel {
-    private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    override val pages: LiveData<List<PageItem>> = _pages
-
-    override val listType = ListType.SEARCH
+@Inject constructor(private val resourceProvider: ResourceProvider) : ViewModel() {
+    private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
+    val searchResult: LiveData<List<PageItem>> = _searchResult
 
     private var isStarted: Boolean = false
     private lateinit var pagesViewModel: PagesViewModel
@@ -52,15 +49,15 @@ class SearchListViewModel
 
             pagesViewModel.checkIfNewPageButtonShouldBeVisible()
         } else {
-            _pages.postValue(listOf(Empty(string.pages_search_suggestion, true)))
+            _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
         }
     }
 
-    override fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem)
     }
 
-    override fun onItemTapped(pageItem: Page) {
+    fun onItemTapped(pageItem: Page) {
         pagesViewModel.onItemTapped(pageItem)
     }
 
@@ -75,9 +72,9 @@ class SearchListViewModel
                         acc.addAll(list)
                         return@fold acc
                     }
-            _pages.postValue(pageItems)
+            _searchResult.postValue(pageItems)
         } else {
-            _pages.postValue(listOf(Empty(string.pages_empty_search_result, true)))
+            _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
         }
     }
 

@@ -125,7 +125,7 @@ class PagesFragment : Fragment() {
             }
         })
 
-        val searchFragment = PageListFragment.newSearchListInstance()
+        val searchFragment = SearchListFragment.newInstance()
         activity.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.searchFrame, searchFragment)
@@ -298,7 +298,7 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
     override fun getCount(): Int = PAGE_TABS
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newPageListInstance(pageTypes[position])
+        return PageListFragment.newInstance(pageTypes[position])
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

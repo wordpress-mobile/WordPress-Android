@@ -22,15 +22,12 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
-import org.wordpress.android.viewmodel.pages.IListViewModel.ListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
-class PageListViewModel @Inject constructor() : ViewModel(), IListViewModel {
+class PageListViewModel @Inject constructor() : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    override val pages: LiveData<List<PageItem>> = _pages
-
-    override val listType = ListType.PAGES
+    val pages: LiveData<List<PageItem>> = _pages
 
     private var isStarted: Boolean = false
     private lateinit var pageStatus: PageStatus
@@ -59,11 +56,11 @@ class PageListViewModel @Inject constructor() : ViewModel(), IListViewModel {
         pagesViewModel.pages.removeObserver(pagesObserver)
     }
 
-    override fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page): Boolean {
         return pagesViewModel.onMenuAction(action, pageItem)
     }
 
-    override fun onItemTapped(pageItem: Page) {
+    fun onItemTapped(pageItem: Page) {
         pagesViewModel.onItemTapped(pageItem)
     }
 
