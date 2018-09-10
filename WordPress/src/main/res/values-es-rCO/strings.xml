@@ -1024,7 +1024,6 @@ Language: es_CO
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_toast_err_tag_exists">Ya estás siguiendo esta etiqueta</string>
     <string name="reader_likes_only_you">Te gusta esto</string>
-    <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>

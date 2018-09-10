@@ -300,7 +300,6 @@ Language: sr_RS
     <string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
     <string name="pick_photo">Одаберите фотографију</string>
     <string name="pick_video">Одаберите видео снимак</string>
-    <string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>
     <string name="empty_list_default">Овај списак је празан</string>
     <string name="reader_toast_err_url_intent">Није могуће отворити %s</string>
     <string name="reader_toast_err_view_image">Није могуће прегледати слику</string>

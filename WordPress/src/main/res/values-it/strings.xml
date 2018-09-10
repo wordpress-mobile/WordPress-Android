@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-20 15:54:08+0000
+Translation-Revision-Date: 2018-09-05 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="quick_start_focus_point_description">tocca qui</string>
+    <string name="quick_start_sites">Avvio rapido</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Crea il tuo sito</string>
+    <string name="quick_start_list_create_site_subtitle">Configura il sito ed eseguilo</string>
+    <string name="quick_start_list_complete_title">Congratulazioni per aver completato l\'Avvio rapido</string>
+    <string name="quick_start_list_complete_subtitle">Non ti fa sentire bene eliminare i punti da un elenco?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Visualizza il tuo sito</string>
+    <string name="quick_start_dialog_view_site_message_short">Tocca %1$s Visualizza sito %2$s per visualizzare un\'anteprima del tuo sito</string>
+    <string name="quick_start_dialog_view_site_message">Visualizza un\'anteprima del tuo nuovo sito per scoprire cosa vedono i tuoi visitatori.</string>
+    <string name="quick_start_dialog_skip_title">Salta Avvio rapido</string>
+    <string name="quick_start_dialog_skip_message">Il tour rapido ti guiderà attraverso la costruzione di un sito di base. Sei sicuro di volerlo saltare?</string>
+    <string name="quick_start_dialog_share_site_title">Condividi il tuo sito</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Tocca %1$s Condivisione %2$s per continuare</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Tocca %1$s Connessioni %2$s per aggiungere i tuoi account dei social media</string>
+    <string name="quick_start_dialog_share_site_message">Collega gli account dei tuoi social media: il tuo sito condividerà automaticamente i nuovi articoli.</string>
+    <string name="quick_start_dialog_publish_post_title">Pubblica un articolo</string>
+    <string name="quick_start_dialog_publish_post_message_short">Tocca %1$s Crea un articolo %2$s per creare un nuovo articolo</string>
+    <string name="quick_start_dialog_publish_post_message">È ora! Fai una bozza e pubblica ogni nuovo articolo.</string>
+    <string name="quick_start_dialog_need_help_title">Desideri un po\' di aiuto per iniziare?</string>
+    <string name="quick_start_dialog_need_help_message">La nostra checklist per l\'Avvio rapido ti guida attraverso le basi della creazione di un nuovo sito web.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Si</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Mai</string>
+    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_follow_sites_title">Segui altri siti</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tocca %1$s Cerca %2$s per guardare altri siti con interessi simili</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Tocca %1$s Reader %2$s per continuare</string>
+    <string name="quick_start_dialog_follow_sites_message">Trova i siti che ti dicono qualcosa e seguili per ottenere aggiornamenti sui contenuti che pubblicano.</string>
+    <string name="quick_start_dialog_customize_site_title">Personalizza il tuo sito</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Tocca %1$s Temi %2$s per continuare</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Tocca %1$s Personalizza %2$s per iniziare la personalizzazione del tuo sito</string>
+    <string name="quick_start_dialog_customize_site_message">Modifica colori, caratteri e immagini per un sito perfettamente personalizzato.</string>
+    <string name="quick_start_dialog_continue_setup_title">Continua con la configurazione del sito</string>
+    <string name="quick_start_dialog_continue_setup_message">È il momento di finire l\'impostazione del tuo sito! La nostra checklist ti guida attraverso i prossimi passaggi.</string>
+    <string name="quick_start_dialog_choose_theme_title">Scegli un tema</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Tocca %1$s Temi %2$s per scoprire nuovi temi</string>
+    <string name="quick_start_dialog_choose_theme_message">Sfoglia tutti i nostri temi per trovare quello perfetto per te.</string>
+    <string name="quick_start_button_skip_positive">Salta</string>
+    <string name="quick_start_button_skip_negative">Annulla</string>
+    <string name="quick_start_button_skip">Salta tutto</string>
+    <string name="quick_start_button_positive">Vai</string>
+    <string name="quick_start_button_negative_short">Annulla</string>
+    <string name="quick_start_button_negative">Non ora</string>
+    <string name="content_description_done">Fatto</string>
+    <string name="my_site_create_new_site_title">Non sono presenti siti</string>
+    <string name="reader_empty_followed_tags_title">Nessuna tag seguita</string>
+    <string name="reader_empty_followed_tags_subtitle">Aggiungi qui le tag per trovare gli articoli con i tuoi argomenti preferiti</string>
+    <string name="login_to_to_connect_jetpack">Accedi all\'account WordPress.com che hai utilizzato per connettere Jetpack.</string>
+    <string name="install_jetpack_retry">Riprova</string>
+    <string name="install_jetpack_continue">Continua</string>
+    <string name="jetpack_installation_problem_message">Jetpack non può essere installato in questo momento</string>
+    <string name="jetpack_installation_problem">Si è verificato un problema</string>
+    <string name="jetpack_installed_message">Jetpack è installato sul tuo sito. Complimenti!</string>
+    <string name="jetpack_installed">Jetpack installato</string>
+    <string name="installing_jetpack_message">Installa Jetpack sul tuo sito. Può richiedere alcuni minuti per essere completato.</string>
+    <string name="installing_jetpack">Installazione di Jetpack</string>
+    <string name="install_jetpack_message">Le credenziali del tuo sito web non verranno archiviate e saranno utilizzate per installare Jetpack.</string>
+    <string name="install_jetpack">Installa Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Impostando Jetpack accetti </string>
+    <string name="stats_jetpack_connection_setup_info">Per utilizzare le Statistiche sul tuo sito WordPress, sarà necessario installare il plugin di Jetpack.</string>
     <string name="themes_empty_list">Nessun tema corrispondente alla ricerca</string>
     <string name="reader_label_post_search_explainer">Che cosa desideri trovare?</string>
     <string name="site_settings_tags_empty_title_search">Nessun tag corrispondente alla ricerca</string>
@@ -57,10 +130,14 @@ Language: it
     <string name="support_contact_email">E–mail di contatto</string>
     <string name="application_log_button">Registro applicazione</string>
     <string name="my_tickets">I miei ticket</string>
+    <string name="activity_log_rewind_dialog_message">Sei sicuro di voler riportare il tuo sito al %1$s alle %2$s? Questo rimuoverà tutti i contenuti e le opzioni create o modificate dopo di allora.</string>
     <string name="activity_log_rewind_site">Ripristina sito</string>
     <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
+    <string name="activity_log_currently_restoring_message">Ripristino al %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Il tuo sito è stato ripristinato correttamente</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Il tuo sito è stato ripristinato correttamente\nTornando al %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Il tuo sito è in fase di ripristino\nRitorno al %1$s %2$s</string>
     <string name="activity_log_button">Pulsante di azione Registro applicazione</string>
     <string name="plugin_auto_managed">Auto–gestito</string>
     <string name="reader_save_posts_locally_dialog_message">Salva questo articolo e torna a leggerlo quando vorrai. Sarà disponibile solo su questo dispositivo: gli articoli salvati non vengono sincronizzati con gli altri dispositivi. (Ma ce ne stiamo occupando!)</string>
@@ -187,6 +264,7 @@ Language: it
     <string name="stats_tab_tap_content_description">mostra %s</string>
     <string name="stats_legend">legenda grafico statistiche</string>
     <string name="fab_create_desc">crea</string>
+    <string name="fab_add_tag_desc">Crea tag</string>
     <string name="stats_bar_week_desc">Settimana di %s</string>
     <string name="stats_bar_date_value_desc">%s, %d visite</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -222,7 +300,9 @@ Language: it
     <string name="jetpack_connection_failed_with_reason">Connessione a Jetpack non riuscita: %s</string>
     <string name="jetpack_already_connected_toast">Sei già connesso a Jetpack</string>
     <string name="menu_undo_snackbar_action">ANNULLA</string>
+    <string name="menu_visual_mode_done_snackbar">Passato alla modalità visuale.</string>
     <string name="menu_visual_mode">Modalità visuale</string>
+    <string name="menu_html_mode_done_snackbar">Passato alla modalità HTML.</string>
     <string name="menu_html_mode">Modalità HTML</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
     <string name="menu_publish_now">Pubblica ora</string>
@@ -377,6 +457,7 @@ Language: it
     <string name="signup_magic_link_message">Ti abbiamo inviato un link per l\'accesso. Controlla la tua e–mail su questo dispositivo e premi il link per terminare l\'iscrizione.</string>
     <string name="signup_magic_link_error_button_positive">Riprova</string>
     <string name="signup_magic_link_error_button_negative">Chiudi</string>
+    <string name="signup_magic_link_error">Si è verificato un errore durante l\'invio dell\'email. Puoi riprovare ora o chiudere e riprovare più tardi.</string>
     <string name="signup_epilogue_hint_username">Nome utente</string>
     <string name="signup_epilogue_hint_password_detail">Puoi sempre accedere con un link come quello che hai appena utilizzato, ma, se preferisci, puoi anche impostare una password.</string>
     <string name="signup_epilogue_hint_password">Password (opzionale)</string>
@@ -411,7 +492,7 @@ Language: it
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ottimizzerà le tue immagini e le servirà dalla posizione del server più vicina ai visitatori. L\'utilizzo della nostra rete di distribuzione dei contenuti migliorerà la velocità di caricamento del tuo sito.</string>
     <string name="site_settings_serve_images_from_our_servers">Servi le immagini dai nostri server</string>
     <string name="site_settings_speed_up_your_site">Velocizza il tuo sito</string>
-    <string name="stats_jetpack_connection_setup">Configura Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Installa Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Attiva/Disattiva testo</string>
     <string name="plugin_info_your_version">La tua versione di WordPress</string>
     <string name="plugin_info_requires_version">Richiede la versione di WordPress</string>
@@ -441,6 +522,7 @@ Language: it
     <string name="site_settings_tags_hint">Gestisci i tag del tuo sito</string>
     <string name="dlg_saving_tag">Salvataggio</string>
     <string name="dlg_deleting_tag">Cancellazione</string>
+    <string name="dlg_confirm_delete_tag">Eliminare definitivamente il tag \'%s\'?</string>
     <string name="error_tag_exists">Esiste già un tag con questo nome</string>
     <string name="add_new_tag">Aggiungi nuovo tag</string>
     <string name="tag_description_hint">Descrizione</string>
@@ -956,6 +1038,8 @@ Language: it
     <string name="send_link">Invia link</string>
     <string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
+    <string name="reader_empty_search_description">Nessun articolo trovato nella tua lingua riguardante %s</string>
+    <string name="reader_hint_post_search">Cerca in WordPress</string>
     <string name="reader_title_related_post_detail">Articoli correlati</string>
     <string name="preview_screen_links_disabled">I link sono disabilitati nella schermata di anteprima</string>
     <string name="draft_explainer">Questo articolo è un bozza che non è stata ancora pubblicata</string>
@@ -997,6 +1081,7 @@ Language: it
     <string name="delete_site_hint">Elimina il sito</string>
     <string name="export_site_hint">Esporta il sito in un file XML</string>
     <string name="primary_domain">Dominio principale</string>
+    <string name="error_deleting_site_summary">Si è verificato un errore durante la cancellazione del sito. Contatta il forum di supporto per ulteriore assistenza.</string>
     <string name="error_deleting_site">Errore durante la cancellazione del sito</string>
     <string name="site_settings_export_content_title">Esporta il contenuto</string>
     <string name="confirm_delete_site_prompt">Digita %1$s nel campo sotto alla conferma. Dopo il sito sarà cancellato per sempre.</string>
@@ -1010,6 +1095,9 @@ Language: it
     <string name="editor_remove_failed_uploads">Rimuovi i caricamenti falliti</string>
     <string name="editor_toast_failed_uploads">Il caricamento di qualche media è fallito. Tu puoi non salvare oppure pubblicare \n il tuo articolo così. Vuoi rimuovere i file dei media il cui caricamento è fallito?</string>
     <string name="site_settings_advanced_header">Avanzato</string>
+    <string name="comments_empty_list_filtered_trashed">Nessun commento nel cestino</string>
+    <string name="comments_empty_list_filtered_pending">Nessun commento in sospeso</string>
+    <string name="comments_empty_list_filtered_approved">Nessun commento approvato</string>
     <string name="xmlrpc_missing_method_error">Non è possibile connettersi. Sul server mancano i necessari metodi XML–RPC</string>
     <string name="alignment_center">Centro</string>
     <string name="post_format_video">Video</string>
@@ -1068,6 +1156,7 @@ Language: it
     <string name="mnu_comment_delete_permanently">Elimina</string>
     <string name="mnu_comment_untrash">Ripristina</string>
     <string name="comment_deleted_permanently">Commento eliminato</string>
+    <string name="comments_empty_list_filtered_spam">Nessun commento spam</string>
     <string name="comment_status_all">Tutti</string>
     <string name="could_not_load_page">Impossibile caricare la pagina</string>
     <string name="off">Disattivata</string>
@@ -1220,7 +1309,13 @@ Language: it
     <string name="reader_label_gap_marker">Carica altri articoli</string>
     <string name="notifications_no_search_results">Nessun sito corrisponde a \'%s\'</string>
     <string name="search_sites">Ricerca siti</string>
+    <string name="notifications_empty_view_reader">Visualizza nel Reader</string>
+    <string name="notifications_empty_action_followers_likes">Ottieni notifiche: commenti ad articoli che hai letto.</string>
+    <string name="notifications_empty_action_comments">Unisciti ad una conversazione: commenti su articoli di blog che segui.</string>
+    <string name="notifications_empty_action_unread">Ravviva la conversazione: scrivi un nuovo articolo.</string>
     <string name="notifications_empty_action_all">Sii attivo! Commenta articoli dei blog che segui.</string>
+    <string name="notifications_empty_comments">Nessun commento per ora</string>
+    <string name="notifications_empty_unread">Tutto è completamente aggiornato!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accedi alla Statistiche nella app e quindi successivamente prova ad aggiungere il widget</string>
     <string name="stats_widget_error_readd_widget">Rimuovi il widget e aggiungilo nuovamente</string>
     <string name="stats_widget_error_no_visible_blog">Le statistiche non sono accessibili senza un blog visibile</string>
@@ -1243,6 +1338,7 @@ Language: it
     <string name="reader_short_like_count_none">Mi piace</string>
     <string name="reader_label_follow_count">%,d ti seguono</string>
     <string name="reader_short_like_count_one">1 Mi piace</string>
+    <string name="reader_menu_tags">Modifica tag e siti</string>
     <string name="reader_title_post_detail">Reader articoli</string>
     <string name="local_draft_explainer">Questo articolo è una bozza locale che non è stata pubblicata</string>
     <string name="local_changes_explainer">Questo articolo contiene modifiche locali che non sono state pubblicate</string>
@@ -1274,6 +1370,8 @@ Language: it
     <string name="post_trashed">Articolo inviato al cestino</string>
     <string name="post_deleted">Articolo cancellato</string>
     <string name="page_trashed">Pagina inviata al cestino</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo sito</string>
+    <string name="reader_toast_err_follow_blog_not_found">Impossibile trovare questo sito</string>
     <string name="undo">Annulla</string>
     <string name="passcodelock_prompt_message">Inserisci il tuo PIN</string>
     <string name="push_auth_expired">La richiesta è scaduta. Accedi a WordPress.com per riprovare.</string>
@@ -1339,6 +1437,7 @@ Language: it
     <string name="error_copy_to_clipboard">Si è verificato un errore durante la copia del testo negli appunti</string>
     <string name="stats_recent_weeks">Settimane recenti</string>
     <string name="stats_average_per_day">Media giornaliera</string>
+    <string name="reader_empty_posts_in_blog">Questo sito è vuoto</string>
     <string name="reader_label_new_posts">Nuovi articoli</string>
     <string name="logs_copied_to_clipboard">I log dell\'applicazione sono stati copiati negli appunti</string>
     <string name="stats_period">Periodo</string>
@@ -1430,14 +1529,25 @@ Language: it
     <string name="reader_empty_comments">Ancora nessun commento</string>
     <string name="create_new_blog_wpcom">Crea un blog su WordPress.com</string>
     <string name="browse_our_faq_button">Scorri le nostre FAQ</string>
+    <string name="reader_menu_block_blog">Blocca questo sito</string>
+    <string name="reader_toast_blog_blocked">Gli articoli di questo sito non verranno più mostrati</string>
+    <string name="reader_toast_err_block_blog">Impossibile bloccare questo sito</string>
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="contact_us">Contattaci</string>
     <string name="schedule_verb">Pianifica</string>
     <string name="update_verb">Aggiorna</string>
+    <string name="reader_empty_recommended_blogs">Nessun sito consigliato</string>
+    <string name="reader_toast_err_unfollow_blog">Impossibile smettere di seguire questo sito</string>
+    <string name="reader_toast_err_follow_blog">Impossibile seguire questo sito</string>
+    <string name="reader_toast_err_already_follow_blog">Segui già questo sito</string>
+    <string name="reader_toast_err_get_blog_info">Impossibile mostrare questo sito</string>
+    <string name="reader_label_followed_blog">Sito seguito</string>
     <string name="reader_hint_add_tag_or_url">Inserisci una URL o untag da seguire</string>
     <string name="reader_page_followed_blogs">Siti che segui</string>
     <string name="reader_page_followed_tags">Tag seguiti</string>
+    <string name="reader_title_subs">Tag e siti</string>
     <string name="reader_title_tag_preview">Reader tag</string>
+    <string name="reader_title_blog_preview">Reader del sito</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>
     <string name="ssl_certificate_error">Certificato SSL non valido</string>
     <string name="forgot_password">Password dimenticata?</string>
@@ -1548,7 +1658,6 @@ Language: it
     <string name="pick_video">Seleziona video</string>
     <string name="pick_photo">Seleziona foto</string>
     <string name="reader_likes_you_and_one">Piace a te e a un\'altra persona</string>
-    <string name="reader_empty_followed_tags">Non stai seguendo alcun tag</string>
     <string name="reader_toast_err_url_intent">Impossibile aprire %s</string>
     <string name="reader_toast_err_view_image">Impossibile visualizzare l\'immagine</string>
     <string name="reader_toast_err_share_intent">Impossibile condividere</string>
@@ -1564,6 +1673,7 @@ Language: it
     <string name="reader_btn_follow">Segui</string>
     <string name="reader_btn_share">Condividi</string>
     <string name="reader_untitled_post">(Senza titolo)</string>
+    <string name="comments_empty_list">Nessun commento.</string>
     <string name="empty_list_default">Questo elenco è vuoto</string>
     <string name="passcode_turn_on">Attiva il blocco PIN</string>
     <string name="passcode_turn_off">Disattiva il blocco PIN</string>
