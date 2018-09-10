@@ -6,6 +6,8 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.SearchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
@@ -28,6 +30,8 @@ public enum PostAction implements IAction {
     SEARCH_POSTS,
     @Action(payloadType = SearchPostsPayload.class)
     SEARCH_PAGES,
+    @Action(payloadType = FetchRevisionsPayload.class)
+    FETCH_REVISIONS,
 
     // Remote responses
     @Action(payloadType = FetchPostsResponsePayload.class)
@@ -40,6 +44,8 @@ public enum PostAction implements IAction {
     DELETED_POST,
     @Action(payloadType = SearchPostsResponsePayload.class)
     SEARCHED_POSTS,
+    @Action(payloadType = FetchRevisionsResponsePayload.class)
+    FETCHED_REVISIONS,
 
     // Local actions
     @Action(payloadType = PostModel.class)
