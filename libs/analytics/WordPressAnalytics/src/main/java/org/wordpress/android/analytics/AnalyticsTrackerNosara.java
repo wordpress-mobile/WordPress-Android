@@ -306,6 +306,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
                 predefinedEventProperties.put("type", "neutral");
                 break;
+            case INSTALLATION_REFERRER_OBTAINED:
+                predefinedEventProperties.put("source", "google_play");
+                break;
         }
 
         final String user;
@@ -1246,6 +1249,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED:
             case QUICK_START_REQUEST_DIALOG_NEUTRAL_TAPPED:
                 return "quick_start_request_dialog_button_tapped";
+            case INSTALLATION_REFERRER_OBTAINED:
+                return "installation_referrer_obtained";
             default:
                 return null;
         }
