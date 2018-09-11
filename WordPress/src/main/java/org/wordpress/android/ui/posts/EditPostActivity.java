@@ -1008,6 +1008,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (settingsMenuItem != null) {
+            settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
             settingsMenuItem.setVisible(showMenuItems);
         }
 
