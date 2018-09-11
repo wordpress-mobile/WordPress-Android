@@ -63,58 +63,6 @@ public class PostStore extends Store {
         }
     }
 
-    public static class SearchPostsPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public String searchTerm;
-        public int offset;
-
-        public SearchPostsPayload(SiteModel site, String searchTerm) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-        }
-
-        public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
-            this(site, searchTerm);
-            this.offset = offset;
-        }
-    }
-
-    public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
-        public PostModel post;
-        public SiteModel site;
-
-        public FetchRevisionsPayload(PostModel post, SiteModel site) {
-            this.post = post;
-            this.site = site;
-        }
-    }
-
-    public static class SearchPostsResponsePayload extends Payload<PostError> {
-        public PostsModel posts;
-        public SiteModel site;
-        public String searchTerm;
-        public boolean isPages;
-        public boolean loadedMore;
-        public boolean canLoadMore;
-
-        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm, boolean isPages,
-                                          boolean loadedMore, boolean canLoadMore) {
-            this.posts = posts;
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.loadedMore = loadedMore;
-            this.canLoadMore = canLoadMore;
-        }
-
-        public SearchPostsResponsePayload(SiteModel site, String searchTerm, boolean isPages, PostError error) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.error = error;
-        }
-    }
-
     public static class FetchPostsResponsePayload extends Payload<PostError> {
         public PostsModel posts;
         public SiteModel site;
@@ -142,6 +90,16 @@ public class PostStore extends Store {
         public SiteModel site;
 
         public RemotePostPayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
+    public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public SiteModel site;
+
+        public FetchRevisionsPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
         }
@@ -218,23 +176,11 @@ public class PostStore extends Store {
         }
     }
 
-    public static class OnPostsSearched extends OnChanged<PostError> {
-        public String searchTerm;
-        public PostsModel searchResults;
-        public boolean canLoadMore;
-
-        public OnPostsSearched(String searchTerm, PostsModel searchResults, boolean canLoadMore) {
-            this.searchTerm = searchTerm;
-            this.searchResults = searchResults;
-            this.canLoadMore = canLoadMore;
-        }
-    }
-
     public static class OnRevisionsFetched extends OnChanged<RevisionError> {
         public PostModel post;
         public RevisionsModel revisionsModel;
 
-        public OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
+        OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
             this.revisionsModel = revisionsModel;
         }
@@ -454,15 +400,6 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
-            case SEARCH_POSTS:
-                searchPosts((SearchPostsPayload) action.getPayload(), false);
-                break;
-            case SEARCH_PAGES:
-                searchPosts((SearchPostsPayload) action.getPayload(), true);
-                break;
-            case SEARCHED_POSTS:
-                handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
-                break;
             case FETCH_REVISIONS:
                 fetchRevisions((FetchRevisionsPayload) action.getPayload());
                 break;
@@ -501,19 +438,6 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
-        }
-    }
-
-    private void searchPosts(SearchPostsPayload payload, boolean pages) {
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.searchPosts(payload.site, payload.searchTerm, pages, payload.offset);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            PostError error =
-                    new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
-            OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, null, false);
-            onPostsSearched.error = error;
-            emitChange(onPostsSearched);
         }
     }
 
@@ -578,20 +502,6 @@ public class PostStore extends Store {
         }
 
         emitChange(onPostChanged);
-    }
-
-    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts, payload.canLoadMore);
-
-        if (payload.isError()) {
-            onPostsSearched.error = payload.error;
-        } else if (payload.posts.getPosts() != null && payload.posts.getPosts().size() > 0) {
-            for (PostModel post : payload.posts.getPosts()) {
-                PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
-            }
-        }
-
-        emitChange(onPostsSearched);
     }
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
