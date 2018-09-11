@@ -15,11 +15,11 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
@@ -157,11 +157,11 @@ public class PostStore extends Store {
 
     public static class FetchRevisionsResponsePayload extends Payload<BaseNetworkError> {
         public PostModel post;
-        public RevisionsResponse revisionsResponse;
+        public RevisionsModel revisionsModel;
 
-        public FetchRevisionsResponsePayload(PostModel post, RevisionsResponse revisionsResponse) {
+        public FetchRevisionsResponsePayload(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
-            this.revisionsResponse = revisionsResponse;
+            this.revisionsModel = revisionsModel;
         }
     }
 
@@ -232,11 +232,11 @@ public class PostStore extends Store {
 
     public static class OnRevisionsFetched extends OnChanged<RevisionError> {
         public PostModel post;
-        public RevisionsResponse revisionsResponse;
+        public RevisionsModel revisionsModel;
 
-        public OnRevisionsFetched(PostModel post, RevisionsResponse revisionsResponse) {
+        public OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
             this.post = post;
-            this.revisionsResponse = revisionsResponse;
+            this.revisionsModel = revisionsModel;
         }
     }
 
@@ -526,11 +526,12 @@ public class PostStore extends Store {
     }
 
     private void handleFetchedRevisions(FetchRevisionsResponsePayload payload) {
-        OnRevisionsFetched onRevisionsFetched = new OnRevisionsFetched(payload.post, payload.revisionsResponse);
+        OnRevisionsFetched onRevisionsFetched = new OnRevisionsFetched(payload.post, payload.revisionsModel);
 
         if (payload.isError()) {
             onRevisionsFetched.error = new RevisionError(RevisionsErrorType.GENERIC_ERROR, payload.error.message);
         }
+
 
         emitChange(onRevisionsFetched);
     }

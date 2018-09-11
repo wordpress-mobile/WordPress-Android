@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.RevisionModel;
+import org.wordpress.android.fluxc.model.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -26,6 +28,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffDetails;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.Revision;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -280,9 +284,10 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<RevisionsResponse>() {
                     @Override
                     public void onResponse(RevisionsResponse response) {
-                        FetchRevisionsResponsePayload payload = new FetchRevisionsResponsePayload(post, response);
-
-                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(payload));
+                        FetchRevisionsResponsePayload payload =
+                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(post, response));
+                        mDispatcher.dispatch(
+                                PostActionBuilder.newFetchedRevisionsAction(payload));
                     }
                 },
                 new WPComErrorListener() {
@@ -350,7 +355,6 @@ public class PostRestClient extends BaseWPComRestClient {
 
         return post;
     }
-
 
     private Map<String, Object> postModelToParams(PostModel post) {
         Map<String, Object> params = new HashMap<>();
@@ -443,4 +447,32 @@ public class PostRestClient extends BaseWPComRestClient {
 
         return params;
     }
+
+    private RevisionsModel revisionsResponseToModel(PostModel post, RevisionsResponse response) {
+        ArrayList<RevisionModel> revisions = new ArrayList<>();
+        for (DiffDetails diffDetails : response.getDiffs()) {
+            Revision revision = response.getRevisions().get(Integer.toString(diffDetails.getTo()));
+
+            RevisionModel revisionModel =
+                    new RevisionModel(
+                            revision.getId(),
+                            post.getRemotePostId(),
+                            diffDetails.getFrom(),
+                            diffDetails.getDiff().getTotal().getAdd(),
+                            diffDetails.getDiff().getTotal().getDel(),
+                            revision.getPost_content(),
+                            revision.getPost_excerpt(),
+                            revision.getPost_title(),
+                            revision.getPost_date_gmt(),
+                            revision.getPost_modified_gmt(),
+                            revision.getPost_author(),
+                            diffDetails.getDiff().getPost_title(),
+                            diffDetails.getDiff().getPost_content()
+                    );
+            revisions.add(revisionModel);
+        }
+
+        return new RevisionsModel(revisions);
+    }
+
 }
