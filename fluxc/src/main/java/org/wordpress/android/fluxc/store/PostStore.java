@@ -442,11 +442,7 @@ public class PostStore extends Store {
     }
 
     private void fetchRevisions(FetchRevisionsPayload payload) {
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchRevisions(payload.post, payload.site);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-        }
+        mPostRestClient.fetchRevisions(payload.post, payload.site);
     }
 
     private void handleFetchedRevisions(FetchRevisionsResponsePayload payload) {
@@ -455,7 +451,6 @@ public class PostStore extends Store {
         if (payload.isError()) {
             onRevisionsFetched.error = new RevisionError(RevisionsErrorType.GENERIC_ERROR, payload.error.message);
         }
-
 
         emitChange(onRevisionsFetched);
     }
