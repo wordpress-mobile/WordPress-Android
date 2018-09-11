@@ -49,23 +49,20 @@ public class InstallationReferrerServiceLogic {
                         try {
                             AppLog.i(T.UTILS, "installation referrer connected");
                             ReferrerDetails response = mReferrerClient.getInstallReferrer();
-                            if (!AppPrefs.isInstallationReferrerObtained()) {
-                                // mark referrer as obtained so we don't try fetching it again
-                                // Citing here:
-                                //  Caution: The install referrer information will be available for 90 days and won't
-                                //  change unless the application is reinstalled. To avoid unecessary API calls in your
-                                //  app, you should invoke the API only once during the first execution after install.
-                                // read more: https://developer.android.com/google/play/installreferrer/library
-                                AppPrefs.setInstallationReferrerObtained(true);
+                            // mark referrer as obtained so we don't try fetching it again
+                            // Citing here:
+                            //  Caution: The install referrer information will be available for 90 days and won't
+                            //  change unless the application is reinstalled. To avoid unecessary API calls in your
+                            //  app, you should invoke the API only once during the first execution after install.
+                            // read more: https://developer.android.com/google/play/installreferrer/library
+                            AppPrefs.setInstallationReferrerObtained(true);
 
-                                // handle and send information to Tracks here
-                                Map<String, Object> properties = new HashMap<>();
-                                properties.put("install_referrer", response.getInstallReferrer());
-                                properties.put("install_referrer_timestamp_begin", response.getInstallBeginTimestampSeconds());
-                                properties.put("install_referrer_timestamp_click", response.getReferrerClickTimestampSeconds());
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
-                            }
-                            mReferrerClient.endConnection();
+                            // handle and send information to Tracks here
+                            Map<String, Object> properties = new HashMap<>();
+                            properties.put("install_referrer", response.getInstallReferrer());
+                            properties.put("install_referrer_timestamp_begin", response.getInstallBeginTimestampSeconds());
+                            properties.put("install_referrer_timestamp_click", response.getReferrerClickTimestampSeconds());
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
                         } catch (RemoteException e) {
                             e.printStackTrace();
                             AppLog.i(T.UTILS, "installation referrer: RemoteException occurred");
@@ -101,6 +98,7 @@ public class InstallationReferrerServiceLogic {
     }
 
     private void stopService() {
+        mReferrerClient.endConnection();
         mCompletionListener.onCompleted(mListenerCompanion);
     }
 
