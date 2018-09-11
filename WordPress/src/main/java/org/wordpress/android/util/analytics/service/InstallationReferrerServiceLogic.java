@@ -9,6 +9,7 @@ import com.android.installreferrer.api.InstallReferrerClient.InstallReferrerResp
 import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
 
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -44,8 +45,11 @@ public class InstallationReferrerServiceLogic {
                         try {
                             AppLog.i(T.UTILS, "installation referrer connected");
                             ReferrerDetails response = mReferrerClient.getInstallReferrer();
-                            // TODO handle and send information to Tracks here
-                            // handleReferrer(response);
+                            if (!AppPrefs.isInstallationReferrerObtained()) {
+                                AppPrefs.setInstallationReferrerObtained(true);
+                                // TODO handle and send information to Tracks here
+                                // handleReferrer(response);
+                            }
                             mReferrerClient.endConnection();
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -53,10 +57,17 @@ public class InstallationReferrerServiceLogic {
                         break;
                     case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
                         // API not available on the current Play Store app
+                        // just log but DO NOT mark AppPrefs.setInstallationReferrerObtained(true);,
+                        // because the user could update to a version of Google PLay that supports it
+                        // and we can obtain it also from the old com.android.vending.INSTALL_REFERRER intent
                         AppLog.i(T.UTILS, "installation referrer: feature not supported");
                         break;
                     case InstallReferrerResponse.SERVICE_UNAVAILABLE:
                         // Connection could not be established
+                        // same as above, this is a retriable error
+                        // just log but DO NOT mark AppPrefs.setInstallationReferrerObtained(true);,
+                        // and we can obtain it also from the old com.android.vending.INSTALL_REFERRER intent
+                        // if this is retried but the error persists
                         AppLog.i(T.UTILS, "installation referrer: service unavailable");
                         break;
                 }

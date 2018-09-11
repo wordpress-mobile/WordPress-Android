@@ -216,6 +216,11 @@ public class WPMainActivity extends AppCompatActivity implements
                 new IntentFilter(Intent.ACTION_PACKAGE_FIRST_LAUNCH));
 
         if (savedInstanceState == null) {
+
+            if (!AppPrefs.isInstallationReferrerObtained()) {
+                InstallationReferrerServiceStarter.startService(this);
+            }
+
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
