@@ -98,7 +98,7 @@ class FormattableContentUtilsTest {
 
     @Test
     fun verifyRangeIdOrZeroReturnsZeroWhenNull() {
-        val range = range.copy(value = null)
+        val range = range.copy(id = null)
         val content = content.copy(ranges = listOf(range))
         assertEquals(0L, content.getRangeIdOrZero(0))
     }
@@ -112,7 +112,7 @@ class FormattableContentUtilsTest {
 
     @Test
     fun verifyRangeUrlOrEmptyReturnsEmptyWhenEmpty() {
-        val range = range.copy(value = null)
+        val range = range.copy(url = null)
         val content = content.copy(ranges = listOf(range))
         assertEquals("", content.getRangeUrlOrEmpty(0))
     }
