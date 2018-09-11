@@ -164,7 +164,7 @@ class PagesViewModel
     }
 
     fun onPageEditFinished(pageId: Long) {
-        launch(commonPoolContext) {
+        launch(uiContext) {
             waitForPageUpdate(pageId)
             reloadPages()
         }
@@ -178,7 +178,7 @@ class PagesViewModel
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
-        launch(commonPoolContext) {
+        launch(uiContext) {
             pageMap[pageId]?.let { page ->
                 setParent(page, parentId)
             }
@@ -227,7 +227,7 @@ class PagesViewModel
         _isSearchExpanded.value = false
         clearSearch()
 
-        launch(commonPoolContext) {
+        launch(uiContext) {
             delay(500)
             checkIfNewPageButtonShouldBeVisible()
         }
@@ -266,7 +266,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        launch(commonPoolContext) {
+        launch(uiContext) {
             reloadPages(FETCHING)
         }
     }
@@ -388,7 +388,7 @@ class PagesViewModel
                 }
             }
 
-            launch(commonPoolContext) {
+            launch(uiContext) {
                 _arePageActionsEnabled = false
                 actionPerfomer.performAction(action)
                 _arePageActionsEnabled = true
