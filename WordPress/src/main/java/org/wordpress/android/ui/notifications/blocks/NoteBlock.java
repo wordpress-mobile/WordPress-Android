@@ -27,7 +27,7 @@ import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FormattableContentUtils;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -42,7 +42,6 @@ public class NoteBlock {
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     protected final ImageManager mImageManager;
     protected final NotificationsUtilsWrapper mNotificationsUtilsWrapper;
-    protected final FormattableContentUtils mFormattableContentUtils;
     private boolean mIsBadge;
     private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
@@ -60,13 +59,11 @@ public class NoteBlock {
 
     public NoteBlock(FormattableContent noteObject, ImageManager imageManager,
                      NotificationsUtilsWrapper notificationsUtilsWrapper,
-                     FormattableContentUtils formattableContentUtils,
                      OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
         mImageManager = imageManager;
         mNotificationsUtilsWrapper = notificationsUtilsWrapper;
-        mFormattableContentUtils = formattableContentUtils;
     }
 
     OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
@@ -87,15 +84,15 @@ public class NoteBlock {
     }
 
     String getMetaHomeTitle() {
-        return mFormattableContentUtils.getMetaTitlesHomeOrEmpty(mNoteData);
+        return FormattableContentUtilsKt.getMetaTitlesHomeOrEmpty(mNoteData);
     }
 
     long getMetaSiteId() {
-        return mFormattableContentUtils.getMetaIdsSiteIdOrZero(mNoteData);
+        return FormattableContentUtilsKt.getMetaIdsSiteIdOrZero(mNoteData);
     }
 
     public String getMetaSiteUrl() {
-        return mFormattableContentUtils.getMetaLinksHomeOrEmpty(mNoteData);
+        return FormattableContentUtilsKt.getMetaLinksHomeOrEmpty(mNoteData);
     }
 
     private boolean isPingBack() {
@@ -107,7 +104,7 @@ public class NoteBlock {
     }
 
     FormattableMedia getNoteMediaItem() {
-        return mFormattableContentUtils.getMediaOrNull(mNoteData, 0);
+        return FormattableContentUtilsKt.getMediaOrNull(mNoteData, 0);
     }
 
     public void setIsBadge() {

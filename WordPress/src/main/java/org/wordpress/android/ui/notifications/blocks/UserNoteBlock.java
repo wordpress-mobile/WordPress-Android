@@ -12,7 +12,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.FormattableContentUtils;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -36,10 +36,8 @@ public class UserNoteBlock extends NoteBlock {
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
             ImageManager imageManager,
-            NotificationsUtilsWrapper notificationsUtilsWrapper,
-            FormattableContentUtils formattableContentUtils) {
-        super(noteObject, imageManager, notificationsUtilsWrapper, formattableContentUtils,
-                onNoteBlockTextClickListener);
+            NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
@@ -147,15 +145,15 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     String getUserUrl() {
-        return mFormattableContentUtils.getMetaLinksHomeOrEmpty(getNoteData());
+        return FormattableContentUtilsKt.getMetaLinksHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTitle() {
-        return mFormattableContentUtils.getMetaTitlesHomeOrEmpty(getNoteData());
+        return FormattableContentUtilsKt.getMetaTitlesHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTagline() {
-        return mFormattableContentUtils.getMetaTitlesTaglineOrEmpty(getNoteData());
+        return FormattableContentUtilsKt.getMetaTitlesTaglineOrEmpty(getNoteData());
     }
 
     private boolean hasUserUrl() {
@@ -206,8 +204,8 @@ public class UserNoteBlock extends NoteBlock {
         String siteUrl = getUserUrl();
         if (mGravatarClickedListener != null) {
             mGravatarClickedListener
-                    .onGravatarClicked(mFormattableContentUtils.getMetaIdsSiteIdOrZero(getNoteData()),
-                            mFormattableContentUtils.getMetaIdsUserIdOrZero(getNoteData()), siteUrl);
+                    .onGravatarClicked(FormattableContentUtilsKt.getMetaIdsSiteIdOrZero(getNoteData()),
+                            FormattableContentUtilsKt.getMetaIdsUserIdOrZero(getNoteData()), siteUrl);
         }
     }
 }

@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.FormattableContentUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -42,10 +41,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                                 FormattableContent commentTextBlock,
                                 long timestamp, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener,
-                                ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper,
-                                FormattableContentUtils formattableContentUtils) {
+                                ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
         super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
-                notificationsUtilsWrapper, formattableContentUtils);
+                notificationsUtilsWrapper);
 
         mCommentData = commentTextBlock;
         mTimestamp = timestamp;

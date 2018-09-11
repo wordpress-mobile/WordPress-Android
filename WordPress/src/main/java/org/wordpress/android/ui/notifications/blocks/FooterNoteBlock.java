@@ -11,7 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.FormattableContentUtils;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -21,10 +21,8 @@ public class FooterNoteBlock extends NoteBlock {
     public FooterNoteBlock(FormattableContent noteObject,
                            ImageManager imageManager,
                            NotificationsUtilsWrapper notificationsUtilsWrapper,
-                           FormattableContentUtils formattableContentUtils,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, imageManager, notificationsUtilsWrapper, formattableContentUtils,
-                onNoteBlockTextClickListener);
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
     }
 
     public void setClickableSpan(FormattableRange rangeObject, String noteType) {
@@ -81,7 +79,7 @@ public class FooterNoteBlock extends NoteBlock {
 
     @NotNull
     private String getNoticonGlyph() {
-        return mFormattableContentUtils.getRangeValueOrEmpty(getNoteData(), 0);
+        return FormattableContentUtilsKt.getRangeValueOrEmpty(getNoteData(), 0);
     }
 
     @Override

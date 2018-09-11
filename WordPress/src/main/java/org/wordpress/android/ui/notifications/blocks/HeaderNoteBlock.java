@@ -13,7 +13,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
-import org.wordpress.android.util.FormattableContentUtils;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -33,10 +33,8 @@ public class HeaderNoteBlock extends NoteBlock {
     public HeaderNoteBlock(Context context, List<FormattableContent> headerArray, ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
-                           ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper,
-                           FormattableContentUtils formattableContentUtils) {
-        super(new FormattableContent(), imageManager, notificationsUtilsWrapper, formattableContentUtils,
-                onNoteBlockTextClickListener);
+                           ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(new FormattableContent(), imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
         mHeadersList = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
@@ -68,8 +66,8 @@ public class HeaderNoteBlock extends NoteBlock {
             mImageManager.load(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
         }
 
-        final long siteId = mFormattableContentUtils.getRangeSiteIdOrZero(getHeader(0), 0);
-        final long userId = mFormattableContentUtils.getRangeIdOrZero(getHeader(0), 0);
+        final long siteId = FormattableContentUtilsKt.getRangeSiteIdOrZero(getHeader(0), 0);
+        final long userId = FormattableContentUtilsKt.getRangeIdOrZero(getHeader(0), 0);
 
         if (!TextUtils.isEmpty(getUserUrl()) && siteId > 0 && userId > 0) {
             noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
@@ -121,15 +119,15 @@ public class HeaderNoteBlock extends NoteBlock {
     };
 
     private String getAvatarUrl() {
-        return GravatarUtils.fixGravatarUrl(mFormattableContentUtils.getMediaUrlOrEmpty(getHeader(0), 0), mAvatarSize);
+        return GravatarUtils.fixGravatarUrl(FormattableContentUtilsKt.getMediaUrlOrEmpty(getHeader(0), 0), mAvatarSize);
     }
 
     private String getUserUrl() {
-        return mFormattableContentUtils.getRangeUrlOrEmpty(getHeader(0), 0);
+        return FormattableContentUtilsKt.getRangeUrlOrEmpty(getHeader(0), 0);
     }
 
     private String getSnippet() {
-        return mFormattableContentUtils.getTextOrEmpty(getHeader(1));
+        return FormattableContentUtilsKt.getTextOrEmpty(getHeader(1));
     }
 
     @Override
