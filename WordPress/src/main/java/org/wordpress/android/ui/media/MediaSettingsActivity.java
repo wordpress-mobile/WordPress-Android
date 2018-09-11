@@ -757,9 +757,6 @@ public class MediaSettingsActivity extends AppCompatActivity
                     public void onResourceReady(@NotNull Drawable resource) {
                         if (!isFinishing()) {
                             showProgress(false);
-                            if (isMediaFromEditor()) {
-                                showImageDimensions(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
-                            }
                         }
                     }
 
