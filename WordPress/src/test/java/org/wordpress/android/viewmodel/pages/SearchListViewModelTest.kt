@@ -23,7 +23,6 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.test
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -41,8 +40,8 @@ class SearchListViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = SearchListViewModel(resourceProvider)
-        pagesViewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined)
+        viewModel = SearchListViewModel(resourceProvider, Unconfined)
+        pagesViewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined, Unconfined)
     }
 
     @Test
@@ -55,11 +54,9 @@ class SearchListViewModelTest {
         val expectedResult = listOf(Divider("Drafts"), DraftPage(1, title))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf(DRAFT to drafts))
 
-        val observer = viewModel.searchResult.test()
+        pagesViewModel.onSearch(query, 0)
 
-        pagesViewModel.onSearch(query)
-
-        val result = observer.await()
+        val result = viewModel.searchResult.value
 
         assertThat(result).isEqualTo(expectedResult)
     }
@@ -71,11 +68,9 @@ class SearchListViewModelTest {
         val pageItems = listOf(Empty(string.pages_empty_search_result, true))
         whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
 
-        val observer = viewModel.searchResult.test()
+        pagesViewModel.onSearch(query, 0)
 
-        pagesViewModel.onSearch(query)
-
-        val result = observer.await()
+        val result = viewModel.searchResult.value
 
         assertThat(result).isEqualTo(pageItems)
     }
@@ -86,11 +81,9 @@ class SearchListViewModelTest {
         val query = ""
         val pageItems = listOf(Empty(string.pages_search_suggestion, true))
 
-        val observer = viewModel.searchResult.test()
+        pagesViewModel.onSearch(query, 0)
 
-        pagesViewModel.onSearch(query)
-
-        val result = observer.await()
+        val result = viewModel.searchResult.value
 
         assertThat(result).isEqualTo(pageItems)
     }

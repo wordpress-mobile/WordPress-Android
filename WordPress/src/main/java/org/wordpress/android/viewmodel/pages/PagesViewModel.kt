@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
@@ -23,6 +22,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.modules.COMMON_POOL_CONTEXT
 import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
@@ -55,7 +55,8 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
-    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
+    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher,
+    @Named(COMMON_POOL_CONTEXT) private val commonPoolContext: CoroutineDispatcher
 ) : ViewModel() {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -136,7 +137,7 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun reloadPagesAsync() = launch(CommonPool) {
+    private fun reloadPagesAsync() = launch(commonPoolContext) {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
         refreshPages()
 
@@ -163,7 +164,7 @@ class PagesViewModel
     }
 
     fun onPageEditFinished(pageId: Long) {
-        launch {
+        launch(commonPoolContext) {
             waitForPageUpdate(pageId)
             reloadPages()
         }
@@ -177,7 +178,7 @@ class PagesViewModel
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
-        launch {
+        launch(commonPoolContext) {
             pageMap[pageId]?.let { page ->
                 setParent(page, parentId)
             }
@@ -194,16 +195,16 @@ class PagesViewModel
         _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
-    fun onSearch(searchQuery: String) {
+    fun  onSearch(searchQuery: String, delay: Long = 200) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {
-            searchJob = launch {
-                delay(200)
+            searchJob = launch(uiContext) {
+                delay(delay)
                 searchJob = null
                 if (isActive) {
                     _lastSearchQuery = searchQuery
                     val result = pageStore.groupedSearch(site, searchQuery)
-                    _searchPages.postValue(result)
+                    _searchPages.value = result
                 }
             }
         } else {
@@ -226,7 +227,7 @@ class PagesViewModel
         _isSearchExpanded.value = false
         clearSearch()
 
-        launch {
+        launch(commonPoolContext) {
             delay(500)
             checkIfNewPageButtonShouldBeVisible()
         }
@@ -251,7 +252,7 @@ class PagesViewModel
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
-        launch {
+        launch(commonPoolContext) {
             pageMap[remoteId]?.let { deletePage(it) }
         }
     }
@@ -265,7 +266,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        launch {
+        launch(commonPoolContext) {
             reloadPages(FETCHING)
         }
     }
@@ -274,7 +275,7 @@ class PagesViewModel
         val oldParent = page.parent?.remoteId ?: 0
 
         val action = PageAction(UPLOAD) {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 if (page.parent?.remoteId != parentId) {
                     page.parent = _pageMap[parentId]
                     pageMap = _pageMap
@@ -284,7 +285,7 @@ class PagesViewModel
             }
         }
         action.undo = {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 pageMap[page.remoteId]?.let { changed ->
                     changed.parent = _pageMap[oldParent]
                     pageMap = _pageMap
@@ -294,7 +295,7 @@ class PagesViewModel
             }
         }
         action.onSuccess = {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 reloadPages()
 
                 delay(100)
@@ -303,7 +304,7 @@ class PagesViewModel
             }
         }
         action.onError = {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 refreshPages()
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
@@ -319,7 +320,7 @@ class PagesViewModel
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(REMOVE) {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 _pageMap.remove(page.remoteId)
                 pageMap = _pageMap
 
@@ -329,7 +330,7 @@ class PagesViewModel
             }
         }
         action.onSuccess = {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 delay(100)
                 reloadPages()
 
@@ -337,7 +338,7 @@ class PagesViewModel
             }
         }
         action.onError = {
-            launch(CommonPool) {
+            launch(commonPoolContext) {
                 refreshPages()
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
@@ -354,7 +355,7 @@ class PagesViewModel
             val oldStatus = page.status
             val action = PageAction(UPLOAD) {
                 page.status = status
-                launch(CommonPool) {
+                launch(commonPoolContext) {
                     pageStore.updatePageInDb(page)
                     refreshPages()
 
@@ -363,7 +364,7 @@ class PagesViewModel
             }
             action.undo = {
                 page.status = oldStatus
-                launch(CommonPool) {
+                launch(commonPoolContext) {
                     pageStore.updatePageInDb(page)
                     refreshPages()
 
@@ -371,7 +372,7 @@ class PagesViewModel
                 }
             }
             action.onSuccess = {
-                launch(CommonPool) {
+                launch(commonPoolContext) {
                     delay(100)
                     reloadPages()
 
@@ -380,14 +381,14 @@ class PagesViewModel
                 }
             }
             action.onError = {
-                launch(CommonPool) {
+                launch(commonPoolContext) {
                     action.undo()
 
                     _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
 
-            launch {
+            launch(commonPoolContext) {
                 _arePageActionsEnabled = false
                 actionPerfomer.performAction(action)
                 _arePageActionsEnabled = true
