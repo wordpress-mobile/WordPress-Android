@@ -750,7 +750,6 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (SiteUtils.isPhotonCapable(mSite)) {
             imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
-        showProgress(true);
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, null,
                 new RequestListener<Drawable>() {
                     @Override
