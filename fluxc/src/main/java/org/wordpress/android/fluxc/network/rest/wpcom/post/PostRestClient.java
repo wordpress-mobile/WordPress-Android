@@ -238,7 +238,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(RevisionsResponse response) {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(
-                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(response))));
+                                new FetchRevisionsResponsePayload(post, revisionsResponseToRevisionsModel(response))));
                     }
                 },
                 new WPComErrorListener() {
@@ -398,7 +398,7 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
-    private RevisionsModel revisionsResponseToModel(RevisionsResponse response) {
+    private RevisionsModel revisionsResponseToRevisionsModel(RevisionsResponse response) {
         ArrayList<RevisionModel> revisions = new ArrayList<>();
         for (DiffResponse diffResponse : response.getDiffs()) {
             RevisionResponse revision = response.getRevisions().get(Integer.toString(diffResponse.getTo()));
