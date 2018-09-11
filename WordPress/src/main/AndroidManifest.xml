@@ -631,6 +631,16 @@
             android:label="Notifications Update Job Service" />
 
         <service
+            android:name=".util.analytics.service.InstallationReferrerService"
+            android:exported="false"
+            android:label="Installation Referrer Service" />
+        <service
+            android:name=".util.analytics.service.InstallationReferrerJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Installation Referrer Service" />
+
+        <service
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
@@ -656,11 +666,6 @@
         </receiver>
 
         <receiver android:name=".ui.notifications.ShareAndDismissNotificationReceiver" />
-        <receiver android:name=".util.analytics.PackageFirstLaunchReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_FIRST_LAUNCH" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".ui.stats.StatsWidgetProvider"
             android:label="@string/stats_widget_name">
