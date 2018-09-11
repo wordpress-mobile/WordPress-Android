@@ -1,11 +1,9 @@
 package org.wordpress.android.util
 
-import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMedia
@@ -14,323 +12,326 @@ import org.wordpress.android.fluxc.tools.FormattableRange
 
 @RunWith(MockitoJUnitRunner::class)
 class FormattableContentUtilsTest {
-    @Mock
-    lateinit var content: FormattableContent
-    @Mock
-    lateinit var range: FormattableRange
-    @Mock
-    lateinit var media: FormattableMedia
-    @Mock
-    lateinit var titles: FormattableMeta.Titles
-    @Mock
-    lateinit var links: FormattableMeta.Links
-    @Mock
-    lateinit var ids: FormattableMeta.Ids
-    @Mock
-    lateinit var meta: FormattableMeta
+    private lateinit var content: FormattableContent
+    private lateinit var range: FormattableRange
+    private lateinit var media: FormattableMedia
+    private lateinit var meta: FormattableMeta
+    private lateinit var titles: FormattableMeta.Titles
+    private lateinit var ids: FormattableMeta.Ids
+    private lateinit var links: FormattableMeta.Links
 
     @Before
     fun setUp() {
+        content = FormattableContent()
+        range = FormattableRange()
+        media = FormattableMedia()
+        meta = FormattableMeta()
+        titles = FormattableMeta.Titles()
+        ids = FormattableMeta.Ids()
+        links = FormattableMeta.Links()
     }
 
     @Test
     fun verifyTextOrEmptyReturnsText() {
-        whenever(content.text).thenReturn("ahoj")
+        val content = content.copy(text = "ahoj")
         assertEquals("ahoj", content.getTextOrEmpty())
     }
 
     @Test
     fun verifyTextOrEmptyReturnsEmpty() {
-        whenever(content.text).thenReturn(null)
+        val content = content.copy(text = null)
         assertEquals("", content.getTextOrEmpty())
     }
 
     @Test
     fun verifyRangeSiteIdOrZeroReturnsId() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.siteId).thenReturn(123L)
+        val range = range.copy(siteId = 123L)
+        val content = content.copy(ranges = listOf(range))
         assertEquals(123L, content.getRangeSiteIdOrZero(0))
     }
 
     @Test
     fun verifyRangeSiteIdOrZeroReturnsZeroWhenEmpty() {
-        whenever(content.ranges).thenReturn(listOf())
+        val content = content.copy(ranges = listOf())
         assertEquals(0L, content.getRangeSiteIdOrZero(0))
     }
 
     @Test
     fun verifyRangeSiteIdOrZeroReturnsZeroWhenNull() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.siteId).thenReturn(null)
+        val range = range.copy(siteId = null)
+        val content = content.copy(ranges = listOf(range))
         assertEquals(0L, content.getRangeSiteIdOrZero(0))
     }
 
     @Test
     fun verifyRangeValueOrEmptyReturnsValue() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.value).thenReturn("example value")
+        val range = range.copy(value = "example value")
+        val content = content.copy(ranges = listOf(range))
         assertEquals("example value", content.getRangeValueOrEmpty(0))
     }
 
     @Test
     fun verifyRangeValueOrEmptyReturnsEmptyWhenEmpty() {
-        whenever(content.ranges).thenReturn(listOf())
+        val content = content.copy(ranges = listOf())
         assertEquals("", content.getRangeValueOrEmpty(0))
     }
 
     @Test
     fun verifyRangeValueOrEmptyReturnsEmptyWhenNull() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.value).thenReturn(null)
+        val range = range.copy(value = null)
+        val content = content.copy(ranges = listOf(range))
         assertEquals("", content.getRangeValueOrEmpty(0))
     }
 
     @Test
     fun verifyRangeIdOrZeroReturnsId() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.id).thenReturn(123L)
+        val range = range.copy(id = 123L)
+        val content = content.copy(ranges = listOf(range))
         assertEquals(123L, content.getRangeIdOrZero(0))
     }
 
     @Test
     fun verifyRangeIdOrZeroReturnsZeroWhenEmpty() {
-        whenever(content.ranges).thenReturn(listOf())
+        val content = content.copy(ranges = listOf())
         assertEquals(0L, content.getRangeIdOrZero(0))
     }
 
     @Test
     fun verifyRangeIdOrZeroReturnsZeroWhenNull() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.id).thenReturn(null)
+        val range = range.copy(value = null)
+        val content = content.copy(ranges = listOf(range))
         assertEquals(0L, content.getRangeIdOrZero(0))
     }
 
     @Test
     fun verifyRangeUrlOrEmptyReturnsUrl() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.url).thenReturn("http://example.com")
+        val range = range.copy(url = "http://example.com")
+        val content = content.copy(ranges = listOf(range))
         assertEquals("http://example.com", content.getRangeUrlOrEmpty(0))
     }
 
     @Test
     fun verifyRangeUrlOrEmptyReturnsEmptyWhenEmpty() {
-        whenever(content.ranges).thenReturn(listOf(range))
-        whenever(range.url).thenReturn(null)
+        val range = range.copy(value = null)
+        val content = content.copy(ranges = listOf(range))
         assertEquals("", content.getRangeUrlOrEmpty(0))
     }
 
     @Test
     fun verifyRangeUrlOrEmptyReturnsEmptyWhenNull() {
-        whenever(content.ranges).thenReturn(null)
+        val content = content.copy(ranges = null)
         assertEquals("", content.getRangeUrlOrEmpty(0))
     }
 
     @Test
     fun verifyRangeUrlOrEmptyReturnsEmptyWhenInvalidIndex() {
-        whenever(content.ranges).thenReturn(listOf(range))
+        val content = content.copy(ranges = listOf(range))
         assertEquals("", content.getRangeUrlOrEmpty(999))
     }
 
     @Test
     fun verifyRangeOrNullReturnsRange() {
-        whenever(content.ranges).thenReturn(listOf(range))
+        val content = content.copy(ranges = listOf(range))
         assertEquals(range, content.getRangeOrNull(0))
     }
 
     @Test
     fun verifyRangeOrNullReturnsNullWhenEmpty() {
-        whenever(content.ranges).thenReturn(listOf())
+        val content = content.copy(ranges = listOf())
         assertEquals(null, content.getRangeOrNull(0))
     }
 
     @Test
     fun verifyRangeOrNullReturnsNullWhenNull() {
-        whenever(content.ranges).thenReturn(null)
+        val content = content.copy(ranges = null)
         assertEquals(null, content.getRangeOrNull(0))
     }
 
     @Test
     fun verifyRangeOrNullReturnsNullWhenInvalidIndex() {
-        whenever(content.ranges).thenReturn(listOf(range))
+        val content = content.copy(ranges = listOf(range))
         assertEquals(null, content.getRangeOrNull(999))
     }
 
     @Test
     fun verifyMediaUrlOrEmptyReturnsUrl() {
-        whenever(content.media).thenReturn(listOf(media))
-        whenever(media.url).thenReturn("http://example.com")
+        val media = media.copy(url = "http://example.com")
+        val content = content.copy(media = listOf(media))
         assertEquals("http://example.com", content.getMediaUrlOrEmpty(0))
     }
 
     @Test
     fun verifyMediaUrlOrEmptyReturnsEmpty() {
-        whenever(content.media).thenReturn(listOf())
+        val content = content.copy(media = listOf())
         assertEquals("", content.getMediaUrlOrEmpty(0))
     }
 
     @Test
     fun verifyMediaOrNullReturnsMedia() {
-        whenever(content.media).thenReturn(listOf(media))
+        val content = content.copy(media = listOf(media))
         assertEquals(media, content.getMediaOrNull(0))
     }
 
     @Test
     fun verifyMediaOrNullReturnsNullWhenEmpty() {
-        whenever(content.media).thenReturn(listOf())
+        val content = content.copy(media = listOf())
         assertEquals(null, content.getMediaOrNull(0))
     }
 
     @Test
     fun verifyMediaOrNullReturnsNullWhenNull() {
-        whenever(content.media).thenReturn(null)
+        val content = content.copy(media = null)
         assertEquals(null, content.getMediaOrNull(0))
     }
 
     @Test
     fun verifyMediaOrNullReturnsNullWhenInvalidIndex() {
-        whenever(content.media).thenReturn(listOf(media))
+        val content = content.copy(media = listOf(media))
         assertEquals(null, content.getMediaOrNull(999))
     }
 
     @Test
     fun verifyMetaTitlesHomeOrEmptyReturnsHome() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(titles)
-        whenever(titles.home).thenReturn("example home")
+        val titles = titles.copy(home = "example home")
+        val meta = meta.copy(titles = titles)
+        val content = content.copy(meta = meta)
         assertEquals("example home", content.getMetaTitlesHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaTitlesHomeOrEmptyReturnsEmptyWhenTitlesNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(null)
+        val meta = meta.copy(titles = null)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaTitlesHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaTitlesHomeOrEmptyReturnsEmptyWhenMetaNull() {
-        whenever(content.meta).thenReturn(null)
+        val content = content.copy(meta = null)
         assertEquals("", content.getMetaTitlesHomeOrEmpty())
     }
+
     @Test
     fun verifyMetaTitlesHomeOrEmptyReturnsEmptyWhenHomeNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(titles)
-        whenever(titles.home).thenReturn(null)
+        val titles = titles.copy(home = null)
+        val meta = meta.copy(titles = titles)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaTitlesHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaLinksHomeOrEmptyReturnsHome() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.links).thenReturn(links)
-        whenever(links.home).thenReturn("example home")
+        val links = links.copy(home = "example home")
+        val meta = meta.copy(links = links)
+        val content = content.copy(meta = meta)
         assertEquals("example home", content.getMetaLinksHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaLinksHomeOrEmptyReturnsEmptyWhenLinksNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.links).thenReturn(null)
+        val meta = meta.copy(links = null)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaLinksHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaLinksHomeOrEmptyReturnsEmptyWhenMetaNull() {
-        whenever(content.meta).thenReturn(null)
+        val content = content.copy(meta = null)
         assertEquals("", content.getMetaLinksHomeOrEmpty())
     }
+
     @Test
     fun verifyMetaLinksHomeOrEmptyReturnsEmptyWhenHomeNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.links).thenReturn(links)
-        whenever(links.home).thenReturn(null)
+        val links = links.copy(home = null)
+        val meta = meta.copy(links = links)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaLinksHomeOrEmpty())
     }
 
     @Test
     fun verifyMetaTitlesTaglineOrEmptyReturnsTagline() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(titles)
-        whenever(titles.tagline).thenReturn("example tagline")
+        val titles = titles.copy(tagline = "example tagline")
+        val meta = meta.copy(titles = titles)
+        val content = content.copy(meta = meta)
         assertEquals("example tagline", content.getMetaTitlesTaglineOrEmpty())
     }
 
     @Test
     fun verifyMetaTitlesTaglineOrEmptyReturnsEmptyWhenTitlesNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(null)
+        val meta = meta.copy(titles = null)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaTitlesTaglineOrEmpty())
     }
 
     @Test
     fun verifyMetaTitlesTaglineOrEmptyReturnsEmptyWhenMetaNull() {
-        whenever(content.meta).thenReturn(null)
+        val content = content.copy(meta = null)
         assertEquals("", content.getMetaTitlesTaglineOrEmpty())
     }
+
     @Test
     fun verifyMetaTitlesTaglineOrEmptyReturnsEmptyWhenTaglineNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.titles).thenReturn(titles)
-        whenever(titles.tagline).thenReturn(null)
+        val titles = titles.copy(tagline = null)
+        val meta = meta.copy(titles = titles)
+        val content = content.copy(meta = meta)
         assertEquals("", content.getMetaTitlesTaglineOrEmpty())
     }
 
     @Test
     fun verifyMetaIdsSiteIdOrZeroReturnsSiteId() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(ids)
-        whenever(ids.site).thenReturn(123L)
+        val ids = ids.copy(site = 123L)
+        val meta = meta.copy(ids = ids)
+        val content = content.copy(meta = meta)
         assertEquals(123L, content.getMetaIdsSiteIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsSiteIdOrZeroReturnsZeroWhenNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(ids)
-        whenever(ids.site).thenReturn(null)
+        val ids = ids.copy(site = null)
+        val meta = meta.copy(ids = ids)
+        val content = content.copy(meta = meta)
         assertEquals(0L, content.getMetaIdsSiteIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsSiteIdOrZeroReturnsZeroWhenIdsNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(null)
+        val meta = meta.copy(ids = null)
+        val content = content.copy(meta = meta)
         assertEquals(0L, content.getMetaIdsSiteIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsSiteIdOrZeroReturnsZeroWhenMetaNull() {
-        whenever(content.meta).thenReturn(null)
+        val content = content.copy(meta = null)
         assertEquals(0L, content.getMetaIdsSiteIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsUserIdOrZeroReturnsUserId() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(ids)
-        whenever(ids.user).thenReturn(123L)
+        val ids = ids.copy(user = 123L)
+        val meta = meta.copy(ids = ids)
+        val content = content.copy(meta = meta)
         assertEquals(123L, content.getMetaIdsUserIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsUserIdOrZeroReturnsZeroWhenNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(ids)
-        whenever(ids.user).thenReturn(null)
+        val ids = ids.copy(user = null)
+        val meta = meta.copy(ids = ids)
+        val content = content.copy(meta = meta)
         assertEquals(0L, content.getMetaIdsUserIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsUserIdOrZeroReturnsZeroWhenIdsNull() {
-        whenever(content.meta).thenReturn(meta)
-        whenever(meta.ids).thenReturn(null)
+        val meta = meta.copy(ids = null)
+        val content = content.copy(meta = meta)
         assertEquals(0L, content.getMetaIdsUserIdOrZero())
     }
 
     @Test
     fun verifyMetaIdsUserIdOrZeroReturnsZeroWhenMetaNull() {
-        whenever(content.meta).thenReturn(null)
+        val content = content.copy(meta = null)
         assertEquals(0L, content.getMetaIdsUserIdOrZero())
     }
 }
