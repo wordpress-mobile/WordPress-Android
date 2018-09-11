@@ -58,6 +58,6 @@ class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper
     ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
             textView, clickHandler, isFooter)
 
-    fun mapJsonToFormattablbeContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
+    fun mapJsonToFormattableContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
             .mapJsonToFormattableContent(formattableContentMapper, blockObject)
 }
