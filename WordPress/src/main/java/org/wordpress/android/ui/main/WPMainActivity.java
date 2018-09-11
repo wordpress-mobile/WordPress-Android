@@ -95,7 +95,6 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.PackageFirstLaunchReceiver;
 import org.wordpress.android.util.analytics.receiver.PackageFirstLaunchReceiver;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -217,7 +216,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 new IntentFilter(Intent.ACTION_PACKAGE_FIRST_LAUNCH));
 
         if (savedInstanceState == null) {
-
             if (!AppPrefs.isInstallationReferrerObtained()) {
                 InstallationReferrerServiceStarter.startService(this, null);
             }

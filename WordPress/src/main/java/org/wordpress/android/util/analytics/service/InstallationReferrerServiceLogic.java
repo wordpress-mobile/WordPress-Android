@@ -77,8 +77,10 @@ public class InstallationReferrerServiceLogic {
                             // handle and send information to Tracks here
                             Map<String, Object> properties = new HashMap<>();
                             properties.put("install_referrer", response.getInstallReferrer());
-                            properties.put("install_referrer_timestamp_begin", response.getInstallBeginTimestampSeconds());
-                            properties.put("install_referrer_timestamp_click", response.getReferrerClickTimestampSeconds());
+                            properties.put("install_referrer_timestamp_begin",
+                                    response.getInstallBeginTimestampSeconds());
+                            properties.put("install_referrer_timestamp_click",
+                                    response.getReferrerClickTimestampSeconds());
                             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
                             mReferrerClient.endConnection();
                         } catch (RemoteException e) {
