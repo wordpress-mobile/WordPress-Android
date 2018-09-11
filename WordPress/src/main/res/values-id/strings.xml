@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-21 06:54:08+0000
+Translation-Revision-Date: 2018-09-05 06:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="quick_start_focus_point_description">ketuk di sini</string>
+    <string name="quick_start_sites">Mulai Cepat</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Buat situs Anda</string>
+    <string name="quick_start_list_create_site_subtitle">Jalankan situs Anda</string>
+    <string name="quick_start_list_complete_title">Selamat, Anda telah menyelesaikan Mulai Cepat</string>
+    <string name="quick_start_list_complete_subtitle">bukankah menyenangkan rasanya saat mencoret satu hal dari daftar?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Lihat situs Anda</string>
+    <string name="quick_start_dialog_view_site_message_short">Ketuk %1$s Lihat Situs %2$s untuk mempratinjau situs Anda</string>
+    <string name="quick_start_dialog_view_site_message">Pratinjau situs baru Anda untuk mengetahui tampilan situs yang akan dilihat oleh pengunjung.</string>
+    <string name="quick_start_dialog_skip_title">Lewati Mulai Cepat</string>
+    <string name="quick_start_dialog_skip_message">Tur singkat akan memandu Anda dalam membuat situs dasar. Anda yakin ingin melewatinya?</string>
+    <string name="quick_start_dialog_share_site_title">Bagikan situs Anda</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Ketuk %1$s Berbagi %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Ketuk %1$s Koneksi %2$s untuk menambahkan akun media sosial Anda</string>
+    <string name="quick_start_dialog_share_site_message">Sambungkan ke akun media sosial Anda. Situs akan membagikan pos baru secara otomatis.</string>
+    <string name="quick_start_dialog_publish_post_title">Publikasikan pos</string>
+    <string name="quick_start_dialog_publish_post_message_short">Ketuk %1$s Buat Pos %2$s untuk membuat pos baru</string>
+    <string name="quick_start_dialog_publish_post_message">Sekarang waktunya! Buat konsep dan publikasikan pos pertama Anda.</string>
+    <string name="quick_start_dialog_need_help_title">Perlu sedikit bantuan untuk memulai?</string>
+    <string name="quick_start_dialog_need_help_message">Anda akan dipandu menggunakan daftar periksa Mulai Cepat untuk dasar–dasar menyiapkan situs web baru.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ya</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Tidak pernah</string>
+    <string name="quick_start_dialog_need_help_button_negative">Tidak</string>
+    <string name="quick_start_dialog_follow_sites_title">Ikuti situs lain</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Ketuk %1$s Cari %2$s untuk mencari situs dengan minat serupa</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Ketuk %1$s Pembaca %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_follow_sites_message">Temukan situs yang menarik dan ikuti untuk mendapatkan pemberitahuan saat mereka memublikasikan sesuatu.</string>
+    <string name="quick_start_dialog_customize_site_title">Sesuaikan situs Anda</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Ketuk %1$s Tema %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Ketuk %1$s Sesuaikan %2$s untuk memulai personalisasi situs</string>
+    <string name="quick_start_dialog_customize_site_message">Ubah warna, font, dan gambar untuk mendapatkan situs yang dipersonalisasikan dengan sempurna.</string>
+    <string name="quick_start_dialog_continue_setup_title">Lanjutkan penyiapan situs</string>
+    <string name="quick_start_dialog_continue_setup_message">Waktunya menyelesaikan penyiapan situs Anda! Daftar periksa kami memberikan panduan bagi Anda untuk langkah selanjutnya.</string>
+    <string name="quick_start_dialog_choose_theme_title">Pilih tema</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Ketuk %1$s Themes %2$s untuk menemukan tema baru</string>
+    <string name="quick_start_dialog_choose_theme_message">Jelajahi semua tema kami untuk menemukan yang paling cocok.</string>
+    <string name="quick_start_button_skip_positive">Lewati</string>
+    <string name="quick_start_button_skip_negative">Batal</string>
+    <string name="quick_start_button_skip">Lewati semua</string>
+    <string name="quick_start_button_positive">Ayo</string>
+    <string name="quick_start_button_negative_short">Batal</string>
+    <string name="quick_start_button_negative">Jangan sekarang</string>
+    <string name="content_description_done">Selesai</string>
+    <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
+    <string name="reader_empty_followed_tags_title">Tidak ada tag yang diikuti</string>
+    <string name="reader_empty_followed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
+    <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
+    <string name="install_jetpack_retry">Coba lagi</string>
+    <string name="install_jetpack_continue">Lanjutkan</string>
+    <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini</string>
+    <string name="jetpack_installation_problem">Ada masalah</string>
+    <string name="jetpack_installed_message">Jetpack sudah diinstal di situs Anda. Selamat!</string>
+    <string name="jetpack_installed">Jetpack sudah diinstal</string>
+    <string name="installing_jetpack_message">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini</string>
+    <string name="installing_jetpack">Menginstal Jetpack</string>
+    <string name="install_jetpack_message">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack</string>
+    <string name="install_jetpack">Instal Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui </string>
+    <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
     <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
     <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
     <string name="site_settings_tags_empty_title_search">Tidak ada tag yang cocok dengan pencarian Anda</string>
@@ -1488,7 +1561,6 @@ Language: id
     <string name="pick_video">Pilih video</string>
     <string name="pick_photo">Pilih foto</string>
     <string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
-    <string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>

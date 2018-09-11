@@ -1,5 +1,0 @@
-10.6:
-* Nu är aktivitetsloggen tillgänglig för gratis webbplatser på WordPress.com.
-* Förbättrat stöd för vissa språkversioner.
-* Allmänna förbättringar för gif-bilder.
-* Ett gäng övriga felrättningar.

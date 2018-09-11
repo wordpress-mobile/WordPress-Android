@@ -317,7 +317,6 @@ Language: gd_GB
     <string name="reader_toast_err_share_intent">Cha ghabh a cho–roinneadh</string>
     <string name="reader_toast_err_view_image">Cha ghabh an dealbh seo a shealltainn</string>
     <string name="reader_toast_err_url_intent">Cha ghabh %s fhosgladh</string>
-    <string name="reader_empty_followed_tags">Chan eil thu a’ leantainn taga sam bith</string>
     <string name="empty_list_default">Tha an liosta seo falamh</string>
     <string name="reader_hint_comment_on_comment">Freagair am beachd…</string>
     <string name="themes">Ùrlaran</string>
