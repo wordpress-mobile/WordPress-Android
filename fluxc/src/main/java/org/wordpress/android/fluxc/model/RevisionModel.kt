@@ -38,7 +38,7 @@ class RevisionModel(
                     "add" -> ADD
                     "del" -> DELETE
                     else -> { // Note the block
-                        UNKNOWN;
+                        UNKNOWN
                     }
                 }
             }
