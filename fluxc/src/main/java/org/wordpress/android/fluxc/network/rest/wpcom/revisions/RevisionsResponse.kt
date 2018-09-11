@@ -15,7 +15,7 @@ class RevisionsResponse(
     inner class Diff(
         val post_title: List<DiffContent>,
         val post_content: List<DiffContent>,
-        val total: Totals
+        val totals: Totals
     ) {
         inner class DiffContent(
             @SerializedName("op")
