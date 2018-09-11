@@ -63,6 +63,7 @@ public class InstallationReferrerServiceLogic {
                             properties.put("install_referrer_timestamp_begin", response.getInstallBeginTimestampSeconds());
                             properties.put("install_referrer_timestamp_click", response.getReferrerClickTimestampSeconds());
                             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
+                            mReferrerClient.endConnection();
                         } catch (RemoteException e) {
                             e.printStackTrace();
                             AppLog.i(T.UTILS, "installation referrer: RemoteException occurred");
@@ -98,7 +99,6 @@ public class InstallationReferrerServiceLogic {
     }
 
     private void stopService() {
-        mReferrerClient.endConnection();
         mCompletionListener.onCompleted(mListenerCompanion);
     }
 
