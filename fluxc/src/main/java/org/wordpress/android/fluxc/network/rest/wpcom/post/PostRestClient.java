@@ -227,9 +227,9 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchRevisions(final PostModel post, final SiteModel site) {
         String url;
         if (post.isPage()) {
-            url = WPCOMREST.sites.site(site.getSiteId()).post.item(post.getRemotePostId()).diffs.getUrlV1_1();
-        } else {
             url = WPCOMREST.sites.site(site.getSiteId()).page.post(post.getRemotePostId()).diffs.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).post.item(post.getRemotePostId()).diffs.getUrlV1_1();
         }
 
         final WPComGsonRequest<RevisionsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
@@ -237,16 +237,13 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<RevisionsResponse>() {
                     @Override
                     public void onResponse(RevisionsResponse response) {
-                        FetchRevisionsResponsePayload payload =
-                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(response));
-                        mDispatcher.dispatch(
-                                PostActionBuilder.newFetchedRevisionsAction(payload));
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(
+                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(response))));
                     }
                 },
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
                         FetchRevisionsResponsePayload payload = new FetchRevisionsResponsePayload(post, null);
                         payload.error = error;
                         mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(payload));
