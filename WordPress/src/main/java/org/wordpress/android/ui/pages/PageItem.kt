@@ -57,7 +57,7 @@ sealed class PageItem(open val type: Type) {
         override val type: Type
     ) : PageItem(type)
 
-    data class Divider(val title: String) : PageItem(DIVIDER)
+    data class Divider(val title: String = "") : PageItem(DIVIDER)
 
     data class Empty(
         @StringRes val textResource: Int = R.string.empty_list_default,

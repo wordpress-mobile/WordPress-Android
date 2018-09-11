@@ -72,4 +72,50 @@ class PagesViewModelTest {
         assertThat(listStates).containsExactly(FETCHING, DONE)
         refreshPagesObserver.awaitNullableValues(2)
     }
+
+    @Test
+    fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
+        initSearch()
+        val query = "query"
+        val drafts = listOf( PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
+        val expectedResult = sortedMapOf(DRAFT to drafts)
+        whenever(pageStore.groupedSearch(site, query)).thenReturn(expectedResult)
+
+        viewModel.onSearch(query, 0)
+
+        val result = viewModel.searchPages.value
+
+        assertThat(result).isEqualTo(expectedResult)
+    }
+
+    @Test
+    fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
+        initSearch()
+        val query = "query"
+        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
+
+        viewModel.onSearch(query, 0)
+
+        val result = viewModel.searchPages.value
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun onEmptyQueryClearsSearch() = runBlocking {
+        initSearch()
+        val query = ""
+
+        viewModel.onSearch(query, 0)
+
+        val result = viewModel.searchPages.value
+
+        assertThat(result).isNull()
+    }
+
+    private suspend fun initSearch() {
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        viewModel.start(site)
+    }
 }

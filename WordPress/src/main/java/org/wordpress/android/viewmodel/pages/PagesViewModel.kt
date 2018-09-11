@@ -311,7 +311,7 @@ class PagesViewModel
             }
         }
 
-        launch {
+        launch(uiContext) {
             _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
