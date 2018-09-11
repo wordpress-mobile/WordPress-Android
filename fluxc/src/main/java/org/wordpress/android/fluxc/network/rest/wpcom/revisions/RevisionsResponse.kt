@@ -1,44 +1,32 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.revisions
 
-import com.google.gson.annotations.SerializedName
-
 class RevisionsResponse(
-    val diffs: List<DiffDetails>,
-    val revisions: Map<String, Revision>
+    val diffs: List<DiffResponse>,
+    val revisions: Map<String, RevisionResponse>
 ) {
-    inner class DiffDetails(
+    inner class DiffResponse(
         val from: Int,
         val to: Int,
-        val diff: Diff
+        val diff: DiffResponseContent
     )
 
-    inner class Diff(
-        val post_title: List<DiffContent>,
-        val post_content: List<DiffContent>,
-        val totals: Totals
-    ) {
-        inner class DiffContent(
-            @SerializedName("op")
-            val operation: DiffAction,
-            val value: String
-        )
+    inner class DiffResponseContent(
+        val post_title: List<DiffResponsePart>,
+        val post_content: List<DiffResponsePart>,
+        val totals: DiffResponseTotals
+    )
 
-        inner class Totals(
-            val del: Int,
-            val add: Int
-        )
-    }
+    inner class DiffResponsePart(
+        val op: String,
+        val value: String
+    )
 
-    enum class DiffAction {
-        @SerializedName("copy")
-        COPY,
-        @SerializedName("add")
-        ADD,
-        @SerializedName("del")
-        DELETE
-    }
+    inner class DiffResponseTotals(
+        val del: Int,
+        val add: Int
+    )
 
-    inner class Revision(
+    inner class RevisionResponse(
         val post_date_gmt: String,
         val post_modified_gmt: String,
         val post_author: String,
