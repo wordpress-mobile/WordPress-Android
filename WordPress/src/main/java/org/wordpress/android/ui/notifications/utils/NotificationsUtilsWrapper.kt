@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Singleton
 class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper: FormattableContentMapper) {
     fun getSpannableContentForRanges(subject: FormattableContent?): Spannable = NotificationsUtils
-            .getSpannableContentForRanges(subject, null, null, false)
+            .getSpannableContentForRanges(subject, null, null as? NoteBlock.OnNoteBlockTextClickListener, false)
 
     fun getSpannableContentForRanges(subject: JSONObject): Spannable = NotificationsUtils.getSpannableContentForRanges(
             formattableContentMapper, subject, null, null, false)
