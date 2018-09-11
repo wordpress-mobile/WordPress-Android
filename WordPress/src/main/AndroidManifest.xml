@@ -677,6 +677,14 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
+        <receiver
+            android:name=".util.analytics.receiver.InstallationReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
 
         <!-- Google Cloud Messaging receiver and services -->
         <meta-data

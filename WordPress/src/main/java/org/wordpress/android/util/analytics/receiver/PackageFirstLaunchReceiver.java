@@ -1,4 +1,4 @@
-package org.wordpress.android.util.analytics;
+package org.wordpress.android.util.analytics.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,8 +11,8 @@ import org.wordpress.android.util.analytics.service.InstallationReferrerServiceS
 public class PackageFirstLaunchReceiver extends BroadcastReceiver {
     private static PackageFirstLaunchReceiver sInstance;
     public void onReceive(Context context, Intent receivedIntent) {
-        AppLog.i(AppLog.T.UTILS, "installation referrer RECEIVER: received");
-        InstallationReferrerServiceStarter.startService(context);
+        AppLog.i(AppLog.T.UTILS, "package first launch RECEIVER: received");
+        InstallationReferrerServiceStarter.startService(context, null);
     }
 
     public static PackageFirstLaunchReceiver getInstance() {

@@ -17,6 +17,8 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter.ARG_REFERRER;
+
 
 /**
  * Background service to retrieve installation referrer information.
@@ -39,6 +41,21 @@ public class InstallationReferrerServiceLogic {
 
     public void performTask(Bundle extras, Object companion) {
         mListenerCompanion = companion;
+
+        // if a referrer string has been passed already (coming from com.android.vending.INSTALL_REFERRER receiver),
+        // just send it to tracks
+        if (extras != null && extras.containsKey(ARG_REFERRER)) {
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("install_referrer", extras.getString(ARG_REFERRER));
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALLATION_REFERRER_OBTAINED, properties);
+            // mark referrer as obtained now
+            AppPrefs.setInstallationReferrerObtained(true);
+            stopService();
+            return;
+        }
+
+
+        // if not, try to obtain it from Play Store app connection through the Install Referrer API Library if possible
         mReferrerClient = InstallReferrerClient.newBuilder(mContext).build();
         mReferrerClient.startConnection(new InstallReferrerStateListener() {
             @Override
