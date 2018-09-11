@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.RevisionModel;
+import org.wordpress.android.fluxc.model.RevisionModel.Diff;
+import org.wordpress.android.fluxc.model.RevisionModel.DiffOperations;
 import org.wordpress.android.fluxc.model.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
@@ -28,8 +30,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
-import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffDetails;
-import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.Revision;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
@@ -285,7 +288,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(RevisionsResponse response) {
                         FetchRevisionsResponsePayload payload =
-                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(post, response));
+                                new FetchRevisionsResponsePayload(post, revisionsResponseToModel(response));
                         mDispatcher.dispatch(
                                 PostActionBuilder.newFetchedRevisionsAction(payload));
                     }
@@ -448,31 +451,43 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
-    private RevisionsModel revisionsResponseToModel(PostModel post, RevisionsResponse response) {
+    private RevisionsModel revisionsResponseToModel(RevisionsResponse response) {
         ArrayList<RevisionModel> revisions = new ArrayList<>();
-        for (DiffDetails diffDetails : response.getDiffs()) {
-            Revision revision = response.getRevisions().get(Integer.toString(diffDetails.getTo()));
+        for (DiffResponse diffResponse : response.getDiffs()) {
+            RevisionResponse revision = response.getRevisions().get(Integer.toString(diffResponse.getTo()));
+
+            ArrayList<Diff> titleDiffs = new ArrayList<>();
+            for (DiffResponsePart titleDiffPart : diffResponse.getDiff().getPost_title()) {
+                Diff diff = new Diff(DiffOperations.fromResponseString(titleDiffPart.getOp()),
+                        titleDiffPart.getValue());
+                titleDiffs.add(diff);
+            }
+
+            ArrayList<Diff> contentDiffs = new ArrayList<>();
+            for (DiffResponsePart contentDiffPart : diffResponse.getDiff().getPost_content()) {
+                Diff diff = new Diff(DiffOperations.fromResponseString(contentDiffPart.getOp()),
+                        contentDiffPart.getValue());
+                contentDiffs.add(diff);
+            }
 
             RevisionModel revisionModel =
                     new RevisionModel(
                             revision.getId(),
-                            post.getRemotePostId(),
-                            diffDetails.getFrom(),
-                            diffDetails.getDiff().getTotals().getAdd(),
-                            diffDetails.getDiff().getTotals().getDel(),
+                            diffResponse.getFrom(),
+                            diffResponse.getDiff().getTotals().getAdd(),
+                            diffResponse.getDiff().getTotals().getDel(),
                             revision.getPost_content(),
                             revision.getPost_excerpt(),
                             revision.getPost_title(),
                             revision.getPost_date_gmt(),
                             revision.getPost_modified_gmt(),
                             revision.getPost_author(),
-                            diffDetails.getDiff().getPost_title(),
-                            diffDetails.getDiff().getPost_content()
+                            titleDiffs,
+                            contentDiffs
                     );
             revisions.add(revisionModel);
         }
 
         return new RevisionsModel(revisions);
     }
-
 }
