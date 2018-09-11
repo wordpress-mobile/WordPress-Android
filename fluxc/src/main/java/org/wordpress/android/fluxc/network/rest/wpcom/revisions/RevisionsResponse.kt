@@ -13,17 +13,13 @@ class RevisionsResponse(
     )
 
     inner class Diff(
-        val post_title: List<PostTitle>,
-        val post_content: List<PostContent>,
+        val post_title: List<DiffContent>,
+        val post_content: List<DiffContent>,
         val total: Totals
     ) {
-        inner class PostTitle(
-            val op: DiffAction,
-            val value: String
-        )
-
-        inner class PostContent(
-            val op: DiffAction,
+        inner class DiffContent(
+            @SerializedName("op")
+            val operation: DiffAction,
             val value: String
         )
 
