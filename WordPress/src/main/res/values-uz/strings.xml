@@ -33,7 +33,6 @@ Language: uz
     <string name="reader_label_removed_tag">%s o‘chirildi</string>
     <string name="reader_likes_one">Bir kishi yoqtirgan</string>
     <string name="reader_likes_only_you">Siz yoqtirgansiz</string>
-    <string name="reader_empty_followed_tags">Birorta ham teg kuzatmayapsiz</string>
     <string name="reader_hint_comment_on_comment">Fikrga javob yozish</string>
     <string name="media_gallery_type_circles">Doiralar</string>
     <string name="themes">Shablonlar</string>

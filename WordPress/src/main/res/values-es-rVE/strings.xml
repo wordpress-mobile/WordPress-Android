@@ -693,7 +693,6 @@ Language: es_VE
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_btn_unfollow">Siguiendo</string>
-    <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>
     <string name="themes">Temas</string>
     <string name="media_gallery_type_squares">Cuadrados</string>

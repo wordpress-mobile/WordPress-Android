@@ -440,7 +440,6 @@ Language: th
     <string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
     <string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
     <string name="reader_toast_err_url_intent">ไม่สามารถเปิด %s</string>
-    <string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
     <string name="reader_likes_one">หนึ่งคนชอบสิ่งนี้</string>
     <string name="reader_likes_only_you">คุณชอบสิ่งนี้</string>
     <string name="reader_toast_err_comment_failed">ไม่สามารถเขียนความเห็นของคุณ</string>

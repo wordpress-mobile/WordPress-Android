@@ -1,5 +1,0 @@
-10.6:
-* Il log attività è ora disponibile per i siti WordPress.com gratuiti.
-* Miglioramenti nel supporto per alcune impostazioni locali.
-* Miglioramenti generici per il supporto Gif.
-* Alcune altre correzioni di bug.

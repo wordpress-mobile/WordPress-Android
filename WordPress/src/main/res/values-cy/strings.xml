@@ -706,7 +706,6 @@ Language: cy_GB
     <string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
     <string name="pick_photo">Dewis ffoto</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
-    <string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>
     <string name="reader_toast_err_share_intent">Methu â rhannu</string>

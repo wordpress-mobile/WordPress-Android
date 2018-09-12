@@ -378,8 +378,6 @@ Language: sk
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a ponúka ich zo serverovej lokality, ktorá je najbližšie k vašim návštevníkom. Použitie našej globálnej doručovacej siete zvýši rýchlosť načítavania vašich webových stránok.</string>
     <string name="site_settings_serve_images_from_our_servers">Ponúkať obrázky z našich severov</string>
     <string name="site_settings_speed_up_your_site">Zrýchlite svoje webové stránky</string>
-    <string name="stats_jetpack_connection_setup_info">Ak chcete používať štatistické údaje na svojej WordPress webovej stránke, musíte nainštalovať plugin Jetpack. Chcete nastaviť Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Nastaviť Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Prepnúť text</string>
     <string name="plugin_info_your_version">Vaša WordPress verzia</string>
     <string name="plugin_info_requires_version">Vyžaduje WordPress verziu</string>
@@ -1012,7 +1010,6 @@ Language: sk
     <string name="pick_video">Vyberte video</string>
     <string name="pick_photo">Vyberte forografiu</string>
     <string name="reader_likes_you_and_one">Lajkli ste to vy a niekto ďalší</string>
-    <string name="reader_empty_followed_tags">Nesledujete žiadne značky</string>
     <string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
     <string name="reader_toast_err_view_image">Nie je možné zobraziť obrázok</string>
     <string name="reader_toast_err_share_intent">Nie je možné zdieľať</string>

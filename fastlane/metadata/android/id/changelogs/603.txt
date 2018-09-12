@@ -1,5 +1,0 @@
-10.6:
-* Log Aktivitas kini tersedia untuk situs WordPress.com gratis.
-* Peningkatan untuk dukungan dalam sebagian lokal.
-* Peningkatan umum dalam dukungan Gif.
-* Sejumlah perbaikan bug lainnya.

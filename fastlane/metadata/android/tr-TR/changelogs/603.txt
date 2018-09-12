@@ -1,5 +1,0 @@
-10.6:
-* Artık ücretsiz WordPress.com sitelerinde Etkinlik Günlüğü mevcut.
-* Bazı yerel ayarlarda geliştirmeler.
-* Gif desteği konusunda genel iyileştirmeler.
-* Bir dizi başka hata düzeltmesi.
