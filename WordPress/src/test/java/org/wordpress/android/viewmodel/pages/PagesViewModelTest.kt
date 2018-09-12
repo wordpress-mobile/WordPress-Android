@@ -2,8 +2,13 @@ package org.wordpress.android.viewmodel.pages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.reset
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,12 +18,14 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -37,32 +44,41 @@ class PagesViewModelTest {
     @Mock lateinit var actionPerformer: ActionPerformer
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
-    private lateinit var refreshPages: MutableList<List<PageModel>>
+    private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageStatus, List<PageModel>>>
 
     @Before
     fun setUp() {
         viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined, Unconfined)
         listStates = mutableListOf()
-        refreshPages = mutableListOf()
+        pages = mutableListOf()
+        searchPages = mutableListOf()
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
-        viewModel.pages.observeForever { if (it != null) refreshPages.add(it) }
+        viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
     }
 
     @Test
     fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(
-                listOf(
-                        PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
-                )
-        )
+        val pageModel = initPageRepo()
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
 
         viewModel.start(site)
 
         assertThat(listStates).containsExactly(REFRESHING, DONE)
-        assertThat(refreshPages).hasSize(3)
+        assertThat(pages).hasSize(2)
+        assertThat(pages.last()).containsOnly(pageModel)
+    }
+
+    private suspend fun initPageRepo(): PageModel {
+        val pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
+        val expectedPages = listOf(
+                pageModel
+        )
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(
+                expectedPages
+        )
+        return pageModel
     }
 
     @Test
@@ -73,7 +89,34 @@ class PagesViewModelTest {
         viewModel.start(site)
 
         assertThat(listStates).containsExactly(FETCHING, DONE)
-        assertThat(refreshPages).hasSize(3)
+        assertThat(pages).hasSize(2)
+    }
+
+    @Test
+    fun onPageEditFinishedReloadSite() = runBlocking<Unit> {
+        whenever(pageStore.requestPagesFromServer(site)).thenReturn(OnPostChanged(0, false))
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
+
+        val pageModel = initPageRepo()
+        viewModel.start(site)
+
+        reset(pageStore)
+
+        val postModel = PostModel()
+        val postId: Long = 5
+        postModel.remotePostId = postId
+        val job = launch { viewModel.onPageEditFinished(postId) }
+
+        delay(10)
+
+        verifyZeroInteractions(pageStore)
+
+        job.join()
+
+        viewModel.onPostUploaded(OnPostUploaded(postModel))
+
+        verify(pageStore).requestPagesFromServer(site)
+        assertThat(pages.last()).containsOnly(pageModel)
     }
 
     @Test

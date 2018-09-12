@@ -134,7 +134,6 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(commonPoolContext) {
-        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
@@ -156,7 +155,7 @@ class PagesViewModel
     }
 
     private suspend fun refreshPages() {
-        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
+        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
     fun onPageEditFinished(pageId: Long) {
