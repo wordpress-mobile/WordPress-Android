@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -95,7 +94,6 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.analytics.receiver.PackageFirstLaunchReceiver;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -211,9 +209,6 @@ public class WPMainActivity extends AppCompatActivity implements
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
         registeNewsItemObserver();
-
-        registerReceiver(PackageFirstLaunchReceiver.getInstance(),
-                new IntentFilter(Intent.ACTION_PACKAGE_FIRST_LAUNCH));
 
         if (savedInstanceState == null) {
             if (!AppPrefs.isInstallationReferrerObtained()) {
@@ -475,7 +470,6 @@ public class WPMainActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(PackageFirstLaunchReceiver.getInstance());
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
         super.onDestroy();
