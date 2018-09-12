@@ -6,13 +6,15 @@ import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -28,9 +30,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
-import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.fluxc.store.PostStore.SearchPostsResponsePayload;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -82,15 +82,14 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final ListType listType, final boolean getPages,
-                           final List<PostStatus> statusList, final int offset) {
+    public void fetchPosts(final SiteModel site, final boolean getPages, final List<PostStatus> statusList,
+                           final int offset) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
         params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
-        params.put("fields", "ID,modified");
 
         if (getPages) {
             params.put("type", "page");
@@ -109,18 +108,18 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<PostsResponse>() {
                     @Override
                     public void onResponse(PostsResponse response) {
-                        List<PostListItem> listItems = new ArrayList<>();
+                        List<PostModel> postArray = new ArrayList<>();
+                        PostModel post;
                         for (PostWPComRestResponse postResponse : response.posts) {
-                            PostListItem item = new PostListItem();
-                            item.remotePostId = postResponse.ID;
-                            item.lastModified = postResponse.modified;
-                            listItems.add(item);
+                            post = postResponseToPostModel(postResponse);
+                            post.setLocalSiteId(site.getId());
+                            postArray.add(post);
                         }
 
-                        boolean canLoadMore = listItems.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
 
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(listItems,
-                                site, listType, getPages, offset > 0, canLoadMore);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(new PostsModel(postArray),
+                                site, getPages, offset > 0, canLoadMore);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
@@ -129,7 +128,7 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                         // Possible non-generic errors: 404 unknown_post_type (invalid post type, shouldn't happen)
                         PostError postError = new PostError(error.apiError, error.message);
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
@@ -141,9 +140,9 @@ public class PostRestClient extends BaseWPComRestClient {
         String url;
 
         if (post.isLocalDraft()) {
-            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_1();
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.new_.getUrlV1_2();
         } else {
-            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+            url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
         Map<String, Object> body = postModelToParams(post);
@@ -213,54 +212,6 @@ public class PostRestClient extends BaseWPComRestClient {
         request.addQueryParameter("context", "edit");
 
         request.disableRetries();
-        add(request);
-    }
-
-    public void searchPosts(final SiteModel site, final String searchTerm, final boolean pages, final int offset) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
-
-        Map<String, String> params = new HashMap<>();
-
-        if (pages) {
-            params.put("type", "page");
-        }
-        params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
-        params.put("offset", String.valueOf(offset));
-        params.put("search", searchTerm);
-        params.put("status", "any");
-
-        final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
-                PostsResponse.class,
-                new Listener<PostsResponse>() {
-                    @Override
-                    public void onResponse(PostsResponse response) {
-                        List<PostModel> postList = new ArrayList<>();
-                        PostModel post;
-                        for (PostWPComRestResponse postResponse : response.posts) {
-                            post = postResponseToPostModel(postResponse);
-                            post.setLocalSiteId(site.getId());
-                            postList.add(post);
-                        }
-
-                        boolean loadedMore = offset > 0;
-                        boolean canLoadMore = postList.size() == PostStore.NUM_POSTS_PER_FETCH;
-
-                        SearchPostsResponsePayload payload = new SearchPostsResponsePayload(
-                                postList, site, searchTerm, pages, loadedMore, canLoadMore);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
-                    }
-                },
-                new WPComErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        PostError postError = new PostError(error.apiError, error.message);
-                        SearchPostsResponsePayload payload =
-                                new SearchPostsResponsePayload(site, searchTerm, pages, postError);
-                        mDispatcher.dispatch(PostActionBuilder.newSearchedPostsAction(payload));
-                    }
-                }
-        );
-
         add(request);
     }
 
@@ -341,12 +292,30 @@ public class PostRestClient extends BaseWPComRestClient {
             }
         } else {
             params.put("type", "page");
+            params.put("parent", post.getParentId());
         }
 
         params.put("password", StringUtils.notNullStr(post.getPassword()));
 
-        params.put("categories", TextUtils.join(",", post.getCategoryIdList()));
-        params.put("tags", TextUtils.join(",", post.getTagNameList()));
+        // construct a json object with a `category` field holding a json array with the tags
+        JsonObject termsById = new JsonObject();
+        JsonArray categoryIds = new JsonArray();
+        for (Long categoryId : post.getCategoryIdList()) {
+            categoryIds.add(categoryId);
+        }
+        termsById.add("category", categoryIds);
+        // categories are transmitted via the `term_by_id.categories` field
+        params.put("terms_by_id", termsById);
+
+        // construct a json object with a `post_tag` field holding a json array with the tags
+        JsonArray tags = new JsonArray();
+        for (String tag : post.getTagNameList()) {
+            tags.add(tag);
+        }
+        JsonObject terms = new JsonObject();
+        terms.add("post_tag", tags);
+        // categories are transmitted via the `terms.post_tag` field
+        params.put("terms", terms);
 
         if (post.hasFeaturedImage()) {
             params.put("featured_image", post.getFeaturedImageId());

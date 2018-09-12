@@ -6,6 +6,8 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.yarolegovich.wellsql.SelectQuery
+import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -14,12 +16,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.ActivityLogAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogStoreTest {
@@ -31,11 +38,11 @@ class ActivityLogStoreTest {
 
     @Before
     fun setUp() {
-        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils, dispatcher)
+        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils, Unconfined, dispatcher)
     }
 
     @Test
-    fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() {
+    fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() = runBlocking<Unit> {
         val number = 10
         val offset = 0
 
@@ -47,7 +54,7 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() {
+    fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() = runBlocking<Unit> {
         val number = 10
 
         val existingActivities = listOf<ActivityLogModel>(mock())
@@ -62,7 +69,7 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onFetchRewindStatusActionCallRestClient() {
+    fun onFetchRewindStatusActionCallRestClient() = runBlocking<Unit> {
         val payload = ActivityLogStore.FetchRewindStatePayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchRewindStateAction(payload)
         activityLogStore.onAction(action)
@@ -71,7 +78,7 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun onRewindActionCallRestClient() {
+    fun onRewindActionCallRestClient() = runBlocking<Unit> {
         val rewindId = "rewindId"
         val payload = ActivityLogStore.RewindPayload(siteModel, rewindId)
         val action = ActivityLogActionBuilder.newRewindAction(payload)
@@ -81,50 +88,50 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun storeFetchedActivityLogToDbAndSetsLoadMoreToFalse() {
-        val activityModels = listOf<ActivityLogModel>(mock())
-        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 10, 10, 0)
-        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
+    fun storeFetchedActivityLogToDbAndSetsLoadMoreToFalse() = runBlocking<Unit> {
         val rowsAffected = 1
-        whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
+        val activityModels = listOf<ActivityLogModel>(mock())
+
+        val action = initRestClient(activityModels, rowsAffected)
 
         activityLogStore.onAction(action)
 
         verify(activityLogSqlUtils).insertOrUpdateActivities(siteModel, activityModels)
         val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
                 false,
-                ActivityLogAction.FETCHED_ACTIVITIES)
+                ActivityLogAction.FETCH_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
         verify(activityLogSqlUtils).deleteActivityLog()
     }
 
     @Test
-    fun cannotLoadMoreWhenResponseEmpty() {
-        val activityModels = listOf<ActivityLogModel>()
-        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 100, 10, 0)
-        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
+    fun cannotLoadMoreWhenResponseEmpty() = runBlocking {
+        val rowsAffected = 0
+        val activityModels = listOf<ActivityLogModel>(mock())
+
+        val action = initRestClient(activityModels, rowsAffected)
 
         activityLogStore.onAction(action)
 
         val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(0,
                 false,
-                ActivityLogAction.FETCHED_ACTIVITIES)
+                ActivityLogAction.FETCH_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     @Test
-    fun setsLoadMoreToTrueOnMoreItems() {
-        val activityModels = listOf<ActivityLogModel>(mock())
-        val payload = ActivityLogStore.FetchedActivityLogPayload(activityModels, siteModel, 15, 10, 0)
-        val action = ActivityLogActionBuilder.newFetchedActivitiesAction(payload)
+    fun setsLoadMoreToTrueOnMoreItems() = runBlocking {
         val rowsAffected = 1
+        val activityModels = listOf<ActivityLogModel>(mock())
+
+        val action = initRestClient(activityModels, rowsAffected, totalItems = 100)
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
 
         activityLogStore.onAction(action)
 
         val expectedChangeEvent = ActivityLogStore.OnActivityLogFetched(rowsAffected,
                 true,
-                ActivityLogAction.FETCHED_ACTIVITIES)
+                ActivityLogAction.FETCH_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
@@ -141,15 +148,16 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun storeFetchedRewindStatusToDb() {
+    fun storeFetchedRewindStatusToDb() = runBlocking {
         val rewindStatusModel = mock<RewindStatusModel>()
         val payload = ActivityLogStore.FetchedRewindStatePayload(rewindStatusModel, siteModel)
-        val action = ActivityLogActionBuilder.newFetchedRewindStateAction(payload)
+        whenever(activityLogRestClient.fetchActivityRewind(siteModel)).thenReturn(payload)
 
-        activityLogStore.onAction(action)
+        val fetchAction = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
 
         verify(activityLogSqlUtils).replaceRewindStatus(siteModel, rewindStatusModel)
-        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityLogAction.FETCHED_REWIND_STATE)
+        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityLogAction.FETCH_REWIND_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
@@ -166,15 +174,16 @@ class ActivityLogStoreTest {
     }
 
     @Test
-    fun emitsRewindResult() {
+    fun emitsRewindResult() = runBlocking {
         val rewindId = "rewindId"
         val restoreId = 10L
+
         val payload = ActivityLogStore.RewindResultPayload(rewindId, restoreId, siteModel)
-        val action = ActivityLogActionBuilder.newRewindResultAction(payload)
+        whenever(activityLogRestClient.rewind(siteModel, rewindId)).thenReturn(payload)
 
-        activityLogStore.onAction(action)
+        activityLogStore.onAction(ActivityLogActionBuilder.newRewindAction(RewindPayload(siteModel, rewindId)))
 
-        val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND_RESULT)
+        val expectedChangeEvent = ActivityLogStore.OnRewind(rewindId, restoreId, ActivityLogAction.REWIND)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
@@ -200,5 +209,20 @@ class ActivityLogStoreTest {
 
         assertEquals(activityLogModel, returnedItem)
         verify(activityLogSqlUtils).getActivityByActivityId(rewindId)
+    }
+
+    private suspend fun initRestClient(
+        activityModels: List<ActivityLogModel>,
+        rowsAffected: Int,
+        offset: Int = 0,
+        number: Int = 10,
+        totalItems: Int = 10
+    ): Action<*> {
+        val action = ActivityLogActionBuilder.newFetchActivitiesAction(FetchActivityLogPayload(siteModel))
+
+        val payload = FetchedActivityLogPayload(activityModels, siteModel, totalItems, number, offset)
+        whenever(activityLogRestClient.fetchActivity(siteModel, number, offset)).thenReturn(payload)
+        whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
+        return action
     }
 }

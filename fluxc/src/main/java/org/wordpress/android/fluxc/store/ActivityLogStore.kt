@@ -1,11 +1,15 @@
 package org.wordpress.android.fluxc.store
 
 import com.yarolegovich.wellsql.SelectQuery
+import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ActivityLogAction
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
+import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -16,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.experimental.CoroutineContext
 
 private const val ACTIVITY_LOG_PAGE_SIZE = 10
 
@@ -24,21 +29,28 @@ class ActivityLogStore
 @Inject constructor(
     private val activityLogRestClient: ActivityLogRestClient,
     private val activityLogSqlUtils: ActivityLogSqlUtils,
+    private val coroutineContext: CoroutineContext,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? ActivityLogAction ?: return
-
         when (actionType) {
-            ActivityLogAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivityLogPayload)
-            ActivityLogAction.FETCHED_ACTIVITIES ->
-                storeActivityLog(action.payload as FetchedActivityLogPayload, actionType)
-            ActivityLogAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
-            ActivityLogAction.FETCHED_REWIND_STATE ->
-                storeRewindState(action.payload as FetchedRewindStatePayload, actionType)
-            ActivityLogAction.REWIND -> rewind(action.payload as RewindPayload)
-            ActivityLogAction.REWIND_RESULT -> emitRewindResult(action.payload as RewindResultPayload, actionType)
+            ActivityLogAction.FETCH_ACTIVITIES -> {
+                launch(coroutineContext) {
+                    emitChange(fetchActivities(action.payload as FetchActivityLogPayload))
+                }
+            }
+            ActivityLogAction.FETCH_REWIND_STATE -> {
+                launch(coroutineContext) {
+                    emitChange(fetchActivitiesRewind(action.payload as FetchRewindStatePayload))
+                }
+            }
+            ActivityLogAction.REWIND -> {
+                launch(coroutineContext) {
+                    emitChange(rewind(action.payload as RewindPayload))
+                }
+            }
         }
     }
 
@@ -63,7 +75,7 @@ class ActivityLogStore
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
 
-    private fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload) {
+    suspend fun fetchActivities(fetchActivityLogPayload: FetchActivityLogPayload): OnActivityLogFetched {
         var offset = 0
         if (fetchActivityLogPayload.loadMore) {
             offset = activityLogSqlUtils.getActivitiesForSite(
@@ -71,16 +83,23 @@ class ActivityLogStore
                     SelectQuery.ORDER_ASCENDING
             ).size
         }
-        activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
+        val payload = activityLogRestClient.fetchActivity(fetchActivityLogPayload.site, ACTIVITY_LOG_PAGE_SIZE, offset)
+        return storeActivityLog(payload, FETCH_ACTIVITIES)
     }
 
-    private fun rewind(rewindPayload: RewindPayload) {
-        activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+    suspend fun fetchActivitiesRewind(fetchActivitiesRewindPayload: FetchRewindStatePayload): OnRewindStatusFetched {
+        val payload = activityLogRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site)
+        return storeRewindState(payload, FETCH_REWIND_STATE)
     }
 
-    private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction) {
-        if (payload.error != null) {
-            emitChange(OnActivityLogFetched(payload.error, action))
+    suspend fun rewind(rewindPayload: RewindPayload): OnRewind {
+        val payload = activityLogRestClient.rewind(rewindPayload.site, rewindPayload.rewindId)
+        return emitRewindResult(payload, REWIND)
+    }
+
+    private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
+        return if (payload.error != null) {
+            OnActivityLogFetched(payload.error, action)
         } else {
             if (payload.offset == 0) {
                 activityLogSqlUtils.deleteActivityLog()
@@ -90,31 +109,27 @@ class ActivityLogStore
             else 0
             val canLoadMore = payload.activityLogModels.isNotEmpty() &&
                     (payload.offset + payload.number) < payload.totalItems
-            emitChange(OnActivityLogFetched(rowsAffected, canLoadMore, action))
+            OnActivityLogFetched(rowsAffected, canLoadMore, action)
         }
     }
 
-    private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityLogAction) {
-        if (payload.error != null) {
-            emitChange(OnRewindStatusFetched(payload.error, action))
+    private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityLogAction): OnRewindStatusFetched {
+        return if (payload.error != null) {
+            OnRewindStatusFetched(payload.error, action)
         } else {
             if (payload.rewindStatusModelResponse != null) {
                 activityLogSqlUtils.replaceRewindStatus(payload.site, payload.rewindStatusModelResponse)
             }
-            emitChange(OnRewindStatusFetched(action))
+            OnRewindStatusFetched(action)
         }
     }
 
-    private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction) {
-        if (payload.error != null) {
-            emitChange(OnRewind(payload.rewindId, payload.error, action))
+    private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction): OnRewind {
+        return if (payload.error != null) {
+            OnRewind(payload.rewindId, payload.error, action)
         } else {
-            emitChange(OnRewind(rewindId = payload.rewindId, restoreId = payload.restoreId, causeOfChange = action))
+            OnRewind(rewindId = payload.rewindId, restoreId = payload.restoreId, causeOfChange = action)
         }
-    }
-
-    private fun fetchActivitiesRewind(fetchActivitiesRewindPayload: FetchRewindStatePayload) {
-        activityLogRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site)
     }
 
     // Actions

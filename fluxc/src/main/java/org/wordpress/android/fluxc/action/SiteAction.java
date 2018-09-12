@@ -13,14 +13,19 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSit
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainAvailabilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.QuickStartCompletedResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesResponsePayload;
 
 @ActionEnum
 public enum SiteAction implements IAction {
@@ -57,6 +62,16 @@ public enum SiteAction implements IAction {
     INITIATE_AUTOMATED_TRANSFER,
     @Action(payloadType = SiteModel.class)
     CHECK_AUTOMATED_TRANSFER_STATUS,
+    @Action(payloadType = SiteModel.class)
+    FETCH_PLANS,
+    @Action(payloadType = String.class)
+    CHECK_DOMAIN_AVAILABILITY,
+    @Action(payloadType = String.class)
+    FETCH_DOMAIN_SUPPORTED_STATES,
+    @Action
+    FETCH_DOMAIN_SUPPORTED_COUNTRIES,
+    @Action(payloadType = SiteModel.class)
+    COMPLETE_QUICK_START,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)
@@ -85,6 +100,16 @@ public enum SiteAction implements IAction {
     INITIATED_AUTOMATED_TRANSFER,
     @Action(payloadType = AutomatedTransferStatusResponsePayload.class)
     CHECKED_AUTOMATED_TRANSFER_STATUS,
+    @Action(payloadType = FetchedPlansPayload.class)
+    FETCHED_PLANS,
+    @Action(payloadType = DomainAvailabilityResponsePayload.class)
+    CHECKED_DOMAIN_AVAILABILITY,
+    @Action(payloadType = DomainSupportedStatesResponsePayload.class)
+    FETCHED_DOMAIN_SUPPORTED_STATES,
+    @Action(payloadType = DomainSupportedCountriesResponsePayload.class)
+    FETCHED_DOMAIN_SUPPORTED_COUNTRIES,
+    @Action(payloadType = QuickStartCompletedResponsePayload.class)
+    COMPLETED_QUICK_START,
 
     // Local actions
     @Action(payloadType = SiteModel.class)
