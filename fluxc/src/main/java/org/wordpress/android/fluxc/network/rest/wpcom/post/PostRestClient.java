@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
@@ -92,7 +91,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(remoteSiteId).posts.getUrlV1_1();
 
         Map<String, String> params =
-                fetchPostListParameters(false, offset, number, null, "ID,modified");
+                getFetchPostListParameters(false, offset, number, null, "ID,modified");
         final boolean loadedMore = offset > 0;
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
@@ -129,7 +128,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
-                fetchPostListParameters(getPages, offset, number, statusList, null);
+                getFetchPostListParameters(getPages, offset, number, statusList, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -144,7 +143,7 @@ public class PostRestClient extends BaseWPComRestClient {
                             postArray.add(post);
                         }
 
-                        boolean canLoadMore = postArray.size() == PostStore.NUM_POSTS_PER_FETCH;
+                        boolean canLoadMore = postArray.size() == number;
 
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(new PostsModel(postArray),
                                 site, getPages, offset > 0, canLoadMore);
@@ -392,11 +391,11 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
-    private Map<String, String> fetchPostListParameters(final boolean getPages,
-                                                        final int offset,
-                                                        final int number,
-                                                        @Nullable final List<PostStatus> statusList,
-                                                        @Nullable String fields) {
+    private Map<String, String> getFetchPostListParameters(final boolean getPages,
+                                                           final int offset,
+                                                           final int number,
+                                                           @Nullable final List<PostStatus> statusList,
+                                                           @Nullable String fields) {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
