@@ -441,7 +441,8 @@ public class PostStore extends Store {
             mPostRestClient.fetchPostList(site.getSiteId(), payload.listDescriptor, payload.offset,
                     NUM_POST_LIST_PER_FETCH);
         } else {
-            // TODO: handle xml rpc sites
+            mPostXMLRPCClient.fetchPostList(site, payload.listDescriptor, payload.offset,
+                    NUM_POST_LIST_PER_FETCH);
         }
     }
 
@@ -475,7 +476,7 @@ public class PostStore extends Store {
             mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset, NUM_POSTS_PER_FETCH);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset, NUM_POSTS_PER_FETCH);
         }
     }
 
