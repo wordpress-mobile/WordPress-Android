@@ -8,7 +8,6 @@ import android.os.Bundle;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-
 /**
  * Background service to connect to Google Play Store's Install Referrer API to
  * securely retrieve referral content from Google Play.
@@ -26,11 +25,8 @@ public class InstallationReferrerJobService extends JobService implements
     @Override
     public boolean onStartJob(JobParameters params) {
         AppLog.i(T.UTILS, "installation referrer job service > started");
-        InstallationReferrerServiceLogic logic =
-                new InstallationReferrerServiceLogic(this, this);
-        logic.performTask(
-                new Bundle(params.getExtras()),
-                params);
+        InstallationReferrerServiceLogic logic = new InstallationReferrerServiceLogic(this, this);
+        logic.performTask(new Bundle(params.getExtras()), params);
         return true;
     }
 

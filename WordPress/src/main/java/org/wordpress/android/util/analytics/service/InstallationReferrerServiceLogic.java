@@ -19,7 +19,6 @@ import java.util.Map;
 
 import static org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter.ARG_REFERRER;
 
-
 /**
  * Background service to retrieve installation referrer information.
  */
