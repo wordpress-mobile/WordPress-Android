@@ -96,7 +96,7 @@ public class InstallationReferrerServiceLogic {
                         break;
                     case InstallReferrerResponse.SERVICE_UNAVAILABLE:
                         // Connection could not be established
-                        // same as above, this is a retriable error
+                        // same as above, this error can be retried
                         // just log but DO NOT mark AppPrefs.setInstallationReferrerObtained(true);,
                         // we can obtain it also from the old com.android.vending.INSTALL_REFERRER intent
                         // if this is retried but the error persists
