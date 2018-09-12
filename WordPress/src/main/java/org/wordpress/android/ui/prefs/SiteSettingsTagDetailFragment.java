@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,7 +25,10 @@ import static org.wordpress.android.ui.reader.utils.ReaderUtils.sanitizeWithDash
 /**
  * A fragment for editing a tag
  */
-public class SiteSettingsTagDetailFragment extends Fragment {
+// TODO: android.app.Fragment  is deprecated since Android P.
+// Needs to be replaced with android.support.v4.app.Fragment
+// See https://developer.android.com/reference/android/app/Fragment
+public class SiteSettingsTagDetailFragment extends android.app.Fragment {
     private static final String ARGS_TERM = "term";
     private static final String ARGS_IS_NEW_TERM = "is_new";
 

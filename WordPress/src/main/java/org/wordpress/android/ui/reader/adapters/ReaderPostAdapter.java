@@ -35,6 +35,9 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.news.NewsItem;
+import org.wordpress.android.ui.news.NewsViewHolder;
+import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
@@ -72,6 +75,7 @@ import javax.inject.Inject;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
+    private NewsCardListener mNewsCardListener;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -89,6 +93,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
     private final HashSet<String> mRenderedIds = new HashSet<>();
+    private NewsItem mNewsItem;
 
     private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
@@ -108,9 +113,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
     private static final int VIEW_TYPE_REMOVED_POST = 5;
+    private static final int VIEW_TYPE_NEWS_CARD = 6;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
+    private static final long ITEM_ID_NEWS_CARD = -3L;
+
+    private static final int NEWS_CARD_POSITION = 0;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -307,10 +316,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && hasSiteHeader()) {
+        int headerPosition = hasNewsCard() ? 1 : 0;
+        if (position == NEWS_CARD_POSITION && hasNewsCard()) {
+            return VIEW_TYPE_NEWS_CARD;
+        } else if (position == headerPosition && hasSiteHeader()) {
             // first item is a ReaderSiteHeaderView
             return VIEW_TYPE_SITE_HEADER;
-        } else if (position == 0 && hasTagHeader()) {
+        } else if (position == headerPosition && hasTagHeader()) {
             // first item is a ReaderTagHeaderView
             return VIEW_TYPE_TAG_HEADER;
         } else if (position == mGapMarkerPosition) {
@@ -332,6 +344,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         View postView;
         switch (viewType) {
+            case VIEW_TYPE_NEWS_CARD:
+                return new NewsViewHolder(parent, mNewsCardListener);
             case VIEW_TYPE_SITE_HEADER:
                 ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
                 readerSiteHeaderView.setOnFollowListener(mFollowListener);
@@ -377,6 +391,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
+        } else if (holder instanceof NewsViewHolder) {
+            ((NewsViewHolder) holder).bind(mNewsItem);
         }
     }
 
@@ -682,7 +698,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         setHasStableIds(true);
     }
 
-    private boolean hasCustomFirstItem() {
+    private boolean hasHeader() {
         return hasSiteHeader() || hasTagHeader();
     }
 
@@ -724,6 +740,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {
         mBlogInfoLoadedListener = listener;
+    }
+
+    public void setOnNewsCardListener(NewsCardListener newsCardListener) {
+        this.mNewsCardListener = newsCardListener;
     }
 
     private ReaderTypes.ReaderPostListType getPostListType() {
@@ -797,14 +817,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
-        if (position == 0 && hasCustomFirstItem()) {
+        if (position == NEWS_CARD_POSITION && hasNewsCard()) {
+            return null;
+        }
+        if (position == getHeaderPosition() && hasHeader()) {
             return null;
         }
         if (position == mGapMarkerPosition) {
             return null;
         }
 
-        int arrayPos = hasCustomFirstItem() ? position - 1 : position;
+        int arrayPos = position - getItemPositionOffset();
 
         if (mGapMarkerPosition > -1 && position > mGapMarkerPosition) {
             arrayPos--;
@@ -813,12 +836,30 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mPosts.get(arrayPos);
     }
 
+    private int getItemPositionOffset() {
+        int newsCardOffset = hasNewsCard() ? 1 : 0;
+        int headersOffset = hasHeader() ? 1 : 0;
+        return newsCardOffset + headersOffset;
+    }
+
+    private int getHeaderPosition() {
+        int headerPosition = hasNewsCard() ? 1 : 0;
+        return hasHeader() ? headerPosition : -1;
+    }
+
     @Override
     public int getItemCount() {
-        if (hasCustomFirstItem() || mGapMarkerPosition != -1) {
-            return mPosts.size() + 1;
+        int size = mPosts.size();
+        if (mGapMarkerPosition != -1) {
+            size++;
         }
-        return mPosts.size();
+        if (hasHeader()) {
+            size++;
+        }
+        if (hasNewsCard()) {
+            size++;
+        }
+        return size;
     }
 
     public boolean isEmpty() {
@@ -838,6 +879,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return ITEM_ID_HEADER;
             case VIEW_TYPE_GAP_MARKER:
                 return ITEM_ID_GAP_MARKER;
+            case VIEW_TYPE_NEWS_CARD:
+                return ITEM_ID_NEWS_CARD;
             default:
                 ReaderPost post = getItem(position);
                 return post != null ? post.getStableId() : 0;
@@ -1082,6 +1125,28 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    public void updateNewsCardItem(NewsItem newsItem) {
+        NewsItem prevState = mNewsItem;
+        mNewsItem = newsItem;
+        if (prevState == null && newsItem != null) {
+            notifyItemInserted(NEWS_CARD_POSITION);
+        } else if (prevState != null) {
+            if (newsItem == null) {
+                notifyItemRemoved(NEWS_CARD_POSITION);
+            } else {
+                notifyItemChanged(NEWS_CARD_POSITION);
+            }
+        }
+    }
+
+    private boolean hasNewsCard() {
+        // We don't want to display the card when we are displaying just a loading screen. However, on Discover a header
+        // is shown, even when we are loading data, so the card should be displayed. [moreover displaying the card only
+        // after we fetch the data results in weird animation after configuration change, since it plays insertion
+        // animation for all the data (including the card) except of the header which hasn't changed].
+        return mNewsItem != null && (!isEmpty() || isDiscover());
+    }
+
     /*
      * AsyncTask to load posts in the current tag
      */
@@ -1161,10 +1226,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 } else {
                     // we want the gap marker to appear *below* this post
                     gapMarkerPosition = gapMarkerPostPosition + 1;
-                    // increment it if there's a custom first item
-                    if (hasCustomFirstItem()) {
-                        gapMarkerPosition++;
-                    }
+                    // increment it if there are custom items at the top of the list (header or newsCard)
+                    gapMarkerPosition += getItemPositionOffset();
                     AppLog.d(AppLog.T.READER, "gap marker at position " + gapMarkerPostPosition);
                 }
             }

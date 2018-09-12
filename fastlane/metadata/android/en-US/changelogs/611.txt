@@ -1,0 +1,5 @@
+10.8:
+This update is all about getting you to your goal faster.
+There’s a new Quick Start section with a list of suggested steps to help you build a great site.
+We streamlined Jetpack installation so it has fewer steps. Less setting up, more using!
+(Oh, and we squashed some bugs as well. )

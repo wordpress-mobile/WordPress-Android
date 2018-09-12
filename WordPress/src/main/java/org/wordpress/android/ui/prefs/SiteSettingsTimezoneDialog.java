@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -241,7 +240,10 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        Fragment target = getTargetFragment();
+        // TODO: android.app.Fragment  is deprecated since Android P.
+        // Needs to be replaced with android.support.v4.app.Fragment
+        // See https://developer.android.com/reference/android/app/Fragment
+        android.app.Fragment target = getTargetFragment();
         if (mConfirmed && target != null && !TextUtils.isEmpty(mSelectedTimezone)) {
             Intent intent = new Intent().putExtra(KEY_TIMEZONE, mSelectedTimezone);
             target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
@@ -324,7 +326,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
             boolean isSelected = mSelectedTimezone != null
                                  && mSelectedTimezone.equals(mFilteredTimezones.get(position).mValue);
-            int colorRes = isSelected ? R.color.list_row_selected : R.color.transparent;
+            int colorRes = isSelected ? R.color.color_control_activated : R.color.transparent;
             holder.mTxtLabel.setBackgroundColor(getResources().getColor(colorRes));
             holder.mTxtLabel.setText(mFilteredTimezones.get(position).mLabel);
 

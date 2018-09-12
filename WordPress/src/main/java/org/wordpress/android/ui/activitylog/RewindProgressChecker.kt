@@ -1,63 +1,65 @@
 package org.wordpress.android.ui.activitylog
 
-import android.os.Handler
-import android.os.Looper
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
+import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.NonCancellable.isActive
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.withContext
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
+import org.wordpress.android.modules.COMMON_POOL_CONTEXT
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class RewindProgressChecker
-@Inject
-constructor(val activityLogStore: ActivityLogStore, val siteStore: SiteStore, val dispatcher: Dispatcher) {
-    private var handler: Handler = Handler(Looper.getMainLooper())
-    private var checkState: Runnable? = null
-    var isRunning: Boolean = false
-
+@Inject constructor(
+    private val activityLogStore: ActivityLogStore,
+    @param:Named(COMMON_POOL_CONTEXT) private val backgroundContext: CoroutineDispatcher
+) {
     companion object {
         const val CHECK_DELAY_MILLIS = 10000L
     }
 
-    fun startNow(site: SiteModel, restoreId: Long) {
-        start(site, restoreId, true)
+    suspend fun startNow(site: SiteModel, restoreId: Long): OnRewindStatusFetched? {
+        return start(site, restoreId, true)
     }
 
-    fun start(site: SiteModel, restoreId: Long, now: Boolean = false) {
-        isRunning = true
-        checkState = object : Runnable {
-            override fun run() {
-                val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
-                val rewind = rewindStatusForSite?.rewind
-                rewind?.let {
-                    if (rewind.status == FINISHED && rewind.restoreId == restoreId) {
-                        isRunning = false
-                        return
-                    }
+    suspend fun start(
+        site: SiteModel,
+        restoreId: Long,
+        now: Boolean = false,
+        checkDelay: Long = CHECK_DELAY_MILLIS
+    ) = withContext(backgroundContext) {
+        if (!now) {
+            delay(checkDelay)
+        }
+        var result: OnRewindStatusFetched? = null
+        while (isActive) {
+            val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site)
+            val rewind = rewindStatusForSite?.rewind
+            if (rewind != null && rewind.restoreId == restoreId) {
+                if (rewind.status == FINISHED) {
+                    result = OnRewindStatusFetched(FETCH_REWIND_STATE)
+                    break
+                } else if (rewind.status == FAILED) {
+                    result = OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR, rewind.reason), FETCH_REWIND_STATE)
+                    break
                 }
-
-                val action = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(site))
-                dispatcher.dispatch(action)
-
-                handler.postDelayed(this, CHECK_DELAY_MILLIS)
             }
+            result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
+            if (result.isError) {
+                break
+            }
+            delay(checkDelay)
         }
-        if (now) {
-            handler.post(checkState)
-        } else {
-            handler.postDelayed(checkState, CHECK_DELAY_MILLIS)
-        }
-    }
-
-    fun cancel() {
-        checkState?.let {
-            handler.removeCallbacks(checkState)
-            isRunning = false
-        }
+        return@withContext result
     }
 }

@@ -10,11 +10,21 @@ import android.webkit.MimeTypeMap;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
 
 public class FluxCUtils {
+    public static class FluxCUtilsLoggingException extends Exception {
+        public FluxCUtilsLoggingException(String message) {
+            super(message);
+        }
+        public FluxCUtilsLoggingException(Throwable originalException) {
+            super(originalException);
+        }
+    }
+
     /**
      * This method doesn't do much, but insure we're doing the same check in all parts of the app.
      *
@@ -72,8 +82,10 @@ public class FluxCUtils {
         return mediaFile;
     }
 
-    /*
-     * returns a MediaModel from a device media URI
+    /**
+     * This method returns a FluxC MediaModel from a device media URI
+     *
+     * @return MediaModel or null in case of problems reading the URI
      */
     public static MediaModel mediaModelFromLocalUri(@NonNull Context context,
                                                     @NonNull Uri uri,
@@ -83,11 +95,23 @@ public class FluxCUtils {
         String path = MediaUtils.getRealPathFromURI(context, uri);
 
         if (TextUtils.isEmpty(path)) {
+            // For now, we're wrapping up the actual log into a Crashlytics exception to reduce possibility
+            // of information not travelling to Crashlytics (Crashlytics rolls logs up to 8
+            // entries and 64kb max, and they only travel with the next crash happening, so logging an
+            // Exception assures us to have this information sent in the next batch).
+            // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
+            CrashlyticsUtils.logException(
+                    new FluxCUtilsLoggingException("The input URI " + uri.toString() + " can't be read."),
+                    T.UTILS);
             return null;
         }
 
         File file = new File(path);
         if (!file.exists()) {
+            CrashlyticsUtils.logException(
+                    new FluxCUtilsLoggingException("The input URI " + uri.toString() + ", converted locally to " + path
+                                                   + " doesn't exist."),
+                    T.UTILS);
             return null;
         }
 
