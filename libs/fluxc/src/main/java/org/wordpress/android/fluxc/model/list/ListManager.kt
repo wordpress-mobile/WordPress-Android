@@ -27,7 +27,8 @@ class ListManager<T>(
     private val dataSource: ListItemDataSource<T>,
     private val loadMoreOffset: Int,
     val isFetchingFirstPage: Boolean,
-    val isLoadingMore: Boolean
+    val isLoadingMore: Boolean,
+    val canLoadMore: Boolean
 ) {
     val size: Int = items.size
 
@@ -91,7 +92,7 @@ class ListManager<T>(
      * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
      */
     private fun loadMore() {
-        if (!isLoadingMore) {
+        if (canLoadMore) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
         }
     }

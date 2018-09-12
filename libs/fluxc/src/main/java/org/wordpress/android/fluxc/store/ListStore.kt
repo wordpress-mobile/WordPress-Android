@@ -73,14 +73,16 @@ class ListStore @Inject constructor(
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
+        val listState = if (listModel != null) getListState(listModel) else null
         return ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
                 items = listItems,
                 dataSource = dataSource,
                 loadMoreOffset = loadMoreOffset,
-                isFetchingFirstPage = if (listModel != null) getListState(listModel).isFetchingFirstPage() else false,
-                isLoadingMore = if (listModel != null) getListState(listModel).isLoadingMore() else false
+                isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
+                isLoadingMore = listState?.isLoadingMore() ?: false,
+                canLoadMore = listState?.canLoadMore() ?: false
         )
     }
 
