@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -96,8 +98,16 @@ class ListStore @Inject constructor(
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(listOf(payload.listDescriptor), null))
 
+        val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+            "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
+        }
+        val offset = listItemSqlUtils.getListItems(listModel.id).size
+
         when (payload.listDescriptor.type) {
-            ListType.POST -> TODO()
+            ListType.POST -> {
+                val fetchPostListPayload = FetchPostListPayload(payload.listDescriptor, offset)
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
+            }
             ListType.WOO_ORDER -> TODO()
         }
     }
