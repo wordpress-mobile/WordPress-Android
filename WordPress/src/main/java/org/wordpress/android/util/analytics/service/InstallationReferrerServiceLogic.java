@@ -68,7 +68,7 @@ public class InstallationReferrerServiceLogic {
                             // mark referrer as obtained so we don't try fetching it again
                             // Citing here:
                             //  Caution: The install referrer information will be available for 90 days and won't
-                            //  change unless the application is reinstalled. To avoid unecessary API calls in your
+                            //  change unless the application is reinstalled. To avoid unnecessary API calls in your
                             //  app, you should invoke the API only once during the first execution after install.
                             // read more: https://developer.android.com/google/play/installreferrer/library
                             AppPrefs.setInstallationReferrerObtained(true);
