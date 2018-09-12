@@ -1,28 +1,38 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
+import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.ListDescriptor;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
+import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
+import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
+import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
+import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +43,7 @@ import javax.inject.Singleton;
 @Singleton
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
+    public static final int NUM_POST_LIST_PER_FETCH = 100;
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
@@ -40,6 +51,46 @@ public class PostStore extends Store {
             PostStatus.PRIVATE,
             PostStatus.PUBLISHED,
             PostStatus.SCHEDULED));
+
+    public static class FetchPostListPayload extends Payload<BaseNetworkError> {
+        public ListDescriptor listDescriptor;
+        public int offset;
+
+        public FetchPostListPayload(ListDescriptor listDescriptor, int offset) {
+            this.listDescriptor = listDescriptor;
+            this.offset = offset;
+        }
+    }
+
+    public static class PostListItem {
+        public Long remotePostId;
+        public String lastModified;
+
+        public PostListItem(Long remotePostId, String lastModified) {
+            this.remotePostId = remotePostId;
+            this.lastModified = lastModified;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class FetchPostListResponsePayload extends Payload<PostError> {
+        @NotNull public ListDescriptor listDescriptor;
+        @NotNull public List<PostListItem> postListItems;
+        public boolean loadedMore;
+        public boolean canLoadMore;
+
+        public FetchPostListResponsePayload(@NonNull ListDescriptor listDescriptor,
+                                            @NonNull List<PostListItem> postListItems,
+                                            boolean loadedMore,
+                                            boolean canLoadMore,
+                                            @Nullable PostError error) {
+            this.listDescriptor = listDescriptor;
+            this.postListItems = postListItems;
+            this.loadedMore = loadedMore;
+            this.canLoadMore = canLoadMore;
+            this.error = error;
+        }
+    }
 
     public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
@@ -318,6 +369,12 @@ public class PostStore extends Store {
         }
 
         switch ((PostAction) actionType) {
+            case FETCH_POST_LIST:
+                fetchPostList((FetchPostListPayload) action.getPayload());
+                break;
+            case FETCHED_POST_LIST:
+                fetchedPostList((FetchPostListResponsePayload) action.getPayload());
+                break;
             case FETCH_POSTS:
                 fetchPosts((FetchPostsPayload) action.getPayload(), false);
                 break;
@@ -375,6 +432,39 @@ public class PostStore extends Store {
         }
     }
 
+    private void fetchPostList(FetchPostListPayload payload) {
+        // TODO: We shouldn't access SiteSqlUtils from here, fix this!
+        SiteModel site =
+                SiteSqlUtils.getSitesWith(SiteModelTable.ID, payload.listDescriptor.getLocalSiteId()).getAsModel()
+                            .get(0);
+        if (site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostList(site.getSiteId(), payload.listDescriptor, payload.offset,
+                    NUM_POST_LIST_PER_FETCH);
+        } else {
+            // TODO: handle xml rpc sites
+        }
+    }
+
+    private void fetchedPostList(FetchPostListResponsePayload payload) {
+        FetchedListItemsError fetchedListItemsError = null;
+        List<Long> postIds;
+        if (payload.isError()) {
+            fetchedListItemsError = new FetchedListItemsError(FetchedListItemsErrorType.GENERIC_ERROR, payload.error.message);
+            postIds = Collections.emptyList();
+        } else {
+            postIds = new ArrayList<>(payload.postListItems.size());
+            for (PostListItem item : payload.postListItems) {
+                postIds.add(item.remotePostId);
+                // TODO: compare lastmodified for each item
+            }
+        }
+
+        FetchedListItemsPayload fetchedListItemsPayload =
+                new FetchedListItemsPayload(payload.listDescriptor, postIds,
+                        payload.loadedMore, payload.canLoadMore, fetchedListItemsError);
+        mDispatcher.dispatch(ListActionBuilder.newFetchedListItemsAction(fetchedListItemsPayload));
+    }
+
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
         int offset = 0;
         if (payload.loadMore) {
@@ -382,7 +472,7 @@ public class PostStore extends Store {
         }
 
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset);
+            mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset, NUM_POSTS_PER_FETCH);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
