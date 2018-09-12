@@ -22,10 +22,6 @@ import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
@@ -33,9 +29,14 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.test
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -141,7 +142,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun requestPagesFetchesFromServerAndReturnsEvent() = runBlocking {
+    fun requestPagesFetchesFromServerAndReturnsEvent() = test {
         val expected = OnPostChanged(5, false)
         expected.causeOfChange = FETCH_PAGES
         var event: OnPostChanged? = null
@@ -158,7 +159,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = runBlocking<Unit> {
+    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
         val firstEvent = OnPostChanged(5, true)
         val lastEvent = OnPostChanged(5, false)
         firstEvent.causeOfChange = FETCH_PAGES
@@ -185,7 +186,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun deletePageTest() = runBlocking<Unit> {
+    fun deletePageTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
         val event = OnPostChanged(0)
@@ -208,7 +209,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun deletePageWithErrorTest() = runBlocking<Unit> {
+    fun deletePageWithErrorTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(0)
@@ -226,7 +227,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun requestPagesAndVerifyAllPageTypesPresent() = runBlocking<Unit> {
+    fun requestPagesAndVerifyAllPageTypesPresent() = test {
         val event = OnPostChanged(4, false)
         event.causeOfChange = FETCH_PAGES
         launch {
@@ -260,7 +261,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun getTopLevelPageByLocalId() = runBlocking {
+    fun getTopLevelPageByLocalId() = test {
         doAnswer { invocation -> pageHierarchy.firstOrNull { it.id == invocation.arguments.first() } }
                 .`when`(postStore).getPostByLocalPostId(any())
 
@@ -273,7 +274,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun getChildPageByRemoteId() = runBlocking {
+    fun getChildPageByRemoteId() = test {
         doAnswer { invocation -> pageHierarchy.firstOrNull { it.remotePostId == invocation.arguments.first() } }
                 .`when`(postStore).getPostByRemotePostId(any(), any())
 
@@ -292,7 +293,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun getPages() = runBlocking<Unit> {
+    fun getPages() = test {
         whenever(postStore.getPagesForSite(site)).thenReturn(pageHierarchy)
 
         val pages = store.getPagesFromDb(site)

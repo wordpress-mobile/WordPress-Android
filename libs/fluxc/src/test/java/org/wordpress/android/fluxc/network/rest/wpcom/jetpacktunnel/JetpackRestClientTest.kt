@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient.JetpackInstallResponse
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType
+import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackRestClientTest {
@@ -54,7 +54,7 @@ class JetpackRestClientTest {
     }
 
     @Test
-    fun `returns success on successful jetpack install`() = runBlocking<Unit> {
+    fun `returns success on successful jetpack install`() = test {
         initRequest(Success(JetpackInstallResponse(true)))
         val success = true
 
@@ -72,7 +72,7 @@ class JetpackRestClientTest {
     }
 
     @Test
-    fun `returns error with type`() = runBlocking<Unit> {
+    fun `returns error with type`() = test {
         initRequest(Error(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))))
 
         val jetpackErrorPayload = jetpackRestClient.installJetpack(site)
