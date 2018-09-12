@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -28,6 +29,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedStateResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SupportedCountryResponse;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils.DuplicateSiteException;
@@ -86,6 +89,21 @@ public class SiteStore extends Store {
         public FetchedUserRolesPayload(@NonNull SiteModel site, @NonNull List<RoleModel> roles) {
             this.site = site;
             this.roles = roles;
+        }
+    }
+
+    public static class FetchedPlansPayload extends Payload<PlansError> {
+        public SiteModel site;
+        @Nullable public List<PlanModel> plans;
+
+        public FetchedPlansPayload(SiteModel site, @Nullable List<PlanModel> plans) {
+            this.site = site;
+            this.plans = plans;
+        }
+
+        public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
+            this.site = site;
+            this.error = error;
         }
     }
 
@@ -203,6 +221,48 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainAvailabilityResponsePayload extends Payload<DomainAvailabilityError> {
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
+        public boolean supportsPrivacy;
+
+        public DomainAvailabilityResponsePayload(@Nullable DomainAvailabilityStatus status,
+                                                 @Nullable DomainMappabilityStatus mappable,
+                                                 @Nullable boolean supportsPrivacy) {
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
+        }
+
+        public DomainAvailabilityResponsePayload(@NonNull DomainAvailabilityError error) {
+            this.error = error;
+        }
+    }
+
+    public static class DomainSupportedStatesResponsePayload extends Payload<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
+
+        public DomainSupportedStatesResponsePayload(@Nullable List<SupportedStateResponse> supportedStates) {
+            this.supportedStates = supportedStates;
+        }
+
+        public DomainSupportedStatesResponsePayload(@NonNull DomainSupportedStatesError error) {
+            this.error = error;
+        }
+    }
+
+    public static class DomainSupportedCountriesResponsePayload extends Payload<DomainSupportedCountriesError> {
+        public List<SupportedCountryResponse> supportedCountries;
+
+        public DomainSupportedCountriesResponsePayload(@Nullable List<SupportedCountryResponse> supportedCountries) {
+            this.supportedCountries = supportedCountries;
+        }
+
+        public DomainSupportedCountriesResponsePayload(@NonNull DomainSupportedCountriesError error) {
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
@@ -285,6 +345,55 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class DomainAvailabilityError implements OnChangedError {
+        @NonNull public DomainAvailabilityErrorType type;
+        @Nullable public String message;
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public DomainAvailabilityError(@NonNull DomainAvailabilityErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class DomainSupportedStatesError implements OnChangedError {
+        @NonNull public DomainSupportedStatesErrorType type;
+        @Nullable public String message;
+
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+
+        public DomainSupportedStatesError(@NonNull DomainSupportedStatesErrorType type) {
+            this.type = type;
+        }
+    }
+
+    public static class DomainSupportedCountriesError implements OnChangedError {
+        @NonNull public DomainSupportedCountriesErrorType type;
+        @Nullable public String message;
+
+        public DomainSupportedCountriesError(
+                @NonNull DomainSupportedCountriesErrorType type,
+                @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public static class QuickStartError implements OnChangedError {
+        @NonNull public QuickStartErrorType type;
+        @Nullable public String message;
+
+        public QuickStartError(@NonNull QuickStartErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     // OnChanged Events
     public static class OnProfileFetched extends OnChanged<SiteError> {
         public SiteModel site;
@@ -344,6 +453,17 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnPlansFetched extends OnChanged<PlansError> {
+        public SiteModel site;
+        public @Nullable List<PlanModel> plans;
+
+        public OnPlansFetched(SiteModel site, @Nullable List<PlanModel> plans, @Nullable PlansError error) {
+            this.site = site;
+            this.plans = plans;
+            this.error = error;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -383,6 +503,96 @@ public class SiteStore extends Store {
         public OnSuggestedDomains(@NonNull String query, @NonNull List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
+        }
+    }
+
+    public static class OnDomainAvailabilityChecked extends OnChanged<DomainAvailabilityError> {
+        public @Nullable DomainAvailabilityStatus status;
+        public @Nullable DomainMappabilityStatus mappable;
+        public boolean supportsPrivacy;
+
+        public OnDomainAvailabilityChecked(@Nullable DomainAvailabilityStatus status,
+                                           @Nullable DomainMappabilityStatus mappable,
+                                           boolean supportsPrivacy,
+                                           @Nullable DomainAvailabilityError error) {
+            this.status = status;
+            this.mappable = mappable;
+            this.supportsPrivacy = supportsPrivacy;
+            this.error = error;
+        }
+    }
+
+    public enum DomainAvailabilityStatus {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        TLD_NOT_SUPPORTED,
+        TRANSFERRABLE_DOMAIN,
+        AVAILABLE,
+        UNKNOWN_STATUS;
+
+        public static DomainAvailabilityStatus fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (DomainAvailabilityStatus v : DomainAvailabilityStatus.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
+        }
+    }
+
+    public enum DomainMappabilityStatus {
+        BLACKLISTED_DOMAIN,
+        INVALID_TLD,
+        INVALID_DOMAIN,
+        MAPPABLE_DOMAIN,
+        UNKNOWN_STATUS;
+
+        public static DomainMappabilityStatus fromString(final String string) {
+            if (!TextUtils.isEmpty(string)) {
+                for (DomainMappabilityStatus v : DomainMappabilityStatus.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return UNKNOWN_STATUS;
+        }
+    }
+
+    public static class OnDomainSupportedStatesFetched extends OnChanged<DomainSupportedStatesError> {
+        public @Nullable List<SupportedStateResponse> supportedStates;
+
+        public OnDomainSupportedStatesFetched(@Nullable List<SupportedStateResponse> supportedStates,
+                                              @Nullable DomainSupportedStatesError error) {
+            this.supportedStates = supportedStates;
+            this.error = error;
+        }
+    }
+
+    public static class OnDomainSupportedCountriesFetched extends OnChanged<DomainSupportedCountriesError> {
+        public @Nullable List<SupportedCountryResponse> supportedCountries;
+
+        public OnDomainSupportedCountriesFetched(@Nullable List<SupportedCountryResponse> supportedCountries,
+                                                 @Nullable DomainSupportedCountriesError error) {
+            this.supportedCountries = supportedCountries;
+            this.error = error;
+        }
+    }
+
+    public static class PlansError implements OnChangedError {
+        @NonNull public PlansErrorType type;
+        @Nullable public String message;
+
+        public PlansError(@Nullable String type, @Nullable String message) {
+            this.type = PlansErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public PlansError(@NonNull PlansErrorType type) {
+            this.type = type;
         }
     }
 
@@ -432,6 +642,26 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class QuickStartCompletedResponsePayload extends OnChanged<QuickStartError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        public QuickStartCompletedResponsePayload(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
+    public static class OnQuickStartCompleted extends OnChanged<QuickStartError> {
+        public @NonNull SiteModel site;
+        public boolean success;
+
+        OnQuickStartCompleted(@NonNull SiteModel site, boolean status) {
+            this.site = site;
+            this.success = status;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -468,6 +698,25 @@ public class SiteStore extends Store {
         INVALID_SITE,
         INVALID_RESPONSE,
         GENERIC_ERROR;
+    }
+
+    public enum PlansErrorType {
+        NOT_AVAILABLE,
+        AUTHORIZATION_REQUIRED,
+        UNAUTHORIZED,
+        UNKNOWN_BLOG,
+        GENERIC_ERROR;
+
+        public static PlansErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (PlansErrorType v : PlansErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
     }
 
     public enum UserRolesErrorType {
@@ -547,6 +796,36 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum DomainAvailabilityErrorType {
+        INVALID_DOMAIN_NAME,
+        GENERIC_ERROR
+    }
+
+    public enum DomainSupportedStatesErrorType {
+        INVALID_COUNTRY_CODE,
+        INVALID_QUERY,
+        GENERIC_ERROR;
+
+        public static DomainSupportedStatesErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (DomainSupportedStatesErrorType v : DomainSupportedStatesErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+      }
+
+    public enum DomainSupportedCountriesErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum QuickStartErrorType {
+        GENERIC_ERROR
     }
 
     public enum SiteVisibility {
@@ -958,6 +1237,30 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            case FETCH_PLANS:
+                fetchPlans((SiteModel) action.getPayload());
+                break;
+            case FETCHED_PLANS:
+                handleFetchedPlans((FetchedPlansPayload) action.getPayload());
+                break;
+            case CHECK_DOMAIN_AVAILABILITY:
+                checkDomainAvailability((String) action.getPayload());
+                break;
+            case CHECKED_DOMAIN_AVAILABILITY:
+                handleCheckedDomainAvailability((DomainAvailabilityResponsePayload) action.getPayload());
+                break;
+            case FETCH_DOMAIN_SUPPORTED_STATES:
+                fetchSupportedStates((String) action.getPayload());
+                break;
+            case FETCHED_DOMAIN_SUPPORTED_STATES:
+                handleFetchedSupportedStates((DomainSupportedStatesResponsePayload) action.getPayload());
+                break;
+            case FETCH_DOMAIN_SUPPORTED_COUNTRIES:
+                mSiteRestClient.fetchSupportedCountries();
+                break;
+            case FETCHED_DOMAIN_SUPPORTED_COUNTRIES:
+                handleFetchedSupportedCountries((DomainSupportedCountriesResponsePayload) action.getPayload());
+                break;
             // Automated Transfer
             case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
@@ -977,6 +1280,12 @@ public class SiteStore extends Store {
                 break;
             case CHECKED_AUTOMATED_TRANSFER_STATUS:
                 handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
+                break;
+            case COMPLETE_QUICK_START:
+                completeQuickStart((SiteModel) action.getPayload());
+                break;
+            case COMPLETED_QUICK_START:
+                handleQuickStartCompleted((QuickStartCompletedResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -1238,6 +1547,56 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
+    private void fetchPlans(SiteModel siteModel) {
+        if (siteModel.isUsingWpComRestApi()) {
+            mSiteRestClient.fetchPlans(siteModel);
+        } else {
+            PlansError plansError = new PlansError(PlansErrorType.NOT_AVAILABLE);
+            handleFetchedPlans(new FetchedPlansPayload(siteModel, plansError));
+        }
+    }
+
+    private void handleFetchedPlans(FetchedPlansPayload payload) {
+        emitChange(new OnPlansFetched(payload.site, payload.plans, payload.error));
+    }
+
+    private void checkDomainAvailability(String domainName) {
+        if (TextUtils.isEmpty(domainName)) {
+            DomainAvailabilityError error =
+                    new DomainAvailabilityError(DomainAvailabilityErrorType.INVALID_DOMAIN_NAME);
+            handleCheckedDomainAvailability(new DomainAvailabilityResponsePayload(error));
+        } else {
+            mSiteRestClient.checkDomainAvailability(domainName);
+        }
+    }
+
+    private void handleCheckedDomainAvailability(DomainAvailabilityResponsePayload payload) {
+        emitChange(
+                new OnDomainAvailabilityChecked(
+                        payload.status,
+                        payload.mappable,
+                        payload.supportsPrivacy,
+                        payload.error));
+    }
+
+    private void fetchSupportedStates(String countryCode) {
+        if (TextUtils.isEmpty(countryCode)) {
+            DomainSupportedStatesError error =
+                    new DomainSupportedStatesError(DomainSupportedStatesErrorType.INVALID_COUNTRY_CODE);
+            handleFetchedSupportedStates(new DomainSupportedStatesResponsePayload(error));
+        } else {
+            mSiteRestClient.fetchSupportedStates(countryCode);
+        }
+    }
+
+    private void handleFetchedSupportedStates(DomainSupportedStatesResponsePayload payload) {
+        emitChange(new OnDomainSupportedStatesFetched(payload.supportedStates, payload.error));
+    }
+
+    private void handleFetchedSupportedCountries(DomainSupportedCountriesResponsePayload payload) {
+        emitChange(new OnDomainSupportedCountriesFetched(payload.supportedCountries, payload.error));
+    }
+
     // Automated Transfers
 
     private void checkAutomatedTransferEligibility(SiteModel site) {
@@ -1271,6 +1630,16 @@ public class SiteStore extends Store {
         } else {
             event = new OnAutomatedTransferStatusChecked(payload.site, payload.error);
         }
+        emitChange(event);
+    }
+
+    private void completeQuickStart(@NonNull SiteModel site) {
+        mSiteRestClient.completeQuickStart(site);
+    }
+
+    private void handleQuickStartCompleted(QuickStartCompletedResponsePayload payload) {
+        OnQuickStartCompleted event = new OnQuickStartCompleted(payload.site, payload.success);
+        event.error = payload.error;
         emitChange(event);
     }
 }

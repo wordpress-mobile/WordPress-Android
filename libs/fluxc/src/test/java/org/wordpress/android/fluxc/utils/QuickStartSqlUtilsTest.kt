@@ -8,7 +8,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
-import org.wordpress.android.fluxc.model.QuickStartModel
+import org.wordpress.android.fluxc.model.QuickStartStatusModel
+import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import kotlin.test.assertFalse
@@ -22,7 +23,8 @@ class QuickStartSqlUtilsTest {
     @Before
     fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
-        val config = SingleStoreWellSqlConfigForTests(appContext, QuickStartModel::class.java)
+        val config = SingleStoreWellSqlConfigForTests(appContext,
+                listOf(QuickStartTaskModel::class.java, QuickStartStatusModel::class.java), "")
         WellSql.init(config)
         config.reset()
 
@@ -71,5 +73,46 @@ class QuickStartSqlUtilsTest {
 
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
         assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+    }
+
+    @Test
+    fun testTaskMultipleStatuses() {
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, true)
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, true)
+        assertTrue(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
+        assertFalse(quickStartSqlUtils.hasShownTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE))
+    }
+
+    @Test
+    fun testQuickStartCompletedStatus() {
+        assertFalse(quickStartSqlUtils.getQuickStartCompleted(testLocalSiteId))
+
+        quickStartSqlUtils.setQuickStartCompleted(testLocalSiteId, true)
+        assertTrue(quickStartSqlUtils.getQuickStartCompleted(testLocalSiteId))
+
+        quickStartSqlUtils.setQuickStartCompleted(testLocalSiteId, false)
+        assertFalse(quickStartSqlUtils.getQuickStartCompleted(testLocalSiteId))
+    }
+
+    @Test
+    fun testQuickStartNotificationReceivedStatus() {
+        assertFalse(quickStartSqlUtils.getQuickStartNotificationReceived(testLocalSiteId))
+
+        quickStartSqlUtils.setQuickStartNotificationReceived(testLocalSiteId, true)
+        assertTrue(quickStartSqlUtils.getQuickStartNotificationReceived(testLocalSiteId))
+
+        quickStartSqlUtils.setQuickStartNotificationReceived(testLocalSiteId, false)
+        assertFalse(quickStartSqlUtils.getQuickStartNotificationReceived(testLocalSiteId))
     }
 }
