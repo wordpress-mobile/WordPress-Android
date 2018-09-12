@@ -1,0 +1,5 @@
+10.8:
+Bei diesem Update steht das schnellere Erreichen deines Ziels im Mittelpunkt.
+Es gibt einen neuen Schnellstartbereich mit einer Liste empfohlener Schritte zur Erstellung einer tollen Website.
+Wir haben die Installation von Jetpack gestrafft, sodass hierfür nun weniger Schritte nötig sind. Weniger einrichten, mehr benutzen!
+(Ach ja, wir haben auch einige Fehler beseitigt. )

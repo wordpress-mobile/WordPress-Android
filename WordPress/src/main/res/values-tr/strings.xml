@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-20 10:05:08+0000
+Translation-Revision-Date: 2018-09-05 12:54:07+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="quick_start_focus_point_description">buraya dokunun</string>
+    <string name="quick_start_sites">Hızlı Başlangıç</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
+    <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın</string>
+    <string name="quick_start_list_complete_title">Hızlı başlangıcı bitirdiğiniz için tebrikler</string>
+    <string name="quick_start_list_complete_subtitle">Bir şeyleri listeden silmek iyi değil mi?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Sitenizi görüntüleyin</string>
+    <string name="quick_start_dialog_view_site_message_short">Sitenizi önizlemek için %1$s Siteyi Görüntüle %2$s seçeneğine dokunun.</string>
+    <string name="quick_start_dialog_view_site_message">Ziyaretçilerinizin ne göreceğine bakmak için yeni sitenizi ön izleyin.</string>
+    <string name="quick_start_dialog_skip_title">Hızlı başlangıcı atla</string>
+    <string name="quick_start_dialog_skip_message">Hızlı tur, temel bir site oluşturmak için size rehberlik edecektir. Atlamak istediğinize emin misiniz?</string>
+    <string name="quick_start_dialog_share_site_title">Siteni paylaş</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Devam etmek için %1$s Paylaşım %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Sosyal medya hesaplarınızı eklemek için %1$s Bağlantılar %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_share_site_message">Sosyal medya hesaplarınıza bağlanın – siteniz yeni yazıları otomatik olarak paylaşır.</string>
+    <string name="quick_start_dialog_publish_post_title">Bir yazı yayınla</string>
+    <string name="quick_start_dialog_publish_post_message_short">Yeni bir gönderi oluşturmak için %1$s Gönderi Oluştur %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_publish_post_message">Zamanı! İlk yazı taslağını oluşturun ve yayınlayın.</string>
+    <string name="quick_start_dialog_need_help_title">Başlamak için ufak bir yardım ister misin?</string>
+    <string name="quick_start_dialog_need_help_message">Hızlı başlangıç kontrol listemiz size yeni bir web sitesi kurmanın temelleri hakkında bilgi verir.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Evet</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Asla</string>
+    <string name="quick_start_dialog_need_help_button_negative">Hayır</string>
+    <string name="quick_start_dialog_follow_sites_title">Diğer siteleri takip et</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Benzer alanlardaki siteleri aramak için %1$s Ara %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Devam etmek için %1$s Okuyucu %2$s seçeneğine dokunun.</string>
+    <string name="quick_start_dialog_follow_sites_message">Size hitab eden siteleri bulun ve yayınladıkları zaman güncellemeleri almak için bunları takip edin.</string>
+    <string name="quick_start_dialog_customize_site_title">Sitenizi özelleştirin</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Devam etmek için %1$s Temalar %2$s seçeneğine dokunun.</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Sitenizi kişiselleştirmeye başlamak için %1$s Özelleştir %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_customize_site_message">Mükemmel bir kişiselleştirilmiş site için renkleri, yazı tiplerini ve görselleri değiştirin.</string>
+    <string name="quick_start_dialog_continue_setup_title">Site yapılandırması ile devam et</string>
+    <string name="quick_start_dialog_continue_setup_message">Sitenizi kurmayı bitirme zamanı! Kontrol listemiz bir sonraki adımlarda size yol gösterir.</string>
+    <string name="quick_start_dialog_choose_theme_title">Bir tema seç</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Yeni temalar keşfetmek için %1$s Temalar %2$s seçeneğine dokunun</string>
+    <string name="quick_start_dialog_choose_theme_message">Mükemmel uyumunuzu bulmak için tüm temalarımıza göz atın.</string>
+    <string name="quick_start_button_skip_positive">Atla</string>
+    <string name="quick_start_button_skip_negative">Vazgeç</string>
+    <string name="quick_start_button_skip">Tümünü geç</string>
+    <string name="quick_start_button_positive">Git</string>
+    <string name="quick_start_button_negative_short">Vazgeç</string>
+    <string name="quick_start_button_negative">Şimdi değil</string>
+    <string name="content_description_done">Tamam</string>
+    <string name="my_site_create_new_site_title">Hiçbir siteniz yok</string>
+    <string name="reader_empty_followed_tags_title">Takip edilen etiket yok</string>
+    <string name="reader_empty_followed_tags_subtitle">Beğendiğiniz konularla ilgili yazıları bulmak için buraya etiket ekleyin</string>
+    <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
+    <string name="install_jetpack_retry">Tekrar dene</string>
+    <string name="install_jetpack_continue">Devam et</string>
+    <string name="jetpack_installation_problem_message">Jetpack şu anda yüklenemedi</string>
+    <string name="jetpack_installation_problem">Bir sorun vardı</string>
+    <string name="jetpack_installed_message">Sitenize Jetpack kurdunuz. Tebrikler!</string>
+    <string name="jetpack_installed">Jetpack kuruldu</string>
+    <string name="installing_jetpack_message">Jetpack sitenize yükleniyor. Bu işlemin tamamlanması birkaç dakika sürebilir</string>
+    <string name="installing_jetpack">Jetpack kuruluyor</string>
+    <string name="install_jetpack_message">Web sitesi kimlik bilgileriniz depolanmayacak ve yalnızca Jetpack\'i kurma amacıyla kullanılacak</string>
+    <string name="install_jetpack">Jetpack\'i kur</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Jetpack\'i kurarak şunu kabul etmiş olursunuz: </string>
+    <string name="stats_jetpack_connection_setup_info">WordPress sitenizdeki istatistikleri kullanmak için Jetpack eklentisini yüklemeniz gerekir.</string>
     <string name="themes_empty_list">Aramanızla eşleşen bir tema yok</string>
     <string name="reader_label_post_search_explainer">Ne bulmak istersiniz?</string>
     <string name="site_settings_tags_empty_title_search">Aramanızla eşleşen etiket yok</string>
@@ -191,6 +264,7 @@ Language: tr
     <string name="stats_tab_tap_content_description">%s gösteriliyor</string>
     <string name="stats_legend">istatistik grafik göstergesi</string>
     <string name="fab_create_desc">oluşturun</string>
+    <string name="fab_add_tag_desc">Etiket oluşturun</string>
     <string name="stats_bar_week_desc">%s haftası</string>
     <string name="stats_bar_date_value_desc">%s, %d görüntüleme</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -418,7 +492,6 @@ Language: tr
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack resimlerinizi optimize eder ve bunları ziyaretçilerinize en yakın sunucu konumundan sunar. Global içerik sağlama ağımızı kullanmak sitenizin yüklenme hızını artıracak.</string>
     <string name="site_settings_serve_images_from_our_servers">Resimleri sunucularımızdan sunun</string>
     <string name="site_settings_speed_up_your_site">Sitenizi hızlandırın</string>
-    <string name="stats_jetpack_connection_setup_info">WordPress sitenizde İstatistikleri kullanmak için, Jetpack eklentisini yüklemelisiniz. Jetpack’i kurmak ister misiniz?</string>
     <string name="stats_jetpack_connection_setup">Jetpack\'i Kur</string>
     <string name="plugin_chevron_icon_content_description">Değiştir metni</string>
     <string name="plugin_info_your_version">WordPress sürümünüz</string>
@@ -1585,7 +1658,6 @@ Language: tr
     <string name="pick_video">Video seçin</string>
     <string name="pick_photo">Fotoğraf seçin</string>
     <string name="reader_likes_you_and_one">Siz ve bir başkası daha bunu değendi</string>
-    <string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>
     <string name="reader_toast_err_share_intent">Paylaşılamadı</string>

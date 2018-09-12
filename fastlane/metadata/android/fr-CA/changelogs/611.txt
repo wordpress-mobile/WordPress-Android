@@ -1,0 +1,5 @@
+10.8 :
+Cette mise à jour vise à vous permettre d'atteindre plus rapidement votre objectif.
+Une nouvelle section « Démarrage rapide » est disponible. Elle contient une liste de suggestions d'étapes à suivre pour faciliter la création d'un site exceptionnel.
+Nous avons simplifié l'installation de Jetpack pour en réduire le nombre d'étapes. Moins de configuration pour une meilleure utilisation !
+(Oh, et nous avons également résolu quelques bugs. )
