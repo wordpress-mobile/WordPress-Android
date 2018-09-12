@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.post;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.ListDescriptor;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -27,13 +29,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
+import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,26 +87,49 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchPostList(final Long remoteSiteId, final ListDescriptor listDescriptor, final int offset,
+                              final int number) {
+        String url = WPCOMREST.sites.site(remoteSiteId).posts.getUrlV1_1();
+
+        Map<String, String> params =
+                fetchPostListParameters(false, offset, number, null, "ID,modified");
+        final boolean loadedMore = offset > 0;
+
+        final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostsResponse.class,
+                new Listener<PostsResponse>() {
+                    @Override
+                    public void onResponse(PostsResponse response) {
+                        List<PostListItem> postListItems = new ArrayList<>(response.posts.size());
+                        for (PostWPComRestResponse postResponse : response.posts) {
+                            postListItems.add(new PostListItem(postResponse.ID, postResponse.modified));
+                        }
+                        boolean canLoadMore = postListItems.size() == number;
+                        FetchPostListResponsePayload responsePayload =
+                                new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
+                                        canLoadMore, null);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostListAction(responsePayload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        PostError postError = new PostError(error.apiError, error.message);
+                        FetchPostListResponsePayload responsePayload =
+                                new FetchPostListResponsePayload(listDescriptor, Collections.<PostListItem>emptyList(),
+                                        loadedMore, false, postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostListAction(responsePayload));
+                    }
+                });
+        add(request);
+    }
+
     public void fetchPosts(final SiteModel site, final boolean getPages, final List<PostStatus> statusList,
-                           final int offset) {
+                           final int offset, final int number) {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
-        Map<String, String> params = new HashMap<>();
-
-        params.put("context", "edit");
-        params.put("number", String.valueOf(PostStore.NUM_POSTS_PER_FETCH));
-
-        if (getPages) {
-            params.put("type", "page");
-        }
-
-        if (statusList.size() > 0) {
-            params.put("status", PostStatus.postStatusListToString(statusList));
-        }
-
-        if (offset > 0) {
-            params.put("offset", String.valueOf(offset));
-        }
+        Map<String, String> params =
+                fetchPostListParameters(getPages, offset, number, statusList, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -131,8 +159,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
-                }
-        );
+                });
         add(request);
     }
 
@@ -360,6 +387,35 @@ public class PostRestClient extends BaseWPComRestClient {
             }
 
             params.put("metadata", metadata);
+        }
+
+        return params;
+    }
+
+    private Map<String, String> fetchPostListParameters(final boolean getPages,
+                                                        final int offset,
+                                                        final int number,
+                                                        @Nullable final List<PostStatus> statusList,
+                                                        @Nullable String fields) {
+        Map<String, String> params = new HashMap<>();
+
+        params.put("context", "edit");
+        params.put("number", String.valueOf(number));
+
+        if (getPages) {
+            params.put("type", "page");
+        }
+
+        if (statusList != null && statusList.size() > 0) {
+            params.put("status", PostStatus.postStatusListToString(statusList));
+        }
+
+        if (offset > 0) {
+            params.put("offset", String.valueOf(offset));
+        }
+
+        if (!TextUtils.isEmpty(fields)) {
+            params.put("fields", fields);
         }
 
         return params;
