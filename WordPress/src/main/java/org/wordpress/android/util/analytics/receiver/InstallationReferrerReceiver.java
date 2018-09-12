@@ -7,7 +7,6 @@ import android.content.Intent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 
-
 public class InstallationReferrerReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent receivedIntent) {
         AppLog.i(AppLog.T.UTILS, "installation referrer RECEIVER: received");
@@ -15,5 +14,3 @@ public class InstallationReferrerReceiver extends BroadcastReceiver {
         InstallationReferrerServiceStarter.startService(context, referrer);
     }
 }
-
-
