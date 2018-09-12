@@ -13,10 +13,9 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
+import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
@@ -74,8 +73,8 @@ class ActivityLogDetailViewModel
                                         actorRole = it.actor?.role,
                                         text = it.text,
                                         summary = it.summary,
-                                        createdDate = it.published.printDate(),
-                                        createdTime = it.published.printTime(),
+                                        createdDate = it.published.toFormattedDateString(),
+                                        createdTime = it.published.toFormattedTimeString(),
                                         rewindAction = it.rewindID?.let {
                                             { this.onRewindClicked() }
                                         } ?: {
@@ -102,13 +101,5 @@ class ActivityLogDetailViewModel
     private fun ActivityActor.showJetpackIcon(): Boolean {
         return displayName == "Jetpack" && type == "Application" ||
                 displayName == "Happiness Engineer" && type == "Happiness Engineer"
-    }
-
-    private fun Date.printDate(): String {
-        return DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(this)
-    }
-
-    private fun Date.printTime(): String {
-        return DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(this)
     }
 }

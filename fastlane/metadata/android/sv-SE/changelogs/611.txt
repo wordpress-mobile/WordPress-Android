@@ -1,0 +1,6 @@
+10.8:
+Den här uppdateringen handlar om att du snabbare ska nå ditt mål.
+Det finns ett nytt snabbstartavsnitt med en lista över förslag till steg som hjälper dig att bygga en fantastisk webbplats.
+Vi har förenklat Jetpack-installationen så att den har färre steg. Färre inställningar, mer användning!
+(Visst ja, vi har även fixat ett par buggar. )
+

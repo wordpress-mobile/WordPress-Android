@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 09:11:05+0000
+Translation-Revision-Date: 2018-08-30 08:53:39+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="quick_start_focus_point_description">нажмите здесь</string>
+    <string name="quick_start_sites">Быстрый старт</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Создайте ваш сайт</string>
+    <string name="quick_start_list_create_site_subtitle">Запустите ваш сайт</string>
+    <string name="quick_start_list_complete_title">Вы прошли \"Быстрый старт\"! Поздравляем!</string>
+    <string name="quick_start_list_complete_subtitle">правда хорошо просто выбирать из списка?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Посмотреть ваш сайт</string>
+    <string name="quick_start_dialog_view_site_message_short">Нажмите %1$s Посмотреть сайт %2$s для просмотра вашего сайта</string>
+    <string name="quick_start_dialog_view_site_message">Посмотрите ваш новый сайт, чтобы увидеть его как он предстанет посетителям.</string>
+    <string name="quick_start_dialog_skip_title">Пропустить быстрый старт</string>
+    <string name="quick_start_dialog_skip_message">Этот быстрый тур поможет создать базовый сайт. Вы точно хотите пропустить его?</string>
+    <string name="quick_start_dialog_share_site_title">Делитесь содержимым сайта</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Нажмите %1$s Поделиться %2$s для продолжения</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Нажмите %1$s Подключения %2$s для добавления учетных записей в соцсетях</string>
+    <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
+    <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
+    <string name="quick_start_dialog_publish_post_message_short">Нажмите %1$s Создать запись %2$s для создания новой записи</string>
+    <string name="quick_start_dialog_publish_post_message">Самое время! Сохраните в черновики и опубликуйте вашу первую запись.</string>
+    <string name="quick_start_dialog_need_help_title">Нужна помощь с тем, как начать?</string>
+    <string name="quick_start_dialog_need_help_message">Наш Быстрый старт проведет вас по списку основных шагов по созданию нового сайта.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Да</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Никогда</string>
+    <string name="quick_start_dialog_need_help_button_negative">Нет</string>
+    <string name="quick_start_dialog_follow_sites_title">Подписка на другие сайты</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Нажмите %1$s Поиск %2$s, чтобы найти сайты с похожими интересами</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Нажмите %1$s Читалка %2$s для продолжения</string>
+    <string name="quick_start_dialog_follow_sites_message">Найдите сайты взаимодействующие с вами и подпишитесь на них для получения новых публикаций с них.</string>
+    <string name="quick_start_dialog_customize_site_title">Настройте ваш сайт</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Нажмите %1$s Темы %2$s для продолжения</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Нажмите %1$s Настроить %2$s для начала персонализации вашего сайта</string>
+    <string name="quick_start_dialog_customize_site_message">Смените цвета, шрифты и изображения для отлично настроенного под ваши вкусы сайта.</string>
+    <string name="quick_start_dialog_continue_setup_title">Продолжить настройку сайта</string>
+    <string name="quick_start_dialog_continue_setup_message">Пора завершить настройку вашего сайта! Наш список проведет вас по следующим шагам.</string>
+    <string name="quick_start_dialog_choose_theme_title">Выберите тему</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Нажмите %1$s Темы %2$s для поиска новых тем</string>
+    <string name="quick_start_dialog_choose_theme_message">Посмотреть все наши темы, чтобы найти наиболее подходящую.</string>
+    <string name="quick_start_button_skip_positive">Пропустить</string>
+    <string name="quick_start_button_skip_negative">Отмена</string>
+    <string name="quick_start_button_skip">Пропустить все</string>
+    <string name="quick_start_button_positive">Вперед</string>
+    <string name="quick_start_button_negative_short">Отмена</string>
+    <string name="quick_start_button_negative">Не сейчас</string>
+    <string name="content_description_done">Готово</string>
+    <string name="my_site_create_new_site_title">У вас нет сайтов</string>
+    <string name="reader_empty_followed_tags_title">Нет подписок на метки</string>
+    <string name="reader_empty_followed_tags_subtitle">Добавьте метки здесь, чтобы найти записи по вашим любимым темам</string>
+    <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
+    <string name="install_jetpack_retry">Повторить</string>
+    <string name="install_jetpack_continue">Продолжить</string>
+    <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен</string>
+    <string name="jetpack_installation_problem">Возникла проблема</string>
+    <string name="jetpack_installed_message">Jetpack установлен на вашем сайте. Поздравляем!</string>
+    <string name="jetpack_installed">Jetpack установлен</string>
+    <string name="installing_jetpack_message">Установка Jetpack на сайт. Это может занять пару минут</string>
+    <string name="installing_jetpack">Устанавливается Jetpack</string>
+    <string name="install_jetpack_message">Данные для входа на ваш сайт не будут сохранены и будут использоваться только для установки Jetpack</string>
+    <string name="install_jetpack">Установить Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Устанавливая Jetpack вы соглашаетесь с нашими</string>
+    <string name="stats_jetpack_connection_setup_info">Для использования Статистики на вашем сайте WordPress требуется установить плагин Jetpack.</string>
     <string name="themes_empty_list">Нет тем по вашему поиску</string>
     <string name="reader_label_post_search_explainer">Что вы хотите найти?</string>
     <string name="site_settings_tags_empty_title_search">Нет меток по вашему поиску</string>
@@ -191,6 +264,7 @@ Language: ru
     <string name="stats_tab_tap_content_description">показано %s</string>
     <string name="stats_legend">легенда графика статистики</string>
     <string name="fab_create_desc">создать</string>
+    <string name="fab_add_tag_desc">Создать метку</string>
     <string name="stats_bar_week_desc">Неделя %s</string>
     <string name="stats_bar_date_value_desc">%s, %d просмотров</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -418,7 +492,6 @@ Language: ru
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack оптимизирует изображения и отдает их посетителям с ближайшего к ним сервера. Использование нашей глобальной CDN повысит скорость загрузки вашего сайта.</string>
     <string name="site_settings_serve_images_from_our_servers">Отдавать изображения с наших серверов</string>
     <string name="site_settings_speed_up_your_site">Ускорить ваш сайт</string>
-    <string name="stats_jetpack_connection_setup_info">Чтобы использовать статистику на вашем сайте WordPress, вам необходимо установить плагин Jetpack. Вы хотите установить Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Установить Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Включить/Выключить текст</string>
     <string name="plugin_info_your_version">Ваша версия WordPress</string>
@@ -1585,7 +1658,6 @@ Language: ru
     <string name="pick_video">Выберите видео</string>
     <string name="pick_photo">Выберите фото</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
-    <string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
     <string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>

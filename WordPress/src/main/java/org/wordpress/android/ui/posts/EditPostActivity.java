@@ -164,7 +164,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -201,6 +200,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
+    public static final String EXTRA_POST_REMOTE_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -1295,17 +1295,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void launchPictureLibrary() {
         WPMediaUtils.launchPictureLibrary(this, true);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoLibrary() {
         WPMediaUtils.launchVideoLibrary(this, true);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void launchVideoCamera() {
         WPMediaUtils.launchVideoCamera(this);
-        AppLockManager.getInstance().setExtendedTimeout();
     }
 
     private void showErrorAndFinish(int errorMessageId) {
@@ -1659,6 +1656,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         setResult(RESULT_OK, i);
     }
@@ -2132,7 +2130,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                       @Override
                                       public void onMediaCapturePathReady(String mediaCapturePath) {
                                           mMediaCapturePath = mediaCapturePath;
-                                          AppLockManager.getInstance().setExtendedTimeout();
                                       }
                                   });
     }
@@ -2579,6 +2576,11 @@ public class EditPostActivity extends AppCompatActivity implements
     private void addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
         MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
                                                 MediaUploadState.QUEUED);
+        if (mediaModel == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
         if (isVideo) {
             mediaModel.setTitle(getResources().getString(R.string.video));
         } else {
@@ -2961,6 +2963,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // we need to update media with the local post Id
         MediaModel media = buildMediaModel(uri, mimeType, startingState);
+        if (media == null) {
+            ToastUtils.showToast(this, R.string.file_not_found, ToastUtils.Duration.SHORT);
+            return null;
+        }
         media.setLocalPostId(mPost.getId());
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
 
@@ -2971,6 +2977,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private MediaModel buildMediaModel(Uri uri, String mimeType, MediaUploadState startingState) {
         MediaModel media = FluxCUtils.mediaModelFromLocalUri(this, uri, mimeType, mMediaStore, mSite.getId());
+        if (media == null) {
+            return null;
+        }
         if (org.wordpress.android.fluxc.utils.MediaUtils.isVideoMimeType(media.getMimeType())) {
             String path = MediaUtils.getRealPathFromURI(this, uri);
             media.setThumbnailUrl(getVideoThumbnail(path));
@@ -3201,8 +3210,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         refreshBlogMedia();
                     }
                 });
-            } else {
-                AppLockManager.getInstance().setExtendedTimeout();
             }
         }
 

@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-20 19:54:07+0000
+Translation-Revision-Date: 2018-09-05 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="quick_start_focus_point_description">appuyer ici</string>
+    <string name="quick_start_sites">Démarrage rapide</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Créer votre site</string>
+    <string name="quick_start_list_create_site_subtitle">Rendre votre site opérationnel</string>
+    <string name="quick_start_list_complete_title">Félicitations, vous avez terminé le démarrage rapide.</string>
+    <string name="quick_start_list_complete_subtitle">N\'est–il pas formidable de pouvoir rayer des éléments d\'une liste de choses à faire ?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Voir votre site</string>
+    <string name="quick_start_dialog_view_site_message_short">Appuyez sur %1$s Voir le site %2$s pour prévisualiser votre site</string>
+    <string name="quick_start_dialog_view_site_message">Prévisualisez votre nouveau site pour voir ce que vos visiteurs verront.</string>
+    <string name="quick_start_dialog_skip_title">Ignorer le démarrage rapide</string>
+    <string name="quick_start_dialog_skip_message">Les étapes du démarrage rapide vous guideront tout au long de la création d\'un site de base. Voulez–vous vraiment les ignorer ?</string>
+    <string name="quick_start_dialog_share_site_title">Partager votre site</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Appuyez sur %1$s Partage %2$s pour continuer</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Appuyez sur %1$s Connexions %2$s pour ajouter vos comptes de réseaux sociaux</string>
+    <string name="quick_start_dialog_share_site_message">Connectez vos comptes de réseaux sociaux. Votre site partagera automatiquement vos nouveaux articles.</string>
+    <string name="quick_start_dialog_publish_post_title">Publier un article</string>
+    <string name="quick_start_dialog_publish_post_message_short">Appuyez sur %1$s Créer un article %2$s pour créer un article</string>
+    <string name="quick_start_dialog_publish_post_message">C\'est le moment ! Créez votre premier brouillon et publiez votre tout premier article.</string>
+    <string name="quick_start_dialog_need_help_title">Besoin d\'un petit coup de pouce pour commencer ?</string>
+    <string name="quick_start_dialog_need_help_message">Notre liste de contrôle de démarrage rapide vous guidera lors des étapes de base de configuration d\'un nouveau site Web.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Oui</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Jamais</string>
+    <string name="quick_start_dialog_need_help_button_negative">Non</string>
+    <string name="quick_start_dialog_follow_sites_title">S\'abonner à d\'autres sites</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Appuyez sur %1$s Rechercher %2$s pour rechercher des sites présentant des intérêts similaires</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Appuyez sur %1$s Lecteur %2$s pour continuer</string>
+    <string name="quick_start_dialog_follow_sites_message">Trouvez des sites qui vous parlent, et suivez–les pour recevoir une notification quand ils publient.</string>
+    <string name="quick_start_dialog_customize_site_title">Personnalisez votre site</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Appuyez sur %1$s Thèmes %2$s pour continuer</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Appuyez sur %1$s Personnaliser %2$s pour commencer à personnaliser votre site</string>
+    <string name="quick_start_dialog_customize_site_message">Modifiez les couleurs, les polices et les images pour obtenir un site parfaitement personnalisé.</string>
+    <string name="quick_start_dialog_continue_setup_title">Poursuivre la configuration du site</string>
+    <string name="quick_start_dialog_continue_setup_message">Il est temps de terminer la configuration de votre site ! Notre liste de contrôle vous guidera lors des étapes suivantes.</string>
+    <string name="quick_start_dialog_choose_theme_title">Choisir un thème</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Appuyez sur %1$s Thèmes %2$s pour découvrir de nouveaux thèmes</string>
+    <string name="quick_start_dialog_choose_theme_message">Parcourez tous nos thèmes pour trouver celui qui vous correspond.</string>
+    <string name="quick_start_button_skip_positive">Ignorer</string>
+    <string name="quick_start_button_skip_negative">Annuler</string>
+    <string name="quick_start_button_skip">Ignorer tout</string>
+    <string name="quick_start_button_negative_short">Annuler</string>
+    <string name="quick_start_button_negative">Pas maintenant</string>
+    <string name="content_description_done">Terminé</string>
+    <string name="my_site_create_new_site_title">Vous n\'avez pas de sites.</string>
+    <string name="reader_empty_followed_tags_title">Aucune étiquette suivie</string>
+    <string name="reader_empty_followed_tags_subtitle">Ajoutez des étiquettes ici pour rechercher des articles sur vos rubriques préférées</string>
+    <string name="login_to_to_connect_jetpack">Connectez–vous au compte WordPress.com que vous utilisez pour connecter Jetpack.</string>
+    <string name="install_jetpack_retry">Réessayer</string>
+    <string name="install_jetpack_continue">Continuer</string>
+    <string name="jetpack_installation_problem_message">Impossible d\'installer Jetpack pour le moment</string>
+    <string name="jetpack_installation_problem">Un problème est survenu</string>
+    <string name="jetpack_installed_message">Jetpack est installé sur votre site. Bravo !</string>
+    <string name="jetpack_installed">Jetpack installé</string>
+    <string name="installing_jetpack_message">Installation de Jetpack sur votre site. Cette opération peut prendre quelques minutes</string>
+    <string name="installing_jetpack">Installation de Jetpack</string>
+    <string name="install_jetpack_message">Vos informations d\'identification sur le site Web ne seront pas conservées. Elles sont utilisées afin d\'installer Jetpack.</string>
+    <string name="install_jetpack">Installer Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">En installant Jetpack vous acceptez nos </string>
+    <string name="stats_jetpack_connection_setup_info">Pour utiliser les statistiques sur votre site WordPress, vous devez installer l\'extension Jetpack.</string>
     <string name="themes_empty_list">Aucun thème ne correspond à votre recherche.</string>
     <string name="reader_label_post_search_explainer">Que recherchez–vous ?</string>
     <string name="site_settings_tags_empty_title_search">Aucune étiquette ne correspond à votre recherche.</string>
@@ -14,6 +86,7 @@ Language: fr
     <string name="site_settings_tags_empty_button">Créer une étiquette</string>
     <string name="media_empty_search_list">Aucun média ne correspond à votre recherche.</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Se déconnecter de WordPress ?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Vous avez modifié des articles qui n\'ont pas été chargés sur votre site. Si vous vous déconnectez maintenant, vous perdrez ces modifications sur votre appareil. Voulez–vous vous déconnecter malgré tout ?</string>
     <string name="people_empty_list_filtered_viewers">Pas encore de visiteurs</string>
     <string name="people_empty_list_filtered_email_followers">Pas encore d\'abonnés par e–mail</string>
     <string name="people_empty_list_filtered_followers">Pas encore d\'abonnés</string>
@@ -56,10 +129,14 @@ Language: fr
     <string name="support_contact_email">E–mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
+    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %1$s à %2$s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
     <string name="activity_log_rewind_site">Retour en arrière du site</string>
     <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
+    <string name="activity_log_currently_restoring_message">Retour en arrière de %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto–géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article, et revenez pour le lire quand vous le souhaitez. Il ne sera disponible que sur cet appareil -– les articles enregistrés ne sont pas encore synchronisés avec les autres périphériques. (On y travaille.)</string>
@@ -186,6 +263,7 @@ Language: fr
     <string name="stats_tab_tap_content_description">Affichage de %s</string>
     <string name="stats_legend">légende du graphique des statistiques</string>
     <string name="fab_create_desc">créer</string>
+    <string name="fab_add_tag_desc">Créer une étiquette</string>
     <string name="stats_bar_week_desc">Semaine de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vues</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -413,7 +491,6 @@ Language: fr
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimisera vos images et les diffusera auprès des visiteurs de votre site à partir de l\'emplacement serveur le plus proche de ces derniers. L\'utilisation de notre réseau mondial de distribution de contenu améliorera considérablement la vitesse de chargement de votre site.</string>
     <string name="site_settings_serve_images_from_our_servers">Diffuser des images à partir de nos serveurs</string>
     <string name="site_settings_speed_up_your_site">Optimiser la vitesse de votre site</string>
-    <string name="stats_jetpack_connection_setup_info">Pour utiliser les statistiques sur votre site WordPress, vous devrez installer l\'extension Jetpack. Souhaitez–vous configurer Jetpack ?</string>
     <string name="stats_jetpack_connection_setup">Configurer Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Inverser le texte</string>
     <string name="plugin_info_your_version">Votre version de WordPress</string>
@@ -444,6 +521,7 @@ Language: fr
     <string name="site_settings_tags_hint">Gérez les étiquettes de votre site</string>
     <string name="dlg_saving_tag">Enregistrement</string>
     <string name="dlg_deleting_tag">Suppression</string>
+    <string name="dlg_confirm_delete_tag">Supprimer définitivement la balise « %s » ?</string>
     <string name="error_tag_exists">Une étiquette avec ce nom existe déjà</string>
     <string name="add_new_tag">Ajout de nouvelle étiquette</string>
     <string name="tag_description_hint">Description</string>
@@ -1016,6 +1094,9 @@ Language: fr
     <string name="editor_remove_failed_uploads">Supprimer les téléversements échoués</string>
     <string name="editor_toast_failed_uploads">Certains téléversements de fichiers ont échoué. Vous ne pouvez pas\nenregistrer ou publier votre article dans cet état.\nSouhaitez–vous supprimer tous les téléversements ayant échoué ?</string>
     <string name="site_settings_advanced_header">Avancé</string>
+    <string name="comments_empty_list_filtered_trashed">Aucun commentaire dans la corbeille</string>
+    <string name="comments_empty_list_filtered_pending">Aucun commentaire en attente</string>
+    <string name="comments_empty_list_filtered_approved">Aucun commentaire approuvé</string>
     <string name="xmlrpc_missing_method_error">Impossible de se connecter. Le serveur ne dispose pas des méthodes XML–RPC requises.</string>
     <string name="alignment_center">Centré</string>
     <string name="post_format_video">Vidéo</string>
@@ -1074,6 +1155,7 @@ Language: fr
     <string name="mnu_comment_delete_permanently">Supprimer</string>
     <string name="mnu_comment_untrash">Restaurer</string>
     <string name="comment_deleted_permanently">Commentaire supprimé</string>
+    <string name="comments_empty_list_filtered_spam">Pas de commentaire indésirable</string>
     <string name="comment_status_all">Tout</string>
     <string name="could_not_load_page">Impossible de charger la page</string>
     <string name="off">Off</string>
@@ -1226,7 +1308,13 @@ Language: fr
     <string name="reader_label_gap_marker">Charger plus d\'artilces</string>
     <string name="notifications_no_search_results">Aucun site ne correspond à \'%s\'</string>
     <string name="search_sites">Rechercher les sites</string>
+    <string name="notifications_empty_view_reader">Ouvrir le Lecteur</string>
+    <string name="notifications_empty_action_followers_likes">Fates–vous remarquer : commentez les articles que vous avez lus</string>
+    <string name="notifications_empty_action_comments">Rejoignez une conversation : commentez les articles des sites que vous suivez</string>
+    <string name="notifications_empty_action_unread">Relancez la conversation : écrivez un nouvel article</string>
     <string name="notifications_empty_action_all">Soyez actif! Commentez les articles des sites que vous suivez.</string>
+    <string name="notifications_empty_comments">Pas de commentaires pour le moment</string>
+    <string name="notifications_empty_unread">Vous êtes à jour !</string>
     <string name="stats_widget_error_jetpack_no_blogid">Vous devez d\'abord aller sur l\'écran Stats dans l\'appli, réessayez d\'ajouter le Widget ensuite.</string>
     <string name="stats_widget_error_readd_widget">Veuillez retirer le widget et le rajouter ensuite.</string>
     <string name="stats_widget_error_no_visible_blog">Les Stats ne sont pas accessibles sans un Site visible</string>
@@ -1569,7 +1657,6 @@ Language: fr
     <string name="pick_video">Sélectionner une vidéo</string>
     <string name="pick_photo">Sélectionner une photo</string>
     <string name="reader_likes_you_and_one">Vous et un autre avez aimé ceci</string>
-    <string name="reader_empty_followed_tags">Vous ne suivez aucun tag</string>
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
     <string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
     <string name="reader_toast_err_share_intent">Impossible de partager</string>
@@ -1585,6 +1672,7 @@ Language: fr
     <string name="reader_btn_follow">Suivre</string>
     <string name="reader_btn_share">Partager</string>
     <string name="reader_untitled_post">(Sans Titre)</string>
+    <string name="comments_empty_list">Pas de commentaires pour le moment</string>
     <string name="empty_list_default">Cette liste est vide</string>
     <string name="passcode_turn_on">Activer le code PIN</string>
     <string name="passcode_turn_off">Désactiver le code PIN</string>

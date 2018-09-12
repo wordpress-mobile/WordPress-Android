@@ -1,7 +1,6 @@
 package org.wordpress.android.util;
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -26,7 +25,11 @@ import java.util.List;
 public class WPActivityUtils {
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
     // See: http://stackoverflow.com/a/27455363/309558
-    public static void addToolbarToDialog(final Fragment context, final Dialog dialog, String title) {
+
+    // TODO: android.app.Fragment  is deprecated since Android P.
+    // Needs to be replaced with android.support.v4.app.Fragment
+    // See https://developer.android.com/reference/android/app/Fragment
+    public static void addToolbarToDialog(final android.app.Fragment context, final Dialog dialog, String title) {
         if (!context.isAdded() || dialog == null) {
             return;
         }
@@ -70,10 +73,14 @@ public class WPActivityUtils {
      * removes it if it exists.
      * <p>
      * Originally added to prevent a crash that occurs with nested PreferenceScreens that added
-     * a toolbar via {@link WPActivityUtils#addToolbarToDialog(Fragment, Dialog, String)}. The
+     * a toolbar via {@link WPActivityUtils#addToolbarToDialog(android.app.Fragment, Dialog, String)}. The
      * crash can be reproduced by turning 'Don't keep activities' on from Developer options.
      */
-    public static void removeToolbarFromDialog(final Fragment context, final Dialog dialog) {
+
+    // TODO: android.app.Fragment  is deprecated since Android P.
+    // Needs to be replaced with android.support.v4.app.Fragment
+    // See https://developer.android.com/reference/android/app/Fragment
+    public static void removeToolbarFromDialog(final android.app.Fragment context, final Dialog dialog) {
         if (dialog == null || !context.isAdded()) {
             return;
         }

@@ -233,6 +233,15 @@
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
+            android:name=".ui.pages.PagesActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/my_site_btn_site_pages" />
+        <activity
+            android:name=".ui.pages.PageParentActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/set_parent" />
+        <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
@@ -485,19 +494,6 @@
         <activity
             android:name=".ui.notifications.NotificationsDetailActivity"
             android:theme="@style/CalypsoTheme" />
-
-        <!-- Passcode lock activities -->
-        <activity
-            android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
-            android:theme="@style/CalypsoTheme"
-            android:launchMode="singleInstance"
-            android:label="@string/passcode_screen_title"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
-            android:theme="@style/CalypsoTheme"
-            android:label="@string/passcode_screen_title"
-            android:windowSoftInputMode="stateHidden" />
 
         <!--People Management-->
         <activity

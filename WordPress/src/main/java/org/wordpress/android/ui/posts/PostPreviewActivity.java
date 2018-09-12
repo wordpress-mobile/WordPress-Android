@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -141,7 +141,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
     }
 
     private void showPreviewFragment() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
         String tagForFragment = getString(R.string.fragment_tag_post_preview);
@@ -159,7 +159,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
 
     private PostPreviewFragment getPreviewFragment() {
         String tagForFragment = getString(R.string.fragment_tag_post_preview);
-        Fragment fragment = getFragmentManager().findFragmentByTag(tagForFragment);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tagForFragment);
         if (fragment != null) {
             return (PostPreviewFragment) fragment;
         } else {

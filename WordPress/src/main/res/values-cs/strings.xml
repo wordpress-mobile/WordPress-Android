@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 09:08:33+0000
+Translation-Revision-Date: 2018-08-30 10:57:13+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="quick_start_focus_point_description">kliknout zde</string>
+    <string name="quick_start_sites">Rychlý start</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ano</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Ne</string>
+    <string name="quick_start_button_skip_positive">Přeskočit</string>
+    <string name="quick_start_button_skip_negative"> Zrušit</string>
+    <string name="quick_start_button_skip">Přeskočit vše</string>
+    <string name="quick_start_button_negative_short">Zrušit</string>
+    <string name="quick_start_button_negative">Né teď</string>
+    <string name="content_description_done">Hotovo</string>
+    <string name="install_jetpack">Instalovat Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="reader_gallery_images_desc">galerie obrázků</string>
     <string name="blavatar_desc">ikona stránky</string>
     <string name="theme_image_desc">obrázek šablony</string>
@@ -162,6 +190,7 @@ Language: cs_CZ
     <string name="stats_tab_tap_content_description">zobrazování %s</string>
     <string name="stats_legend">legenda grafu statistik</string>
     <string name="fab_create_desc">vytvořit</string>
+    <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="stats_bar_week_desc">Týden z %s</string>
     <string name="stats_bar_date_value_desc">%s, %d zobrazení</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -389,8 +418,7 @@ Language: cs_CZ
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a načítá je z nejbližších serverů. Pomocí naší globální sítě serverů pro doručování obsahu se zvýší rychlost načítání vašeho webu.</string>
     <string name="site_settings_serve_images_from_our_servers">Načítejte obrázky z našich serverů</string>
     <string name="site_settings_speed_up_your_site">Zrychlete svůj web</string>
-    <string name="stats_jetpack_connection_setup_info">Pro použití Stats na tomto WordPress webu bude potřeba nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Nastavit Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Instalovat Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Přepnout text</string>
     <string name="plugin_info_your_version">Verze WordPressu</string>
     <string name="plugin_info_requires_version">Požadovaná verze WordPressu</string>
@@ -1556,7 +1584,6 @@ Language: cs_CZ
     <string name="pick_video">Vyberte video</string>
     <string name="pick_photo">Vyberte fotku</string>
     <string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
-    <string name="reader_empty_followed_tags">Nesledujete žádné štítky</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
     <string name="reader_toast_err_view_image">Nelze zobrazit obrázek</string>
     <string name="reader_toast_err_share_intent">Nelze sdílet</string>

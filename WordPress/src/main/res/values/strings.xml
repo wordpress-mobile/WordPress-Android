@@ -32,7 +32,6 @@
     <string name="release_notes_screen_title">Release notes</string>
     <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
-    <string name="passcode_screen_title">WordPress Passcode</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My site</string>
     <string name="me_section_screen_title">Me</string>
@@ -106,6 +105,7 @@
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
+    <string name="dismiss">dismiss</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -229,6 +229,19 @@
     <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
+    <string name="pages">Pages</string>
+    <string name="set_parent">Set Parent</string>
+    <string name="page_delete_error">There was a problem deleting the page</string>
+    <string name="page_status_change_error">There was a problem changing the page status</string>
+    <string name="page_parent_change_error">There was a problem changing the page parent</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="top_level">Top level</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -1283,10 +1296,8 @@
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
     <string name="image_settings">Image settings</string>
-    <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
-    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
@@ -1348,7 +1359,6 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
-    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
 
     <!-- Post Error -->
@@ -1360,20 +1370,6 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-
-    <!-- Passcode lock -->
-    <string name="passcode_manage">Manage PIN lock</string>
-    <string name="passcode_enter_old_passcode">Enter your old PIN</string>
-    <string name="passcode_re_enter_passcode">Re-enter your PIN</string>
-    <string name="passcode_change_passcode">Change PIN</string>
-    <string name="passcode_set">PIN set</string>
-    <string name="passcode_wrong_passcode">Wrong PIN</string>
-    <string name="passcode_preference_title">PIN lock</string>
-    <string name="passcode_turn_off">Turn PIN lock off</string>
-    <string name="passcode_turn_on">Turn PIN lock on</string>
-    <string name="passcodelock_prompt_message">Enter your PIN</string>
-    <!--suppress CheckTagEmptyBody -->
-    <string name="passcodelock_hint"></string>
 
     <!--
       Jetpack strings
@@ -1521,7 +1517,7 @@
     <string name="reader_empty_followed_tags_title">No followed tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
-    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
+    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
@@ -1554,9 +1550,6 @@
     <string name="connectionbar_no_connection">No connection</string>
 
     <!-- NUX strings -->
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
-    <string name="creating_your_site">Creating your site</string>
-    <string name="required_field">Required field</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
@@ -1618,6 +1611,7 @@
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
+    <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
     <!-- Application logs view -->
@@ -2064,8 +2058,9 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <!-- Screen titles -->
@@ -2286,26 +2281,58 @@
     <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_list_choose_theme_subtitle">@string/quick_start_dialog_choose_theme_message</string>
-    <string name="quick_start_list_choose_theme_title">@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle" translatable="false">@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_list_choose_theme_title" translatable="false">@string/quick_start_dialog_choose_theme_title</string>
     <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
     <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_customize_site_subtitle">@string/quick_start_dialog_customize_site_message</string>
-    <string name="quick_start_list_customize_site_title">@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_follow_site_subtitle">@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_follow_site_title">@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_publish_post_subtitle">@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_publish_post_title">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_share_site_subtitle">@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_share_site_title">@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_follow_site_subtitle" translatable="false">@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_share_site_subtitle" translatable="false">@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_share_site_title" translatable="false">@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
+    <!-- Pages -->
+    <string name="pages_published" tools:ignore="UnusedResources">Published</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_view">View</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
+    <string name="pages_empty_search_result">No pages matching your search</string>
+    <string name="pages_search_suggestion">Search pages</string>
+    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_empty_drafts">You don\'t have any draft pages</string>
+    <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
+    <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_title_sample_announcement" >[New feature available]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
 </resources>
