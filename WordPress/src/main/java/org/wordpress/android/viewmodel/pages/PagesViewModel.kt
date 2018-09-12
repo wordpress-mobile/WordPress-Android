@@ -88,14 +88,10 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
-    private var _pageMap: MutableMap<Long, PageModel> = mutableMapOf()
-    private var pageMap: MutableMap<Long, PageModel>
-        get() {
-            return _pageMap
-        }
+    private var pageMap: Map<Long, PageModel> = mapOf()
         set(value) {
-            _pageMap = value
-            _pages.postValue(pageMap.values.toList())
+            field = value
+            _pages.postValue(field.values.toList())
 
             if (isSearchExpanded.value == true) {
                 onSearch(lastSearchQuery)
@@ -138,7 +134,7 @@ class PagesViewModel
     }
 
     private fun reloadPagesAsync() = launch(commonPoolContext) {
-        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
+        pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
@@ -277,8 +273,7 @@ class PagesViewModel
         val action = PageAction(UPLOAD) {
             launch(commonPoolContext) {
                 if (page.parent?.remoteId != parentId) {
-                    page.parent = _pageMap[parentId]
-                    pageMap = _pageMap
+                    page.parent = pageMap[parentId]
 
                     pageStore.uploadPageToServer(page)
                 }
@@ -287,8 +282,7 @@ class PagesViewModel
         action.undo = {
             launch(commonPoolContext) {
                 pageMap[page.remoteId]?.let { changed ->
-                    changed.parent = _pageMap[oldParent]
-                    pageMap = _pageMap
+                    changed.parent = pageMap[oldParent]
 
                     pageStore.uploadPageToServer(changed)
                 }
@@ -321,8 +315,7 @@ class PagesViewModel
     private fun deletePage(page: PageModel) {
         val action = PageAction(REMOVE) {
             launch(commonPoolContext) {
-                _pageMap.remove(page.remoteId)
-                pageMap = _pageMap
+                pageMap = pageMap.filter { it.key != page.remoteId }
 
                 checkIfNewPageButtonShouldBeVisible()
 
