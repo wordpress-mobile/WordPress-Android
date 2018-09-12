@@ -45,7 +45,7 @@ public class InstallationReferrerService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         AppLog.i(T.UTILS, "installation referrer service > task: " + startId + " started");
-        mInstallationReferrerServiceLogic.performTask(intent.getExtras(), Integer.valueOf(startId));
+        mInstallationReferrerServiceLogic.performTask(intent.getExtras(), startId);
         return START_NOT_STICKY;
     }
 
