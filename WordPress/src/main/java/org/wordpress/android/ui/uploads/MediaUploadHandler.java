@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;

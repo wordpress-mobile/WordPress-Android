@@ -30,7 +30,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
