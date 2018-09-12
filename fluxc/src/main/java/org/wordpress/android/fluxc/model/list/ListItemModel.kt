@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model
+package org.wordpress.android.fluxc.model.list
 
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
@@ -12,6 +12,11 @@ import com.yarolegovich.wellsql.core.annotation.Table
         "UNIQUE(LIST_ID, REMOTE_ITEM_ID)"
 )
 class ListItemModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
+    constructor(listId: Int, remoteItemId: Long): this() {
+        this.listId = listId
+        this.remoteItemId = remoteItemId
+    }
+
     @Column var listId: Int = 0
     @Column var remoteItemId: Long = 0
 
@@ -20,4 +25,7 @@ class ListItemModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable 
     override fun setId(id: Int) {
         this.id = id
     }
+
+    fun contentEquals(other: ListItemModel): Boolean =
+        this.listId == other.listId && this.remoteItemId == other.remoteItemId
 }

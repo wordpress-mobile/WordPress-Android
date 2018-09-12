@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,8 +14,8 @@ import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
-import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -32,7 +31,6 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
-import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -111,39 +109,40 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final ListType listType, final boolean getPages, final int offset) {
+    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
         Map<String, Object> contentStruct = new HashMap<>();
+
         contentStruct.put("number", PostStore.NUM_POSTS_PER_FETCH);
         contentStruct.put("offset", offset);
+
         if (getPages) {
             contentStruct.put("post_type", "page");
         }
-
-        List<String> fields = new ArrayList<>();
-        fields.add("post_id");
-        fields.add("post_modified");
 
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(contentStruct);
-        params.add(fields);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
-                        if (response != null) {
-                            boolean canLoadMore = response.length == PostStore.NUM_POSTS_PER_FETCH;
-                            List<PostListItem> listItems = listItemsFromPostsResponse(response);
+                        boolean canLoadMore = false;
+                        if (response != null && response.length == PostStore.NUM_POSTS_PER_FETCH) {
+                            canLoadMore = true;
+                        }
 
-                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(listItems, site, listType,
-                                    getPages, offset > 0, canLoadMore);
+                        PostsModel posts = postsResponseToPostsModel(response, site);
+
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
+                                offset > 0, canLoadMore);
+
+                        if (posts != null) {
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         } else {
-                            PostError error = new PostError(PostErrorType.INVALID_RESPONSE);
-                            FetchPostsResponsePayload payload = new FetchPostsResponsePayload(error);
+                            payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         }
                     }
@@ -163,7 +162,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             default:
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
-                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError);
+                        FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
@@ -278,17 +277,28 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    private @NotNull List<PostListItem> listItemsFromPostsResponse(Object[] response) {
-        List<PostListItem> listItems = new ArrayList<>();
+    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site) {
+        List<Map<?, ?>> postsList = new ArrayList<>();
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
-
-            PostListItem item = new PostListItem();
-            item.remotePostId = Long.parseLong(MapUtils.getMapStr(postMap, "post_id"));
-            item.lastModified = MapUtils.getMapStr(postMap, "post_modified");
-            listItems.add(item);
+            postsList.add(postMap);
         }
-        return listItems;
+
+        List<PostModel> postArray = new ArrayList<>();
+        PostModel post;
+
+        for (Object postObject : postsList) {
+            post = postResponseObjectToPostModel(postObject, site);
+            if (post != null) {
+                postArray.add(post);
+            }
+        }
+
+        if (postArray.isEmpty()) {
+            return null;
+        }
+
+        return new PostsModel(postArray);
     }
 
     private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site) {
@@ -400,6 +410,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             if (!TextUtils.isEmpty(post.getPostFormat())) {
                 contentStruct.put("post_format", post.getPostFormat());
             }
+        } else {
+            contentStruct.put("parent", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");

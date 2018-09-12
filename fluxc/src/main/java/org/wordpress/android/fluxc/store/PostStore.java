@@ -12,22 +12,17 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.generated.ListActionBuilder;
-import org.wordpress.android.fluxc.model.ListModel.ListType;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
-import org.wordpress.android.fluxc.store.ListStore.UpdateListError;
-import org.wordpress.android.fluxc.store.ListStore.UpdateListErrorType;
-import org.wordpress.android.fluxc.store.ListStore.UpdateListPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +32,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PostStore extends Store {
-    public static final int NUM_POSTS_PER_FETCH = 100;
+    public static final int NUM_POSTS_PER_FETCH = 20;
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
@@ -48,88 +43,43 @@ public class PostStore extends Store {
 
     public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public ListType listType;
-        public int offset;
+        public boolean loadMore;
+        public List<PostStatus> statusTypes;
 
-        public FetchPostsPayload(SiteModel site, ListType listType) {
+        public FetchPostsPayload(SiteModel site) {
             this.site = site;
-            this.listType = listType;
         }
 
-        public FetchPostsPayload(SiteModel site, ListType listType, int offset) {
+        public FetchPostsPayload(SiteModel site, boolean loadMore) {
+            this(site, loadMore, DEFAULT_POST_STATUS_LIST);
+        }
+
+        public FetchPostsPayload(SiteModel site, boolean loadMore, List<PostStatus> statusTypes) {
             this.site = site;
-            this.listType = listType;
-            this.offset = offset;
+            this.loadMore = loadMore;
+            this.statusTypes = statusTypes;
         }
-    }
-
-    public static class SearchPostsPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public String searchTerm;
-        public int offset;
-
-        public SearchPostsPayload(SiteModel site, String searchTerm) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-        }
-
-        public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
-            this(site, searchTerm);
-            this.offset = offset;
-        }
-    }
-
-    public static class SearchPostsResponsePayload extends Payload<PostError> {
-        public List<PostModel> postList;
-        public SiteModel site;
-        public String searchTerm;
-        public boolean isPages;
-        public boolean loadedMore;
-        public boolean canLoadMore;
-
-        public SearchPostsResponsePayload(List<PostModel> postList, SiteModel site, String searchTerm, boolean isPages,
-                                          boolean loadedMore, boolean canLoadMore) {
-            this.postList = postList;
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.loadedMore = loadedMore;
-            this.canLoadMore = canLoadMore;
-        }
-
-        public SearchPostsResponsePayload(SiteModel site, String searchTerm, boolean isPages, PostError error) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.error = error;
-        }
-    }
-
-    public static class PostListItem {
-        public long remotePostId;
-        public String lastModified;
     }
 
     public static class FetchPostsResponsePayload extends Payload<PostError> {
-        public List<PostListItem> listItems;
+        public PostsModel posts;
         public SiteModel site;
-        public ListType listType;
         public boolean isPages;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostsResponsePayload(List<PostListItem> listItems, SiteModel site, ListType listType,
-                                         boolean isPages, boolean loadedMore, boolean canLoadMore) {
-            this.listItems = listItems;
+        public FetchPostsResponsePayload(PostsModel posts, SiteModel site, boolean isPages, boolean loadedMore,
+                                         boolean canLoadMore) {
+            this.posts = posts;
             this.site = site;
-            this.listType = listType;
             this.isPages = isPages;
             this.loadedMore = loadedMore;
             this.canLoadMore = canLoadMore;
         }
 
-        public FetchPostsResponsePayload(PostError error) {
+        public FetchPostsResponsePayload(PostError error, boolean isPages) {
             this.error = error;
+            this.isPages = isPages;
         }
     }
 
@@ -186,33 +136,11 @@ public class PostStore extends Store {
         }
     }
 
-    public static class OnSinglePostFetched extends OnChanged<PostError> {
-        public int localSiteId;
-        public Long remotePostId;
-
-        public OnSinglePostFetched(int localSiteId, Long remotePostId) {
-            this.localSiteId = localSiteId;
-            this.remotePostId = remotePostId;
-        }
-    }
-
     public static class OnPostUploaded extends OnChanged<PostError> {
         public PostModel post;
 
         public OnPostUploaded(PostModel post) {
             this.post = post;
-        }
-    }
-
-    public static class OnPostsSearched extends OnChanged<PostError> {
-        public String searchTerm;
-        public List<PostModel> searchResults;
-        public boolean canLoadMore;
-
-        public OnPostsSearched(String searchTerm, List<PostModel> searchResults, boolean canLoadMore) {
-            this.searchTerm = searchTerm;
-            this.searchResults = searchResults;
-            this.canLoadMore = canLoadMore;
         }
     }
 
@@ -426,15 +354,6 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
-            case SEARCH_POSTS:
-                searchPosts((SearchPostsPayload) action.getPayload(), false);
-                break;
-            case SEARCH_PAGES:
-                searchPosts((SearchPostsPayload) action.getPayload(), true);
-                break;
-            case SEARCHED_POSTS:
-                handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
-                break;
         }
     }
 
@@ -457,24 +376,16 @@ public class PostStore extends Store {
     }
 
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPosts(payload.site, payload.listType, pages, DEFAULT_POST_STATUS_LIST, payload.offset);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, payload.listType, pages, payload.offset);
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = PostSqlUtils.getUploadedPostsForSite(payload.site, pages).size();
         }
-    }
 
-    private void searchPosts(SearchPostsPayload payload, boolean pages) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.searchPosts(payload.site, payload.searchTerm, pages, payload.offset);
+            mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            PostError error =
-                    new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
-            OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, null, false);
-            onPostsSearched.error = error;
-            emitChange(onPostsSearched);
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
         }
     }
 
@@ -492,34 +403,34 @@ public class PostStore extends Store {
     }
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
-        UpdateListError updateListError = null;
-        if (payload.isError()) {
-            updateListError = new UpdateListError(UpdateListErrorType.GENERIC_ERROR, payload.error.message);
-        }
-        List<Long> remoteItemIds = new ArrayList<>();
-        for (PostListItem postListItem : payload.listItems) {
-            // TODO: Check the lastModified dates and update the individual posts
-            remoteItemIds.add(postListItem.remotePostId);
-        }
-        UpdateListPayload updateListPayload =
-                new UpdateListPayload(payload.site.getId(), payload.listType, remoteItemIds,
-                        payload.loadedMore, payload.canLoadMore, updateListError);
-        mDispatcher.dispatch(ListActionBuilder.newUpdateListAction(updateListPayload));
-    }
-
-    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        OnPostsSearched onPostsSearched =
-                new OnPostsSearched(payload.searchTerm, payload.postList, payload.canLoadMore);
+        OnPostChanged onPostChanged;
 
         if (payload.isError()) {
-            onPostsSearched.error = payload.error;
-        } else if (payload.postList != null && payload.postList.size() > 0) {
-            for (PostModel post : payload.postList) {
-                PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+            onPostChanged = new OnPostChanged(0);
+            onPostChanged.error = payload.error;
+        } else {
+            // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
+            // This is the simplest way of keeping our local posts in sync with remote posts (in case of deletions,
+            // or if the user manual changed some post IDs)
+            if (!payload.loadedMore) {
+                PostSqlUtils.deleteUploadedPostsForSite(payload.site, payload.isPages);
             }
+
+            int rowsAffected = 0;
+            for (PostModel post : payload.posts.getPosts()) {
+                rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
+            }
+
+            onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
         }
 
-        emitChange(onPostsSearched);
+        if (payload.isPages) {
+            onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
+        } else {
+            onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
+        }
+
+        emitChange(onPostChanged);
     }
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
@@ -582,9 +493,6 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
-        OnSinglePostFetched onSinglePostFetched =
-                new OnSinglePostFetched(post.getLocalSiteId(), post.getRemotePostId());
-        emitChange(onSinglePostFetched);
     }
 
     private void removePost(PostModel post) {
