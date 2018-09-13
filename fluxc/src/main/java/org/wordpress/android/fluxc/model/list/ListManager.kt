@@ -89,7 +89,7 @@ class ListManager<T>(
      * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager]. See [getRemoteItem]
      * for more details.
      *
-     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
+     * [canLoadMore] will be checked before dispatching the action.
      */
     private fun loadMore() {
         if (canLoadMore) {
