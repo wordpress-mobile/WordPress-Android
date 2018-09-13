@@ -13,10 +13,10 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.PostCauseOfChange;
-import org.wordpress.android.fluxc.model.PostCauseOfChange.FetchPages;
-import org.wordpress.android.fluxc.model.PostCauseOfChange.FetchPosts;
-import org.wordpress.android.fluxc.model.PostCauseOfChange.RemoveAllPosts;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.RevisionsModel;
@@ -160,15 +160,15 @@ public class PostStore extends Store {
     public static class OnPostChanged extends OnChanged<PostError> {
         public final int rowsAffected;
         public final boolean canLoadMore;
-        public final PostCauseOfChange causeOfChange;
+        public final CauseOfOnPostChanged causeOfChange;
 
-        public OnPostChanged(PostCauseOfChange causeOfChange, int rowsAffected) {
+        public OnPostChanged(CauseOfOnPostChanged causeOfChange, int rowsAffected) {
             this.causeOfChange = causeOfChange;
             this.rowsAffected = rowsAffected;
             this.canLoadMore = false;
         }
 
-        public OnPostChanged(PostCauseOfChange causeOfChange, int rowsAffected, boolean canLoadMore) {
+        public OnPostChanged(CauseOfOnPostChanged causeOfChange, int rowsAffected, boolean canLoadMore) {
             this.causeOfChange = causeOfChange;
             this.rowsAffected = rowsAffected;
             this.canLoadMore = canLoadMore;
@@ -464,7 +464,7 @@ public class PostStore extends Store {
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
         OnPostChanged event = new OnPostChanged(
-                new PostCauseOfChange.DeletePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+                new CauseOfOnPostChanged.DeletePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
 
         if (payload.isError()) {
             event.error = payload.error;
@@ -478,7 +478,7 @@ public class PostStore extends Store {
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
         OnPostChanged onPostChanged;
 
-        PostCauseOfChange causeOfChange;
+        CauseOfOnPostChanged causeOfChange;
         if (payload.isPages) {
             causeOfChange = FetchPages.INSTANCE;
         } else {
@@ -521,7 +521,7 @@ public class PostStore extends Store {
 
         if (payload.isError()) {
             OnPostChanged event = new OnPostChanged(
-                    new PostCauseOfChange.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+                    new CauseOfOnPostChanged.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
             event.error = payload.error;
             emitChange(event);
         } else {
@@ -564,7 +564,7 @@ public class PostStore extends Store {
             post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
         }
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-        PostCauseOfChange causeOfChange = new PostCauseOfChange.UpdatePost(post.getId(), post.getRemotePostId());
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
@@ -572,7 +572,7 @@ public class PostStore extends Store {
     private void removePost(PostModel post) {
         int rowsAffected = PostSqlUtils.deletePost(post);
 
-        PostCauseOfChange causeOfChange = new PostCauseOfChange.RemovePost(post.getId(), post.getRemotePostId());
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RemovePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
