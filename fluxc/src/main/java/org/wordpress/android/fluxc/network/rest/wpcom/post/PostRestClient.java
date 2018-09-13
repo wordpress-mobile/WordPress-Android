@@ -87,7 +87,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                     }
                 }
-                                                                                                );
+        );
         add(request);
     }
 
@@ -141,7 +141,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 }
-                                                                                        );
+        );
         add(request);
     }
 
@@ -183,7 +183,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 }
-                                                                                                 );
+        );
 
         request.addQueryParameter("context", "edit");
 
@@ -216,7 +216,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
                     }
                 }
-                                                                                                 );
+        );
 
         request.addQueryParameter("context", "edit");
 
@@ -249,7 +249,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(payload));
                     }
                 }
-                                                                                            );
+        );
         add(request);
     }
 

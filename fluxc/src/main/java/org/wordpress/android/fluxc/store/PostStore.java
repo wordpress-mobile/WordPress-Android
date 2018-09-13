@@ -322,8 +322,8 @@ public class PostStore extends Store {
      */
     public PostModel getPostByLocalPostId(int localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                                        .where().equals(PostModelTable.ID, localId).endWhere()
-                                        .getAsModel();
+                .where().equals(PostModelTable.ID, localId).endWhere()
+                .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -337,9 +337,9 @@ public class PostStore extends Store {
      */
     public PostModel getPostByRemotePostId(long remoteId, SiteModel site) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                                        .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
-                                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
-                                        .getAsModel();
+                .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
+                .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
+                .getAsModel();
 
         if (result.isEmpty()) {
             return null;
