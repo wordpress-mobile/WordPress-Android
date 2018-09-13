@@ -103,7 +103,7 @@ class ListStore @Inject constructor(
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
-        val offset = listItemSqlUtils.getListItems(listModel.id).size
+        val offset = if(payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
 
         when (payload.listDescriptor.type) {
             ListType.POST -> {
