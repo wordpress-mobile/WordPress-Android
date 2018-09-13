@@ -31,6 +31,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -54,10 +55,10 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -728,46 +729,47 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        switch (event.causeOfChange) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             // if a Post is updated, let's refresh the whole list, because we can't really know
             // from FluxC which post has changed, or when. So to make sure, we go to the source,
             // which is the FluxC PostStore.
-            case UPDATE_POST:
-                if (!event.isError()) {
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
-            case FETCH_POSTS:
-            case FETCH_PAGES:
-                mIsFetchingPosts = false;
-                if (!isAdded()) {
-                    return;
-                }
+            /*
+             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
+             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
+             * both the original comment and this note is kept for record keeping.
+             */
+            if (!event.isError()) {
+                loadPosts(LoadMode.IF_CHANGED);
+            }
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.FetchPosts
+                   || event.causeOfChange instanceof CauseOfOnPostChanged.FetchPages) {
+            mIsFetchingPosts = false;
+            if (!isAdded()) {
+                return;
+            }
 
-                setRefreshing(false);
-                hideLoadMoreProgress();
-                if (!event.isError()) {
-                    mCanLoadMorePosts = event.canLoadMore;
-                    loadPosts(LoadMode.IF_CHANGED);
-                } else {
-                    PostError error = event.error;
-                    switch (error.type) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
+            setRefreshing(false);
+            hideLoadMoreProgress();
+            if (!event.isError()) {
+                mCanLoadMorePosts = event.canLoadMore;
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                PostError error = event.error;
+                switch (error.type) {
+                    case UNAUTHORIZED:
+                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                        break;
+                    default:
+                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                        break;
                 }
-                break;
-            case DELETE_POST:
-                if (event.isError()) {
-                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
-                    ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
+            }
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.DeletePost) {
+            if (event.isError()) {
+                String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
+                ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
+                loadPosts(LoadMode.IF_CHANGED);
+            }
         }
     }
 

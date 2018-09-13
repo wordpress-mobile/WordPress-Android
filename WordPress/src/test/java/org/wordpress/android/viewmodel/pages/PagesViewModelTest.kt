@@ -13,6 +13,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
@@ -45,7 +46,9 @@ class PagesViewModelTest {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(
                 PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
         )
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false)
+        )
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.pages.test()
         val searchPagesObserver = viewModel.searchPages.test()
@@ -61,7 +64,9 @@ class PagesViewModelTest {
     @Test
     fun onSiteWithoutPages() = runBlocking<Unit> {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
+        )
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.pages.test()
 

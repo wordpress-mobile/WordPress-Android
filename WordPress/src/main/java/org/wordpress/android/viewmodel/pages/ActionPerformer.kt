@@ -1,19 +1,20 @@
 package org.wordpress.android.viewmodel.pages
 
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.experimental.withTimeoutOrNull
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import javax.inject.Inject
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import kotlinx.coroutines.experimental.withTimeoutOrNull
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import java.util.concurrent.TimeUnit.SECONDS
+import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
@@ -57,10 +58,23 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        if (continuation != null && eventType.action == event.causeOfChange) {
-            continuation!!.resume(!event.isError)
+        if (continuation != null) {
+            val postAction = postCauseOfChangeToPostAction(event.causeOfChange)
+            if (eventType.action == postAction) {
+                continuation!!.resume(!event.isError)
+            }
         }
     }
+
+    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): PostAction =
+            when (postCauseOfChange) {
+                is CauseOfOnPostChanged.DeletePost -> PostAction.DELETE_POST
+                CauseOfOnPostChanged.FetchPages -> PostAction.FETCH_PAGES
+                CauseOfOnPostChanged.FetchPosts -> PostAction.FETCH_POST
+                CauseOfOnPostChanged.RemoveAllPosts -> PostAction.REMOVE_ALL_POSTS
+                is CauseOfOnPostChanged.RemovePost -> PostAction.REMOVE_POST
+                is CauseOfOnPostChanged.UpdatePost -> PostAction.UPDATE_POST
+            }
 
     private suspend inline fun <T> suspendCoroutineWithTimeout(
         timeout: Long,

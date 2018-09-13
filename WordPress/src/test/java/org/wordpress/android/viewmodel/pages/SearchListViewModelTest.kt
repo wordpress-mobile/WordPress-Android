@@ -14,6 +14,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
@@ -97,7 +98,9 @@ class SearchListViewModelTest {
 
     private suspend fun initSearch() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
+        )
         pagesViewModel.start(site)
         viewModel.start(pagesViewModel)
     }
