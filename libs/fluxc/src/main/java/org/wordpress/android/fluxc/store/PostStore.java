@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -93,11 +95,31 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public SiteModel site;
+
+        public FetchRevisionsPayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
     public static class FetchPostResponsePayload extends RemotePostPayload {
         public PostAction origin = PostAction.FETCH_POST; // Only used to track fetching newly uploaded XML-RPC posts
 
         public FetchPostResponsePayload(PostModel post, SiteModel site) {
             super(post, site);
+        }
+    }
+
+    public static class FetchRevisionsResponsePayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public RevisionsModel revisionsModel;
+
+        public FetchRevisionsResponsePayload(PostModel post, RevisionsModel revisionsModel) {
+            this.post = post;
+            this.revisionsModel = revisionsModel;
         }
     }
 
@@ -117,6 +139,16 @@ public class PostStore extends Store {
 
         public PostError(PostErrorType type) {
             this(type, "");
+        }
+    }
+
+    public static class RevisionError implements OnChangedError {
+        @NonNull public RevisionsErrorType type;
+        @Nullable public String message;
+
+        public RevisionError(@NonNull RevisionsErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -144,6 +176,16 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnRevisionsFetched extends OnChanged<RevisionError> {
+        public PostModel post;
+        public RevisionsModel revisionsModel;
+
+        OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
+            this.post = post;
+            this.revisionsModel = revisionsModel;
+        }
+    }
+
     public enum PostErrorType {
         UNKNOWN_POST,
         UNKNOWN_POST_TYPE,
@@ -162,6 +204,10 @@ public class PostStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum RevisionsErrorType {
+        GENERIC_ERROR
     }
 
     private final PostRestClient mPostRestClient;
@@ -354,6 +400,12 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
+            case FETCH_REVISIONS:
+                fetchRevisions((FetchRevisionsPayload) action.getPayload());
+                break;
+            case FETCHED_REVISIONS:
+                handleFetchedRevisions((FetchRevisionsResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -387,6 +439,20 @@ public class PostStore extends Store {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
         }
+    }
+
+    private void fetchRevisions(FetchRevisionsPayload payload) {
+        mPostRestClient.fetchRevisions(payload.post, payload.site);
+    }
+
+    private void handleFetchedRevisions(FetchRevisionsResponsePayload payload) {
+        OnRevisionsFetched onRevisionsFetched = new OnRevisionsFetched(payload.post, payload.revisionsModel);
+
+        if (payload.isError()) {
+            onRevisionsFetched.error = new RevisionError(RevisionsErrorType.GENERIC_ERROR, payload.error.message);
+        }
+
+        emitChange(onRevisionsFetched);
     }
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
