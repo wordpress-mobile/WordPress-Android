@@ -17,10 +17,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.PostAction
-import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
-import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.model.PostCauseOfChange
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -144,8 +142,7 @@ class PageStoreTest {
 
     @Test
     fun requestPagesFetchesFromServerAndReturnsEvent() = test {
-        val expected = OnPostChanged(5, false)
-        expected.causeOfChange = FETCH_PAGES
+        val expected = OnPostChanged(PostCauseOfChange.FetchPages, 5, false)
         var event: OnPostChanged? = null
         val job = launch {
             event = store.requestPagesFromServer(site)
@@ -161,10 +158,8 @@ class PageStoreTest {
 
     @Test
     fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
-        val firstEvent = OnPostChanged(5, true)
-        val lastEvent = OnPostChanged(5, false)
-        firstEvent.causeOfChange = FETCH_PAGES
-        lastEvent.causeOfChange = FETCH_PAGES
+        val firstEvent = OnPostChanged(PostCauseOfChange.FetchPages, 5, true)
+        val lastEvent = OnPostChanged(PostCauseOfChange.FetchPages, 5, false)
         var event: OnPostChanged? = null
         val job = launch {
             event = store.requestPagesFromServer(site)
@@ -190,8 +185,7 @@ class PageStoreTest {
     fun deletePageTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
-        val event = OnPostChanged(0)
-        event.causeOfChange = DELETE_POST
+        val event = OnPostChanged(PostCauseOfChange.DeletePost(post.id, post.remotePostId), 0)
         val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
         launch {
@@ -213,8 +207,7 @@ class PageStoreTest {
     fun deletePageWithErrorTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
-        val event = OnPostChanged(0)
-        event.causeOfChange = PostAction.DELETE_POST
+        val event = OnPostChanged(PostCauseOfChange.DeletePost(post.id, post.remotePostId), 0)
         event.error = PostError(UNKNOWN_POST)
         val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
@@ -228,8 +221,7 @@ class PageStoreTest {
 
     @Test
     fun requestPagesAndVerifyAllPageTypesPresent() = test {
-        val event = OnPostChanged(4, false)
-        event.causeOfChange = FETCH_PAGES
+        val event = OnPostChanged(PostCauseOfChange.FetchPages, 4, false)
         launch {
             store.requestPagesFromServer(site)
         }
