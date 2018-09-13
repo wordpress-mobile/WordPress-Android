@@ -190,7 +190,7 @@ class PagesViewModel
         _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
-    fun  onSearch(searchQuery: String, delay: Long = 200) {
+    fun onSearch(searchQuery: String, delay: Long = 200) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {
             searchJob = launch(uiContext) {
