@@ -6,8 +6,8 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
-import org.json.JSONObject
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -20,7 +20,7 @@ class GeneratedNoteBlock(
     notificationsUtilsWrapper: NotificationsUtilsWrapper,
     val clickListener: OnNoteBlockTextClickListener,
     val pingbackUrl: String
-) : NoteBlock(JSONObject(), imageManager, notificationsUtilsWrapper, clickListener) {
+) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, clickListener) {
     override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
 

@@ -170,12 +170,16 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
+    static FormattableContent mapJsonToFormattableContent(FormattableContentMapper mapper, JSONObject blockObject) {
+        return mapper.mapToFormattableContent(blockObject.toString());
+    }
+
     static Spannable getSpannableContentForRanges(
             FormattableContentMapper formattableContentMapper,
             JSONObject blockObject, TextView textView,
             final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             boolean isFooter) {
-        return getSpannableContentForRanges(formattableContentMapper.mapToFormattableContent(blockObject.toString()),
+        return getSpannableContentForRanges(mapJsonToFormattableContent(formattableContentMapper, blockObject),
                 textView, onNoteBlockTextClickListener, isFooter);
     }
 
