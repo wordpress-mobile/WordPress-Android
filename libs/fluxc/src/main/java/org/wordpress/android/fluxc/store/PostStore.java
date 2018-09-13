@@ -13,6 +13,10 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.PostCauseOfChange;
+import org.wordpress.android.fluxc.model.PostCauseOfChange.FetchPages;
+import org.wordpress.android.fluxc.model.PostCauseOfChange.FetchPosts;
+import org.wordpress.android.fluxc.model.PostCauseOfChange.RemoveAllPosts;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.RevisionsModel;
@@ -154,15 +158,18 @@ public class PostStore extends Store {
 
     // OnChanged events
     public static class OnPostChanged extends OnChanged<PostError> {
-        public int rowsAffected;
-        public boolean canLoadMore;
-        public PostAction causeOfChange;
+        public final int rowsAffected;
+        public final boolean canLoadMore;
+        public final PostCauseOfChange causeOfChange;
 
-        public OnPostChanged(int rowsAffected) {
+        public OnPostChanged(PostCauseOfChange causeOfChange, int rowsAffected) {
+            this.causeOfChange = causeOfChange;
             this.rowsAffected = rowsAffected;
+            this.canLoadMore = false;
         }
 
-        public OnPostChanged(int rowsAffected, boolean canLoadMore) {
+        public OnPostChanged(PostCauseOfChange causeOfChange, int rowsAffected, boolean canLoadMore) {
+            this.causeOfChange = causeOfChange;
             this.rowsAffected = rowsAffected;
             this.canLoadMore = canLoadMore;
         }
@@ -456,8 +463,8 @@ public class PostStore extends Store {
     }
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
-        OnPostChanged event = new OnPostChanged(0);
-        event.causeOfChange = PostAction.DELETE_POST;
+        OnPostChanged event = new OnPostChanged(
+                new PostCauseOfChange.DeletePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
 
         if (payload.isError()) {
             event.error = payload.error;
@@ -471,8 +478,15 @@ public class PostStore extends Store {
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
         OnPostChanged onPostChanged;
 
+        PostCauseOfChange causeOfChange;
+        if (payload.isPages) {
+            causeOfChange = FetchPages.INSTANCE;
+        } else {
+            causeOfChange = FetchPosts.INSTANCE;
+        }
+
         if (payload.isError()) {
-            onPostChanged = new OnPostChanged(0);
+            onPostChanged = new OnPostChanged(causeOfChange, 0);
             onPostChanged.error = payload.error;
         } else {
             // Clear existing uploading posts if this is a fresh fetch (loadMore = false in the original request)
@@ -487,13 +501,7 @@ public class PostStore extends Store {
                 rowsAffected += PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
             }
 
-            onPostChanged = new OnPostChanged(rowsAffected, payload.canLoadMore);
-        }
-
-        if (payload.isPages) {
-            onPostChanged.causeOfChange = PostAction.FETCH_PAGES;
-        } else {
-            onPostChanged.causeOfChange = PostAction.FETCH_POSTS;
+            onPostChanged = new OnPostChanged(causeOfChange, rowsAffected, payload.canLoadMore);
         }
 
         emitChange(onPostChanged);
@@ -512,9 +520,9 @@ public class PostStore extends Store {
         }
 
         if (payload.isError()) {
-            OnPostChanged event = new OnPostChanged(0);
+            OnPostChanged event = new OnPostChanged(
+                    new PostCauseOfChange.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
             event.error = payload.error;
-            event.causeOfChange = PostAction.UPDATE_POST;
             emitChange(event);
         } else {
             updatePost(payload.post, false);
@@ -556,23 +564,22 @@ public class PostStore extends Store {
             post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
         }
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-        OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
-        onPostChanged.causeOfChange = PostAction.UPDATE_POST;
+        PostCauseOfChange causeOfChange = new PostCauseOfChange.UpdatePost(post.getId(), post.getRemotePostId());
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
 
     private void removePost(PostModel post) {
         int rowsAffected = PostSqlUtils.deletePost(post);
 
-        OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
-        onPostChanged.causeOfChange = PostAction.REMOVE_POST;
+        PostCauseOfChange causeOfChange = new PostCauseOfChange.RemovePost(post.getId(), post.getRemotePostId());
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
     }
 
     private void removeAllPosts() {
         int rowsAffected = PostSqlUtils.deleteAllPosts();
-        OnPostChanged event = new OnPostChanged(rowsAffected);
-        event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
+        OnPostChanged event = new OnPostChanged(RemoveAllPosts.INSTANCE, rowsAffected);
         emitChange(event);
     }
 }
