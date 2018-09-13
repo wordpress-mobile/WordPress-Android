@@ -200,7 +200,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_POST_REMOTE_ID = "postModelLocalId";
+    public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
