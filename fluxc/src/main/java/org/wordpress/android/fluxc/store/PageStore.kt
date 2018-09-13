@@ -5,20 +5,21 @@ import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.PostCauseOfChange
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -28,7 +29,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
-import org.wordpress.android.fluxc.persistence.PostSqlUtils
 
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
@@ -132,7 +132,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
             val payload = RemotePostPayload(post, page.site)
             dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
         } else {
-            val event = OnPostChanged(0)
+            val event = OnPostChanged(PostCauseOfChange.DeletePost(page.pageId, page.remoteId), 0)
             event.error = PostError(PostErrorType.UNKNOWN_POST)
             cont.resume(event)
         }
@@ -163,7 +163,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
-            PostAction.FETCH_PAGES -> {
+            is PostCauseOfChange.FetchPages -> {
                 if (event.canLoadMore && site != null) {
                     fetchPages(site!!, true)
                 } else {
@@ -171,11 +171,11 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                     postLoadContinuation = null
                 }
             }
-            PostAction.DELETE_POST -> {
+            is PostCauseOfChange.DeletePost -> {
                 deletePostContinuation?.resume(event)
                 deletePostContinuation = null
             }
-            PostAction.UPDATE_POST -> {
+            is PostCauseOfChange.UpdatePost -> {
                 updatePostContinuation?.resume(event)
                 updatePostContinuation = null
             }
