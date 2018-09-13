@@ -47,7 +47,7 @@ public class PostStore extends Store {
         public List<PostStatus> statusTypes;
 
         public FetchPostsPayload(SiteModel site) {
-            this.site = site;
+            this(site, false);
         }
 
         public FetchPostsPayload(SiteModel site, boolean loadMore) {

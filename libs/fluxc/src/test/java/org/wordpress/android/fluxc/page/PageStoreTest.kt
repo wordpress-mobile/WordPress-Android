@@ -17,6 +17,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
 import org.wordpress.android.fluxc.annotations.action.Action
@@ -213,14 +214,13 @@ class PageStoreTest {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(0)
+        event.causeOfChange = PostAction.DELETE_POST
         event.error = PostError(UNKNOWN_POST)
         val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
         launch {
             result = store.deletePageFromServer(page)
         }
-        delay(10)
-        store.onPostChanged(event)
         delay(10)
 
         assertThat(result?.error?.type).isEqualTo(event.error.type)
