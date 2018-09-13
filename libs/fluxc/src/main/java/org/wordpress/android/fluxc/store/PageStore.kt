@@ -6,7 +6,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.fluxc.model.PostCauseOfChange
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -132,7 +132,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
             val payload = RemotePostPayload(post, page.site)
             dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
         } else {
-            val event = OnPostChanged(PostCauseOfChange.DeletePost(page.pageId, page.remoteId), 0)
+            val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(page.pageId, page.remoteId), 0)
             event.error = PostError(PostErrorType.UNKNOWN_POST)
             cont.resume(event)
         }
@@ -163,7 +163,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
-            is PostCauseOfChange.FetchPages -> {
+            is CauseOfOnPostChanged.FetchPages -> {
                 if (event.canLoadMore && site != null) {
                     fetchPages(site!!, true)
                 } else {
@@ -171,11 +171,11 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                     postLoadContinuation = null
                 }
             }
-            is PostCauseOfChange.DeletePost -> {
+            is CauseOfOnPostChanged.DeletePost -> {
                 deletePostContinuation?.resume(event)
                 deletePostContinuation = null
             }
-            is PostCauseOfChange.UpdatePost -> {
+            is CauseOfOnPostChanged.UpdatePost -> {
                 updatePostContinuation?.resume(event)
                 updatePostContinuation = null
             }
