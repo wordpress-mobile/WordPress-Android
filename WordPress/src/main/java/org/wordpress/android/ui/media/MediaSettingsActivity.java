@@ -709,6 +709,11 @@ public class MediaSettingsActivity extends AppCompatActivity
         findViewById(R.id.text_image_dimensions).setVisibility(View.GONE);
         findViewById(R.id.text_image_dimensions_label).setVisibility(View.GONE);
         findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+
+        // Hide file type divider too if duration is hidden (i.e. media length is zero) to remove bottom divider.
+        if (mMedia.getLength() == 0) {
+            findViewById(R.id.divider_filetype).setVisibility(View.GONE);
+        }
     }
 
     /**
