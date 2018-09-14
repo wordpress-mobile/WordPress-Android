@@ -15,7 +15,13 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
-import org.wordpress.android.fluxc.model.RevisionsModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
+import org.wordpress.android.fluxc.model.revisions.LocalDiffType;
+import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -25,6 +31,7 @@ import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -574,5 +581,102 @@ public class PostStore extends Store {
         OnPostChanged event = new OnPostChanged(rowsAffected);
         event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
         emitChange(event);
+    }
+
+    public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
+        LocalRevisionModel localRevisionModel = new LocalRevisionModel();
+        localRevisionModel.setRevisionId(model.getId());
+        localRevisionModel.setPostId(post.getRemotePostId());
+        localRevisionModel.setSiteId(site.getSiteId());
+
+        localRevisionModel.setDiffFromVersion(model.getDiffFromVersion());
+
+        localRevisionModel.setTotalAdditions(model.getTotalAdditions());
+        localRevisionModel.setTotalDeletions(model.getTotalDeletions());
+
+        localRevisionModel.setPostContent(model.getPostContent());
+        localRevisionModel.setPostExcerpt(model.getPostExcerpt());
+        localRevisionModel.setPostTitle(model.getPostTitle());
+
+        localRevisionModel.setPostDateGmt(model.getPostDateGmt());
+        localRevisionModel.setPostModifiedGmt(model.getPostModifiedGmt());
+        localRevisionModel.setPostAuthorId(model.getPostAuthorId());
+
+        ArrayList<LocalDiffModel> localDiffModels = new ArrayList<>();
+
+        for (Diff titleDiff : model.getTitleDiffs()) {
+            LocalDiffModel localTitleDiffModel = new LocalDiffModel();
+
+            localTitleDiffModel.setRevisionId(model.getId());
+            localTitleDiffModel.setPostId(post.getRemotePostId());
+            localTitleDiffModel.setSiteId(site.getSiteId());
+
+            localTitleDiffModel.setOperation(titleDiff.getOperation().toString());
+            localTitleDiffModel.setValue(titleDiff.getValue());
+
+            localTitleDiffModel.setDiffType(LocalDiffType.TITLE.toString());
+            localDiffModels.add(localTitleDiffModel);
+        }
+
+
+        for (Diff contentDiff : model.getContentDiffs()) {
+            LocalDiffModel localTitleDiffModel = new LocalDiffModel();
+
+            localTitleDiffModel.setRevisionId(model.getId());
+            localTitleDiffModel.setPostId(post.getRemotePostId());
+            localTitleDiffModel.setSiteId(site.getSiteId());
+
+            localTitleDiffModel.setOperation(contentDiff.getOperation().toString());
+            localTitleDiffModel.setValue(contentDiff.getValue());
+
+            localTitleDiffModel.setDiffType(LocalDiffType.CONTENT.toString());
+            localDiffModels.add(localTitleDiffModel);
+        }
+
+        PostSqlUtils.insertOrUpdateLocalRevision(localRevisionModel, localDiffModels);
+    }
+
+
+    public RevisionModel getLocalRevision(SiteModel site, PostModel post) {
+        List<LocalRevisionModel> localRevisions = PostSqlUtils.getLocalRevisions(site, post);
+
+        if (localRevisions.isEmpty()) {
+            return null;
+        }
+
+        LocalRevisionModel localRevision = localRevisions.get(0);
+
+        ArrayList<Diff> titleDiffs = new ArrayList<>();
+        ArrayList<Diff> contentDiffs = new ArrayList<>();
+
+        List<LocalDiffModel> localDiffs =
+                PostSqlUtils.getLocalRevisionDiffs(localRevision, site, post);
+
+        for (LocalDiffModel localDiff : localDiffs) {
+            if (LocalDiffType.TITLE == LocalDiffType.fromString(localDiff.getDiffType())) {
+                Diff titleDiff = new Diff(
+                        DiffOperations.fromString(localDiff.getOperation()), localDiff.getValue());
+                titleDiffs.add(titleDiff);
+            } else if (LocalDiffType.CONTENT == LocalDiffType.fromString(localDiff.getDiffType())) {
+                Diff contentDiff = new Diff(
+                        DiffOperations.fromString(localDiff.getOperation()), localDiff.getValue());
+                titleDiffs.add(contentDiff);
+            }
+        }
+
+
+        return new RevisionModel(
+                localRevision.getRevisionId(),
+                localRevision.getDiffFromVersion(),
+                localRevision.getTotalAdditions(),
+                localRevision.getTotalDeletions(),
+                localRevision.getPostContent(),
+                localRevision.getPostExcerpt(),
+                localRevision.getPostTitle(),
+                localRevision.getPostDateGmt(),
+                localRevision.getPostModifiedGmt(),
+                localRevision.getPostAuthorId(),
+                titleDiffs,
+                contentDiffs);
     }
 }
