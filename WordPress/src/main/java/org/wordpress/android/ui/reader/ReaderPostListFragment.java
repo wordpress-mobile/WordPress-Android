@@ -398,6 +398,8 @@ public class ReaderPostListFragment extends Fragment
             if (discoverTag != null && discoverTag.equals(readerTag)) {
                 setCurrentTag(readerTag);
                 updateCurrentTag();
+            } else if (discoverTag == null) {
+                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
             }
         }
     }
