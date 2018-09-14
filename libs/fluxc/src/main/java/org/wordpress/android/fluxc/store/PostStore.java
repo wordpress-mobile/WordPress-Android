@@ -35,7 +35,9 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -338,13 +340,29 @@ public class PostStore extends Store {
     }
 
     /**
+     * Given a list of remote IDs for a post and the site to which it belongs, returns the posts as map where the
+     * key is the remote post ID and the value is the {@link PostModel}.
+     */
+    public Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
+        if (site == null) {
+            return Collections.emptyMap();
+        }
+        List<PostModel> postList = PostSqlUtils.getPostsByRemoteIds(remoteIds, site.getId());
+        Map<Long, PostModel> postMap = new HashMap<>(postList.size());
+        for (PostModel post : postList) {
+            postMap.put(post.getRemotePostId(), post);
+        }
+        return postMap;
+    }
+
+    /**
      * Given a remote ID for a post and the site to which it belongs, returns that post as a {@link PostModel}.
      */
     public PostModel getPostByRemotePostId(long remoteId, SiteModel site) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
-                .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
-                .getAsModel();
+                                        .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
+                                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
+                                        .getAsModel();
 
         if (result.isEmpty()) {
             return null;
