@@ -21,12 +21,14 @@ import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListType.POST
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
+import java.util.Collections
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
+// TODO: These tests need to be updated for the latest changes. Don't open a PR before handling this TODO
 class ListManagerTest {
     @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var dataSource: ListItemDataSource<PostModel> // should work with any type
+    @Mock private lateinit var fetchItem: (Long) -> Unit
     private lateinit var actionCaptor: KArgumentCaptor<Action<FetchListPayload>>
 
     // Helpers
@@ -49,6 +51,7 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = 11, // doesn't matter
                 remoteItemId = 222L, // doesn't matter
                 remoteItem = PostModel()
@@ -71,6 +74,7 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = true,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = 11, // doesn't matter
                 remoteItemId = 222L, // doesn't matter
                 remoteItem = PostModel()
@@ -90,12 +94,13 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = indexToGet,
                 remoteItemId = remoteItemId,
                 remoteItem = null
         )
         listManager.getRemoteItem(indexToGet, shouldFetchIfNull = true)
-        verify(dataSource).fetchItem(listDescriptor, remoteItemId)
+//        verify(fetchItem(listDescriptor, remoteItemId))
     }
 
     /**
@@ -109,12 +114,13 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = indexToGet,
                 remoteItemId = remoteItemId,
                 remoteItem = null
         )
         listManager.getRemoteItem(indexToGet, shouldFetchIfNull = false)
-        verify(dataSource, never()).fetchItem(listDescriptor, remoteItemId)
+//        verify(fetchItem, never())
     }
 
     /**
@@ -126,6 +132,7 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = indexThatShouldLoadMore,
                 remoteItemId = 132L,
                 remoteItem = null
@@ -148,6 +155,7 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = 0,
                 remoteItemId = 132L,
                 remoteItem = null
@@ -165,6 +173,7 @@ class ListManagerTest {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
+                canLoadMore = true,
                 indexToGet = indexThatShouldLoadMore,
                 remoteItemId = 132L,
                 remoteItem = null
@@ -179,10 +188,12 @@ class ListManagerTest {
      * is true.
      */
     @Test
+    // TODO: Change this test to check canLoadMore instead
     fun testDuplicateLoadMoreIsIgnored() {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = true,
+                canLoadMore = false,
                 indexToGet = indexThatShouldLoadMore,
                 remoteItemId = 132L,
                 remoteItem = null
@@ -190,6 +201,8 @@ class ListManagerTest {
         listManager.getRemoteItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, never()).dispatch(actionCaptor.capture())
     }
+
+    // TODO: test canLoadMore
 
     /**
      * Sets up a ListManager with given parameters.
@@ -199,6 +212,7 @@ class ListManagerTest {
     private fun setupListManager(
         isFetchingFirstPage: Boolean,
         isLoadingMore: Boolean,
+        canLoadMore: Boolean,
         indexToGet: Int,
         remoteItemId: Long,
         remoteItem: PostModel?
@@ -208,9 +222,9 @@ class ListManagerTest {
         listItemModel.remoteItemId = remoteItemId
         whenever(listItems.size).thenReturn(numberOfItems)
         whenever(listItems[indexToGet]).thenReturn(listItemModel)
-        whenever(dataSource.getItem(listDescriptor, remoteItemId)).thenReturn(remoteItem)
-        val listManager = ListManager(dispatcher, listDescriptor, listItems, dataSource, loadMoreOffset,
-                isFetchingFirstPage, isLoadingMore)
+        val listData = if (remoteItem != null) mapOf(Pair(remoteItemId, remoteItem)) else Collections.emptyMap()
+        val listManager = ListManager(dispatcher, listDescriptor, listItems, listData, loadMoreOffset,
+                isFetchingFirstPage, isLoadingMore, canLoadMore, fetchItem)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
         assertEquals(isLoadingMore, listManager.isLoadingMore)
         assertEquals(numberOfItems, listManager.size)
