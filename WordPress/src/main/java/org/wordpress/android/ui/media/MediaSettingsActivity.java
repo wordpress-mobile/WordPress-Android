@@ -705,6 +705,12 @@ public class MediaSettingsActivity extends AppCompatActivity
         }
     }
 
+    private void hideImageDimensions() {
+        findViewById(R.id.text_image_dimensions).setVisibility(View.GONE);
+        findViewById(R.id.text_image_dimensions_label).setVisibility(View.GONE);
+        findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+    }
+
     /**
      * Initialize the image alignment spinner
      */
@@ -756,6 +762,10 @@ public class MediaSettingsActivity extends AppCompatActivity
                     public void onResourceReady(@NotNull Drawable resource) {
                         if (!isFinishing()) {
                             showProgress(false);
+
+                            if (isMediaFromEditor()) {
+                                hideImageDimensions();
+                            }
                         }
                     }
 
