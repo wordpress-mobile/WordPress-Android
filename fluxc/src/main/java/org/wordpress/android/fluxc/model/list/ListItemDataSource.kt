@@ -10,7 +10,7 @@ interface ListItemDataSource<T> {
     fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long)
 
     /**
-     * Should get the item (most likely from its Store) for the given [ListDescriptor] and [remoteItemId].
+     * Should return the items available for the given [ListDescriptor] and [remoteItemIds].
      */
-    fun getItem(listDescriptor: ListDescriptor, remoteItemId: Long): T?
+    fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, T>
 }
