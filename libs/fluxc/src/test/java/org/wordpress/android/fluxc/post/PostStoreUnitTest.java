@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.post;
 import android.content.Context;
 
 import com.yarolegovich.wellsql.WellSql;
+import com.yarolegovich.wellsql.core.Identifiable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,11 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
+import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -26,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -39,7 +46,13 @@ public class PostStoreUnitTest {
     public void setUp() {
         Context appContext = RuntimeEnvironment.application.getApplicationContext();
 
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, PostModel.class);
+        List<Class<? extends Identifiable>> list = new ArrayList<>();
+        list.add(PostModel.class);
+        list.add(LocalDiffModel.class);
+        list.add(LocalRevisionModel.class);
+
+
+        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, list, "");
         WellSql.init(config);
         config.reset();
     }
@@ -355,4 +368,82 @@ public class PostStoreUnitTest {
         PostSqlUtils.deletePost(testPost);
         assertEquals(PostStore.getNumLocalChanges(), 0);
     }
+
+
+    @Test
+    public void saveLocalRevisions() {
+        ArrayList<Diff> testTitleDiffs = new ArrayList<>();
+        testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy title"));
+        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add title"));
+        testTitleDiffs.add(new Diff(DiffOperations.DELETE, "del title"));
+
+        ArrayList<Diff> testContentDiff = new ArrayList<>();
+        testContentDiff.add(new Diff(DiffOperations.COPY, "copy content"));
+        testContentDiff.add(new Diff(DiffOperations.ADD, "add content"));
+        testContentDiff.add(new Diff(DiffOperations.DELETE, "del content"));
+
+
+        RevisionModel testRevisionModel = new RevisionModel(
+                1,
+                2,
+                5,
+                6,
+                "post content",
+                "post excerpt",
+                "post title",
+                "2018-09-04 12:19:34Z",
+                "2018-09-04 12:19:34Z",
+                "111111111",
+                testTitleDiffs,
+                testContentDiff
+
+        );
+
+        SiteModel site = new SiteModel();
+        site.setSiteId(1);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+
+        RevisionModel retrievedRevision = mPostStore.getLocalRevision(site, postModel);
+
+        assertNotNull(retrievedRevision);
+        assertEquals(retrievedRevision.getId(), testRevisionModel.getId());
+        assertEquals(retrievedRevision.getDiffFromVersion(), testRevisionModel.getDiffFromVersion());
+        assertEquals(retrievedRevision.getTotalAdditions(), testRevisionModel.getTotalAdditions());
+        assertEquals(retrievedRevision.getTotalDeletions(), testRevisionModel.getTotalDeletions());
+        assertEquals(retrievedRevision.getPostContent(), testRevisionModel.getPostContent());
+        assertEquals(retrievedRevision.getPostExcerpt(), testRevisionModel.getPostExcerpt());
+        assertEquals(retrievedRevision.getPostTitle(), testRevisionModel.getPostTitle());
+        assertEquals(retrievedRevision.getPostDateGmt(), testRevisionModel.getPostDateGmt());
+        assertEquals(retrievedRevision.getPostModifiedGmt(), testRevisionModel.getPostModifiedGmt());
+        assertEquals(retrievedRevision.getPostAuthorId(), testRevisionModel.getPostAuthorId());
+
+
+        List<Diff> retrievedTitleDiffs = retrievedRevision.getTitleDiffs();
+        assertNotNull(retrievedTitleDiffs);
+        assertEquals(3, retrievedTitleDiffs.size());
+        assertEquals(DiffOperations.COPY, retrievedTitleDiffs.get(0).getOperation());
+        assertEquals(DiffOperations.ADD, retrievedTitleDiffs.get(1).getOperation());
+        assertEquals(DiffOperations.DELETE, retrievedTitleDiffs.get(2).getOperation());
+
+        assertEquals("copy title", retrievedTitleDiffs.get(0).getValue());
+        assertEquals("add title", retrievedTitleDiffs.get(1).getValue());
+        assertEquals("del title", retrievedTitleDiffs.get(2).getValue());
+
+        List<Diff> retrievedContentDiffs = retrievedRevision.getContentDiffs();
+        assertNotNull(retrievedContentDiffs);
+        assertEquals(3, retrievedContentDiffs.size());
+        assertEquals(DiffOperations.COPY, retrievedContentDiffs.get(0).getOperation());
+        assertEquals(DiffOperations.ADD, retrievedContentDiffs.get(1).getOperation());
+        assertEquals(DiffOperations.DELETE, retrievedContentDiffs.get(2).getOperation());
+
+        assertEquals("copy content", retrievedContentDiffs.get(0).getValue());
+        assertEquals("add content", retrievedContentDiffs.get(1).getValue());
+        assertEquals("del content", retrievedContentDiffs.get(2).getValue());
+
+
+    }
+
+
 }
