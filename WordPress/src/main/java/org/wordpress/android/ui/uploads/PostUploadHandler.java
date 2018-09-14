@@ -74,7 +74,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject MediaStore mMediaStore;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
-        ((WordPress) WordPress.getContext()).component().inject(this);
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         AppLog.i(T.POSTS, "PostUploadHandler > Created");
         mDispatcher.register(this);
         mPostUploadNotifier = postUploadNotifier;
