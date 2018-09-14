@@ -63,6 +63,13 @@ need to edit the `./gradle.properties` file and change the
 run the app on a device or an emulator and try to login with a WordPress.com
 account. Note that authenticating to WordPress.com via Google is not supported in development builds of the app, only in the official release.
 
+Note that credentials created with our [WordPress.com applications manager](https://developer.wordpress.com/apps/)
+allow login only and not signup. New accounts must be created using the [official app][1] or [on the web](https://wordpress.com/start).
+Login is restricted to the WordPress.com account with which the credentials were created. Also, you will be able to
+interact with sites of that same WordPress.com account only. In other words, if the credentials were created with
+foo@email.com, you will only be able to login with foo@email.com and access foo@email.com sites. Using another account
+like bar@email.com will cause the `Client cannot use "password" grant_type` error. 
+
 Read more about [OAuth2](https://developer.wordpress.com/docs/oauth2/) and the [WordPress.com REST endpoint](https://developer.wordpress.com/docs/api/).
 
 ## Google Configuration ##
