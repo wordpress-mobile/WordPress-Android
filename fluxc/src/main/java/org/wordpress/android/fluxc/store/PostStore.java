@@ -620,17 +620,17 @@ public class PostStore extends Store {
 
 
         for (Diff contentDiff : model.getContentDiffs()) {
-            LocalDiffModel localTitleDiffModel = new LocalDiffModel();
+            LocalDiffModel localContentDiffModel = new LocalDiffModel();
 
-            localTitleDiffModel.setRevisionId(model.getId());
-            localTitleDiffModel.setPostId(post.getRemotePostId());
-            localTitleDiffModel.setSiteId(site.getSiteId());
+            localContentDiffModel.setRevisionId(model.getId());
+            localContentDiffModel.setPostId(post.getRemotePostId());
+            localContentDiffModel.setSiteId(site.getSiteId());
 
-            localTitleDiffModel.setOperation(contentDiff.getOperation().toString());
-            localTitleDiffModel.setValue(contentDiff.getValue());
+            localContentDiffModel.setOperation(contentDiff.getOperation().toString());
+            localContentDiffModel.setValue(contentDiff.getValue());
 
-            localTitleDiffModel.setDiffType(LocalDiffType.CONTENT.toString());
-            localDiffModels.add(localTitleDiffModel);
+            localContentDiffModel.setDiffType(LocalDiffType.CONTENT.toString());
+            localDiffModels.add(localContentDiffModel);
         }
 
         PostSqlUtils.insertOrUpdateLocalRevision(localRevisionModel, localDiffModels);
@@ -660,7 +660,7 @@ public class PostStore extends Store {
             } else if (LocalDiffType.CONTENT == LocalDiffType.fromString(localDiff.getDiffType())) {
                 Diff contentDiff = new Diff(
                         DiffOperations.fromString(localDiff.getOperation()), localDiff.getValue());
-                titleDiffs.add(contentDiff);
+                contentDiffs.add(contentDiff);
             }
         }
 
