@@ -28,6 +28,16 @@ import kotlin.coroutines.experimental.suspendCoroutine
 
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
+    companion object {
+        val PAGE_TYPES = listOf(
+                PostStatus.DRAFT,
+                PostStatus.PUBLISHED,
+                PostStatus.SCHEDULED,
+                PostStatus.PENDING,
+                PostStatus.PRIVATE,
+                PostStatus.TRASHED)
+    }
+    
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var site: SiteModel? = null
@@ -111,8 +121,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     private fun fetchPages(site: SiteModel, loadMore: Boolean) {
-        val payload = FetchPostsPayload(site, loadMore,
-                listOf(PostStatus.DRAFT, PostStatus.PUBLISHED, PostStatus.SCHEDULED, PostStatus.TRASHED))
+        val payload = FetchPostsPayload(site, loadMore, PAGE_TYPES)
         dispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload))
     }
 
