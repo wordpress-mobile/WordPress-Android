@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -47,7 +49,7 @@ public class PostStore extends Store {
         public List<PostStatus> statusTypes;
 
         public FetchPostsPayload(SiteModel site) {
-            this.site = site;
+            this(site, false);
         }
 
         public FetchPostsPayload(SiteModel site, boolean loadMore) {
@@ -58,48 +60,6 @@ public class PostStore extends Store {
             this.site = site;
             this.loadMore = loadMore;
             this.statusTypes = statusTypes;
-        }
-    }
-
-    public static class SearchPostsPayload extends Payload<BaseNetworkError> {
-        public SiteModel site;
-        public String searchTerm;
-        public int offset;
-
-        public SearchPostsPayload(SiteModel site, String searchTerm) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-        }
-
-        public SearchPostsPayload(SiteModel site, String searchTerm, int offset) {
-            this(site, searchTerm);
-            this.offset = offset;
-        }
-    }
-
-    public static class SearchPostsResponsePayload extends Payload<PostError> {
-        public PostsModel posts;
-        public SiteModel site;
-        public String searchTerm;
-        public boolean isPages;
-        public boolean loadedMore;
-        public boolean canLoadMore;
-
-        public SearchPostsResponsePayload(PostsModel posts, SiteModel site, String searchTerm, boolean isPages,
-                                          boolean loadedMore, boolean canLoadMore) {
-            this.posts = posts;
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.loadedMore = loadedMore;
-            this.canLoadMore = canLoadMore;
-        }
-
-        public SearchPostsResponsePayload(SiteModel site, String searchTerm, boolean isPages, PostError error) {
-            this.site = site;
-            this.searchTerm = searchTerm;
-            this.isPages = isPages;
-            this.error = error;
         }
     }
 
@@ -135,11 +95,31 @@ public class PostStore extends Store {
         }
     }
 
+    public static class FetchRevisionsPayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public SiteModel site;
+
+        public FetchRevisionsPayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
     public static class FetchPostResponsePayload extends RemotePostPayload {
         public PostAction origin = PostAction.FETCH_POST; // Only used to track fetching newly uploaded XML-RPC posts
 
         public FetchPostResponsePayload(PostModel post, SiteModel site) {
             super(post, site);
+        }
+    }
+
+    public static class FetchRevisionsResponsePayload extends Payload<BaseNetworkError> {
+        public PostModel post;
+        public RevisionsModel revisionsModel;
+
+        public FetchRevisionsResponsePayload(PostModel post, RevisionsModel revisionsModel) {
+            this.post = post;
+            this.revisionsModel = revisionsModel;
         }
     }
 
@@ -159,6 +139,16 @@ public class PostStore extends Store {
 
         public PostError(PostErrorType type) {
             this(type, "");
+        }
+    }
+
+    public static class RevisionError implements OnChangedError {
+        @NonNull public RevisionsErrorType type;
+        @Nullable public String message;
+
+        public RevisionError(@NonNull RevisionsErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -186,15 +176,13 @@ public class PostStore extends Store {
         }
     }
 
-    public static class OnPostsSearched extends OnChanged<PostError> {
-        public String searchTerm;
-        public PostsModel searchResults;
-        public boolean canLoadMore;
+    public static class OnRevisionsFetched extends OnChanged<RevisionError> {
+        public PostModel post;
+        public RevisionsModel revisionsModel;
 
-        public OnPostsSearched(String searchTerm, PostsModel searchResults, boolean canLoadMore) {
-            this.searchTerm = searchTerm;
-            this.searchResults = searchResults;
-            this.canLoadMore = canLoadMore;
+        OnRevisionsFetched(PostModel post, RevisionsModel revisionsModel) {
+            this.post = post;
+            this.revisionsModel = revisionsModel;
         }
     }
 
@@ -216,6 +204,10 @@ public class PostStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum RevisionsErrorType {
+        GENERIC_ERROR
     }
 
     private final PostRestClient mPostRestClient;
@@ -408,14 +400,11 @@ public class PostStore extends Store {
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
                 break;
-            case SEARCH_POSTS:
-                searchPosts((SearchPostsPayload) action.getPayload(), false);
+            case FETCH_REVISIONS:
+                fetchRevisions((FetchRevisionsPayload) action.getPayload());
                 break;
-            case SEARCH_PAGES:
-                searchPosts((SearchPostsPayload) action.getPayload(), true);
-                break;
-            case SEARCHED_POSTS:
-                handleSearchPostsCompleted((SearchPostsResponsePayload) action.getPayload());
+            case FETCHED_REVISIONS:
+                handleFetchedRevisions((FetchRevisionsResponsePayload) action.getPayload());
                 break;
         }
     }
@@ -452,17 +441,18 @@ public class PostStore extends Store {
         }
     }
 
-    private void searchPosts(SearchPostsPayload payload, boolean pages) {
-        if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.searchPosts(payload.site, payload.searchTerm, pages, payload.offset);
-        } else {
-            // TODO: check for WP-REST-API plugin and use it here
-            PostError error =
-                    new PostError(PostErrorType.UNSUPPORTED_ACTION, "Search only supported on .com/Jetpack sites");
-            OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, null, false);
-            onPostsSearched.error = error;
-            emitChange(onPostsSearched);
+    private void fetchRevisions(FetchRevisionsPayload payload) {
+        mPostRestClient.fetchRevisions(payload.post, payload.site);
+    }
+
+    private void handleFetchedRevisions(FetchRevisionsResponsePayload payload) {
+        OnRevisionsFetched onRevisionsFetched = new OnRevisionsFetched(payload.post, payload.revisionsModel);
+
+        if (payload.isError()) {
+            onRevisionsFetched.error = new RevisionError(RevisionsErrorType.GENERIC_ERROR, payload.error.message);
         }
+
+        emitChange(onRevisionsFetched);
     }
 
     private void handleDeletePostCompleted(RemotePostPayload payload) {
@@ -507,20 +497,6 @@ public class PostStore extends Store {
         }
 
         emitChange(onPostChanged);
-    }
-
-    private void handleSearchPostsCompleted(SearchPostsResponsePayload payload) {
-        OnPostsSearched onPostsSearched = new OnPostsSearched(payload.searchTerm, payload.posts, payload.canLoadMore);
-
-        if (payload.isError()) {
-            onPostsSearched.error = payload.error;
-        } else if (payload.posts.getPosts() != null && payload.posts.getPosts().size() > 0) {
-            for (PostModel post : payload.posts.getPosts()) {
-                PostSqlUtils.insertOrUpdatePostKeepingLocalChanges(post);
-            }
-        }
-
-        emitChange(onPostsSearched);
     }
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
