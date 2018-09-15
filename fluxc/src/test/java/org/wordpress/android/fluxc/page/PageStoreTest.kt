@@ -29,6 +29,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
+import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
@@ -55,7 +57,8 @@ class PageStoreTest {
             initPage(4, 0, "page 4", "trash"),
             initPage(5, 0, "page 5", "private"),
             initPage(6, 0, "page 6", "pending"),
-            initPage(7, 0, "page 7", "draft")
+            initPage(7, 0, "page 7", "draft"),
+            initPage(7, 0, "page 8", "unknown")
     )
 
     private val pageHierarchy = listOf(
@@ -240,7 +243,7 @@ class PageStoreTest {
         assertThat(payload.site).isEqualTo(site)
 
         val pageTypes = payload.statusTypes
-        assertThat(pageTypes.size).isEqualTo(4)
+        assertThat(pageTypes.size).isEqualTo(6)
         assertThat(pageTypes.filter { it == PostStatus.PUBLISHED }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.DRAFT }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.TRASHED }.size).isEqualTo(1)
@@ -251,11 +254,13 @@ class PageStoreTest {
 
         val pages = store.getPagesFromDb(site)
 
-        assertThat(pages.size).isEqualTo(5)
+        assertThat(pages.size).isEqualTo(7)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(2)
         assertThat(pages.filter { it.status == TRASHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PRIVATE }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PENDING }.size).isEqualTo(1)
     }
 
     @Test
