@@ -41,7 +41,6 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 PostStatus.PRIVATE,
                 PostStatus.TRASHED)
     }
-    
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var updatePostContinuation: Continuation<OnPostChanged>? = null
