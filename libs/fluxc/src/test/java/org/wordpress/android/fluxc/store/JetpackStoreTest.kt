@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +21,7 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GE
 import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstalledPayload
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
 class JetpackStoreTest {
@@ -40,7 +40,7 @@ class JetpackStoreTest {
     }
 
     @Test
-    fun `on install triggers rest client and returns success`() = runBlocking {
+    fun `on install triggers rest client and returns success`() = test {
         val success = true
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(JetpackInstalledPayload(site, success))
 
@@ -55,7 +55,7 @@ class JetpackStoreTest {
     }
 
     @Test
-    fun `on install action triggers rest client and returns success`() = runBlocking {
+    fun `on install action triggers rest client and returns success`() = test {
         val success = true
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(JetpackInstalledPayload(site, success))
 
@@ -68,7 +68,7 @@ class JetpackStoreTest {
     }
 
     @Test
-    fun `on install triggers rest client and returns error`() = runBlocking {
+    fun `on install triggers rest client and returns error`() = test {
         val installError = JetpackInstallError(GENERIC_ERROR)
         val payload = JetpackInstalledPayload(installError, site)
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(payload)
@@ -84,7 +84,7 @@ class JetpackStoreTest {
     }
 
     @Test
-    fun `on install action triggers rest client and returns error`() = runBlocking {
+    fun `on install action triggers rest client and returns error`() = test {
         val installError = JetpackInstallError(GENERIC_ERROR)
         val payload = JetpackInstalledPayload(installError, site)
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(payload)
