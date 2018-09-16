@@ -5,11 +5,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 
 enum class PageStatus {
     PUBLISHED,
-    DRAFT,
-    TRASHED,
-    SCHEDULED,
     PRIVATE,
-    PENDING;
+    DRAFT,
+    PENDING,
+    SCHEDULED,
+    TRASHED;
 
     companion object {
         fun fromPost(post: PostModel): PageStatus {
