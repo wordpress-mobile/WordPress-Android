@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
+import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -111,8 +113,12 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                         previous == next -> 0
                         previous == PUBLISHED -> -1
                         next == PUBLISHED -> 1
+                        previous == PRIVATE -> -1
+                        next == PRIVATE -> 1
                         previous == DRAFT -> -1
                         next == DRAFT -> 1
+                        previous == PENDING -> -1
+                        next == PENDING -> 1
                         previous == SCHEDULED -> -1
                         next == SCHEDULED -> 1
                         else -> throw IllegalArgumentException("Unexpected page type")
