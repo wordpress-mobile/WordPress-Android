@@ -65,7 +65,7 @@ class SearchListViewModel
         if (pages.isNotEmpty()) {
             val pageItems = pages
                     .map { (status, results) ->
-                        listOf(Divider(resourceProvider.getString(status.getTitle()))) +
+                        listOf(Divider(status.getDividerTitle())) +
                                 results.map { it.toPageItem(pagesViewModel.arePageActionsEnabled) }
                     }
                     .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
@@ -78,10 +78,20 @@ class SearchListViewModel
         }
     }
 
+    private fun PageStatus.getDividerTitle(): String {
+        val stringRes = when (this) {
+            PageStatus.PUBLISHED, PageStatus.PRIVATE -> PageStatus.PUBLISHED.getTitle()
+            PageStatus.DRAFT, PageStatus.PENDING -> PageStatus.DRAFT.getTitle()
+            PageStatus.TRASHED -> PageStatus.TRASHED.getTitle()
+            PageStatus.SCHEDULED -> PageStatus.SCHEDULED.getTitle()
+        }
+        return resourceProvider.getString(stringRes)
+    }
+
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
         return when (status) {
-            PageStatus.PUBLISHED -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.DRAFT -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.PUBLISHED, PageStatus.PRIVATE -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
         }
