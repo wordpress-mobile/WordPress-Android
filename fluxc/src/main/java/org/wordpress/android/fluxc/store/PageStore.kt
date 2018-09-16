@@ -102,30 +102,6 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         ERROR_NON_EXISTING_PAGE
     }
 
-    suspend fun groupedSearch(
-        site: SiteModel,
-        searchQuery: String
-    ): SortedMap<PageStatus, List<PageModel>> = withContext(CommonPool) {
-        val list = search(site, searchQuery).groupBy { it.status }
-        return@withContext list.toSortedMap(
-                Comparator { previous, next ->
-                    when {
-                        previous == next -> 0
-                        previous == PUBLISHED -> -1
-                        next == PUBLISHED -> 1
-                        previous == PRIVATE -> -1
-                        next == PRIVATE -> 1
-                        previous == DRAFT -> -1
-                        next == DRAFT -> 1
-                        previous == PENDING -> -1
-                        next == PENDING -> 1
-                        previous == SCHEDULED -> -1
-                        next == SCHEDULED -> 1
-                        else -> throw IllegalArgumentException("Unexpected page type")
-                    }
-                })
-    }
-
     suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val posts = postStore.getPagesForSite(site).asSequence().filterNotNull().associateBy { it.remotePostId }
         posts.map { getPageFromPost(it.key, site, posts) }.filterNotNull().sortedBy { it.remoteId }
