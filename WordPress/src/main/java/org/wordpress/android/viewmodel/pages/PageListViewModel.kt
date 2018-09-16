@@ -8,10 +8,6 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -34,7 +30,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     val pages: LiveData<List<PageItem>> = _pages
 
     private var isStarted: Boolean = false
-    private lateinit var pageStatus: PageStatus
+    private lateinit var listType: PageListType
 
     private lateinit var pagesViewModel: PagesViewModel
 
@@ -60,8 +56,8 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         FETCHING
     }
 
-    fun start(pageStatus: PageStatus, pagesViewModel: PagesViewModel) {
-        this.pageStatus = pageStatus
+    fun start(listType: PageListType, pagesViewModel: PagesViewModel) {
+        this.listType = listType
         this.pagesViewModel = pagesViewModel
 
         if (!isStarted) {
@@ -97,12 +93,12 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .filter { pageStatus == it.status }
+                .filter { listType.pageStatuses.contains(it.status) }
                 .let {
-                    when (pageStatus) {
+                    when (listType) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
                         SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
-                        DRAFT -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                        DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
                         TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
                     }
                 }
@@ -115,10 +111,10 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
-                when (pageStatus) {
+                when (listType) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
-                    DRAFT -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
+                    DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
                 }
             }
@@ -130,7 +126,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return topologicalSort(pages, pageStatus = PageStatus.PUBLISHED)
+        return topologicalSort(pages, listType = PUBLISHED)
                 .map {
                     val label = if (it.hasLocalChanges) string.local_changes else null
                     PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it), actionsEnabled)
@@ -138,7 +134,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return pages.groupBy { it.date.toFormattedDateString() }
+        return pages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
                         results.map { ScheduledPage(it.remoteId, it.title, actionsEnabled) }
                 }
@@ -163,21 +159,24 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun topologicalSort(
         pages: List<PageModel>,
-        pageStatus: PageStatus,
+        listType: PageListType,
         parent: PageModel? = null
     ): List<PageModel> {
         val sortedList = mutableListOf<PageModel>()
         pages.filter {
-            it.parent?.remoteId == parent?.remoteId || (parent == null && it.parent?.status != pageStatus)
+            it.parent?.remoteId == parent?.remoteId ||
+                    (parent == null && !listType.pageStatuses.contains(it.parent?.status))
+        }.forEach {
+            sortedList += it
+            sortedList += topologicalSort(pages, listType, it)
         }
-                .forEach {
-                    sortedList += it
-                    sortedList += topologicalSort(pages, pageStatus, it)
-                }
         return sortedList
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
-        return if (page == null || page.status != PageStatus.PUBLISHED) -1 else getPageItemIndent(page.parent) + 1
+        return if (page == null || !PageListType.PUBLISHED.pageStatuses.contains(page.status))
+            -1
+        else
+            getPageItemIndent(page.parent) + 1
     }
 }

@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
+import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
@@ -43,6 +45,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
@@ -118,7 +121,7 @@ class PagesViewModel
 
     private var searchJob: Job? = null
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
-    private var currentPageType = PageStatus.PUBLISHED
+    private var currentPageType = PageListType.PUBLISHED
 
     fun start(site: SiteModel) {
         _site = site
@@ -184,7 +187,7 @@ class PagesViewModel
         }
     }
 
-    fun onPageTypeChanged(type: PageStatus) {
+    fun onPageTypeChanged(type: PageListType) {
         currentPageType = type
         checkIfNewPageButtonShouldBeVisible()
     }
@@ -401,6 +404,7 @@ class PagesViewModel
             PUBLISHED -> string.page_moved_to_published
             TRASHED -> string.page_moved_to_trash
             SCHEDULED -> string.page_moved_to_scheduled
+            else -> throw NotImplementedError("Status change to ${newStatus.getTitle()} not supported")
         }
 
         return if (undo != null) {
@@ -439,5 +443,7 @@ class PagesViewModel
         DRAFT -> string.pages_drafts
         SCHEDULED -> string.pages_scheduled
         TRASHED -> string.pages_trashed
+        PENDING -> string.pages_pending
+        PRIVATE -> string.pages_private
     }
 }
