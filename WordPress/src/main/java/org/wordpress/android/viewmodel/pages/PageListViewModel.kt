@@ -23,6 +23,10 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import javax.inject.Inject
 
 class PageListViewModel @Inject constructor() : ViewModel() {
@@ -33,6 +37,21 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     private lateinit var pageStatus: PageStatus
 
     private lateinit var pagesViewModel: PagesViewModel
+
+    enum class PageListType(val pageStatuses: List<PageStatus>) {
+        PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),
+        DRAFTS(listOf(PageStatus.DRAFT, PageStatus.PENDING)),
+        SCHEDULED(listOf(PageStatus.SCHEDULED)),
+        TRASHED(listOf(PageStatus.TRASHED));
+
+        val title: Int
+            get() = when (this) {
+                PUBLISHED -> string.pages_published
+                DRAFTS -> string.pages_drafts
+                SCHEDULED -> string.pages_scheduled
+                TRASHED -> string.pages_trashed
+            }
+    }
 
     enum class PageListState {
         DONE,
