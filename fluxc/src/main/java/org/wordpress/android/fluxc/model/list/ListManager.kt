@@ -5,8 +5,8 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 
 /**
- * This is an immutable class which helps us expose the list details to a client. It's designed to be initiated from
- * `ListStore`.
+ * This is a helper class by which FluxC communicates a list's data and its state with its clients. It's designed to be
+ * short lived as `ListStore.OnListChanged` should trigger the client to ask FluxC for a new instance.
  *
  * @param dispatcher The dispatcher to be used for FluxC actions
  * @param listDescriptor The list descriptor that will be used for FluxC actions and comparison with
@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * @param loadMoreOffset Tells how many items before last one should trigger loading more data
  * @param isFetchingFirstPage A helper property to be used to show/hide pull-to-refresh progress bar
  * @param isLoadingMore A helper property to be used to show/hide load more progress bar
+ * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched. If it's `false` [loadMore]
+ * action will not be triggered.
+ * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
  *
  * @property size The number of items in the list
  *
@@ -32,6 +35,15 @@ class ListManager<T>(
     private val fetchItem: (Long) -> Unit
 ) {
     val size: Int = items.size
+    /**
+     * These three private properties help us prevent duplicate requests within short time frames. Since [ListManager]
+     * instances are meant to be short lived, this will not actually prevent duplicate requests and it's not actually
+     * its job to do so. However, since its instances will be used by adapters, it can create a lot of unnecessary
+     * actions, especially load more and fetch item actions.
+     */
+    private var dispatchedRefreshAction = false
+    private var dispatchedLoadMoreAction = false
+    private val fetchRemoteItemSet = HashSet<Long>()
 
     /**
      * Returns the remote id of the item in the given [position].
@@ -58,7 +70,7 @@ class ListManager<T>(
         val remoteItemId = getRemoteItemId(position)
         val item = listData[remoteItemId]
         if (item == null && shouldFetchIfNull) {
-            fetchItem(remoteItemId)
+            fetchItemIfNecessary(remoteItemId)
         }
         return item
     }
@@ -68,13 +80,15 @@ class ListManager<T>(
      * `OnListChanged` should be used to observe changes to lists and a new instance should be requested from
      * `ListStore`.
      *
-     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
+     * [isFetchingFirstPage] & [dispatchedRefreshAction] will be checked before dispatching the action to prevent
+     * duplicate requests.
      *
      * @return whether the refresh action is dispatched
      */
     fun refresh() {
-        if (!isFetchingFirstPage) {
+        if (!isFetchingFirstPage && !dispatchedRefreshAction) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
+            dispatchedRefreshAction = true
         }
     }
 
@@ -82,11 +96,23 @@ class ListManager<T>(
      * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager]. See [getRemoteItem]
      * for more details.
      *
-     * [canLoadMore] will be checked before dispatching the action.
+     * [canLoadMore] & [dispatchedLoadMoreAction] will be checked before dispatching the action.
      */
     private fun loadMore() {
-        if (canLoadMore) {
+        if (canLoadMore && !dispatchedLoadMoreAction) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
+            dispatchedLoadMoreAction = true
+        }
+    }
+
+    /**
+     * Calls the [fetchItem] function if the given [remoteItemId] is not in the [fetchRemoteItemSet] and adds the id
+     * to the [fetchRemoteItemSet]. This is to prevent fetching the same item more than once.
+     */
+    private fun fetchItemIfNecessary(remoteItemId: Long) {
+        if (!fetchRemoteItemSet.contains(remoteItemId)) {
+            fetchItem(remoteItemId)
+            fetchRemoteItemSet.add(remoteItemId)
         }
     }
 }
