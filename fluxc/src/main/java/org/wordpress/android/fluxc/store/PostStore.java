@@ -30,8 +30,8 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsUpdatedPayload;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsUpdatedPayload.ListItemsDeletedPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsDeletedPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -511,7 +511,7 @@ public class PostStore extends Store {
         } else {
             PostSqlUtils.deletePost(payload.post);
             ListItemsDeletedPayload listActionPayload =
-                    new ListItemsDeletedPayload(listDescriptors(payload.site.getId()),
+                    new ListItemsDeletedPayload(listDescriptorsToUpdate(payload.site.getId()),
                             postIdListFromPost(payload.post));
             dispatchListItemUpdatedAction(listActionPayload);
         }
@@ -627,11 +627,11 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
-    private void dispatchListItemUpdatedAction(ListItemsUpdatedPayload payload) {
-       mDispatcher.dispatch(ListActionBuilder.newListItemsUpdatedAction(payload));
+    private void dispatchListItemUpdatedAction(ListItemsChangedPayload payload) {
+       mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(payload));
     }
 
-    private List<ListDescriptor> listDescriptors(int siteId) {
+    private List<ListDescriptor> listDescriptorsToUpdate(int siteId) {
         return Collections.singletonList(new ListDescriptor(ListType.POST, siteId, null, null));
     }
 
