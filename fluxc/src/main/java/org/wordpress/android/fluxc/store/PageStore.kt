@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.util.DateTimeUtils
-import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
