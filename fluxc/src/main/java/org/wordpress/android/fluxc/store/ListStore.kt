@@ -20,8 +20,8 @@ import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsDeletedPayload
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsFetched
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsRemovedPayload
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsUpdatedPayload
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
@@ -163,10 +163,10 @@ class ListStore @Inject constructor(
     private fun handleListItemUpdated(payload: ListItemsChangedPayload) {
         val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
         when (payload) {
-            is ListItemsDeletedPayload -> {
+            is ListItemsRemovedPayload -> {
                 listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
             }
-            is ListItemsFetched -> {
+            is ListItemsUpdatedPayload -> {
                 // No action necessary, all we need to do is emit the change
             }
         }
@@ -226,10 +226,10 @@ class ListStore @Inject constructor(
      */
     sealed class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) :
             Payload<BaseNetworkError>() {
-        class ListItemsDeletedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
+        class ListItemsRemovedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
                 ListItemsChangedPayload(listDescriptors, remoteItemIds)
 
-        class ListItemsFetched(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
+        class ListItemsUpdatedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
                 ListItemsChangedPayload(listDescriptors, remoteItemIds)
     }
 
