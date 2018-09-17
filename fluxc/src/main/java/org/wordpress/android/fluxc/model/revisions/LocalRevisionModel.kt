@@ -4,6 +4,8 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
+import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 
 @Table
 class LocalRevisionModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
@@ -30,5 +32,31 @@ class LocalRevisionModel(@PrimaryKey @Column private var id: Int = 0) : Identifi
 
     override fun setId(id: Int) {
         this.id = id
+    }
+
+    companion object {
+        @JvmStatic
+        fun fromRevisionModel(revisionModel: RevisionModel, site: SiteModel, post: PostModel): LocalRevisionModel {
+            val localRevisionModel = LocalRevisionModel()
+            localRevisionModel.revisionId = revisionModel.revisionId
+            localRevisionModel.postId = post.remotePostId
+            localRevisionModel.siteId = site.siteId
+
+            localRevisionModel.diffFromVersion = revisionModel.diffFromVersion
+
+            localRevisionModel.totalAdditions = revisionModel.totalAdditions
+            localRevisionModel.totalDeletions = revisionModel.totalDeletions
+
+            localRevisionModel.postContent = revisionModel.postContent
+            localRevisionModel.postExcerpt = revisionModel.postExcerpt
+            localRevisionModel.postTitle = revisionModel.postTitle
+
+            localRevisionModel.postDateGmt = revisionModel.postDateGmt
+            localRevisionModel.postModifiedGmt = revisionModel.postModifiedGmt
+            localRevisionModel.postAuthorId = revisionModel.postAuthorId
+
+
+            return localRevisionModel
+        }
     }
 }
