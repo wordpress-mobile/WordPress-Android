@@ -48,7 +48,6 @@ class PagesViewModelTest {
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
         val listStateObserver = viewModel.listState.test()
         val refreshPagesObserver = viewModel.pages.test()
-        val searchPagesObserver = viewModel.searchPages.test()
 
         viewModel.start(site)
 
