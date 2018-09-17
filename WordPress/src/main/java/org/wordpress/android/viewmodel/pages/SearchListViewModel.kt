@@ -81,7 +81,8 @@ class SearchListViewModel
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
         return when (status) {
-            PageStatus.PUBLISHED, PageStatus.PRIVATE -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.PUBLISHED, PageStatus.PRIVATE ->
+                PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
