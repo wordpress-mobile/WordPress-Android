@@ -50,6 +50,10 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 
+private const val ACTION_DELAY = 100
+private const val SEARCH_DELAY = 200
+private const val SEARCH_COLLAPSE_DELAY = 500
+
 class PagesViewModel
 @Inject constructor(
     private val pageStore: PageStore,
@@ -190,7 +194,7 @@ class PagesViewModel
         _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
     }
 
-    fun onSearch(searchQuery: String, delay: Long = 200) {
+    fun onSearch(searchQuery: String, delay: Int = SEARCH_DELAY) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {
             searchJob = launch(uiContext) {
@@ -223,7 +227,7 @@ class PagesViewModel
         clearSearch()
 
         launch(uiContext) {
-            delay(500)
+            delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
         return true
@@ -281,7 +285,7 @@ class PagesViewModel
         action.undo = {
             launch(commonPoolContext) {
                 pageMap[page.remoteId]?.let { changed ->
-                    val updatedPage = updateParent(changed, parentId)
+                    val updatedPage = updateParent(changed, oldParent)
 
                     pageStore.uploadPageToServer(updatedPage)
                 }
@@ -291,7 +295,7 @@ class PagesViewModel
             launch(commonPoolContext) {
                 reloadPages()
 
-                delay(100)
+                delay(ACTION_DELAY)
                 _showSnackbarMessage.postValue(
                         SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
             }
@@ -331,7 +335,7 @@ class PagesViewModel
         }
         action.onSuccess = {
             launch(commonPoolContext) {
-                delay(100)
+                delay(ACTION_DELAY)
                 reloadPages()
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
@@ -373,7 +377,7 @@ class PagesViewModel
             }
             action.onSuccess = {
                 launch(commonPoolContext) {
-                    delay(100)
+                    delay(ACTION_DELAY)
                     reloadPages()
 
                     val message = prepareStatusChangeSnackbar(status, action.undo)
