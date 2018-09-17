@@ -203,13 +203,33 @@ class PagesViewModel
                 searchJob = null
                 if (isActive) {
                     _lastSearchQuery = searchQuery
-                    val result = pageStore.groupedSearch(site, searchQuery)
+                    val result = groupedSearch(site, searchQuery)
                     _searchPages.postValue(result)
                 }
             }
         } else {
             clearSearch()
         }
+    }
+
+    private suspend fun groupedSearch(
+        site: SiteModel,
+        searchQuery: String
+    ): SortedMap<PageListType, List<PageModel>> = withContext(CommonPool) {
+        val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
+        return@withContext list.toSortedMap(
+                Comparator { previous, next ->
+                    when {
+                        previous == next -> 0
+                        previous == PageListType.PUBLISHED -> -1
+                        next == PageListType.PUBLISHED -> 1
+                        previous == PageListType.DRAFTS -> -1
+                        next == PageListType.DRAFTS -> 1
+                        previous == PageListType.SCHEDULED -> -1
+                        next == PageListType.SCHEDULED -> 1
+                        else -> throw IllegalArgumentException("Unexpected page type")
+                    }
+                })
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
@@ -437,11 +457,11 @@ class PagesViewModel
 
 @StringRes fun PageStatus.getTitle(): Int {
     return when (this) {
-        PUBLISHED -> string.pages_published
-        DRAFT -> string.pages_drafts
-        SCHEDULED -> string.pages_scheduled
-        TRASHED -> string.pages_trashed
-        PENDING -> string.pages_pending
-        PRIVATE -> string.pages_private
+        PageStatus.PUBLISHED -> string.pages_published
+        PageStatus.DRAFT -> string.pages_drafts
+        PageStatus.SCHEDULED -> string.pages_scheduled
+        PageStatus.TRASHED -> string.pages_trashed
+        PageStatus.PENDING -> string.pages_pending
+        PageStatus.PRIVATE -> string.pages_private
     }
 }
