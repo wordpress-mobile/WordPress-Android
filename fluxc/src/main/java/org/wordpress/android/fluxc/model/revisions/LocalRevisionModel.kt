@@ -55,7 +55,6 @@ class LocalRevisionModel(@PrimaryKey @Column private var id: Int = 0) : Identifi
             localRevisionModel.postModifiedGmt = revisionModel.postModifiedGmt
             localRevisionModel.postAuthorId = revisionModel.postAuthorId
 
-
             return localRevisionModel
         }
     }

@@ -3,27 +3,30 @@ package org.wordpress.android.fluxc.model.revisions
 import java.util.ArrayList
 
 class RevisionModel(
-        var revisionId: Long,
+    var revisionId: Long,
 
-        var diffFromVersion: Long,
+    var diffFromVersion: Long,
 
-        var totalAdditions: Int,
-        var totalDeletions: Int,
+    var totalAdditions: Int,
+    var totalDeletions: Int,
 
-        var postContent: String?,
-        var postExcerpt: String?,
-        var postTitle: String?,
+    var postContent: String?,
+    var postExcerpt: String?,
+    var postTitle: String?,
 
-        var postDateGmt: String?,
-        var postModifiedGmt: String?,
-        var postAuthorId: String?,
+    var postDateGmt: String?,
+    var postModifiedGmt: String?,
+    var postAuthorId: String?,
 
-        val titleDiffs: ArrayList<Diff>,
-        val contentDiffs: ArrayList<Diff>
+    val titleDiffs: ArrayList<Diff>,
+    val contentDiffs: ArrayList<Diff>
 ) {
     companion object {
         @JvmStatic
-        fun fromLocalRevisionAndDiffs(localRevision: LocalRevisionModel, localDiffs: List<LocalDiffModel>): RevisionModel {
+        fun fromLocalRevisionAndDiffs(
+            localRevision: LocalRevisionModel,
+            localDiffs: List<LocalDiffModel>
+        ): RevisionModel {
             val titleDiffs = ArrayList<Diff>()
             val contentDiffs = ArrayList<Diff>()
 
@@ -47,7 +50,8 @@ class RevisionModel(
                     localRevision.postModifiedGmt,
                     localRevision.postAuthorId,
                     titleDiffs,
-                    contentDiffs)
+                    contentDiffs
+            )
         }
     }
 
@@ -60,12 +64,12 @@ class RevisionModel(
             return false
         }
 
-        return revisionId == other.revisionId && diffFromVersion == other.diffFromVersion
-                && totalAdditions == other.totalAdditions && totalDeletions == other.totalDeletions
-                && postContent == other.postContent && postExcerpt == other.postExcerpt && postTitle == other.postTitle
-                && postAuthorId == other.postAuthorId
-                && titleDiffs.toArray() contentDeepEquals other.titleDiffs.toArray()
-                && contentDiffs.toArray() contentDeepEquals other.contentDiffs.toArray()
+        return revisionId == other.revisionId && diffFromVersion == other.diffFromVersion &&
+                totalAdditions == other.totalAdditions && totalDeletions == other.totalDeletions &&
+                postContent == other.postContent && postExcerpt == other.postExcerpt && postTitle == other.postTitle &&
+                postAuthorId == other.postAuthorId &&
+                titleDiffs.toArray() contentDeepEquals other.titleDiffs.toArray() &&
+                contentDiffs.toArray() contentDeepEquals other.contentDiffs.toArray()
     }
 
     override fun hashCode(): Int {

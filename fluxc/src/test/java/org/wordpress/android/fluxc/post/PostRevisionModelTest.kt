@@ -2,7 +2,11 @@ package org.wordpress.android.fluxc.post
 
 import org.junit.Test
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.revisions.*
+import org.wordpress.android.fluxc.model.revisions.DiffOperations
+import org.wordpress.android.fluxc.model.revisions.Diff
+import org.wordpress.android.fluxc.model.revisions.LocalDiffModel
+import org.wordpress.android.fluxc.model.revisions.LocalDiffType
+import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -24,7 +28,6 @@ class PostRevisionModelTest {
         assertEquals("2018-09-05 13:19:34Z", revision.postModifiedGmt)
         assertEquals("111111111", revision.postAuthorId)
 
-
         val titleDiffs = revision.titleDiffs
         assertNotNull(titleDiffs)
         assertEquals(3, titleDiffs.size)
@@ -37,7 +40,6 @@ class PostRevisionModelTest {
 
         assertEquals(DiffOperations.DELETE, titleDiffs[2].operation)
         assertEquals("del title", titleDiffs[2].value)
-
 
         val contentDiffs = revision.contentDiffs
         assertNotNull(contentDiffs)
@@ -60,7 +62,7 @@ class PostRevisionModelTest {
 
         assertTrue(sampleRevision1 == sampleRevision2)
 
-        sampleRevision1.titleDiffs[0] = Diff(DiffOperations.COPY,"wrong value")
+        sampleRevision1.titleDiffs[0] = Diff(DiffOperations.COPY, "wrong value")
         assertFalse(sampleRevision1 == sampleRevision2)
     }
 

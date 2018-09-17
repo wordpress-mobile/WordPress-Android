@@ -27,9 +27,9 @@ class LocalDiffModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable
     companion object {
         @JvmStatic
         fun fromDiffAndLocalRevision(
-                diff: Diff,
-                localDiffType: LocalDiffType,
-                localRevisionModel: LocalRevisionModel
+            diff: Diff,
+            localDiffType: LocalDiffType,
+            localRevisionModel: LocalRevisionModel
         ): LocalDiffModel {
             val localDiff = LocalDiffModel()
 
