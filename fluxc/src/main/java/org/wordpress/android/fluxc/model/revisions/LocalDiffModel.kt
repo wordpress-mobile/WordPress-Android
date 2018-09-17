@@ -23,4 +23,25 @@ class LocalDiffModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable
     override fun setId(id: Int) {
         this.id = id
     }
+
+    companion object {
+        @JvmStatic
+        fun fromDiffAndLocalRevision(
+                diff: Diff,
+                localDiffType: LocalDiffType,
+                localRevisionModel: LocalRevisionModel
+        ): LocalDiffModel {
+            val localDiff = LocalDiffModel()
+
+            localDiff.revisionId = localRevisionModel.revisionId
+            localDiff.postId = localRevisionModel.postId
+            localDiff.siteId = localRevisionModel.siteId
+
+            localDiff.operation = diff.operation.toString()
+            localDiff.value = diff.value
+
+            localDiff.diffType = localDiffType.toString()
+            return localDiff
+        }
+    }
 }
