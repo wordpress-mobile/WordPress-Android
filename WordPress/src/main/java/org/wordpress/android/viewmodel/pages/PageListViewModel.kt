@@ -40,6 +40,16 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         SCHEDULED(listOf(PageStatus.SCHEDULED)),
         TRASHED(listOf(PageStatus.TRASHED));
 
+        companion object {
+            fun fromPageStatus(status: PageStatus): PageListType {
+                return when (status) {
+                    PageStatus.PUBLISHED, PageStatus.PRIVATE -> PUBLISHED
+                    PageStatus.DRAFT, PageStatus.PENDING -> DRAFTS
+                    PageStatus.TRASHED -> TRASHED
+                    PageStatus.SCHEDULED -> SCHEDULED
+                }
+            }
+        }
         val title: Int
             get() = when (this) {
                 PUBLISHED -> string.pages_published

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.SortedMap
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ class SearchListViewModel
         pagesViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<SortedMap<PageStatus, List<PageModel>>> { pages ->
+    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>> { pages ->
         if (pages != null) {
             loadFoundPages(pages)
 
@@ -61,11 +62,11 @@ class SearchListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageStatus, List<PageModel>>) = launch {
+    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch {
         if (pages.isNotEmpty()) {
             val pageItems = pages
-                    .map { (status, results) ->
-                        listOf(Divider(status.getDividerTitle())) +
+                    .map { (listType, results) ->
+                        listOf(Divider(resourceProvider.getString(listType.title))) +
                                 results.map { it.toPageItem(pagesViewModel.arePageActionsEnabled) }
                     }
                     .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
@@ -76,16 +77,6 @@ class SearchListViewModel
         } else {
             _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
         }
-    }
-
-    private fun PageStatus.getDividerTitle(): String {
-        val stringRes = when (this) {
-            PageStatus.PUBLISHED, PageStatus.PRIVATE -> PageStatus.PUBLISHED.getTitle()
-            PageStatus.DRAFT, PageStatus.PENDING -> PageStatus.DRAFT.getTitle()
-            PageStatus.TRASHED -> PageStatus.TRASHED.getTitle()
-            PageStatus.SCHEDULED -> PageStatus.SCHEDULED.getTitle()
-        }
-        return resourceProvider.getString(stringRes)
     }
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {

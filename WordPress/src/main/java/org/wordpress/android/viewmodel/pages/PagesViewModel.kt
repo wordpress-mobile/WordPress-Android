@@ -18,8 +18,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
-import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
@@ -75,8 +73,8 @@ class PagesViewModel
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
 
-    private val _searchPages: MutableLiveData<SortedMap<PageStatus, List<PageModel>>> = MutableLiveData()
-    val searchPages: LiveData<SortedMap<PageStatus, List<PageModel>>> = _searchPages
+    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
