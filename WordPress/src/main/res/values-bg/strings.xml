@@ -866,7 +866,6 @@ Language: bg
     <string name="reader_likes_one">Едно лице хареса това</string>
     <string name="reader_untitled_post">(Неозаглавен)</string>
     <string name="reader_toast_err_url_intent">%s не може да се отвори</string>
-    <string name="reader_empty_followed_tags">Вие не следвате етикети</string>
     <string name="reader_toast_err_tag_invalid">Това не е валиден етикет</string>
     <string name="reader_hint_comment_on_comment">Отговор на коментар…</string>
     <string name="empty_list_default">Списъкът е празен</string>

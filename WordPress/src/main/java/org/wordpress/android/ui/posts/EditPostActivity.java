@@ -99,9 +99,9 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -131,7 +131,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -200,6 +200,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
+    public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
@@ -1007,6 +1008,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (settingsMenuItem != null) {
+            settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
             settingsMenuItem.setVisible(showMenuItems);
         }
 
@@ -1112,7 +1114,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
             if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
-                showAsyncPromoDialog();
+                showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
@@ -1655,6 +1657,7 @@ public class EditPostActivity extends AppCompatActivity implements
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        i.putExtra(EXTRA_POST_REMOTE_ID, mPost.getRemotePostId());
         i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         setResult(RESULT_OK, i);
     }
@@ -3508,12 +3511,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void showAsyncPromoDialog() {
+    private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
+        int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
+        int description = isScheduled
+            ? (isPage ? R.string.async_promo_description_schedule_page : R.string.async_promo_description_schedule_post)
+            : (isPage ? R.string.async_promo_description_publish_page : R.string.async_promo_description_publish_post);
+        int button = isScheduled ? R.string.async_promo_schedule_now : R.string.async_promo_publish_now;
+
         final PromoDialog asyncPromoDialog = new PromoDialog();
         asyncPromoDialog.initialize(ASYNC_PROMO_DIALOG_TAG,
-                getString(R.string.async_promo_title),
-                getString(R.string.async_promo_description),
-                getString(R.string.async_promo_publish_now),
+                getString(title),
+                getString(description),
+                getString(button),
                 R.drawable.img_publish_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));

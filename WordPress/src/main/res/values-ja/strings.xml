@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-21 08:54:08+0000
+Translation-Revision-Date: 2018-09-05 12:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="quick_start_focus_point_description">ここをタップ</string>
+    <string name="quick_start_sites">クイックスタート</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">サイトの作成</string>
+    <string name="quick_start_list_create_site_subtitle">サイトを稼働させる</string>
+    <string name="quick_start_list_complete_title">クイックスタートを完了しました</string>
+    <string name="quick_start_list_complete_subtitle">リストから消したいものがありますか ?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">サイトを表示</string>
+    <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには、%1$sサイトを表示%2$sをタップします。</string>
+    <string name="quick_start_dialog_view_site_message">新しいサイトをプレビューして訪問者に表示される内容を確認できます。</string>
+    <string name="quick_start_dialog_skip_title">クイックスタートをスキップ</string>
+    <string name="quick_start_dialog_skip_message">クイックツアーでは基本的なサイトの作成ステップを説明します。スキップしてもよいですか ?</string>
+    <string name="quick_start_dialog_share_site_title">サイトを共有</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">%1$sシェアする%2$sをタップして続行してください</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">%1$s接続%2$sをタップして、ソーシャルメディアアカウントを追加します</string>
+    <string name="quick_start_dialog_share_site_message">自分のソーシャルメディアアカウントと連携すると、サイトの新しい投稿が自動的に共有されるようになります。</string>
+    <string name="quick_start_dialog_publish_post_title">投稿を公開</string>
+    <string name="quick_start_dialog_publish_post_message_short">%1$s投稿の作成%2$sをタップして、新しい党呼応を作成します</string>
+    <string name="quick_start_dialog_publish_post_message">いよいよスタートです !最初の投稿の下書きを作成して公開してください。</string>
+    <string name="quick_start_dialog_need_help_title">始めるためのサポートが必要ですか ?</string>
+    <string name="quick_start_dialog_need_help_message">クイックスタートチェックリストをご覧になると、新しいサイトを設定するための基本がわかります。</string>
+    <string name="quick_start_dialog_need_help_button_positive">はい</string>
+    <string name="quick_start_dialog_need_help_button_neutral">なし</string>
+    <string name="quick_start_dialog_need_help_button_negative">いいえ</string>
+    <string name="quick_start_dialog_follow_sites_title">他のサイトをフォロー</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">%1$s検索%2$sをタップして、興味が似たサイトを検索します</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">%1$sReader%2$sをタップして続行してください</string>
+    <string name="quick_start_dialog_follow_sites_message">興味のあるサイトを見つけて、そのサイトで更新が公開されたら取得できるようフォローしてください。</string>
+    <string name="quick_start_dialog_customize_site_title">自分のサイトをカスタマイズ</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">%1$sテーマ%2$sをタップして続行してください</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">%1$sカスタマイズ%2$sをタップして、サイトをカスタマイズします</string>
+    <string name="quick_start_dialog_customize_site_message">色、フォント、画像を変更して、思いどおりのサイトにカスタマイズできます。</string>
+    <string name="quick_start_dialog_continue_setup_title">サイトの設定を続ける</string>
+    <string name="quick_start_dialog_continue_setup_message">サイトの設定の最終段階です。チェックリストで次のステップの詳細をご覧ください。</string>
+    <string name="quick_start_dialog_choose_theme_title">テーマを選択</string>
+    <string name="quick_start_dialog_choose_theme_message_short">%1$sテーマ%2$sをタップして、新しいテーマを見つけます</string>
+    <string name="quick_start_dialog_choose_theme_message">すべてのテーマを参照して、ぴったりのテーマを見つけてください。</string>
+    <string name="quick_start_button_skip_positive">スキップ</string>
+    <string name="quick_start_button_skip_negative">キャンセル</string>
+    <string name="quick_start_button_skip">すべてスキップ</string>
+    <string name="quick_start_button_positive">移動</string>
+    <string name="quick_start_button_negative_short">キャンセル</string>
+    <string name="quick_start_button_negative">後で</string>
+    <string name="content_description_done">終了</string>
+    <string name="my_site_create_new_site_title">サイトがありません</string>
+    <string name="reader_empty_followed_tags_title">フォロー中のタグがありません</string>
+    <string name="reader_empty_followed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
+    <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
+    <string name="install_jetpack_retry">再試行</string>
+    <string name="install_jetpack_continue">次へ</string>
+    <string name="jetpack_installation_problem_message">Jetpack は現在インストールできません</string>
+    <string name="jetpack_installation_problem">問題が発生しました</string>
+    <string name="jetpack_installed_message">サイトに Jetpack がインストールされました。おめでとうございます !</string>
+    <string name="jetpack_installed">Jetpack がインストールされています</string>
+    <string name="installing_jetpack_message">サイトに Jetpack をインストールしています。完了まで数分かかります</string>
+    <string name="installing_jetpack">Jetpack をインストール</string>
+    <string name="install_jetpack_message">サイトの証明書は保存されず、Jetpack インストールの目的のみに使用されます</string>
+    <string name="install_jetpack">Jetpack をインストール</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Jetpack を設定すると、</string>
+    <string name="stats_jetpack_connection_setup_info">WordPress サイトの統計情報を利用するには、Jetpack プラグインのインするが必要です。</string>
     <string name="themes_empty_list">検索と一致するテーマがありません</string>
     <string name="reader_label_post_search_explainer">何をお探しですか ?</string>
     <string name="site_settings_tags_empty_title_search">検索と一致するタグがありません</string>
@@ -411,8 +484,6 @@ Language: ja_JP
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack が画像を最適化し、訪問者に最も近いところにあるサーバーから画像を提供します。WordPress.com のグローバルコンテンツ配信ネットワークを使用すると、サイトの読み込み速度が向上します。</string>
     <string name="site_settings_serve_images_from_our_servers">WordPress.com のサーバーから画像を提供</string>
     <string name="site_settings_speed_up_your_site">サイトをスピードアップ</string>
-    <string name="stats_jetpack_connection_setup_info">WordPress サイトで統計情報機能を使用するには、Jetpack プラグインをインストールする必要があります。 Jetpack をインストールしますか ?</string>
-    <string name="stats_jetpack_connection_setup">Jetpack を設定</string>
     <string name="plugin_chevron_icon_content_description">テキストを切り替え</string>
     <string name="plugin_info_your_version">お使いの WordPress バージョン</string>
     <string name="plugin_info_requires_version">必須 WordPress バージョン</string>
@@ -1567,7 +1638,6 @@ Language: ja_JP
     <string name="pick_video">動画を選択</string>
     <string name="pick_photo">画像を選択</string>
     <string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
-    <string name="reader_empty_followed_tags">現在何もタグをフォローしていません</string>
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>
     <string name="reader_toast_err_view_image">画像を表示できません</string>
     <string name="reader_toast_err_share_intent">共有に失敗しました</string>

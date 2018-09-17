@@ -35,6 +35,7 @@ public class AppLog {
         NOTIFS,
         DB,
         POSTS,
+        PAGES,
         COMMENTS,
         THEMES,
         TESTS,

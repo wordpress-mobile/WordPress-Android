@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.news
 
-import org.wordpress.android.util.AnalyticsUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 
 import javax.inject.Singleton

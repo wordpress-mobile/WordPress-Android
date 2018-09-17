@@ -88,10 +88,11 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         } else {
             redirectUrl = stringUrl.substring(from);
         }
-        if (redirectUrl.startsWith(JETPACK_PATH)) {
-            redirectUrl = WORDPRESS_COM_PREFIX + redirectUrl;
+        String decodedUrl = URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
+        if (decodedUrl.startsWith(JETPACK_PATH)) {
+            decodedUrl = WORDPRESS_COM_PREFIX + decodedUrl;
         }
-        mRedirectPage = URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
+        mRedirectPage = decodedUrl;
     }
 
     String getRedirectPage() {

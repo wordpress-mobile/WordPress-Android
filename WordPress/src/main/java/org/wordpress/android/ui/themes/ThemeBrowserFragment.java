@@ -35,7 +35,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;

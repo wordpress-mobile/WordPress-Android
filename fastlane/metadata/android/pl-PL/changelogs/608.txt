@@ -1,7 +1,0 @@
-10.7:
-Ludzie lubią GIFy! Aplikacja wspiera animowane GIFy i od teraz przyspieszamy czas ładowania tak żebyś nie czekał aż ten kot spadnie ze stołu. 
-Mało kto lubi puste ekrany pozbawione komunikatów! Jeśli przejdziesz na stronę bez zawartości, np. otworzysz Czytnik, ale nie obserwujesz żadnego blogu - zaproponujemy kolejne kroki.
-Drobne usprawnienia interfejsu aby stał się bardziej intuicyjny. 
-Prawdopodobnie ich nie zauważysz i o to chodzi. 
-Poprawki błędów. 
-
