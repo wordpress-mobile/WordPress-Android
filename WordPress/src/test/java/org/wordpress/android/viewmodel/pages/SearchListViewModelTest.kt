@@ -7,6 +7,7 @@ import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,6 +46,7 @@ class SearchListViewModelTest {
         pagesViewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined)
     }
 
+    @Ignore
     @Test
     fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
         initSearch()
@@ -64,6 +66,7 @@ class SearchListViewModelTest {
         assertThat(result).isEqualTo(expectedResult)
     }
 
+    @Ignore
     @Test
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
         initSearch()
@@ -80,6 +83,7 @@ class SearchListViewModelTest {
         assertThat(result).isEqualTo(pageItems)
     }
 
+    @Ignore
     @Test
     fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
         initSearch()
