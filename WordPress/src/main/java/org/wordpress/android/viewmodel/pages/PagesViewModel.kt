@@ -272,18 +272,18 @@ class PagesViewModel
         val action = PageAction(UPLOAD) {
             launch(commonPoolContext) {
                 if (page.parent?.remoteId != parentId) {
-                    page.parent = pageMap[parentId]
+                    val updatedPage = updateParent(page, parentId)
 
-                    pageStore.uploadPageToServer(page)
+                    pageStore.uploadPageToServer(updatedPage)
                 }
             }
         }
         action.undo = {
             launch(commonPoolContext) {
                 pageMap[page.remoteId]?.let { changed ->
-                    changed.parent = pageMap[oldParent]
+                    val updatedPage = updateParent(changed, parentId)
 
-                    pageStore.uploadPageToServer(changed)
+                    pageStore.uploadPageToServer(updatedPage)
                 }
             }
         }
@@ -309,6 +309,14 @@ class PagesViewModel
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
         }
+    }
+
+    private fun updateParent(page: PageModel, parentId: Long): PageModel {
+        val updatedPage = page.copy(parent = pageMap[parentId])
+        val updatedMap = pageMap.toMutableMap()
+        updatedMap[page.remoteId] = updatedPage
+        pageMap = updatedMap
+        return updatedPage
     }
 
     private fun deletePage(page: PageModel) {
@@ -346,21 +354,21 @@ class PagesViewModel
         pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
             val action = PageAction(UPLOAD) {
-                page.status = status
+                val updatedPage = updatePageStatus(page, status)
                 launch(commonPoolContext) {
-                    pageStore.updatePageInDb(page)
+                    pageStore.updatePageInDb(updatedPage)
                     refreshPages()
 
-                    pageStore.uploadPageToServer(page)
+                    pageStore.uploadPageToServer(updatedPage)
                 }
             }
             action.undo = {
-                page.status = oldStatus
+                val updatedPage = updatePageStatus(page, oldStatus)
                 launch(commonPoolContext) {
-                    pageStore.updatePageInDb(page)
+                    pageStore.updatePageInDb(updatedPage)
                     refreshPages()
 
-                    pageStore.uploadPageToServer(page)
+                    pageStore.uploadPageToServer(updatedPage)
                 }
             }
             action.onSuccess = {
@@ -386,6 +394,14 @@ class PagesViewModel
                 _arePageActionsEnabled = true
             }
         }
+    }
+
+    private fun updatePageStatus(page: PageModel, oldStatus: PageStatus): PageModel {
+        val updatedPage = page.copy(status = oldStatus)
+        val updatedMap = pageMap.toMutableMap()
+        updatedMap[page.remoteId] = updatedPage
+        pageMap = updatedMap
+        return updatedPage
     }
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
