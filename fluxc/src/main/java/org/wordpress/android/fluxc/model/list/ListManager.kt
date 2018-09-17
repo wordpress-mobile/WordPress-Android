@@ -85,11 +85,13 @@ class ListManager<T>(
      *
      * @return whether the refresh action is dispatched
      */
-    fun refresh() {
+    fun refresh(): Boolean {
         if (!isFetchingFirstPage && !dispatchedRefreshAction) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
             dispatchedRefreshAction = true
+            return true
         }
+        return false
     }
 
     /**
