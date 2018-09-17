@@ -47,7 +47,7 @@ class ListStore @Inject constructor(
         when (actionType) {
             ListAction.FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
             ListAction.FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
-            ListAction.DELETE_LIST_ITEMS -> handleDeleteListItems(action.payload as DeleteListItemsPayload)
+            ListAction.LIST_ITEMS_UPDATED -> handleListItemUpdated(action.payload as ListItemsUpdatedPayload)
         }
     }
 
@@ -154,13 +154,20 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * Handles the [ListAction.DELETE_LIST_ITEMS] action.
+     * Handles the [ListAction.LIST_ITEMS_UPDATED] action.
      *
-     * It'll find every list for the given [ListDescriptor]s, remove the given items from each one and emit the changes.
+     * Depending on the action type, it'll make changes in the DB and emit the change for the updated lists.
      */
-    private fun handleDeleteListItems(payload: DeleteListItemsPayload) {
+    private fun handleListItemUpdated(payload: ListItemsUpdatedPayload) {
         val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
-        listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
+        when (payload) {
+            is ListStore.ListItemsUpdatedPayload.ListItemsDeletedPayload -> {
+                listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
+            }
+            is ListStore.ListItemsUpdatedPayload.ListItemsFetched -> {
+                // No action necessary, all we need to do is emit the change
+            }
+        }
         emitChange(OnListChanged(payload.listDescriptors, error = null))
     }
 
@@ -213,16 +220,16 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * This is the payload for [ListAction.DELETE_LIST_ITEMS]. When an item is deleted, we'll need to remove it from
-     * several lists. It's the caller Stores responsibility to decide which lists an item should be deleted from.
-     *
-     * @property listDescriptors Lists to be deleted from.
-     * @property remoteItemIds Items to delete.
+     * This is the payload for [ListAction.LIST_ITEMS_UPDATED].
      */
-    class DeleteListItemsPayload(
-        val listDescriptors: List<ListDescriptor>,
-        val remoteItemIds: List<Long>
-    ) : Payload<BaseNetworkError>()
+    sealed class ListItemsUpdatedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) :
+            Payload<BaseNetworkError>() {
+        class ListItemsDeletedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
+                ListItemsUpdatedPayload(listDescriptors, remoteItemIds)
+
+        class ListItemsFetched(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
+                ListItemsUpdatedPayload(listDescriptors, remoteItemIds)
+    }
 
     /**
      * This is the payload for [ListAction.FETCH_LIST].
