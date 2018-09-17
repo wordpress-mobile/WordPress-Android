@@ -24,7 +24,7 @@ import kotlin.coroutines.experimental.CoroutineContext
 @Singleton
 class StatsStore
 @Inject constructor(private val coroutineContext: CoroutineContext) {
-    suspend fun getInsights(): List<InsightsTypes> = withContext(coroutineContext){
+    suspend fun getInsights(): List<InsightsTypes> = withContext(coroutineContext) {
         return@withContext listOf(
                 LATEST_POST_SUMMARY,
                 TODAY_STATS,
@@ -33,10 +33,11 @@ class StatsStore
                 COMMENTS,
                 TAGS_AND_CATEGORIES,
                 FOLLOWERS,
-                PUBLICISE)
+                PUBLICISE
+        )
     }
 
-    suspend fun getTimeStatsTypes() :List<TimeStatsTypes> = withContext(coroutineContext) {
+    suspend fun getTimeStatsTypes(): List<TimeStatsTypes> = withContext(coroutineContext) {
         return@withContext listOf(
                 OVERVIEW,
                 POSTS_AND_PAGES,
