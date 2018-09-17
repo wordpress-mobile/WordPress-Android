@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '2304a69c29d3728802ac827f006eb4a0d833004c'
+    fluxCVersion = '67536d792b9de38c9c584ab15c014e02208e7116'
 }
