@@ -17,10 +17,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.UI_CONTEXT
@@ -196,8 +192,9 @@ class PagesViewModel
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = pageMap.values.any { it.status == currentPageType }
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
+        val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
+        val hasNoExceptions = currentPageType != PageStatus.TRASHED && _isSearchExpanded.value != true
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
 
     fun onSearch(searchQuery: String) {
@@ -263,8 +260,8 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
             SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
-            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
@@ -273,7 +270,7 @@ class PagesViewModel
 
     private fun publishPageNow(remoteId: Long) {
         pageMap[remoteId]?.date = Date()
-        changePageStatus(remoteId, PUBLISHED)
+        changePageStatus(remoteId, PageStatus.PUBLISHED)
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
@@ -423,10 +420,10 @@ class PagesViewModel
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
-            DRAFT -> string.page_moved_to_draft
-            PUBLISHED -> string.page_moved_to_published
-            TRASHED -> string.page_moved_to_trash
-            SCHEDULED -> string.page_moved_to_scheduled
+            PageStatus.DRAFT -> string.page_moved_to_draft
+            PageStatus.PUBLISHED -> string.page_moved_to_published
+            PageStatus.TRASHED -> string.page_moved_to_trash
+            PageStatus.SCHEDULED -> string.page_moved_to_scheduled
             else -> throw NotImplementedError("Status change to ${newStatus.getTitle()} not supported")
         }
 
