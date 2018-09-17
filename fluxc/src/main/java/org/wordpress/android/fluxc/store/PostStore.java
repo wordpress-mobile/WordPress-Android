@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsRemovedPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsUpdatedPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -610,6 +611,9 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
+
+        dispatchListItemUpdatedAction(
+                new ListItemsUpdatedPayload(listDescriptorsToUpdate(post.getLocalSiteId()), postIdListFromPost(post)));
     }
 
     private void removePost(PostModel post) {
@@ -618,6 +622,9 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
         emitChange(onPostChanged);
+
+        dispatchListItemUpdatedAction(
+                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()), postIdListFromPost(post)));
     }
 
     private void removeAllPosts() {

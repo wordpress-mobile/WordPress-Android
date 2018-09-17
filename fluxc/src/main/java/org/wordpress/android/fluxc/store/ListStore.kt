@@ -224,8 +224,7 @@ class ListStore @Inject constructor(
     /**
      * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
      */
-    sealed class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) :
-            Payload<BaseNetworkError>() {
+    sealed class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) {
         class ListItemsRemovedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
                 ListItemsChangedPayload(listDescriptors, remoteItemIds)
 
