@@ -705,6 +705,17 @@ public class MediaSettingsActivity extends AppCompatActivity
         }
     }
 
+    private void hideImageDimensions() {
+        findViewById(R.id.text_image_dimensions).setVisibility(View.GONE);
+        findViewById(R.id.text_image_dimensions_label).setVisibility(View.GONE);
+        findViewById(R.id.divider_dimensions).setVisibility(View.GONE);
+
+        // Hide file type divider too if duration is hidden (i.e. media length is zero) to remove bottom divider.
+        if (mMedia.getLength() == 0) {
+            findViewById(R.id.divider_filetype).setVisibility(View.GONE);
+        }
+    }
+
     /**
      * Initialize the image alignment spinner
      */
@@ -750,15 +761,15 @@ public class MediaSettingsActivity extends AppCompatActivity
         if (SiteUtils.isPhotonCapable(mSite)) {
             imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
         }
-        showProgress(true);
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, null,
                 new RequestListener<Drawable>() {
                     @Override
                     public void onResourceReady(@NotNull Drawable resource) {
                         if (!isFinishing()) {
                             showProgress(false);
+
                             if (isMediaFromEditor()) {
-                                showImageDimensions(resource.getIntrinsicWidth(), resource.getIntrinsicHeight());
+                                hideImageDimensions();
                             }
                         }
                     }
