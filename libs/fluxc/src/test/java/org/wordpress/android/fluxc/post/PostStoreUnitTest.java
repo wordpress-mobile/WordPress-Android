@@ -371,79 +371,16 @@ public class PostStoreUnitTest {
 
 
     @Test
-    public void saveLocalRevisions() {
-        ArrayList<Diff> testTitleDiffs = new ArrayList<>();
-        testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy title"));
-        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add title"));
-        testTitleDiffs.add(new Diff(DiffOperations.DELETE, "del title"));
-
-        ArrayList<Diff> testContentDiff = new ArrayList<>();
-        testContentDiff.add(new Diff(DiffOperations.COPY, "copy content"));
-        testContentDiff.add(new Diff(DiffOperations.ADD, "add content"));
-        testContentDiff.add(new Diff(DiffOperations.DELETE, "del content"));
-
-
-        RevisionModel testRevisionModel = new RevisionModel(
-                1,
-                2,
-                5,
-                6,
-                "post content",
-                "post excerpt",
-                "post title",
-                "2018-09-04 12:19:34Z",
-                "2018-09-04 12:19:34Z",
-                "111111111",
-                testTitleDiffs,
-                testContentDiff
-
-        );
-
+    public void testSavingAndRetrievalOfLocalRevision() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
         SiteModel site = new SiteModel();
-        site.setSiteId(1);
+        site.setSiteId(77);
 
         PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
         mPostStore.setLocalRevision(testRevisionModel, site, postModel);
 
         RevisionModel retrievedRevision = mPostStore.getLocalRevision(site, postModel);
 
-        assertNotNull(retrievedRevision);
-        assertEquals(retrievedRevision.getId(), testRevisionModel.getId());
-        assertEquals(retrievedRevision.getDiffFromVersion(), testRevisionModel.getDiffFromVersion());
-        assertEquals(retrievedRevision.getTotalAdditions(), testRevisionModel.getTotalAdditions());
-        assertEquals(retrievedRevision.getTotalDeletions(), testRevisionModel.getTotalDeletions());
-        assertEquals(retrievedRevision.getPostContent(), testRevisionModel.getPostContent());
-        assertEquals(retrievedRevision.getPostExcerpt(), testRevisionModel.getPostExcerpt());
-        assertEquals(retrievedRevision.getPostTitle(), testRevisionModel.getPostTitle());
-        assertEquals(retrievedRevision.getPostDateGmt(), testRevisionModel.getPostDateGmt());
-        assertEquals(retrievedRevision.getPostModifiedGmt(), testRevisionModel.getPostModifiedGmt());
-        assertEquals(retrievedRevision.getPostAuthorId(), testRevisionModel.getPostAuthorId());
-
-
-        List<Diff> retrievedTitleDiffs = retrievedRevision.getTitleDiffs();
-        assertNotNull(retrievedTitleDiffs);
-        assertEquals(3, retrievedTitleDiffs.size());
-        assertEquals(DiffOperations.COPY, retrievedTitleDiffs.get(0).getOperation());
-        assertEquals(DiffOperations.ADD, retrievedTitleDiffs.get(1).getOperation());
-        assertEquals(DiffOperations.DELETE, retrievedTitleDiffs.get(2).getOperation());
-
-        assertEquals("copy title", retrievedTitleDiffs.get(0).getValue());
-        assertEquals("add title", retrievedTitleDiffs.get(1).getValue());
-        assertEquals("del title", retrievedTitleDiffs.get(2).getValue());
-
-        List<Diff> retrievedContentDiffs = retrievedRevision.getContentDiffs();
-        assertNotNull(retrievedContentDiffs);
-        assertEquals(3, retrievedContentDiffs.size());
-        assertEquals(DiffOperations.COPY, retrievedContentDiffs.get(0).getOperation());
-        assertEquals(DiffOperations.ADD, retrievedContentDiffs.get(1).getOperation());
-        assertEquals(DiffOperations.DELETE, retrievedContentDiffs.get(2).getOperation());
-
-        assertEquals("copy content", retrievedContentDiffs.get(0).getValue());
-        assertEquals("add content", retrievedContentDiffs.get(1).getValue());
-        assertEquals("del content", retrievedContentDiffs.get(2).getValue());
-
-
+        assertTrue(testRevisionModel.equals(retrievedRevision));
     }
-
-
 }
