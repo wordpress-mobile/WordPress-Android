@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListDescriptor;
+import org.wordpress.android.fluxc.model.list.ListType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -29,6 +30,8 @@ import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsUpdatedPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsUpdatedPayload.ListItemsDeletedPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -507,6 +510,10 @@ public class PostStore extends Store {
             event.error = payload.error;
         } else {
             PostSqlUtils.deletePost(payload.post);
+            ListItemsDeletedPayload listActionPayload =
+                    new ListItemsDeletedPayload(listDescriptors(payload.site.getId()),
+                            postIdListFromPost(payload.post));
+            dispatchListItemUpdatedAction(listActionPayload);
         }
 
         emitChange(event);
@@ -618,5 +625,17 @@ public class PostStore extends Store {
         OnPostChanged event = new OnPostChanged(rowsAffected);
         event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
         emitChange(event);
+    }
+
+    private void dispatchListItemUpdatedAction(ListItemsUpdatedPayload payload) {
+       mDispatcher.dispatch(ListActionBuilder.newListItemsUpdatedAction(payload));
+    }
+
+    private List<ListDescriptor> listDescriptors(int siteId) {
+        return Collections.singletonList(new ListDescriptor(ListType.POST, siteId, null, null));
+    }
+
+    private List<Long> postIdListFromPost(PostModel post) {
+        return Collections.singletonList(post.getRemotePostId());
     }
 }
