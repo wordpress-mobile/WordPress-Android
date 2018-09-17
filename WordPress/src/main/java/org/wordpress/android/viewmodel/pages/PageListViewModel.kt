@@ -128,8 +128,13 @@ class PageListViewModel @Inject constructor() : ViewModel() {
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return topologicalSort(pages, listType = PUBLISHED)
                 .map {
-                    val label = if (it.hasLocalChanges) string.local_changes else null
-                    PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it), actionsEnabled)
+                    val labels = mutableListOf<Int>()
+                    if (it.status == PageStatus.PRIVATE)
+                        labels.add(string.pages_private)
+                    if (it.hasLocalChanges)
+                        labels.add(string.local_changes)
+
+                    PublishedPage(it.remoteId, it.title, labels, getPageItemIndent(it), actionsEnabled)
                 }
     }
 
@@ -146,8 +151,13 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            val label = if (it.hasLocalChanges) string.local_draft else null
-            DraftPage(it.remoteId, it.title, label, actionsEnabled)
+            val labels = mutableListOf<Int>()
+            if (it.status == PageStatus.PENDING)
+                labels.add(string.pages_pending)
+            if (it.hasLocalChanges)
+                labels.add(string.local_draft)
+
+            DraftPage(it.remoteId, it.title, labels, actionsEnabled)
         }
     }
 
