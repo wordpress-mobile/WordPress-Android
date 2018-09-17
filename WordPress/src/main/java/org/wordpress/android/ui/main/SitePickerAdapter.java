@@ -238,7 +238,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.mTxtDomain.setText(site.mHomeURL);
         mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.mBlavatarUrl);
 
-        if (site.mLocalId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
+        if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled)
+            || (mIsMultiSelectEnabled && isItemSelected(position))) {
             holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
             holder.mLayoutContainer.setBackgroundDrawable(null);
@@ -387,6 +388,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
+        notifyDataSetChanged();
 
         loadSites();
     }
