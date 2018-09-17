@@ -5,15 +5,13 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import javax.inject.Inject
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
-import kotlinx.coroutines.experimental.withTimeoutOrNull
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
-import java.util.concurrent.TimeUnit.SECONDS
 import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
@@ -22,7 +20,7 @@ class ActionPerformer
     private lateinit var eventType: EventType
 
     companion object {
-        private const val ACTION_TIMEOUT = 30L
+        private const val ACTION_TIMEOUT = 30L * 1000
     }
 
     init {
@@ -60,13 +58,6 @@ class ActionPerformer
         if (continuation != null && eventType.action == event.causeOfChange) {
             continuation!!.resume(!event.isError)
         }
-    }
-
-    private suspend inline fun <T> suspendCoroutineWithTimeout(
-        timeout: Long,
-        crossinline block: (Continuation<T>) -> Unit
-    ) = withTimeoutOrNull(timeout, SECONDS) {
-        suspendCancellableCoroutine(block = block)
     }
 
     data class PageAction(val event: EventType, val perform: () -> Unit) {
