@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsDeletedPayload
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsFetched
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
@@ -47,7 +49,7 @@ class ListStore @Inject constructor(
         when (actionType) {
             ListAction.FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
             ListAction.FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
-            ListAction.LIST_ITEMS_UPDATED -> handleListItemUpdated(action.payload as ListItemsUpdatedPayload)
+            ListAction.LIST_ITEMS_CHANGED -> handleListItemUpdated(action.payload as ListItemsChangedPayload)
         }
     }
 
@@ -154,17 +156,17 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * Handles the [ListAction.LIST_ITEMS_UPDATED] action.
+     * Handles the [ListAction.LIST_ITEMS_CHANGED] action.
      *
      * Depending on the action type, it'll make changes in the DB and emit the change for the updated lists.
      */
-    private fun handleListItemUpdated(payload: ListItemsUpdatedPayload) {
+    private fun handleListItemUpdated(payload: ListItemsChangedPayload) {
         val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
         when (payload) {
-            is ListStore.ListItemsUpdatedPayload.ListItemsDeletedPayload -> {
+            is ListItemsDeletedPayload -> {
                 listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
             }
-            is ListStore.ListItemsUpdatedPayload.ListItemsFetched -> {
+            is ListItemsFetched -> {
                 // No action necessary, all we need to do is emit the change
             }
         }
@@ -220,15 +222,15 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * This is the payload for [ListAction.LIST_ITEMS_UPDATED].
+     * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
      */
-    sealed class ListItemsUpdatedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) :
+    sealed class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) :
             Payload<BaseNetworkError>() {
         class ListItemsDeletedPayload(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
-                ListItemsUpdatedPayload(listDescriptors, remoteItemIds)
+                ListItemsChangedPayload(listDescriptors, remoteItemIds)
 
         class ListItemsFetched(listDescriptors: List<ListDescriptor>, remoteItemIds: List<Long>) :
-                ListItemsUpdatedPayload(listDescriptors, remoteItemIds)
+                ListItemsChangedPayload(listDescriptors, remoteItemIds)
     }
 
     /**
