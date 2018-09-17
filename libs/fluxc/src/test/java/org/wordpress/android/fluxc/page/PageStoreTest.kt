@@ -92,46 +92,6 @@ class PageStoreTest {
         assertThat(result[0].title).isEqualTo(pageWithQuery.title)
     }
 
-    @Test
-    fun searchOrdersResultsByStatus() {
-        val trashStatus = "trash"
-        val draftStatus = "draft"
-        val publishStatus = "publish"
-        val futureStatus = "future"
-        val title = "title"
-        val trashedSite1 = initPage(1, title = title, status = trashStatus)
-        val draftSite1 = initPage(2, title = title, status = draftStatus)
-        val publishedSite1 = initPage(3, title = title, status = publishStatus)
-        val scheduledSite1 = initPage(4, title = title, status = futureStatus)
-        val scheduledSite2 = initPage(5, title = title, status = futureStatus)
-        val publishedSite2 = initPage(6, title = title, status = publishStatus)
-        val draftSite2 = initPage(7, title = title, status = draftStatus)
-        val trashedSite2 = initPage(8, title = title, status = trashStatus)
-        val pages = listOf(
-                trashedSite1,
-                draftSite1,
-                publishedSite1,
-                scheduledSite1,
-                scheduledSite2,
-                publishedSite2,
-                draftSite2,
-                trashedSite2
-        )
-        whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-
-        val result = runBlocking { store.groupedSearch(site, title) }
-
-        assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
-        assertPage(result, 0, PageStatus.PUBLISHED)
-        assertPage(result, 1, PageStatus.PUBLISHED)
-        assertPage(result, 0, PageStatus.DRAFT)
-        assertPage(result, 1, PageStatus.DRAFT)
-        assertPage(result, 0, PageStatus.SCHEDULED)
-        assertPage(result, 1, PageStatus.SCHEDULED)
-        assertPage(result, 0, PageStatus.TRASHED)
-        assertPage(result, 1, PageStatus.TRASHED)
-    }
-
     private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
         val page = map[status]?.get(position)
         assertThat(page).isNotNull()
