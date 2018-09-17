@@ -25,7 +25,15 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     }
 
     val listDescriptor: ListDescriptor
-        get() = ListDescriptor(typeDbValue, localSiteIdDbValue, filterDbValue, orderDbValue)
+        get() {
+            val type = ListType.fromValue(typeDbValue)
+            return ListDescriptor(
+                    type,
+                    localSiteIdDbValue,
+                    ListFilter.fromValue(type, filterDbValue),
+                    ListOrder.fromValue(type, orderDbValue)
+            )
+        }
 
     fun setListDescriptor(listDescriptor: ListDescriptor) {
         typeDbValue = listDescriptor.type.value
