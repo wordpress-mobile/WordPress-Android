@@ -468,7 +468,8 @@ public class PostStore extends Store {
         FetchedListItemsError fetchedListItemsError = null;
         List<Long> postIds;
         if (payload.isError()) {
-            fetchedListItemsError = new FetchedListItemsError(FetchedListItemsErrorType.GENERIC_ERROR, payload.error.message);
+            fetchedListItemsError =
+                    new FetchedListItemsError(FetchedListItemsErrorType.GENERIC_ERROR, payload.error.message);
             postIds = Collections.emptyList();
         } else {
             postIds = new ArrayList<>(payload.postListItems.size());
