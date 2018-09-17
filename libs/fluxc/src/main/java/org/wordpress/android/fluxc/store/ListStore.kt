@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -64,18 +66,18 @@ class ListStore @Inject constructor(
      * @return An immutable list manager that exposes enough information about a list to be used by adapters. See
      * [ListManager] for more details.
      */
-    fun <T> getListManager(
+    suspend fun <T> getListManager(
         listDescriptor: ListDescriptor,
         dataSource: ListItemDataSource<T>,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
-    ): ListManager<T> {
+    ): ListManager<T> = withContext(CommonPool) {
         val listModel = listSqlUtils.getList(listDescriptor)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
         val listState = if (listModel != null) getListState(listModel) else null
         val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
-        return ListManager(
+        return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
                 items = listItems,
