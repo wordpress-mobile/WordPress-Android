@@ -180,7 +180,6 @@ public class PostSqlUtils {
         int localRevisionModels =
                 WellSql.select(LocalRevisionModel.class)
                         .where().beginGroup()
-                        .equals(LocalRevisionModelTable.ID, revision.getId())
                         .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                         .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                         .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
@@ -188,7 +187,6 @@ public class PostSqlUtils {
         if (localRevisionModels > 0) {
             WellSql.update(LocalRevisionModel.class)
                     .where().beginGroup()
-                    .equals(LocalRevisionModelTable.ID, revision.getId())
                     .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                     .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                     .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
@@ -203,7 +201,7 @@ public class PostSqlUtils {
         // we need to maintain order of diffs, so it's better to remove all existing ones beforehand
         WellSql.delete(LocalDiffModel.class)
                 .where().beginGroup()
-                .equals(LocalDiffModelTable.REVISION_ID, revision.getId())
+                .equals(LocalDiffModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalDiffModelTable.POST_ID, revision.getPostId())
                 .equals(LocalDiffModelTable.SITE_ID, revision.getSiteId())
                 .endGroup()
@@ -244,7 +242,7 @@ public class PostSqlUtils {
 
         WellSql.delete(LocalDiffModel.class)
                 .where().beginGroup()
-                .equals(LocalDiffModelTable.REVISION_ID, revision.getId())
+                .equals(LocalDiffModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalDiffModelTable.POST_ID, revision.getPostId())
                 .equals(LocalDiffModelTable.SITE_ID, revision.getSiteId())
                 .endGroup()
