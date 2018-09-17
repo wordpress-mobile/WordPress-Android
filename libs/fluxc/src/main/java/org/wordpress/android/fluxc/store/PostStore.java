@@ -31,7 +31,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsDeletedPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload.ListItemsRemovedPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
@@ -510,8 +510,8 @@ public class PostStore extends Store {
             event.error = payload.error;
         } else {
             PostSqlUtils.deletePost(payload.post);
-            ListItemsDeletedPayload listActionPayload =
-                    new ListItemsDeletedPayload(listDescriptorsToUpdate(payload.site.getId()),
+            ListItemsRemovedPayload listActionPayload =
+                    new ListItemsRemovedPayload(listDescriptorsToUpdate(payload.site.getId()),
                             postIdListFromPost(payload.post));
             dispatchListItemUpdatedAction(listActionPayload);
         }
