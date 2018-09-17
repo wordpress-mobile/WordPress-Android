@@ -122,7 +122,7 @@ class PagesViewModel
     private var currentPageType = PageListType.PUBLISHED
 
     companion object {
-        val PAGE_UPDATE_TIMEOUT = 5L * 1000
+        const val PAGE_UPDATE_TIMEOUT = 5L * 1000
     }
 
     fun start(site: SiteModel) {
