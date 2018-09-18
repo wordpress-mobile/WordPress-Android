@@ -290,7 +290,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             return true;
                         } else if (mSiteSelectedListener != null) {
                             boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
-                            setItemSelected(clickedPosition, true);
                             return result;
                         }
                     } else {
@@ -388,7 +387,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mIsMultiSelectEnabled = enable;
         mSelectedPositions.clear();
-        notifyDataSetChanged();
 
         loadSites();
     }
