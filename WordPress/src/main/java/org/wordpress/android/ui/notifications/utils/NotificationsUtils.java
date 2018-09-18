@@ -174,7 +174,7 @@ public class NotificationsUtils {
         return mapper.mapToFormattableContent(blockObject.toString());
     }
 
-    static Spannable getSpannableContentForRanges(
+    static SpannableStringBuilder getSpannableContentForRanges(
             FormattableContentMapper formattableContentMapper,
             JSONObject blockObject, TextView textView,
             final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
@@ -192,7 +192,7 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
+    static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
                                                   final NoteBlock.OnNoteBlockTextClickListener
                                                           onNoteBlockTextClickListener,
                                                   boolean isFooter) {
@@ -218,7 +218,7 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+    static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
                                                   TextView textView,
                                                   final Function1<FormattableRange, Unit> clickHandler,
                                                   boolean isFooter) {
@@ -244,7 +244,7 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    private static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+    private static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
                                                           TextView textView,
                                                           boolean isFooter,
                                                           final Function1<NoteBlockClickableSpan, Unit>
