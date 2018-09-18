@@ -130,7 +130,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             }
         } else {
             val pagesWithBottomGap = newPages.toMutableList()
-            pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
+            pagesWithBottomGap.addAll(listOf(Divider(), Divider()))
             _pages.postValue(pagesWithBottomGap)
         }
     }
