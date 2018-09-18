@@ -85,6 +85,7 @@ enum class FormattableRangeType {
     NOTICON,
     LIKE,
     MATCH,
+    MEDIA,
     UNKNOWN;
 
     companion object {
@@ -101,6 +102,7 @@ enum class FormattableRangeType {
                 "noticon" -> NOTICON
                 "like" -> LIKE
                 "match" -> MATCH
+                "media" -> MEDIA
                 else -> UNKNOWN
             }
         }
