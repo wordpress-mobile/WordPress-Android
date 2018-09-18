@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.launch
-import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.ListStatus.DONE
@@ -15,7 +14,6 @@ import javax.inject.Named
 
 class InsightsViewModel
 @Inject constructor(
-    private val statsStore: StatsStore,
     private val insightsDomain: InsightsDomain,
     @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
 ) : ViewModel() {
