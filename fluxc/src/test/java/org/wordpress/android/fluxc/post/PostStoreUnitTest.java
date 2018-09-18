@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -398,5 +400,36 @@ public class PostStoreUnitTest {
         RevisionModel retrievedRevision = mPostStore.getLocalRevision(site, postModel);
 
         assertTrue(testRevisionModel.equals(retrievedRevision));
+    }
+
+    @Test
+    public void testDeleteLocalRevision() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+        assertNotNull(mPostStore.getLocalRevision(site, postModel));
+
+        mPostStore.deleteLocalRevision(testRevisionModel, site, postModel);
+        assertNull(mPostStore.getLocalRevision(site, postModel));
+    }
+
+    @Test
+    public void testDeleteLocalRevisionOfAPostOrPage() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        postModel.setRemoteSiteId(77);
+
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+        assertNotNull(mPostStore.getLocalRevision(site, postModel));
+
+        mPostStore.deleteLocalRevisionOfAPostOrPage(postModel);
+        assertNull(mPostStore.getLocalRevision(site, postModel));
     }
 }

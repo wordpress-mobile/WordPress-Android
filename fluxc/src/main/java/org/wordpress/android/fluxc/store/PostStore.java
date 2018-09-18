@@ -620,7 +620,7 @@ public class PostStore extends Store {
                 LocalRevisionModel.fromRevisionModel(revisionModel, site, post));
     }
 
-    public void deleteLocalRevisionOfApost(PostModel post) {
-        PostSqlUtils.deleteLocalRevisionAndDiffsOfApost(post);
+    public void deleteLocalRevisionOfAPostOrPage(PostModel post) {
+        PostSqlUtils.deleteLocalRevisionAndDiffsOfAPostOrPage(post);
     }
 }

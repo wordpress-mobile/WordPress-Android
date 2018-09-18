@@ -233,7 +233,7 @@ public class PostSqlUtils {
     public static void deleteLocalRevisionAndDiffs(LocalRevisionModel revision) {
         WellSql.delete(LocalRevisionModel.class)
                 .where().beginGroup()
-                .equals(LocalRevisionModelTable.REVISION_ID, revision.getId())
+                .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                 .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
                 .endGroup()
@@ -250,7 +250,7 @@ public class PostSqlUtils {
                 .execute();
     }
 
-    public static void deleteLocalRevisionAndDiffsOfApost(PostModel post) {
+    public static void deleteLocalRevisionAndDiffsOfAPostOrPage(PostModel post) {
         WellSql.delete(LocalRevisionModel.class)
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
