@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -89,12 +90,15 @@ class JetpackRemoteInstallViewModel
     fun onEventsUpdated(event: OnJetpackInstalled) {
         val site = siteModel ?: return
         if (event.isError) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
             mutableViewState.postValue(Error { startRemoteInstall(site) })
             return
         }
         if (event.success) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
             mutableViewState.postValue(Installed { connectJetpack(site.id) })
         } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
             mutableViewState.postValue(Error { startRemoteInstall(site) })
         }
     }

@@ -27,10 +27,6 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -41,8 +37,11 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
-import org.wordpress.android.viewmodel.pages.getTitle
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -291,7 +290,7 @@ class PagesFragment : Fragment() {
 
 class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        val pageTypes = listOf(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
+        val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }
 
     override fun getCount(): Int = pageTypes.size
@@ -301,6 +300,6 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(pageTypes[position].getTitle())
+        return context.getString(pageTypes[position].title)
     }
 }
