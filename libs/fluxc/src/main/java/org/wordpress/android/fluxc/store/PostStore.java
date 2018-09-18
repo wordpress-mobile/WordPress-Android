@@ -608,6 +608,7 @@ public class PostStore extends Store {
             return null;
         }
 
+        // we currently only support one local revision per post or page
         LocalRevisionModel localRevision = localRevisions.get(0);
         List<LocalDiffModel> localDiffs =
                 PostSqlUtils.getLocalRevisionDiffs(localRevision);

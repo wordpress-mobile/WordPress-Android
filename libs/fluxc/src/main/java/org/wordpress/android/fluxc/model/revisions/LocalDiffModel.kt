@@ -28,7 +28,7 @@ class LocalDiffModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable
         @JvmStatic
         fun fromDiffAndLocalRevision(
             diff: Diff,
-            localDiffType: LocalDiffType,
+            diffType: LocalDiffType,
             localRevisionModel: LocalRevisionModel
         ): LocalDiffModel {
             val localDiff = LocalDiffModel()
@@ -40,7 +40,7 @@ class LocalDiffModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable
             localDiff.operation = diff.operation.toString()
             localDiff.value = diff.value
 
-            localDiff.diffType = localDiffType.toString()
+            localDiff.diffType = diffType.toString()
             return localDiff
         }
     }
