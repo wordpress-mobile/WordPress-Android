@@ -466,6 +466,7 @@
                                 tools:text="text_filetype" />
                     </LinearLayout>
                     <View
+                        android:id="@+id/divider_filetype"
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
