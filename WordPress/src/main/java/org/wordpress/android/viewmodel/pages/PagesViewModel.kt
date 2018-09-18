@@ -84,6 +84,9 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
+    private val _scrollToPage = SingleLiveEvent<PageModel>()
+    val scrollToPage: LiveData<PageModel?> = _scrollToPage
+
     private var _pageMap: MutableMap<Long, PageModel> = mutableMapOf()
     private var pageMap: MutableMap<Long, PageModel>
         get() {
@@ -212,6 +215,12 @@ class PagesViewModel
             }
         } else {
             clearSearch()
+        }
+    }
+
+    fun onSpecificPageRequested(remotePageId: Long) {
+        pageMap.values.firstOrNull { it.remoteId == remotePageId }?.let {
+            _scrollToPage.postValue(it)
         }
     }
 
