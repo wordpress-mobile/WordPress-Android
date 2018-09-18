@@ -8,17 +8,13 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSmoothScroller
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -92,6 +88,12 @@ class PageListFragment : Fragment() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
         })
+
+        viewModel.scrollToPosition.observe(this, Observer { position ->
+            position?.let {
+                recyclerView.smoothScrollToPosition(position)
+            }
+        })
     }
 
     private fun setPages(pages: List<PageItem>) {
@@ -108,12 +110,7 @@ class PageListFragment : Fragment() {
         adapter.update(pages)
     }
 
-    fun scrollToPage(pageId: Long) {
-        val position = viewModel.pages.value?.indexOfFirst { it is Page && it.id == pageId }
-        if (position != null && position != -1) {
-            recyclerView.smoothScrollToPosition(position)
-        } else {
-            ToastUtils.showToast(activity, R.string.pages_open_page_error)
-        }
+    fun scrollToPage(remotePageId: Long) {
+        viewModel.onScrollToPageRequested(remotePageId)
     }
 }

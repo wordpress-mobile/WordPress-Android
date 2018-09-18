@@ -246,7 +246,7 @@ class PagesFragment : Fragment() {
         viewModel.scrollToPage.observe(this, Observer { requestedPage ->
             requestedPage?.let { page ->
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
-                pagesPager.setCurrentItem(pagerIndex, false)
+                pagesPager.currentItem = pagerIndex
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })

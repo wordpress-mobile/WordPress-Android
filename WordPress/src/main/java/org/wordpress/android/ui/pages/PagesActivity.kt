@@ -25,19 +25,21 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
         }
+
+        handleIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
         if (intent.hasExtra(EXTRA_PAGE_REMOTE_ID_KEY)) {
             val pageId = intent.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, -1)
-            if (pageId != -1L) {
-                supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
-                    (it as PagesFragment).onSpecificPageRequested(pageId)
-                }
-            } else {
-                ToastUtils.showToast(this, R.string.pages_open_page_error)
+            supportFragmentManager.findFragmentById(id.fragment_container)?.let {
+                (it as PagesFragment).onSpecificPageRequested(pageId)
             }
         }
     }
