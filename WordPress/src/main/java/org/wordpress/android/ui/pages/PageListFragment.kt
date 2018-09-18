@@ -111,7 +111,7 @@ class PageListFragment : Fragment() {
         val position = viewModel.pages.value?.indexOfFirst { it is Page && it.id == pageId }
         if (position != null && position != -1) {
             val smoothScroller = object : LinearSmoothScroller(activity) {
-                private val SCROLL_OFFSET_DP = 23
+                private val SCROLL_OFFSET_DP = activity?.resources?.getDimension(R.dimen.page_scroll_offset) ?: 23f
 
                 override fun getVerticalSnapPreference(): Int {
                     return LinearSmoothScroller.SNAP_TO_START
@@ -124,9 +124,9 @@ class PageListFragment : Fragment() {
                     boxEnd: Int,
                     snapPreference: Int
                 ): Int {
-                    // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
+                    // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above pages shows
                     val offsetPx = TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP.toFloat(), resources.displayMetrics
+                            TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP, resources.displayMetrics
                     ).toInt()
                     return boxStart - viewStart + offsetPx
                 }
