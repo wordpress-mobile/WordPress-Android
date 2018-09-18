@@ -3,13 +3,13 @@ package org.wordpress.android.ui.stats.refresh
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.StatsType.NOT_IMPLEMENTED
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 
-class StatsListAdapter : Adapter<StatsViewHolder>() {
-    private var items: List<StatsItem> = listOf()
-    fun update(newItems: List<StatsItem>) {
+class InsightsAdapter : Adapter<InsightsViewHolder>() {
+    private var items: List<InsightsItem> = listOf()
+    fun update(newItems: List<InsightsItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                StatsDiffCallback(
+                InsightsDiffCallback(
                         items,
                         newItems
                 )
@@ -19,8 +19,8 @@ class StatsListAdapter : Adapter<StatsViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsViewHolder {
-        return when (StatsType.values()[viewType]) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InsightsViewHolder {
+        return when (InsightsItem.Type.values()[viewType]) {
             NOT_IMPLEMENTED -> NotImplementedViewHolder(parent)
         }
     }
@@ -31,7 +31,7 @@ class StatsListAdapter : Adapter<StatsViewHolder>() {
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: StatsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: InsightsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
             is NotImplementedViewHolder -> holder.bind(item as NotImplemented)

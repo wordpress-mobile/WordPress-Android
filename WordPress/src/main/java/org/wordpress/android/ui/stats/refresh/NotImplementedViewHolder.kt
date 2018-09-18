@@ -7,12 +7,12 @@ import org.wordpress.android.R.layout
 
 class NotImplementedViewHolder(
     parent: ViewGroup
-) : StatsViewHolder(
+) : InsightsViewHolder(
         parent,
         layout.stats_not_implemented_block
 ) {
     private val title: TextView = itemView.findViewById(R.id.not_implemented_block_title)
-    fun bind(statsItem: NotImplemented) {
-        title.text = statsItem.text
+    fun bind(insightsItem: NotImplemented) {
+        title.text = insightsItem.text
     }
 }

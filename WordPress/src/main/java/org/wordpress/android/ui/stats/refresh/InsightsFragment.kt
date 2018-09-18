@@ -14,9 +14,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-class StatsListFragment : Fragment() {
+class InsightsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: StatsListViewModel
+    private lateinit var mViewModel: InsightsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_log_list_fragment, container, false)
@@ -30,17 +30,17 @@ class StatsListFragment : Fragment() {
         (activity?.application as WordPress).component()?.inject(this)
 
         val viewModelProvider = ViewModelProviders.of(this, viewModelFactory)
-        viewModel = viewModelProvider.get(StatsListViewModel::class.java)
+        mViewModel = viewModelProvider.get(InsightsViewModel::class.java)
 
-        val adapter = StatsListAdapter()
+        val adapter = InsightsAdapter()
 
         log_list_view.adapter = adapter
 
-        viewModel.data.observe(this, Observer {
+        mViewModel.data.observe(this, Observer {
             if (it != null) {
-                adapter.update(it)
+                adapter.update(it.data)
             }
         })
-        viewModel.start()
+        mViewModel.start()
     }
 }
