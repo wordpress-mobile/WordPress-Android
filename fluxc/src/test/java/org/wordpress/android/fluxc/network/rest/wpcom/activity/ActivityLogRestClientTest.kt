@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
+import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.test
 
 @RunWith(MockitoJUnitRunner::class)
@@ -98,7 +99,7 @@ class ActivityLogRestClientTest {
                 assertEquals(this.published, ACTIVITY_RESPONSE.published)
                 assertEquals(this.rewindID, ACTIVITY_RESPONSE.rewind_id)
                 assertEquals(this.rewindable, ACTIVITY_RESPONSE.is_rewindable)
-                assertEquals(this.text, ACTIVITY_RESPONSE.content?.text)
+                assertEquals(this.content, ACTIVITY_RESPONSE.content)
                 assertEquals(this.actor?.avatarURL, ACTIVITY_RESPONSE.actor?.icon?.url)
                 assertEquals(this.actor?.wpcomUserID, ACTIVITY_RESPONSE.actor?.wpcom_user_id)
             }
@@ -129,7 +130,7 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivity_dispatchesErrorOnMissingContentText() = test {
-        val emptyContent = ActivitiesResponse.Content(null)
+        val emptyContent = FormattableContent(null)
         val failingPage = Page(listOf(ACTIVITY_RESPONSE.copy(content = emptyContent)))
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         initFetchActivity(activitiesResponse)

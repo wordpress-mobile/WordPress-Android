@@ -6,6 +6,8 @@ import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
@@ -15,6 +17,10 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrEmptyArray;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrEmptyArrayDeserializer;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalse;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalseDeserializer;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient;
@@ -283,5 +289,16 @@ public class ReleaseNetworkModule {
                                                      @Named("regular") RequestQueue requestQueue,
                                                      AccessToken token, UserAgent userAgent) {
         return new ReaderRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public Gson provideGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
+                new JsonObjectOrEmptyArrayDeserializer());
+        return gsonBuilder.create();
     }
 }
