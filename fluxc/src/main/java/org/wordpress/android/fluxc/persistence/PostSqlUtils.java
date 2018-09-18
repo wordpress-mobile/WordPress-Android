@@ -190,23 +190,19 @@ public class PostSqlUtils {
                     .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                     .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                     .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
-                    .endGroup()
-                    .endWhere()
-                    .put(revision, new UpdateAllExceptId<>(LocalRevisionModel.class))
-                    .execute();
+                    .endGroup().endWhere()
+                    .put(revision, new UpdateAllExceptId<>(LocalRevisionModel.class)).execute();
         } else {
             WellSql.insert(revision).execute();
         }
 
-        // we need to maintain order of diffs, so it's better to remove all existing ones beforehand
+        // we need to maintain order of diffs, so it's better to remove all of existing ones beforehand
         WellSql.delete(LocalDiffModel.class)
                 .where().beginGroup()
                 .equals(LocalDiffModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalDiffModelTable.POST_ID, revision.getPostId())
                 .equals(LocalDiffModelTable.SITE_ID, revision.getSiteId())
-                .endGroup()
-                .endWhere()
-                .execute();
+                .endGroup().endWhere().execute();
 
         for (LocalDiffModel diff : diffs) {
             WellSql.insert(diff).execute();
@@ -236,18 +232,14 @@ public class PostSqlUtils {
                 .equals(LocalRevisionModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalRevisionModelTable.POST_ID, revision.getPostId())
                 .equals(LocalRevisionModelTable.SITE_ID, revision.getSiteId())
-                .endGroup()
-                .endWhere()
-                .execute();
+                .endGroup().endWhere().execute();
 
         WellSql.delete(LocalDiffModel.class)
                 .where().beginGroup()
                 .equals(LocalDiffModelTable.REVISION_ID, revision.getRevisionId())
                 .equals(LocalDiffModelTable.POST_ID, revision.getPostId())
                 .equals(LocalDiffModelTable.SITE_ID, revision.getSiteId())
-                .endGroup()
-                .endWhere()
-                .execute();
+                .endGroup().endWhere().execute();
     }
 
     public static void deleteLocalRevisionAndDiffsOfAPostOrPage(PostModel post) {
@@ -255,16 +247,12 @@ public class PostSqlUtils {
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
                 .equals(LocalRevisionModelTable.SITE_ID, post.getRemoteSiteId())
-                .endGroup()
-                .endWhere()
-                .execute();
+                .endGroup().endWhere().execute();
 
         WellSql.delete(LocalDiffModel.class)
                 .where().beginGroup()
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
                 .equals(LocalRevisionModelTable.SITE_ID, post.getRemoteSiteId())
-                .endGroup()
-                .endWhere()
-                .execute();
+                .endGroup().endWhere().execute();
     }
 }
