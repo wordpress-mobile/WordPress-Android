@@ -8,7 +8,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +16,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
-import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.ui.pages.PageItem
@@ -27,6 +25,7 @@ import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.Date
 import java.util.SortedMap
 
@@ -39,7 +38,7 @@ class SearchListViewModelTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var pagesViewModel: PagesViewModel
 
-    private lateinit var searchPages: MutableLiveData<SortedMap<PageStatus, List<PageModel>>>
+    private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
     private lateinit var viewModel: SearchListViewModel
 
     private lateinit var page: PageModel
@@ -60,12 +59,11 @@ class SearchListViewModelTest {
         assertThat(viewModel.searchResult.value).containsOnly(Empty(string.pages_search_suggestion, true))
     }
 
-    @Ignore
     @Test
     fun `adds divider to published group`() {
         val expectedTitle = "title"
-        for (status in PageStatus.values()) {
-            whenever(resourceProvider.getString(status.getTitle())).thenReturn(expectedTitle)
+        for (status in PageListType.values()) {
+            whenever(resourceProvider.getString(status.title)).thenReturn(expectedTitle)
 
             searchPages.value = sortedMapOf(status to listOf())
 
@@ -73,7 +71,6 @@ class SearchListViewModelTest {
         }
     }
 
-    @Ignore
     @Test
     fun `builds list with dividers from grouped result`() {
         val expectedTitle = "title"
@@ -82,11 +79,11 @@ class SearchListViewModelTest {
         val publishedPageId = 1
         val publishedPageRemoteId = 11L
         val publishedPage = page.copy(pageId = publishedPageId, remoteId = publishedPageRemoteId, status = PUBLISHED)
-        val publishedList = PageStatus.PUBLISHED to listOf(publishedPage)
+        val publishedList = PageListType.PUBLISHED to listOf(publishedPage)
         val draftPageId = 2
         val draftPageRemoteId = 22L
         val draftPage = page.copy(pageId = draftPageId, remoteId = draftPageRemoteId, status = DRAFT)
-        val draftList = PageStatus.DRAFT to listOf(draftPage)
+        val draftList = PageListType.DRAFTS to listOf(draftPage)
 
         searchPages.value = sortedMapOf(publishedList, draftList)
 
@@ -111,10 +108,9 @@ class SearchListViewModelTest {
         }
     }
 
-    @Ignore
     @Test
     fun `passes action to page view model on menu action`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", null, 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
         val action = VIEW_PAGE
 
         viewModel.onMenuAction(action, clickedPage)
@@ -124,7 +120,7 @@ class SearchListViewModelTest {
 
     @Test
     fun `passes page to page view model on item tapped`() {
-        val clickedPage = PageItem.PublishedPage(1, "title", null, 0, false)
+        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
 
         viewModel.onItemTapped(clickedPage)
 

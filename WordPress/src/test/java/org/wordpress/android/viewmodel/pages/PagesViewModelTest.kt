@@ -2,36 +2,29 @@ package org.wordpress.android.viewmodel.pages
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.reset
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
-import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import java.util.Date
 import java.util.SortedMap
 
@@ -47,7 +40,7 @@ class PagesViewModelTest {
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
-    private lateinit var searchPages: MutableList<SortedMap<PageStatus, List<PageModel>>>
+    private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
     private lateinit var pageModel: PageModel
 
     @Before
@@ -62,7 +55,6 @@ class PagesViewModelTest {
         pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
     }
 
-    @Ignore
     @Test
     fun clearsResultAndLoadsDataOnStart() = test {
         val pageModel = initPageRepo()
@@ -85,7 +77,6 @@ class PagesViewModelTest {
         return pageModel
     }
 
-    @Ignore
     @Test
     fun onSiteWithoutPages() = test {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
@@ -98,43 +89,12 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onPageEditFinishedReloadSite() = test {
-        whenever(pageStore.requestPagesFromServer(site)).thenReturn(OnPostChanged(0, false))
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
-
-        val pageModel = initPageRepo()
-        viewModel.start(site)
-
-        reset(pageStore)
-
-        val postModel = PostModel()
-        val postId: Long = 5
-        postModel.remotePostId = postId
-        val job = launch {
-            whenever(pageStore.requestPagesFromServer(site)).thenReturn(OnPostChanged(0, false))
-            initPageRepo()
-            viewModel.onPageEditFinished(postId)
-        }
-
-        delay(10)
-
-        verifyZeroInteractions(pageStore)
-
-        job.join()
-
-        viewModel.onPostUploaded(OnPostUploaded(postModel))
-
-        verify(pageStore).requestPagesFromServer(site)
-        assertThat(pages.last()).containsOnly(pageModel)
-    }
-
-    @Test
     fun onSearchReturnsResultsFromStore() = test {
         initSearch()
         val query = "query"
         val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
-        val expectedResult = sortedMapOf(DRAFT to drafts)
-        whenever(pageStore.groupedSearch(site, query)).thenReturn(expectedResult)
+        val expectedResult = sortedMapOf(DRAFTS to drafts)
+        whenever(pageStore.search(site, query)).thenReturn(drafts)
 
         viewModel.onSearch(query, 0)
 
@@ -147,7 +107,7 @@ class PagesViewModelTest {
     fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
         initSearch()
         val query = "query"
-        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
+        whenever(pageStore.search(site, query)).thenReturn(listOf())
 
         viewModel.onSearch(query, 0)
 
