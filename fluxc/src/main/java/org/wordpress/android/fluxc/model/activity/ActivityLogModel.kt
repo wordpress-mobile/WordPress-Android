@@ -1,11 +1,12 @@
 package org.wordpress.android.fluxc.model.activity
 
+import org.wordpress.android.fluxc.tools.FormattableContent
 import java.util.Date
 
 data class ActivityLogModel(
     val activityID: String,
     val summary: String,
-    val text: String,
+    val content: FormattableContent?,
     val name: String?,
     val type: String?,
     val gridicon: String?,
