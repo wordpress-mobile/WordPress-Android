@@ -1,10 +1,10 @@
 package org.wordpress.android.fluxc.tools
 
-import com.google.gson.Gson
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.module.ReleaseNetworkModule
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -90,7 +90,7 @@ class FormattableContentMapperTest {
 
     @Before
     fun setUp() {
-        val gson = Gson()
+        val gson = ReleaseNetworkModule().provideGson()
         formattableContentMapper = FormattableContentMapper(gson)
     }
 
