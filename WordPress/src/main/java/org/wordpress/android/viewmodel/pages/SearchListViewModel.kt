@@ -18,6 +18,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.SortedMap
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ class SearchListViewModel
         pagesViewModel.searchPages.removeObserver(searchObserver)
     }
 
-    private val searchObserver = Observer<SortedMap<PageStatus, List<PageModel>>> { pages ->
+    private val searchObserver = Observer<SortedMap<PageListType, List<PageModel>>> { pages ->
         if (pages != null) {
             loadFoundPages(pages)
 
@@ -61,11 +62,11 @@ class SearchListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageStatus, List<PageModel>>) = launch {
+    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch {
         if (pages.isNotEmpty()) {
             val pageItems = pages
-                    .map { (status, results) ->
-                        listOf(Divider(resourceProvider.getString(status.getTitle()))) +
+                    .map { (listType, results) ->
+                        listOf(Divider(resourceProvider.getString(listType.title))) +
                                 results.map { it.toPageItem(pagesViewModel.arePageActionsEnabled) }
                     }
                     .fold(mutableListOf()) { acc: MutableList<PageItem>, list: List<PageItem> ->
@@ -80,8 +81,9 @@ class SearchListViewModel
 
     private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem {
         return when (status) {
-            PageStatus.PUBLISHED -> PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
-            PageStatus.DRAFT -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.PUBLISHED, PageStatus.PRIVATE ->
+                PublishedPage(remoteId, title, actionsEnabled = areActionsEnabled)
+            PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.TRASHED -> TrashedPage(remoteId, title, actionsEnabled = areActionsEnabled)
             PageStatus.SCHEDULED -> ScheduledPage(remoteId, title, actionsEnabled = areActionsEnabled)
         }

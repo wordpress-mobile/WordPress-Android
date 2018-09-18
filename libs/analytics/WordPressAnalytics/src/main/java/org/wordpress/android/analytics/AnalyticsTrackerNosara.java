@@ -787,6 +787,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "install_jetpack_canceled";
             case INSTALL_JETPACK_COMPLETED:
                 return "install_jetpack_completed";
+            case INSTALL_JETPACK_REMOTE_COMPLETED:
+                return "install_jetpack_remote_completed";
+            case INSTALL_JETPACK_REMOTE_FAILED:
+                return "connect_jetpack_remote_failed";
             case CONNECT_JETPACK_SELECTED:
                 return "connect_jetpack_selected";
             case CONNECT_JETPACK_FAILED:
