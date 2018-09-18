@@ -87,6 +87,9 @@ class PagesViewModel
     private val _scrollToPage = SingleLiveEvent<PageModel>()
     val scrollToPage: LiveData<PageModel?> = _scrollToPage
 
+    private var isInitialized = false
+    private var scrollToPageId: Long? = null
+
     private var _pageMap: MutableMap<Long, PageModel> = mutableMapOf()
     private var pageMap: MutableMap<Long, PageModel>
         get() {
@@ -127,7 +130,7 @@ class PagesViewModel
     fun start(site: SiteModel) {
         _site = site
 
-        reloadPagesAsync()
+        loadPagesAsync()
     }
 
     init {
@@ -140,12 +143,18 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun reloadPagesAsync() = launch(CommonPool) {
+    private fun loadPagesAsync() = launch(CommonPool) {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
         reloadPages(loadState)
+
+        isInitialized = true
+
+        scrollToPageId?.let {
+            onSpecificPageRequested(it)
+        }
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
@@ -219,8 +228,15 @@ class PagesViewModel
     }
 
     fun onSpecificPageRequested(remotePageId: Long) {
-        pageMap.values.firstOrNull { it.remoteId == remotePageId }?.let {
-            _scrollToPage.postValue(it)
+        if (isInitialized) {
+            val page = pageMap[remotePageId]
+            if (page != null) {
+                _scrollToPage.postValue(page)
+            } else {
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.pages_open_page_error))
+            }
+        } else {
+            scrollToPageId = remotePageId
         }
     }
 
