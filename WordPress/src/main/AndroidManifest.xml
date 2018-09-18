@@ -233,6 +233,15 @@
             android:theme="@style/Calypso.NoActionBar"
             android:label="" />
         <activity
+            android:name=".ui.pages.PagesActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:launchMode="singleTop"
+            android:label="@string/my_site_btn_site_pages" />
+        <activity
+            android:name=".ui.pages.PageParentActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/set_parent" />
+        <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
             android:theme="@style/Calypso.NoActionBar" />
@@ -622,6 +631,16 @@
             android:label="Notifications Update Job Service" />
 
         <service
+            android:name=".util.analytics.service.InstallationReferrerService"
+            android:exported="false"
+            android:label="Installation Referrer Service" />
+        <service
+            android:name=".util.analytics.service.InstallationReferrerJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Installation Referrer Service" />
+
+        <service
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
@@ -658,6 +677,14 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stats_widget_info" />
         </receiver>
+        <receiver
+            android:name=".util.analytics.receiver.InstallationReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
 
         <!-- Google Cloud Messaging receiver and services -->
         <meta-data

@@ -1,0 +1,6 @@
+10.8:
+Bu güncelleme sadece sizin daha çabuk gol atmanızla alakalı.
+Muhteşem bir site yapmanıza yardımcı olmak için, önerilen adımların listesi olan  yeni bir Hızlı Başlangıç bölümü var.
+Jetpack kurulumunu kolaylaştırdık, böylece daha az adım var. Daha az kurulum, daha fazla kllanım!
+(Oh, ve tabiki bazı hataları da yok ettik. )
+

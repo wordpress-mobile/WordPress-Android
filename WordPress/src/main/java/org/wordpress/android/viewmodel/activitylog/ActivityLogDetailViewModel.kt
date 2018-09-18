@@ -9,14 +9,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
+import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.text.DateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
@@ -34,6 +34,10 @@ class ActivityLogDetailViewModel
     private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
     val showRewindDialog: LiveData<ActivityLogDetailModel>
         get() = _showRewindDialog
+
+    private val _handleFormattableRangeClick = SingleLiveEvent<FormattableRange>()
+    val handleFormattableRangeClick: LiveData<FormattableRange>
+        get() = _handleFormattableRangeClick
 
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
@@ -59,34 +63,24 @@ class ActivityLogDetailViewModel
         this.activityLogId = activityLogId
 
         if (activityLogId != _item.value?.activityID) {
-            _item.postValue(
-                    activityLogStore
-                            .getActivityLogForSite(site)
-                            .find { it.activityID == activityLogId }
-                            ?.let {
-                                ActivityLogDetailModel(
-                                        activityID = it.activityID,
-                                        rewindId = it.rewindID,
-                                        actorIconUrl = it.actor?.avatarURL,
-                                        showJetpackIcon = it.actor?.showJetpackIcon(),
-                                        isRewindButtonVisible = it.rewindable ?: false,
-                                        actorName = it.actor?.displayName,
-                                        actorRole = it.actor?.role,
-                                        text = it.text,
-                                        summary = it.summary,
-                                        createdDate = it.published.printDate(),
-                                        createdTime = it.published.printTime(),
-                                        rewindAction = it.rewindID?.let {
-                                            { this.onRewindClicked() }
-                                        } ?: {
-                                            AppLog.e(
-                                                    ACTIVITY_LOG,
-                                                    "Trying to rewind activity without rewind ID"
-                                            )
-                                        }
-                                )
-                            }
-            )
+            _item.value = activityLogStore
+                    .getActivityLogForSite(site)
+                    .find { it.activityID == activityLogId }
+                    ?.let {
+                        ActivityLogDetailModel(
+                                activityID = it.activityID,
+                                rewindId = it.rewindID,
+                                actorIconUrl = it.actor?.avatarURL,
+                                showJetpackIcon = it.actor?.showJetpackIcon(),
+                                isRewindButtonVisible = it.rewindable ?: false,
+                                actorName = it.actor?.displayName,
+                                actorRole = it.actor?.role,
+                                content = it.content,
+                                summary = it.summary,
+                                createdDate = it.published.toFormattedDateString(),
+                                createdTime = it.published.toFormattedTimeString()
+                        )
+                    }
         }
         rewindStatusService.start(site)
     }
@@ -95,20 +89,23 @@ class ActivityLogDetailViewModel
         rewindStatusService.stop()
     }
 
-    private fun onRewindClicked() {
-        _item.value?.let { _showRewindDialog.postValue(it) }
+    fun onRangeClicked(range: FormattableRange) {
+        _handleFormattableRangeClick.value = range
+    }
+
+    fun onRewindClicked(model: ActivityLogDetailModel) {
+        if (model.rewindId != null) {
+            _showRewindDialog.value = model
+        } else {
+            AppLog.e(
+                    ACTIVITY_LOG,
+                    "Trying to rewind activity without rewind ID"
+            )
+        }
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
         return displayName == "Jetpack" && type == "Application" ||
                 displayName == "Happiness Engineer" && type == "Happiness Engineer"
-    }
-
-    private fun Date.printDate(): String {
-        return DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(this)
-    }
-
-    private fun Date.printTime(): String {
-        return DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(this)
     }
 }

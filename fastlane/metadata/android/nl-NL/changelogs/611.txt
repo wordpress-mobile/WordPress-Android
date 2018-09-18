@@ -1,0 +1,5 @@
+10.8:
+Het doel van deze update is je sneller je doel te laten bereiken.
+We hebben een nieuw Snelstart-gedeelte met een lijst van voorgestelde stappen om een geweldige site te bouwen.
+We hebben de installatie van Jetpack getroomlijnd, zodat er minder stappen zijn. Minder instellen, meer gebruiken!
+(En we hebben ook wat bugs uit de weg geruimd. )

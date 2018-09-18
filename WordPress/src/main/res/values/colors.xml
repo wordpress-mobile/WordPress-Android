@@ -195,4 +195,7 @@
 
     <color name="switch_tint">@color/blue_medium</color>
     <color name="jetpack_green">#00be28</color>
+
+    <!-- Pages -->
+    <color name="page_item_tag_background">#fbf4e7</color>
 </resources>

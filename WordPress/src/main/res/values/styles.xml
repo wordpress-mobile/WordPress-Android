@@ -770,4 +770,14 @@
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
     </style>
 
+    <!-- Pages styles -->
+    <style name="PageListItemTextStyle" parent="PageListTopLevelItemTextStyle">
+        <item name="android:fontFamily">serif</item>
+    </style>
+    <style name="PageListTopLevelItemTextStyle">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

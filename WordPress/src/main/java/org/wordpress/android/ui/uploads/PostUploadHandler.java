@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FluxCUtils;
@@ -74,7 +74,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject MediaStore mMediaStore;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
-        ((WordPress) WordPress.getContext()).component().inject(this);
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         AppLog.i(T.POSTS, "PostUploadHandler > Created");
         mDispatcher.register(this);
         mPostUploadNotifier = postUploadNotifier;

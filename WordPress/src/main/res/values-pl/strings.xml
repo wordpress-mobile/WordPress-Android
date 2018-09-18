@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-16 19:47:59+0000
+Translation-Revision-Date: 2018-09-01 08:48:26+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="quick_start_focus_point_description">stuknij tutaj</string>
+    <string name="quick_start_sites">Szybki start</string>
+    <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
+    <string name="quick_start_list_create_site_subtitle">Uruchom swoją witrynę</string>
+    <string name="quick_start_list_complete_title">Gratulacje, ukończyłeś Szybki Start</string>
+    <string name="quick_start_list_complete_subtitle">czy to nie fajne uczucie wykreślać kolejne elementy z listy? </string>
+    <string name="quick_start_dialog_view_site_title">Zobacz swoją witrynę</string>
+    <string name="quick_start_dialog_view_site_message_short">Stuknij na %1$s Zobacz Witrynę %2$s aby ją podejrzeć</string>
+    <string name="quick_start_dialog_view_site_message">Podejrzej witrynę aby sprawdzić wygląd witryny, który zobaczą odwiedzający. </string>
+    <string name="quick_start_dialog_skip_title">Pomiń Szybki Start</string>
+    <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
+    <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
+    <string name="quick_start_dialog_need_help_title">Potrzebujesz pomocy?</string>
+    <string name="quick_start_dialog_need_help_button_positive">Tak</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nie</string>
+    <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
+    <string name="quick_start_dialog_customize_site_title">Spersonalizuj swoją witrynę</string>
+    <string name="quick_start_dialog_continue_setup_title">Kontynuuj konfigurację witryny</string>
+    <string name="quick_start_dialog_choose_theme_title">Wybierz szablon</string>
+    <string name="quick_start_button_skip_positive">Pomiń</string>
+    <string name="quick_start_button_skip_negative">Anuluj</string>
+    <string name="quick_start_button_skip">Pomiń wszystko</string>
+    <string name="quick_start_button_positive">Dalej</string>
+    <string name="quick_start_button_negative_short">Anuluj</string>
+    <string name="quick_start_button_negative">Nie teraz</string>
+    <string name="content_description_done">Zrobione</string>
+    <string name="my_site_create_new_site_title">Nie msz żadnych witryn</string>
+    <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tagów</string>
+    <string name="reader_empty_followed_tags_subtitle">Dodaj tagi aby odnaleźć wpisy o swoich ulubionych tematach </string>
+    <string name="login_to_to_connect_jetpack">Zaloguj się na stronę konto WordPress.com które używałeś do podłączenia Jetpacka.</string>
+    <string name="install_jetpack_retry">Ponów</string>
+    <string name="install_jetpack_continue">Kontynuuj</string>
+    <string name="jetpack_installation_problem_message">Nie można było zainstalować  Jetpacka</string>
+    <string name="jetpack_installation_problem">Wystąpił problem</string>
+    <string name="jetpack_installed_message">Jetpack jest zainstalowany na twojej witrynie. Gratulacje! </string>
+    <string name="jetpack_installed">Jetpack zainstalowany</string>
+    <string name="installing_jetpack">Instalowanie Jetpacka</string>
+    <string name="install_jetpack">Zainstaluj Jetpacka</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Konfigurując Jetpacka zgadzasz się z naszymi</string>
+    <string name="stats_jetpack_connection_setup_info">Aby korzystać ze statystyk na swojej witrynie, musisz zainstalować wtyczkę Jetpack.</string>
     <string name="themes_empty_list">Brak motywów spełniających kryteria wyszukiwania</string>
     <string name="reader_label_post_search_explainer">Co chciał(a)byś wyszukać? </string>
     <string name="site_settings_tags_empty_title_search">Brak tagów spełniających kryteria wyszukiwania</string>
@@ -191,6 +234,7 @@ Language: pl
     <string name="stats_tab_tap_content_description">Pokazano %s</string>
     <string name="stats_legend">legenda wykresu statystyk</string>
     <string name="fab_create_desc">utwórz</string>
+    <string name="fab_add_tag_desc">Utwórz tag</string>
     <string name="stats_bar_week_desc">Tydzień %s</string>
     <string name="stats_bar_date_value_desc">%s, %d wyświetleń</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -418,8 +462,7 @@ Language: pl
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack zoptymalizuje twoje obrazki i poda je z serwera najbliżej ulokowanego do twoich oglądających. Korzystając z naszej sieci dostarczającej globalne treści przyspieszysz ładowanie swojej witryny.</string>
     <string name="site_settings_serve_images_from_our_servers">Podaj obrazki z naszych serwerów</string>
     <string name="site_settings_speed_up_your_site">Przyspiesz swoją witrynę</string>
-    <string name="stats_jetpack_connection_setup_info">Aby korzystać ze Statystyk na swojej witrynie WordPressowej, musisz zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
-    <string name="stats_jetpack_connection_setup">Skonfiguruj Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Zainstaluj Jetpacka</string>
     <string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
     <string name="plugin_info_your_version">Twoja wersja WordPressa</string>
     <string name="plugin_info_requires_version">Wymagana wersja WordPressa</string>
@@ -1585,7 +1628,6 @@ Language: pl
     <string name="pick_video">Wybierz film</string>
     <string name="pick_photo">Wybierz zdjęcie</string>
     <string name="reader_likes_you_and_one">Ty i jedna inna osoba lubicie to</string>
-    <string name="reader_empty_followed_tags">Nie obserwujesz żadnych tagów</string>
     <string name="reader_toast_err_url_intent">Nie można otworzyć %s</string>
     <string name="reader_toast_err_view_image">Nie można wyświetlić obrazka</string>
     <string name="reader_toast_err_share_intent">Nie udało się udostępnić</string>

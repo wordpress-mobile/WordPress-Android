@@ -1,0 +1,5 @@
+10.8:
+Pembaruan ini difokuskan untuk membantu Anda meraih target lebih cepat.
+Ada bagian Mulai Cepat baru berisi daftar saran langkah untuk membantu Anda membuat situs yang hebat.
+Kami menyederhanakan penginstalan Jetpack agar langkahnya lebih sedikit. Sedikit penyiapan, banyak manfaat!
+(Oh, kami juga membasmi sejumlah bug. )
