@@ -997,12 +997,19 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
+        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
-        MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
-        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
+
+        if (saveAsDraftMenuItem != null) {
+            saveAsDraftMenuItem.setVisible(showMenuItems);
+            if (mPost != null) {
+                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
+            }
+        }
 
         if (historyMenuItem != null) {
             historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED);
@@ -1012,21 +1019,14 @@ public class EditPostActivity extends AppCompatActivity implements
             previewMenuItem.setVisible(showMenuItems);
         }
 
-        if (settingsMenuItem != null) {
-            settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
-            settingsMenuItem.setVisible(showMenuItems);
-        }
-
-        if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(showMenuItems);
-            if (mPost != null) {
-                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
-            }
-        }
-
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (settingsMenuItem != null) {
+            settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
+            settingsMenuItem.setVisible(showMenuItems);
         }
 
         if (discardChanges != null) {
