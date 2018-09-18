@@ -49,7 +49,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.helpers.WPImageGetter;
+import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -329,18 +329,10 @@ public class NotificationsUtils {
             return;
         }
 
-        Drawable loading = context.getResources().getDrawable(
-                org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
-        Drawable failed = context.getResources().getDrawable(R.drawable.ic_notice_grey_500_48dp);
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
-        WPImageGetter imageGetter = new WPImageGetter(
-                textView,
-                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                WordPress.sImageLoader,
-                loading,
-                failed
-        );
+        WPCustomImageGetter imageGetter = new WPCustomImageGetter(textView,
+                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size));
 
         int indexAdjustment = 0;
         String imagePlaceholder;
