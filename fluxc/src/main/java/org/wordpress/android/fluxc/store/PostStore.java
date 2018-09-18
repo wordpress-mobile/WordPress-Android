@@ -510,11 +510,11 @@ public class PostStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PostSqlUtils.deletePost(payload.post);
             ListItemsRemovedPayload listActionPayload =
                     new ListItemsRemovedPayload(listDescriptorsToUpdate(payload.site.getId()),
                             postIdListFromPost(payload.post));
             dispatchListItemUpdatedAction(listActionPayload);
+            PostSqlUtils.deletePost(payload.post);
         }
 
         emitChange(event);
@@ -617,14 +617,15 @@ public class PostStore extends Store {
     }
 
     private void removePost(PostModel post) {
+        if (post == null) {
+            return;
+        }
+        dispatchListItemUpdatedAction(
+                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()), postIdListFromPost(post)));
         int rowsAffected = PostSqlUtils.deletePost(post);
-
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
         emitChange(onPostChanged);
-
-        dispatchListItemUpdatedAction(
-                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()), postIdListFromPost(post)));
     }
 
     private void removeAllPosts() {
