@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload
+import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload
 
 @ActionEnum
 enum class ListAction : IAction {
@@ -14,5 +15,7 @@ enum class ListAction : IAction {
     @Action(payloadType = FetchedListItemsPayload::class)
     FETCHED_LIST_ITEMS,
     @Action(payloadType = ListItemsChangedPayload::class)
-    LIST_ITEMS_CHANGED
+    LIST_ITEMS_CHANGED,
+    @Action(payloadType = ListItemsRemovedPayload::class)
+    LIST_ITEMS_REMOVED
 }
