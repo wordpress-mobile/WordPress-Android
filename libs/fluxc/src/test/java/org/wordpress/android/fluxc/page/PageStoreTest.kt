@@ -26,6 +26,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
+import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
@@ -58,7 +60,8 @@ class PageStoreTest {
             initPage(4, 0, "page 4", "trash"),
             initPage(5, 0, "page 5", "private"),
             initPage(6, 0, "page 6", "pending"),
-            initPage(7, 0, "page 7", "draft")
+            initPage(7, 0, "page 7", "draft"),
+            initPage(7, 0, "page 8", "unknown")
     )
 
     private val pageHierarchy = listOf(
@@ -87,46 +90,6 @@ class PageStoreTest {
 
         assertThat(result).hasSize(1)
         assertThat(result[0].title).isEqualTo(pageWithQuery.title)
-    }
-
-    @Test
-    fun searchOrdersResultsByStatus() {
-        val trashStatus = "trash"
-        val draftStatus = "draft"
-        val publishStatus = "publish"
-        val futureStatus = "future"
-        val title = "title"
-        val trashedSite1 = initPage(1, title = title, status = trashStatus)
-        val draftSite1 = initPage(2, title = title, status = draftStatus)
-        val publishedSite1 = initPage(3, title = title, status = publishStatus)
-        val scheduledSite1 = initPage(4, title = title, status = futureStatus)
-        val scheduledSite2 = initPage(5, title = title, status = futureStatus)
-        val publishedSite2 = initPage(6, title = title, status = publishStatus)
-        val draftSite2 = initPage(7, title = title, status = draftStatus)
-        val trashedSite2 = initPage(8, title = title, status = trashStatus)
-        val pages = listOf(
-                trashedSite1,
-                draftSite1,
-                publishedSite1,
-                scheduledSite1,
-                scheduledSite2,
-                publishedSite2,
-                draftSite2,
-                trashedSite2
-        )
-        whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-
-        val result = runBlocking { store.groupedSearch(site, title) }
-
-        assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
-        assertPage(result, 0, PageStatus.PUBLISHED)
-        assertPage(result, 1, PageStatus.PUBLISHED)
-        assertPage(result, 0, PageStatus.DRAFT)
-        assertPage(result, 1, PageStatus.DRAFT)
-        assertPage(result, 0, PageStatus.SCHEDULED)
-        assertPage(result, 1, PageStatus.SCHEDULED)
-        assertPage(result, 0, PageStatus.TRASHED)
-        assertPage(result, 1, PageStatus.TRASHED)
     }
 
     private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
@@ -242,7 +205,7 @@ class PageStoreTest {
         assertThat(payload.site).isEqualTo(site)
 
         val pageTypes = payload.statusTypes
-        assertThat(pageTypes.size).isEqualTo(4)
+        assertThat(pageTypes.size).isEqualTo(6)
         assertThat(pageTypes.filter { it == PostStatus.PUBLISHED }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.DRAFT }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.TRASHED }.size).isEqualTo(1)
@@ -253,11 +216,13 @@ class PageStoreTest {
 
         val pages = store.getPagesFromDb(site)
 
-        assertThat(pages.size).isEqualTo(5)
+        assertThat(pages.size).isEqualTo(7)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(2)
         assertThat(pages.filter { it.status == TRASHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PRIVATE }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PENDING }.size).isEqualTo(1)
     }
 
     @Test
