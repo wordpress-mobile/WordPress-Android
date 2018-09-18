@@ -1186,6 +1186,7 @@
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
+    <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
