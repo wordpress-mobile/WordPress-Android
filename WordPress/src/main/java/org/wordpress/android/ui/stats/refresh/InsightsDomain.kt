@@ -19,7 +19,7 @@ import javax.inject.Inject
 class InsightsDomain
 @Inject constructor(private val statsStore: StatsStore) {
     private fun load(type: InsightsTypes): InsightsItem {
-        return when(type) {
+        return when (type) {
             LATEST_POST_SUMMARY,
             MOST_POPULAR_DAY_AND_HOUR,
             ALL_TIME_STATS,
