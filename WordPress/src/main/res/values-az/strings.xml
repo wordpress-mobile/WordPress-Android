@@ -291,7 +291,6 @@ Language: az
     <string name="reader_untitled_post">(adsız)</string>
     <string name="reader_label_added_tag"> %s əlavə edildi</string>
     <string name="reader_label_removed_tag">%s silindi</string>
-    <string name="reader_empty_followed_tags">Siz hər hansı bir etiketi izləyə bilməyəcəksiniz</string>
     <string name="reader_btn_follow">İzlə</string>
     <string name="reader_btn_unfollow">İzlənən</string>
     <string name="reader_likes_one">Bir nəfər bunu bəyənir</string>

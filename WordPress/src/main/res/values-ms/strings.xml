@@ -1060,7 +1060,6 @@ Language: ms
     <string name="pick_video">Pilih video</string>
     <string name="pick_photo">Pilih gambar</string>
     <string name="reader_likes_you_and_one">Anda dan seorang lagi sukakannya</string>
-    <string name="reader_empty_followed_tags">Anda tidak mengikut apa–apa tag</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat imej</string>
     <string name="reader_toast_err_share_intent">Tidak dapat dikongsi</string>

@@ -1120,10 +1120,15 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
-    <string name="async_promo_title">Publish with Confidence</string>
-    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_title_publish">Publish with Confidence</string>
+    <string name="async_promo_title_schedule">Schedule with Confidence</string>
+    <string name="async_promo_description_publish_page">You can now leave the editor and your page will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_publish_post">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_page">You can now leave the editor and your page will save and schedule behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_post">You can now leave the editor and your post will save and schedule behind the scenes! Give it a try!</string>
     <string name="async_promo_link">How does it work?</string>
     <string name="async_promo_publish_now">Publish now</string>
+    <string name="async_promo_schedule_now">Schedule now</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -2308,6 +2313,8 @@
     <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
     <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
     <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_pending">Pending review</string>
+    <string name="pages_private">Private</string>
     <string name="pages_view">View</string>
     <string name="pages_set_parent">Set parent</string>
     <string name="pages_publish_now">Publish Now</string>

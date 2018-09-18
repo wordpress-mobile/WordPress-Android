@@ -489,7 +489,6 @@ Language: eu_ES
     <string name="reader_likes_one">Pertsona batek hau gustuko du</string>
     <string name="reader_likes_only_you">Hau gustuko duzu</string>
     <string name="reader_toast_err_tag_exists">Dagoeneko etiketa hau jarraitzen duzu</string>
-    <string name="reader_empty_followed_tags">Ez duzu etiketatik jarraitzen</string>
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>
     <string name="media_gallery_type_squares">Karratuak</string>
     <string name="media_edit_title_text">Izenburua</string>

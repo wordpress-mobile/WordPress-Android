@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-126"
-        versionCode 610
+        versionName "alpha-129"
+        versionCode 616
         minSdkVersion 16
         targetSdkVersion 26
 
@@ -141,6 +141,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.automattic:rest:1.0.7'

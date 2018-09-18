@@ -65,7 +65,7 @@ import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;

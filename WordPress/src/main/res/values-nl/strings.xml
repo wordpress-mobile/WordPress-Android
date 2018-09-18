@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-20 10:54:08+0000
+Translation-Revision-Date: 2018-09-06 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="quick_start_focus_point_description">tik hier</string>
+    <string name="quick_start_sites">Snelstart</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Je site maken</string>
+    <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site</string>
+    <string name="quick_start_list_complete_title">Gefeliciteerd, je hebt Snelstart afgerond</string>
+    <string name="quick_start_list_complete_subtitle">Voelt het niet goed om dingen af te strepen?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Website bekijken</string>
+    <string name="quick_start_dialog_view_site_message_short">Tik op %1$s Site bekijken %2$s om een voorbeeld te zien van je site</string>
+    <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je nieuwe site om te zien wat je bezoekers zien.</string>
+    <string name="quick_start_dialog_skip_title">Snelstart overslaan</string>
+    <string name="quick_start_dialog_skip_message">In de snelle rondleiding wordt getoond hoe je een basissite bouwt. Weet je zeker dat je wilt overslaan?</string>
+    <string name="quick_start_dialog_share_site_title">Je site delen</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Tik op %1$s Delen %2$s om door te gaan</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Tik op %1$s Verbindingen %2$s om je social media–accounts toe te voegen</string>
+    <string name="quick_start_dialog_share_site_message">Koppel je site aan je social media–accounts en je site zal nieuwe berichten automatisch delen.</string>
+    <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
+    <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
+    <string name="quick_start_dialog_publish_post_message">De tijd is aangebroken! Stel je allereerste bericht op en publiceer het.</string>
+    <string name="quick_start_dialog_need_help_title">Heb je hulp nodig om aan de slag te kunnen gaan?</string>
+    <string name="quick_start_dialog_need_help_message">Onze Snelstart–checklist toont de basisbeginselen voor het bouwen van een nieuwe website.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ja</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nooit</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nee</string>
+    <string name="quick_start_dialog_follow_sites_title">Andere sites volgen</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tik op %1$s Zoeken %2$s om te zoeken naar sites met dezelfde interesses</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Tik op %1$s Reader %2$s om door te gaan</string>
+    <string name="quick_start_dialog_follow_sites_message">Ontdek sites die je aanspreken en volg ze om updates te ontvangen wanneer nieuwe content wordt gepubliceerd.</string>
+    <string name="quick_start_dialog_customize_site_title">Je site aanpassen</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Tik op %1$s Thema\'s %2$s om door te gaan</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Tik op %1$s Aanpassen %2$s om je site te personaliseren</string>
+    <string name="quick_start_dialog_customize_site_message">Wijzig kleuren, lettertypen en afbeeldingen voor een perfect gepersonaliseerde site.</string>
+    <string name="quick_start_dialog_continue_setup_title">Ga verder met het configureren van je site</string>
+    <string name="quick_start_dialog_continue_setup_message">Tijd om je site af te ronden! Onze checklist leidt je door de volgende stappen.</string>
+    <string name="quick_start_dialog_choose_theme_title">Kies een thema</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Tik op %1$s Thema\'s %2$s om nieuwe thema\'s te ontdekken</string>
+    <string name="quick_start_dialog_choose_theme_message">Blader door al onze thema\'s om het thema te vinden dat perfect bij je past.</string>
+    <string name="quick_start_button_skip_positive">Overslaan</string>
+    <string name="quick_start_button_skip_negative">Annuleren</string>
+    <string name="quick_start_button_skip">Alles overslaan</string>
+    <string name="quick_start_button_positive">Starten</string>
+    <string name="quick_start_button_negative_short">Annuleren</string>
+    <string name="quick_start_button_negative">Niet nu</string>
+    <string name="content_description_done">Klaar</string>
+    <string name="my_site_create_new_site_title">Je hebt geen sites</string>
+    <string name="reader_empty_followed_tags_title">Geen gevolgde tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Voeg hier tags toe om berichten te vinden over je favoriete onderwerpen</string>
+    <string name="login_to_to_connect_jetpack">Log in op het WordPress.com–account dat je gebruikte om verbinding te maken met Jetpack.</string>
+    <string name="install_jetpack_retry">Opnieuw proberen</string>
+    <string name="install_jetpack_continue">Doorgaan</string>
+    <string name="jetpack_installation_problem_message">Jetpack kan momenteel niet geïnstalleerd worden</string>
+    <string name="jetpack_installation_problem">Er is een probleem opgetreden</string>
+    <string name="jetpack_installed_message">Je hebt Jetpack geïnstalleerd op je site. Gefeliciteerd!</string>
+    <string name="jetpack_installed">Jetpack geïnstalleerd</string>
+    <string name="installing_jetpack_message">Jetpack installeren op je site. Het kan een aantal minuten duren voordat de installatie is afgerond</string>
+    <string name="installing_jetpack">Jetpack installeren</string>
+    <string name="install_jetpack_message">De inloggegevens voor je website zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
+    <string name="install_jetpack">Jetpack installeren</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Door Jetpack in te stellen, ga je akkoord met onze </string>
+    <string name="stats_jetpack_connection_setup_info">Installeer de Jetpack-plugin om statistieken voor je WordPress–site te gebruiken.</string>
     <string name="themes_empty_list">Er komen geen thema\'s overeen met je zoekopdracht</string>
     <string name="reader_label_post_search_explainer">Waar ben je naar op zoek?</string>
     <string name="site_settings_tags_empty_title_search">Er komen geen tags overeen met je zoekopdracht</string>
@@ -353,7 +426,6 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
-    <string name="stats_jetpack_connection_setup">Jetpack instellen</string>
     <string name="plugin_chevron_icon_content_description">Tekst in–/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>
     <string name="plugin_info_requires_version">Vereist WordPress versie</string>
@@ -1489,7 +1561,6 @@ Language: nl
     <string name="pick_video">Selecteer video</string>
     <string name="pick_photo">Selecteer foto</string>
     <string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
-    <string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
     <string name="reader_toast_err_url_intent">Onmogelijk %s te openen</string>
     <string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
     <string name="reader_toast_err_share_intent">Onmogelijk te delen</string>

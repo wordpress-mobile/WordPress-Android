@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-21 09:54:09+0000
+Translation-Revision-Date: 2018-09-05 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="quick_start_focus_point_description">轻点此处</string>
+    <string name="quick_start_sites">快速启动</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">创建站点</string>
+    <string name="quick_start_list_create_site_subtitle">建立并运行您的站点</string>
+    <string name="quick_start_list_complete_title">恭喜您完成“快速启动”</string>
+    <string name="quick_start_list_complete_subtitle">从列表中划掉内容的感觉是不是很棒？</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">查看您的站点</string>
+    <string name="quick_start_dialog_view_site_message_short">轻点%1$s“查看站点”%2$s以预览您的站点。</string>
+    <string name="quick_start_dialog_view_site_message">预览新站点以查看访问者将看到的内容。</string>
+    <string name="quick_start_dialog_skip_title">跳过“快速启动”</string>
+    <string name="quick_start_dialog_skip_message">快速指南将指引您创建一个基础的站点。是否确定要跳过？</string>
+    <string name="quick_start_dialog_share_site_title">分享您的站点</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">轻点%1$s“分享”%2$s并继续</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">轻点%1$s“连接”%2$s，添加您的社交媒体帐户</string>
+    <string name="quick_start_dialog_share_site_message">连接至您的社交媒体帐户 – 您的站点将自动共享新文章。</string>
+    <string name="quick_start_dialog_publish_post_title">发布文章</string>
+    <string name="quick_start_dialog_publish_post_message_short">轻点%1$s“创建文章”%2$s，撰写一篇新文章</string>
+    <string name="quick_start_dialog_publish_post_message">是时候了！起草并发布您的第一篇文章。</string>
+    <string name="quick_start_dialog_need_help_title">不知从何入手，需要一点帮助？</string>
+    <string name="quick_start_dialog_need_help_message">我们的“快速启动”清单将指导您完成设置新网站的基础操作。</string>
+    <string name="quick_start_dialog_need_help_button_positive">是</string>
+    <string name="quick_start_dialog_need_help_button_neutral">从不</string>
+    <string name="quick_start_dialog_need_help_button_negative">否</string>
+    <string name="quick_start_dialog_follow_sites_title">关注其他站点</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">轻点%1$s“搜索”%2$s，查找具有类似兴趣的站点</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">轻点%1$s“阅读器”%2$s并继续</string>
+    <string name="quick_start_dialog_follow_sites_message">查找并关注您中意的站点，在其发布新内容时获取更新。</string>
+    <string name="quick_start_dialog_customize_site_title">定制您的站点</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">轻点%1$s“主题”%2$s并继续</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">轻点%1$s“定制”%2$s，开始个性化您的站点</string>
+    <string name="quick_start_dialog_customize_site_message">更改颜色、字体和图像，获得理想的个性化站点。</string>
+    <string name="quick_start_dialog_continue_setup_title">继续设置站点</string>
+    <string name="quick_start_dialog_continue_setup_message">是时候完成站点设置了！我们的清单将指引您进入下一步。</string>
+    <string name="quick_start_dialog_choose_theme_title">选择主题</string>
+    <string name="quick_start_dialog_choose_theme_message_short">轻点%1$s“主题”%2$s，发现新的主题</string>
+    <string name="quick_start_dialog_choose_theme_message">浏览我们所有的主题，寻找最适合您的主题。</string>
+    <string name="quick_start_button_skip_positive">跳过</string>
+    <string name="quick_start_button_skip_negative">取消</string>
+    <string name="quick_start_button_skip">全部跳过</string>
+    <string name="quick_start_button_positive">前往</string>
+    <string name="quick_start_button_negative_short">取消</string>
+    <string name="quick_start_button_negative">现在不行</string>
+    <string name="content_description_done">完成</string>
+    <string name="my_site_create_new_site_title">您没有任何站点</string>
+    <string name="reader_empty_followed_tags_title">未关注的标签</string>
+    <string name="reader_empty_followed_tags_subtitle">在此处添加标签，发现与您最喜欢的主题相关的文章</string>
+    <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 帐户。</string>
+    <string name="install_jetpack_retry">重试</string>
+    <string name="install_jetpack_continue">继续</string>
+    <string name="jetpack_installation_problem_message">目前无法安装 Jetpack</string>
+    <string name="jetpack_installation_problem">出现问题</string>
+    <string name="jetpack_installed_message">您已在站点上安装了 Jetpack。恭喜！</string>
+    <string name="jetpack_installed">已安装 Jetpack</string>
+    <string name="installing_jetpack_message">正在您的站点上安装 Jetpack。这将花费几分钟的时间才能完成</string>
+    <string name="installing_jetpack">正在安装 Jetpack</string>
+    <string name="install_jetpack_message">系统将不会存储您的网站凭据，并且仅将其用于安装 Jetpack</string>
+    <string name="install_jetpack">安装 Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">设置 Jetpack 即表示，您同意我们的</string>
+    <string name="stats_jetpack_connection_setup_info">要在 WordPress 站点中使用统计功能，您需要安装 Jetpack 插件。</string>
     <string name="themes_empty_list">没有与您的搜索匹配的主题</string>
     <string name="reader_label_post_search_explainer">您想要查找什么内容？</string>
     <string name="site_settings_tags_empty_title_search">没有与您的搜索匹配的标签</string>
@@ -407,7 +480,6 @@ Language: zh_CN
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 将优化您的图片，并通过距离访客最近的服务器位置提供。使用我们的全球内容交付网络将大大提升您站点的加载速度。</string>
     <string name="site_settings_serve_images_from_our_servers">通过服务器提供图片</string>
     <string name="site_settings_speed_up_your_site">加快站点加载速度</string>
-    <string name="stats_jetpack_connection_setup">设置 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切换文本</string>
     <string name="plugin_info_your_version">您的 WordPress 版本</string>
     <string name="plugin_info_requires_version">需要的 WordPress 版本</string>
@@ -1532,7 +1604,6 @@ Language: zh_CN
     <string name="pick_video">选择视频</string>
     <string name="pick_photo">选择图片</string>
     <string name="reader_likes_you_and_one">你和另一个人喜欢</string>
-    <string name="reader_empty_followed_tags">您没有关注任何标签</string>
     <string name="reader_toast_err_url_intent">无法打开 %s</string>
     <string name="reader_toast_err_view_image">无法查看图片</string>
     <string name="reader_toast_err_share_intent">无法分享</string>

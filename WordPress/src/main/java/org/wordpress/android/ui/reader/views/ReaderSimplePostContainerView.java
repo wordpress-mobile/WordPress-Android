@@ -12,7 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 /**
  * used by the detail view to display related posts, which can be either local (related posts

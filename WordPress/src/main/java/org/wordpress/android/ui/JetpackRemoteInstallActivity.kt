@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar.*
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED
+import org.wordpress.android.ui.JetpackConnectionUtils.trackWithSource
+import org.wordpress.android.ui.JetpackRemoteInstallFragment.Companion.TRACKING_SOURCE_KEY
 
 class JetpackRemoteInstallActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,5 +29,13 @@ class JetpackRemoteInstallActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        trackWithSource(
+                INSTALL_JETPACK_CANCELLED,
+                intent.getSerializableExtra(TRACKING_SOURCE_KEY) as JetpackConnectionSource
+        )
+        super.onBackPressed()
     }
 }

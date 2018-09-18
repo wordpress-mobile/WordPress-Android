@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -61,6 +62,7 @@ class PagesViewModelTest {
         pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
     }
 
+    @Ignore
     @Test
     fun clearsResultAndLoadsDataOnStart() = test {
         val pageModel = initPageRepo()
@@ -83,6 +85,7 @@ class PagesViewModelTest {
         return pageModel
     }
 
+    @Ignore
     @Test
     fun onSiteWithoutPages() = test {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())

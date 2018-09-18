@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 16:21:37+0000
+Translation-Revision-Date: 2018-09-01 11:26:34+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="quick_start_focus_point_description">toca aquí</string>
+    <string name="quick_start_sites">Inicio rápido</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">Crea tu sitio</string>
+    <string name="quick_start_list_create_site_subtitle">Consigue tu sitio al instante</string>
+    <string name="quick_start_list_complete_title">Enhorabuena por terminar el inicio rápido</string>
+    <string name="quick_start_list_complete_subtitle">¿a que se siente uno bien terminando una lista?</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">Ver tu sitio</string>
+    <string name="quick_start_dialog_view_site_message_short">Toca en %1$s Ver sitio %2$s para previsualizar tu sitio</string>
+    <string name="quick_start_dialog_view_site_message">Previsualiza tu nuevo sitio para ver lo que verán tus visitantes.</string>
+    <string name="quick_start_dialog_skip_title">Saltar el inicio rápido</string>
+    <string name="quick_start_dialog_skip_message">La visita rápida te guiará para crear un sitio básico. ¿Estás seguro de querer saltártela? </string>
+    <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Toca en %1$s Compartir %2$s para continuar</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Toca en %1$s Conexiones %2$s para añadir tus cuentas de medios sociales</string>
+    <string name="quick_start_dialog_share_site_message">Conecta a tus cuentas de medios sociales – tu sitio compartirá automáticamente las nuevas entradas.</string>
+    <string name="quick_start_dialog_publish_post_title">Publica una entrada</string>
+    <string name="quick_start_dialog_publish_post_message_short">Toca en %1$s Crear entrada %2$s para crear una nueva entrada</string>
+    <string name="quick_start_dialog_publish_post_message">¡Es el momento! Guarda un borrador y publica tu primera entrada.</string>
+    <string name="quick_start_dialog_need_help_title">¿Quieres un poco de ayuda para empezar?</string>
+    <string name="quick_start_dialog_need_help_message">Nuestra lista de comprobación de inicio rápido te lleva a través de los básicos para configurar una nueva web.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Sí</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
+    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_follow_sites_title">Sigue otros sitios</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con intereses similares</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
+    <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te hablen, y síguelos para obtener actualizaciones cuando publiquen.</string>
+    <string name="quick_start_dialog_customize_site_title">Personaliza tu sitio</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Toca en %1$s Temas %2$s para seguir</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Toca en %1$s Personalizar %2$s para empezar a personalizar tu sitio</string>
+    <string name="quick_start_dialog_customize_site_message">Cambia colores, fuentes e imágenes para tener un sitio perfectamente personalizado.</string>
+    <string name="quick_start_dialog_continue_setup_title">Sigue configurando el sitio</string>
+    <string name="quick_start_dialog_continue_setup_message">¡Llegó el momento de configurar tu sitio! Nuestra lista de comprobación te lleva a los siguientes pasos.</string>
+    <string name="quick_start_dialog_choose_theme_title">Elige un tema</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Toca en %1$s Temas %2$s para descubrir nuevos temas</string>
+    <string name="quick_start_dialog_choose_theme_message">Revisa todos nuestros temas para encontrar el que se te ajuste a la perfección</string>
+    <string name="quick_start_button_skip_positive">Saltar</string>
+    <string name="quick_start_button_skip_negative">Cancelar</string>
+    <string name="quick_start_button_skip">Saltar todo</string>
+    <string name="quick_start_button_positive">Ir</string>
+    <string name="quick_start_button_negative_short">Cancelar</string>
+    <string name="quick_start_button_negative">Ahora no</string>
+    <string name="content_description_done">Hecho</string>
+    <string name="my_site_create_new_site_title">No tienes sitios</string>
+    <string name="reader_empty_followed_tags_title">No sigues etiquetas</string>
+    <string name="reader_empty_followed_tags_subtitle">Añade aquí etiquetas para descubrir entradas sobre tos temáticas favoritas</string>
+    <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
+    <string name="install_jetpack_retry">Reintentar</string>
+    <string name="install_jetpack_continue">Seguir</string>
+    <string name="jetpack_installation_problem_message">Jetpack no se pudo instalar en este momento</string>
+    <string name="jetpack_installation_problem">Hubo un problema</string>
+    <string name="jetpack_installed_message">Tienes Jetpack instalado en tu sitio. ¡Enhorabuena!</string>
+    <string name="jetpack_installed">Jetpack instalado</string>
+    <string name="installing_jetpack_message">Instalando Jetpack en tu sitio. Esto puede llevar unos minutos completarse.</string>
+    <string name="installing_jetpack">Instalando Jetpack</string>
+    <string name="install_jetpack_message">Las credenciales de tu web no se almacenarán, y solo se utiliza para instalar Jetpack</string>
+    <string name="install_jetpack">Instala Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Al configurar Jetpack aceptas nuestras</string>
+    <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress necesitas instalar el plugin Jetpack.</string>
     <string name="themes_empty_list">No hay temas que coincidan con tu búsqueda</string>
     <string name="reader_label_post_search_explainer">¿Que te gustaría encontrar?</string>
     <string name="site_settings_tags_empty_title_search">No hay etiquetas que coincidan con tu búsqueda</string>
@@ -191,6 +264,7 @@ Language: es
     <string name="stats_tab_tap_content_description">mostrando %s</string>
     <string name="stats_legend">leyenda del gráfico de estadísticas</string>
     <string name="fab_create_desc">crear</string>
+    <string name="fab_add_tag_desc">Crear etiqueta</string>
     <string name="stats_bar_week_desc">Semana de %s</string>
     <string name="stats_bar_date_value_desc">%s, %d vistas</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -418,8 +492,7 @@ Language: es
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimizará tus imágenes y las servirá desde la ubicación del servidor más cercana a tus visitantes. Usar nuestra red global de entregad de contenidos impulsará la velocidad de carga de tu sitio.</string>
     <string name="site_settings_serve_images_from_our_servers">Sirve imágenes desde nuestros servidores</string>
     <string name="site_settings_speed_up_your_site">Acelera tu sitio</string>
-    <string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Configurar Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Instalar Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Alternar texto</string>
     <string name="plugin_info_your_version">Tu versión de WordPress</string>
     <string name="plugin_info_requires_version">Requiere la versión de WordPress</string>
@@ -1585,7 +1658,6 @@ Language: es
     <string name="pick_video">Elige un vídeo</string>
     <string name="pick_photo">Elige una foto</string>
     <string name="reader_likes_you_and_one">A ti y a otra persona os gusta esto.</string>
-    <string name="reader_empty_followed_tags">No sigues ninguna etiqueta</string>
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>

@@ -23,7 +23,7 @@ import org.wordpress.android.ui.ShareIntentReceiverFragment.ShareIntentFragmentL
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PermissionUtils;

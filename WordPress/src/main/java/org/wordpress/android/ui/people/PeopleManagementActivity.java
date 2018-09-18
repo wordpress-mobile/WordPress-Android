@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnUserRolesChanged;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;

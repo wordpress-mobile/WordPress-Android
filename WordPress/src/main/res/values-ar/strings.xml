@@ -1,11 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-23 14:54:06+0000
+Translation-Revision-Date: 2018-09-05 12:54:08+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="quick_start_focus_point_description">انقر هنا</string>
+    <string name="quick_start_sites">البدء السريع</string>
+    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
+    <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل</string>
+    <string name="quick_start_list_complete_title">تهانينا على إنهاء جولة البدء السريع</string>
+    <string name="quick_start_list_complete_subtitle">أليس من الأفضل حذف الأشياء من القائمة؟</string>
+    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
+    <string name="quick_start_dialog_view_site_message_short">انقر على %1$sعرض الموقع %2$s لاستعراض موقعك</string>
+    <string name="quick_start_dialog_view_site_message">يمكنك معاينة موقعك الجديد لرؤية ما سيراه الزائرون.</string>
+    <string name="quick_start_dialog_skip_title">تجاوز البدء السريع</string>
+    <string name="quick_start_dialog_skip_message">ستوجهك الجولة السريعة من خلال إنشاء موقع أساسي. هل تريد التجاوز بالتأكيد؟</string>
+    <string name="quick_start_dialog_share_site_title">مشاركة موقعك</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">انقر على%1$sمشاركة%2$s للمتابعة</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">انقر على %1$sاتصالات%2$s لإضافة حساباتك على وسائل التواصل الاجتماعي</string>
+    <string name="quick_start_dialog_share_site_message">اتصل بحساباتك على وسائل التواصل الاجتماعي – سيشارك موقعك مقالات جديدة تلقائيًّا.</string>
+    <string name="quick_start_dialog_publish_post_title">نشر مقالة</string>
+    <string name="quick_start_dialog_publish_post_message_short">انقر على %1$sإنشاء مقالة%2$s لإنشاء مقالة جديدة</string>
+    <string name="quick_start_dialog_publish_post_message">حان الوقت! يمكنك عمل مسودة لمقالتك الأولي ونشرها.</string>
+    <string name="quick_start_dialog_need_help_title">هل تريد بعض المساعدة للبدء؟</string>
+    <string name="quick_start_dialog_need_help_message">ستوضح لك قائمة اختيار البدء السريع الخاصة بنا أساسيات إنشاء موقع ويب جديد.</string>
+    <string name="quick_start_dialog_need_help_button_positive">نعم</string>
+    <string name="quick_start_dialog_need_help_button_neutral">أبدًا</string>
+    <string name="quick_start_dialog_need_help_button_negative">لا</string>
+    <string name="quick_start_dialog_follow_sites_title">متابعة مواقع أخرى</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">انقر على %1$sبحث%2$s للبحث عن مواقع ذات اهتمامات مماثلة</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">انقر على %1$sالقاريء%2$s للمتابعة</string>
+    <string name="quick_start_dialog_follow_sites_message">يمكنك العثور على المواقع التي تتواصل معك ومتابعتها للحصول على التحديثات عندما تقوم بالنشر.</string>
+    <string name="quick_start_dialog_customize_site_title">تخصيص موقعك</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">انقر على %1$sالقوالب%2$s للمتابعة</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">انقر على %1$sتخصيص%2$s للبدء في تخصيص موقعك</string>
+    <string name="quick_start_dialog_customize_site_message">غيِّر الألوان والخطوط والصور للحصول على موقع مخصص تخصيصًا مثاليًا.</string>
+    <string name="quick_start_dialog_continue_setup_title">استمر في إعداد الموقع</string>
+    <string name="quick_start_dialog_continue_setup_message">حان الوقت لإنهاء إعداد موقعك! توضح لك قائمة الاختيار الخاصة بنا الخطوات التالية.</string>
+    <string name="quick_start_dialog_choose_theme_title">اختيار قالب</string>
+    <string name="quick_start_dialog_choose_theme_message_short">انقر على %1$sالقوالب%2$s لاكتشاف قوالب جديدة</string>
+    <string name="quick_start_dialog_choose_theme_message">تصفّح جميع قوالبنا للعثور على ما يناسبك.</string>
+    <string name="quick_start_button_skip_positive">تخطي</string>
+    <string name="quick_start_button_skip_negative">إلغاء</string>
+    <string name="quick_start_button_skip">تجاوز الكل</string>
+    <string name="quick_start_button_positive">انتقال</string>
+    <string name="quick_start_button_negative_short">إلغاء</string>
+    <string name="quick_start_button_negative">ليس الآن</string>
+    <string name="content_description_done">تم</string>
+    <string name="my_site_create_new_site_title">ليس لديك أي مواقع</string>
+    <string name="reader_empty_followed_tags_title">لا توجد وسوم تمت متابعتها</string>
+    <string name="reader_empty_followed_tags_subtitle">أضف وسومًا هنا للعثور على مقالات حول موضوعاتك المفضلة</string>
+    <string name="login_to_to_connect_jetpack">سجّل الدخول إلى حساب وردبرس الذي تستخدمه للاتصال بـ Jetpack.</string>
+    <string name="install_jetpack_retry">إعادة المحاولة</string>
+    <string name="install_jetpack_continue">المتابعة</string>
+    <string name="jetpack_installation_problem_message">يتعذر تثبيت Jetpack في الوقت الحالي</string>
+    <string name="jetpack_installation_problem">حدثت مشكلة</string>
+    <string name="jetpack_installed_message">لديك Jetpack مثبت على موقعك. تهانينا!</string>
+    <string name="jetpack_installed">تم تثبيت Jetpack</string>
+    <string name="installing_jetpack_message">تثبيت Jetpack على موقعك. قد يستغرق هذا الأمر وقتًا يصل إلى بضع دقائق لاكتماله</string>
+    <string name="installing_jetpack">تثبيت Jetpack</string>
+    <string name="install_jetpack_message">لن يتم تخزين بيانات اعتمادك وستُستخدم فقط بغرض تثبيت Jetpack.</string>
+    <string name="install_jetpack">تثبيت Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">يعني إعداد Jetpack موافقتك على </string>
+    <string name="stats_jetpack_connection_setup_info">لاستخدام الإحصاءات على موقعك على وردبرس، سيتعين عليك تثبيت المكوّن الإضافي Jetpack.</string>
     <string name="themes_empty_list">لا توجد سمات مطابقة لبحثك</string>
     <string name="reader_label_post_search_explainer">ما الذي ترغب في إيجاده؟</string>
     <string name="site_settings_tags_empty_title_search">لا توجد وسوم مطابقة لبحثك</string>
@@ -167,7 +240,6 @@ Language: ar
     <string name="stats_tab_tap_content_description">إظهار %s</string>
     <string name="stats_legend">وسيلة إيضاح الرسم البياني للإحصاءات</string>
     <string name="fab_create_desc">إنشاء</string>
-    <string name="fab_add_tag_desc">إنشاء وسم</string>
     <string name="stats_bar_week_desc">أسبوع %s</string>
     <string name="stats_bar_date_value_desc">%s، %d من المشاهدات</string>
     <string name="stats_bar_date_value_type_desc">%s، %d %s</string>
@@ -378,7 +450,6 @@ Language: ar
     <string name="site_settings_serve_images_from_our_servers_summary">سيُحسّن Jetpack صورك ويوفِّرها من موقع الخادم الأقرب إلى زائريك. سيؤدي استخدام شبكة توصيل المحتوى العالمية إلى تعزيز سرعة التحميل في موقعك.</string>
     <string name="site_settings_serve_images_from_our_servers">الحصول على الصور من خوادمنا</string>
     <string name="site_settings_speed_up_your_site">زيادة سرعة موقعك</string>
-    <string name="stats_jetpack_connection_setup">إعداد Jetpack</string>
     <string name="plugin_chevron_icon_content_description">التبديل بين النصوص</string>
     <string name="plugin_info_your_version">إصدار وردبرس الخاص بك</string>
     <string name="plugin_info_requires_version">يتطلب إصدار وردبرس</string>
@@ -1471,7 +1542,6 @@ Language: ar
     <string name="pick_video">تحديد فيديو</string>
     <string name="pick_photo">تحديد صورة</string>
     <string name="reader_likes_you_and_one">أنت وشخص آخر معجبان بهذا</string>
-    <string name="reader_empty_followed_tags">لا تتابع أي وسوم</string>
     <string name="reader_toast_err_url_intent">لايمكن فتح %s</string>
     <string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
     <string name="reader_toast_err_share_intent">لايمكن المشاركة</string>
