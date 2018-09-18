@@ -180,7 +180,6 @@ public class SitePickerActivity extends AppCompatActivity
 
         // no point showing search if there aren't multiple blogs
         mMenuSearch.setVisible(mSiteStore.getSitesCount() > 1);
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -488,7 +487,7 @@ public class SitePickerActivity extends AppCompatActivity
         hideSoftKeyboard();
         setIsInSearchModeAndSetNewAdapter(false);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void hideSoftKeyboard() {
