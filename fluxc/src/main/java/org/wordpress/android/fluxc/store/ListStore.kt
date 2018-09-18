@@ -167,7 +167,7 @@ class ListStore @Inject constructor(
     private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
         emitChange(OnListChanged(payload.listDescriptors, error = null))
     }
-    
+
     /**
      * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
      *
@@ -228,8 +228,15 @@ class ListStore @Inject constructor(
         }
     }
 
-    class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>)
-    class ListItemsRemovedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>)
+    class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>) {
+        constructor(listDescriptor: ListDescriptor): this(listOf(listDescriptor))
+    }
+    class ListItemsRemovedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) {
+        constructor(listDescriptor: ListDescriptor, remoteItemId: Long) : this(
+                listOf(listDescriptor),
+                listOf(remoteItemId)
+        )
+    }
 
     /**
      * This is the payload for [ListAction.FETCH_LIST].

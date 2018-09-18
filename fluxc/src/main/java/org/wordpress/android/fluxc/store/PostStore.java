@@ -510,8 +510,8 @@ public class PostStore extends Store {
             event.error = payload.error;
         } else {
             ListItemsRemovedPayload listActionPayload =
-                    new ListItemsRemovedPayload(listDescriptorsToUpdate(payload.site.getId()),
-                            postIdListFromPost(payload.post));
+                    new ListItemsRemovedPayload(listDescriptorToUpdate(payload.site.getId()),
+                            payload.post.getRemotePostId());
             mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
             PostSqlUtils.deletePost(payload.post);
         }
@@ -612,7 +612,7 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
 
         mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(listDescriptorsToUpdate(post.getLocalSiteId()))));
+                new ListItemsChangedPayload(listDescriptorToUpdate(post.getLocalSiteId()))));
     }
 
     private void removePost(PostModel post) {
@@ -620,7 +620,7 @@ public class PostStore extends Store {
             return;
         }
         mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
-                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()), postIdListFromPost(post))));
+                new ListItemsRemovedPayload(listDescriptorToUpdate(post.getLocalSiteId()), post.getRemotePostId())));
         int rowsAffected = PostSqlUtils.deletePost(post);
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
@@ -634,11 +634,7 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
-    private List<ListDescriptor> listDescriptorsToUpdate(int siteId) {
-        return Collections.singletonList(new ListDescriptor(ListType.POST, siteId, null, null));
-    }
-
-    private List<Long> postIdListFromPost(PostModel post) {
-        return Collections.singletonList(post.getRemotePostId());
+    private ListDescriptor listDescriptorToUpdate(int siteId) {
+        return new ListDescriptor(ListType.POST, siteId, null, null);
     }
 }
