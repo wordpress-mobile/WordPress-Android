@@ -2322,6 +2322,7 @@
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+    <string name="pages_open_page_error">The selected page is not available</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->

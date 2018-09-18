@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
@@ -134,6 +135,8 @@ class PageListFragment : Fragment() {
 
             smoothScroller.targetPosition = position
             recyclerView.layoutManager.startSmoothScroll(smoothScroller)
+        } else {
+            ToastUtils.showToast(activity, R.string.pages_open_page_error)
         }
     }
 }
