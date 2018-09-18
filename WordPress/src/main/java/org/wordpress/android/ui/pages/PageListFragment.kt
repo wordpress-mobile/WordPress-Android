@@ -118,7 +118,10 @@ class PageListFragment : Fragment() {
                 }
 
                 override fun calculateDtToFit(
-                    viewStart: Int, viewEnd: Int, boxStart: Int, boxEnd: Int,
+                    viewStart: Int,
+                    viewEnd: Int,
+                    boxStart: Int,
+                    boxEnd: Int,
                     snapPreference: Int
                 ): Int {
                     // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows

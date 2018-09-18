@@ -240,7 +240,7 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.scrollToPage.observe(this, Observer {  requestedPage ->
+        viewModel.scrollToPage.observe(this, Observer { requestedPage ->
             requestedPage?.let { page ->
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOfFirst { it.pageStatuses.contains(page.status) }
                 pagesPager.setCurrentItem(pagerIndex, false)
