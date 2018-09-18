@@ -111,7 +111,9 @@
                 android:layout_marginTop="24dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_dark"
-                tools:text="Jetpack by WordPress.com autoupdated to 5.6"/>
+                android:linksClickable="true"
+                tools:text="Jetpack by WordPress.com autoupdated to 5.6"
+                android:focusable="true"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/activityType"

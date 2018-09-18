@@ -12,7 +12,7 @@ import android.widget.TextView;
  * Allows links to be highlighted when tapped on note blocks.
  * See: http://stackoverflow.com/a/20905824/309558
  */
-class NoteBlockLinkMovementMethod extends LinkMovementMethod {
+public class NoteBlockLinkMovementMethod extends LinkMovementMethod {
     private NoteBlockClickableSpan mPressedSpan;
 
     @Override

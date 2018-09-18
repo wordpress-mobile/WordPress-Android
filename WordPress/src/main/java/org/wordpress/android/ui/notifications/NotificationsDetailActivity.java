@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -33,7 +34,6 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -366,7 +366,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
-    public void showStatsActivityForSite(long siteId, NoteBlockRangeType rangeType) {
+    public void showStatsActivityForSite(long siteId, FormattableRangeType rangeType) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
         if (site == null) {
             // One way the site can be null: new site created, receive a notification from this site,
@@ -377,12 +377,12 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         showStatsActivityForSite(site, rangeType);
     }
 
-    private void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
+    private void showStatsActivityForSite(@NonNull SiteModel site, FormattableRangeType rangeType) {
         if (isFinishing()) {
             return;
         }
 
-        if (rangeType == NoteBlockRangeType.FOLLOW) {
+        if (rangeType == FormattableRangeType.FOLLOW) {
             Intent intent = new Intent(this, StatsViewAllActivity.class);
             intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
             intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);

@@ -82,7 +82,7 @@ class ActivityLogViewModelTest {
     val activity = ActivityLogModel(
             "activityId",
             "",
-            "",
+            null,
             null,
             null,
             null,
@@ -327,7 +327,7 @@ class ActivityLogViewModelTest {
         birthday.set(1985, 8, 27)
 
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel("", "", "", "", "", "",
+        val activity = ActivityLogModel("", "", null, "", "", "",
                 "", true, "", birthday.time)
         list.add(activity)
         list.add(activity.copy())

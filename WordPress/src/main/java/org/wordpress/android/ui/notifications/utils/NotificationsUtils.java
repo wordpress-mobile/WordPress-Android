@@ -35,15 +35,20 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.NotificationsTable;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableContentMapper;
+import org.wordpress.android.fluxc.tools.FormattableMedia;
+import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.PackageUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.WPImageGetter;
 
 import java.lang.reflect.Field;
@@ -52,6 +57,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class NotificationsUtils {
     public static final String ARG_PUSH_AUTH_TOKEN = "arg_push_auth_token";
@@ -162,64 +170,127 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
-    public static Spannable getSpannableContentForRanges(JSONObject subject) {
-        return getSpannableContentForRanges(subject, null, null, false);
+    static FormattableContent mapJsonToFormattableContent(FormattableContentMapper mapper, JSONObject blockObject) {
+        return mapper.mapToFormattableContent(blockObject.toString());
+    }
+
+    static Spannable getSpannableContentForRanges(
+            FormattableContentMapper formattableContentMapper,
+            JSONObject blockObject, TextView textView,
+            final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+            boolean isFooter) {
+        return getSpannableContentForRanges(mapJsonToFormattableContent(formattableContentMapper, blockObject),
+                textView, onNoteBlockTextClickListener, isFooter);
     }
 
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
      *
-     * @param blockObject the JSON data
+     * @param formattableContent the data
      * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
-                                 final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                 boolean isFooter) {
-        if (blockObject == null) {
+    static Spannable getSpannableContentForRanges(FormattableContent formattableContent, TextView textView,
+                                                  final NoteBlock.OnNoteBlockTextClickListener
+                                                          onNoteBlockTextClickListener,
+                                                  boolean isFooter) {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                onNoteBlockTextClickListener != null ? new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        onNoteBlockTextClickListener.onNoteBlockTextClicked(noteBlockClickableSpan);
+                        return null;
+                    }
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param clickHandler - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                  TextView textView,
+                                                  final Function1<FormattableRange, Unit> clickHandler,
+                                                  boolean isFooter) {
+        Function1<NoteBlockClickableSpan, Unit> clickListener =
+                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
+                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
+                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                        return null;
+                    }
+                } : null;
+        return getSpannableContentForRanges(formattableContent,
+                textView,
+                isFooter,
+                clickListener);
+    }
+
+    /**
+     * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
+     * @param formattableContent the data
+     * @param textView the TextView that will display the spannnable
+     * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
+     * @param isFooter - Set if spannable should apply special formatting
+     * @return Spannable string with formatted content
+     */
+    private static Spannable getSpannableContentForRanges(FormattableContent formattableContent,
+                                                          TextView textView,
+                                                          boolean isFooter,
+                                                          final Function1<NoteBlockClickableSpan, Unit>
+                                                                  onNoteBlockTextClickListener) {
+        if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = blockObject.optString("text", "");
+        String text = formattableContent.getText();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         // Add ImageSpans for note media
-        addImageSpansForBlockMedia(textView, blockObject, spannableStringBuilder);
+        addImageSpansForBlockMedia(textView, formattableContent, spannableStringBuilder);
 
         // Process Ranges to add links and text formatting
-        JSONArray rangesArray = blockObject.optJSONArray("ranges");
+        List<FormattableRange> rangesArray = formattableContent.getRanges();
         if (rangesArray != null) {
-            for (int i = 0; i < rangesArray.length(); i++) {
-                JSONObject rangeObject = rangesArray.optJSONObject(i);
-                if (rangeObject == null) {
-                    continue;
-                }
-
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                                                                                  shouldLink, isFooter) {
+            for (FormattableRange range : rangesArray) {
+                NoteBlockClickableSpan clickableSpan =
+                        new NoteBlockClickableSpan(WordPress.getContext(), range, shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
-                            onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                            onNoteBlockTextClickListener.invoke(this);
                         }
                     }
                 };
 
-                int[] indices = clickableSpan.getIndices();
-                if (indices.length == 2 && indices[0] <= spannableStringBuilder.length()
-                    && indices[1] <= spannableStringBuilder.length()) {
+                List<Integer> indices = clickableSpan.getIndices();
+                if (indices != null && indices.size() == 2 && indices.get(0) <= spannableStringBuilder.length()
+                    && indices.get(1) <= spannableStringBuilder.length()) {
                     spannableStringBuilder
-                            .setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                            .setSpan(clickableSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
                     // Add additional styling if the range wants it
                     if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
                         spannableStringBuilder
-                                .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                                .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+
+                    if (onNoteBlockTextClickListener != null && textView != null) {
+                        textView.setLinksClickable(true);
+                        textView.setMovementMethod(new NoteBlockLinkMovementMethod());
                     }
                 }
             }
@@ -246,14 +317,14 @@ public class NotificationsUtils {
     /**
      * Adds ImageSpans to the passed SpannableStringBuilder
      */
-    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject,
+    private static void addImageSpansForBlockMedia(TextView textView, FormattableContent subject,
                                                    SpannableStringBuilder spannableStringBuilder) {
         if (textView == null || subject == null || spannableStringBuilder == null) {
             return;
         }
 
         Context context = textView.getContext();
-        JSONArray mediaArray = subject.optJSONArray("media");
+        List<FormattableMedia> mediaArray = subject.getMedia();
         if (context == null || mediaArray == null) {
             return;
         }
@@ -273,16 +344,22 @@ public class NotificationsUtils {
 
         int indexAdjustment = 0;
         String imagePlaceholder;
-        for (int i = 0; i < mediaArray.length(); i++) {
-            JSONObject mediaObject = mediaArray.optJSONObject(i);
+        for (FormattableMedia mediaObject : mediaArray) {
             if (mediaObject == null) {
                 continue;
             }
 
-            final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
-            ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
-            int startIndex = JSONUtils.queryJSON(mediaObject, "indices[0]", -1);
-            int endIndex = JSONUtils.queryJSON(mediaObject, "indices[1]", -1);
+            final Drawable remoteDrawable = imageGetter.getDrawable(StringUtils.notNullStr(mediaObject.getUrl()));
+            ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, StringUtils.notNullStr(mediaObject.getUrl()));
+            int startIndex = -1;
+            int endIndex = -1;
+            List<Integer> indices =
+                    (mediaObject.getIndices() != null && mediaObject.getIndices().size() == 2) ? mediaObject
+                            .getIndices() : null;
+            if (indices != null) {
+                startIndex = indices.get(0);
+                endIndex = indices.get(1);
+            }
             if (startIndex >= 0) {
                 startIndex += indexAdjustment;
                 endIndex += indexAdjustment;
