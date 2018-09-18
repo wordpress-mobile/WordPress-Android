@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 40;
+        return 41;
     }
 
     @Override
@@ -344,6 +344,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + " TEXT NOT NULL,NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID "
                         + "TEXT,PUBLISHED INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID "
                         + "INTEGER,AVATAR_URL TEXT,ROLE TEXT)");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
