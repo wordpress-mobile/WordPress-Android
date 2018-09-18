@@ -76,7 +76,7 @@ abstract class ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(InsightsViewModel.class)
-    abstract ViewModel statsListViewModel(InsightsViewModel viewModel);
+    abstract ViewModel insightsViewModel(InsightsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
