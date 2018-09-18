@@ -8,12 +8,15 @@ import android.os.Parcelable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearSmoothScroller
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -102,5 +105,32 @@ class PageListFragment : Fragment() {
             adapter = recyclerView.adapter as PagesAdapter
         }
         adapter.update(pages)
+    }
+
+    fun scrollToPage(pageId: Long) {
+        val position = viewModel.pages.value?.indexOfFirst { it is Page && it.id == pageId }
+        if (position != null && position != -1) {
+            val smoothScroller = object : LinearSmoothScroller(activity) {
+                private val SCROLL_OFFSET_DP = 23
+
+                override fun getVerticalSnapPreference(): Int {
+                    return LinearSmoothScroller.SNAP_TO_START
+                }
+
+                override fun calculateDtToFit(
+                    viewStart: Int, viewEnd: Int, boxStart: Int, boxEnd: Int,
+                    snapPreference: Int
+                ): Int {
+                    // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
+                    val offsetPx = TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP.toFloat(), resources.displayMetrics
+                    ).toInt()
+                    return boxStart - viewStart + offsetPx
+                }
+            }
+
+            smoothScroller.targetPosition = position
+            recyclerView.layoutManager.startSmoothScroll(smoothScroller)
+        }
     }
 }
