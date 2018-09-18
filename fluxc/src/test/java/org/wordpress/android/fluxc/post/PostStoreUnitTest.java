@@ -47,13 +47,12 @@ public class PostStoreUnitTest {
     public void setUp() {
         Context appContext = RuntimeEnvironment.application.getApplicationContext();
 
-        List<Class<? extends Identifiable>> list = new ArrayList<>();
-        list.add(PostModel.class);
-        list.add(LocalDiffModel.class);
-        list.add(LocalRevisionModel.class);
+        List<Class<? extends Identifiable>> modelsToTest = new ArrayList<>();
+        modelsToTest.add(PostModel.class);
+        modelsToTest.add(LocalDiffModel.class);
+        modelsToTest.add(LocalRevisionModel.class);
 
-
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, list, "");
+        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, modelsToTest, "");
         WellSql.init(config);
         config.reset();
     }
@@ -385,7 +384,7 @@ public class PostStoreUnitTest {
     }
 
     @Test
-    public void testUpdatingOfLocalRevision() {
+    public void testUpdatingLocalRevision() {
         RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
         SiteModel site = new SiteModel();
         site.setSiteId(77);
