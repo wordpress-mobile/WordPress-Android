@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.test
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -46,6 +47,7 @@ class PagesViewModelTest {
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageStatus, List<PageModel>>>
+    private lateinit var pageModel: PageModel
 
     @Before
     fun setUp() {
@@ -56,10 +58,11 @@ class PagesViewModelTest {
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
+        pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
     }
 
     @Test
-    fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
+    fun clearsResultAndLoadsDataOnStart() = test {
         val pageModel = initPageRepo()
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
 
@@ -71,7 +74,6 @@ class PagesViewModelTest {
     }
 
     private suspend fun initPageRepo(): PageModel {
-        val pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
         val expectedPages = listOf(
                 pageModel
         )
@@ -82,7 +84,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onSiteWithoutPages() = runBlocking<Unit> {
+    fun onSiteWithoutPages() = test {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
 
@@ -93,7 +95,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onPageEditFinishedReloadSite() = runBlocking<Unit> {
+    fun onPageEditFinishedReloadSite() = test {
         whenever(pageStore.requestPagesFromServer(site)).thenReturn(OnPostChanged(0, false))
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
 
@@ -105,7 +107,11 @@ class PagesViewModelTest {
         val postModel = PostModel()
         val postId: Long = 5
         postModel.remotePostId = postId
-        val job = launch { viewModel.onPageEditFinished(postId) }
+        val job = launch {
+            whenever(pageStore.requestPagesFromServer(site)).thenReturn(OnPostChanged(0, false))
+            initPageRepo()
+            viewModel.onPageEditFinished(postId)
+        }
 
         delay(10)
 
@@ -120,7 +126,7 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
+    fun onSearchReturnsResultsFromStore() = test {
         initSearch()
         val query = "query"
         val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
