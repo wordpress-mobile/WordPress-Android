@@ -72,6 +72,8 @@
 /sites/$site/posts/new/
 /sites/$site/posts/slug:$post_slug#String/
 
+/sites/$site/stats/visits
+
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
 /sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
