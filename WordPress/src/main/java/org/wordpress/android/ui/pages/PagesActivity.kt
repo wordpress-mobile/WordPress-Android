@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -22,6 +23,19 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        if (intent.hasExtra(EXTRA_PAGE_REMOTE_ID_KEY)) {
+            val pageId = intent.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, -1)
+            if (pageId != -1L) {
+                supportFragmentManager.findFragmentById(R.id.fragment_container)?.let {
+                    (it as PagesFragment).onSpecificPageRequested(pageId)
+                }
+            }
         }
     }
 

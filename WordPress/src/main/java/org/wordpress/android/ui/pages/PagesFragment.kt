@@ -92,6 +92,10 @@ class PagesFragment : Fragment() {
         }
     }
 
+    fun onSpecificPageRequested(remotePageId: Long) {
+        viewModel.onSpecificPageRequested(remotePageId)
+    }
+
     private fun onPageEditFinished(pageId: Long) {
         viewModel.onPageEditFinished(pageId)
     }
@@ -235,6 +239,14 @@ class PagesFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.scrollToPage.observe(this, Observer {  requestedPage ->
+            requestedPage?.let { page ->
+                val pagerIndex = PagesPagerAdapter.pageTypes.indexOfFirst { it.pageStatuses.contains(page.status) }
+                pagesPager.setCurrentItem(pagerIndex, false)
+                (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page.remoteId, pagerIndex)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -288,7 +300,7 @@ class PagesFragment : Fragment() {
     }
 }
 
-class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
         val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }
@@ -301,5 +313,10 @@ class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPag
 
     override fun getPageTitle(position: Int): CharSequence? {
         return context.getString(pageTypes[position].title)
+    }
+
+    fun scrollToPage(pageId: Long, pagerIndex: Int) {
+        val listFragment = fm.findFragmentByTag("android:switcher:${R.id.pager}:$pagerIndex") as? PageListFragment
+        listFragment?.scrollToPage(pageId)
     }
 }
