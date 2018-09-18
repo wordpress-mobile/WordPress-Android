@@ -111,30 +111,7 @@ class PageListFragment : Fragment() {
     fun scrollToPage(pageId: Long) {
         val position = viewModel.pages.value?.indexOfFirst { it is Page && it.id == pageId }
         if (position != null && position != -1) {
-            val smoothScroller = object : LinearSmoothScroller(activity) {
-                private val SCROLL_OFFSET_DP = activity?.resources?.getDimension(R.dimen.page_scroll_offset) ?: 23f
-
-                override fun getVerticalSnapPreference(): Int {
-                    return LinearSmoothScroller.SNAP_TO_START
-                }
-
-                override fun calculateDtToFit(
-                    viewStart: Int,
-                    viewEnd: Int,
-                    boxStart: Int,
-                    boxEnd: Int,
-                    snapPreference: Int
-                ): Int {
-                    // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above pages shows
-                    val offsetPx = TypedValue.applyDimension(
-                            TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP, resources.displayMetrics
-                    ).toInt()
-                    return boxStart - viewStart + offsetPx
-                }
-            }
-
-            smoothScroller.targetPosition = position
-            recyclerView.layoutManager.startSmoothScroll(smoothScroller)
+            recyclerView.smoothScrollToPosition(position)
         } else {
             ToastUtils.showToast(activity, R.string.pages_open_page_error)
         }
