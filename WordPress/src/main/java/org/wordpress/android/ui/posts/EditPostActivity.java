@@ -1794,9 +1794,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    if (isNewPost()) {
+                    if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                         // new post - user just left the editor without publishing, they probably want
-                        // to keep the post as a draft
+                        // to keep the post as a draft (unless they explicitly changed the status)
                         mPost.setStatus(PostStatus.DRAFT.toString());
                         if (mEditPostSettingsFragment != null) {
                             runOnUiThread(new Runnable() {
