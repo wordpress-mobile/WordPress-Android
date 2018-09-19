@@ -1809,8 +1809,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     }
 
-                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
-                        && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    PostStatus status = PostStatus.fromPost(mPost);
+                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
+                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         savePostLocallyAndFinishAsync(doFinish);
