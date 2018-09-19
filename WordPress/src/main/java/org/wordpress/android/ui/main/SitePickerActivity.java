@@ -147,20 +147,17 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
+        mMenuSearch = menu.findItem(R.id.menu_search);
+        mMenuEdit = menu.findItem(R.id.menu_edit);
+        mMenuAdd = menu.findItem(R.id.menu_add);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        mMenuEdit = menu.findItem(R.id.menu_edit);
-        mMenuAdd = menu.findItem(R.id.menu_add);
-        mMenuSearch = menu.findItem(R.id.menu_search);
-
         updateMenuItemVisibility();
         setupSearchView();
-
         return true;
     }
 
