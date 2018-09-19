@@ -103,7 +103,7 @@
 /sites/$site/stats/insights
 /sites/$site/stats/summary
 /sites/$site/stats/posts
-/sites/$site/stats/post
+/sites/$site/stats/post/$post_ID
 
 /sites/$site/post/$post_ID/diffs
 /sites/$site/page/$post_ID/diffs
