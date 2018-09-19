@@ -5,10 +5,9 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
+import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.StatsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.StatsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.StatsRestClient.PostViewsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.StatsRestClient.PostsResponse
+import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
@@ -18,36 +17,57 @@ class InsightsStore
 @Inject constructor(private val statsRestClient: StatsRestClient, private val coroutineContext: CoroutineContext) {
     suspend fun fetchAllTimeInsights(site: SiteModel) = withContext(coroutineContext) {
         val payload = statsRestClient.fetchAllTimeInsights(site)
-        if (payload.isError) {
-            return@withContext OnAllTimeInsightsFetched(payload.error)
-        } else {
-            val data = payload.model
-            val stats = data!!.stats
-            return@withContext OnAllTimeInsightsFetched(
-                    InsightsAllTimeModel(
-                            site.siteId,
-                            data.date,
-                            stats.visitors,
-                            stats.views,
-                            stats.posts,
-                            stats.viewsBestDay,
-                            stats.viewsBestDayTotal
-                    )
-            )
+        return@withContext when {
+            payload.isError -> OnInsightsFetched(payload.error)
+            payload.response != null -> {
+                val data = payload.response
+                val stats = data.stats
+                OnInsightsFetched(
+                        InsightsAllTimeModel(
+                                site.siteId,
+                                data.date,
+                                stats.visitors,
+                                stats.views,
+                                stats.posts,
+                                stats.viewsBestDay,
+                                stats.viewsBestDayTotal
+                        )
+                )
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    suspend fun fetchLatestPostInsights(site: SiteModel): OnLatestPostInsightsFetched {
+    suspend fun fetchMostPopularInsights(site: SiteModel) = withContext(coroutineContext) {
+        val payload = statsRestClient.fetchMostPopularInsights(site)
+        return@withContext when {
+            payload.isError -> OnInsightsFetched(payload.error)
+            payload.response != null -> {
+                val data = payload.response
+                OnInsightsFetched(
+                        InsightsMostPopularModel(
+                                data.highestDayOfWeek,
+                                data.highestHour,
+                                data.highestDayPercent,
+                                data.highestHourPercent
+                        )
+                )
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    suspend fun fetchLatestPostInsights(site: SiteModel) = withContext(coroutineContext) {
         val responsePost = statsRestClient.fetchLatestPostForInsights(site)
         val postsFound = responsePost.response?.postsFound
 
         val posts = responsePost.response?.posts
-        if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
+        return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
             val postViews = statsRestClient.fetchPostViewsForInsights(site, latestPost.id)
             val commentCount = latestPost.discussion?.commentCount ?: 0
             val viewsCount = postViews.response?.views ?: 0
-            return OnLatestPostInsightsFetched(
+            OnInsightsFetched(
                     InsightsLatestPostModel(
                             site.siteId,
                             latestPost.title,
@@ -60,46 +80,20 @@ class InsightsStore
                     )
             )
         } else if (responsePost.isError) {
-            return OnLatestPostInsightsFetched(responsePost.error)
+            OnInsightsFetched(responsePost.error)
         } else {
-            return OnLatestPostInsightsFetched()
+            OnInsightsFetched()
         }
     }
 
-    data class OnAllTimeInsightsFetched(
-        val allTimeModel: InsightsAllTimeModel? = null
-    ) : Store.OnChanged<StatsError>() {
+    data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
         }
     }
 
-    data class OnLatestPostInsightsFetched(
-        val latestPostModel: InsightsLatestPostModel? = null
-    ) : Store.OnChanged<StatsError>() {
-        constructor(error: StatsError) : this() {
-            this.error = error
-        }
-    }
-
-    data class FetchAllTimeInsightsPayload(
-        val model: AllTimeResponse? = null
-    ) : Payload<StatsError>() {
-        constructor(error: StatsError) : this() {
-            this.error = error
-        }
-    }
-
-    data class FetchLatestPostPayload(
-        val response: PostsResponse? = null
-    ) : Payload<StatsError>() {
-        constructor(error: StatsError) : this() {
-            this.error = error
-        }
-    }
-
-    data class FetchLatestPostViewsPayload(
-        val response: PostViewsResponse? = null
+    data class FetchInsightsPayload<T>(
+        val response: T? = null
     ) : Payload<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
@@ -108,6 +102,7 @@ class InsightsStore
 
     enum class StatsErrorType {
         GENERIC_ERROR,
+        TIMEOUT,
         API_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE
