@@ -86,6 +86,25 @@
 
 /sites/$site/mobile-quick-start
 
+/sites/$site/stats
+/sites/$site/stats/visits
+/sites/$site/stats/top-posts
+/sites/$site/stats/referrers
+/sites/$site/stats/clicks
+/sites/$site/stats/country-views
+/sites/$site/stats/top-authors
+/sites/$site/stats/video-plays
+/sites/$site/stats/comments
+/sites/$site/stats/followers
+/sites/$site/stats/comment-followers
+/sites/$site/stats/tags
+/sites/$site/stats/publicize
+/sites/$site/stats/search-terms
+/sites/$site/stats/insights
+/sites/$site/stats/summary
+/sites/$site/stats/posts
+/sites/$site/stats/post
+
 /sites/$site/post/$post_ID/diffs
 /sites/$site/page/$post_ID/diffs
 
