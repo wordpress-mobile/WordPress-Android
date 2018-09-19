@@ -290,7 +290,7 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setupRecycleView() {
-        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView = findViewById(R.id.recycler_view);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
