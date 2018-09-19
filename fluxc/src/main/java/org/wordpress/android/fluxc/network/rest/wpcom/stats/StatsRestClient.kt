@@ -57,14 +57,6 @@ constructor(
         }
     }
 
-    private fun periodDateMaxParams(
-        period: StatsTimeframe,
-        date: String,
-        maxResultsRequested: Int
-    ): Map<String, String> {
-        return mapOf("period" to period.value, "date" to date, "max" to maxResultsRequested.toString())
-    }
-
     data class InsightsAllTimeResponse(
         @SerializedName("date")
         var date: String? = null,
@@ -84,80 +76,4 @@ constructor(
         @SerializedName("views_best_day_total")
         val viewsBestDayTotal: Int
     )
-
-    fun load(
-        blogId: Long,
-        timeframe: StatsTimeframe,
-        date: String,
-        sectionToUpdate: StatsEndpointsEnum,
-        maxResultsRequested: Int,
-        pageRequested: Int
-    ) {
-        val period = timeframe.value
-        val periodDateMaxPlaceholder = "?period=%s&date=%s&max=%s"
-        var path = String.format(Locale.US, "/sites/%s/stats/" + sectionToUpdate.restEndpointPath, blogId)
-        when (sectionToUpdate) {
-            StatsEndpointsEnum.VISITS -> path = String.format(
-                    Locale.US,
-                    "$path?unit=%s&quantity=15&date=%s", period, date
-            )
-            StatsEndpointsEnum.TOP_POSTS, StatsEndpointsEnum.REFERRERS, StatsEndpointsEnum.CLICKS, StatsEndpointsEnum.GEO_VIEWS, StatsEndpointsEnum.AUTHORS, StatsEndpointsEnum.VIDEO_PLAYS, StatsEndpointsEnum.SEARCH_TERMS -> path = String.format(
-                    Locale.US, path + periodDateMaxPlaceholder, period, date, maxResultsRequested
-            )
-            StatsEndpointsEnum.TAGS_AND_CATEGORIES, StatsEndpointsEnum.PUBLICIZE -> path = String.format(
-                    Locale.US, "$path?max=%s", maxResultsRequested
-            )
-            StatsEndpointsEnum.COMMENTS -> {
-            }
-            StatsEndpointsEnum.FOLLOWERS_WPCOM -> if (pageRequested < 1) {
-                path = String.format(Locale.US, "$path&max=%s", maxResultsRequested)
-            } else {
-                path = String.format(
-                        Locale.US, "$path&period=%s&date=%s&max=%s&page=%s",
-                        period, date, maxResultsRequested, pageRequested
-                )
-            }
-            StatsEndpointsEnum.FOLLOWERS_EMAIL -> if (pageRequested < 1) {
-                path = String.format(Locale.US, "$path&max=%s", maxResultsRequested)
-            } else {
-                path = String.format(
-                        Locale.US, "$path&period=%s&date=%s&max=%s&page=%s",
-                        period, date, maxResultsRequested, pageRequested
-                )
-            }
-            StatsEndpointsEnum.COMMENT_FOLLOWERS -> if (pageRequested < 1) {
-                path = String.format(Locale.US, "$path?max=%s", maxResultsRequested)
-            } else {
-                path = String.format(
-                        Locale.US, "$path?period=%s&date=%s&max=%s&page=%s", period,
-                        date, maxResultsRequested, pageRequested
-                )
-            }
-            StatsEndpointsEnum.INSIGHTS_ALL_TIME, StatsEndpointsEnum.INSIGHTS_POPULAR -> {
-            }
-            StatsEndpointsEnum.INSIGHTS_TODAY -> path = String.format(
-                    Locale.US,
-                    "$path?period=day&date=%s",
-                    date
-            )
-            StatsEndpointsEnum.INSIGHTS_LATEST_POST_SUMMARY ->
-                // This is an edge cases since we're not loading stats but posts
-                path = String.format(
-                        Locale.US, "/sites/%s/%s", blogId,
-                        sectionToUpdate.restEndpointPath + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date"
-                )
-            StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS ->
-                // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
-                path = String.format(Locale.US, "$path/%s?fields=views", pageRequested)
-            else -> {
-                AppLog.i(T.STATS, "Called an update of Stats of unknown section!?? " + sectionToUpdate.name)
-                return
-            }
-        }
-    }
-
-    enum class StatsTimeframe(val value: String) {
-        INSIGHTS("day"), DAY("day"), WEEK("week"), MONTH("month"), YEAR("year");
-    }
-
 }
