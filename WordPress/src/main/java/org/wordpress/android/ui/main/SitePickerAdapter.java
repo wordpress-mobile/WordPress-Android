@@ -673,7 +673,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final long mSiteId;
         private final String mBlogName;
         private final String mHomeURL;
-        private final String mUrl;
         private final String mBlavatarUrl;
         private boolean mIsHidden;
         private boolean mIsRecentPick;
@@ -683,7 +682,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mSiteId = siteModel.getSiteId();
             mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
             mHomeURL = SiteUtils.getHomeURLOrHostName(siteModel);
-            mUrl = siteModel.getUrl();
             mBlavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
             mIsHidden = !siteModel.isVisible();
         }
