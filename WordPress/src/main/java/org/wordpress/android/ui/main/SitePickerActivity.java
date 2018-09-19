@@ -487,7 +487,7 @@ public class SitePickerActivity extends AppCompatActivity
         hideSoftKeyboard();
         setIsInSearchModeAndSetNewAdapter(false);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void hideSoftKeyboard() {
