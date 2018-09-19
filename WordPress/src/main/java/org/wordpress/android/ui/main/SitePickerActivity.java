@@ -480,7 +480,7 @@ public class SitePickerActivity extends AppCompatActivity
     private void enableSearchMode() {
         setIsInSearchModeAndSetNewAdapter(true);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void disableSearchMode() {
