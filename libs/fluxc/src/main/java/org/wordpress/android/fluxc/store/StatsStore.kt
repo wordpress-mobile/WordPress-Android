@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICISE
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
@@ -33,7 +33,7 @@ class StatsStore
                 COMMENTS,
                 TAGS_AND_CATEGORIES,
                 FOLLOWERS,
-                PUBLICISE
+                PUBLICIZE
         )
     }
 
@@ -61,7 +61,7 @@ class StatsStore
         FOLLOWERS,
         TODAY_STATS,
         POSTING_ACTIVITY,
-        PUBLICISE
+        PUBLICIZE
     }
 
     enum class TimeStatsTypes {
