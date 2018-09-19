@@ -105,7 +105,6 @@ class PagesViewModel
             }
         }
 
-
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
@@ -347,7 +346,8 @@ class PagesViewModel
 
                 delay(ACTION_DELAY)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                )
             }
         }
         action.onError = {
