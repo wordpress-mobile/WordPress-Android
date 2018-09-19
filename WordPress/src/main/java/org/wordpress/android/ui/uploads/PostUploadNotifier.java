@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 
 class PostUploadNotifier {
     private final Context mContext;
@@ -316,12 +319,8 @@ class PostUploadNotifier {
         notificationBuilder.setAutoCancel(true);
 
         long notificationId = getNotificationIdForPost(post);
-        // Tap notification intent (open the post list)
-        Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                                                                     (int) notificationId,
                                                                     notificationIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -449,12 +448,7 @@ class PostUploadNotifier {
                         mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
-        // Tap notification intent (open the post list)
-        Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
         notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
@@ -492,6 +486,24 @@ class PostUploadNotifier {
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
         doNotify(notificationId, notificationBuilder.build());
+    }
+
+    @NonNull
+    private Intent getNotificationIntent(@NonNull PostModel post, @NonNull SiteModel site, long notificationId) {
+        // Tap notification intent (open the post/page list)
+        Intent notificationIntent;
+        if (post.isPage()) {
+            notificationIntent = new Intent(mContext, PagesActivity.class);
+            notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
+        } else {
+            notificationIntent = new Intent(mContext, PostsListActivity.class);
+        }
+
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notificationIntent.putExtra(WordPress.SITE, site);
+        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        return notificationIntent;
     }
 
     void updateNotificationErrorForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site,

@@ -251,7 +251,7 @@ public class ActivityLauncher {
         intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
-        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PAGE_PARENT, page.getSite());
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
     }
 
     public static void viewCurrentBlogComments(Context context, SiteModel site) {

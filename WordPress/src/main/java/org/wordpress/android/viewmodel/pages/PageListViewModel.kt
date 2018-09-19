@@ -17,7 +17,9 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -28,6 +30,9 @@ import javax.inject.Inject
 class PageListViewModel @Inject constructor() : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
+
+    private val _scrollToPosition = SingleLiveEvent<Int>()
+    val scrollToPosition: LiveData<Int> = _scrollToPosition
 
     private var isStarted: Boolean = false
     private lateinit var listType: PageListType
@@ -91,6 +96,15 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     fun onEmptyListNewPageButtonTapped() {
         pagesViewModel.onNewPageButtonTapped()
+    }
+
+    fun onScrollToPageRequested(remotePageId: Long) {
+        val position = pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
+        if (position != -1) {
+            _scrollToPosition.postValue(position)
+        } else {
+            AppLog.e(AppLog.T.PAGES, "Attempt to scroll to a missing page with ID $remotePageId")
+        }
     }
 
     private val pagesObserver = Observer<List<PageModel>> { pages ->

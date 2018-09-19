@@ -89,6 +89,12 @@ class PagesViewModel
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
 
+    private val _scrollToPage = SingleLiveEvent<PageModel>()
+    val scrollToPage: LiveData<PageModel?> = _scrollToPage
+
+    private var isInitialized = false
+    private var scrollToPageId: Long? = null
+
     private var pageMap: Map<Long, PageModel> = mapOf()
         set(value) {
             field = value
@@ -98,6 +104,7 @@ class PagesViewModel
                 onSearch(lastSearchQuery)
             }
         }
+
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
@@ -125,7 +132,7 @@ class PagesViewModel
     fun start(site: SiteModel) {
         _site = site
 
-        reloadPagesAsync()
+        loadPagesAsync()
     }
 
     init {
@@ -138,11 +145,17 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun reloadPagesAsync() = launch(commonPoolContext) {
+    private fun loadPagesAsync() = launch(commonPoolContext) {
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
         reloadPages(loadState)
+
+        isInitialized = true
+
+        scrollToPageId?.let {
+            onSpecificPageRequested(it)
+        }
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
@@ -212,6 +225,19 @@ class PagesViewModel
             }
         } else {
             clearSearch()
+        }
+    }
+
+    fun onSpecificPageRequested(remotePageId: Long) {
+        if (isInitialized) {
+            val page = pageMap[remotePageId]
+            if (page != null) {
+                _scrollToPage.postValue(page)
+            } else {
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.pages_open_page_error))
+            }
+        } else {
+            scrollToPageId = remotePageId
         }
     }
 

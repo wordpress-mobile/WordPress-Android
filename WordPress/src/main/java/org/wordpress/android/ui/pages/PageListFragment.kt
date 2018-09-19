@@ -88,6 +88,12 @@ class PageListFragment : Fragment() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
         })
+
+        viewModel.scrollToPosition.observe(this, Observer { position ->
+            position?.let {
+                recyclerView.smoothScrollToPosition(position)
+            }
+        })
     }
 
     private fun setPages(pages: List<PageItem>) {
@@ -102,5 +108,9 @@ class PageListFragment : Fragment() {
             adapter = recyclerView.adapter as PagesAdapter
         }
         adapter.update(pages)
+    }
+
+    fun scrollToPage(remotePageId: Long) {
+        viewModel.onScrollToPageRequested(remotePageId)
     }
 }
