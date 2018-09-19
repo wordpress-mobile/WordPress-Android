@@ -1770,7 +1770,6 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
                 boolean isFirstTimePublish = isFirstTimePublish();
 
                 boolean postUpdateSuccessful = updatePostObject();
