@@ -242,9 +242,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled)
             || (mIsMultiSelectEnabled && isItemSelected(position))) {
-            holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+            holder.mLayoutContainer.setBackground(mSelectedItemBackground);
         } else {
-            holder.mLayoutContainer.setBackgroundDrawable(null);
+            holder.mLayoutContainer.setBackground(null);
         }
 
         // different styling for visible/hidden sites
