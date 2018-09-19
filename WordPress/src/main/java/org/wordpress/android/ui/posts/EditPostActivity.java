@@ -1833,8 +1833,9 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                  && isPublishable && hasLocalChanges;
+        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
+                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
+                                                      && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
         return (mOriginalPost != null && hasChanges)
