@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
 import org.wordpress.android.fluxc.tools.FormattableRangeType.FOLLOW
 import org.wordpress.android.fluxc.tools.FormattableRangeType.LIKE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.MATCH
+import org.wordpress.android.fluxc.tools.FormattableRangeType.MEDIA
 import org.wordpress.android.fluxc.tools.FormattableRangeType.NOTICON
 import org.wordpress.android.fluxc.tools.FormattableRangeType.PAGE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
@@ -76,6 +77,7 @@ class FormattableContentClickHandler
             BLOCKQUOTE,
             NOTICON,
             MATCH,
+            MEDIA,
             UNKNOWN -> {
                 showWebViewActivityForUrl(activity, clickedSpan.url, rangeType)
             }

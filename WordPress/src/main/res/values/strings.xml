@@ -8,7 +8,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
@@ -2313,6 +2313,8 @@
     <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
     <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
     <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_pending">Pending review</string>
+    <string name="pages_private">Private</string>
     <string name="pages_view">View</string>
     <string name="pages_set_parent">Set parent</string>
     <string name="pages_publish_now">Publish Now</string>
@@ -2325,6 +2327,7 @@
     <string name="pages_empty_drafts">You don\'t have any draft pages</string>
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+    <string name="pages_open_page_error">The selected page is not available</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->

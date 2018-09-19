@@ -8,10 +8,6 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -21,18 +17,52 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import javax.inject.Inject
 
 class PageListViewModel @Inject constructor() : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
+    private val _scrollToPosition = SingleLiveEvent<Int>()
+    val scrollToPosition: LiveData<Int> = _scrollToPosition
+
     private var isStarted: Boolean = false
-    private lateinit var pageStatus: PageStatus
+    private lateinit var listType: PageListType
 
     private lateinit var pagesViewModel: PagesViewModel
+
+    enum class PageListType(val pageStatuses: List<PageStatus>) {
+        PUBLISHED(listOf(PageStatus.PUBLISHED, PageStatus.PRIVATE)),
+        DRAFTS(listOf(PageStatus.DRAFT, PageStatus.PENDING)),
+        SCHEDULED(listOf(PageStatus.SCHEDULED)),
+        TRASHED(listOf(PageStatus.TRASHED));
+
+        companion object {
+            fun fromPageStatus(status: PageStatus): PageListType {
+                return when (status) {
+                    PageStatus.PUBLISHED, PageStatus.PRIVATE -> PUBLISHED
+                    PageStatus.DRAFT, PageStatus.PENDING -> DRAFTS
+                    PageStatus.TRASHED -> TRASHED
+                    PageStatus.SCHEDULED -> SCHEDULED
+                }
+            }
+        }
+        val title: Int
+            get() = when (this) {
+                PUBLISHED -> string.pages_published
+                DRAFTS -> string.pages_drafts
+                SCHEDULED -> string.pages_scheduled
+                TRASHED -> string.pages_trashed
+            }
+    }
 
     enum class PageListState {
         DONE,
@@ -41,8 +71,8 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         FETCHING
     }
 
-    fun start(pageStatus: PageStatus, pagesViewModel: PagesViewModel) {
-        this.pageStatus = pageStatus
+    fun start(listType: PageListType, pagesViewModel: PagesViewModel) {
+        this.listType = listType
         this.pagesViewModel = pagesViewModel
 
         if (!isStarted) {
@@ -68,6 +98,15 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         pagesViewModel.onNewPageButtonTapped()
     }
 
+    fun onScrollToPageRequested(remotePageId: Long) {
+        val position = pages.value?.indexOfFirst { it is Page && it.id == remotePageId } ?: -1
+        if (position != -1) {
+            _scrollToPosition.postValue(position)
+        } else {
+            AppLog.e(AppLog.T.PAGES, "Attempt to scroll to a missing page with ID $remotePageId")
+        }
+    }
+
     private val pagesObserver = Observer<List<PageModel>> { pages ->
         pages?.let {
             loadPagesAsync(pages)
@@ -78,12 +117,12 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
-                .filter { pageStatus == it.status }
+                .filter { listType.pageStatuses.contains(it.status) }
                 .let {
-                    when (pageStatus) {
+                    when (listType) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
                         SCHEDULED -> prepareScheduledPages(it, pagesViewModel.arePageActionsEnabled)
-                        DRAFT -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
+                        DRAFTS -> prepareDraftPages(it, pagesViewModel.arePageActionsEnabled)
                         TRASHED -> prepareTrashedPages(it, pagesViewModel.arePageActionsEnabled)
                     }
                 }
@@ -96,30 +135,35 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             if (pagesViewModel.listState.value == FETCHING || pagesViewModel.listState.value == null) {
                 _pages.postValue(listOf(Empty(string.pages_fetching, isButtonVisible = false, isImageVisible = false)))
             } else {
-                when (pageStatus) {
+                when (listType) {
                     PUBLISHED -> _pages.postValue(listOf(Empty(string.pages_empty_published)))
                     SCHEDULED -> _pages.postValue(listOf(Empty(string.pages_empty_scheduled)))
-                    DRAFT -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
+                    DRAFTS -> _pages.postValue(listOf(Empty(string.pages_empty_drafts)))
                     TRASHED -> _pages.postValue(listOf(Empty(string.pages_empty_trashed, isButtonVisible = false)))
                 }
             }
         } else {
             val pagesWithBottomGap = newPages.toMutableList()
-            pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
+            pagesWithBottomGap.addAll(listOf(Divider(), Divider()))
             _pages.postValue(pagesWithBottomGap)
         }
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return topologicalSort(pages, pageStatus = PageStatus.PUBLISHED)
+        return topologicalSort(pages, listType = PUBLISHED)
                 .map {
-                    val label = if (it.hasLocalChanges) string.local_changes else null
-                    PublishedPage(it.remoteId, it.title, label, getPageItemIndent(it), actionsEnabled)
+                    val labels = mutableListOf<Int>()
+                    if (it.status == PageStatus.PRIVATE)
+                        labels.add(string.pages_private)
+                    if (it.hasLocalChanges)
+                        labels.add(string.local_changes)
+
+                    PublishedPage(it.remoteId, it.title, labels, getPageItemIndent(it), actionsEnabled)
                 }
     }
 
     private fun prepareScheduledPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return pages.groupBy { it.date.toFormattedDateString() }
+        return pages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) -> listOf(Divider(date)) +
                         results.map { ScheduledPage(it.remoteId, it.title, actionsEnabled) }
                 }
@@ -131,8 +175,13 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
         return pages.map {
-            val label = if (it.hasLocalChanges) string.local_draft else null
-            DraftPage(it.remoteId, it.title, label, actionsEnabled)
+            val labels = mutableListOf<Int>()
+            if (it.status == PageStatus.PENDING)
+                labels.add(string.pages_pending)
+            if (it.hasLocalChanges)
+                labels.add(string.local_draft)
+
+            DraftPage(it.remoteId, it.title, labels, actionsEnabled)
         }
     }
 
@@ -144,21 +193,24 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun topologicalSort(
         pages: List<PageModel>,
-        pageStatus: PageStatus,
+        listType: PageListType,
         parent: PageModel? = null
     ): List<PageModel> {
         val sortedList = mutableListOf<PageModel>()
         pages.filter {
-            it.parent?.remoteId == parent?.remoteId || (parent == null && it.parent?.status != pageStatus)
+            it.parent?.remoteId == parent?.remoteId ||
+                    (parent == null && !listType.pageStatuses.contains(it.parent?.status))
+        }.forEach {
+            sortedList += it
+            sortedList += topologicalSort(pages, listType, it)
         }
-                .forEach {
-                    sortedList += it
-                    sortedList += topologicalSort(pages, pageStatus, it)
-                }
         return sortedList
     }
 
     private fun getPageItemIndent(page: PageModel?): Int {
-        return if (page == null || page.status != PageStatus.PUBLISHED) -1 else getPageItemIndent(page.parent) + 1
+        return if (page == null || !PageListType.PUBLISHED.pageStatuses.contains(page.status))
+            -1
+        else
+            getPageItemIndent(page.parent) + 1
     }
 }
