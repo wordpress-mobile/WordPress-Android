@@ -50,7 +50,7 @@ class ReaderPostListViewModel @Inject constructor(
         newsTrackerHelper.reset()
         tag?.let { newTag ->
             // show the card only when the initial tag is selected in the filter
-            if (initialTag== null || newTag == initialTag) {
+            if (initialTag == null || newTag == initialTag) {
                 _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
             } else {
                 _newsItemSourceMediator.removeSource(newsItemSource)
