@@ -337,7 +337,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 40:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("DROP TABLE IF EXISTS ActivityLogModel");
+                db.execSQL("DROP TABLE IF EXISTS ActivityLog");
                 db.execSQL(
                         "CREATE TABLE ActivityLog (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,FORMATTABLE_CONTENT"
