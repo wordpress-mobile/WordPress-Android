@@ -97,11 +97,16 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
 
     suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
         val posts = postStore.getPagesForSite(site).asSequence().filterNotNull().associateBy { it.remotePostId }
-        posts.map { getPageFromPost(it.key, site, posts) }.filterNotNull().sortedBy { it.remoteId }
+        posts.map { getPageFromPost(it.key, site, posts, false) }.filterNotNull().sortedBy { it.remoteId }
     }
 
-    private fun getPageFromPost(postId: Long, site: SiteModel, posts: Map<Long, PostModel>): PageModel? {
-        if (postId == 0L || !posts.containsKey(postId)) {
+    private fun getPageFromPost(
+        postId: Long,
+        site: SiteModel,
+        posts: Map<Long, PostModel>,
+        skipLocalPages: Boolean = true
+    ): PageModel? {
+        if (skipLocalPages && (postId == 0L || !posts.containsKey(postId))) {
             return null
         }
         val post = posts[postId]!!
