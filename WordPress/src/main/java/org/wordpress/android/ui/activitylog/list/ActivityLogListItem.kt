@@ -40,7 +40,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
                 model.activityID,
                 model.summary,
-                model.text,
+                model.content?.text ?: "",
                 model.gridicon,
                 model.status,
                 model.rewindable ?: false,

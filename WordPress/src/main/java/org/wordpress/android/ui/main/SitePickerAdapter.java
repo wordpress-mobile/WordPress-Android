@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -212,8 +213,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
             return mHeaderHandler.onCreateViewHolder(mInflater, parent, false);
         } else {
@@ -223,7 +225,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_HEADER) {
@@ -238,10 +240,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         holder.mTxtDomain.setText(site.mHomeURL);
         mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.mBlavatarUrl);
 
-        if (site.mLocalId == mCurrentLocalId || (mIsMultiSelectEnabled && isItemSelected(position))) {
-            holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+        if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled)
+            || (mIsMultiSelectEnabled && isItemSelected(position))) {
+            holder.mLayoutContainer.setBackground(mSelectedItemBackground);
         } else {
-            holder.mLayoutContainer.setBackgroundDrawable(null);
+            holder.mLayoutContainer.setBackground(null);
         }
 
         // different styling for visible/hidden sites
@@ -288,9 +291,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             toggleSelection(clickedPosition);
                             return true;
                         } else if (mSiteSelectedListener != null) {
-                            boolean result = mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
-                            setItemSelected(clickedPosition, true);
-                            return result;
+                            return mSiteSelectedListener.onSiteLongClick(getItem(clickedPosition));
                         }
                     } else {
                         AppLog.w(AppLog.T.MAIN, "site picker > invalid clicked position " + clickedPosition);
@@ -672,7 +673,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final long mSiteId;
         private final String mBlogName;
         private final String mHomeURL;
-        private final String mUrl;
         private final String mBlavatarUrl;
         private boolean mIsHidden;
         private boolean mIsRecentPick;
@@ -682,7 +682,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mSiteId = siteModel.getSiteId();
             mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
             mHomeURL = SiteUtils.getHomeURLOrHostName(siteModel);
-            mUrl = siteModel.getUrl();
             mBlavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
             mIsHidden = !siteModel.isVisible();
         }

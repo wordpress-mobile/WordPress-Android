@@ -4,10 +4,12 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -21,9 +23,13 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.SortedMap
 import javax.inject.Inject
+import javax.inject.Named
 
 class SearchListViewModel
-@Inject constructor(private val resourceProvider: ResourceProvider) : ViewModel() {
+@Inject constructor(
+    private val resourceProvider: ResourceProvider,
+    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
+) : ViewModel() {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
@@ -50,7 +56,7 @@ class SearchListViewModel
 
             pagesViewModel.checkIfNewPageButtonShouldBeVisible()
         } else {
-            _searchResult.postValue(listOf(Empty(string.pages_search_suggestion, true)))
+            _searchResult.value = listOf(Empty(string.pages_search_suggestion, true))
         }
     }
 
@@ -62,7 +68,7 @@ class SearchListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch {
+    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch(uiContext) {
         if (pages.isNotEmpty()) {
             val pageItems = pages
                     .map { (listType, results) ->
@@ -73,9 +79,9 @@ class SearchListViewModel
                         acc.addAll(list)
                         return@fold acc
                     }
-            _searchResult.postValue(pageItems)
+            _searchResult.value = pageItems
         } else {
-            _searchResult.postValue(listOf(Empty(string.pages_empty_search_result, true)))
+            _searchResult.value = listOf(Empty(string.pages_empty_search_result, true))
         }
     }
 

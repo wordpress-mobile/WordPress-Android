@@ -311,10 +311,18 @@ public class UploadUtils {
                         UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
                     }
                 } else {
-                    int messageRes = post.isPage() ? R.string.page_published
-                            : (userCanPublish ? R.string.post_published : R.string.post_submitted);
-                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
-                                                          R.string.button_view, new View.OnClickListener() {
+                    boolean isScheduled = PostStatus.fromPost(post) == PostStatus.SCHEDULED;
+                    int messageRes;
+
+                    if (post.isPage()) {
+                        messageRes = isScheduled ? R.string.page_scheduled : R.string.page_published;
+                    } else {
+                        messageRes = isScheduled ? R.string.post_scheduled
+                                : (userCanPublish ? R.string.post_published : R.string.post_submitted);
+                    }
+
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes, R.string.button_view,
+                            new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     // jump to Editor Preview mode to show this Post

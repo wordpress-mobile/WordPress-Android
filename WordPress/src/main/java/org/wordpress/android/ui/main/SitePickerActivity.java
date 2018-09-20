@@ -147,20 +147,17 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
+        mMenuSearch = menu.findItem(R.id.menu_search);
+        mMenuEdit = menu.findItem(R.id.menu_edit);
+        mMenuAdd = menu.findItem(R.id.menu_add);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        mMenuEdit = menu.findItem(R.id.menu_edit);
-        mMenuAdd = menu.findItem(R.id.menu_add);
-        mMenuSearch = menu.findItem(R.id.menu_search);
-
         updateMenuItemVisibility();
         setupSearchView();
-
         return true;
     }
 
@@ -293,7 +290,7 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setupRecycleView() {
-        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView = findViewById(R.id.recycler_view);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
@@ -480,14 +477,14 @@ public class SitePickerActivity extends AppCompatActivity
     private void enableSearchMode() {
         setIsInSearchModeAndSetNewAdapter(true);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void disableSearchMode() {
         hideSoftKeyboard();
         setIsInSearchModeAndSetNewAdapter(false);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void hideSoftKeyboard() {
