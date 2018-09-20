@@ -24,6 +24,9 @@ import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
+import java.util.UUID
+
+
 
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
@@ -96,8 +99,20 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val posts = postStore.getPagesForSite(site).asSequence().filterNotNull().associateBy { it.remotePostId }
-        posts.map { getPageFromPost(it.key, site, posts, false) }.filterNotNull().sortedBy { it.remoteId }
+        val posts = postStore.getPagesForSite(site)
+                .asSequence()
+                .filterNotNull()
+                .map {
+                    if (it.remotePostId == 0L) {
+                        it.remotePostId = UUID.randomUUID().mostSignificantBits and java.lang.Long.MAX_VALUE
+                    }
+                    it
+                }
+                .associateBy { it.remotePostId }
+
+        return@withContext posts.map { getPageFromPost(it.key, site, posts, false) }
+                .filterNotNull()
+                .sortedBy { it.remoteId }
     }
 
     private fun getPageFromPost(
