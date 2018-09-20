@@ -32,7 +32,7 @@ sealed class ListDescriptor {
 
     class PostListDescriptor @JvmOverloads constructor(
         val localSiteId: Int,
-        val filter: PostListFilter = PostListFilter.ANY,
+        val filter: PostListFilter = PostListFilter.PUBLISH,
         val order: ListOrder = ListOrder.DESC,
         val orderBy: PostOrderBy = PostOrderBy.DATE,
         val searchQuery: String? = null
