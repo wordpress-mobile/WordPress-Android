@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.network.utils.getString
 import java.lang.reflect.Type
 
 @JsonAdapter(WPOrgPluginDeserializer::class)
-class WPOrgPluginResponse (
+class WPOrgPluginResponse(
     val authorAsHtml: String? = null,
     val banner: String? = null,
     val homepageUrl: String? = null,

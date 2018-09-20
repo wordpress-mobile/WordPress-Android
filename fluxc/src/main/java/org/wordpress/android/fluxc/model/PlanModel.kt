@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model
 
-class PlanModel (
+class PlanModel(
     val productId: Int?,
     val productSlug: String?,
     val productName: String?,
