@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -49,7 +50,7 @@ class PageParentViewModel
         }
     }
 
-    private fun loadPages(pageId: Long) = launch(CommonPool) {
+    private fun loadPages(pageId: Long) = GlobalScope.launch(CommonPool) {
         page = pageStore.getPageByRemoteId(pageId, site)
 
         val parents = mutableListOf<PageItem>(

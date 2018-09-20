@@ -12,16 +12,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.modules.UI_CONTEXT
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.viewmodel.pages.SearchListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
+import javax.inject.Named
 
 class SearchListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @field:Named(UI_CONTEXT) lateinit var uiContext: CoroutineDispatcher
     private lateinit var viewModel: SearchListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -85,7 +89,8 @@ class SearchListFragment : Fragment() {
         if (recyclerView.adapter == null) {
             adapter = PagesAdapter(
                     onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
-                    onItemTapped = { page -> viewModel.onItemTapped(page) })
+                    onItemTapped = { page -> viewModel.onItemTapped(page) },
+                    uiContext = uiContext)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter

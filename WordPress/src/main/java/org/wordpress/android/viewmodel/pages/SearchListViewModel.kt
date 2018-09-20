@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -68,7 +69,7 @@ class SearchListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch(uiContext) {
+    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = GlobalScope.launch(uiContext) {
         if (pages.isNotEmpty()) {
             val pageItems = pages
                     .map { (listType, results) ->

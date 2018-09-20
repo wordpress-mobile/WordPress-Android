@@ -2,9 +2,9 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
 
 const val UI_CONTEXT = "UI_CONTEXT"
@@ -15,12 +15,12 @@ class ThreadModule {
     @Provides
     @Named(UI_CONTEXT)
     fun provideUiContext(): CoroutineDispatcher {
-        return UI
+        return Dispatchers.Main
     }
 
     @Provides
     @Named(COMMON_POOL_CONTEXT)
     fun provideBackgroundContext(): CoroutineDispatcher {
-        return CommonPool
+        return Dispatchers.Default
     }
 }

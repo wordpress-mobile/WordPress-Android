@@ -3,7 +3,8 @@ package org.wordpress.android.ui.pages
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
@@ -18,7 +19,8 @@ class PagesAdapter(
     private val onMenuAction: (PageItem.Action, Page) -> Boolean = { _, _ -> false },
     private val onItemTapped: (Page) -> Unit = { },
     private val onEmptyActionButtonTapped: () -> Unit = { },
-    private val onParentSelected: (ParentPage) -> Unit = { }
+    private val onParentSelected: (ParentPage) -> Unit = { },
+    private val uiContext: CoroutineDispatcher
 ) : Adapter<PageItemViewHolder>() {
     private val items = mutableListOf<PageItem>()
 
@@ -39,7 +41,7 @@ class PagesAdapter(
 
     private fun selectParent(parent: ParentPage) {
         onParentSelected(parent)
-        launch(UI) {
+        GlobalScope.launch(uiContext) {
             delay(200) // let the selection animation play out before refreshing the list
             notifyDataSetChanged()
         }

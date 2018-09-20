@@ -3,6 +3,7 @@ package org.wordpress.android.ui.activitylog
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -60,7 +61,7 @@ class RewindStatusService
         const val REWIND_ID_TRACKING_KEY = "rewind_id"
     }
 
-    fun rewind(rewindId: String, site: SiteModel) = launch(uiContext) {
+    fun rewind(rewindId: String, site: SiteModel) = GlobalScope.launch(uiContext) {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_REWIND_STARTED,
                 site, mutableMapOf(REWIND_ID_TRACKING_KEY to rewindId as Any))
 
@@ -91,7 +92,7 @@ class RewindStatusService
     fun requestStatusUpdate() {
         site?.let {
             fetchRewindJob?.cancel()
-            fetchRewindJob = launch(uiContext) {
+            fetchRewindJob = GlobalScope.launch(uiContext) {
                 val rewindStatus = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(it))
                 onRewindStatusFetched(rewindStatus.error, rewindStatus.isError)
             }
@@ -117,7 +118,7 @@ class RewindStatusService
             val restoreId = rewindStatus.rewind?.restoreId
             if (rewindProgressCheckerJob?.isActive != true && restoreId != null) {
                 site?.let {
-                    rewindProgressCheckerJob = launch(uiContext) {
+                    rewindProgressCheckerJob = GlobalScope.launch(uiContext) {
                         val rewindStatusFetched = rewindProgressChecker.startNow(it, restoreId)
                         onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                     }
@@ -150,7 +151,7 @@ class RewindStatusService
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                rewindProgressCheckerJob = launch(uiContext) {
+                rewindProgressCheckerJob = GlobalScope.launch(uiContext) {
                     val rewindStatusFetched = rewindProgressChecker.start(it, restoreId)
                     onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
                 }
