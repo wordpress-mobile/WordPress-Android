@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.list.ListDescriptor.PostListDescriptor;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;

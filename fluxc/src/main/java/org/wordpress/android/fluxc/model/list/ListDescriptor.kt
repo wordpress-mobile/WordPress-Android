@@ -2,56 +2,36 @@ package org.wordpress.android.fluxc.model.list
 
 data class ListDescriptorIdentifier(val identifier: Int)
 
-sealed class ListDescriptor {
-    val uniqueHash: Int by lazy {
-        calculateUnique()
-    }
-    private val typeIdentifierHash: ListDescriptorIdentifier by lazy {
-        calculateTypeIdentifier()
-    }
-
-    internal abstract fun calculateUnique(): Int
-    internal abstract fun calculateTypeIdentifier(): ListDescriptorIdentifier
-
-    override fun hashCode(): Int {
-        return uniqueHash
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other?.javaClass != javaClass) return false
-
-        other as ListDescriptor
-
-        return uniqueHash == other.uniqueHash
-    }
+interface ListDescriptor {
+    fun calculateUnique(): Int
+    fun calculateTypeIdentifier(): ListDescriptorIdentifier
 
     fun compareIdentifier(other: ListDescriptorIdentifier): Boolean {
-        return typeIdentifierHash == other
+        return calculateTypeIdentifier() == other
+    }
+}
+
+class PostListDescriptor @JvmOverloads constructor(
+    val localSiteId: Int,
+    val filter: PostListFilter = PostListFilter.PUBLISH,
+    val order: ListOrder = ListOrder.DESC,
+    val orderBy: PostOrderBy = PostOrderBy.DATE,
+    val searchQuery: String? = null
+) : ListDescriptor {
+    override fun calculateUnique(): Int {
+        // TODO: do something better!
+        return "post-$localSiteId-f${filter.value}-o${order.value}-ob-${orderBy.value}-sq$searchQuery".hashCode()
     }
 
-    class PostListDescriptor @JvmOverloads constructor(
-        val localSiteId: Int,
-        val filter: PostListFilter = PostListFilter.PUBLISH,
-        val order: ListOrder = ListOrder.DESC,
-        val orderBy: PostOrderBy = PostOrderBy.DATE,
-        val searchQuery: String? = null
-    ) : ListDescriptor() {
-        override fun calculateUnique(): Int {
+    override fun calculateTypeIdentifier(): ListDescriptorIdentifier {
+        return PostListDescriptor.typeIdentifier(localSiteId)
+    }
+
+    companion object {
+        @JvmStatic
+        fun typeIdentifier(localSiteId: Int): ListDescriptorIdentifier {
             // TODO: do something better!
-            return "post-$localSiteId-f${filter.value}-o${order.value}-ob-${orderBy.value}-sq$searchQuery".hashCode()
-        }
-
-        override fun calculateTypeIdentifier(): ListDescriptorIdentifier {
-            return PostListDescriptor.typeIdentifier(localSiteId)
-        }
-
-        companion object {
-            @JvmStatic
-            fun typeIdentifier(localSiteId: Int): ListDescriptorIdentifier {
-                // TODO: do something better!
-                return ListDescriptorIdentifier("post-$localSiteId".hashCode())
-            }
+            return ListDescriptorIdentifier("post-$localSiteId".hashCode())
         }
     }
 }

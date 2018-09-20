@@ -40,7 +40,7 @@ class ListSqlUtils @Inject constructor() {
                         cv
                     }.execute()
         } else {
-            listModel.descriptorDbValue = listDescriptor.uniqueHash
+            listModel.descriptorDbValue = listDescriptor.calculateUnique()
             WellSql.insert(listModel).execute()
         }
     }
@@ -51,7 +51,7 @@ class ListSqlUtils @Inject constructor() {
     fun getList(listDescriptor: ListDescriptor): ListModel? {
         val listModel = WellSql.select(ListModel::class.java)
                 .where()
-                .equals(ListModelTable.DESCRIPTOR_DB_VALUE, listDescriptor.uniqueHash)
+                .equals(ListModelTable.DESCRIPTOR_DB_VALUE, listDescriptor.calculateUnique())
                 .endWhere()
                 .asModel
                 .firstOrNull()
