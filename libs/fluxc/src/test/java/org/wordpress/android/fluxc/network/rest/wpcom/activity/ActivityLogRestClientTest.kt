@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import com.android.volley.RequestQueue
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
@@ -35,8 +36,8 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
-import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.FormattableContent
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
@@ -277,7 +278,10 @@ class ActivityLogRestClientTest {
                 eq(activityRestClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(ActivitiesResponse::class.java))
+                eq(ActivitiesResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -294,7 +298,10 @@ class ActivityLogRestClientTest {
                 eq(activityRestClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(RewindStatusResponse::class.java))).thenReturn(response)
+                eq(RewindStatusResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
     }
