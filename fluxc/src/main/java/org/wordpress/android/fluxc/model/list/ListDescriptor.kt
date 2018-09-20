@@ -6,7 +6,7 @@ sealed class ListDescriptor {
     val uniqueHash: Int by lazy {
         calculateUnique()
     }
-    val typeIdentifierHash: ListDescriptorIdentifier by lazy {
+    private val typeIdentifierHash: ListDescriptorIdentifier by lazy {
         calculateTypeIdentifier()
     }
 
@@ -57,8 +57,8 @@ sealed class ListDescriptor {
 }
 
 enum class ListOrder(val value: String) {
-    ASC("asc"),
-    DESC("desc");
+    ASC("ASC"),
+    DESC("DESC");
 }
 
 enum class PostOrderBy(val value: String) {
