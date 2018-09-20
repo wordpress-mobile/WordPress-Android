@@ -55,7 +55,7 @@ class JetpackTimeoutRequestHandler<T>(
                     AppLog.e(AppLog.T.API, "5-second timeout reached for endpoint $wpApiEndpoint, retrying...")
                     if (numRetries > 0) {
                         // Delay retries after the first by a bit
-                        with (Handler()) {
+                        with(Handler()) {
                             postDelayed({ jpTimeoutListener(gsonRequest) }, ADDITIONAL_RETRY_DELAY_MS)
                         }
                     } else {
@@ -63,8 +63,10 @@ class JetpackTimeoutRequestHandler<T>(
                     }
                     numRetries++
                 } else {
-                    AppLog.e(AppLog.T.API,
-                            "5-second timeout reached for endpoint $wpApiEndpoint - maximum retries reached")
+                    AppLog.e(
+                            AppLog.T.API,
+                            "5-second timeout reached for endpoint $wpApiEndpoint - maximum retries reached"
+                    )
                     wpComErrorListener.onErrorResponse(error)
                 }
             } else {
