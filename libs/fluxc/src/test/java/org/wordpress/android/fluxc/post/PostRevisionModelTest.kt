@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.revisions.LocalDiffType
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
@@ -66,10 +67,10 @@ class PostRevisionModelTest {
         val sampleRevision1 = PostTestUtils.generateSamplePostRevision()
         val sampleRevision2 = PostTestUtils.generateSamplePostRevision()
 
-        assertTrue(sampleRevision1 == sampleRevision2)
+        assertEquals(sampleRevision1, sampleRevision2)
 
         sampleRevision1.titleDiffs[0] = Diff(DiffOperations.COPY, "wrong value")
-        assertFalse(sampleRevision1 == sampleRevision2)
+        assertNotEquals(sampleRevision1, sampleRevision2)
     }
 
     @Test
