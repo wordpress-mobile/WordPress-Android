@@ -6,9 +6,7 @@ data class InsightsLatestPostModel(
     val postURL: String,
     val postDate: String,
     val postID: Long,
-    val postViewsCount : Int = 0,
+    val postViewsCount: Int = 0,
     val postCommentCount: Int = 0,
     val postLikeCount: Int
 )
-
-
