@@ -8,16 +8,26 @@ interface ListDescriptor {
     val typeIdentifier: ListDescriptorTypeIdentifier
 }
 
+enum class PostListStatus(val value: String) {
+    ANY("any"),
+    DRAFT("draft"),
+    PUBLISH("publish"),
+    PRIVATE("private"),
+    PENDING("pending"),
+    FUTURE("future"),
+    TRASH("trash");
+}
+
 class PostListDescriptor @JvmOverloads constructor(
     val localSiteId: Int,
-    val filter: PostListFilter = PostListFilter.PUBLISH,
+    val status: PostListStatus = PostListStatus.PUBLISH,
     val order: ListOrder = ListOrder.DESC,
     val orderBy: PostOrderBy = PostOrderBy.DATE,
     val searchQuery: String? = null
 ) : ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
-        ListDescriptorUniqueIdentifier(("post-$localSiteId-f${filter.value}-o${order.value}-ob-${orderBy.value}" +
+        ListDescriptorUniqueIdentifier(("post-$localSiteId-f${status.value}-o${order.value}-ob-${orderBy.value}" +
                 "-sq$searchQuery").hashCode())
     }
 
