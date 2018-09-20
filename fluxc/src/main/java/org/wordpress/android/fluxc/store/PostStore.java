@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.list.ListDescriptor;
-import org.wordpress.android.fluxc.model.list.ListType;
+import org.wordpress.android.fluxc.model.list.ListDescriptor.PostListDescriptor;
+import org.wordpress.android.fluxc.model.list.PostListFilter;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -58,10 +58,10 @@ public class PostStore extends Store {
             PostStatus.SCHEDULED));
 
     public static class FetchPostListPayload extends Payload<BaseNetworkError> {
-        public ListDescriptor listDescriptor;
+        public PostListDescriptor listDescriptor;
         public int offset;
 
-        public FetchPostListPayload(ListDescriptor listDescriptor, int offset) {
+        public FetchPostListPayload(PostListDescriptor listDescriptor, int offset) {
             this.listDescriptor = listDescriptor;
             this.offset = offset;
         }
@@ -79,12 +79,12 @@ public class PostStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class FetchPostListResponsePayload extends Payload<PostError> {
-        @NotNull public ListDescriptor listDescriptor;
+        @NotNull public PostListDescriptor listDescriptor;
         @NotNull public List<PostListItem> postListItems;
         public boolean loadedMore;
         public boolean canLoadMore;
 
-        public FetchPostListResponsePayload(@NonNull ListDescriptor listDescriptor,
+        public FetchPostListResponsePayload(@NonNull PostListDescriptor listDescriptor,
                                             @NonNull List<PostListItem> postListItems,
                                             boolean loadedMore,
                                             boolean canLoadMore,
@@ -510,8 +510,8 @@ public class PostStore extends Store {
             event.error = payload.error;
         } else {
             ListItemsRemovedPayload listActionPayload =
-                    new ListItemsRemovedPayload(listDescriptorToUpdate(payload.site.getId()),
-                            payload.post.getRemotePostId());
+                    new ListItemsRemovedPayload(listDescriptorsToUpdate(payload.site.getId()),
+                            Collections.singletonList(payload.post.getRemotePostId()));
             mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
             PostSqlUtils.deletePost(payload.post);
         }
@@ -612,7 +612,7 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
 
         mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(listDescriptorToUpdate(post.getLocalSiteId()))));
+                new ListItemsChangedPayload(listDescriptorsToUpdate(post.getLocalSiteId()))));
     }
 
     private void removePost(PostModel post) {
@@ -620,7 +620,8 @@ public class PostStore extends Store {
             return;
         }
         mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
-                new ListItemsRemovedPayload(listDescriptorToUpdate(post.getLocalSiteId()), post.getRemotePostId())));
+                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()),
+                        Collections.singletonList(post.getRemotePostId()))));
         int rowsAffected = PostSqlUtils.deletePost(post);
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
@@ -634,7 +635,11 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
-    private ListDescriptor listDescriptorToUpdate(int siteId) {
-        return new ListDescriptor(ListType.POST, siteId, null, null);
+    private List<PostListDescriptor> listDescriptorsToUpdate(int siteId) {
+        List<PostListDescriptor> list = new ArrayList<>();
+        for (PostListFilter f : PostListFilter.values()) {
+           list.add(new PostListDescriptor(siteId, f));
+        }
+        return list;
     }
 }

@@ -39,7 +39,7 @@ class ListSqlUtils @Inject constructor() {
                         cv
                     }.execute()
         } else {
-            listModel.setListDescriptor(listDescriptor)
+            listModel.descriptorDbValue = listDescriptor.uniqueHash
             WellSql.insert(listModel).execute()
         }
     }
@@ -48,17 +48,14 @@ class ListSqlUtils @Inject constructor() {
      * This function returns the [ListModel] record for the given [listDescriptor] if there is one.
      */
     fun getList(listDescriptor: ListDescriptor): ListModel? {
-        val listModels = WellSql.select(ListModel::class.java)
+        val listModel = WellSql.select(ListModel::class.java)
                 .where()
-                .equals(ListModelTable.TYPE_DB_VALUE, listDescriptor.type.value)
+                .equals(ListModelTable.DESCRIPTOR_DB_VALUE, listDescriptor.uniqueHash)
                 .endWhere()
                 .asModel
-
-        return listModels.firstOrNull { list ->
-            list.localSiteIdDbValue == listDescriptor.localSiteId &&
-                    list.filterDbValue == listDescriptor.filter?.value &&
-                    list.orderDbValue == listDescriptor.order?.value
-        }
+                .firstOrNull()
+        listModel?.listDescriptor = listDescriptor
+        return listModel
     }
 
     /**

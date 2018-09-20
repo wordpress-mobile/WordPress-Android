@@ -27,7 +27,10 @@ interface ListFilter {
 }
 
 enum class PostListFilter(override val value: String) : ListFilter {
-    ALL("all");
+    ANY("any"),
+    DRAFT("draft"),
+    PUBLISH("publish"),
+    TRASH("trash");
 }
 
 enum class WooOrderListFilter(override val value: String) : ListFilter {

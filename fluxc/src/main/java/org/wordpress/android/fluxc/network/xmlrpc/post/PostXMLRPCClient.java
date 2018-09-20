@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListDescriptor;
+import org.wordpress.android.fluxc.model.list.ListDescriptor.PostListDescriptor;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -114,7 +115,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPostList(final SiteModel site, final ListDescriptor listDescriptor, final int offset,
+    public void fetchPostList(final SiteModel site, final PostListDescriptor listDescriptor, final int offset,
                               final int number) {
         List<String> fields = new ArrayList<>();
         fields.add("post_id");
