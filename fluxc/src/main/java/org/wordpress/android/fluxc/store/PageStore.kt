@@ -24,7 +24,6 @@ import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
-import java.util.UUID
 
 
 
@@ -111,7 +110,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 .filterNotNull()
                 .map {
                     if (it.remotePostId == 0L) {
-                        it.remotePostId = -(UUID.randomUUID().mostSignificantBits and java.lang.Long.MAX_VALUE)
+                        it.remotePostId = -it.id.toLong()
                     }
                     it
                 }
