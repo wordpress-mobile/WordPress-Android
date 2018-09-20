@@ -8,10 +8,8 @@ import org.wordpress.android.fluxc.model.revisions.LocalDiffModel
 import org.wordpress.android.fluxc.model.revisions.LocalDiffType
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 class PostRevisionModelTest {
     @Test
