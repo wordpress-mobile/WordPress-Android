@@ -58,13 +58,15 @@ public class PostTestUtils {
     public static RevisionModel generateSamplePostRevision() {
         ArrayList<Diff> testTitleDiffs = new ArrayList<>();
         testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy title"));
-        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add title"));
+        testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy another title"));
+        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add new title"));
         testTitleDiffs.add(new Diff(DiffOperations.DELETE, "del title"));
+        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add different title"));
 
         ArrayList<Diff> testContentDiff = new ArrayList<>();
-        testContentDiff.add(new Diff(DiffOperations.COPY, "copy content"));
-        testContentDiff.add(new Diff(DiffOperations.ADD, "add content"));
-        testContentDiff.add(new Diff(DiffOperations.DELETE, "del content"));
+        testContentDiff.add(new Diff(DiffOperations.COPY, "copy some content"));
+        testContentDiff.add(new Diff(DiffOperations.ADD, "add new content"));
+        testContentDiff.add(new Diff(DiffOperations.DELETE, "del all the content"));
 
         return new RevisionModel(
                 1,
