@@ -56,7 +56,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
     }
 
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
-        if (remoteId == 0L) {
+        if (remoteId <= 0L) {
             return@withContext null
         }
         val post = postStore.getPostByRemotePostId(remoteId, site)
@@ -87,7 +87,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         if (post == null) {
             post = postStore.getPostByLocalPostId(page.pageId)
         }
-        
+
         if (post != null) {
             post.updatePageData(page)
 
@@ -111,7 +111,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 .filterNotNull()
                 .map {
                     if (it.remotePostId == 0L) {
-                        it.remotePostId = UUID.randomUUID().mostSignificantBits and java.lang.Long.MAX_VALUE
+                        it.remotePostId = -(UUID.randomUUID().mostSignificantBits and java.lang.Long.MAX_VALUE)
                     }
                     it
                 }
@@ -128,7 +128,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         posts: Map<Long, PostModel>,
         skipLocalPages: Boolean = true
     ): PageModel? {
-        if (skipLocalPages && (postId == 0L || !posts.containsKey(postId))) {
+        if (skipLocalPages && (postId <= 0L || !posts.containsKey(postId))) {
             return null
         }
         val post = posts[postId]!!
