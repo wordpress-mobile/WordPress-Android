@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.StatsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,9 +14,9 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 @Singleton
 class InsightsStore
-@Inject constructor(private val statsRestClient: StatsRestClient, private val coroutineContext: CoroutineContext) {
+@Inject constructor(private val insightsRestClient: InsightsRestClient, private val coroutineContext: CoroutineContext) {
     suspend fun fetchAllTimeInsights(site: SiteModel) = withContext(coroutineContext) {
-        val payload = statsRestClient.fetchAllTimeInsights(site)
+        val payload = insightsRestClient.fetchAllTimeInsights(site)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
@@ -39,7 +39,7 @@ class InsightsStore
     }
 
     suspend fun fetchMostPopularInsights(site: SiteModel) = withContext(coroutineContext) {
-        val payload = statsRestClient.fetchMostPopularInsights(site)
+        val payload = insightsRestClient.fetchMostPopularInsights(site)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
@@ -58,13 +58,13 @@ class InsightsStore
     }
 
     suspend fun fetchLatestPostInsights(site: SiteModel) = withContext(coroutineContext) {
-        val responsePost = statsRestClient.fetchLatestPostForInsights(site)
+        val responsePost = insightsRestClient.fetchLatestPostForInsights(site)
         val postsFound = responsePost.response?.postsFound
 
         val posts = responsePost.response?.posts
         return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
-            val postViews = statsRestClient.fetchPostViewsForInsights(site, latestPost.id)
+            val postViews = insightsRestClient.fetchPostViewsForInsights(site, latestPost.id)
             val commentCount = latestPost.discussion?.commentCount ?: 0
             val viewsCount = postViews.response?.views ?: 0
             OnInsightsFetched(

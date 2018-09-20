@@ -33,7 +33,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ER
 import javax.inject.Singleton
 
 @Singleton
-class StatsRestClient
+class InsightsRestClient
 constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
