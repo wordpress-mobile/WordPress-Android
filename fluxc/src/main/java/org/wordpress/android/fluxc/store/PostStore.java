@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListDescriptor.PostListDescriptor;
-import org.wordpress.android.fluxc.model.list.PostListFilter;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -510,7 +509,7 @@ public class PostStore extends Store {
             event.error = payload.error;
         } else {
             ListItemsRemovedPayload listActionPayload =
-                    new ListItemsRemovedPayload(listDescriptorsToUpdate(payload.site.getId()),
+                    new ListItemsRemovedPayload(PostListDescriptor.typeIdentifier(payload.post.getLocalSiteId()),
                             Collections.singletonList(payload.post.getRemotePostId()));
             mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
             PostSqlUtils.deletePost(payload.post);
@@ -612,7 +611,7 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
 
         mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(listDescriptorsToUpdate(post.getLocalSiteId()))));
+                new ListItemsChangedPayload(PostListDescriptor.typeIdentifier(post.getLocalSiteId()))));
     }
 
     private void removePost(PostModel post) {
@@ -620,7 +619,7 @@ public class PostStore extends Store {
             return;
         }
         mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
-                new ListItemsRemovedPayload(listDescriptorsToUpdate(post.getLocalSiteId()),
+                new ListItemsRemovedPayload(PostListDescriptor.typeIdentifier(post.getLocalSiteId()),
                         Collections.singletonList(post.getRemotePostId()))));
         int rowsAffected = PostSqlUtils.deletePost(post);
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
@@ -633,13 +632,5 @@ public class PostStore extends Store {
         OnPostChanged event = new OnPostChanged(rowsAffected);
         event.causeOfChange = PostAction.REMOVE_ALL_POSTS;
         emitChange(event);
-    }
-
-    private List<PostListDescriptor> listDescriptorsToUpdate(int siteId) {
-        List<PostListDescriptor> list = new ArrayList<>();
-        for (PostListFilter f : PostListFilter.values()) {
-           list.add(new PostListDescriptor(siteId, f));
-        }
-        return list;
     }
 }
