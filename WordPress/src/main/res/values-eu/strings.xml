@@ -263,7 +263,6 @@ Language: eu_ES
     <string name="button_edit">Editatu</string>
     <string name="button_publish">Argitaratu</string>
     <string name="undo">Desegin</string>
-    <string name="passcodelock_prompt_message">Sartu zure PINa</string>
     <string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com–en berriro saiatzeko.</string>
     <string name="ignore">Ezikusi</string>
     <string name="stats_insights_most_popular_hour">Ordurik jendetsuena</string>
@@ -355,7 +354,6 @@ Language: eu_ES
     <string name="more">Gehiago</string>
     <string name="reader_label_comments_closed">Iruzkinak itxita daude</string>
     <string name="reader_empty_posts_in_tag">Ez dago bidalketarik etiketa honekin</string>
-    <string name="create_new_blog_wpcom">Sortu WordPress.com bloga</string>
     <string name="reader_empty_comments">Oraindik ez dago iruzkinik</string>
     <string name="reader_label_view_original">Ikusi artikulu originala</string>
     <string name="reader_label_like">Gustukoa</string>
@@ -373,7 +371,6 @@ Language: eu_ES
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
     <string name="forgot_password">Pasahitza galdu duzu?</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
-    <string name="passcode_wrong_passcode">PIN okerra</string>
     <string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
     <string name="stats_bar_graph_empty">Ez dago estatistikarik eskuragarri.</string>
     <string name="error_refresh_pages">Orrialdeak ezin dira momentu honetan eguneratu.</string>
@@ -433,11 +430,9 @@ Language: eu_ES
     <string name="trash_no">Ez bidali zakarrontzira</string>
     <string name="content_required">Iruzkina beharrezkoa da</string>
     <string name="toast_comment_unedited">Iruzkina ez da aldatu</string>
-    <string name="required_field">Beharrezko eremua</string>
     <string name="learn_more">Gehiago jakin</string>
     <string name="media_gallery_type_thumbnail_grid">Miniaturen sareta</string>
     <string name="http_authorization_required">Baimena beharrezkoa</string>
-    <string name="add_account_blog_url">Blogaren helbidea</string>
     <string name="connection_error">Errorea konektatzean</string>
     <string name="cancel_edit">Ezeztatu editatutakoa</string>
     <string name="media_error_no_permission">Ez duzu media bilduma ikusteko baimenik</string>
@@ -462,7 +457,6 @@ Language: eu_ES
     <string name="image_settings">Irudiaren ezarpenak</string>
     <string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
     <string name="share_link">Partekatu esteka</string>
-    <string name="creating_your_site">Zure gunea sortzen</string>
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
     <string name="reader_label_reply">Erantzun</string>
     <string name="video">Bideoa</string>
@@ -505,7 +499,6 @@ Language: eu_ES
     <string name="theme_activate_button">Gaitu</string>
     <string name="stats_view_clicks">Klikak</string>
     <string name="stats_view_referrers">Erreferentziak</string>
-    <string name="passcode_change_passcode">Aldatu PINa</string>
     <string name="media_gallery_type_slideshow">Diapositiba pasea</string>
     <string name="media_gallery_type_tiled">Mosaikoa</string>
     <string name="media_gallery_type_circles">Zirkuluak</string>
@@ -518,15 +511,8 @@ Language: eu_ES
     <string name="stats_view_tags_and_categories">Etiketak eta kategoriak</string>
     <string name="stats_entry_referrers">Erreferentzia</string>
     <string name="stats_entry_authors">Egilea</string>
-    <string name="passcode_manage">Kudeatu PIN blokeatzea</string>
     <string name="stats_totals_plays">Erreprodukzioak</string>
     <string name="media_edit_failure">Huts egin du eguneratzeak</string>
-    <string name="passcode_enter_old_passcode">Sartu zure PIN zaharra</string>
-    <string name="passcode_re_enter_passcode">Sartu PINa berriro</string>
-    <string name="passcode_set">PINaren ezarpena</string>
-    <string name="passcode_preference_title">PINaren blokeoa</string>
-    <string name="passcode_turn_off">Desblokeatu PINa</string>
-    <string name="passcode_turn_on">Blokeatu PINa</string>
     <string name="manage">Kudeatu</string>
     <string name="discard">Baztertu</string>
     <string name="new_notifications">%d jakinarazpen berri</string>
@@ -545,6 +531,7 @@ Language: eu_ES
     <string name="username">Erabiltzaile–izena</string>
     <string name="reader">Irakurlea</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
+    <string name="pages">Orrialdeak</string>
     <string name="width">Zabalera</string>
     <string name="anonymous">Anonimoa</string>
     <string name="featured_in_post">Txertatu irudia mezuaren edukian</string>
