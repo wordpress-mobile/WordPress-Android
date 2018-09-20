@@ -30,6 +30,9 @@ enum class PostListFilter(override val value: String) : ListFilter {
     ANY("any"),
     DRAFT("draft"),
     PUBLISH("publish"),
+    PRIVATE("private"),
+    PENDING("pending"),
+    FUTURE("future"),
     TRASH("trash");
 }
 
