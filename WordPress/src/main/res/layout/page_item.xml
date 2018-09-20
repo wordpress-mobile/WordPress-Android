@@ -1,114 +1,116 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:background="@drawable/page_item_background"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
     <View
         android:id="@+id/divider_top"
-        android:layout_width="match_parent"
+        android:background="@color/grey_lighten_20"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
+        android:layout_width="match_parent" >
+    </View>
 
     <LinearLayout
         android:id="@+id/header_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:background="@color/grey_light"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_time_grey_darken_10_16dp"
             android:drawablePadding="@dimen/margin_small"
+            android:drawableStart="@drawable/ic_time_grey_darken_10_16dp"
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:padding="@dimen/margin_medium"
+            android:textAlignment="viewStart"
             android:textColor="@color/grey_text_min"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_date"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            android:drawableStart="@drawable/ic_time_grey_darken_10_16dp" />
+            tools:text="text_date" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <View
-            android:layout_width="match_parent"
+            android:background="@color/grey_lighten_20"
             android:layout_height="1dp"
-            android:background="@color/grey_lighten_20" />
+            android:layout_width="match_parent" >
+        </View>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:background="?android:selectableItemBackground"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
+            android:layout_width="match_parent"
             android:paddingBottom="@dimen/margin_large"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_large"
+            android:paddingEnd="@dimen/margin_extra_large"
             android:paddingStart="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_extra_large">
+            android:paddingTop="@dimen/margin_large" >
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/btn_more"
-                android:orientation="vertical"
-                android:layout_toStartOf="@+id/btn_more">
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/btn_more"
+                android:layout_width="match_parent"
+                android:orientation="vertical" >
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="3"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/text_sz_large"
-                    android:fontFamily="serif"
-                    android:textAlignment="viewStart"
                     android:gravity="start"
-                    tools:text="text_title" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:maxLines="3"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/grey_dark"
+                    android:fontFamily="serif"
+                    android:textSize="@dimen/text_sz_large"
+                    tools:text="text_title" >
+                </org.wordpress.android.widgets.WPTextView>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_extra_large"
-                    android:layout_marginRight="@dimen/margin_extra_large"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:orientation="horizontal"
-                    android:textAlignment="viewStart"
                     android:gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_extra_large"
-                    android:layout_marginStart="@dimen/margin_extra_large">
+                    android:layout_marginStart="@dimen/margin_extra_large"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:textAlignment="viewStart" >
 
                     <ImageView
                         android:id="@+id/image_status"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="@dimen/margin_small"
                         android:contentDescription="@null"
-                        tools:src="@drawable/ic_gridicons_page"
-                        android:layout_marginEnd="@dimen/margin_small" />
+                        android:layout_gravity="center"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:layout_width="16dp"
+                        tools:src="@drawable/ic_gridicons_page" >
+                    </ImageView>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/text_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:textColor="@color/grey_text_min"
                         android:textSize="@dimen/text_sz_small"
                         android:visibility="gone"
                         tools:text="text_status"
-                        tools:visibility="visible" />
+                        tools:visibility="visible" >
+                    </org.wordpress.android.widgets.WPTextView>
 
                 </LinearLayout>
 
@@ -116,46 +118,47 @@
 
             <ImageView
                 android:id="@+id/btn_more"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_medium"
                 android:background="?android:selectableItemBackground"
-                android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/show_more_desc"
-                android:tint="@color/grey_text_min"
-                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="@dimen/margin_medium" />
+                android:layout_height="32dp"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_width="32dp"
+                android:padding="@dimen/margin_medium"
+                android:tint="@color/grey_text_min"
+                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" >
+            </ImageView>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/disabled_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:background="@color/white_translucent_65"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
 
         </RelativeLayout>
 
         <ProgressBar
             android:id="@+id/post_upload_progress"
-            style="@style/UploadProgressBar"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:indeterminate="false"
-            android:max="100" />
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:max="100"
+            android:visibility="gone"
+            style="@style/UploadProgressBar" >
+        </ProgressBar>
 
     </LinearLayout>
 
     <View
         android:id="@+id/divider_bottom"
-        android:layout_width="match_parent"
+        android:background="@color/grey_lighten_20"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_20" />
+        android:layout_width="match_parent" >
+    </View>
 
 </LinearLayout>

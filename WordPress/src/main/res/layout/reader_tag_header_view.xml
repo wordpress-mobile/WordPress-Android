@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="@dimen/reader_tag_header_image_height"
-    android:layout_marginBottom="@dimen/margin_extra_small">
+    android:layout_marginBottom="@dimen/margin_extra_small"
+    android:layout_width="match_parent" >
 
     <ImageView
         android:id="@+id/image_tag_header"
-        android:layout_width="match_parent"
+        android:contentDescription="@null"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:contentDescription="@null"/>
+        android:layout_width="match_parent" >
+    </ImageView>
 
     <View
         android:id="@+id/view_overlay"
-        android:layout_width="match_parent"
+        android:background="@color/grey_dark_translucent_50"
         android:layout_height="@dimen/reader_tag_header_image_height"
-        android:background="@color/grey_dark_translucent_50" />
+        android:layout_width="match_parent" >
+    </View>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawableLeft="@drawable/ic_tag_white_24dp"
         android:drawablePadding="@dimen/margin_small"
+        android:drawableStart="@drawable/ic_tag_white_24dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:maxLines="1"
         android:shadowColor="@color/grey_dark"
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
@@ -34,19 +37,19 @@
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_double_extra_large"
-        tools:text="text_tag"
-        android:drawableStart="@drawable/ic_tag_white_24dp"/>
+        tools:text="text_tag" >
+    </org.wordpress.android.widgets.WPTextView>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_attribution"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:ellipsize="end"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_width="wrap_content"
         android:maxLines="1"
         android:shadowColor="@color/grey_dark"
         android:shadowDx="@dimen/reader_photo_title_shadow_offset"
@@ -54,8 +57,7 @@
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="text_attribution"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_alignParentEnd="true"/>
+        tools:text="text_attribution" >
+    </org.wordpress.android.widgets.WPTextView>
 
 </RelativeLayout>

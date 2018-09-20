@@ -1,86 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_width="match_parent" >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+            layout="@layout/toolbar" >
+        </include>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
             android:background="@color/tab_background"
-            app:tabIndicatorColor="@color/tab_indicator" />
+            android:layout_below="@+id/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            app:tabIndicatorColor="@color/tab_indicator" >
+        </android.support.design.widget.TabLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_above="@+id/divider_list"
-        android:layout_below="@+id/appbar" />
+        android:layout_below="@+id/appbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
+    </org.wordpress.android.widgets.WPViewPager>
 
     <View
         android:id="@+id/divider_list"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:background="@color/reader_divider_grey"
         android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@color/reader_divider_grey" />
+        android:layout_height="1dp"
+        android:layout_width="match_parent" >
+    </View>
 
     <LinearLayout
         android:id="@+id/layout_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_medium"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_small"
+        android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_extra_large">
+        android:paddingTop="@dimen/margin_small" >
 
         <EditText
-            android:textSize="@dimen/text_sz_medium"
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/edit_add"
-            style="@style/ReaderEditText.Topic"
-            android:layout_width="0dp"
+            android:gravity="start"
+            android:hint="@string/reader_hint_add_tag_or_url"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/reader_hint_add_tag_or_url" />
+            android:layout_width="0dp"
+            android:textAlignment="viewStart"
+            android:textSize="@dimen/text_sz_medium"
+            style="@style/ReaderEditText.Topic" >
+        </EditText>
 
         <ImageButton
             android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
-            android:padding="@dimen/margin_small"
             android:contentDescription="@string/add"
-            app:srcCompat="@drawable/ic_reader_follow_blue_medium_24dp" />
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/margin_small"
+            app:srcCompat="@drawable/ic_reader_follow_blue_medium_24dp" >
+        </ImageButton>
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_follow"
-        style="@style/ReaderProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        style="@style/ReaderProgressBar" >
+    </ProgressBar>
 
 </RelativeLayout>

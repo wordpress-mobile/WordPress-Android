@@ -1,91 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/plugin_row_width"
-    android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
+    android:layout_height="match_parent"
+    android:layout_width="@dimen/plugin_row_width"
     android:paddingBottom="@dimen/margin_small"
     android:paddingEnd="@dimen/margin_medium"
-    android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium"
     android:paddingStart="@dimen/margin_medium" >
 
     <ImageView
         android:id="@+id/plugin_icon"
-        android:layout_width="@dimen/plugin_row_width"
-        android:layout_height="@dimen/plugin_row_width"
         android:contentDescription="@string/plugin_icon_content_description"
-        tools:src="@drawable/plugin_placeholder" />
+        android:layout_height="@dimen/plugin_row_width"
+        android:layout_width="@dimen/plugin_row_width"
+        tools:src="@drawable/plugin_placeholder" >
+    </ImageView>
 
     <TextView
         android:id="@+id/plugin_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_icon"
         android:breakStrategy="simple"
         android:ellipsize="end"
+        android:layout_below="@+id/plugin_icon"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:maxLines="2"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        tools:text="plugin_name"
-        tools:ignore="UnusedAttribute"/>
+        tools:ignore="UnusedAttribute"
+        tools:text="plugin_name" >
+    </TextView>
 
     <TextView
         android:id="@+id/plugin_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_name"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
+        android:layout_below="@+id/plugin_name"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_width="wrap_content"
         android:lines="1"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_small"
-        tools:text="plugin_author" />
+        tools:text="plugin_author" >
+    </TextView>
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/plugin_author"
-        android:paddingBottom="@dimen/margin_large">
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:paddingBottom="@dimen/margin_large" >
 
         <LinearLayout
             android:id="@+id/plugin_status_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/plugin_status_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
                 android:contentDescription="@null"
-                tools:src="@drawable/plugin_update_available_icon" />
+                android:layout_gravity="center_vertical"
+                android:layout_height="12dp"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_width="12dp"
+                tools:src="@drawable/plugin_update_available_icon" >
+            </ImageView>
 
             <TextView
                 android:id="@+id/plugin_status_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/alert_yellow"
                 android:textSize="@dimen/text_sz_small"
-                tools:text="@string/plugin_needs_update" />
+                tools:text="@string/plugin_needs_update" >
+            </TextView>
+
         </LinearLayout>
 
         <RatingBar
             android:id="@+id/rating_bar"
-            style="@style/WPRatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:numStars="5"
-            tools:rating="3" />
+            tools:rating="3"
+            style="@style/WPRatingBar.Small" >
+        </RatingBar>
+
     </FrameLayout>
 
 </RelativeLayout>

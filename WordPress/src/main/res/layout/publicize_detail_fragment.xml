@@ -2,147 +2,144 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingBottom="@dimen/content_margin"
     android:paddingEnd="@dimen/content_margin"
-    android:paddingLeft="@dimen/content_margin"
-    android:paddingRight="@dimen/content_margin"
     android:paddingStart="@dimen/content_margin" >
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_connections"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible">
+        tools:visibility="visible" >
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_extra_large"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
 
             <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
                 android:text="@string/connected_accounts_label"
                 android:textColor="@color/blue_wordpress"
                 android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                android:textStyle="bold" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <org.wordpress.android.ui.reader.views.ReaderRecyclerView
                 android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                android:layout_width="match_parent" >
+            </org.wordpress.android.ui.reader.views.ReaderRecyclerView>
 
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_service"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP">
+        android:layout_width="match_parent"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
+        tools:targetApi="LOLLIPOP" >
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_service"
-                android:layout_width="wrap_content"
+                android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:ellipsize="end"
+                android:layout_width="wrap_content"
                 android:textColor="@color/blue_wordpress"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
-                tools:text="text_service"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                tools:text="text_service" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
                 android:textColor="@color/grey_darken_20"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_description"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                tools:text="text_description" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_description_notice"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_large"
                 android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_width="wrap_content"
+                android:paddingTop="@dimen/margin_large"
+                android:visibility="gone"
                 android:textColor="@color/grey_darken_20"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
-                tools:text="text_description_notice"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_marginStart="@dimen/margin_extra_large"/>
+                tools:text="text_description_notice" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/learn_more_button"
-                android:layout_width="wrap_content"
+                android:ellipsize="end"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:ellipsize="end"
+                android:layout_width="wrap_content"
                 android:text="@string/learn_more"
                 android:textColor="@color/blue_wordpress"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
-                tools:text="learn_more_button"
-                android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large"/>
+                tools:text="learn_more_button" >
+            </org.wordpress.android.widgets.WPTextView>
 
             <View
-                android:layout_width="match_parent"
+                android:background="@color/divider_grey"
                 android:layout_height="@dimen/list_divider_height"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/divider_grey" />
+                android:layout_width="match_parent" >
+            </View>
 
             <org.wordpress.android.ui.publicize.ConnectButton
                 android:id="@+id/button_connect"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" >
+            </org.wordpress.android.ui.publicize.ConnectButton>
 
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

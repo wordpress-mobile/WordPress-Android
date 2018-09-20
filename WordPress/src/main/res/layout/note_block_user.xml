@@ -1,87 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="wrap_content"
-    android:background="@color/white">
+    android:layout_width="match_parent" >
 
     <LinearLayout
-        android:contentDescription="@null"
-        android:focusable="true"
-        android:clickable="true"
         android:id="@+id/user_block_root_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="?android:selectableItemBackground"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large">
+        android:contentDescription="@null"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large" >
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium">
+            android:paddingTop="@dimen/margin_medium" >
 
             <ImageView
-                android:importantForAccessibility="no"
                 android:id="@+id/user_avatar"
-                android:layout_width="@dimen/notifications_avatar_sz"
+                android:importantForAccessibility="no"
                 android:layout_height="@dimen/notifications_avatar_sz"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
-                android:layout_marginEnd="@dimen/notifications_adjusted_font_margin" />
+                android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
+                android:layout_width="@dimen/notifications_avatar_sz" >
+            </ImageView>
 
             <LinearLayout
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_width="fill_parent"
+                android:orientation="vertical" >
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:singleLine="true"
+                    android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_medium"
                     android:textStyle="bold"
-                    android:textColor="@color/grey_dark"
-                    tools:text="Bob Ross" />
+                    tools:text="Bob Ross" >
+                </org.wordpress.android.widgets.WPTextView>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_blog_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:singleLine="true"
                     android:textColor="@color/blue_wordpress"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="Paint with Me" />
+                    tools:text="Paint with Me" >
+                </org.wordpress.android.widgets.WPTextView>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_blog_tagline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:singleLine="true"
                     android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="www.bobross.com" />
+                    tools:text="www.bobross.com" >
+                </org.wordpress.android.widgets.WPTextView>
 
             </LinearLayout>
 
         </LinearLayout>
 
         <View
-            android:layout_width="fill_parent"
+            android:background="@drawable/notifications_list_divider_full_width"
             android:layout_height="1dp"
-            android:background="@drawable/notifications_list_divider_full_width" />
+            android:layout_width="fill_parent" >
+        </View>
 
     </LinearLayout>
+
 </LinearLayout>

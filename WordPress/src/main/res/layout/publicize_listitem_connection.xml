@@ -1,56 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:background="?android:selectableItemBackground"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground">
+    android:layout_width="match_parent" >
 
     <ImageView
         android:id="@+id/image_avatar"
-        android:layout_width="@dimen/avatar_sz_small"
-        android:layout_height="@dimen/avatar_sz_small"
+        android:contentDescription="@null"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_large"
-        tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+        android:layout_height="@dimen/avatar_sz_small"
         android:layout_marginEnd="@dimen/margin_large"
-        android:contentDescription="@null"/>
+        android:layout_width="@dimen/avatar_sz_small"
+        tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" >
+    </ImageView>
 
     <View
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_toRightOf="@+id/image_avatar"
         android:background="@color/divider_grey"
-        android:layout_toEndOf="@+id/image_avatar"/>
+        android:layout_height="@dimen/list_divider_height"
+        android:layout_toEndOf="@+id/image_avatar"
+        android:layout_width="match_parent">
+    </View>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="@dimen/margin_large"
-        android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@+id/button_connect"
-        android:layout_toRightOf="@+id/image_avatar"
         android:ellipsize="end"
+        android:gravity="start"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/image_avatar"
+        android:layout_toStartOf="@+id/button_connect"
+        android:layout_width="match_parent"
+        android:textAlignment="viewStart"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
-        tools:text="text_user"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:textAlignment="viewStart"
-        android:gravity="start"
-        android:layout_toEndOf="@+id/image_avatar"
-        android:layout_toStartOf="@+id/button_connect"/>
+        tools:text="text_user" >
+    </org.wordpress.android.widgets.WPTextView>
 
     <org.wordpress.android.ui.publicize.ConnectButton
         android:id="@+id/button_connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/margin_extra_large"/>
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_width="wrap_content" >
+    </org.wordpress.android.ui.publicize.ConnectButton>
+
 </RelativeLayout>

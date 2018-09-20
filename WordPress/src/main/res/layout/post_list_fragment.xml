@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/ptr_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:clipToPadding="false"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
                 android:paddingTop="@dimen/margin_medium"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical" >
+            </android.support.v7.widget.RecyclerView>
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_create_white_24dp"
             android:contentDescription="@string/fab_create_desc"
+            android:layout_gravity="end|bottom"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_width="wrap_content"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed"
-            android:layout_marginEnd="@dimen/fab_margin"/>
+            app:srcCompat="@drawable/ic_create_white_24dp" >
+        </android.support.design.widget.FloatingActionButton>
 
     </android.support.design.widget.CoordinatorLayout>
 
@@ -56,13 +58,14 @@
 
     <ProgressBar
         android:id="@+id/progress"
-        style="?android:attr/progressBarStyleInverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"
+        android:layout_width="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        style="?android:attr/progressBarStyleInverse" >
+    </ProgressBar>
 
 </RelativeLayout>

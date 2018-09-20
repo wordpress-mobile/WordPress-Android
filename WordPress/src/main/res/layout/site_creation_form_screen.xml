@@ -1,75 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:background="@color/grey_lighten_30"
     android:layout_height="match_parent"
-    android:background="@color/grey_lighten_30">
+    android:layout_width="match_parent" >
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
         android:background="@color/blue_wordpress"
         android:elevation="@dimen/appbar_elevation"
-        app:contentInsetLeft="@dimen/toolbar_content_offset"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
         app:contentInsetStart="@dimen/toolbar_content_offset"
-        app:titleTextColor="@color/white"
         app:theme="@style/LoginTheme.Toolbar"
-        tools:targetApi="LOLLIPOP"/>
+        app:titleTextColor="@color/white"
+        tools:targetApi="LOLLIPOP" >
+    </android.support.v7.widget.Toolbar>
 
     <ViewStub
         android:id="@+id/site_creation_form_content_stub"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
         android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom_buttons"/>
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+    </ViewStub>
 
     <View
         android:id="@+id/bottom_shadow"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/button_container_shadow_height"
         android:background="@drawable/login_shadow"
         android:layout_above="@+id/bottom_buttons"
+        android:layout_height="@dimen/button_container_shadow_height"
+        android:layout_width="match_parent"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" >
+    </View>
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_medium_large"
-        android:paddingBottom="@dimen/margin_medium_large"
-        android:layout_alignParentBottom="true"
         android:background="@color/grey_lighten_30"
         android:clipToPadding="false"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:paddingTop="@dimen/margin_medium_large"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible" >
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
             android:id="@+id/primary_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_medium_large"
-            android:layout_marginEnd="@dimen/margin_medium_large"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium_large"
+            android:layout_width="wrap_content"
             android:text="@string/next"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            style="@style/WordPress.Button.Primary" >
+        </android.support.v7.widget.AppCompatButton>
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
             android:id="@+id/finish_button"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_width="match_parent"
             android:text="@string/site_creation_domain_finish_button"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            style="@style/WordPress.Button.Primary" >
+        </android.support.v7.widget.AppCompatButton>
+
     </RelativeLayout>
+
 </RelativeLayout>

@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/content_margin"
-        android:paddingRight="@dimen/content_margin"
         android:layout_marginEnd="@dimen/margin_large"
-        android:paddingStart="@dimen/content_margin"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
         android:paddingEnd="@dimen/content_margin"
-        android:layout_marginStart="@dimen/margin_large">
+        android:paddingStart="@dimen/content_margin" >
 
         <ImageView
             android:id="@+id/image_plan_icon"
-            android:layout_width="@dimen/plan_icon_size"
-            android:layout_height="@dimen/plan_icon_size"
+            android:contentDescription="@null"
             android:layout_gravity="center_horizontal"
+            android:layout_height="@dimen/plan_icon_size"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:background="@drawable/penandink_223dp"
-            android:contentDescription="@null"/>
+            android:layout_width="@dimen/plan_icon_size"
+            tools:background="@drawable/penandink_223dp" >
+        </ImageView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_product_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="wrap_content"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_extra_large"
-            tools:text="text_product_name" />
+            tools:text="text_product_name" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_tagline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/margin_medium"
             android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="wrap_content"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
-            tools:text="text_tagline" />
+            tools:text="text_tagline" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <!-- plan features are added to this container view -->
         <LinearLayout
             android:id="@+id/plan_container"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
+        </LinearLayout>
 
         <View
-            android:layout_width="match_parent"
+            android:background="@color/divider_grey"
             android:layout_height="1dp"
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:background="@color/divider_grey" />
+            android:layout_width="match_parent" >
+        </View>
 
     </LinearLayout>
+
 </org.wordpress.android.widgets.WPScrollView>

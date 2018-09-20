@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tags_list_row_container"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/tags_list_row_height"
-                android:background="?android:selectableItemBackground"
-                android:orientation="vertical">
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tags_list_row_container"
+    android:background="?android:selectableItemBackground"
+    android:layout_height="@dimen/tags_list_row_height"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/tag_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:ellipsize="end"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:maxLines="1"
         android:padding="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_medium"/>
+        android:textSize="@dimen/text_sz_medium" >
+    </TextView>
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_height="1dp"
         android:layout_marginStart="@dimen/margin_medium"
-        android:background="@color/grey_lighten_20"/>
+        android:layout_width="match_parent" >
+    </View>
 
 </RelativeLayout>

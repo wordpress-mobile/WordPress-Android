@@ -1,72 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:layout_width="match_parent"
+        android:padding="20dp" >
 
         <TextView
             android:id="@+id/categoryTitle"
-            android:layout_width="match_parent"
+            android:labelFor="@+id/category_name"
             android:layout_height="wrap_content"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:layout_width="match_parent"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
             android:text="@string/category_name"
             android:textColor="@color/grey_dark"
-            android:textStyle="bold"
-            android:labelFor="@+id/category_name"
             android:textSize="@dimen/text_sz_large"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"/>
+            android:textStyle="bold" >
+        </TextView>
 
         <!-- Category name -->
         <EditText
             android:id="@+id/category_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/categoryTitle"
             android:inputType="text"
-            android:paddingTop="16dp"
+            android:layout_below="@id/categoryTitle"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:paddingBottom="16dp"
+            android:paddingTop="16dp"
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_large"
-            tools:text="Pony" />
+            tools:text="Pony" >
+        </EditText>
 
         <!--  Parent category -->
         <TextView
             android:id="@+id/parentDescLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:labelFor="@+id/parent_category"
             android:layout_below="@id/category_name"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:layout_width="match_parent"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
             android:text="@string/category_parent"
             android:textColor="@color/grey_dark"
-            android:textStyle="bold"
-            android:labelFor="@+id/parent_category"
             android:textSize="@dimen/text_sz_large"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"/>
+            android:textStyle="bold" >
+        </TextView>
 
         <Spinner
             android:id="@+id/parent_category"
-            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_below="@id/parentDescLabel"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
+            android:layout_width="match_parent"
+            android:paddingEnd="0dp"
+            android:paddingStart="0dp"
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_large"
             tools:listitem="@layout/wp_simple_list_item_1"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"/>
+            style="@style/Base.Widget.AppCompat.Spinner.Underlined" >
+        </Spinner>
+
     </RelativeLayout>
+
 </ScrollView>

@@ -1,107 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:gravity="center"
     android:layout_gravity="center"
-    android:gravity="center">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:background="@drawable/stats_white_background"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/stats_pager_tabs"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:orientation="horizontal"
             android:visibility="gone" >
 
             <!-- VIEWS tab-->
             <include
-                layout="@layout/stats_visitors_and_views_tab"
-                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="1"/>
+                layout="@layout/stats_visitors_and_views_tab" >
+            </include>
 
             <!-- VISITORS tab -->
             <include
-                layout="@layout/stats_visitors_and_views_tab"
-                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="1"/>
+                layout="@layout/stats_visitors_and_views_tab" >
+            </include>
 
             <!-- LIKES tab -->
             <include
-                layout="@layout/stats_visitors_and_views_tab"
-                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="1"/>
+                layout="@layout/stats_visitors_and_views_tab" >
+            </include>
 
             <!-- COMMENTS tab -->
             <include
-                layout="@layout/stats_visitors_and_views_tab"
-                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="1"/>
+                layout="@layout/stats_visitors_and_views_tab" >
+            </include>
 
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent" >
+
             <LinearLayout
-                android:focusable="false"
                 android:id="@+id/stats_bar_chart_fragment_container"
-                android:layout_width="fill_parent"
+                android:focusable="false"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/margin_large"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_extra_small"
-                android:paddingBottom="@dimen/margin_large"
+                android:layout_width="fill_parent"
                 android:minHeight="@dimen/stats_barchart_height"
                 android:orientation="vertical"
+                android:paddingBottom="@dimen/margin_large"
                 android:paddingEnd="@dimen/margin_extra_small"
-                android:paddingStart="@dimen/margin_medium"/>
-            <LinearLayout
-                android:contentDescription="@string/stats_no_activity_this_period"
-                android:importantForAccessibility="yes"
-                android:id="@+id/stats_bar_chart_no_activity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal|center_vertical"
-                android:paddingTop="@dimen/margin_medium"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingRight="@dimen/margin_extra_large"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:visibility="gone"
-                android:background="@drawable/stats_barchart_no_activity_background"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    app:srcCompat="@drawable/ic_info_grey_800_32dp"
-                    android:contentDescription="@null"
-                    android:paddingEnd="@dimen/margin_medium"
-                    android:paddingRight="@dimen/margin_medium"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#404040"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:text="@string/stats_no_activity_this_period"/>
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_large" >
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/stats_bar_chart_no_activity"
+                android:background="@drawable/stats_barchart_no_activity_background"
+                android:contentDescription="@string/stats_no_activity_this_period"
+                android:gravity="center_horizontal|center_vertical"
+                android:importantForAccessibility="yes"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_medium"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:contentDescription="@null"
+                    android:layout_height="24dp"
+                    android:layout_width="24dp"
+                    android:paddingEnd="@dimen/margin_medium"
+                    app:srcCompat="@drawable/ic_info_grey_800_32dp" >
+                </ImageView>
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_no_activity_this_period"
+                    android:textColor="#404040"
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
+
+            </LinearLayout>
+
         </RelativeLayout>
 
         <!-- Bottom Legend -->
@@ -113,64 +123,73 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginBottom="@dimen/margin_medium">
+
             <LinearLayout
                 android:focusable="false"
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:gravity="center"
                 android:layout_height="wrap_content"
-                android:gravity="center">
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:orientation="horizontal" >
+
                 <!-- Have to use a CheckedTextView instead of a plain TextView otherwise
                 there was a "jumpy UI" when the CheckBox below 'stats_checkbox_visitors' is not on the screen. This is due to the
                 CheckedTextView/CheckBox touching area that is bigger than the touching area of a TextView .
                 -->
                 <CheckedTextView
                     android:id="@+id/stats_legend_label"
-                    android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
                     android:checkMark="?android:attr/listChoiceIndicatorSingle"
-                    android:drawableLeft="@drawable/stats_visitors_and_views_legend_background_primary"
+                    android:enabled="false"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:drawableStart="@drawable/stats_visitors_and_views_legend_background_primary"
-                    android:drawablePadding="@dimen/margin_medium"
-                    android:textSize="@dimen/text_sz_small"
-                    android:text="@string/stats_views"
-                    android:textColor="@color/grey_darken_30"/>
-            </LinearLayout>
-            <LinearLayout
-                android:focusable="false"
-                android:id="@+id/stats_checkbox_visitors_container"
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:visibility="gone">
-                <CheckBox
-                    android:focusable="false"
-                    android:id="@+id/stats_checkbox_visitors"
-                    android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/stats_visitors_and_views_legend_background_secondary"
-                    android:drawableStart="@drawable/stats_visitors_and_views_legend_background_secondary"
-                    android:drawablePadding="@dimen/margin_medium"
-                    android:textSize="@dimen/text_sz_small"
-                    android:text="@string/stats_visitors"
-                    android:textColor="@color/grey_darken_30"/>
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_views"
+                    android:textColor="@color/grey_darken_30"
+                    android:textSize="@dimen/text_sz_small" >
+                </CheckedTextView>
+
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/stats_checkbox_visitors_container"
+                android:focusable="false"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+
+                <CheckBox
+                    android:id="@+id/stats_checkbox_visitors"
+                    android:drawablePadding="@dimen/margin_medium"
+                    android:drawableStart="@drawable/stats_visitors_and_views_legend_background_secondary"
+                    android:focusable="false"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/stats_visitors"
+                    android:textColor="@color/grey_darken_30"
+                    android:textSize="@dimen/text_sz_small" >
+                </CheckBox>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_summary_date"
-        android:textAppearance="?android:attr/textAppearance"
-        android:textSize="@dimen/text_sz_large"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="wrap_content"
+        android:textAppearance="?android:attr/textAppearance"
         android:textColor="@color/grey_darken_20"
-        tools:text="Date"/>
+        android:textSize="@dimen/text_sz_large"
+        tools:text="Date" >
+    </org.wordpress.android.widgets.WPTextView>
+
 </LinearLayout>

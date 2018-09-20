@@ -1,62 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/stats_pager_tabs"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_small"
-        android:paddingBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
-        android:orientation="horizontal"
         android:layout_marginEnd="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_large">
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_small" >
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_post_trend_label"
             android:background="?android:selectableItemBackground"
+            android:gravity="start"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:textAppearance="?android:attr/textAppearance"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"/>
+            android:textSize="@dimen/text_sz_small" >
+        </org.wordpress.android.widgets.WPTextView>
 
     </LinearLayout>
 
-    <include layout="@layout/stats_insights_header_line" />
+    <include
+        layout="@layout/stats_insights_header_line" >
+    </include>
 
     <LinearLayout
         android:id="@+id/stats_latest_post_tabs"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
+
         <!-- VIEWS tab-->
         <include
-            layout="@layout/stats_visitors_and_views_tab"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal" />
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            layout="@layout/stats_visitors_and_views_tab" >
+        </include>
 
         <!-- LIKES tab -->
         <include
-            layout="@layout/stats_visitors_and_views_tab"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal" />
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            layout="@layout/stats_visitors_and_views_tab" >
+        </include>
 
         <!-- COMMENTS tab -->
         <include
-            layout="@layout/stats_visitors_and_views_tab"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal" />
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            layout="@layout/stats_visitors_and_views_tab" >
+        </include>
+
     </LinearLayout>
+
 </LinearLayout>

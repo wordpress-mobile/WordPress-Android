@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
     <org.wordpress.android.widgets.WPTextView
-        style="@style/LoginTheme.PromoText"
         android:id="@+id/promo_text"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_medium_large"
         android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
         android:minLines="3"
         tools:text="@string/login_promo_text_anytime"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        style="@style/LoginTheme.PromoText" >
+    </org.wordpress.android.widgets.WPTextView>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_view"
-        android:layout_width="match_parent"
+        android:layout_below="@+id/promo_text"
         android:layout_height="match_parent"
         android:layout_marginTop="36dp"
-        android:layout_below="@+id/promo_text"/>
+        android:layout_width="match_parent" >
+    </com.airbnb.lottie.LottieAnimationView>
+
 </RelativeLayout>

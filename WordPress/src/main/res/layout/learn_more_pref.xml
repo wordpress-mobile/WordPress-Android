@@ -3,50 +3,51 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingStart="16dp"
-    android:paddingRight="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="16dp">
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large" >
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/learn_more_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
             android:contentDescription="@null"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+            android:layout_width="24dp"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:src="@drawable/ic_info_grey_800_32dp"/>
+            tools:src="@drawable/ic_info_grey_800_32dp"
+            tools:visibility="visible" >
+        </ImageView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/learn_more_caption"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@color/calypso_title_text"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textColor="@color/calypso_title_text"
             android:visibility="gone"
+            tools:text="Learn more text"
             tools:visibility="visible"
-            tools:text="Learn more text"/>
+            style="@style/TextAppearance.AppCompat.Body1" >
+        </org.wordpress.android.widgets.WPTextView>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/learn_more_button"
-        android:textColor="@color/color_primary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:gravity="end|center_vertical"
         android:layout_gravity="end"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:text="@string/learn_more"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+        android:textColor="@color/color_primary"
+        style="@style/Widget.AppCompat.Button.Borderless" >
+    </Button>
 
 </LinearLayout>

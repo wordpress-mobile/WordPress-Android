@@ -1,192 +1,201 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                    xmlns:tools="http://schemas.android.com/tools"
-                                    xmlns:wp="http://schemas.android.com/apk/res-auto"
-                                    android:id="@+id/card_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:stateListAnimator="@anim/pressed_card"
-                                    card_view:cardBackgroundColor="@color/white"
-                                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                                    card_view:cardElevation="@dimen/card_elevation"
-                                    tools:targetApi="LOLLIPOP">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:stateListAnimator="@anim/pressed_card"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/cardview_default_radius"
+    app:cardElevation="@dimen/card_elevation"
+    tools:targetApi="LOLLIPOP" >
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
 
         <ImageView
             android:id="@+id/image_featured"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/postlist_featured_image_height"
-            android:visibility="gone"
             android:contentDescription="@string/featured_image_desc"
-            tools:visibility="visible" />
+            android:layout_height="@dimen/postlist_featured_image_height"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible" >
+        </ImageView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
-            style="@style/ReaderTextView.Post.Title"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             tools:text="text_title"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"/>
+            style="@style/ReaderTextView.Post.Title" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
-            style="@style/ReaderTextView.Post.Excerpt"
+            android:importantForAccessibility="no"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:maxLines="4"
-            android:importantForAccessibility="no"
             tools:text="text_excerpt"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"/>
+            style="@style/ReaderTextView.Post.Excerpt" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
-            style="@style/ReaderTextView.Date"
             android:drawablePadding="@dimen/margin_small"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            tools:text="text_date"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"/>
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="wrap_content"
+            tools:text="text_date"
+            style="@style/ReaderTextView.Date" >
+        </org.wordpress.android.widgets.WPTextView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:orientation="horizontal"
             android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_large">
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/image_status"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="@dimen/margin_small"
                 android:contentDescription="@null"
-                tools:src="@drawable/ic_gridicons_cloud_upload"
-                android:layout_marginEnd="@dimen/margin_small"/>
+                android:layout_gravity="center"
+                android:layout_height="16dp"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_width="16dp"
+                tools:src="@drawable/ic_gridicons_cloud_upload" >
+            </ImageView>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small"
                 android:visibility="gone"
                 tools:text="text_status"
-                tools:visibility="visible" />
+                tools:visibility="visible" >
+            </org.wordpress.android.widgets.WPTextView>
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:background="@color/grey_light"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:orientation="vertical"
-            android:background="@color/grey_light">
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
 
             <ProgressBar
                 android:id="@+id/post_upload_progress"
-                style="@style/UploadProgressBar"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:indeterminate="false"
-                android:max="100" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:max="100"
+                android:visibility="gone"
+                style="@style/UploadProgressBar" >
+            </ProgressBar>
 
             <LinearLayout
                 android:id="@+id/layout_buttons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:clickable="false"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_edit"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="edit" />
+                    android:layout_width="0dp"
+                    app:wpPostButtonType="edit" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_view"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="view" />
+                    android:layout_width="0dp"
+                    app:wpPostButtonType="view" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_publish"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="publish" />
+                    android:layout_width="0dp"
+                    app:wpPostButtonType="publish" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_stats"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_width="0dp"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    wp:wpPostButtonType="stats" />
+                    app:wpPostButtonType="stats" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_trash"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_width="0dp"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    wp:wpPostButtonType="trash" />
+                    app:wpPostButtonType="trash" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_more"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="more" />
+                    android:layout_width="0dp"
+                    app:wpPostButtonType="more" >
+                </org.wordpress.android.widgets.PostListButton>
 
                 <org.wordpress.android.widgets.PostListButton
                     android:id="@+id/btn_back"
-                    android:layout_width="0dp"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    wp:wpPostButtonType="back" />
+                    android:layout_width="0dp"
+                    app:wpPostButtonType="back" >
+                </org.wordpress.android.widgets.PostListButton>
 
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/disabled_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:background="@color/white_translucent_65"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
 
     </RelativeLayout>
+
 </android.support.v7.widget.CardView>

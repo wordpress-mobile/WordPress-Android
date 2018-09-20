@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
-    android:id="@+id/categoryRow"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/category_parent_spinner_row_height"
+    android:id="@+id/categoryRow"
     android:clickable="false"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/category_parent_spinner_row_height"
+    android:layout_width="match_parent"
+    android:orientation="horizontal" >
 
     <TextView
         android:id="@+id/categoryRowText"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
         android:orientation="vertical"
-        android:paddingLeft="4dp"
-        android:paddingRight="4dp"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/grey_darken_20"
+        android:paddingEnd="4dp"
         android:paddingStart="4dp"
-        android:paddingEnd="4dp"/>
+        android:textColor="@color/grey_darken_20"
+        android:textSize="@dimen/text_sz_large" >
+    </TextView>
+
 </LinearLayout>

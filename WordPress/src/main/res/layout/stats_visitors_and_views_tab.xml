@@ -1,59 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_height="match_parent"
-              android:layout_width="0dp"
-              android:layout_weight="1"
-              android:orientation="horizontal"
-              android:gravity="center"
-              android:clickable="true"
-    android:focusable="true">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:layout_width="0dp"
+    android:orientation="horizontal" >
 
     <LinearLayout
         android:id="@+id/stats_visitors_and_views_tab_inner_container"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:padding="@dimen/margin_medium"
-        android:background="?android:selectableItemBackground"
-        android:gravity="center"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent" >
 
         <LinearLayout
+            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/stats_visitors_and_views_tab_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginRight="3dp"
-                android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
-                app:srcCompat="@drawable/ic_star_white_48dp" />
+                android:layout_height="12dp"
+                android:layout_marginEnd="3dp"
+                android:layout_width="12dp"
+                app:srcCompat="@drawable/ic_star_white_48dp" >
+            </ImageView>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
-                android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_extra_small"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:maxLines="1"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_extra_small" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
+
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_visitors_and_views_tab_value"
-            android:textColor="@color/blue_wordpress"
-            android:textSize="@dimen/text_sz_small"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_extra_small"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:maxLines="1"
+            android:paddingBottom="@dimen/margin_extra_small"
+            android:paddingTop="@dimen/margin_small"
+            android:textColor="@color/blue_wordpress"
+            android:textSize="@dimen/text_sz_small" >
+        </org.wordpress.android.widgets.WPTextView>
+
     </LinearLayout>
+
 </LinearLayout>

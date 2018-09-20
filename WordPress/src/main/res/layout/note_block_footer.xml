@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/note_footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="6dp"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large">
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="6dp" >
 
         <org.wordpress.android.widgets.NoticonTextView
             android:id="@+id/note_footer_noticon"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
             android:layout_marginEnd="4dp"
+            android:layout_width="wrap_content"
             android:textColor="@color/grey"
-            android:textSize="18sp" />
+            android:textSize="18sp" >
+        </org.wordpress.android.widgets.NoticonTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_footer_text"
-            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
             android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large" >
+        </org.wordpress.android.widgets.WPTextView>
 
     </LinearLayout>
 
     <View
         android:id="@+id/divider_view"
-        android:layout_width="match_parent"
+        android:background="@drawable/notifications_list_divider"
         android:layout_height="1dp"
-        android:background="@drawable/notifications_list_divider" />
+        android:layout_width="match_parent" >
+    </View>
+
 </LinearLayout>

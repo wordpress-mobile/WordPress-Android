@@ -1,231 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PluginCardView"
     card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius">
+    card_view:cardCornerRadius="@dimen/cardview_default_radius" >
 
     <RelativeLayout
         android:id="@+id/plugin_ratings_section_container"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_extra_large">
+        android:layout_width="match_parent"
+        android:padding="@dimen/margin_extra_large" >
 
         <RatingBar
             android:id="@+id/rating_bar"
-            style="@style/WPRatingBar.Small"
-            android:layout_width="wrap_content"
+            android:isIndicator="true"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
-            android:isIndicator="true"
+            android:layout_width="wrap_content"
             android:numStars="5"
-            tools:rating="3" />
+            tools:rating="3"
+            style="@style/WPRatingBar.Small" >
+        </RatingBar>
 
         <LinearLayout
             android:id="@+id/read_reviews_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:padding="@dimen/margin_medium"
                 android:text="@string/plugin_read_reviews"
                 android:textAllCaps="true"
                 android:textColor="@color/blue_medium"
-                android:textSize="@dimen/text_sz_medium" />
+                android:textSize="@dimen/text_sz_medium" >
+            </TextView>
 
             <ImageView
-                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                android:contentDescription="@string/open_external_link_desc"
                 android:layout_gravity="center_vertical"
                 android:tint="@color/blue_medium"
-                android:contentDescription="@string/open_external_link_desc"
-                app:srcCompat="@drawable/ic_external_black_24dp" />
+                app:srcCompat="@drawable/ic_external_black_24dp"
+                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage" >
+            </ImageView>
+
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/plugin_ratings_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/read_reviews_container"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_width="wrap_content"
                     android:text="@string/plugin_five_stars"
                     android:textColor="@color/grey_text_min"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
 
                 <ProgressBar
                     android:id="@+id/progress5"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:progress="75"
                     android:progressTint="@color/blue_medium"
-                    tools:ignore="UnusedAttribute"/>
+                    tools:ignore="UnusedAttribute"
+                    style="?android:attr/progressBarStyleHorizontal" >
+                </ProgressBar>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_width="wrap_content"
                     android:text="@string/plugin_four_stars"
                     android:textColor="@color/grey_text_min"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
 
                 <ProgressBar
                     android:id="@+id/progress4"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:progress="25"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    style="?android:attr/progressBarStyleHorizontal" >
+                </ProgressBar>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_width="wrap_content"
                     android:text="@string/plugin_three_stars"
                     android:textColor="@color/grey_text_min"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
 
                 <ProgressBar
                     android:id="@+id/progress3"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:progress="10"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    style="?android:attr/progressBarStyleHorizontal" >
+                </ProgressBar>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_width="wrap_content"
                     android:text="@string/plugin_two_stars"
                     android:textColor="@color/grey_text_min"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
 
                 <ProgressBar
                     android:id="@+id/progress2"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:progress="10"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    style="?android:attr/progressBarStyleHorizontal" >
+                </ProgressBar>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:orientation="horizontal">
+                android:layout_width="match_parent"
+                android:orientation="horizontal" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="@dimen/margin_large"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_width="wrap_content"
                     android:text="@string/plugin_one_stars"
                     android:textColor="@color/grey_text_min"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:textSize="@dimen/text_sz_medium" >
+                </TextView>
 
                 <ProgressBar
                     android:id="@+id/progress1"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:progress="0"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    style="?android:attr/progressBarStyleHorizontal" >
+                </ProgressBar>
 
             </LinearLayout>
+
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/plugin_ratings_container"
-            android:layout_marginTop="@dimen/margin_large">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_width="match_parent" >
 
             <TextView
                 android:id="@+id/text_num_ratings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:textColor="@color/grey_text_min"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_num_ratings" />
+                tools:text="text_num_ratings" >
+            </TextView>
 
             <TextView
                 android:id="@+id/text_num_downloads"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:textColor="@color/grey_text_min"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_num_downloads"
-                android:layout_alignParentEnd="true"/>
+                tools:text="text_num_downloads" >
+            </TextView>
 
         </RelativeLayout>
+
     </RelativeLayout>
+
 </android.support.v7.widget.CardView>

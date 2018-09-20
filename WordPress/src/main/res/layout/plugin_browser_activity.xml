@@ -1,173 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar" >
+    </include>
 
     <ScrollView
         android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
+        android:layout_width="match_parent" >
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:orientation="vertical" >
 
             <android.support.v7.widget.CardView
                 android:id="@+id/installed_plugins_cardview"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                tools:visibility="visible">
+                tools:visibility="visible" >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" >
 
                     <TextView
                         android:id="@+id/text_installed"
-                        style="@style/PluginDirectoryTitle"
+                        android:layout_toStartOf="@+id/text_manage"
                         android:text="@string/plugin_caption_installed"
-                        android:layout_toLeftOf="@+id/text_manage"
-                        android:layout_toStartOf="@+id/text_manage" />
+                        style="@style/PluginDirectoryTitle" >
+                    </TextView>
 
                     <TextView
                         android:id="@+id/text_manage"
-                        style="@style/PluginDirectoryListButton"
-                        android:text="@string/plugin_manage" />
+                        android:text="@string/plugin_manage"
+                        style="@style/PluginDirectoryListButton" >
+                    </TextView>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/installed_plugins_recycler"
                         android:layout_below="@+id/text_manage"
-                        style="@style/PluginDirectoryList" />
+                        style="@style/PluginDirectoryList" >
+                    </android.support.v7.widget.RecyclerView>
+
                 </RelativeLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/featured_plugins_cardview"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="match_parent"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                tools:visibility="visible">
+                tools:visibility="visible" >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" >
 
                     <TextView
                         android:id="@+id/text_featured"
-                        style="@style/PluginDirectoryTitle"
+                        android:layout_toStartOf="@+id/text_all_featured"
                         android:text="@string/plugin_caption_featured"
-                        android:layout_toLeftOf="@+id/text_all_featured"
-                        android:layout_toStartOf="@+id/text_all_featured"/>
+                        style="@style/PluginDirectoryTitle" >
+                    </TextView>
 
                     <TextView
                         android:id="@+id/text_all_featured"
-                        style="@style/PluginDirectoryListButton"
-                        android:text="@string/plugin_see_all" />
+                        android:text="@string/plugin_see_all"
+                        style="@style/PluginDirectoryListButton" >
+                    </TextView>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/featured_plugins_recycler"
                         android:layout_below="@+id/text_all_featured"
-                        style="@style/PluginDirectoryList" />
+                        style="@style/PluginDirectoryList" >
+                    </android.support.v7.widget.RecyclerView>
+
                 </RelativeLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/popular_plugins_cardview"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="match_parent"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                tools:visibility="visible">
+                tools:visibility="visible" >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" >
 
                     <TextView
                         android:id="@+id/text_popular"
-                        style="@style/PluginDirectoryTitle"
+                        android:layout_toStartOf="@+id/text_all_popular"
                         android:text="@string/plugin_caption_popular"
-                        android:layout_toLeftOf="@+id/text_all_popular"
-                        android:layout_toStartOf="@+id/text_all_popular"/>
+                        style="@style/PluginDirectoryTitle" >
+                    </TextView>
 
                     <TextView
                         android:id="@+id/text_all_popular"
-                        style="@style/PluginDirectoryListButton"
-                        android:text="@string/plugin_see_all" />
+                        android:text="@string/plugin_see_all"
+                        style="@style/PluginDirectoryListButton" >
+                    </TextView>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/popular_plugins_recycler"
                         android:layout_below="@+id/text_all_popular"
-                        style="@style/PluginDirectoryList" />
+                        style="@style/PluginDirectoryList" >
+                    </android.support.v7.widget.RecyclerView>
+
                 </RelativeLayout>
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/new_plugins_cardview"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:layout_width="match_parent"
                 android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                tools:visibility="visible">
+                tools:visibility="visible" >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/text_new"
-                        style="@style/PluginDirectoryTitle"
+                        android:layout_toStartOf="@+id/text_all_new"
                         android:text="@string/plugin_caption_new"
-                        android:layout_toLeftOf="@+id/text_all_new"
-                        android:layout_toStartOf="@+id/text_all_new" />
+                        style="@style/PluginDirectoryTitle" >
+                    </TextView>
 
                     <TextView
                         android:id="@+id/text_all_new"
-                        style="@style/PluginDirectoryListButton"
-                        android:text="@string/plugin_see_all" />
+                        android:text="@string/plugin_see_all"
+                        style="@style/PluginDirectoryListButton" >
+                    </TextView>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_plugins_recycler"
                         android:layout_below="@+id/text_all_new"
-                        style="@style/PluginDirectoryList" />
+                        style="@style/PluginDirectoryList" >
+                    </android.support.v7.widget.RecyclerView>
+
                 </RelativeLayout>
+
             </android.support.v7.widget.CardView>
+
         </LinearLayout>
 
     </ScrollView>
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar" />
+        android:layout_width="match_parent" >
+    </FrameLayout>
 
     <ProgressBar
         android:id="@+id/progress"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        style="?android:attr/progressBarStyle" >
+    </ProgressBar>
 
 </RelativeLayout>

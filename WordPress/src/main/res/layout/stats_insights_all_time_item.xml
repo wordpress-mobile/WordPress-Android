@@ -1,227 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:baselineAligned="false"
-    android:padding="@dimen/margin_extra_large"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_extra_large" >
 
     <!-- First row -->
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="horizontal" >
 
         <!-- Posts item -->
         <LinearLayout
             android:focusable="true"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal" >
 
                 <ImageView
                     android:id="@+id/stats_visitors_and_views_tab_icon"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_posts_grey_dark_24dp" />
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_width="12dp"
+                    app:srcCompat="@drawable/ic_posts_grey_dark_24dp" >
+                </ImageView>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
-                    style="@style/StatsInsightsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textAllCaps="true"
                     android:gravity="center_horizontal"
-                    android:text="@string/posts" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/posts"
+                    android:textAllCaps="true"
+                    style="@style/StatsInsightsLabel" >
+                </org.wordpress.android.util.widgets.AutoResizeTextView>
+
             </LinearLayout>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_posts"
-                style="@style/StatsInsightsValues"
-                android:textColor="@color/grey_darken_30"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/stats_default_number_zero" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30"
+                style="@style/StatsInsightsValues" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
 
         </LinearLayout>
 
-        <include layout="@layout/stats_vertical_line" />
+        <include
+            layout="@layout/stats_vertical_line" >
+        </include>
 
         <!-- Views Item -->
         <LinearLayout
             android:focusable="true"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal" >
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_width="12dp"
+                    app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" >
+                </ImageView>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
-                    style="@style/StatsInsightsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textAllCaps="true"
                     android:gravity="center_horizontal"
-                    android:text="@string/stats_views" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/stats_views"
+                    android:textAllCaps="true"
+                    style="@style/StatsInsightsLabel" >
+                </org.wordpress.android.util.widgets.AutoResizeTextView>
+
             </LinearLayout>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_views"
-                style="@style/StatsInsightsValues"
-                android:textColor="@color/grey_darken_30"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/stats_default_number_zero" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30"
+                style="@style/StatsInsightsValues" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
 
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
     <!-- Second row -->
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
         android:orientation="horizontal" >
 
         <!-- Visitors Item -->
         <LinearLayout
             android:focusable="true"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal" >
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_width="12dp"
+                    app:srcCompat="@drawable/ic_user_grey_dark_12dp" >
+                </ImageView>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
-                    style="@style/StatsInsightsLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textAllCaps="true"
                     android:gravity="center_horizontal"
-                    android:text="@string/stats_visitors" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/stats_visitors"
+                    android:textAllCaps="true"
+                    style="@style/StatsInsightsLabel" >
+                </org.wordpress.android.util.widgets.AutoResizeTextView>
+
             </LinearLayout>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_visitors"
-                style="@style/StatsInsightsValues"
-                android:textColor="@color/grey_darken_30"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/stats_default_number_zero" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30"
+                style="@style/StatsInsightsValues" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
 
         </LinearLayout>
 
-        <include layout="@layout/stats_vertical_line" />
+        <include
+            layout="@layout/stats_vertical_line" >
+        </include>
 
         <!-- Best Ever Item -->
         <LinearLayout
             android:focusable="true"
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal" >
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="vertical" >
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal" >
 
                 <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
-                    android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_trophy_alert_yellow_32dp" />
+                    android:layout_height="12dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_width="12dp"
+                    app:srcCompat="@drawable/ic_trophy_alert_yellow_32dp" >
+                </ImageView>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
-                    style="@style/StatsInsightsLabel"
-                    android:textColor="@color/alert_yellow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
                     android:ellipsize="end"
-                    android:textAllCaps="true"
                     android:gravity="center_horizontal"
-                    android:text="@string/stats_insights_best_ever" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/stats_insights_best_ever"
+                    android:textAllCaps="true"
+                    android:textColor="@color/alert_yellow"
+                    style="@style/StatsInsightsLabel" >
+                </org.wordpress.android.util.widgets.AutoResizeTextView>
+
             </LinearLayout>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_bestever"
-                style="@style/StatsInsightsValues"
-                android:textColor="@color/grey_darken_30"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="@string/stats_default_number_zero" />
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="@string/stats_default_number_zero"
+                android:textColor="@color/grey_darken_30"
+                style="@style/StatsInsightsValues" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_all_time_bestever_date"
-                style="@style/StatsInsightsLabel"
-                android:textColor="@color/grey_text_min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:maxLines="1"
                 android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:maxLines="1"
                 android:textAllCaps="true"
-                tools:text="August 11, 2012" />
+                android:textColor="@color/grey_text_min"
+                tools:text="August 11, 2012"
+                style="@style/StatsInsightsLabel" >
+            </org.wordpress.android.util.widgets.AutoResizeTextView>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

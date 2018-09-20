@@ -3,38 +3,40 @@
 <!--
     appears below the last item in the page list
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/endlist_indicator"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_width="match_parent"
     android:orientation="horizontal"
-    tools:background="@color/white">
+    tools:background="@color/white" >
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20"
         android:layout_gravity="center_vertical"
+        android:layout_height="1dp"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:layout_width="match_parent" >
+    </View>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
-        app:srcCompat="@drawable/ic_wordpress_grey_20dp"
         android:contentDescription="@null"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginStart="@dimen/margin_medium"/>
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_width="wrap_content"
+        app:srcCompat="@drawable/ic_wordpress_grey_20dp" >
+    </ImageView>
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:background="@color/grey_lighten_20"
         android:layout_gravity="center_vertical"
+        android:layout_height="1dp"
         android:layout_weight="1"
-        android:background="@color/grey_lighten_20" />
+        android:layout_width="match_parent" >
+    </View>
 
 </LinearLayout>
