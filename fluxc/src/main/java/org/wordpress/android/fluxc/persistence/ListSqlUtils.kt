@@ -4,6 +4,7 @@ import android.content.ContentValues
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListDescriptorIdentifier
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.util.DateTimeUtils
@@ -56,6 +57,14 @@ class ListSqlUtils @Inject constructor() {
                 .firstOrNull()
         listModel?.listDescriptor = listDescriptor
         return listModel
+    }
+
+    fun getListsWithIdentifier(listDescriptorIdentifier: ListDescriptorIdentifier): List<ListModel> {
+        return WellSql.select(ListModel::class.java)
+                .where()
+                .equals(ListModelTable.TYPE_IDENTIFIER_DB_VALUE, listDescriptorIdentifier.identifier)
+                .endWhere()
+                .asModel
     }
 
     /**

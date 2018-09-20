@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListDescriptorIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
@@ -163,7 +164,7 @@ class ListStore @Inject constructor(
      * update themselves.
      */
     private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
-        emitChange(OnListChanged(payload.listDescriptors, error = null))
+        emitChange(OnListItemsChanged(payload.identifier, error = null))
     }
 
     /**
@@ -173,9 +174,9 @@ class ListStore @Inject constructor(
      * [ListItemsRemovedPayload.listDescriptors] and [OnListChanged] event will be emitted.
      */
     private fun handleListItemsRemoved(payload: ListItemsRemovedPayload) {
-        val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
+        val lists = listSqlUtils.getListsWithIdentifier(payload.identifier)
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
-        emitChange(OnListChanged(payload.listDescriptors, error = null))
+        emitChange(OnListItemsChanged(payload.identifier, error = null))
     }
 
     /**
@@ -226,15 +227,15 @@ class ListStore @Inject constructor(
         }
     }
 
-    class ListItemsChangedPayload(val listDescriptors: List<ListDescriptor>) {
-        constructor(listDescriptor: ListDescriptor): this(listOf(listDescriptor))
+    class OnListItemsChanged(val listDescriptorIdentifier: ListDescriptorIdentifier, error: FetchedListItemsError?) :
+            Store.OnChanged<FetchedListItemsError>() {
+        init {
+            this.error = error
+        }
     }
-    class ListItemsRemovedPayload(val listDescriptors: List<ListDescriptor>, val remoteItemIds: List<Long>) {
-        constructor(listDescriptor: ListDescriptor, remoteItemId: Long) : this(
-                listOf(listDescriptor),
-                listOf(remoteItemId)
-        )
-    }
+
+    class ListItemsChangedPayload(val identifier: ListDescriptorIdentifier)
+    class ListItemsRemovedPayload(val identifier: ListDescriptorIdentifier, val remoteItemIds: List<Long>)
 
     /**
      * This is the payload for [ListAction.FETCH_LIST].

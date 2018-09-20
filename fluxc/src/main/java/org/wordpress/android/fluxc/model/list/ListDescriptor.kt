@@ -1,11 +1,17 @@
 package org.wordpress.android.fluxc.model.list
 
+data class ListDescriptorIdentifier(val identifier: Int)
+
 sealed class ListDescriptor {
     val uniqueHash: Int by lazy {
-        calculateHash()
+        calculateUnique()
+    }
+    val typeIdentifierHash: ListDescriptorIdentifier by lazy {
+        calculateTypeIdentifier()
     }
 
-    internal abstract fun calculateHash(): Int
+    internal abstract fun calculateUnique(): Int
+    internal abstract fun calculateTypeIdentifier(): ListDescriptorIdentifier
 
     override fun hashCode(): Int {
         return uniqueHash
@@ -20,6 +26,10 @@ sealed class ListDescriptor {
         return uniqueHash == other.uniqueHash
     }
 
+    fun compareIdentifier(other: ListDescriptorIdentifier): Boolean {
+        return typeIdentifierHash == other
+    }
+
     class PostListDescriptor @JvmOverloads constructor(
         val localSiteId: Int,
         val filter: PostListFilter = PostListFilter.ANY,
@@ -27,9 +37,21 @@ sealed class ListDescriptor {
         val orderBy: PostOrderBy = PostOrderBy.DATE,
         val searchQuery: String? = null
     ) : ListDescriptor() {
-        override fun calculateHash(): Int {
+        override fun calculateUnique(): Int {
             // TODO: do something better!
-            return "$localSiteId-f${filter.value}-o${order.value}-ob-${orderBy.value}-sq$searchQuery".hashCode()
+            return "post-$localSiteId-f${filter.value}-o${order.value}-ob-${orderBy.value}-sq$searchQuery".hashCode()
+        }
+
+        override fun calculateTypeIdentifier(): ListDescriptorIdentifier {
+            return PostListDescriptor.typeIdentifier(localSiteId)
+        }
+
+        companion object {
+            @JvmStatic
+            fun typeIdentifier(localSiteId: Int): ListDescriptorIdentifier {
+                // TODO: do something better!
+                return ListDescriptorIdentifier("post-$localSiteId".hashCode())
+            }
         }
     }
 }
@@ -46,4 +68,3 @@ enum class PostOrderBy(val value: String) {
     COMMENT_COUNT("comment_count"),
     ID("ID");
 }
-
