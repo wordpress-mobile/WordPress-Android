@@ -39,8 +39,7 @@
                     android:layout_width="match_parent"
                     android:scaleType="centerCrop"
                     tools:layout_height="224dp"
-                    tools:src="@drawable/ic_gridicons_audio"
-                    tools:targetApi="lollipop" >
+                    tools:src="@drawable/ic_gridicons_audio" >
                 </ImageView>
 
                 <ImageView
@@ -610,7 +609,6 @@
         android:layout_width="wrap_content"
         android:textAppearance="?android:attr/progressBarStyle"
         android:visibility="gone"
-        tools:targetApi="lollipop"
         tools:visibility="visible" >
     </ProgressBar>
 

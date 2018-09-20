@@ -20,7 +20,6 @@
         android:visibility="gone"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP"
         tools:visibility="visible" >
 
         <LinearLayout
@@ -59,8 +58,7 @@
         android:layout_marginTop="@dimen/margin_large"
         android:layout_width="match_parent"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP" >
+        app:cardCornerRadius="@dimen/cardview_default_radius" >
 
         <LinearLayout
             android:layout_height="wrap_content"

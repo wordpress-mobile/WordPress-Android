@@ -18,8 +18,7 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingEnd="@dimen/reader_card_content_padding"
         android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large"
-        tools:targetApi="LOLLIPOP" >
+        android:paddingTop="@dimen/margin_large" >
 
         <ImageView
             android:id="@+id/image_blavatar"

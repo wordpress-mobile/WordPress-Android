@@ -16,8 +16,7 @@
         android:layout_width="match_parent"
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:theme="@style/LoginTheme.Toolbar"
-        app:titleTextColor="@color/white"
-        tools:targetApi="LOLLIPOP" >
+        app:titleTextColor="@color/white" >
     </android.support.v7.widget.Toolbar>
 
     <ViewStub

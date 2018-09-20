@@ -10,8 +10,7 @@
     android:stateListAnimator="@anim/pressed_card"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="@dimen/cardview_default_radius"
-    app:cardElevation="@dimen/reader_card_elevation"
-    tools:targetApi="LOLLIPOP" >
+    app:cardElevation="@dimen/reader_card_elevation" >
 
     <RelativeLayout
         android:id="@+id/removed_item_container"

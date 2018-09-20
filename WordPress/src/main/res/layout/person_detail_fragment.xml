@@ -15,8 +15,7 @@
         android:elevation="@dimen/card_elevation"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingBottom="@dimen/margin_medium"
-        tools:targetApi="LOLLIPOP" >
+        android:paddingBottom="@dimen/margin_medium" >
 
         <ImageView
             android:id="@+id/person_avatar"

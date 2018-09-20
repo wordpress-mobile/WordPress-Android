@@ -39,8 +39,7 @@
         app:contentInsetEnd="@dimen/toolbar_content_offset_end"
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        tools:targetApi="LOLLIPOP" >
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
     </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>
