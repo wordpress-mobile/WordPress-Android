@@ -13,6 +13,7 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
 
     // These fields shouldn't be used directly.
     @Column var descriptorDbValue: Int? = null
+    @Column var typeIdentifierDbValue: Int? = null
     @Column var stateDbValue: Int = ListState.defaultState.value
 
     override fun getId(): Int = id

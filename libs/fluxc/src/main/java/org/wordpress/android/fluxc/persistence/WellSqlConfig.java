@@ -339,6 +339,9 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,DESCRIPTOR_DB_VALUE INTEGER,"
                            + "STATE_DB_VALUE INTEGER,_id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,DESCRIPTOR_DB_VALUE INTEGER,"
+                           + "TYPE_IDENTIFIER_DB_VALUE INTEGER,STATE_DB_VALUE INTEGER,"
+                           + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
                 db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,_id INTEGER PRIMARY KEY "
                            + "AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE,"
                            + "UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
