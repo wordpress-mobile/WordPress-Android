@@ -93,6 +93,11 @@ public class PostRestClient extends BaseWPComRestClient {
         Map<String, String> params =
                 getFetchPostListParameters(false, offset, number, null, "ID,modified");
         params.put("status", listDescriptor.getFilter().getValue());
+        params.put("order", listDescriptor.getOrder().getValue());
+        params.put("order_by", listDescriptor.getOrderBy().getValue());
+        if (!TextUtils.isEmpty(listDescriptor.getSearchQuery())) {
+            params.put("search", listDescriptor.getSearchQuery());
+        }
 
         final boolean loadedMore = offset > 0;
 

@@ -10,17 +10,13 @@ package org.wordpress.android.fluxc.model.list
  * A [BasicListOrder] is provided, but if a different order is required per type, a similar approach to `ListFilter`
  * could be utilized. [fromValue] function requires the list type for this reason.
  */
-interface ListOrder {
-    val value: String
+//interface ListOrder {
+//    val value: String
+//
+//    companion object {
+//        @Suppress("unused_parameter")
+//        fun fromValue(listType: ListType, value: String?): ListOrder? =
+//                BasicListOrder.values().firstOrNull { it.value == value }
+//    }
+//}
 
-    companion object {
-        @Suppress("unused_parameter")
-        fun fromValue(listType: ListType, value: String?): ListOrder? =
-                BasicListOrder.values().firstOrNull { it.value == value }
-    }
-}
-
-enum class BasicListOrder(override val value: String) : ListOrder {
-    ASC("asc"),
-    DESC("desc");
-}
