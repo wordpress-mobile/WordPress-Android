@@ -5,6 +5,6 @@ import com.google.gson.annotations.JsonAdapter
 import org.wordpress.android.fluxc.model.ReaderSiteModel
 
 @JsonAdapter(ReaderSearchSitesDeserializer::class)
-class ReaderSearchSitesResponse (
+class ReaderSearchSitesResponse(
     val sites: List<ReaderSiteModel>
 )

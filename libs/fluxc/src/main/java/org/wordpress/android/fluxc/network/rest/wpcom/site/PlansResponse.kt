@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.network.utils.getString
 import java.lang.reflect.Type
 
 @JsonAdapter(PlansDeserializer::class)
-class PlansResponse (val plansList: List<PlanModel>)
+class PlansResponse(val plansList: List<PlanModel>)
 
 class PlansDeserializer : JsonDeserializer<PlansResponse> {
     @Throws(JsonParseException::class)
