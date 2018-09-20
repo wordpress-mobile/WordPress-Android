@@ -16,7 +16,7 @@ import java.lang.reflect.Type
  * Response to GET request to search for stock media item
  */
 @JsonAdapter(SearchStockMediaDeserializer::class)
-class SearchStockMediaResponse (
+class SearchStockMediaResponse(
     val found: Int,
     val nextPage: Int,
     val canLoadMore: Boolean,
