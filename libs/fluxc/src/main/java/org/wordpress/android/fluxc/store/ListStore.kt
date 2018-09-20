@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
-import org.wordpress.android.fluxc.model.list.ListType
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -116,12 +115,11 @@ class ListStore @Inject constructor(
         }
         val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
 
-        when (payload.listDescriptor.type) {
-            ListType.POST -> {
+        when (payload.listDescriptor) {
+            is ListDescriptor.PostListDescriptor -> {
                 val fetchPostListPayload = FetchPostListPayload(payload.listDescriptor, offset)
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
             }
-            ListType.WOO_ORDER -> TODO()
         }
     }
 

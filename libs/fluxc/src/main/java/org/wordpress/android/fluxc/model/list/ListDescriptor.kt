@@ -1,19 +1,34 @@
 package org.wordpress.android.fluxc.model.list
 
-/**
- * This class is used to describe a list to be used in `ListModel`, `ListStore` and network clients.
- *
- * @property type the primary and only required property. See [ListType] for more details.
- * @property localSiteId the local site id this list belongs to. This field will most likely to be utilized by many
- * lists, but it was still left as nullable since the parent of a list might be a different model all together.
- * @property filter the customizable filter that's used to further differentiate a list. See [ListFilter] for more
- * details.
- * @property order the customizable order. A basic implementation is provided with [BasicListOrder] but it can be fully
- * customized per type similar to [filter]. See [ListOrder] for more details.
- */
-data class ListDescriptor(
-    val type: ListType,
-    val localSiteId: Int? = null,
-    val filter: ListFilter? = null,
-    val order: ListOrder? = null
-)
+sealed class ListDescriptor {
+    val uniqueHash: Int by lazy {
+        calculateHash()
+    }
+
+    internal abstract fun calculateHash(): Int
+
+    override fun hashCode(): Int {
+        return uniqueHash
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other?.javaClass != javaClass) return false
+
+        other as ListDescriptor
+
+        return uniqueHash == other.uniqueHash
+    }
+
+    class PostListDescriptor @JvmOverloads constructor(
+        val localSiteId: Int,
+        val filter: PostListFilter = PostListFilter.ANY,
+        val order: BasicListOrder = BasicListOrder.ASC,
+        val searchQuery: String? = null
+    ) : ListDescriptor() {
+        override fun calculateHash(): Int {
+            // TODO: do something better!
+            return "$localSiteId-f${filter.value}-o${order.value}-s$searchQuery".hashCode()
+        }
+    }
+}
