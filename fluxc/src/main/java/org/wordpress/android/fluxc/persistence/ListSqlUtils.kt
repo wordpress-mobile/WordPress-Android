@@ -4,7 +4,7 @@ import android.content.ContentValues
 import com.wellsql.generated.ListModelTable
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.list.ListDescriptor
-import org.wordpress.android.fluxc.model.list.ListDescriptorIdentifier
+import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.util.DateTimeUtils
@@ -40,7 +40,8 @@ class ListSqlUtils @Inject constructor() {
                         cv
                     }.execute()
         } else {
-            listModel.descriptorDbValue = listDescriptor.calculateUnique()
+            listModel.descriptorUniqueIdentifierDbValue = listDescriptor.uniqueIdentifier.value
+            listModel.descriptorTypeIdentifierDbValue = listDescriptor.typeIdentifier.value
             WellSql.insert(listModel).execute()
         }
     }
@@ -51,7 +52,11 @@ class ListSqlUtils @Inject constructor() {
     fun getList(listDescriptor: ListDescriptor): ListModel? {
         val listModel = WellSql.select(ListModel::class.java)
                 .where()
-                .equals(ListModelTable.DESCRIPTOR_DB_VALUE, listDescriptor.calculateUnique())
+                .equals(ListModelTable.DESCRIPTOR_UNIQUE_IDENTIFIER_DB_VALUE, listDescriptor.uniqueIdentifier.value)
+                // Checking the type identifier shouldn't be necessary since we have a unique value, but if we don't
+                // implement perfect hash for the unique value, we can use this approach to even lower the chance
+                // of collisions for ListDescriptor values.
+                .equals(ListModelTable.DESCRIPTOR_TYPE_IDENTIFIER_DB_VALUE, listDescriptor.typeIdentifier.value)
                 .endWhere()
                 .asModel
                 .firstOrNull()
@@ -59,10 +64,10 @@ class ListSqlUtils @Inject constructor() {
         return listModel
     }
 
-    fun getListsWithIdentifier(listDescriptorIdentifier: ListDescriptorIdentifier): List<ListModel> {
+    fun getListsWithTypeIdentifier(descriptorTypeIdentifier: ListDescriptorTypeIdentifier): List<ListModel> {
         return WellSql.select(ListModel::class.java)
                 .where()
-                .equals(ListModelTable.TYPE_IDENTIFIER_DB_VALUE, listDescriptorIdentifier.identifier)
+                .equals(ListModelTable.DESCRIPTOR_TYPE_IDENTIFIER_DB_VALUE, descriptorTypeIdentifier.value)
                 .endWhere()
                 .asModel
     }
