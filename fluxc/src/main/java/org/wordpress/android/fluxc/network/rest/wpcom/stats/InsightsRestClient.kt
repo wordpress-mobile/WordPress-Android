@@ -42,11 +42,18 @@ constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchAllTimeInsights(site: SiteModel): FetchInsightsPayload<AllTimeResponse> {
+    suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<AllTimeResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.urlV1_1
 
         val params = mapOf<String, String>()
-        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, AllTimeResponse::class.java)
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                AllTimeResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
         return when (response) {
             is Success -> {
                 FetchInsightsPayload(response.data)
@@ -57,11 +64,18 @@ constructor(
         }
     }
 
-    suspend fun fetchMostPopularInsights(site: SiteModel): FetchInsightsPayload<MostPopularResponse> {
+    suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<MostPopularResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.insights.urlV1_1
 
         val params = mapOf<String, String>()
-        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, MostPopularResponse::class.java)
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                MostPopularResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
         return when (response) {
             is Success -> {
                 FetchInsightsPayload(response.data)
@@ -72,7 +86,7 @@ constructor(
         }
     }
 
-    suspend fun fetchLatestPostForInsights(site: SiteModel): FetchInsightsPayload<PostsResponse> {
+    suspend fun fetchLatestPostForInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<PostsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).posts.urlV1_1
         val params = mapOf(
                 "order_by" to "date",
@@ -80,7 +94,14 @@ constructor(
                 "type" to "post",
                 "fields" to "ID,title,URL,discussion,like_count,date"
         )
-        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, PostsResponse::class.java)
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PostsResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
         return when (response) {
             is Success -> {
                 FetchInsightsPayload(response.data)

@@ -14,9 +14,12 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 @Singleton
 class InsightsStore
-@Inject constructor(private val insightsRestClient: InsightsRestClient, private val coroutineContext: CoroutineContext) {
-    suspend fun fetchAllTimeInsights(site: SiteModel) = withContext(coroutineContext) {
-        val payload = insightsRestClient.fetchAllTimeInsights(site)
+@Inject constructor(
+    private val insightsRestClient: InsightsRestClient,
+    private val coroutineContext: CoroutineContext
+) {
+    suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val payload = insightsRestClient.fetchAllTimeInsights(site, forced)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
@@ -38,8 +41,8 @@ class InsightsStore
         }
     }
 
-    suspend fun fetchMostPopularInsights(site: SiteModel) = withContext(coroutineContext) {
-        val payload = insightsRestClient.fetchMostPopularInsights(site)
+    suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val payload = insightsRestClient.fetchMostPopularInsights(site, forced)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
@@ -57,8 +60,8 @@ class InsightsStore
         }
     }
 
-    suspend fun fetchLatestPostInsights(site: SiteModel) = withContext(coroutineContext) {
-        val responsePost = insightsRestClient.fetchLatestPostForInsights(site)
+    suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val responsePost = insightsRestClient.fetchLatestPostForInsights(site, forced)
         val postsFound = responsePost.response?.postsFound
 
         val posts = responsePost.response?.posts
