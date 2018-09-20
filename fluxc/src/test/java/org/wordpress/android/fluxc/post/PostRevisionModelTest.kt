@@ -30,29 +30,35 @@ class PostRevisionModelTest {
 
         val titleDiffs = revision.titleDiffs
         assertNotNull(titleDiffs)
-        assertEquals(3, titleDiffs.size)
+        assertEquals(5, titleDiffs.size)
 
         assertEquals(DiffOperations.COPY, titleDiffs[0].operation)
         assertEquals("copy title", titleDiffs[0].value)
 
-        assertEquals(DiffOperations.ADD, titleDiffs[1].operation)
-        assertEquals("add title", titleDiffs[1].value)
+        assertEquals(DiffOperations.COPY, titleDiffs[1].operation)
+        assertEquals("copy another title", titleDiffs[1].value)
 
-        assertEquals(DiffOperations.DELETE, titleDiffs[2].operation)
-        assertEquals("del title", titleDiffs[2].value)
+        assertEquals(DiffOperations.ADD, titleDiffs[2].operation)
+        assertEquals("add new title", titleDiffs[2].value)
+
+        assertEquals(DiffOperations.DELETE, titleDiffs[3].operation)
+        assertEquals("del title", titleDiffs[3].value)
+
+        assertEquals(DiffOperations.ADD, titleDiffs[4].operation)
+        assertEquals("add different title", titleDiffs[4].value)
 
         val contentDiffs = revision.contentDiffs
         assertNotNull(contentDiffs)
         assertEquals(3, contentDiffs.size)
 
         assertEquals(DiffOperations.COPY, contentDiffs[0].operation)
-        assertEquals("copy content", contentDiffs[0].value)
+        assertEquals("copy some content", contentDiffs[0].value)
 
         assertEquals(DiffOperations.ADD, contentDiffs[1].operation)
-        assertEquals("add content", contentDiffs[1].value)
+        assertEquals("add new content", contentDiffs[1].value)
 
         assertEquals(DiffOperations.DELETE, contentDiffs[2].operation)
-        assertEquals("del content", contentDiffs[2].value)
+        assertEquals("del all the content", contentDiffs[2].value)
     }
 
     @Test
