@@ -15,10 +15,10 @@ import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
-import org.wordpress.android.fluxc.model.RevisionModel;
-import org.wordpress.android.fluxc.model.RevisionModel.Diff;
-import org.wordpress.android.fluxc.model.RevisionModel.DiffOperations;
-import org.wordpress.android.fluxc.model.RevisionsModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -405,14 +405,14 @@ public class PostRestClient extends BaseWPComRestClient {
 
             ArrayList<Diff> titleDiffs = new ArrayList<>();
             for (DiffResponsePart titleDiffPart : diffResponse.getDiff().getPost_title()) {
-                Diff diff = new Diff(DiffOperations.fromResponseString(titleDiffPart.getOp()),
+                Diff diff = new Diff(DiffOperations.fromString(titleDiffPart.getOp()),
                         titleDiffPart.getValue());
                 titleDiffs.add(diff);
             }
 
             ArrayList<Diff> contentDiffs = new ArrayList<>();
             for (DiffResponsePart contentDiffPart : diffResponse.getDiff().getPost_content()) {
-                Diff diff = new Diff(DiffOperations.fromResponseString(contentDiffPart.getOp()),
+                Diff diff = new Diff(DiffOperations.fromString(contentDiffPart.getOp()),
                         contentDiffPart.getValue());
                 contentDiffs.add(diff);
             }
