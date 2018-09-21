@@ -1004,9 +1004,11 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
-        if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(showMenuItems);
-            if (mPost != null) {
+        if (saveAsDraftMenuItem != null && mPost != null) {
+            if (PostStatus.fromPost(mPost) == PostStatus.PRIVATE) {
+                saveAsDraftMenuItem.setVisible(false);
+            } else {
+                saveAsDraftMenuItem.setVisible(showMenuItems);
                 saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
             }
         }
