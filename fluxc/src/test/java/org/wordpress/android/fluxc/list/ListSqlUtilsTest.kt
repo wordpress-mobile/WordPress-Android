@@ -7,13 +7,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
-import org.wordpress.android.fluxc.model.list.BasicListOrder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListType.POST
-import org.wordpress.android.fluxc.model.list.ListType.WOO_ORDER
-import org.wordpress.android.fluxc.model.list.PostListFilter
-import org.wordpress.android.fluxc.model.list.WooOrderListFilter
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -21,8 +19,15 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
+// TODO: Update the tests for the latest changes in ListDescriptor
 class ListSqlUtilsTest {
     private lateinit var listSqlUtils: ListSqlUtils
+    private val testSite by lazy {
+        val site = SiteModel()
+        site.id = 111
+        site.siteId = 222
+        site
+    }
 
     @Before
     fun setUp() {
@@ -36,7 +41,7 @@ class ListSqlUtilsTest {
 
     @Test
     fun testInsertAndUpdateList() {
-        val listDescriptor = ListDescriptor(POST, 333)
+        val listDescriptor = PostListDescriptorForRestSite(testSite)
         /**
          * 1. Insert a test list
          * 2. Wait 1 second before the update to ensure `lastModified` value will be different
@@ -56,20 +61,13 @@ class ListSqlUtilsTest {
      */
     @Test
     fun testInsertSeveralDifferentLists() {
-        insertOrUpdateAndThenAssertList(ListDescriptor(POST))
-        insertOrUpdateAndThenAssertList(ListDescriptor(WOO_ORDER))
-        insertOrUpdateAndThenAssertList(ListDescriptor(POST, 123))
-        insertOrUpdateAndThenAssertList(ListDescriptor(POST, 123, PostListFilter.ALL))
-        insertOrUpdateAndThenAssertList(ListDescriptor(WOO_ORDER, 123, WooOrderListFilter.ALL, BasicListOrder.ASC))
-        insertOrUpdateAndThenAssertList(ListDescriptor(POST, filter = PostListFilter.ALL))
-        insertOrUpdateAndThenAssertList(ListDescriptor(POST, order = BasicListOrder.DESC))
-        insertOrUpdateAndThenAssertList(
-                ListDescriptor(WOO_ORDER, filter = WooOrderListFilter.ALL, order = BasicListOrder.DESC))
+        insertOrUpdateAndThenAssertList(PostListDescriptorForRestSite(testSite))
+        insertOrUpdateAndThenAssertList(PostListDescriptorForXmlRpcSite(testSite))
     }
 
     @Test
     fun testDeleteList() {
-        val listDescriptor = ListDescriptor(POST, 444)
+        val listDescriptor = PostListDescriptorForRestSite(testSite)
         /**
          * 1. Insert a test list
          * 2. Delete it

@@ -16,10 +16,10 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
-import org.wordpress.android.fluxc.model.list.ListType.POST
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import java.util.Collections
 import kotlin.test.assertEquals
@@ -32,7 +32,13 @@ class ListManagerTest {
     private lateinit var actionCaptor: KArgumentCaptor<Action<FetchListPayload>>
 
     // Helpers
-    private val listDescriptor = ListDescriptor(POST)
+    private val testSite by lazy {
+        val site = SiteModel()
+        site.id = 111
+        site.siteId = 222
+        site
+    }
+    private val listDescriptor = PostListDescriptorForRestSite(testSite)
     private val numberOfItems = 30
     private val loadMoreOffset = 10
     private val indexThatShouldLoadMore: Int = numberOfItems - loadMoreOffset + 1
