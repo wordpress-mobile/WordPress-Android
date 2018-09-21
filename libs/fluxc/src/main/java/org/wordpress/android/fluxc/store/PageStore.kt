@@ -25,8 +25,6 @@ import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 
-
-
 @Singleton
 class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
     companion object {
