@@ -1,56 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="false"
-    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:focusableInTouchMode="true"
+    android:fitsSystemWindows="false">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
-        android:fitsSystemWindows="false"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
-            android:fitsSystemWindows="false"
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="false"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed" >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:layout_collapseMode="parallax" >
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="parallax">
 
                 <ImageView
                     android:id="@+id/image_preview"
-                    android:background="@drawable/media_settings_background"
-                    android:contentDescription="@string/media_settings_image_preview_desc"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/media_settings_background"
                     android:scaleType="centerCrop"
                     tools:layout_height="224dp"
+                    android:contentDescription="@string/media_settings_image_preview_desc"
                     tools:src="@drawable/ic_gridicons_audio" >
                 </ImageView>
 
                 <ImageView
                     android:id="@+id/image_gradient_scrim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:background="@drawable/media_settings_gradient_scrim"
                     android:contentDescription="@null"
-                    android:layout_gravity="top"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    tools:layout_height="74dp" >
-                </ImageView>
+                    tools:layout_height="74dp" />
 
                 <ImageView
                     android:id="@+id/image_play"
@@ -65,11 +63,10 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
-            </android.support.v7.widget.Toolbar>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -77,155 +74,158 @@
 
     <org.wordpress.android.widgets.WPNestedScrollView
         android:id="@+id/scroll_view"
-        android:clipToPadding="false"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                android:layout_width="match_parent"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
-                app:cardElevation="@dimen/card_elevation" >
+                app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:orientation="vertical" >
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_height="match_parent"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingEnd="@dimen/media_settings_margin"
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingTop="@dimen/margin_extra_large"
                         android:paddingStart="@dimen/media_settings_margin"
-                        android:paddingTop="@dimen/margin_extra_large" >
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_large"
+                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
-                            android:layout_width="wrap_content"
                             android:text="@string/media_edit_customize_card_caption"
                             android:textColor="@color/blue_wordpress"
                             android:textSize="@dimen/text_sz_large"
-                            android:textStyle="bold" >
-                        </TextView>
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_small"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
-                            android:text="@string/image_size"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
+                            android:layout_marginStart="@dimen/margin_small"
+                            android:text="@string/image_size" />
 
                         <TextView
                             android:id="@+id/image_size_hint"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:layout_marginTop="@dimen/margin_medium"
-                            android:layout_width="wrap_content"
-                            tools:text="Large"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
+                            tools:text="Large" />
 
                         <SeekBar
                             android:id="@+id/image_size_seekbar"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="-8dp"
-                            android:layout_marginStart="-8dp"
-                            android:layout_marginTop="@dimen/margin_large"
+                            style="@style/Widget.AppCompat.SeekBar.Discrete"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-8dp"
+                            android:layout_marginRight="-8dp"
+                            android:layout_marginTop="@dimen/margin_large"
                             tools:max="3"
-                            style="@style/Widget.AppCompat.SeekBar.Discrete" >
-                        </SeekBar>
+                            android:layout_marginStart="-8dp"
+                            android:layout_marginEnd="-8dp"/>
 
                     </LinearLayout>
 
                     <View
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <LinearLayout
-                        android:layout_height="match_parent"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingEnd="@dimen/media_settings_margin"
-                        android:paddingStart="@dimen/media_settings_margin" >
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <TextView
                             android:id="@+id/alignment_spinner_label"
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_small"
+                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
-                            android:layout_width="wrap_content"
-                            android:text="@string/image_alignment"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:text="@string/image_alignment" />
 
                         <Spinner
                             android:id="@+id/alignment_spinner"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:layout_marginTop="@dimen/margin_small"
-                            android:layout_width="match_parent"
-                            android:prompt="@string/image_alignment" >
-                        </Spinner>
+                            android:prompt="@string/image_alignment" />
 
                     </LinearLayout>
 
                     <View
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <LinearLayout
-                        android:layout_height="match_parent"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/margin_extra_large"
-                        android:paddingEnd="@dimen/media_settings_margin"
-                        android:paddingStart="@dimen/media_settings_margin" >
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/edit_link_container"
-                            android:hint="@string/media_edit_link_text"
-                            android:importantForAccessibility="no"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            app:theme="@style/MediaSettings.TextInputTheme" >
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"
+                            android:hint="@string/media_edit_link_text"
+                            app:theme="@style/MediaSettings.TextInputTheme">
 
                             <android.support.design.widget.TextInputEditText
                                 android:id="@+id/edit_link"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:gravity="top|start"
                                 android:hint="@string/media_edit_link_text"
-                                android:inputType="textUri"
-                                android:layout_height="wrap_content"
-                                android:layout_width="match_parent"
                                 android:textColorHint="@color/transparent"
-                                tools:text="edit_link" >
-                            </android.support.design.widget.TextInputEditText>
+                                android:inputType="textUri"
+                                tools:text="edit_link" />
 
                         </android.support.design.widget.TextInputLayout>
 
                         <CheckBox
                             android:id="@+id/edit_link_target_new_widnow_checkbox"
-                            android:hint="@string/media_edit_link_hint"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_small"
-                            android:layout_width="wrap_content" >
-                        </CheckBox>
+                            android:hint="@string/media_edit_link_hint" />
 
                     </LinearLayout>
 
@@ -235,115 +235,113 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card2"
-                android:layout_below="@+id/card1"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card1"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
-                app:cardElevation="@dimen/card_elevation" >
+                app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_extra_large"
+                    android:paddingLeft="@dimen/media_settings_margin"
+                    android:paddingRight="@dimen/media_settings_margin"
+                    android:paddingTop="@dimen/margin_extra_large"
                     android:paddingEnd="@dimen/media_settings_margin"
-                    android:paddingStart="@dimen/media_settings_margin"
-                    android:paddingTop="@dimen/margin_extra_large" >
+                    android:paddingStart="@dimen/media_settings_margin">
 
                     <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_large"
+                        android:layout_marginLeft="@dimen/margin_small"
                         android:layout_marginStart="@dimen/margin_small"
-                        android:layout_width="wrap_content"
                         android:text="@string/media_edit_file_details_card_caption"
                         android:textColor="@color/blue_wordpress"
                         android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold" >
-                    </TextView>
+                        android:textStyle="bold" />
 
                     <android.support.design.widget.TextInputLayout
-                        android:hint="@string/media_edit_title_text"
-                        android:importantForAccessibility="no"
-                        android:layout_height="wrap_content"
+                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
-                        app:theme="@style/MediaSettings.TextInputTheme"
-                        style="@style/MediaSettings.TextInputStyle" >
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_title_text"
+                        app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/edit_title"
-                            android:hint="@string/media_edit_title_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_title_text"
                             android:textColorHint="@color/transparent"
-                            tools:text="edit_title" >
-                        </android.support.design.widget.TextInputEditText>
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_title" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/edit_caption_container"
-                        android:hint="@string/media_edit_caption_text"
-                        android:importantForAccessibility="no"
-                        android:layout_height="wrap_content"
+                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
-                        app:theme="@style/MediaSettings.TextInputTheme"
-                        style="@style/MediaSettings.TextInputStyle" >
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_caption_text"
+                        app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/edit_caption"
-                            android:hint="@string/media_edit_caption_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_caption_text"
                             android:textColorHint="@color/transparent"
-                            tools:text="edit_caption" >
-                        </android.support.design.widget.TextInputEditText>
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_caption" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/edit_alt_text_layout"
-                        android:hint="@string/media_edit_alttext_text"
-                        android:importantForAccessibility="no"
-                        android:layout_height="wrap_content"
+                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
-                        app:theme="@style/MediaSettings.TextInputTheme"
-                        style="@style/MediaSettings.TextInputStyle" >
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_alttext_text"
+                        app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/edit_alt_text"
-                            android:hint="@string/media_edit_alttext_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/media_edit_alttext_text"
                             android:textColorHint="@color/transparent"
-                            tools:text="edit_alt_text" >
-                        </android.support.design.widget.TextInputEditText>
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            tools:text="edit_alt_text" />
 
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/edit_description_container"
-                        android:hint="@string/media_edit_description_text"
-                        android:importantForAccessibility="no"
-                        android:layout_height="wrap_content"
+                        style="@style/MediaSettings.TextInputStyle"
                         android:layout_width="match_parent"
-                        app:theme="@style/MediaSettings.TextInputTheme"
-                        style="@style/MediaSettings.TextInputStyle" >
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_description_text"
+                        app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
                             android:id="@+id/edit_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="top|start"
                             android:hint="@string/media_edit_description_text"
-                            android:inputType="textCapSentences|textAutoCorrect"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:lines="3"
                             android:textColorHint="@color/transparent"
-                            tools:text="edit_description" >
-                        </android.support.design.widget.TextInputEditText>
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:lines="3"
+                            tools:text="edit_description" />
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -353,230 +351,199 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/card3"
-                android:layout_below="@+id/card2"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_extra_large"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/card2"
+                android:layout_marginTop="@dimen/margin_extra_large"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
-                app:cardElevation="@dimen/card_elevation" >
+                app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_small"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_extra_large"
-                    android:paddingTop="@dimen/margin_extra_large" >
+                    android:paddingTop="@dimen/margin_extra_large">
 
                     <!-- url -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
                         <TextView
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
-                            android:text="@string/media_edit_url_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_url_caption" />
 
                         <RelativeLayout
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent" >
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:id="@+id/text_url"
-                                android:ellipsize="end"
-                                android:layout_centerVertical="true"
-                                android:layout_height="wrap_content"
-                                android:layout_toStartOf="@+id/text_copy_url"
+                                style="@style/MediaSettings.Value"
                                 android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/text_copy_url"
+                                android:layout_toStartOf="@+id/text_copy_url"
+                                android:ellipsize="end"
                                 android:singleLine="true"
-                                tools:text="text_url"
-                                style="@style/MediaSettings.Value" >
-                            </TextView>
+                                tools:text="text_url" />
 
                         <TextView
                             android:id="@+id/text_copy_url"
-                            android:background="@drawable/button_frame"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/margin_extra_large"
+                            android:layout_marginRight="@dimen/margin_extra_large"
+                            android:background="@drawable/button_frame"
                             android:paddingBottom="@dimen/margin_small"
-                            android:paddingEnd="@dimen/margin_extra_large"
-                            android:paddingStart="@dimen/margin_extra_large"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingRight="@dimen/margin_extra_large"
                             android:paddingTop="@dimen/margin_small"
                             android:text="@string/copy"
                             android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium" >
-                        </TextView>
-
-                        </RelativeLayout>
-
-                    </LinearLayout>
+                            android:textSize="@dimen/text_sz_medium"
+                    android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>
 
                     <View
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <!-- filename -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
                         <TextView
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
-                            android:text="@string/media_edit_filename_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_filename_caption" />
 
                         <TextView
                             android:id="@+id/text_filename"
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
-                            tools:text="text_filename"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
-
+                            android:layout_height="wrap_content"
+                            tools:text="text_filename" />
                     </LinearLayout>
-
                     <View
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <!-- file type -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
+                            <TextView
+                                style="@style/MediaSettings.Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/media_edit_filetype_caption" />
 
-                        <TextView
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="@string/media_edit_filetype_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
-
-                        <TextView
-                            android:id="@+id/text_filetype"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            tools:text="text_filetype"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
-
+                            <TextView
+                                android:id="@+id/text_filetype"
+                                style="@style/MediaSettings.Value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="text_filetype" />
                     </LinearLayout>
-
                     <View
                         android:id="@+id/divider_filetype"
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <!-- dimensions -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
+                            <TextView
+                                android:id="@+id/text_image_dimensions_label"
+                                style="@style/MediaSettings.Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/media_edit_image_dimensions_caption" />
 
-                        <TextView
-                            android:id="@+id/text_image_dimensions_label"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:text="@string/media_edit_image_dimensions_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
-
-                        <TextView
-                            android:id="@+id/text_image_dimensions"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            tools:text="text_image_dimensions"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
+                            <TextView
+                                android:id="@+id/text_image_dimensions"
+                                style="@style/MediaSettings.Value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="text_image_dimensions" />
 
                     </LinearLayout>
-
                     <View
                         android:id="@+id/divider_dimensions"
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <!-- duration -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
                         <TextView
                             android:id="@+id/text_duration_label"
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
-                            android:text="@string/media_edit_duration_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_duration_caption" />
 
                         <TextView
                             android:id="@+id/text_duration"
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
-                            tools:text="text_image_dimensions"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
-
+                            android:layout_height="wrap_content"
+                            tools:text="text_image_dimensions" />
                     </LinearLayout>
-
                     <View
                         android:id="@+id/divider_duration"
-                        android:layout_height="1dp"
+                        style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
-                        style="@style/MediaSettings.Divider" >
-                    </View>
+                        android:layout_height="1dp" />
 
                     <!-- upload date -->
                     <LinearLayout
-                        android:focusable="true"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
                         <TextView
                             android:id="@+id/text_upload_date_label"
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
-                            android:text="@string/media_edit_upload_date_caption"
-                            style="@style/MediaSettings.Label" >
-                        </TextView>
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_upload_date_caption" />
 
                         <TextView
                             android:id="@+id/text_upload_date"
-                            android:layout_height="wrap_content"
+                            style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
-                            tools:text="text_upload_date"
-                            style="@style/MediaSettings.Value" >
-                        </TextView>
-
+                            android:layout_height="wrap_content"
+                            tools:text="text_upload_date" />
                     </LinearLayout>
-
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -587,10 +554,11 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_button"
-        android:contentDescription="@string/fab_content_description_preview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_width="wrap_content"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:contentDescription="@string/fab_content_description_preview"
         android:visibility="gone"
         app:backgroundTint="@color/blue_wordpress"
         app:elevation="8dp"
@@ -598,15 +566,14 @@
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@drawable/ic_fullscreen_white_24dp"
-        tools:visibility="visible" >
-    </android.support.design.widget.FloatingActionButton>
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progress"
-        android:elevation="@dimen/card_elevation"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:elevation="@dimen/card_elevation"
         android:textAppearance="?android:attr/progressBarStyle"
         android:visibility="gone"
         tools:visibility="visible" >
@@ -614,8 +581,7 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
-    </FrameLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

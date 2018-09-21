@@ -1,53 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_gravity="center"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_gravity="center"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium" >
+        android:paddingTop="@dimen/margin_medium">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_text"
-            android:layout_height="match_parent"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/grey_dark"
             android:textColorLink="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            app:fixWidowWords="true" >
-        </org.wordpress.android.widgets.WPTextView>
+            app:fixWidowWords="true"/>
 
         <Button
             android:id="@+id/note_button"
-            android:gravity="end|center_vertical"
-            android:layout_gravity="end"
-            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end|center_vertical"
             android:text="@string/comment_read_source_post"
             android:textColor="@color/blue_medium"
-            android:visibility="gone"
-            style="@style/Widget.AppCompat.Button.Borderless" >
-        </Button>
-
+            android:visibility="gone"/>
     </LinearLayout>
 
     <View
         android:id="@+id/divider_view"
-        android:background="@drawable/notifications_list_divider"
-        android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:visibility="gone" >
-    </View>
-
+        android:layout_height="1dp"
+        android:background="@drawable/notifications_list_divider"
+        android:visibility="gone"/>
 </LinearLayout>

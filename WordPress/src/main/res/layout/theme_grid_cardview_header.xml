@@ -1,158 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/cardview_default_radius"
-        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large"
-        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
-        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
         android:layout_width="match_parent"
-        app:cardCornerRadius="@dimen/cardview_default_radius"
-        app:cardElevation="@dimen/card_elevation" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginBottom="@dimen/cardview_default_radius"
+        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
+        card_view:cardCornerRadius="@dimen/cardview_default_radius"
+        card_view:cardElevation="@dimen/card_elevation"
+        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large">
 
         <LinearLayout
-            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:focusable="true"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/theme_browser_cardview_header_margin"
                 android:layout_width="wrap_content"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin"
+                android:focusable="true">
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="@string/current_theme"
-                    android:textAllCaps="true"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_small"
-                    android:textStyle="bold" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:textAllCaps="true"
+                    android:text="@string/current_theme" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_theme_text"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="@string/current_theme"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textStyle="bold" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:text="@string/current_theme" />
 
             </LinearLayout>
 
             <View
-                android:background="@color/reader_divider_grey"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/theme_browser_separator_thickness"
-                android:layout_width="match_parent" >
-            </View>
+                android:background="@color/reader_divider_grey" />
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/customize"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical" >
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@null"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_none"
-                        android:layout_width="wrap_content"
-                        app:srcCompat="@drawable/ic_customize_grey_dark_18dp" >
-                    </ImageView>
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        card_view:srcCompat="@drawable/ic_customize_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="@string/customize"
-                        android:textColor="@color/grey_dark" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/customize" />
 
                 </LinearLayout>
 
                 <View
-                    android:background="@color/reader_divider_grey"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:layout_width="@dimen/theme_browser_separator_thickness" >
-                </View>
+                    android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
                     android:id="@+id/details"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical" >
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@null"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_none"
-                        android:layout_width="wrap_content"
-                        app:srcCompat="@drawable/ic_info_outline_grey_dark_18dp" >
-                    </ImageView>
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        card_view:srcCompat="@drawable/ic_info_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="@string/details"
-                        android:textColor="@color/grey_dark" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/details" />
 
                 </LinearLayout>
 
                 <View
-                    android:background="@color/reader_divider_grey"
+                    android:layout_width="@dimen/theme_browser_separator_thickness"
                     android:layout_height="match_parent"
-                    android:layout_width="@dimen/theme_browser_separator_thickness" >
-                </View>
+                    android:background="@color/reader_divider_grey" />
 
                 <LinearLayout
                     android:id="@+id/support"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="center"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/theme_browser_header_button_height"
                     android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:orientation="vertical" >
+                    android:background="?android:attr/selectableItemBackground"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <ImageView
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@null"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_none"
-                        android:layout_width="wrap_content"
-                        app:srcCompat="@drawable/ic_help_outline_grey_dark_18dp" >
-                    </ImageView>
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@null"
+                        card_view:srcCompat="@drawable/ic_help_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="@string/support"
-                        android:textColor="@color/grey_dark" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_dark"
+                        android:text="@string/support" />
 
                 </LinearLayout>
 

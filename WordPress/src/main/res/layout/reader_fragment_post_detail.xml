@@ -1,92 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/layout_post_detail_container"
-        android:background="@color/white"
-        android:descendantFocusability="blocksDescendants"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:background="@color/white"
+        android:descendantFocusability="blocksDescendants">
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/swipe_to_refresh"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <org.wordpress.android.widgets.WPScrollView
                 android:id="@+id/scroll_view_reader"
-                android:clipToPadding="false"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
                 android:scrollbars="vertical"
-                android:scrollbarStyle="insideOverlay" >
+                android:scrollbarStyle="insideOverlay">
 
                 <RelativeLayout
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:paddingTop="@dimen/margin_large" >
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/margin_large">
 
                     <org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView
                         android:id="@+id/header_view"
-                        android:layout_alignEnd="@+id/layout_post_detail_content"
-                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/layout_post_detail_content"
+                        android:layout_alignRight="@+id/layout_post_detail_content"
                         android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_large"
-                        android:layout_width="match_parent"
-                        tools:ignore="UnknownIdInLayout" >
-                    </org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView>
+                        android:layout_alignEnd="@+id/layout_post_detail_content"
+                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        tools:ignore="UnknownIdInLayout"/>
 
                     <include
+                        layout="@layout/reader_include_post_detail_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/header_view"
                         android:layout_centerHorizontal="true"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/reader_detail_margin"
-                        android:layout_marginStart="@dimen/reader_detail_margin"
-                        android:layout_width="match_parent"
-                        layout="@layout/reader_include_post_detail_content" >
-                    </include>
+                        android:layout_marginLeft="@dimen/reader_detail_margin"
+                        android:layout_marginRight="@dimen/reader_detail_margin" />
 
                     <LinearLayout
                         android:id="@+id/container_related_posts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/layout_post_detail_content"
+                        android:layout_alignRight="@+id/layout_post_detail_content"
+                        android:layout_below="@+id/layout_post_detail_content"
+                        android:orientation="vertical"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
                         android:layout_alignStart="@+id/layout_post_detail_content"
-                        android:layout_below="@+id/layout_post_detail_content"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:orientation="vertical"
-                        tools:ignore="UnknownIdInLayout" >
+                        tools:ignore="UnknownIdInLayout">
 
                         <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_local"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
-                            android:layout_width="match_parent"
                             android:visibility="gone"
-                            tools:visibility="visible" >
-                        </org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView>
+                            tools:visibility="visible" />
 
                         <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_global"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:visibility="gone"
-                            tools:visibility="visible" >
-                        </org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView>
+                            tools:visibility="visible" />
 
                     </LinearLayout>
 
                     <View
                         android:id="@+id/footer_spacer"
-                        android:layout_below="@id/container_related_posts"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/toolbar_height"
-                        android:layout_width="match_parent" >
-                    </View>
+                        android:layout_below="@id/container_related_posts" />
 
                 </RelativeLayout>
 
@@ -96,64 +93,62 @@
 
         <include
             android:id="@+id/layout_post_detail_footer"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content"
+            layout="@layout/reader_include_post_detail_footer"
             android:layout_width="match_parent"
-            layout="@layout/reader_include_post_detail_footer" >
-        </include>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
 
         <ProgressBar
             android:id="@+id/progress_loading"
-            android:layout_centerInParent="true"
-            android:layout_height="wrap_content"
+            style="@style/ReaderProgressBar"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/ReaderProgressBar" >
-        </ProgressBar>
-
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <!-- error message when requesting post fails -->
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
         android:drawablePadding="@dimen/margin_small"
         android:drawableTop="@drawable/ic_notice_48dp"
         android:gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/reader_detail_margin"
-        android:layout_marginStart="@dimen/reader_detail_margin"
-        android:layout_width="wrap_content"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="Error message"
-        tools:visibility="visible" >
-    </org.wordpress.android.widgets.WPTextView>
+        tools:visibility="visible"
+        android:layout_marginStart="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/nux_sign_in_button"
+        style="@style/WordPress.NUXPrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/reader_detail_margin"
+        android:layout_marginRight="@dimen/reader_detail_margin"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_below="@+id/text_error"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:layout_below="@+id/text_error"
-        android:layout_marginEnd="@dimen/reader_detail_margin"
-        android:layout_marginStart="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_width="match_parent"
         android:text="@string/sign_in_wpcom"
         android:visibility="gone"
-        style="@style/WordPress.NUXPrimaryButton" >
-    </org.wordpress.android.widgets.WPTextView>
+        android:layout_marginEnd="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"/>
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout
         android:id="@+id/layout_custom_view_container"
-        android:background="#80000000"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:visibility="gone" >
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone" />
 
 </RelativeLayout>

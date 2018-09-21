@@ -1,265 +1,241 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stats_widget_outer_container"
     android:background="@drawable/stats_widget_background"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:showIn="@xml/stats_widget_info" >
+    tools:showIn="@xml/stats_widget_info">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/stats_widget_header_background"
         android:gravity="start|center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:padding="2dp" >
+        android:padding="2dp"
+        android:orientation="horizontal">
 
         <ImageView
-            android:background="@drawable/ic_my_sites_white_32dp"
-            android:contentDescription="@null"
+            android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            android:layout_width="@dimen/stats_widget_icon_size" >
-        </ImageView>
+            android:background="@drawable/ic_my_sites_white_32dp"
+            android:contentDescription="@null"/>
 
         <TextView
             android:id="@+id/blog_title"
+            style="@style/StatsModuleTitle"
+            android:textSize="@dimen/stats_widget_text_sz"
             android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_width="wrap_content"
-            android:singleLine="true"
-            android:text="@string/stats_widget_name"
-            android:textColor="@color/white"
-            android:textSize="@dimen/stats_widget_text_sz"
-            style="@style/StatsModuleTitle" >
+            android:text="@string/stats_widget_name" >
         </TextView>
-
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/grey_lighten_30"
-        android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal" >
-    </LinearLayout>
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:background="@color/grey_lighten_30" />
 
     <LinearLayout
         android:id="@+id/stats_widget_values_container"
-        android:gravity="center_vertical"
         android:layout_height="@dimen/stats_widget_main_container_size"
-        android:layout_width="match_parent"
         android:minHeight="@dimen/stats_widget_main_container_min_size"
-        android:orientation="horizontal" >
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <!-- Views -->
         <LinearLayout
-            android:background="@drawable/stats_visitors_and_views_button_white"
-            android:clickable="false"
-            android:gravity="center"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/stats_visitors_and_views_button_white"
+            android:clickable="false">
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal" >
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:background="@drawable/ic_visible_on_grey_dark_12dp"
-                    android:contentDescription="@null"
+                    android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:layout_width="@dimen/stats_widget_image_layout_size" >
-                </ImageView>
+                    android:contentDescription="@null"
+                    android:background="@drawable/ic_visible_on_grey_dark_12dp" />
 
                 <TextView
-                    android:ellipsize="end"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:maxLines="1"
-                    android:text="@string/stats_views"
-                    android:textAllCaps="true"
                     android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/stats_widget_text_sz_small" >
-                </TextView>
-
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/stats_views"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/stats_widget_views"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz" >
-            </TextView>
-
+                android:textSize="@dimen/stats_widget_text_sz"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/stats_default_number_zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <!-- Visitors -->
         <LinearLayout
-            android:background="@drawable/stats_visitors_and_views_button_white"
-            android:clickable="false"
-            android:gravity="center"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/stats_visitors_and_views_button_white"
+            android:clickable="false">
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal" >
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:background="@drawable/ic_user_grey_dark_12dp"
-                    android:contentDescription="@null"
+                    android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:layout_width="@dimen/stats_widget_image_layout_size" >
-                </ImageView>
+                    android:contentDescription="@null"
+                    android:background="@drawable/ic_user_grey_dark_12dp" />
 
                 <TextView
-                    android:ellipsize="end"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:maxLines="1"
-                    android:textAllCaps="true"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/stats_widget_text_sz_small"
-                    android:text="@string/stats_visitors" >
-                </TextView>
-
+                    android:textAllCaps="true"
+                    android:maxLines="1"
+                    android:text="@string/stats_visitors"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/stats_widget_visitors"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz" >
-            </TextView>
-
+                android:textSize="@dimen/stats_widget_text_sz"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/stats_default_number_zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <!-- Likes -->
         <LinearLayout
-            android:background="@drawable/stats_visitors_and_views_button_white"
-            android:clickable="false"
-            android:gravity="center"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/stats_visitors_and_views_button_white"
+            android:clickable="false">
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal" >
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:background="@drawable/ic_star_grey_dark_12dp"
-                    android:contentDescription="@null"
+                    android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:layout_width="@dimen/stats_widget_image_layout_size" >
-                </ImageView>
+                    android:contentDescription="@null"
+                    android:background="@drawable/ic_star_grey_dark_12dp" />
 
                 <TextView
-                    android:ellipsize="end"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:text="@string/stats_likes"
-                    android:textAllCaps="true"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/stats_widget_text_sz_small" >
-                </TextView>
-
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/stats_widget_likes"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz" >
-            </TextView>
-
+                android:textSize="@dimen/stats_widget_text_sz"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/stats_default_number_zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <!-- Comments -->
         <LinearLayout
-            android:background="@drawable/stats_visitors_and_views_button_latest_white"
-            android:clickable="false"
-            android:gravity="center"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/stats_visitors_and_views_button_latest_white"
+            android:clickable="false">
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal" >
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:background="@drawable/ic_comment_grey_dark_12dp"
-                    android:contentDescription="@null"
+                    android:layout_width="@dimen/stats_widget_image_layout_size"
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
-                    android:layout_width="@dimen/stats_widget_image_layout_size" >
-                </ImageView>
+                    android:contentDescription="@null"
+                    android:background="@drawable/ic_comment_grey_dark_12dp" />
 
                 <TextView
-                    android:ellipsize="end"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/stats_widget_text_sz_small"
+                    android:textAllCaps="true"
                     android:maxLines="1"
                     android:text="@string/stats_comments"
-                    android:textAllCaps="true"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/stats_widget_text_sz_small" >
-                </TextView>
-
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/stats_widget_comments"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingTop="@dimen/margin_extra_small"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/stats_default_number_zero"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/stats_widget_text_sz" >
-            </TextView>
-
+                android:textSize="@dimen/stats_widget_text_sz"
+                android:paddingTop="@dimen/margin_extra_small"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/stats_default_number_zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/stats_widget_error_container"
@@ -269,19 +245,19 @@
         android:minHeight="@dimen/stats_widget_main_container_min_size"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
         <TextView
             android:id="@+id/stats_widget_error_text"
-            android:gravity="center_horizontal|center_vertical"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dip"
-            android:layout_width="match_parent"
-            android:text="@string/stats_widget_loading_data"
+            android:textSize="@dimen/stats_widget_text_sz"
             android:textColor="@color/grey_darken_20"
-            android:textSize="@dimen/stats_widget_text_sz" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_margin="4dip"
+            android:text="@string/stats_widget_loading_data" >
         </TextView>
-
     </LinearLayout>
 
 </LinearLayout>
+
+

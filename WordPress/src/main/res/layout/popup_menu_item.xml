@@ -1,29 +1,29 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="start|center_vertical"
-    android:layout_height="@dimen/menu_item_height"
     android:layout_width="match_parent"
+    android:layout_height="@dimen/menu_item_height"
+    android:gravity="start|center_vertical"
     android:orientation="horizontal"
+    android:paddingLeft="@dimen/menu_item_margin"
+    android:paddingRight="@dimen/menu_item_margin"
     android:paddingEnd="@dimen/menu_item_margin"
-    android:paddingStart="@dimen/menu_item_margin" >
+    android:paddingStart="@dimen/menu_item_margin">
 
     <ImageView
         android:id="@+id/image"
-        android:contentDescription="@null"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_large"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_large"
         android:tint="@color/grey_dark"
-        tools:src="@drawable/ic_trash_blue_wordpress_18dp" >
-    </ImageView>
+        android:contentDescription="@null"
+        tools:src="@drawable/ic_trash_blue_wordpress_18dp"
+        android:layout_marginEnd="@dimen/margin_large"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAppearance="?textAppearanceSmallPopupMenu"
-        tools:text="Menu item" >
-    </org.wordpress.android.widgets.WPTextView>
+        tools:text="Menu item" />
 
 </LinearLayout>

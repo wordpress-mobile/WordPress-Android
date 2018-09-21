@@ -3,92 +3,92 @@
 <!--
     post header on reader comment activity
 -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_post_header"
-    android:background="?android:selectableItemBackground"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent" >
+    android:background="?android:selectableItemBackground">
 
     <!--
         this inner frame layout is necessary to enforce a background color
         while still enabling ?android:selectableItemBackground (above)
     -->
     <FrameLayout
-        android:background="@color/grey_lighten_30"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingEnd="@dimen/reader_card_margin"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_lighten_30"
+        android:paddingLeft="@dimen/reader_card_margin"
+        android:paddingRight="@dimen/reader_card_margin"
+        android:paddingTop="@dimen/margin_large"
         android:paddingStart="@dimen/reader_card_margin"
-        android:paddingTop="@dimen/margin_large" >
+        android:paddingEnd="@dimen/reader_card_margin">
 
         <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginStart="@dimen/margin_medium"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingEnd="@dimen/reader_card_content_padding"
-            android:paddingStart="@dimen/reader_card_content_padding" >
+            android:layout_marginStart="@dimen/margin_medium"
+            android:paddingStart="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/margin_medium">
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/image_post_avatar"
-                    android:contentDescription="@null"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="16dp"
-                    android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_width="16dp"
-                    tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" >
-                </ImageView>
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_medium"
+                    tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_blog_name"
-                    android:ellipsize="end"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
                     android:maxLines="2"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_small"
-                    tools:text="text_blog_name" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:text="text_blog_name" />
 
             </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_post_title"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="2"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_medium"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"
-                tools:text="text_post_title" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="text_post_title" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_post_dateline"
-                android:ellipsize="end"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_width="wrap_content"
+                android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/grey_text_min"
                 android:textSize="@dimen/text_sz_small"
-                tools:text="text_post_date" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="text_post_date" />
 
         </LinearLayout>
-
     </FrameLayout>
-
 </FrameLayout>

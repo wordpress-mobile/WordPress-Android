@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
@@ -25,33 +26,43 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingStart="@dimen/reader_card_content_padding"
             android:paddingEnd="@dimen/reader_card_content_padding"
             android:paddingTop="@dimen/margin_large" >
 
             <ImageView
                 android:id="@+id/image_avatar_or_blavatar"
-                android:contentDescription="@string/reader_blavatar_desc"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar" >
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:paddingEnd="@dimen/reader_follow_button_padding"
-                android:paddingStart="@dimen/reader_follow_button_padding" >
+                android:paddingLeft="@dimen/reader_follow_button_padding"
+                android:paddingStart="@dimen/reader_follow_button_padding"
+                android:paddingRight="@dimen/reader_follow_button_padding" >
             </org.wordpress.android.ui.reader.views.ReaderFollowButton>
 
             <RelativeLayout
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:layout_toEndOf="@+id/image_avatar_or_blavatar"
+                android:layout_toLeftOf="@+id/follow_button"
+                android:layout_toRightOf="@+id/image_avatar_or_blavatar"
                 android:layout_toStartOf="@+id/follow_button"
                 android:layout_width="match_parent" >
 
@@ -72,6 +83,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_dateline"
                     android:gravity="center_vertical"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/text_author_and_blog_name"
                     android:layout_height="wrap_content"
@@ -89,6 +101,8 @@
             android:background="@drawable/reader_image_border"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
             android:layout_marginStart="@dimen/reader_card_content_padding"
             android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_width="match_parent" >
@@ -103,9 +117,10 @@
                 android:id="@+id/text_photo_title"
                 android:ellipsize="end"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_large"
                 android:layout_gravity="bottom|start"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="wrap_content"
                 android:maxLines="1"
                 android:shadowColor="@color/grey_dark"
@@ -135,17 +150,21 @@
             android:contentDescription="@null"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:paddingEnd="@dimen/reader_card_content_padding"
-            android:paddingStart="@dimen/reader_card_content_padding"
             android:visibility="gone"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
+            android:paddingStart="@dimen/reader_card_content_padding"
+            android:paddingEnd="@dimen/reader_card_content_padding"
             tools:visibility="visible" >
         </org.wordpress.android.ui.reader.views.ReaderThumbnailStrip>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             android:layout_marginTop="@dimen/margin_large"
-            android:paddingEnd="@dimen/reader_card_content_padding"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingStart="@dimen/reader_card_content_padding"
+            android:paddingEnd="@dimen/reader_card_content_padding"
             tools:text="text_title"
             style="@style/ReaderTextView.Post.Title" >
         </org.wordpress.android.widgets.WPTextView>
@@ -155,8 +174,10 @@
             android:importantForAccessibility="no"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:paddingEnd="@dimen/reader_card_content_padding"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingStart="@dimen/reader_card_content_padding"
+            android:paddingEnd="@dimen/reader_card_content_padding"
             tools:text="text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt" >
         </org.wordpress.android.widgets.WPTextView>
@@ -169,18 +190,21 @@
             android:layout_marginTop="@dimen/margin_large"
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/reader_card_content_padding"
+            android:paddingLeft="@dimen/reader_card_content_padding"
+            android:paddingRight="@dimen/reader_card_content_padding"
             android:paddingStart="@dimen/reader_card_content_padding"
+            android:paddingEnd="@dimen/reader_card_content_padding"
             android:visibility="gone"
             tools:visibility="gone" >
 
             <ImageView
                 android:id="@+id/image_discover_avatar"
                 android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/reader_blavatar_desc"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
 
@@ -210,6 +234,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/view_in_browser"
                 android:gravity="center"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
@@ -217,13 +242,17 @@
                 android:minHeight="@dimen/reader_button_minimum_height"
                 android:orientation="horizontal"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingStart="@dimen/margin_medium" >
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium" >
 
                 <ImageView
                     android:id="@+id/image_visit_icon"
                     android:contentDescription="@null"
                     android:layout_height="@dimen/reader_count_icon"
                     android:layout_marginEnd="@dimen/margin_extra_small"
+                    android:layout_marginLeft="-2dp"
+                    android:layout_marginRight="@dimen/margin_extra_small"
                     android:layout_marginStart="-2dp"
                     android:layout_width="@dimen/reader_count_icon"
                     app:srcCompat="@drawable/ic_external_grey_min_24dp" >
@@ -242,9 +271,11 @@
 
             <ViewStub
                 android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_toEndOf="@+id/visit"
-                android:layout_toStartOf="@+id/bookmark"
-                android:layout_width="match_parent" >
+                android:layout_toLeftOf="@+id/bookmark"
+                android:layout_toRightOf="@+id/visit"
+                android:layout_toStartOf="@+id/bookmark" >
             </ViewStub>
 
             <ImageView
@@ -254,8 +285,9 @@
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/count_comments"
                 android:layout_width="wrap_content"
+                android:layout_toLeftOf="@id/count_comments"
+                android:layout_toStartOf="@id/count_comments"
                 android:minWidth="@dimen/reader_button_minimum_height"
                 android:padding="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_bookmark_selector_18dp" >
@@ -267,10 +299,12 @@
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:layout_toLeftOf="@+id/count_likes"
                 android:layout_toStartOf="@+id/count_likes"
                 android:layout_width="wrap_content"
-                app:readerIcon="comment" >
+                wp:readerIcon="comment" >
             </org.wordpress.android.ui.reader.views.ReaderIconCountView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -278,10 +312,12 @@
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginStart="@dimen/margin_medium"
+                android:layout_toLeftOf="@+id/image_more"
                 android:layout_toStartOf="@+id/image_more"
                 android:layout_width="wrap_content"
-                app:readerIcon="like" >
+                wp:readerIcon="like" >
             </org.wordpress.android.ui.reader.views.ReaderIconCountView>
 
             <ImageView
@@ -289,8 +325,10 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/show_more_desc"
                 android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_height="@dimen/reader_more_icon"
+                android:layout_marginLeft="@dimen/margin_medium"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_width="@dimen/reader_more_icon"
                 android:paddingBottom="@dimen/margin_medium"

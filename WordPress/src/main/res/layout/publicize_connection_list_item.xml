@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/selectableItemBackground"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:paddingBottom="@dimen/publicize_default_margin"
-    android:paddingTop="@dimen/publicize_default_margin" >
+    android:paddingTop="@dimen/publicize_default_margin"
+    android:background="?attr/selectableItemBackground">
 
     <RadioButton
         android:id="@+id/radio_button"
-        android:clickable="false"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_width="wrap_content" >
-    </RadioButton>
+        android:clickable="false" />
 
     <ImageView
         android:id="@+id/profile_pic"
-        android:contentDescription="@null"
+        android:layout_width="@dimen/publicize_pic_width"
         android:layout_height="@dimen/publicize_pic_width"
-        android:layout_width="@dimen/publicize_pic_width" >
-    </ImageView>
+        android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/name"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/publicize_name_margin"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/publicize_name_size" >
-    </TextView>
+        android:textSize="@dimen/publicize_name_size"
+        android:layout_marginLeft="@dimen/publicize_name_margin"
+        android:layout_marginStart="@dimen/publicize_name_margin"/>
 
 </LinearLayout>

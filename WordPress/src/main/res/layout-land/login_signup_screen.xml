@@ -1,67 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/intros_pager"
-        android:clipToPadding="false"
-        android:layout_above="@+id/bottom_buttons"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
-    </org.wordpress.android.widgets.WPViewPager>
+        android:layout_above="@+id/bottom_buttons"
+        android:clipToPadding="false" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout_indicator"
-        android:importantForAccessibility="noHideDescendants"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-8dp"
-        android:layout_width="match_parent"
         app:tabBackground="@drawable/indicator_selector"
         app:tabGravity="center"
-        app:tabIndicatorHeight="0dp" >
-    </android.support.design.widget.TabLayout>
+        app:tabIndicatorHeight="0dp"
+        android:importantForAccessibility="noHideDescendants" />
 
     <View
-        android:background="@drawable/login_shadow"
-        android:layout_above="@+id/bottom_buttons"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/button_container_shadow_height"
-        android:layout_width="match_parent" >
-    </View>
+        android:background="@drawable/login_shadow"
+        android:layout_above="@+id/bottom_buttons"/>
 
     <LinearLayout
         android:id="@+id/bottom_buttons"
-        android:background="@color/grey_lighten_30"
-        android:clipToPadding="false"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_lighten_30"
         android:orientation="horizontal"
-        android:padding="@dimen/margin_large" >
+        android:clipToPadding="false"
+        android:padding="@dimen/margin_large">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/create_site_button"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_weight="1"
+            android:theme="@style/WordPress.Button"
             android:layout_width="match_parent"
-            android:text="@string/sign_up"
-            android:theme="@style/WordPress.Button" >
-        </android.support.v7.widget.AppCompatButton>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:text="@string/sign_up"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_weight="1"
+            android:theme="@style/WordPress.Button.Primary"
             android:layout_width="match_parent"
-            android:text="@string/log_in"
-            android:theme="@style/WordPress.Button.Primary" >
-        </android.support.v7.widget.AppCompatButton>
-
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:text="@string/log_in"/>
     </LinearLayout>
-
 </RelativeLayout>

@@ -1,41 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:background="@color/white">
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/ptr_layout"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/margin_medium"
             android:clipToPadding="false"
             android:divider="@drawable/list_divider"
-            android:dividerHeight="1dp"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:paddingTop="@dimen/margin_medium" >
-        </ListView>
+            android:dividerHeight="1dp" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
-        android:layout_marginEnd="@dimen/empty_list_title_side_margin"
-        android:layout_marginStart="@dimen/empty_list_title_side_margin"
+        style="@style/WordPress.EmptyList.Title"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+        android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+        android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:text="@string/empty_list_default"
         android:visibility="gone"
         tools:visibility="visible"
-        style="@style/WordPress.EmptyList.Title" >
-    </org.wordpress.android.widgets.WPTextView>
+        android:layout_marginEnd="@dimen/empty_list_title_side_margin"
+        android:layout_marginStart="@dimen/empty_list_title_side_margin"/>
 
 </FrameLayout>

@@ -1,70 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/row_container"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center_vertical"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="24dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="@dimen/margin_medium"
         android:paddingStart="24dp"
-        android:paddingTop="@dimen/margin_medium" >
+        android:paddingEnd="24dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <LinearLayout
-            android:labelFor="@+id/notifications_switch"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:labelFor="@+id/notifications_switch"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/notifications_switch_title"
-                android:layout_height="wrap_content"
+                style="@android:style/TextAppearance.Medium"
                 android:layout_width="wrap_content"
-                tools:text="Comments"
-                style="@android:style/TextAppearance.Medium" >
-            </TextView>
+                android:layout_height="wrap_content"
+                tools:text="Comments" />
 
             <TextView
                 android:id="@+id/notifications_switch_summary"
-                android:layout_height="wrap_content"
+                style="@android:style/TextAppearance.Small"
                 android:layout_width="wrap_content"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
                 tools:text="Some example sub text."
-                style="@android:style/TextAppearance.Small" >
-            </TextView>
-
+                android:visibility="gone"/>
         </LinearLayout>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/notifications_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:clickable="false"
             android:focusable="false"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:theme="@style/SwitchBlueMedium"
-            tools:checked="true" >
-        </android.support.v7.widget.SwitchCompat>
-
+            tools:checked="true" />
     </LinearLayout>
 
     <View
-        android:background="@color/notifications_settings_divider_color"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:background="@color/notifications_settings_divider_color"
         android:layout_marginStart="24dp"
-        android:layout_width="match_parent" >
-    </View>
+        android:layout_marginEnd="24dp"/>
 
 </LinearLayout>

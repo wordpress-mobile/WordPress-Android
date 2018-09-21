@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/toolbar_main" >
-    </include>
+    <include layout="@layout/toolbar_main"/>
 
     <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:layout_width="match_parent">
 
         <RelativeLayout
             android:layout_height="match_parent"
@@ -25,53 +25,54 @@
                 android:layout_below="@+id/notifications_filter_container"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_notes"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:paddingEnd="@dimen/notifications_content_margin"
-                    android:paddingStart="@dimen/notifications_content_margin"
-                    android:scrollbars="vertical"
+                    android:paddingLeft="@dimen/notifications_content_margin"
+                    android:paddingRight="@dimen/notifications_content_margin"
                     android:scrollbarStyle="outsideOverlay"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-                </android.support.v7.widget.RecyclerView>
+                    android:scrollbars="vertical"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:paddingStart="@dimen/notifications_content_margin"
+                    android:paddingEnd="@dimen/notifications_content_margin"/>
 
             </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/layout_new_notificatons"
-                android:background="@drawable/notifications_new_notification_bar_background"
-                android:elevation="@dimen/message_bar_elevation"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:layout_width="wrap_content"
+                android:background="@drawable/notifications_new_notification_bar_background"
+                android:elevation="@dimen/message_bar_elevation"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/margin_large"
-                android:paddingEnd="@dimen/margin_extra_medium_large"
-                android:paddingStart="@dimen/margin_extra_medium_large"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:paddingTop="@dimen/margin_large"
                 android:visibility="gone"
                 tools:visibility="visible" >
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/notifications_label_new_notifications"
                     android:textColor="@color/grey_lighten_30"
-                    android:textSize="@dimen/text_sz_large" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:textSize="@dimen/text_sz_large" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/notifications_label_new_notifications_subtitle"
                     android:textColor="@color/grey_lighten_30"
-                    android:textSize="@dimen/text_sz_small" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:textSize="@dimen/text_sz_small" />
 
             </LinearLayout>
 
@@ -81,73 +82,76 @@
                 android:layout_alignParentTop="true"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/notifications_content_margin"
+                android:layout_marginLeft="@dimen/notifications_content_margin"
+                android:layout_marginRight="@dimen/notifications_content_margin"
                 android:layout_marginStart="@dimen/notifications_content_margin"
                 android:layout_width="match_parent"
-                app:elevation="0dp" >
+                app:elevation="0dp">
 
                 <LinearLayout
                     android:id="@+id/notifications_filter"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    app:layout_scrollFlags="scroll|enterAlways" >
+                    app:layout_scrollFlags="scroll|enterAlways">
 
                     <HorizontalScrollView
-                        android:fillViewport="true"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="@dimen/margin_medium"
-                        android:layout_marginEnd="@dimen/margin_extra_large"
-                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_marginLeft="@dimen/margin_extra_large"
+                        android:layout_marginRight="@dimen/margin_extra_large"
                         android:layout_marginTop="@dimen/margin_medium"
-                        android:layout_width="match_parent" >
+                        android:fillViewport="true"
+                        android:layout_marginStart="@dimen/margin_extra_large"
+                        android:layout_marginEnd="@dimen/margin_extra_large">
 
                         <RadioGroup
                             android:id="@+id/notifications_radio_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:background="@drawable/calypso_segmented_control_background"
                             android:checkedButton="@+id/notifications_filter_all"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:orientation="horizontal" >
+                            android:orientation="horizontal">
 
                             <RadioButton
                                 android:id="@+id/notifications_filter_all"
+                                style="@style/Calypso.SegmentedControl"
                                 android:background="@drawable/calypso_segmented_control_button_start"
-                                android:text="@string/notifications_tab_title_all"
-                                style="@style/Calypso.SegmentedControl" >
-                            </RadioButton>
+                                android:text="@string/notifications_tab_title_all" />
 
                             <RadioButton
                                 android:id="@+id/notifications_filter_unread"
-                                android:background="@drawable/calypso_segmented_control_button"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
-                                android:text="@string/notifications_tab_title_unread"
-                                style="@style/Calypso.SegmentedControl" >
-                            </RadioButton>
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_unread" />
 
                             <RadioButton
                                 android:id="@+id/notifications_filter_comments"
-                                android:background="@drawable/calypso_segmented_control_button"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
-                                android:text="@string/notifications_tab_title_comments"
-                                style="@style/Calypso.SegmentedControl" >
-                            </RadioButton>
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_comments" />
 
                             <RadioButton
                                 android:id="@+id/notifications_filter_follows"
-                                android:background="@drawable/calypso_segmented_control_button"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
-                                android:text="@string/notifications_tab_title_follows"
-                                style="@style/Calypso.SegmentedControl" >
-                            </RadioButton>
+                                android:background="@drawable/calypso_segmented_control_button"
+                                android:text="@string/notifications_tab_title_follows" />
 
                             <RadioButton
                                 android:id="@+id/notifications_filter_likes"
-                                android:background="@drawable/calypso_segmented_control_button_end"
+                                style="@style/Calypso.SegmentedControl"
+                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
-                                android:text="@string/notifications_tab_title_likes"
-                                style="@style/Calypso.SegmentedControl" >
-                            </RadioButton>
+                                android:background="@drawable/calypso_segmented_control_button_end"
+                                android:text="@string/notifications_tab_title_likes" />
 
                         </RadioGroup>
 
@@ -156,8 +160,7 @@
                     <View
                         android:background="@drawable/notifications_list_divider"
                         android:layout_height="1dp"
-                        android:layout_width="match_parent" >
-                    </View>
+                        android:layout_width="match_parent"/>
 
                 </LinearLayout>
 
@@ -178,68 +181,63 @@
 
             <LinearLayout
                 android:id="@+id/connect_jetpack"
-                android:gravity="center"
-                android:layout_height="match_parent"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:visibility="invisible" >
 
                 <android.support.v4.widget.NestedScrollView
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    tools:ignore="UselessParent" >
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent">
 
                     <LinearLayout
-                        android:gravity="center"
-                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:orientation="vertical" >
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:contentDescription="@string/content_description_person_reading_device_notification"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/img_illustration_notifications_152dp" >
-                        </ImageView>
+                            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             style="@style/JetpackConnectionText"
-                            android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:maxWidth="@dimen/jetpack_text_width"
                             android:text="@string/notifications_jetpack_connection_setup_info"
                             android:textAlignment="center"
-                            app:fixWidowWords="true" >
-                        </org.wordpress.android.widgets.WPTextView>
+                            app:fixWidowWords="true"/>
 
                         <android.support.v7.widget.AppCompatButton
                             android:id="@+id/jetpack_setup"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_extra_large"
-                            android:layout_width="wrap_content"
                             android:text="@string/stats_jetpack_connection_setup"
-                            android:theme="@style/JetpackConnectionButton" >
-                        </android.support.v7.widget.AppCompatButton>
+                            android:theme="@style/JetpackConnectionButton"/>
 
                         <TextView
                             android:id="@+id/jetpack_terms_and_conditions"
+                            android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_extra_large"
-                            android:layout_width="@dimen/jetpack_terms_and_conditions_width"
                             android:text="@string/stats_jetpack_connection_terms_and_conditions"
                             android:textAlignment="center"
-                            style="@style/JetpackTermsAndConditionsButton" >
-                        </TextView>
+                            style="@style/JetpackTermsAndConditionsButton"/>
 
                         <Button
                             android:id="@+id/jetpack_faq"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_height="wrap_content"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="@string/stats_jetpack_connection_faq"
-                            style="@style/JetpackFaqButton" >
-                        </Button>
+                            style="@style/JetpackFaqButton"/>
 
                     </LinearLayout>
 
@@ -252,3 +250,4 @@
     </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
+

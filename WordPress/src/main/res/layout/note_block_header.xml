@@ -1,116 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:background="@color/white"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/header_root_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
             android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:paddingBottom="@dimen/margin_medium"
-            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/comment_avatar_margin_top"
             android:paddingStart="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/comment_avatar_margin_top" >
+            android:paddingEnd="@dimen/margin_extra_large">
 
             <ImageView
                 android:id="@+id/header_avatar"
-                android:layout_height="@dimen/avatar_sz_small"
                 android:layout_width="@dimen/avatar_sz_small"
-                tools:ignore="ContentDescription" >
-            </ImageView>
+                android:layout_height="@dimen/avatar_sz_small"
+                tools:ignore="ContentDescription"/>
 
             <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
                 android:layout_width="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
+                android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
+                android:orientation="vertical">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
                     android:singleLine="true"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
-                    tools:text="Bob Ross" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:text="Bob Ross" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/header_snippet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
                     android:singleLine="true"
                     android:textColor="@color/blue_wordpress"
                     android:textSize="@dimen/text_sz_large"
-                    tools:text="www.bobross.com" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:text="www.bobross.com" />
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
     <!-- Two footer views, one is used specifically for comments -->
     <LinearLayout
         android:id="@+id/header_footer"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <View
-            android:background="@drawable/notifications_list_divider_full_width"
+            android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_width="fill_parent" >
-        </View>
+            android:background="@drawable/notifications_list_divider_full_width" />
 
         <View
-            android:layout_height="@dimen/margin_medium"
-            android:layout_width="match_parent" >
-        </View>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_medium" />
 
         <View
-            android:background="@drawable/notifications_list_divider_full_width"
+            android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_width="fill_parent" >
-        </View>
-
+            android:background="@drawable/notifications_list_divider_full_width" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/header_footer_comment"
-        android:background="@color/white"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <View
-            android:background="@color/grey_lighten_30"
+            android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:background="@color/grey_lighten_30"
             android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_width="fill_parent" >
-        </View>
-
+            android:layout_marginEnd="@dimen/margin_extra_large"/>
     </LinearLayout>
-
 </LinearLayout>

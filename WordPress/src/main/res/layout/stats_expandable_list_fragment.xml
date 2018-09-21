@@ -1,128 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_gravity="top"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_gravity="top"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:background="@drawable/stats_white_background"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/stats_white_background"
         android:orientation="vertical"
-        tools:ignore="UselessParent" >
+        tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/margin_small" >
+            android:paddingTop="@dimen/margin_small">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_title"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_small"
+                style="@style/StatsModuleTitle"
                 android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
-                style="@style/StatsModuleTitle" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <include
                 android:id="@+id/stats_empty_module_placeholder"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
+                layout="@layout/stats_empty_module_placeholder"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_width="match_parent"
-                layout="@layout/stats_empty_module_placeholder" >
-            </include>
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/stats_pager_tabs"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingTop="@dimen/margin_small"
-                android:visibility="gone" >
-            </LinearLayout>
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
-                android:gravity="center"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:paddingTop="@dimen/margin_large"
-                android:paddingBottom="@dimen/margin_medium"
                 android:textColor="@color/stats_module_content_list_header"
                 android:textSize="@dimen/text_sz_small"
-                android:visibility="gone" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_medium"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <include
                 android:id="@+id/stats_top_pagination_container"
+                layout="@layout/stats_pagination_item"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_medium"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:layout_width="match_parent"
-                layout="@layout/stats_pagination_item" >
-            </include>
+                android:layout_marginTop="@dimen/margin_medium"/>
 
             <LinearLayout
                 android:id="@+id/stats_list_container"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:orientation="vertical" >
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_marginStart="@dimen/margin_large"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_large"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:paddingTop="@dimen/margin_small"
                     android:paddingBottom="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_small" >
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_entry_label"
-                        android:layout_alignParentStart="true"
-                        android:layout_height="wrap_content"
+                        style="@style/StatsHeader"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
                         tools:text="TITLE"
-                        style="@style/StatsHeader" >
-                    </org.wordpress.android.widgets.WPTextView>
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_totals_label"
-                        android:layout_alignParentEnd="true"
-                        android:layout_height="wrap_content"
+                        style="@style/StatsHeader"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         tools:text="VIEWS"
-                        style="@style/StatsHeader" >
-                    </org.wordpress.android.widgets.WPTextView>
-
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
+
 
                 <LinearLayout
                     android:id="@+id/stats_list_linearlayout"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:scrollbarStyle="outsideOverlay"
-                    android:visibility="gone" >
-                </LinearLayout>
+                    android:visibility="gone"/>
 
                 <include
                     android:id="@+id/stats_bottom_pagination_container"
-                    layout="@layout/stats_pagination_item" >
-                </include>
+                    layout="@layout/stats_pagination_item" />
 
             </LinearLayout>
 
@@ -130,33 +129,28 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_empty_text"
-            android:gravity="start"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:padding="@dimen/margin_large"
-            android:textAlignment="viewStart"
+            android:layout_height="wrap_content"
             android:textColor="@color/grey_text_min"
             android:textSize="@dimen/text_sz_small"
-            android:visibility="gone" >
-        </org.wordpress.android.widgets.WPTextView>
+            android:padding="@dimen/margin_large"
+            android:visibility="gone"
+            android:textAlignment="viewStart"
+            android:gravity="start"/>
 
         <LinearLayout
-            android:background="@drawable/stats_view_all_button_background"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
-
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/stats_view_all_button_background">
             <Button
                 android:id="@+id/btnViewAll"
-                android:layout_height="wrap_content"
+                style="@style/StatsViewAllButton"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/stats_view_all"
-                android:visibility="gone"
-                style="@style/StatsViewAllButton" >
-            </Button>
-
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
-
 </LinearLayout>

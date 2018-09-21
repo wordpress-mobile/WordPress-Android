@@ -1,81 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_heading"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_large"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:textColor="@color/blue_wordpress"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         android:visibility="gone"
-        tools:text="text_heading" >
-    </TextView>
+        tools:text="text_heading"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"/>
 
     <RelativeLayout
         android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
+        android:orientation="vertical"
         android:focusable="true"
         android:labelFor="@+id/switch_view"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_extra_large" >
+        android:padding="@dimen/margin_extra_large">
 
         <TextView
             android:id="@+id/text_title"
-            android:gravity="start"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
-            android:layout_toStartOf="@+id/switch_view"
-            android:layout_width="match_parent"
-            android:textAlignment="viewStart"
+            android:layout_toLeftOf="@+id/switch_view"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            tools:text="text_title" >
-        </TextView>
+            tools:text="text_title"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:layout_toStartOf="@+id/switch_view"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_view"
-            android:clickable="false"
-            android:focusable="false"
-            android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin_medium"
             android:theme="@style/SwitchBlueMedium"
-            tools:checked="true" >
-        </android.support.v7.widget.SwitchCompat>
+            android:focusable="false"
+            android:clickable="false"
+            tools:checked="true"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:id="@+id/text_summary"
-            android:gravity="start"
-            android:layout_below="@+id/text_title"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/switch_view"
             android:layout_width="match_parent"
-            android:textAlignment="viewStart"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_title"
+            android:layout_toLeftOf="@+id/switch_view"
             android:textColor="@color/grey_text_min"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_summary" >
-        </TextView>
+            tools:text="text_summary"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:layout_toStartOf="@+id/switch_view"/>
 
     </RelativeLayout>
 
     <View
         android:id="@+id/divider"
-        android:background="@color/divider_grey"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" >
-    </View>
+        android:background="@color/divider_grey" />
 
 </LinearLayout>

@@ -1,126 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/comment_avatar_margin_top"
-    android:paddingEnd="@dimen/margin_extra_large" >
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_height="@dimen/avatar_sz_small"
             android:layout_width="@dimen/avatar_sz_small"
-            tools:ignore="ContentDescription" >
-        </ImageView>
+            android:layout_height="@dimen/avatar_sz_small"
+            tools:ignore="ContentDescription"/>
 
         <LinearLayout
             android:id="@+id/user_name_wrapper"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
+            android:layout_marginStart="@dimen/notifications_adjusted_font_margin"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/user_name"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:includeFontPadding="false"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textAlignment="viewStart"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
-                tools:text="Bob Ross" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:textAlignment="viewStart"
+                android:gravity="start"
+                tools:text="Bob Ross" />
 
             <LinearLayout
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:orientation="horizontal" >
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_comment_ago"
-                    android:gravity="start"
-                    android:includeFontPadding="false"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
                     android:singleLine="true"
-                    android:textAlignment="viewStart"
                     android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_large"
                     android:visibility="gone"
                     tools:text="5h"
-                    tools:visibility="visible" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    tools:visibility="visible" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_comment_bullet"
-                    android:gravity="start"
                     android:importantForAccessibility="no"
-                    android:includeFontPadding="false"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_small"
-                    android:layout_marginStart="@dimen/margin_small"
+                    android:id="@+id/user_comment_bullet"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:includeFontPadding="false"
                     android:text="@string/bullet"
-                    android:textAlignment="viewStart"
                     android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_large"
-                    android:textStyle="bold" >
-                </org.wordpress.android.widgets.WPTextView>
+                    android:textStyle="bold"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_comment_site"
-                    android:gravity="start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
-                    android:ellipsize="end"
                     android:focusable="true"
-                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:includeFontPadding="false"
-                    android:layout_width="wrap_content"
                     android:singleLine="true"
-                    android:textAlignment="viewStart"
                     android:textColor="@color/grey_text_min"
                     android:textSize="@dimen/text_sz_large"
-                    tools:text="example.com" >
-                </org.wordpress.android.widgets.WPTextView>
-
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    tools:text="example.com" />
             </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/user_comment"
-        android:background="?android:selectableItemBackground"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        android:layout_width="match_parent"
+        android:background="?android:selectableItemBackground"
         android:paddingBottom="@dimen/margin_medium"
         android:textColor="@color/grey_dark"
-        android:fontFamily="serif"
         android:textSize="@dimen/text_sz_large"
-        tools:text="Thanks for stopping by my blog! I hope to see you again. " >
-    </org.wordpress.android.widgets.WPTextView>
+        android:fontFamily="serif"
+        tools:text="Thanks for stopping by my blog! I hope to see you again. " />
+
 
     <View
         android:id="@+id/divider_view"
-        android:background="@drawable/notifications_list_divider_full_width"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_width="match_parent" >
-    </View>
-
+        android:background="@drawable/notifications_list_divider_full_width" />
 </LinearLayout>
+
+

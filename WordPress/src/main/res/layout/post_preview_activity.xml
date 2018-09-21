@@ -1,101 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:background="@color/white">
 
-    <include
-        layout="@layout/toolbar" >
-    </include>
+    <include layout="@layout/toolbar" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/message_container"
         android:layout_below="@+id/toolbar"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        tools:ignore="UnknownIdInLayout" >
-    </FrameLayout>
+        tools:ignore="UnknownIdInLayout"/>
 
     <RelativeLayout
         android:id="@+id/message_container"
-        android:background="@color/snackbar_background_color"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingEnd="@dimen/content_margin"
-        android:paddingStart="@dimen/content_margin"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/content_margin"
+        android:paddingRight="@dimen/content_margin"
         android:visibility="gone"
-        tools:visibility="visible" >
+        android:background="@color/snackbar_background_color"
+        tools:visibility="visible"
+        android:paddingStart="@dimen/content_margin"
+        android:paddingEnd="@dimen/content_margin">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/message_text"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_toStartOf="@+id/layout_buttons"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_toLeftOf="@+id/layout_buttons"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="Explanation of what a local draft is or what local changes are" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="Explanation of what a local draft is or what local changes are"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_toStartOf="@+id/layout_buttons"/>
 
         <LinearLayout
             android:id="@+id/layout_buttons"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_discard_changes"
-                android:background="?android:selectableItemBackground"
-                android:layout_gravity="end"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_discard_changes"
                 android:textAllCaps="true"
                 android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_sz_small" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:textSize="@dimen/text_sz_small"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_publish"
-                android:layout_gravity="end"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_large"
-                android:paddingStart="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_medium"
                 android:text="@string/button_publish"
                 android:textAllCaps="true"
                 android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_sz_small" >
-            </org.wordpress.android.widgets.WPTextView>
-
+                android:textSize="@dimen/text_sz_small"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"/>
         </LinearLayout>
-
     </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible" >
-    </ProgressBar>
+        tools:visibility="visible" />
 
 </RelativeLayout>

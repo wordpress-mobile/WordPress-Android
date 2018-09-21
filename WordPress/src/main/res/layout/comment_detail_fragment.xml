@@ -4,109 +4,114 @@
     comment detail displayed from both the notification list and the comment list
 -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/grey_light"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:background="@color/grey_light">
 
     <ScrollView
         android:id="@+id/scroll_view"
-        android:fillViewport="true"
-        android:layout_above="@+id/layout_bottom"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:layout_above="@+id/layout_bottom"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/comment_content_container"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/comment_content"
-                android:background="@color/white"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_large"
+                android:background="@color/white"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_large" >
+                android:paddingStart="@dimen/margin_extra_large">
 
                 <ImageView
                     android:id="@+id/image_avatar"
-                    android:importantForAccessibility="no"
-                    android:layout_marginEnd="@dimen/margin_large"
+                    style="@style/ReaderImageView.Avatar"
+                    android:layout_marginRight="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_small"
-                    style="@style/ReaderImageView.Avatar" >
-                </ImageView>
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:importantForAccessibility="no"
+                    />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/text_date"
+                    android:layout_toRightOf="@+id/image_avatar"
                     android:background="?android:selectableItemBackground"
                     android:ellipsize="end"
-                    android:gravity="start"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/image_avatar"
-                    android:layout_toStartOf="@+id/text_date"
-                    android:layout_width="match_parent"
                     android:maxLines="1"
-                    android:textAlignment="viewStart"
                     android:textColor="@color/reader_hyperlink"
                     android:textSize="@dimen/text_sz_extra_large"
-                    tools:text="text_name" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:text="text_name"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:layout_toStartOf="@+id/text_date"
+                    android:layout_toEndOf="@+id/image_avatar"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_post_title"
-                    android:accessibilityTraversalAfter="@+id/text_name"
-                    android:background="?android:selectableItemBackground"
-                    android:layout_alignStart="@+id/text_name"
-                    android:layout_below="@+id/text_name"
-                    android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/text_status"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/text_name"
+                    android:layout_below="@+id/text_name"
+                    android:layout_toLeftOf="@+id/text_status"
+                    android:background="?android:selectableItemBackground"
                     android:ellipsize="end"
-                    android:gravity="start"
                     android:maxLines="1"
                     android:paddingBottom="@dimen/margin_extra_small"
                     android:paddingTop="@dimen/margin_extra_small"
-                    android:textAlignment="viewStart"
                     android:textColor="@color/grey_darken_10"
                     android:textSize="@dimen/text_sz_large"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="text_post_title" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:text="text_post_title"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:accessibilityTraversalAfter="@+id/text_name"
+                    android:layout_alignStart="@+id/text_name"
+                    android:layout_toStartOf="@+id/text_status"
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
+                    style="@style/ReaderTextView.Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:maxLines="1"
+                    tools:text="date"
                     android:accessibilityTraversalAfter="@+id/text_post_title"
                     android:layout_alignParentEnd="true"
-                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_width="wrap_content"
-                    android:maxLines="1"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="date"
-                    style="@style/ReaderTextView.Date" >
-                </org.wordpress.android.widgets.WPTextView>
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
-                    android:accessibilityTraversalAfter="@+id/text_date"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/text_post_title"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/text_post_title"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_small"
                     android:textSize="@dimen/text_sz_small"
                     android:visibility="visible"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="STATUS" >
-                </org.wordpress.android.widgets.WPTextView>
-
+                    tools:text="STATUS"
+                    android:accessibilityTraversalAfter="@+id/text_date"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/margin_small"
+                    tools:ignore="UnusedAttribute"/>
             </RelativeLayout>
 
             <!--
@@ -115,20 +120,21 @@
             -->
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_content"
-                android:background="@color/white"
-                android:fontFamily="serif"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:paddingBottom="@dimen/margin_large"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
+                android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
                 android:textColorLink="@color/reader_hyperlink"
+                android:background="@color/white"
                 android:textIsSelectable="false"
                 android:textSize="@dimen/text_sz_large"
-                tools:text="text_content" >
-            </org.wordpress.android.widgets.WPTextView>
+                android:fontFamily="serif"
+                tools:text="text_content"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"/>
 
         </LinearLayout>
 
@@ -136,26 +142,23 @@
 
     <LinearLayout
         android:id="@+id/layout_bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <include
             android:id="@+id/layout_comment_box"
-            android:layout_height="wrap_content"
+            layout="@layout/reader_include_comment_box"
             android:layout_width="match_parent"
-            layout="@layout/reader_include_comment_box" >
-        </include>
-
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_loading"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:visibility="gone" >
-    </ProgressBar>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

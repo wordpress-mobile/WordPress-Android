@@ -8,68 +8,64 @@
 
     <FrameLayout
         android:id="@+id/frame_avatar"
-        android:layout_centerVertical="true"
+        android:layout_width="@dimen/reader_detail_header_avatar_frame"
         android:layout_height="@dimen/reader_detail_header_avatar_frame"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_width="@dimen/reader_detail_header_avatar_frame" >
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large">
 
         <ImageView
             android:id="@+id/image_header_blavatar"
-            android:contentDescription="@null"
-            android:layout_gravity="top|start"
-            android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_width="@dimen/reader_detail_header_blavatar"
-            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" >
-        </ImageView>
+            android:layout_height="@dimen/reader_detail_header_blavatar"
+            android:layout_gravity="top|start"
+            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:contentDescription="@null"/>
 
         <ImageView
             android:id="@+id/image_header_avatar"
-            android:background="@drawable/shape_oval_white"
-            android:contentDescription="@null"
-            android:layout_gravity="bottom|end"
-            android:layout_height="@dimen/reader_detail_header_avatar"
             android:layout_width="@dimen/reader_detail_header_avatar"
+            android:layout_height="@dimen/reader_detail_header_avatar"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/shape_oval_white"
             android:padding="2dp"
-            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" >
-        </ImageView>
-
+            tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+            android:contentDescription="@null"/>
     </FrameLayout>
+
 
     <LinearLayout
         android:id="@+id/layout_post_header"
-        android:layout_centerVertical="true"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/frame_avatar"
         android:layout_width="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/frame_avatar"
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/frame_avatar">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_header_title"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
-            tools:text="text_header_author_name" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="text_header_author_name" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_header_subtitle"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_header_blog_name" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="text_header_blog_name" />
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/header_follow_button"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
-            tools:visibility="visible" >
-        </org.wordpress.android.ui.reader.views.ReaderFollowButton>
-
+            tools:visibility="visible" />
     </LinearLayout>
 
 </RelativeLayout>

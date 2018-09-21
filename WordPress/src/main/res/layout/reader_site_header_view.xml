@@ -5,124 +5,125 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="@dimen/card_elevation"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_large"
         android:paddingEnd="@dimen/reader_card_content_padding"
         android:paddingStart="@dimen/reader_card_content_padding"
+        android:paddingLeft="@dimen/reader_card_content_padding"
+        android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingTop="@dimen/margin_large" >
 
         <ImageView
             android:id="@+id/image_blavatar"
-            android:contentDescription="@null"
+            style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-            style="@style/ReaderImageView.Avatar" >
-        </ImageView>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@null"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_blog_name"
-            android:gravity="start"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/image_blavatar"
-            android:layout_toStartOf="@+id/follow_button"
-            android:layout_width="match_parent"
             android:textAlignment="viewStart"
+            android:gravity="start"
+            android:id="@+id/text_blog_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/follow_button"
+            android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            tools:text="Loading..." >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="Loading..."
+            android:layout_toStartOf="@+id/follow_button"
+            android:layout_toEndOf="@+id/image_blavatar"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_domain"
-            android:gravity="start"
-            android:layout_below="@+id/text_blog_name"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/image_blavatar"
-            android:layout_toStartOf="@+id/follow_button"
-            android:layout_width="match_parent"
             android:textAlignment="viewStart"
+            android:gravity="start"
+            android:id="@+id/text_domain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_blog_name"
+            android:layout_toLeftOf="@+id/follow_button"
+            android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
-            tools:text="text_domain" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="text_domain"
+            android:layout_toStartOf="@+id/follow_button"
+            android:layout_toEndOf="@+id/image_blavatar"/>
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/follow_button"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:padding="@dimen/reader_follow_button_padding"
             android:visibility="gone"
-            tools:visibility="visible" >
-        </org.wordpress.android.ui.reader.views.ReaderFollowButton>
+            tools:visibility="visible"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
     <LinearLayout
-        android:background="@color/grey_lighten_30"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_lighten_30"
         android:orientation="vertical"
-        android:paddingTop="@dimen/margin_extra_large" >
+        android:paddingTop="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_description"
-            android:ellipsize="end"
-            android:gravity="center"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/reader_card_content_padding"
-            android:layout_marginStart="@dimen/reader_card_content_padding"
-            android:layout_width="match_parent"
+            android:layout_marginLeft="@dimen/reader_card_content_padding"
+            android:layout_marginRight="@dimen/reader_card_content_padding"
+            android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="3"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             android:fontFamily="serif"
-            tools:text="text_description" >
-        </org.wordpress.android.widgets.WPTextView>
+            tools:text="text_description"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"/>
 
         <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_width="match_parent"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <View
-                android:background="@color/grey_lighten_20"
-                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_width="match_parent" >
-            </View>
+                android:background="@color/grey_lighten_20" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_follow_count"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small"
-                tools:text="12 followers" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="12 followers" />
 
             <View
-                android:background="@color/grey_lighten_20"
-                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_width="match_parent" >
-            </View>
-
+                android:background="@color/grey_lighten_20" />
         </LinearLayout>
 
     </LinearLayout>

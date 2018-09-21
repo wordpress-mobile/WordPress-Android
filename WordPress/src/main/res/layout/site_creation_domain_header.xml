@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/grey_lighten_30"
-    android:clipChildren="false"
-    android:focusable="true"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:background="@color/grey_lighten_30"
     android:orientation="vertical"
-    android:paddingTop="@dimen/margin_extra_large" >
+    android:clipChildren="false"
+    android:paddingTop="@dimen/margin_extra_large"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/label_title"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:text="@string/site_creation_label_domain_selection_title"
-        style="@style/SiteCreation.Heading" >
-    </TextView>
+        style="@style/SiteCreation.Heading" />
 
     <TextView
         android:id="@+id/label"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:text="@string/site_creation_label_domain_selection"
-        style="@style/LoginTheme.TextLabel" >
-    </TextView>
-
+        style="@style/LoginTheme.TextLabel" />
 </LinearLayout>

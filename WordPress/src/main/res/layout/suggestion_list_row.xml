@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="center_vertical"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_large" >
+    android:padding="@dimen/margin_large">
 
     <ImageView
         android:id="@+id/suggest_list_row_avatar"
-        android:contentDescription="@null"
-        android:gravity="center_vertical"
+        android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
-        android:layout_width="@dimen/avatar_sz_small" >
-    </ImageView>
+        android:gravity="center_vertical"
+        android:contentDescription="@null"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_user_login_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_weight="1"
-        android:layout_width="wrap_content"
         android:maxLines="1"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="user_login" >
-    </org.wordpress.android.widgets.WPTextView>
+        tools:text="user_login"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_display_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_weight="2"
         android:ellipsize="end"
         android:gravity="center_vertical|end"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:layout_weight="2"
-        android:layout_width="wrap_content"
         android:maxLines="1"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="display_name" >
-    </org.wordpress.android.widgets.WPTextView>
+        tools:text="display_name"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
 </LinearLayout>

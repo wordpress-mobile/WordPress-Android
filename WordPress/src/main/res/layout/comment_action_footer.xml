@@ -1,204 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:id="@+id/layout_buttons"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/layout_buttons"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/btn_moderate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/moderate_button_selector"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_medium" >
+            android:paddingTop="@dimen/margin_medium">
 
             <ImageView
                 android:id="@+id/btn_moderate_icon"
-                android:contentDescription="@null"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_checkmark_grey_min_24dp" >
-            </ImageView>
+                app:srcCompat="@drawable/ic_checkmark_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_moderate_text"
-                android:text="@string/mnu_comment_approve"
-                style="@style/CommentActionLabel" >
-            </org.wordpress.android.util.widgets.AutoResizeTextView>
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_approve"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_spam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/moderate_button_selector"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_spam_icon"
-                android:contentDescription="@null"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_spam_grey_min_24dp" >
-            </ImageView>
+                app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_spam_text"
-                android:text="@string/mnu_comment_spam"
-                style="@style/CommentActionLabel" >
-            </org.wordpress.android.util.widgets.AutoResizeTextView>
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_spam"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_trash"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/moderate_button_selector"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_trash_icon"
-                android:contentDescription="@null"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_trash_grey_min_24dp" >
-            </ImageView>
+                app:srcCompat="@drawable/ic_trash_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_trash_text"
-                android:text="@string/mnu_comment_trash"
-                style="@style/CommentActionLabel" >
-            </org.wordpress.android.util.widgets.AutoResizeTextView>
+                style="@style/CommentActionLabel"
+                android:text="@string/mnu_comment_trash"/>
 
         </LinearLayout>
 
         <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
         <LinearLayout
             android:id="@+id/btn_like"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/moderate_button_selector"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_medium" >
+            android:paddingTop="@dimen/margin_medium">
 
             <ImageView
                 android:id="@+id/btn_like_icon"
-                android:contentDescription="@null"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp" >
-            </ImageView>
+                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_like_text"
-                android:text="@string/reader_label_like"
-                style="@style/CommentActionLabel" >
-            </org.wordpress.android.util.widgets.AutoResizeTextView>
+                style="@style/CommentActionLabel"
+                android:text="@string/reader_label_like"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/btn_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/moderate_button_selector"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/btn_edit_icon"
-                android:contentDescription="@null"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
+                android:paddingLeft="@dimen/margin_medium"
+                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_pencil_grey_min_24dp" >
-            </ImageView>
+                app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_edit_text"
-                android:text="@string/edit"
-                style="@style/CommentActionLabel" >
-            </org.wordpress.android.util.widgets.AutoResizeTextView>
+                style="@style/CommentActionLabel"
+                android:text="@string/edit"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <View
-        android:background="@drawable/notifications_list_divider_full_width"
+        android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_width="fill_parent" >
-    </View>
-
+        android:background="@drawable/notifications_list_divider_full_width"/>
 </LinearLayout>

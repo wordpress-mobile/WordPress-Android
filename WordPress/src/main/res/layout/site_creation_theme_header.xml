@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:clipChildren="false"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingTop="@dimen/margin_extra_large" >
+    android:paddingTop="@dimen/margin_extra_large">
 
     <LinearLayout
-        android:focusable="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/label_title"
-            android:layout_height="wrap_content"
+            style="@style/SiteCreation.Heading"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
             android:paddingStart="@dimen/margin_extra_large"
-            android:text="@string/site_creation_label_theme_selection_title"
-            style="@style/SiteCreation.Heading" >
-        </TextView>
+            android:text="@string/site_creation_label_theme_selection_title"/>
 
         <TextView
             android:id="@+id/label"
+            style="@style/LoginTheme.TextLabel"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_extra_large"
-            android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
             android:paddingStart="@dimen/margin_extra_large"
-            android:text="@string/site_creation_label_theme_selection"
-            style="@style/LoginTheme.TextLabel" >
-        </TextView>
+            android:text="@string/site_creation_label_theme_selection"/>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/progress_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_width="match_parent"
         android:orientation="vertical"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:visibility="gone"
-        tools:visibility="visible" >
+        tools:visibility="visible">
 
         <ProgressBar
             android:id="@+id/progress_bar"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_width="24dp" >
-        </ProgressBar>
+            android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:id="@+id/progress_label"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
+            style="@style/LoginTheme.TextLabel"
             android:layout_width="match_parent"
-            android:text="@string/site_creation_label_theme_loading"
-            style="@style/LoginTheme.TextLabel" >
-        </TextView>
-
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/site_creation_label_theme_loading"/>
     </LinearLayout>
-
 </LinearLayout>

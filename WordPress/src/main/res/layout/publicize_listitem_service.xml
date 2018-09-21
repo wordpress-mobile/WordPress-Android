@@ -1,66 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?android:selectableItemBackground"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent" >
+    android:background="?android:selectableItemBackground">
 
     <ImageView
         android:id="@+id/image_icon"
-        android:contentDescription="@null"
+        android:layout_width="@dimen/blavatar_sz_small"
         android:layout_height="@dimen/blavatar_sz_small"
         android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_large"
+        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
         android:layout_marginEnd="@dimen/margin_large"
-        android:layout_width="@dimen/blavatar_sz_small"
-        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp" >
-    </ImageView>
+        android:contentDescription="@null"/>
 
     <View
         android:id="@+id/divider"
-        android:background="@color/divider_grey"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_toEndOf="@+id/image_icon"
-        android:layout_width="match_parent" >
-    </View>
+        android:layout_toRightOf="@+id/image_icon"
+        android:background="@color/divider_grey"
+        android:layout_toEndOf="@+id/image_icon"/>
 
     <LinearLayout
-        android:layout_centerVertical="true"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@+id/image_icon"
         android:layout_width="match_parent"
-        android:orientation="vertical" >
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/image_icon"
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/image_icon"
+        android:layout_marginEnd="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_service"
-            android:ellipsize="end"
-            android:layout_gravity="start"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:textAlignment="viewStart"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            tools:text="text_service" >
-        </org.wordpress.android.widgets.WPTextView>
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
+            tools:text="text_service" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_user"
-            android:ellipsize="end"
-            android:layout_gravity="start"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="2"
-            android:textAlignment="viewStart"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_user" >
-        </org.wordpress.android.widgets.WPTextView>
-
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
+            tools:text="text_user" />
     </LinearLayout>
 
 </RelativeLayout>
