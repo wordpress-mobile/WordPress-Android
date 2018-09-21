@@ -385,8 +385,8 @@ public class PostStore extends Store {
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
             searchQuery = descriptor.getSearchQuery();
-            if (descriptor.getStatus() != PostStatusForRestSite.ANY
-                || descriptor.getStatus() != PostStatusForRestSite.DRAFT) {
+            if (!(descriptor.getStatus() == PostStatusForRestSite.ANY
+                || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
                 // Any other status shouldn't be in the local drafts results
                 return Collections.emptyList();
             }
@@ -404,10 +404,10 @@ public class PostStore extends Store {
                 break;
             case COMMENT_COUNT:
                 // Local drafts can't have comments
-                orderBy = PostModelTable.LOCAL_SITE_ID;
+                orderBy = PostModelTable.DATE_CREATED;
                 break;
             case ID:
-                orderBy = PostModelTable.LOCAL_SITE_ID;
+                orderBy = PostModelTable.ID;
                 break;
         }
         int order;
