@@ -114,8 +114,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPostList(final SiteModel site, final PostListDescriptor listDescriptor, final int offset,
+    public void fetchPostList(final PostListDescriptor listDescriptor, final int offset,
                               final int number) {
+        SiteModel site = listDescriptor.getSite();
         List<String> fields = new ArrayList<>();
         fields.add("post_id");
         fields.add("post_modified");

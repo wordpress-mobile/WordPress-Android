@@ -86,9 +86,9 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPostList(final Long remoteSiteId, final PostListDescriptor listDescriptor, final int offset,
+    public void fetchPostList(final PostListDescriptor listDescriptor, final int offset,
                               final int number) {
-        String url = WPCOMREST.sites.site(remoteSiteId).posts.getUrlV1_1();
+        String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
                 getFetchPostListParameters(false, offset, number, null, "ID,modified");
