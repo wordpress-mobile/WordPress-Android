@@ -8,13 +8,13 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
         when (this) {
             is PostListDescriptorForRestSite -> {
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-$site.id-st${status.value}-o${order.value}-ob${orderBy.value}" +
+                        ("rest-site-post-list-$site.id-st${status.value}-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
             is PostListDescriptorForXmlRpcSite -> {
                 ListDescriptorUniqueIdentifier(
-                        "xmlrpc-site-post-${site.id}-o${order.value}-ob${orderBy.value}".hashCode()
+                        "xml-rpc-site-post-list-${site.id}-o${order.value}-ob${orderBy.value}".hashCode()
                 )
             }
         }
@@ -36,7 +36,7 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
         site: SiteModel,
         val status: PostStatusForRestSite = PostStatusForRestSite.PUBLISH,
         val order: ListOrder = ListOrder.DESC,
-        val orderBy: PostOrderByForRestSite = PostOrderByForRestSite.DATE,
+        val orderBy: PostListOrderBy = PostListOrderBy.DATE,
         val searchQuery: String? = null
     ) : PostListDescriptor(site) {
         enum class PostStatusForRestSite(val value: String) {
@@ -54,32 +54,24 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
                 }
             }
         }
-        enum class PostOrderByForRestSite(val value: String) {
-            DATE("date"),
-            LAST_MODIFIED("modified"),
-            TITLE("title"),
-            COMMENT_COUNT("comment_count"),
-            ID("ID");
-            companion object {
-                fun fromValue(value: String): PostOrderByForRestSite? {
-                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
-                }
-            }
-        }
     }
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
         val order: ListOrder = ListOrder.DESC,
-        val orderBy: PostOrderByForXmlRpcSite = PostOrderByForXmlRpcSite.DATE
-    ) : PostListDescriptor(site) {
-        enum class PostOrderByForXmlRpcSite(val value: String) {
-            DATE("date");
-            companion object {
-                fun fromValue(value: String): PostOrderByForXmlRpcSite? {
-                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
-                }
-            }
+        val orderBy: PostListOrderBy = PostListOrderBy.DATE
+    ) : PostListDescriptor(site)
+}
+
+enum class PostListOrderBy(val value: String) {
+    DATE("date"),
+    LAST_MODIFIED("modified"),
+    TITLE("title"),
+    COMMENT_COUNT("comment_count"),
+    ID("ID");
+    companion object {
+        fun fromValue(value: String): PostListOrderBy? {
+            return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
         }
     }
 }
