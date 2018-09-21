@@ -2,7 +2,8 @@ package org.wordpress.android.fluxc.model.list
 
 import org.wordpress.android.fluxc.model.SiteModel
 
-sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
+sealed class PostListDescriptor(val site: SiteModel, val orderBy: PostListOrderBy, val order: ListOrder) :
+        ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
         when (this) {
@@ -46,10 +47,10 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
     class PostListDescriptorForRestSite(
         site: SiteModel,
         val status: PostStatusForRestSite = PostStatusForRestSite.PUBLISH,
-        val order: ListOrder = ListOrder.DESC,
-        val orderBy: PostListOrderBy = PostListOrderBy.DATE,
+        order: ListOrder = ListOrder.DESC,
+        orderBy: PostListOrderBy = PostListOrderBy.DATE,
         val searchQuery: String? = null
-    ) : PostListDescriptor(site) {
+    ) : PostListDescriptor(site, orderBy, order) {
         enum class PostStatusForRestSite(val value: String) {
             ANY("any"),
             DRAFT("draft"),
@@ -69,9 +70,9 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
-        val order: ListOrder = ListOrder.DESC,
-        val orderBy: PostListOrderBy = PostListOrderBy.DATE
-    ) : PostListDescriptor(site)
+        order: ListOrder = ListOrder.DESC,
+        orderBy: PostListOrderBy = PostListOrderBy.DATE
+    ) : PostListDescriptor(site, orderBy, order)
 }
 
 enum class PostListOrderBy(val value: String) {
