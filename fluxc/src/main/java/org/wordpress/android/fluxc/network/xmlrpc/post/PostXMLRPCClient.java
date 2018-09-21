@@ -123,7 +123,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         fields.add("post_modified");
         List<Object> params =
                 getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, number, fields);
+                        offset, number, fields, listDescriptor.getOrderBy().getValue(),
+                        listDescriptor.getOrder().getValue());
 
         final boolean loadedMore = offset > 0;
 
@@ -165,7 +166,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset, final int number) {
         List<Object> params =
                 getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), getPages,
-                        offset, number, null);
+                        offset, number, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
@@ -596,16 +597,25 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return contentStruct;
     }
 
-    private List<Object> getFetchPostListParameters(final Long selfHostedSiteId,
-                                                    final String username,
-                                                    final String password,
-                                                    final boolean getPages,
-                                                    final int offset,
-                                                    final int number,
-                                                    @Nullable List<String> fields) {
+    private List<Object> getFetchPostListParameters(
+            final Long selfHostedSiteId,
+            final String username,
+            final String password,
+            final boolean getPages,
+            final int offset,
+            final int number,
+            @Nullable List<String> fields,
+            @Nullable String orderBy,
+            @Nullable String order) {
         Map<String, Object> contentStruct = new HashMap<>();
         contentStruct.put("number", number);
         contentStruct.put("offset", offset);
+        if (!TextUtils.isEmpty(orderBy)) {
+            contentStruct.put("orderby", orderBy);
+        }
+        if (!TextUtils.isEmpty(order)) {
+            contentStruct.put("order", order);
+        }
 
         if (getPages) {
             contentStruct.put("post_type", "page");
