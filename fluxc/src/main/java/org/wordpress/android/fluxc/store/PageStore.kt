@@ -103,6 +103,9 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 .filter { PAGE_TYPES.contains(PostStatus.valueOf(it.status)) }
                 .map {
                     if (it.remotePostId == 0L) {
+                        // local DB pages have a non-unique remote ID value of 0
+                        // to keep the apart we replace it with page ID (still unique)
+                        // and make it negative (to easily tell it's a temporary value)
                         it.remotePostId = -it.id.toLong()
                     }
                     it
