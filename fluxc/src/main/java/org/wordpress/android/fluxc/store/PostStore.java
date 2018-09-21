@@ -2,8 +2,12 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.wellsql.generated.PostModelTable;
+import com.yarolegovich.wellsql.ConditionClauseBuilder;
+import com.yarolegovich.wellsql.SelectQuery;
+import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -19,8 +23,10 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.ListOrder;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite.PostStatusForRestSite;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -374,6 +380,53 @@ public class PostStore extends Store {
         }
     }
 
+    public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
+        String searchQuery = null;
+        if (postListDescriptor instanceof PostListDescriptorForRestSite) {
+            PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
+            searchQuery = descriptor.getSearchQuery();
+            if (descriptor.getStatus() != PostStatusForRestSite.ANY
+                || descriptor.getStatus() != PostStatusForRestSite.DRAFT) {
+                // Any other status shouldn't be in the local drafts results
+                return Collections.emptyList();
+            }
+        }
+        String orderBy = null;
+        switch (postListDescriptor.getOrderBy()) {
+            case DATE:
+                orderBy = PostModelTable.DATE_CREATED;
+                break;
+            case LAST_MODIFIED:
+                orderBy = PostModelTable.DATE_LOCALLY_CHANGED;
+                break;
+            case TITLE:
+                orderBy = PostModelTable.TITLE;
+                break;
+            case COMMENT_COUNT:
+                // Local drafts can't have comments
+                orderBy = PostModelTable.LOCAL_SITE_ID;
+                break;
+            case ID:
+                orderBy = PostModelTable.LOCAL_SITE_ID;
+                break;
+        }
+        int order;
+        if (postListDescriptor.getOrder() == ListOrder.ASC) {
+            order = SelectQuery.ORDER_ASCENDING;
+        } else {
+            order = SelectQuery.ORDER_DESCENDING;
+        }
+        ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
+                WellSql.select(PostModel.class).where().beginGroup()
+                       .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                       .equals(PostModelTable.LOCAL_SITE_ID, postListDescriptor.getSite().getId())
+                       .equals(PostModelTable.IS_PAGE, false).endGroup();
+        if (!TextUtils.isEmpty(searchQuery)) {
+            clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
+                                         .contains(PostModelTable.CONTENT, searchQuery).endGroup();
+        }
+        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+    }
     /**
      * returns the total number of posts with local changes across all sites
      */
