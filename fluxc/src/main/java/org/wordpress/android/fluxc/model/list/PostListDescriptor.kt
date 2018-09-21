@@ -8,11 +8,15 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
         when (this) {
             is PostListDescriptorForRestSite -> {
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-$site.id-f${status.value}-o${order.value}-ob-${orderBy.value}" +
+                        ("rest-site-post-$site.id-st${status.value}-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
-            is PostListDescriptorForXmlRpcSite -> TODO()
+            is PostListDescriptorForXmlRpcSite -> {
+                ListDescriptorUniqueIdentifier(
+                        "xmlrpc-site-post-${site.id}-o${order.value}-ob${orderBy.value}".hashCode()
+                )
+            }
         }
     }
 
@@ -66,8 +70,8 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
-        val order: ListOrder,
-        val orderBy: PostOrderByForXmlRpcSite
+        val order: ListOrder = ListOrder.DESC,
+        val orderBy: PostOrderByForXmlRpcSite = PostOrderByForXmlRpcSite.DATE
     ) : PostListDescriptor(site) {
         enum class PostOrderByForXmlRpcSite(val value: String) {
             DATE("date");
