@@ -143,10 +143,10 @@
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
+                                android:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                tools:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
                                 tools:text="plugin_version_top"
                                 style="@style/PluginCardViewPrimaryText" />
 
