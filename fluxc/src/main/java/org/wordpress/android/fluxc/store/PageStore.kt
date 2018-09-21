@@ -99,7 +99,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         val posts = postStore.getPagesForSite(site)
                 .asSequence()
                 .filterNotNull()
-                .filter { PAGE_TYPES.contains(PostStatus.valueOf(it.status)) }
+                .filter { PAGE_TYPES.contains(PostStatus.fromPost(it)) }
                 .map {
                     if (it.remotePostId == 0L) {
                         // local DB pages have a non-unique remote ID value of 0
