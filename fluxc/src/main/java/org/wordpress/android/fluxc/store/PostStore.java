@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
+import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -471,9 +472,17 @@ public class PostStore extends Store {
             postIds = Collections.emptyList();
         } else {
             postIds = new ArrayList<>(payload.postListItems.size());
+            SiteModel site = payload.listDescriptor.getSite();
             for (PostListItem item : payload.postListItems) {
                 postIds.add(item.remotePostId);
-                // TODO: compare lastmodified for each item
+            }
+            Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
+            for (PostListItem item : payload.postListItems) {
+                PostModel post = posts.get(item.remotePostId);
+                // Dispatch a fetch action for the posts that are changed
+                if (post != null && !post.getLastModified().equals(item.lastModified)) {
+                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
+                }
             }
         }
 
