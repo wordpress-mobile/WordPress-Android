@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
@@ -451,12 +453,12 @@ public class PostStore extends Store {
     }
 
     private void fetchPostList(FetchPostListPayload payload) {
-        if (payload.listDescriptor.getSite().isUsingWpComRestApi()) {
-            mPostRestClient.fetchPostList(payload.listDescriptor, payload.offset,
-                    NUM_POST_LIST_PER_FETCH);
-        } else {
-            mPostXMLRPCClient.fetchPostList(payload.listDescriptor, payload.offset,
-                    NUM_POST_LIST_PER_FETCH);
+        if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
+            PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
+            mPostRestClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
+        } else if (payload.listDescriptor instanceof PostListDescriptorForXmlRpcSite) {
+            PostListDescriptorForXmlRpcSite descriptor = (PostListDescriptorForXmlRpcSite) payload.listDescriptor;
+            mPostXMLRPCClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
         }
     }
 
@@ -502,9 +504,9 @@ public class PostStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ListItemsRemovedPayload listActionPayload =
-                    new ListItemsRemovedPayload(PostListDescriptor.typeIdentifier(payload.post.getLocalSiteId()),
-                            Collections.singletonList(payload.post.getRemotePostId()));
+            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
+                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
+                    Collections.singletonList(payload.post.getRemotePostId()));
             mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
             PostSqlUtils.deletePost(payload.post);
         }
@@ -605,7 +607,7 @@ public class PostStore extends Store {
         emitChange(onPostChanged);
 
         mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.typeIdentifier(post.getLocalSiteId()))));
+                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
     }
 
     private void removePost(PostModel post) {
@@ -613,7 +615,7 @@ public class PostStore extends Store {
             return;
         }
         mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
-                new ListItemsRemovedPayload(PostListDescriptor.typeIdentifier(post.getLocalSiteId()),
+                new ListItemsRemovedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()),
                         Collections.singletonList(post.getRemotePostId()))));
         int rowsAffected = PostSqlUtils.deletePost(post);
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
