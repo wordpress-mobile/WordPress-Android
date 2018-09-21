@@ -41,13 +41,15 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-130"
-        versionCode 619
+        versionName "10.9"
+        versionCode 620
         minSdkVersion 16
         targetSdkVersion 26
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -66,6 +68,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "REVISIONS_ENABLED", "true"
         }
     }
 

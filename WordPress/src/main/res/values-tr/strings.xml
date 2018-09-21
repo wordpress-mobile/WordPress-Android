@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 12:54:07+0000
+Translation-Revision-Date: 2018-09-15 15:43:39+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="pages_search_suggestion">Sayfaları ara</string>
+    <string name="pages_empty_search_result">Aramanızla eşleşen sayfa yok</string>
+    <string name="pages_delete_permanently">Kalıcı olarak sil</string>
+    <string name="pages_move_to_trash">Çöpe taşı</string>
+    <string name="pages_move_to_draft">Taslağa taşı</string>
+    <string name="pages_publish_now">Şimdi yayınla</string>
+    <string name="pages_set_parent">Ebeveyn belirle</string>
+    <string name="pages_view">Görüntüle</string>
+    <string name="pages_trashed">Çöpe atıldı</string>
+    <string name="pages_scheduled">Zamanlandı</string>
+    <string name="pages_drafts">Taslaklar</string>
+    <string name="pages_published">Yayınlandı</string>
+    <string name="set_parent">Ebeveyn belirle</string>
     <string name="quick_start_focus_point_description">buraya dokunun</string>
     <string name="quick_start_sites">Hızlı Başlangıç</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
     <string name="quick_start_list_create_site_subtitle">Sitenizi ayağa kaldırın ve yayınlayın</string>
     <string name="quick_start_list_complete_title">Hızlı başlangıcı bitirdiğiniz için tebrikler</string>
     <string name="quick_start_list_complete_subtitle">Bir şeyleri listeden silmek iyi değil mi?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">Sitenizi görüntüleyin</string>
     <string name="quick_start_dialog_view_site_message_short">Sitenizi önizlemek için %1$s Siteyi Görüntüle %2$s seçeneğine dokunun.</string>
     <string name="quick_start_dialog_view_site_message">Ziyaretçilerinizin ne göreceğine bakmak için yeni sitenizi ön izleyin.</string>
@@ -339,7 +340,6 @@ Language: tr
     <string name="me_section_screen_title">Ben</string>
     <string name="my_site_section_screen_title">Sitem</string>
     <string name="notif_settings_screen_title">Bildirim ayarları</string>
-    <string name="passcode_screen_title">WordPress Geçiş Kodu</string>
     <string name="help_screen_title">Yardım ve Destek</string>
     <string name="license_screen_title">Lisans</string>
     <string name="release_notes_screen_title">Sürüm notları</string>
@@ -602,7 +602,6 @@ Language: tr
     <string name="media_edit_file_details_card_caption">Dosya detayları</string>
     <string name="login_error_suffix">\nBelki de farklı bir hesap denemelisiniz.</string>
     <string name="login_error_generic">Google hesabı ile bağlantı kurarken bir miktar sorun yaşadık.</string>
-    <string name="login_error_email_not_found">\'%s\' Google hesabı WordPress.com\'daki mevcut bir hesabın hiçbiriyle eşleşmiyor.</string>
     <string name="login_error_button">Kapat</string>
     <string name="login_google_button_suffix">Google ile giriş yapın.</string>
     <string name="enter_wpcom_password_google">Bu Google hesabıyla devam etmek için lütfen eşleşen WordPress.com parolasını sağlayın. Bu yalnızca bir kez sorulacak.</string>
@@ -905,7 +904,6 @@ Language: tr
     <string name="image_quality">Görsel kalitesi</string>
     <string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
-    <string name="error_fetch_site_after_creation">Site oluşturuldu, site seçicideki siteleri yenilemeniz gerekebilir.</string>
     <string name="submit_for_review">Gönder</string>
     <string name="duplicate_site_detected">Tekrar eden bir site tespit edildi.</string>
     <string name="cannot_add_duplicate_site">Bu site zaten uygulamada mevcut, tekrar ekleyemezsiniz.</string>
@@ -923,7 +921,6 @@ Language: tr
     <string name="confirm">Onayla</string>
     <string name="xmlrpc_endpoint_forbidden_error">Bağlanılamıyor. Sitenizin XMLRPC uç noktasına bağlanırken bir 403\n     hatası aldık. Uygulamanın ssitenizle iletişim kurabilmesi için gereklidir. Problemi çözmek için\n     servis sağlayıcınızla iletişime geçin.</string>
     <string name="xmlrpc_post_blocked_error">Bağlanılamıyor. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna ihtiyaç duyuyor. Bu problemi gidermek için servis sağlayıcınızla iletişime geçin.</string>
-    <string name="reader_empty_followed_blogs_search_title">Eşleşen site yok</string>
     <string name="reader_hint_search_followed_sites">Takip edilen siteleri ara</string>
     <string name="visual_editor_disabled">Görsel editör etkisizleştirildi</string>
     <string name="preference_editor_visual">Görsel</string>
@@ -1373,7 +1370,6 @@ Language: tr
     <string name="reader_toast_err_follow_blog_not_authorized">Bu siteye erişim için yetkiniz yok</string>
     <string name="reader_toast_err_follow_blog_not_found">Site bulunamadı</string>
     <string name="undo">Geri al</string>
-    <string name="passcodelock_prompt_message">PIN kodunuzu girin</string>
     <string name="push_auth_expired">İstek süresi doldu. WordPress.com\'a giriş yaparak tekrar deneyin.</string>
     <string name="stats_insights_most_popular_percent_views">Görüntülemelerde %1$d%%</string>
     <string name="ignore">Yoksay</string>
@@ -1527,7 +1523,6 @@ Language: tr
     <string name="reader_label_view_original">Orijinal makaleyi oku</string>
     <string name="reader_empty_posts_in_tag">Bu etiketi içeren yazı yok</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
-    <string name="create_new_blog_wpcom">WordPress.com blogu oluştur</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
     <string name="reader_menu_block_blog">Bu siteyi engelleyin</string>
     <string name="reader_toast_blog_blocked">Bu siteden yazılar artık gösterilmeyecek</string>
@@ -1555,7 +1550,6 @@ Language: tr
     <string name="username_or_password_incorrect">Yanlış kullanıcı adı veya şifre girdiniz</string>
     <string name="email_invalid">Geçerli bir Email adresi girin</string>
     <string name="invalid_email_message">Geçersiz Email adresi</string>
-    <string name="passcode_wrong_passcode">Yanlış PIN</string>
     <string name="error_downloading_image">Resim indirme hatası</string>
     <string name="error_load_comment">Yorum yüklenemedi</string>
     <string name="error_edit_comment">Yorum düzeltilirken hata oluştu</string>
@@ -1579,7 +1573,6 @@ Language: tr
     <string name="blog_not_found">Bu blog\'a erişilirken hata ile karşılaşıldı</string>
     <string name="gallery_error">Ortam dosyası geri getirilemedi</string>
     <string name="no_network_message">Uygun durumda şebeke yok</string>
-    <string name="required_field">Gerekli alan</string>
     <string name="reader_toast_err_remove_tag">Bu etiket kaldırılamıyor</string>
     <string name="reader_toast_err_add_tag">Bu etiket eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
@@ -1588,7 +1581,6 @@ Language: tr
     <string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
     <string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="add_account_blog_url">Blog adresi</string>
     <string name="image_settings">Görsel ayarları</string>
     <string name="local_changes">Yerel değişiklikler</string>
     <string name="privacy_policy">Gizlilik politikası</string>
@@ -1646,7 +1638,6 @@ Language: tr
     <string name="connection_error">Bağlantı hatası</string>
     <string name="select_categories">Kategorileri seçin</string>
     <string name="share_link">Bağlantıyı paylaş</string>
-    <string name="creating_your_site">Siteniz oluşturuluyor</string>
     <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="cant_share_no_visible_blog">Görünürbir bloğunuz olmadan WordPress ile paylaşamazsınız</string>
     <string name="comment_spammed">Yorum istenmeyen olarak işaretlendi</string>
@@ -1675,14 +1666,6 @@ Language: tr
     <string name="reader_untitled_post">(Başlıksız)</string>
     <string name="comments_empty_list">Henüz yorum yok</string>
     <string name="empty_list_default">Bu liste boş</string>
-    <string name="passcode_turn_on">PIN kilidini aç</string>
-    <string name="passcode_turn_off">PIN kilidini kapat</string>
-    <string name="passcode_preference_title">PIN kilidi</string>
-    <string name="passcode_set">PIN ayarla</string>
-    <string name="passcode_change_passcode">PIN değiştir</string>
-    <string name="passcode_re_enter_passcode">PINi tekrar girin</string>
-    <string name="passcode_enter_old_passcode">Eski PINi girin</string>
-    <string name="passcode_manage">PIN kilidini yönet</string>
     <string name="stats_totals_plays">Çalınanlar</string>
     <string name="stats_totals_clicks">Tıklamalar</string>
     <string name="stats_totals_views">Görüntülemeler</string>
@@ -1734,6 +1717,7 @@ Language: tr
     <string name="posts">Yazılar</string>
     <string name="width">Genişlik</string>
     <string name="caption">Başlık (seçime bağlı)</string>
+    <string name="pages">Sayfalar</string>
     <string name="no_network_title">Kullanılabilir ağ yok</string>
     <string name="featured_in_post">Görseli yazı içeriğine ekle</string>
     <string name="blogusername">blogkullanıcıadı</string>
