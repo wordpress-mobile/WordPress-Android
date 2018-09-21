@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 class ListManager<T>(
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
+    private val localItems: List<T>?,
     private val items: List<ListItemModel>,
     private val listData: Map<Long, T>,
     private val loadMoreOffset: Int,
@@ -34,7 +35,24 @@ class ListManager<T>(
     val canLoadMore: Boolean,
     private val fetchItem: (Long) -> Unit
 ) {
-    val size: Int = items.size
+    companion object {
+        fun <T> areItemsTheSame(new: ListManager<T>, old: ListManager<T>, newPosition: Int, oldPosition: Int, areItemsTheSame: (T, T) -> Boolean): Boolean {
+            if (newPosition >= new.localItemSize && oldPosition >= old.localItemSize) {
+                return new.remoteItemId(newPosition - new.localItemSize) == old.remoteItemId(oldPosition - old.localItemSize)
+            }
+            val oldItem = old.getItem(oldPosition, false)
+            val newItem = new.getItem(newPosition, false)
+            if (oldItem == null && newItem == null) {
+                return true
+            }
+            if (oldItem == null || newItem == null) {
+                return false
+            }
+            return areItemsTheSame(oldItem, newItem)
+        }
+    }
+    private val localItemSize: Int = localItems?.size ?: 0
+    val size: Int = items.size + localItemSize
     /**
      * These three private properties help us prevent duplicate requests within short time frames. Since [ListManager]
      * instances are meant to be short lived, this will not actually prevent duplicate requests and it's not actually
@@ -45,10 +63,9 @@ class ListManager<T>(
     private var dispatchedLoadMoreAction = false
     private val fetchRemoteItemSet = HashSet<Long>()
 
-    /**
-     * Returns the remote id of the item in the given [position].
-     */
-    fun getRemoteItemId(position: Int): Long = items[position].remoteItemId
+    private fun remoteItemId(remoteItemIndex: Int): Long {
+        return items[remoteItemIndex].remoteItemId
+    }
 
     /**
      * Returns the item in a given position if it's available.
@@ -59,7 +76,7 @@ class ListManager<T>(
      * @param shouldLoadMoreIfNecessary Indicates whether the [ListManager] should dispatch an action to load more data
      * if the end of the list is closer than the [loadMoreOffset].
      */
-    fun getRemoteItem(
+    fun getItem(
         position: Int,
         shouldFetchIfNull: Boolean = true,
         shouldLoadMoreIfNecessary: Boolean = true
@@ -67,7 +84,13 @@ class ListManager<T>(
         if (shouldLoadMoreIfNecessary && position > size - loadMoreOffset) {
             loadMore()
         }
-        val remoteItemId = getRemoteItemId(position)
+        localItems?.let {
+            if (position < it.size) {
+                return it[position]
+            }
+        }
+        val remoteItemIndex = position - (localItems?.size ?: 0)
+        val remoteItemId = items[remoteItemIndex].remoteItemId
         val item = listData[remoteItemId]
         if (item == null && shouldFetchIfNull) {
             fetchItemIfNecessary(remoteItemId)

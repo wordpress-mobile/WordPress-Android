@@ -74,6 +74,7 @@ class ListStore @Inject constructor(
      */
     suspend fun <T> getListManager(
         listDescriptor: ListDescriptor,
+        localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(CommonPool) {
@@ -86,6 +87,7 @@ class ListStore @Inject constructor(
         return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
+                localItems = localItems,
                 items = listItems,
                 listData = listData,
                 loadMoreOffset = loadMoreOffset,
