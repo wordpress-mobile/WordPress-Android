@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -86,7 +86,7 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void fetchPostList(final PostListDescriptor listDescriptor, final int offset,
+    public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final int offset,
                               final int number) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
