@@ -43,6 +43,12 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
             PENDING("pending"),
             FUTURE("future"),
             TRASH("trash");
+
+            companion object {
+                fun fromValue(value: String): PostStatusForRestSite? {
+                   return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
+                }
+            }
         }
         enum class PostOrderByForRestSite(val value: String) {
             DATE("date"),
@@ -50,13 +56,26 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
             TITLE("title"),
             COMMENT_COUNT("comment_count"),
             ID("ID");
+            companion object {
+                fun fromValue(value: String): PostOrderByForRestSite? {
+                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
+                }
+            }
         }
     }
 
-    class PostListDescriptorForXmlRpcSite(site: SiteModel, order: ListOrder, orderBy: PostOrderByForXmlRpcSite) :
-            PostListDescriptor(site) {
+    class PostListDescriptorForXmlRpcSite(
+        site: SiteModel,
+        val order: ListOrder,
+        val orderBy: PostOrderByForXmlRpcSite
+    ) : PostListDescriptor(site) {
         enum class PostOrderByForXmlRpcSite(val value: String) {
             DATE("date");
+            companion object {
+                fun fromValue(value: String): PostOrderByForXmlRpcSite? {
+                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
+                }
+            }
         }
     }
 }
