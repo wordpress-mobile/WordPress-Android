@@ -95,7 +95,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/image_icon"
                             android:orientation="vertical"
                             android:layout_toEndOf="@+id/image_icon">
 
@@ -103,7 +102,6 @@
                                 android:id="@+id/text_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/margin_extra_large"
                                 android:textColor="@color/grey_dark"
                                 android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
@@ -114,7 +112,6 @@
                                 android:id="@+id/text_byline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="@dimen/margin_extra_large"
                                 android:linksClickable="true"
                                 android:textColor="@color/grey_dark"
                                 android:textColorLink="@color/blue_wordpress"
@@ -133,16 +130,13 @@
                             android:background="?android:attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
-                            android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:layout_height="match_parent"
-                            android:layout_toLeftOf="@+id/plugin_btn_container"
                             android:layout_toStartOf="@+id/plugin_btn_container"
                             android:layout_width="wrap_content"
                             android:orientation="vertical"
                             android:paddingBottom="@dimen/margin_extra_large"
-                            android:paddingLeft="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"
                             android:paddingTop="@dimen/margin_extra_large"
                             tools:ignore="RtlSymmetry" >
@@ -153,7 +147,6 @@
                                 android:ellipsize="end"
                                 android:maxLines="1"
                                 tools:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
-                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
                                 tools:text="plugin_version_top"
                                 style="@style/PluginCardViewPrimaryText" />
 
@@ -169,13 +162,10 @@
                         <FrameLayout
                             android:id="@+id/plugin_btn_container"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_height="match_parent"
                             android:layout_width="wrap_content"
                             android:paddingEnd="@dimen/margin_extra_large"
-                            android:paddingLeft="@dimen/margin_extra_large"
-                            android:paddingRight="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large" >
 
                             <android.support.v7.widget.AppCompatButton

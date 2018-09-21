@@ -23,8 +23,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_extra_large"
             android:paddingEnd="@dimen/margin_extra_extra_medium_large"
-            android:paddingLeft="@dimen/margin_extra_extra_medium_large"
-            android:paddingRight="@dimen/margin_extra_extra_medium_large"
             android:paddingStart="@dimen/margin_extra_extra_medium_large"
             android:paddingTop="@dimen/margin_extra_large"
             android:visibility="gone"
@@ -40,8 +38,7 @@
                 android:text="@string/quick_start_list_complete_title"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/quick_start_completed_text"
-                tools:drawableEnd="@drawable/img_emoji_party_popper_24sp"
-                tools:drawableRight="@drawable/img_emoji_party_popper_24sp">
+                tools:drawableEnd="@drawable/img_emoji_party_popper_24sp" >
             </TextView>
 
             <TextView
@@ -77,8 +74,6 @@
                 android:id="@+id/title_create_site"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_create_site"
-                android:layout_toLeftOf="@+id/done_create_site"
-                android:layout_toRightOf="@+id/icon_create_site"
                 android:layout_toStartOf="@+id/done_create_site"
                 android:text="@string/quick_start_list_create_site_title">
             </TextView>
@@ -88,8 +83,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_create_site"
                 android:layout_toEndOf="@+id/icon_create_site"
-                android:layout_toLeftOf="@+id/done_create_site"
-                android:layout_toRightOf="@+id/icon_create_site"
                 android:layout_toStartOf="@+id/done_create_site"
                 android:text="@string/quick_start_list_create_site_subtitle"
                 app:fixWidowWords="true">
@@ -97,7 +90,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_create_site"
                 android:layout_alignStart="@+id/title_create_site"
                 android:layout_below="@+id/subtitle_create_site">
             </View>
@@ -127,8 +119,6 @@
                 android:id="@+id/title_view_site"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_view_site"
-                android:layout_toLeftOf="@+id/done_view_site"
-                android:layout_toRightOf="@+id/icon_view_site"
                 android:layout_toStartOf="@+id/done_view_site"
                 android:text="@string/quick_start_list_view_site_title">
             </TextView>
@@ -138,8 +128,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_view_site"
                 android:layout_toEndOf="@+id/icon_view_site"
-                android:layout_toLeftOf="@+id/done_view_site"
-                android:layout_toRightOf="@+id/icon_view_site"
                 android:layout_toStartOf="@+id/done_view_site"
                 android:text="@string/quick_start_list_view_site_subtitle"
                 app:fixWidowWords="true">
@@ -147,7 +135,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_view_site"
                 android:layout_alignStart="@+id/title_view_site"
                 android:layout_below="@+id/subtitle_view_site">
             </View>
@@ -176,8 +163,6 @@
                 android:id="@+id/title_browse_themes"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_browse_themes"
-                android:layout_toLeftOf="@+id/done_browse_themes"
-                android:layout_toRightOf="@+id/icon_browse_themes"
                 android:layout_toStartOf="@+id/done_browse_themes"
                 android:text="@string/quick_start_list_choose_theme_title">
             </TextView>
@@ -187,8 +172,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_browse_themes"
                 android:layout_toEndOf="@+id/icon_browse_themes"
-                android:layout_toLeftOf="@+id/done_browse_themes"
-                android:layout_toRightOf="@+id/icon_browse_themes"
                 android:layout_toStartOf="@+id/done_browse_themes"
                 android:text="@string/quick_start_list_choose_theme_subtitle"
                 app:fixWidowWords="true">
@@ -196,7 +179,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_browse_themes"
                 android:layout_alignStart="@+id/title_browse_themes"
                 android:layout_below="@+id/subtitle_browse_themes">
             </View>
@@ -225,8 +207,6 @@
                 android:id="@+id/title_customize_site"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_customize_site"
-                android:layout_toLeftOf="@+id/done_customize_site"
-                android:layout_toRightOf="@+id/icon_customize_site"
                 android:layout_toStartOf="@+id/done_customize_site"
                 android:text="@string/quick_start_list_customize_site_title">
             </TextView>
@@ -236,8 +216,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_customize_site"
                 android:layout_toEndOf="@+id/icon_customize_site"
-                android:layout_toLeftOf="@+id/done_customize_site"
-                android:layout_toRightOf="@+id/icon_customize_site"
                 android:layout_toStartOf="@+id/done_customize_site"
                 android:text="@string/quick_start_list_customize_site_subtitle"
                 app:fixWidowWords="true">
@@ -245,7 +223,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_customize_site"
                 android:layout_alignStart="@+id/title_customize_site"
                 android:layout_below="@+id/subtitle_customize_site">
             </View>
@@ -274,8 +251,6 @@
                 android:id="@+id/title_share_site"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_share_site"
-                android:layout_toLeftOf="@+id/done_share_site"
-                android:layout_toRightOf="@+id/icon_share_site"
                 android:layout_toStartOf="@+id/done_share_site"
                 android:text="@string/quick_start_list_share_site_title">
             </TextView>
@@ -285,8 +260,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_share_site"
                 android:layout_toEndOf="@+id/icon_share_site"
-                android:layout_toLeftOf="@+id/done_share_site"
-                android:layout_toRightOf="@+id/icon_share_site"
                 android:layout_toStartOf="@+id/done_share_site"
                 android:text="@string/quick_start_list_share_site_subtitle"
                 app:fixWidowWords="true">
@@ -294,7 +267,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_share_site"
                 android:layout_alignStart="@+id/title_share_site"
                 android:layout_below="@+id/subtitle_share_site">
             </View>
@@ -323,8 +295,6 @@
                 android:id="@+id/title_publish_post"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_publish_post"
-                android:layout_toLeftOf="@+id/done_publish_post"
-                android:layout_toRightOf="@+id/icon_publish_post"
                 android:layout_toStartOf="@+id/done_publish_post"
                 android:text="@string/quick_start_list_publish_post_title">
             </TextView>
@@ -334,8 +304,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_publish_post"
                 android:layout_toEndOf="@+id/icon_publish_post"
-                android:layout_toLeftOf="@+id/done_publish_post"
-                android:layout_toRightOf="@+id/icon_publish_post"
                 android:layout_toStartOf="@+id/done_publish_post"
                 android:text="@string/quick_start_list_publish_post_subtitle"
                 app:fixWidowWords="true">
@@ -343,7 +311,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_publish_post"
                 android:layout_alignStart="@+id/title_publish_post"
                 android:layout_below="@+id/subtitle_publish_post">
             </View>
@@ -372,8 +339,6 @@
                 android:id="@+id/title_follow_site"
                 style="@style/QuickStartTitle"
                 android:layout_toEndOf="@+id/icon_follow_site"
-                android:layout_toLeftOf="@+id/done_follow_site"
-                android:layout_toRightOf="@+id/icon_follow_site"
                 android:layout_toStartOf="@+id/done_follow_site"
                 android:text="@string/quick_start_list_follow_site_title">
             </TextView>
@@ -383,8 +348,6 @@
                 style="@style/QuickStartSubtitle"
                 android:layout_below="@+id/title_follow_site"
                 android:layout_toEndOf="@+id/icon_follow_site"
-                android:layout_toLeftOf="@+id/done_follow_site"
-                android:layout_toRightOf="@+id/icon_follow_site"
                 android:layout_toStartOf="@+id/done_follow_site"
                 android:text="@string/quick_start_list_follow_site_subtitle"
                 app:fixWidowWords="true">
@@ -392,7 +355,6 @@
 
             <View
                 style="@style/QuickStartDivider"
-                android:layout_alignLeft="@+id/title_follow_site"
                 android:layout_alignStart="@+id/title_follow_site"
                 android:layout_below="@+id/subtitle_follow_site">
             </View>

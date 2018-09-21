@@ -30,7 +30,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_marginRight="12dp"
                     app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
                     android:contentDescription="@null"
                     tools:src="@drawable/badge"/>
@@ -40,7 +39,6 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_marginRight="12dp"
                     android:visibility="gone"
                     app:srcCompat="@drawable/ic_plans_grey_36dp"
                     android:contentDescription="@string/activity_log_jetpack_icon"
@@ -137,7 +135,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:layout_marginEnd="6dp"
-                    android:layout_marginRight="6dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"

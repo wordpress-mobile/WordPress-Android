@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart">
 
     <TextView
@@ -14,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/image_delete"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lines="1"
@@ -28,9 +25,7 @@
         android:id="@+id/image_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin_small"
         android:background="?android:selectableItemBackground"
         android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:padding="@dimen/margin_small"

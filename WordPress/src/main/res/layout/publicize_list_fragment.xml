@@ -30,14 +30,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
                     android:layout_marginEnd="@dimen/content_margin"
-                    android:layout_marginLeft="@dimen/content_margin"
-                    android:layout_marginRight="@dimen/content_margin"
                     android:layout_marginStart="@dimen/content_margin"
                     android:layout_marginTop="@dimen/margin_large"
                     android:orientation="vertical"
                     android:paddingEnd="@dimen/margin_medium"
-                    android:paddingLeft="@dimen/margin_medium"
-                    android:paddingRight="@dimen/margin_medium"
                     android:paddingStart="@dimen/margin_medium">
 
                     <org.wordpress.android.widgets.WPTextView
@@ -79,12 +75,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:layout_marginEnd="@dimen/content_margin"
-                    android:layout_marginLeft="@dimen/content_margin"
-                    android:layout_marginRight="@dimen/content_margin"
                     android:layout_marginStart="@dimen/content_margin"
                     android:paddingEnd="@dimen/margin_medium"
-                    android:paddingLeft="@dimen/margin_medium"
-                    android:paddingRight="@dimen/margin_medium"
                     android:paddingStart="@dimen/margin_medium">
 
                     <org.wordpress.android.widgets.WPTextView
@@ -119,7 +111,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="@dimen/margin_extra_large"
                             android:layout_marginStart="@dimen/margin_extra_large"
                             android:text="@string/manage"
                             android:textColor="@color/grey_dark"

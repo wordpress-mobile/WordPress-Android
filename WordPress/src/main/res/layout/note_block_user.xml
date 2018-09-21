@@ -14,8 +14,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="?android:selectableItemBackground"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large">
 
@@ -32,7 +30,6 @@
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                 android:layout_marginEnd="@dimen/notifications_adjusted_font_margin" />
 
             <LinearLayout

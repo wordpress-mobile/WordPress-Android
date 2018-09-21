@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="6dp"
-    android:paddingRight="12dp"
     android:paddingTop="@dimen/margin_large"
     android:paddingStart="6dp"
     android:paddingEnd="12dp">
@@ -15,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="5dp"
         android:gravity="center_vertical"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"

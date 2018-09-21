@@ -12,8 +12,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
         android:paddingTop="@dimen/margin_medium"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
@@ -57,8 +55,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
         android:background="@color/notifications_settings_divider_color"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"/>
