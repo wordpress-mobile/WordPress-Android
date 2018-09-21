@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
@@ -106,6 +107,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         val posts = postStore.getPagesForSite(site)
                 .asSequence()
                 .filterNotNull()
+                .filter { PAGE_TYPES.contains(PostStatus.valueOf(it.status)) }
                 .map {
                     if (it.remotePostId == 0L) {
                         it.remotePostId = -it.id.toLong()
