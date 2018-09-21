@@ -4,6 +4,8 @@
     android:id="@+id/text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:drawablePadding="@dimen/margin_extra_large"
+    android:drawableStart="@drawable/ic_add_outline_grey_dark_24dp"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:textAppearance="?android:attr/textAppearanceListItem"
     android:textColor="?android:attr/textColorAlertDialogListItem"
