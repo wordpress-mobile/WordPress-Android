@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 09:54:08+0000
+Translation-Revision-Date: 2018-09-13 00:33:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Fortsätt läsa]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Hinner du inte läsa just nu? Det är lugnt: spara inlägg tills du har tid.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Nya funktioner tillgängliga]</string>
+    <string name="pages_empty_trashed">Du har inga sidor i papperskorgen</string>
+    <string name="pages_empty_scheduled">Du har inte några schemalagda sidor</string>
+    <string name="pages_empty_drafts">Du har inga utkast till sidor</string>
+    <string name="pages_empty_published">Du har inte publicerat några sidor ännu</string>
+    <string name="pages_search_suggestion">Sök sidor</string>
+    <string name="pages_empty_search_result">Ingen sida matchar din sökning</string>
+    <string name="pages_delete_permanently">Radera permanent</string>
+    <string name="pages_move_to_trash">Lägg i papperskorgen</string>
+    <string name="pages_move_to_draft">Lägg i utkast</string>
+    <string name="pages_publish_now">Publicera nu</string>
+    <string name="pages_set_parent">Ange överordnad</string>
+    <string name="pages_view">Visa</string>
+    <string name="pages_trashed">I papperskorgen</string>
+    <string name="pages_scheduled">Schemalagda</string>
+    <string name="pages_drafts">Utkast</string>
+    <string name="pages_published">Publicerade</string>
+    <string name="login_error_sms_throttled">Vi har gjort för många försök att leverera en verifieringskod via SMS – Vänta lite och be om en ny om en minut.</string>
+    <string name="login_error_email_not_found_v2">Det finns inget WordPress.com-konto som stämmer mot detta Google–konto.</string>
+    <string name="site_picker_remove_site_empty">Inga webbplatser motsvarar din sökning</string>
+    <string name="reader_empty_followed_blogs_search_title">Inga webbplatser motsvarar din sökning</string>
+    <string name="page_parent_changed">Överordnad sida har uppdaterats</string>
+    <string name="page_permanently_deleted">Sidan har raderats permanent</string>
+    <string name="page_moved_to_scheduled">Sidan har schemalagts</string>
+    <string name="page_moved_to_published">Sidan har publicerats</string>
+    <string name="page_moved_to_trash">Sidan har lagts i papperskorgen</string>
+    <string name="page_moved_to_draft">Sidan har flyttats till utkast</string>
+    <string name="top_level">Översta nivån</string>
+    <string name="page_delete_dialog_message">Är du säker på att du vill radera sidan %s?</string>
+    <string name="page_parent_change_error">Det gick inte att ändra den överordnade sidan</string>
+    <string name="page_status_change_error">Det gick inte att ändra sidans status</string>
+    <string name="page_delete_error">Det gick inte att radera sidan</string>
+    <string name="set_parent">Ange överordnad</string>
+    <string name="dismiss">avfärda</string>
     <string name="quick_start_focus_point_description">klicka här</string>
     <string name="quick_start_sites">Snabbstart</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">Skapa din webbplats</string>
     <string name="quick_start_list_create_site_subtitle">Kom igång med din webbplats</string>
     <string name="quick_start_list_complete_title">Grattis. Nu är du klar med snabbstarten</string>
     <string name="quick_start_list_complete_subtitle">visst är det skönt att kunna bocka av en lista!</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">Visa din webbplats</string>
     <string name="quick_start_dialog_view_site_message_short">Klicka på %1$s Visa webbplats %2$s för att förhandsvisa din webbplats</string>
     <string name="quick_start_dialog_view_site_message">Förhandsvisa din nya webbplats för att kontrollera vad besökarna kommer att se.</string>
@@ -339,7 +363,6 @@ Language: sv_SE
     <string name="me_section_screen_title">Jag</string>
     <string name="my_site_section_screen_title">Min webbplats</string>
     <string name="notif_settings_screen_title">Notisinställningar</string>
-    <string name="passcode_screen_title">Behörighetskod till WordPress</string>
     <string name="help_screen_title">Hjälp och support</string>
     <string name="license_screen_title">Licens</string>
     <string name="release_notes_screen_title">Release–uppgifter</string>
@@ -602,7 +625,6 @@ Language: sv_SE
     <string name="media_edit_file_details_card_caption">Filinformation</string>
     <string name="login_error_suffix">\nDu kanske vill prova ett annat konto?</string>
     <string name="login_error_generic">Det var något som inte stämde vid uppkoppling till Google–kontot.</string>
-    <string name="login_error_email_not_found">Google–kontot ”%s” motsvarar inte något befintligt konto på WordPress.com.</string>
     <string name="login_error_button">Stäng</string>
     <string name="login_google_button_suffix">Logga in via Google.</string>
     <string name="enter_wpcom_password_google">Ange motsvarande lösenord för WordPress.com för att fortsätta med detta Google–konto. Denna fråga får du endast en gång.</string>
@@ -905,7 +927,6 @@ Language: sv_SE
     <string name="image_quality">Bildkvalitet</string>
     <string name="error_all_media_upload_canceled">Alla mediauppladdningar har avbrutits på grund av ett okänt fel. Försök ladda upp igen</string>
     <string name="error_unknown_post_type">Okänt inläggsformat</string>
-    <string name="error_fetch_site_after_creation">Webbplatsen har skapats, du kan behöva uppdatera din webbplatslista i listan för val av webbplats.</string>
     <string name="submit_for_review">Skicka</string>
     <string name="duplicate_site_detected">En dublett–webbplats har hittats.</string>
     <string name="cannot_add_duplicate_site">Det går inte att lägga till denna webbplats. Den finns redan i appen.</string>
@@ -923,7 +944,6 @@ Language: sv_SE
     <string name="confirm">Bekräfta</string>
     <string name="xmlrpc_endpoint_forbidden_error">Det gick inte att ansluta. Vi får fel 403 (förbjudet) när vi anropar XMLRPC–ändpunkten för din webbplats. Appen behöver detta för att kunna kommunicera med din webbplats. Kontakta webbhotellet för att lösa detta problem.</string>
     <string name="xmlrpc_post_blocked_error">Det gick inte att ansluta. Din webbserver blockerar POST–anrop, som appen behöver för att kommunicera med din webbplats. Kontakta ditt webbhotell för att lösa detta problem.</string>
-    <string name="reader_empty_followed_blogs_search_title">Inga matchande webbplatser</string>
     <string name="reader_hint_search_followed_sites">Sök följda webbplatser</string>
     <string name="visual_editor_disabled">Visuell redigerare inaktiverad</string>
     <string name="preference_editor_visual">Visuell</string>
@@ -1373,7 +1393,6 @@ Language: sv_SE
     <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
     <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
     <string name="undo">Ångra</string>
-    <string name="passcodelock_prompt_message">Ange din PIN</string>
     <string name="push_auth_expired">Begäran har löpt ut. Logga in på WordPress.com för att försöka igen.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% av visningar</string>
     <string name="ignore">Ignorera </string>
@@ -1527,7 +1546,6 @@ Language: sv_SE
     <string name="reader_label_view_original">Visa originalartikel</string>
     <string name="reader_empty_posts_in_tag">Inga inlägg med denna etikett</string>
     <string name="reader_empty_comments">Inga kommentarer än</string>
-    <string name="create_new_blog_wpcom">Skapa en blogg på WordPress.com</string>
     <string name="browse_our_faq_button">Bläddra bland vanliga frågor</string>
     <string name="reader_menu_block_blog">Blockera denna webbplats</string>
     <string name="reader_toast_blog_blocked">Inlägg från denna webbplats kommer inte längre att visas</string>
@@ -1555,7 +1573,6 @@ Language: sv_SE
     <string name="username_or_password_incorrect">Användarnamnet eller lösenordet som angavs är felaktigt</string>
     <string name="email_invalid">Ange en giltig epostadress</string>
     <string name="invalid_email_message">Din epostadress är ogilltig</string>
-    <string name="passcode_wrong_passcode">Fel PIN</string>
     <string name="error_downloading_image">Fel vid nedladdning av bild</string>
     <string name="error_load_comment">Kunde inte ladda kommentaren</string>
     <string name="error_edit_comment">Ett fel uppstod under redigeringen av kommentaren</string>
@@ -1579,7 +1596,6 @@ Language: sv_SE
     <string name="blog_not_found">Ett fel uppstod vid anslutning till bloggen</string>
     <string name="gallery_error">Medieobjektet kunde inte hämtas</string>
     <string name="no_network_message">Inget nätverk tillgängligt</string>
-    <string name="required_field">Obligatoriskt fält</string>
     <string name="reader_toast_err_remove_tag">Kunde inte ta bort etiketten</string>
     <string name="reader_toast_err_add_tag">Kunde inte lägga till etiketten</string>
     <string name="reader_title_applog">Programlogg</string>
@@ -1588,7 +1604,6 @@ Language: sv_SE
     <string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
     <string name="error_deleting_page">Ett fel inträffade när sidan skulle raderas</string>
     <string name="wordpress_blog">WordPress–blogg</string>
-    <string name="add_account_blog_url">Bloggadress</string>
     <string name="image_settings">Bildinställningar</string>
     <string name="local_changes">Lokala ändringar</string>
     <string name="privacy_policy">Integritetspolicy</string>
@@ -1646,7 +1661,6 @@ Language: sv_SE
     <string name="connection_error">Kommunikationsfel</string>
     <string name="select_categories">Välj kategorier</string>
     <string name="share_link">Dela länk</string>
-    <string name="creating_your_site">Skapar din webbplats</string>
     <string name="reader_empty_posts_in_tag_updating">Hämtar inlägg…</string>
     <string name="cant_share_no_visible_blog">Du kan inte dela på WordPress utan att ha en synlig blogg</string>
     <string name="comment_spammed">Kommentar markerad som skräppost</string>
@@ -1675,14 +1689,6 @@ Language: sv_SE
     <string name="reader_untitled_post">(Ingen titel)</string>
     <string name="comments_empty_list">Inga kommentarer … än</string>
     <string name="empty_list_default">Listan är tom</string>
-    <string name="passcode_turn_on">Slå på PIN–kodlås</string>
-    <string name="passcode_turn_off">Stäng av PIN–kodlås</string>
-    <string name="passcode_preference_title">PIN–kodlås</string>
-    <string name="passcode_set">PIN–kod inställd</string>
-    <string name="passcode_change_passcode">Ändra PIN–kod</string>
-    <string name="passcode_re_enter_passcode">Skriv din PIN–kod igen</string>
-    <string name="passcode_enter_old_passcode">Skriv din gamla PIN–kod</string>
-    <string name="passcode_manage">Ändra PIN–kodlås</string>
     <string name="stats_totals_plays">Spelningar</string>
     <string name="stats_totals_clicks">Klick</string>
     <string name="stats_totals_views">Visningar</string>
@@ -1734,6 +1740,7 @@ Language: sv_SE
     <string name="posts">Inlägg</string>
     <string name="width">Bredd</string>
     <string name="caption">Bildtext (valfritt)</string>
+    <string name="pages">Sidor</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="featured_in_post">Inkludera bild i inlägget</string>
     <string name="blogusername">användarnamn</string>

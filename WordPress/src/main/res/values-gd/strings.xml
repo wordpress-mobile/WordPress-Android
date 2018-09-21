@@ -47,7 +47,6 @@ Language: gd_GB
     <string name="invite_error_sending">Thachair mearachd nuair a dh’fheuch sinn ris an cuireadh a chur!</string>
     <string name="invite_error_invalid_usernames_multiple">Cha ghabh a chur: Tha ainmean no puist–d ann nach eil dligheach</string>
     <string name="invite_error_invalid_usernames_one">Cha ghabh a chur: Tha ainm no post–d ann nach eil dligheach</string>
-    <string name="passcodelock_prompt_message">Cuir a–steach am PIN agad</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de sheallaidhean</string>
     <string name="ignore">Leig seachad</string>
     <string name="stats_insights_best_ever">Na seallaidhean as fhearr a–riamh</string>
@@ -189,7 +188,6 @@ Language: gd_GB
     <string name="reader_label_view_original">Seall an t–artaigil tùsail</string>
     <string name="reader_empty_posts_in_tag">Chan eil an taga seo aig post sam bith</string>
     <string name="reader_empty_comments">Chan eil beachd ann fhathast</string>
-    <string name="create_new_blog_wpcom">Cruthaich bloga WordPress.com</string>
     <string name="browse_our_faq_button">Rùraich na CÀBHA agam</string>
     <string name="more">Barrachd</string>
     <string name="reader_toast_err_generic">Cha ghabh seo a dhèanamh</string>
@@ -207,7 +205,6 @@ Language: gd_GB
     <string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a–steach cearr</string>
     <string name="email_invalid">Cuir a-steach post–d dligheach</string>
     <string name="invalid_email_message">Chan eil am post–d agad dligheach</string>
-    <string name="passcode_wrong_passcode">PIN cearr</string>
     <string name="error_downloading_image">Mearachd le luchdadh a–nuas an deilbh</string>
     <string name="error_load_comment">Cha b’ urrainn dhuinn am beachd a luchdadh</string>
     <string name="error_refresh_comments">Cha b’ urrainn dhuinn na beachdan ath–nuadhachadh aig an àm seo</string>
@@ -230,14 +227,12 @@ Language: gd_GB
     <string name="theme_fetch_failed">Cha b’ urrainn dhuinn na h–ùrlaran fhaighinn dhut</string>
     <string name="no_network_message">Chan eil lìonra ri làimh</string>
     <string name="invalid_url_message">Dèan cinnteach gu bheil an URL seo dligheach</string>
-    <string name="required_field">Raon air a bheil feum</string>
     <string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
     <string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
     <string name="reader_title_applog">Loga na h–aplacaid</string>
     <string name="fatal_db_error">Thachair mearachd fhad ’s a bha sinn a’ cruthachadh stòr–dàta nan aplacaidean. Feuch is stàlaich an aplacaid às ùr.</string>
     <string name="error_blog_hidden">’S e bloga falaichte a tha ann is cha b’ urrainn dhuinn a luchdadh. Cuir an comas e sna roghainnean is feuch ris a–rithist.</string>
     <string name="wordpress_blog">Bloga WordPress</string>
-    <string name="add_account_blog_url">Seòladh a’ bhloga</string>
     <string name="local_changes">Atharraichean ionadail</string>
     <string name="image_settings">Roghainnean an deilbh</string>
     <string name="privacy_policy">Am poileasaidh prìobhaideachd</string>
@@ -291,7 +286,6 @@ Language: gd_GB
     <string name="invalid_site_url_message">Dèan cinnteach gu bheil an URL a chuir thu a–steach dligheach</string>
     <string name="notifications_empty_all">Chan eil brath ann… fhathast.</string>
     <string name="share_link">Co–roinn an ceangal</string>
-    <string name="creating_your_site">A\' cruthachadh na làraich agad</string>
     <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
@@ -348,14 +342,6 @@ Language: gd_GB
     <string name="stats_totals_views">Seallaidhean</string>
     <string name="stats_totals_clicks">Briogaidhean</string>
     <string name="stats_totals_plays">Air a chluich</string>
-    <string name="passcode_re_enter_passcode">Cuir a-steach am PIN agad a–rithist</string>
-    <string name="passcode_change_passcode">Atharraich am PIN</string>
-    <string name="passcode_manage">Stiùirich glas a\' PIN</string>
-    <string name="passcode_enter_old_passcode">Cuir a–steach an seann PIN agad</string>
-    <string name="passcode_set">Chaidh am PIN a shuidheachadh</string>
-    <string name="passcode_preference_title">Glas a\' PIN</string>
-    <string name="passcode_turn_off">Cuir glas a\' PIN dheth</string>
-    <string name="passcode_turn_on">Cuir glas a\' PIN air</string>
     <string name="manage">Stiùirich</string>
     <string name="discard">Tilg air falbh</string>
     <string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
@@ -375,6 +361,7 @@ Language: gd_GB
     <string name="reader">Leughadair</string>
     <string name="featured_in_post">Gabh a–steach an dealbh ann an susbaint a\' phuist</string>
     <string name="no_network_title">Chan eil lìonra ri fhaighinn</string>
+    <string name="pages">Duilleagan</string>
     <string name="caption">Caipsean (roghainneil)</string>
     <string name="width">Leud</string>
     <string name="posts">Puist</string>

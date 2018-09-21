@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 12:54:08+0000
+Translation-Revision-Date: 2018-09-19 10:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[اقرأ المزيد]</string>
+    <string name="news_card_announcement_content_sample_announcement">[ألا يوجد وقت للقراءة الآن؟ لا توجد مشكلة: حفظ المنشورات كلما تقوم بالنشر.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[ميزة جديدة متوفرة]</string>
+    <string name="pages_empty_trashed">ليس لديك أي صفحات تم نقلها إلى سلة المهملات</string>
+    <string name="pages_empty_scheduled">ليس لديك أي صفحات مجدولة</string>
+    <string name="pages_empty_drafts">ليس لديك أي مسودة صفحات</string>
+    <string name="pages_empty_published">لم تنشر أي صفحات حتى الآن</string>
+    <string name="pages_search_suggestion">بحث في الصفحات</string>
+    <string name="pages_empty_search_result">لا تتطابق أي صفحات مع بحثك</string>
+    <string name="pages_delete_permanently">حذف نهائيًّا</string>
+    <string name="pages_move_to_trash">نقل إلى سلة المهملات</string>
+    <string name="pages_move_to_draft">نقل إلى المسودة</string>
+    <string name="pages_publish_now">النشر الآن</string>
+    <string name="pages_set_parent">تعيين الأصل</string>
+    <string name="pages_view">عرض</string>
+    <string name="pages_trashed">أُضيف إلى سلة المهملات</string>
+    <string name="pages_scheduled">مجدول</string>
+    <string name="pages_drafts">المسودات</string>
+    <string name="pages_published">منشور</string>
+    <string name="login_error_sms_throttled">أجرينا عددًا كبيرًا جدًا من المحاولات لإرسال رمز التحقق عبر الرسائل القصيرة — استرح، واطلب رمزًا جديدًا في غضون دقيقة.</string>
+    <string name="login_error_email_not_found_v2">لا يتطابق أي حساب على وردبرس.كوم مع حساب Google هذا.</string>
+    <string name="site_picker_remove_site_empty">لا تتطابق أي مواقع مع بحثك</string>
+    <string name="reader_empty_followed_blogs_search_title">لا تتطابق أي مواقع مع بحثك</string>
+    <string name="page_parent_changed">تم تغيير أصل الصفحة</string>
+    <string name="page_permanently_deleted">تم حذف الصفحة نهائيًّا</string>
+    <string name="page_moved_to_scheduled">تمت جدولة الصفحة</string>
+    <string name="page_moved_to_published">تم نشر الصفحة</string>
+    <string name="page_moved_to_trash">تم نقل الصفحة إلى سلة المهملات</string>
+    <string name="page_moved_to_draft">تم نقل الصفحة إلى المسودات</string>
+    <string name="top_level">أعلى مستوى</string>
+    <string name="page_delete_dialog_message">هل تريد بالتأكيد حذف الصفحة %s؟</string>
+    <string name="page_parent_change_error">حدثت مشكلة أثناء تغيير أصل الصفحة</string>
+    <string name="page_status_change_error">حدثت مشكلة أثناء تغيير حالة الصفحة</string>
+    <string name="page_delete_error">حدثت مشكلة أثناء حذف الصفحة</string>
+    <string name="set_parent">تعيين الأصل</string>
+    <string name="dismiss">تجاهل</string>
     <string name="quick_start_focus_point_description">انقر هنا</string>
     <string name="quick_start_sites">البدء السريع</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
     <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل</string>
     <string name="quick_start_list_complete_title">تهانينا على إنهاء جولة البدء السريع</string>
     <string name="quick_start_list_complete_subtitle">أليس من الأفضل حذف الأشياء من القائمة؟</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">عرض موقعك</string>
     <string name="quick_start_dialog_view_site_message_short">انقر على %1$sعرض الموقع %2$s لاستعراض موقعك</string>
     <string name="quick_start_dialog_view_site_message">يمكنك معاينة موقعك الجديد لرؤية ما سيراه الزائرون.</string>
@@ -312,7 +336,6 @@ Language: ar
     <string name="me_section_screen_title">أنا</string>
     <string name="my_site_section_screen_title">موقعي</string>
     <string name="notif_settings_screen_title">إعدادات التنبيه</string>
-    <string name="passcode_screen_title">رمز مرور وردبرس</string>
     <string name="help_screen_title">المساعدة والدعم</string>
     <string name="license_screen_title">الترخيص</string>
     <string name="release_notes_screen_title">ملاحظات الإصدار</string>
@@ -558,7 +581,6 @@ Language: ar
     <string name="media_edit_file_details_card_caption">تفاصيل الملف</string>
     <string name="login_error_suffix">\nهل يمكن أن تجرّب حسابًا مختلفًا؟</string>
     <string name="login_error_generic">حدثت مشكلة أثناء الاتصال بحساب Google.</string>
-    <string name="login_error_email_not_found">لا يتطابق حساب Google \"%s\" مع أي حساب موجود على وردبرس.كوم.</string>
     <string name="login_error_button">إغلاق</string>
     <string name="login_google_button_suffix">سجّل الدخول إلى Google.</string>
     <string name="enter_wpcom_password_google">للمتابعة باستخدام حساب Google هذا، يرجى إدخال كلمة مرور متطابقة في وردبرس.كوم. ستتم المطالبة بها لمرة واحدة.</string>
@@ -843,7 +865,6 @@ Language: ar
     <string name="keep_editing">متابعة التحرير</string>
     <string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
     <string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
-    <string name="error_fetch_site_after_creation">تم إنشاء الموقع، ربما تحتاج إلى تحديث مواقعك في منتقي المواقع.</string>
     <string name="submit_for_review">إرسال</string>
     <string name="duplicate_site_detected">تم اكتشاف موقع متكرر.</string>
     <string name="cannot_add_duplicate_site">الموقع موجود بالفعل في التطبيق، لا يمكنك إضافته.</string>
@@ -860,7 +881,6 @@ Language: ar
     <string name="retry">إعادة المحاولة</string>
     <string name="confirm">تأكيد</string>
     <string name="xmlrpc_post_blocked_error">تعذر الاتصال. يقوم المضيف الخاص بك بحظر طلبات POST، ويحتاج التطبيق إليها\n للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل هذه المشكلة.</string>
-    <string name="reader_empty_followed_blogs_search_title">لا توجد مواقع متطابقة</string>
     <string name="reader_hint_search_followed_sites">بحث في المواقع التي تتم متابعتها</string>
     <string name="visual_editor_disabled">تم تعطيل المحرر المرئي</string>
     <string name="preference_editor_visual">مرئي</string>
@@ -1283,7 +1303,6 @@ Language: ar
     <string name="post_deleted">تم حذف المقالة</string>
     <string name="page_trashed">تم إرسال الصفحة إلى سلة المهملات</string>
     <string name="undo">تراجع</string>
-    <string name="passcodelock_prompt_message">أدخل مفتاح الـ PIN</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="ignore">تجاهل</string>
     <string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
@@ -1426,7 +1445,6 @@ Language: ar
     <string name="reader_label_view_original">عرض المقالة الأصلية</string>
     <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
-    <string name="create_new_blog_wpcom">إنشاء مدونة WordPress.com</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="contact_us">اتصل بنا</string>
@@ -1443,7 +1461,6 @@ Language: ar
     <string name="username_or_password_incorrect">اسم المستخدم أو كلمة المرور غير صحيحة</string>
     <string name="email_invalid">أدخل عنوان بريد إلكتروني صالح</string>
     <string name="invalid_email_message">عنوان بريدك الإلكتروني غير صالح</string>
-    <string name="passcode_wrong_passcode">مفتاح الـ PIN خاطئ</string>
     <string name="error_downloading_image">خطأ في تحميل الصورة</string>
     <string name="error_load_comment">لايمكن تحميل التعليق</string>
     <string name="error_edit_comment">حدث خطأ أثناء تعديل التعليق </string>
@@ -1466,7 +1483,6 @@ Language: ar
     <string name="blog_not_found">حدث خطأ أثناء دخول هذه المدونة </string>
     <string name="gallery_error">لا يمكن استعادة عنصر الوسائط المتعددة</string>
     <string name="no_network_message">لاتوجد شبكة متاحة</string>
-    <string name="required_field">حقل مطلوب</string>
     <string name="reader_toast_err_remove_tag">غير قادر على حذف هذا الوسم</string>
     <string name="reader_toast_err_add_tag">غير قادر على إضافة هذا الوسم</string>
     <string name="reader_title_applog">سجل التطبيق</string>
@@ -1475,7 +1491,6 @@ Language: ar
     <string name="error_refresh_media">تعذر تحديث الوسائط هذه المرة</string>
     <string name="error_deleting_page">حدث خطأ أثناء حذف الصفحة</string>
     <string name="wordpress_blog">مدونة ووردبريس</string>
-    <string name="add_account_blog_url">عنوان المدونة</string>
     <string name="image_settings">إعدادات الصورة</string>
     <string name="local_changes">التغيرات المحلية</string>
     <string name="privacy_policy">سياسة الخصوصية</string>
@@ -1530,7 +1545,6 @@ Language: ar
     <string name="connection_error">خطأ في الاتصال</string>
     <string name="select_categories">تحديد التصنيفات</string>
     <string name="share_link">مشاركة الرابط</string>
-    <string name="creating_your_site">يتم الآن إنشاء موقعك</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
     <string name="comment_spammed">تم وضع علامة إزعاج على التعليق</string>
@@ -1558,14 +1572,6 @@ Language: ar
     <string name="reader_btn_share">مشاركة</string>
     <string name="reader_untitled_post">( بدون اسم )</string>
     <string name="empty_list_default">هذه القائمة فارغة.</string>
-    <string name="passcode_turn_on">تشغيل قفل رمز PIN</string>
-    <string name="passcode_turn_off">ايقاف قفل رمز PIN</string>
-    <string name="passcode_preference_title">قفل الـ PIN</string>
-    <string name="passcode_set">تعيين مفتاح الـ PIN</string>
-    <string name="passcode_change_passcode">تغيير مفتاح الـ PIN</string>
-    <string name="passcode_re_enter_passcode">اعادة إدخال مفتاح الـ PIN</string>
-    <string name="passcode_enter_old_passcode">أدخل مفتاح الـ PIN القديم</string>
-    <string name="passcode_manage">ادارة قفل الـ PIN</string>
     <string name="stats_totals_plays">يشغل</string>
     <string name="stats_totals_clicks">النقرات</string>
     <string name="stats_totals_views">الزيارات</string>
@@ -1615,6 +1621,7 @@ Language: ar
     <string name="posts">المقالات</string>
     <string name="width">عرض</string>
     <string name="caption">الكلمات التوضيحية (اختياري)</string>
+    <string name="pages">صفحات</string>
     <string name="no_network_title">لا توجد شبكة متاحة</string>
     <string name="featured_in_post">إدراج الصورة في محتوى المقالة</string>
     <string name="blogusername">blogusername</string>

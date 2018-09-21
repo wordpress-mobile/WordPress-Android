@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 08:54:09+0000
+Translation-Revision-Date: 2018-09-20 05:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[더 보기]</string>
+    <string name="news_card_announcement_content_sample_announcement">[읽을 시간이 없나요? 괜찮습니다. 글을 저장했다가 읽을 수 있을 때 읽으세요.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[사용 가능한 새 기능]</string>
+    <string name="pages_empty_trashed">삭제한 페이지가 없습니다.</string>
+    <string name="pages_empty_scheduled">예약한 페이지가 없습니다.</string>
+    <string name="pages_empty_drafts">임시 페이지가 없습니다.</string>
+    <string name="pages_empty_published">아직 페이지를 게시하지 않았습니다.</string>
+    <string name="pages_search_suggestion">페이지 검색</string>
+    <string name="pages_empty_search_result">검색어와 일치하는 페이지 없음</string>
+    <string name="pages_delete_permanently">영구적으로 삭제하기</string>
+    <string name="pages_move_to_trash">휴지통으로 이동</string>
+    <string name="pages_move_to_draft">임시글로 이동</string>
+    <string name="pages_publish_now">지금 공개</string>
+    <string name="pages_set_parent">상위 항목 설정</string>
+    <string name="pages_view">보기</string>
+    <string name="pages_trashed">삭제된</string>
+    <string name="pages_scheduled">예약됨</string>
+    <string name="pages_drafts">임시글</string>
+    <string name="pages_published">발행됨</string>
+    <string name="login_error_sms_throttled">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
+    <string name="login_error_email_not_found_v2">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
+    <string name="site_picker_remove_site_empty">검색어와 일치하는 사이트 없음</string>
+    <string name="reader_empty_followed_blogs_search_title">검색어와 일치하는 사이트 없음</string>
+    <string name="page_parent_changed">페이지 상위 항목이 변경되었습니다.</string>
+    <string name="page_permanently_deleted">페이지가 영구적으로 삭제되었습니다.</string>
+    <string name="page_moved_to_scheduled">페이지가 예약되었습니다.</string>
+    <string name="page_moved_to_published">페이지가 게시되었습니다.</string>
+    <string name="page_moved_to_trash">페이지가 휴지통으로 이동되었습니다.</string>
+    <string name="page_moved_to_draft">페이지가 임시 보관함으로 이동되었습니다.</string>
+    <string name="top_level">최상위</string>
+    <string name="page_delete_dialog_message">%s 페이지를 삭제하시겠습니까?</string>
+    <string name="page_parent_change_error">페이지 상위 항목을 변경하는 중에 문제가 발생했습니다.</string>
+    <string name="page_status_change_error">페이지 상태를 변경하는 중에 문제가 발생했습니다.</string>
+    <string name="page_delete_error">페이지를 삭제하는 중에 문제가 발생했습니다.</string>
+    <string name="set_parent">상위 항목 설정</string>
+    <string name="dismiss">해제</string>
     <string name="quick_start_focus_point_description">여기를 탭하세요.</string>
     <string name="quick_start_sites">퀵 스타트</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">사이트 만들기</string>
     <string name="quick_start_list_create_site_subtitle">사이트 가동 및 작동</string>
     <string name="quick_start_list_complete_title">퀵 스타트 완료</string>
     <string name="quick_start_list_complete_subtitle">목록에서 끝난 일을 지우는 건 항상 기분 좋은 일이죠.</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">사이트 보기</string>
     <string name="quick_start_dialog_view_site_message_short">%1$s 사이트 보기 %2$s를 탭하여 사이트 미리보기</string>
     <string name="quick_start_dialog_view_site_message">새 사이트를 미리 보고 방문자에게 어떤 것이 표시되는지 확인하세요.</string>
@@ -331,7 +355,6 @@ Language: ko_KR
     <string name="me_section_screen_title">나</string>
     <string name="my_site_section_screen_title">내 사이트</string>
     <string name="notif_settings_screen_title">알림 설정</string>
-    <string name="passcode_screen_title">워드프레스 패스코드</string>
     <string name="help_screen_title">도움말 및 지원</string>
     <string name="license_screen_title">라이선스</string>
     <string name="release_notes_screen_title">릴리스 노트</string>
@@ -588,7 +611,6 @@ Language: ko_KR
     <string name="media_edit_file_details_card_caption">파일 세부정보</string>
     <string name="login_error_suffix">\n다른 계정을 사용해 보세요.</string>
     <string name="login_error_generic">Google 계정과 연결하는 데 문제가 발생했습니다.</string>
-    <string name="login_error_email_not_found">Google 계정 \'%s\'이(가) 워드프레스닷컴의 기존 계정과 일치하지 않습니다.</string>
     <string name="login_error_button">닫기</string>
     <string name="login_google_button_suffix">Google로 로그인합니다.</string>
     <string name="enter_wpcom_password_google">이 Google 계정으로 진행하려면 일치하는 워드프레스닷컴 비밀번호를 제공하세요. 이 메시지는 한 번만 표시됩니다.</string>
@@ -887,7 +909,6 @@ Language: ko_KR
     <string name="keep_editing">계속 편집하기</string>
     <string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
     <string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
-    <string name="error_fetch_site_after_creation">사이트가 생성되면 사이트 선택 도구에서 사이트를 새로 고쳐야 할 수 있습니다.</string>
     <string name="submit_for_review">제출하기</string>
     <string name="duplicate_site_detected">중복 사이트가 감지되었습니다.</string>
     <string name="cannot_add_duplicate_site">이 사이트가 이미 앱에 있으므로, 추가할 수 없습니다.</string>
@@ -905,7 +926,6 @@ Language: ko_KR
     <string name="confirm">확인</string>
     <string name="xmlrpc_endpoint_forbidden_error">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
     <string name="xmlrpc_post_blocked_error">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
-    <string name="reader_empty_followed_blogs_search_title">일치하는 사이트 없음</string>
     <string name="reader_hint_search_followed_sites">팔로우된 사이트 검색</string>
     <string name="visual_editor_disabled">비주얼 편집기 사용 안 함</string>
     <string name="preference_editor_visual">비주얼</string>
@@ -1329,7 +1349,6 @@ Language: ko_KR
     <string name="post_deleted">글 삭제됨</string>
     <string name="page_trashed">휴지통으로 이동된 페이지</string>
     <string name="undo">실행 취소</string>
-    <string name="passcodelock_prompt_message">PIN 입력</string>
     <string name="push_auth_expired">요청이 만료되었습니다. 다시 시도하려면 WordPress.com에 로그인하십시요.</string>
     <string name="stats_insights_most_popular_percent_views">조회수 %1$d%%</string>
     <string name="ignore">무시</string>
@@ -1478,7 +1497,6 @@ Language: ko_KR
     <string name="reader_label_view_original">원본 기사 보기</string>
     <string name="reader_empty_posts_in_tag">이 태그가 지정된 게시물이 없음</string>
     <string name="reader_empty_comments">아직 댓글이 없음</string>
-    <string name="create_new_blog_wpcom">WordPress.com 블로그 만들기</string>
     <string name="browse_our_faq_button">FAQ 찾아보기</string>
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
     <string name="contact_us">문의하기</string>
@@ -1495,7 +1513,6 @@ Language: ko_KR
     <string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
     <string name="email_invalid">유효한 이메일 주소를 입력 하십시오.</string>
     <string name="invalid_email_message">잘못된 이메일 주소입니다.</string>
-    <string name="passcode_wrong_passcode">PIN 번호가 잘못되었습니다 . 다시 시도 하십시오.</string>
     <string name="error_downloading_image">이미지를 다운로드하는 중에 오류가 발생했습니다. 다시 시도하십시오.</string>
     <string name="error_load_comment">코멘트 를 로드 할 수 없습니다. 다시 시도 하십시오.</string>
     <string name="error_edit_comment">코멘트 편집 할 때 오류가 발생 했습니다. 나중에 다시 시도 하십시오.</string>
@@ -1518,7 +1535,6 @@ Language: ko_KR
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
     <string name="gallery_error">미디어 항목을 로드 할 수 없습니다.</string>
     <string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
-    <string name="required_field">필수 항목</string>
     <string name="reader_toast_err_remove_tag">태그를 삭제할 수 없습니다.</string>
     <string name="reader_toast_err_add_tag">태그를 추가할 수 없습니다.</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
@@ -1527,7 +1543,6 @@ Language: ko_KR
     <string name="error_refresh_media">현재 미디어를 새로 고칠 수 없습니다</string>
     <string name="error_deleting_page">페이지를 삭제하는 중에 오류가 발생했습니다</string>
     <string name="wordpress_blog">WordPress 블로그</string>
-    <string name="add_account_blog_url">블로그 주소</string>
     <string name="image_settings">이미지 설정</string>
     <string name="local_changes">로컬 변경</string>
     <string name="privacy_policy">개인 정보 보호 정책</string>
@@ -1582,7 +1597,6 @@ Language: ko_KR
     <string name="connection_error">연결 오류</string>
     <string name="select_categories">카테고리를 선택</string>
     <string name="share_link">링크 공유</string>
-    <string name="creating_your_site">사이트를 만들 수 있습니다</string>
     <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
     <string name="cant_share_no_visible_blog">공개 블로그가 없기 때문에 WordPress에 공유 할 수 없습니다</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
@@ -1610,14 +1624,6 @@ Language: ko_KR
     <string name="reader_btn_share">공유</string>
     <string name="reader_untitled_post">(제목 없음)</string>
     <string name="empty_list_default">이 목록에는 아무것도 포함되어 있지 않습니다.</string>
-    <string name="passcode_turn_on">PIN 번호 잠금을 활성화</string>
-    <string name="passcode_turn_off">PIN 번호 잠금을 해제</string>
-    <string name="passcode_preference_title">PIN 번호 잠금</string>
-    <string name="passcode_set">PIN 번호 변경</string>
-    <string name="passcode_change_passcode">PIN 번호 변경</string>
-    <string name="passcode_re_enter_passcode">PIN 번호 다시 입력</string>
-    <string name="passcode_enter_old_passcode">이전 PIN 번호를 입력</string>
-    <string name="passcode_manage">PIN 번호 잠금 관리</string>
     <string name="stats_totals_plays">조회</string>
     <string name="stats_totals_clicks">클릭 수</string>
     <string name="stats_totals_views">보기</string>
@@ -1669,6 +1675,7 @@ Language: ko_KR
     <string name="posts">작성</string>
     <string name="width">가로</string>
     <string name="caption">캡션(옵션)</string>
+    <string name="pages">페이지</string>
     <string name="no_network_title">사용 가능한 네트워크가 없습니다</string>
     <string name="featured_in_post">게시물 본문에 이미지를 포함</string>
     <string name="blogusername">blogusername</string>
