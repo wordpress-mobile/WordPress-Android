@@ -24,6 +24,17 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
         PostListDescriptor.calculateTypeIdentifier(site.id)
     }
 
+    override fun hashCode(): Int {
+        return uniqueIdentifier.value
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val that = other as PostListDescriptor
+        return uniqueIdentifier == that.uniqueIdentifier
+    }
+
     companion object {
         @JvmStatic
         fun calculateTypeIdentifier(localSiteId: Int): ListDescriptorTypeIdentifier {
