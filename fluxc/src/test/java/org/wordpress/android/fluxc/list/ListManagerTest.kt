@@ -119,9 +119,9 @@ class ListManagerTest {
                 remoteItem = null,
                 fetchItem = fetchItem
         )
-        listManager.getRemoteItem(indexToGet, shouldFetchIfNull = true)
+        listManager.getItem(indexToGet, shouldFetchIfNull = true)
         assertTrue(fetchedFirstTime)
-        listManager.getRemoteItem(indexToGet, shouldFetchIfNull = true)
+        listManager.getItem(indexToGet, shouldFetchIfNull = true)
         assertFalse(fetchedSecondTime)
     }
 
@@ -145,7 +145,7 @@ class ListManagerTest {
                 remoteItem = PostModel(),
                 fetchItem = fetchItem
         )
-        listManager.getRemoteItem(indexToGet, shouldFetchIfNull = true)
+        listManager.getItem(indexToGet, shouldFetchIfNull = true)
         assertFalse(fetched)
     }
     /**
@@ -168,7 +168,7 @@ class ListManagerTest {
                 remoteItem = null,
                 fetchItem = fetchItem
         )
-        listManager.getRemoteItem(indexToGet, shouldFetchIfNull = false)
+        listManager.getItem(indexToGet, shouldFetchIfNull = false)
         assertFalse(fetched)
     }
 
@@ -188,8 +188,8 @@ class ListManagerTest {
                 remoteItemId = 132L,
                 remoteItem = null
         )
-        listManager.getRemoteItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
-        listManager.getRemoteItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
+        listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
+        listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
         with(actionCaptor.firstValue) {
             assertEquals(this.type, ListAction.FETCH_LIST)
@@ -212,7 +212,7 @@ class ListManagerTest {
                 remoteItemId = 132L,
                 remoteItem = null
         )
-        listManager.getRemoteItem(0, shouldLoadMoreIfNecessary = true)
+        listManager.getItem(0, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, never()).dispatch(actionCaptor.capture())
     }
 
@@ -230,7 +230,7 @@ class ListManagerTest {
                 remoteItemId = 132L,
                 remoteItem = null
         )
-        listManager.getRemoteItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = false)
+        listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = false)
         verify(dispatcher, never()).dispatch(actionCaptor.capture())
     }
 
@@ -249,7 +249,7 @@ class ListManagerTest {
                 remoteItemId = 132L,
                 remoteItem = null
         )
-        listManager.getRemoteItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
+        listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, never()).dispatch(actionCaptor.capture())
     }
 
@@ -274,7 +274,7 @@ class ListManagerTest {
         whenever(listItems[indexToGet]).thenReturn(listItemModel)
         val listData = if (remoteItem != null) mapOf(Pair(remoteItemId, remoteItem)) else Collections.emptyMap()
         val fetchFunction = fetchItem ?: {}
-        val listManager = ListManager(dispatcher, listDescriptor, listItems, listData, loadMoreOffset,
+        val listManager = ListManager(dispatcher, listDescriptor, null, listItems, listData, loadMoreOffset,
                 isFetchingFirstPage, isLoadingMore, canLoadMore, fetchFunction)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
         assertEquals(isLoadingMore, listManager.isLoadingMore)

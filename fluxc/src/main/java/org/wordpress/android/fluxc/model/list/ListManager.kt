@@ -36,9 +36,16 @@ class ListManager<T>(
     private val fetchItem: (Long) -> Unit
 ) {
     companion object {
-        fun <T> areItemsTheSame(new: ListManager<T>, old: ListManager<T>, newPosition: Int, oldPosition: Int, areItemsTheSame: (T, T) -> Boolean): Boolean {
+        fun <T> areItemsTheSame(
+            new: ListManager<T>,
+            old: ListManager<T>,
+            newPosition: Int,
+            oldPosition: Int,
+            areItemsTheSame: (T, T) -> Boolean
+        ): Boolean {
             if (newPosition >= new.localItemSize && oldPosition >= old.localItemSize) {
-                return new.remoteItemId(newPosition - new.localItemSize) == old.remoteItemId(oldPosition - old.localItemSize)
+                return new.remoteItemId(newPosition - new.localItemSize) ==
+                        old.remoteItemId(oldPosition - old.localItemSize)
             }
             val oldItem = old.getItem(oldPosition, false)
             val newItem = new.getItem(newPosition, false)
@@ -51,6 +58,7 @@ class ListManager<T>(
             return areItemsTheSame(oldItem, newItem)
         }
     }
+
     private val localItemSize: Int = localItems?.size ?: 0
     val size: Int = items.size + localItemSize
     /**
