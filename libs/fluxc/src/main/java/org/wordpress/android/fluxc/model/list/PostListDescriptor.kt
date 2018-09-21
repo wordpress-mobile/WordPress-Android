@@ -50,7 +50,7 @@ sealed class PostListDescriptor(val site: SiteModel) : ListDescriptor {
 
             companion object {
                 fun fromValue(value: String): PostStatusForRestSite? {
-                   return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
+                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
                 }
             }
         }
@@ -69,6 +69,7 @@ enum class PostListOrderBy(val value: String) {
     TITLE("title"),
     COMMENT_COUNT("comment_count"),
     ID("ID");
+
     companion object {
         fun fromValue(value: String): PostListOrderBy? {
             return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
