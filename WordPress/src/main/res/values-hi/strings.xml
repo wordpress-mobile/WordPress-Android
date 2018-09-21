@@ -265,7 +265,6 @@ Language: hi_IN
     <string name="invalid_email_message">आपका ईमेल पता मान्य नहीं है</string>
     <string name="adding_cat_failed">श्रेणी जोड़ना असफल हुआ</string>
     <string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
-    <string name="passcode_wrong_passcode">गलत पिन</string>
     <string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
     <string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
     <string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
@@ -283,7 +282,6 @@ Language: hi_IN
     <string name="hint_comment_content">टिप्पणी</string>
     <string name="content_required">टिप्पणी आवश्यक है</string>
     <string name="http_authorization_required">प्रमाणीकरण आवश्यक</string>
-    <string name="add_account_blog_url">ब्लॉग का पता</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="cancel_edit">संपादन रद्द करें</string>
     <string name="category_name">श्रेणी नाम</string>
@@ -320,7 +318,6 @@ Language: hi_IN
     <string name="connection_error">कनेक्शन त्रुटि</string>
     <string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
     <string name="select_categories">श्रेणियों को चुने</string>
-    <string name="required_field">आवश्यक फ़ील्ड</string>
     <string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
     <string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
@@ -339,7 +336,6 @@ Language: hi_IN
     <string name="reader_title_applog">एप्लीकेशन लॉग</string>
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
-    <string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
     <string name="video">वीडियो</string>
     <string name="reader_label_reply">जवाब दें</string>
@@ -386,23 +382,15 @@ Language: hi_IN
     <string name="media_edit_failure">अपडेट करने में असफल</string>
     <string name="stats_entry_tags_and_categories">विषय</string>
     <string name="stats_totals_views">देखें गये</string>
-    <string name="passcode_change_passcode">पिन बदलें</string>
     <string name="stats">आँकड़े</string>
     <string name="media_gallery_type_squares">वर्गाकार</string>
     <string name="media_gallery_type_slideshow">स्लाइड शो</string>
     <string name="media_edit_caption_text">शीर्षक</string>
-    <string name="passcode_enter_old_passcode">अपना पुराना पिन दर्ज करें</string>
     <string name="stats_view_visitors_and_views">दर्शक और देखें गये</string>
     <string name="stats_entry_referrers">रेफ़रर</string>
     <string name="stats_view_referrers">रेफ़ररस</string>
-    <string name="passcode_set">पिन निर्धारित करें</string>
     <string name="stats_totals_plays">चलाया गया</string>
-    <string name="passcode_turn_off">पिन को ऑफ करे</string>
-    <string name="passcode_turn_on">पिन को ऑन करे</string>
-    <string name="passcode_manage">पिन का प्रबंधन करे</string>
-    <string name="passcode_preference_title">पिन लॉक</string>
     <string name="media_gallery_type_tiled">टाइल किया हुआ</string>
-    <string name="passcode_re_enter_passcode">अपना पिन फिर से दर्ज करें</string>
     <string name="stats_view_tags_and_categories">टैग और श्रेणियाँ</string>
     <string name="manage">प्रबंधन</string>
     <string name="discard">नज़रअंदाज़ करे</string>
@@ -422,6 +410,7 @@ Language: hi_IN
     <string name="reader">पाठक</string>
     <string name="anonymous">अनाम</string>
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
+    <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
     <string name="width">चौडाई</string>
     <string name="caption">शीर्षक (वैकल्पिक)</string>

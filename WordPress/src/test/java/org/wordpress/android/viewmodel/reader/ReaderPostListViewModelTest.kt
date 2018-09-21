@@ -32,6 +32,9 @@ class ReaderPostListViewModelTest {
     @Mock private lateinit var newsManager: NewsManager
     @Mock private lateinit var observer: Observer<NewsItem>
     @Mock private lateinit var item: NewsItem
+    /**
+     * First tag for which the card was shown.
+     */
     @Mock private lateinit var initialTag: ReaderTag
     @Mock private lateinit var otherTag: ReaderTag
     @Mock private lateinit var newsTracker: NewsTracker
@@ -75,8 +78,13 @@ class ReaderPostListViewModelTest {
 
     @Test
     fun emitNullOnInitialTagChanged() {
-        viewModel.start(initialTag)
+        viewModel.start(otherTag)
+        // propagates the item since the card hasn't been shown yet
         liveData.postValue(item)
+        viewModel.onTagChanged(initialTag)
+        // the card has been shown for the initialTag
+        viewModel.onNewsCardShown(item, initialTag)
+        // propagates null since the card should be visible only for initialTag
         viewModel.onTagChanged(otherTag)
         val inOrder = inOrder(observer)
         inOrder.verify(observer).onChanged(item)
@@ -84,16 +92,24 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun verifyNewsItemAvailableOnlyForInitialReaderTag() {
-        viewModel.start(initialTag)
+    fun verifyNewsItemAvailableOnlyForFirstTagForWhichCardWasShown() {
+        viewModel.start(otherTag)
+        // propagate the item since the card hasn't been shown yet
         liveData.postValue(item)
-        viewModel.onTagChanged(otherTag)
-        liveData.postValue(item) // should not be propagated to the UI
-        liveData.postValue(item) // should not be propagated to the UI
-        liveData.postValue(item) // should not be propagated to the UI
-        liveData.postValue(item) // should not be propagated to the UI
         viewModel.onTagChanged(initialTag)
-
+        // the card has been shown for the initialTag
+        viewModel.onNewsCardShown(item, initialTag)
+        viewModel.onTagChanged(otherTag)
+        // do not propagate the item since the card should be visible only for initialTag
+        liveData.postValue(item)
+        // do not propagate the item since the card should be visible only for initialTag
+        liveData.postValue(item)
+        // do not propagate the item since the card should be visible only for initialTag
+        liveData.postValue(item)
+        // do not propagate the item since the card should be visible only for initialTag
+        liveData.postValue(item)
+        // propagate the item since the initialTag is selected
+        viewModel.onTagChanged(initialTag)
         val inOrder = inOrder(observer)
         inOrder.verify(observer).onChanged(item)
         inOrder.verify(observer).onChanged(null)
@@ -109,7 +125,7 @@ class ReaderPostListViewModelTest {
     @Test
     fun verifyViewModelPropagatesCardShownToNewsTracker() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(true)
-        viewModel.onNewsCardShown(item)
+        viewModel.onNewsCardShown(item, initialTag)
         verify(newsTracker).trackNewsCardShown(argThat { this == READER }, any())
         verify(newsTrackerHelper).itemTracked(any())
     }
@@ -117,7 +133,7 @@ class ReaderPostListViewModelTest {
     @Test
     fun verifyViewModelDoesNotPropagatesCardShownToNewsTracker() {
         whenever(newsTrackerHelper.shouldTrackNewsCardShown(any())).thenReturn(false)
-        viewModel.onNewsCardShown(item)
+        viewModel.onNewsCardShown(item, initialTag)
         verify(newsTracker, times(0)).trackNewsCardShown(argThat { this == READER }, any())
         verify(newsTrackerHelper, times(0)).itemTracked(any())
     }

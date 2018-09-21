@@ -265,7 +265,6 @@ Language: sk
     <string name="me_section_screen_title">Ja</string>
     <string name="my_site_section_screen_title">Moja webová stránka</string>
     <string name="notif_settings_screen_title">Nastavenia upozornení</string>
-    <string name="passcode_screen_title">WordPress heslo</string>
     <string name="help_screen_title">Pomoc a podpora</string>
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Poznámky k verzii</string>
@@ -755,7 +754,6 @@ Language: sk
     <string name="post_deleted">Článok vymazaný</string>
     <string name="page_trashed">Stránka presunutá do koša</string>
     <string name="undo">Zrušiť zmenu</string>
-    <string name="passcodelock_prompt_message">Zadajte svoj PIN</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% zobrazení</string>
     <string name="ignore">Ignorovať</string>
     <string name="stats_insights_best_ever">Najlepšie zobrazenia</string>
@@ -897,7 +895,6 @@ Language: sk
     <string name="reader_label_view_original">Pozrieť originál článku</string>
     <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto značkou</string>
     <string name="reader_empty_comments">Zatiaľ nie sú žiadne komentáre</string>
-    <string name="create_new_blog_wpcom">Vytvoriť WordPress blog</string>
     <string name="browse_our_faq_button">Prehľadávať časté otázky</string>
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
     <string name="contact_us">Kontaktujte nás</string>
@@ -914,7 +911,6 @@ Language: sk
     <string name="username_or_password_incorrect">Používateľské meno alebo heslo nie je správne</string>
     <string name="email_invalid">Vložte platnú emailovú adresu</string>
     <string name="invalid_email_message">Zadaná emailová adresa nie je platná</string>
-    <string name="passcode_wrong_passcode">Nesprávny PIN</string>
     <string name="error_downloading_image">Chyba pri sťahovaní obrázka</string>
     <string name="error_load_comment">Nepodarilo sa načítať komentár</string>
     <string name="error_edit_comment">Počas úpravy komentára sa vyskytla chyba</string>
@@ -936,7 +932,6 @@ Language: sk
     <string name="blog_not_found">Počas prístupu k blogu sa vyskytla chyba</string>
     <string name="gallery_error">Súbor nebolo možné načítať</string>
     <string name="no_network_message">Nie sú k dispozícii žiadne siete</string>
-    <string name="required_field">Povinné pole</string>
     <string name="reader_toast_err_remove_tag">Túto značku nie je možné odstrániť</string>
     <string name="reader_toast_err_add_tag">Túto značku nie je možné pridať</string>
     <string name="reader_title_applog">Záznamy aplikácie</string>
@@ -945,7 +940,6 @@ Language: sk
     <string name="error_refresh_media">Média momentálne nemohli byť obnovené </string>
     <string name="error_deleting_page">Pri vymazávaní webovej stránky sa vyskytla chyba</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="add_account_blog_url">Adresa blogu</string>
     <string name="image_settings">Nastavenie obrázka</string>
     <string name="local_changes">Miestne zmeny</string>
     <string name="privacy_policy">Ochrana osobných údajov</string>
@@ -998,7 +992,6 @@ Language: sk
     <string name="connection_error">Chyba pripojenia</string>
     <string name="select_categories">Vyberte si kategórie</string>
     <string name="share_link">Zdieľať odkaz</string>
-    <string name="creating_your_site">Stránka sa vytvára</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
     <string name="comment_spammed">Komentáre označené ako spam</string>
@@ -1026,14 +1019,6 @@ Language: sk
     <string name="reader_btn_share">Zdielať</string>
     <string name="reader_untitled_post">(bez názvu)</string>
     <string name="empty_list_default">Tento zoznam je prázdny</string>
-    <string name="passcode_turn_on">Zapnúť funkciu overovanie PIN kódom</string>
-    <string name="passcode_turn_off">Vypnúť funkciu overovanie PIN kódom</string>
-    <string name="passcode_preference_title">Uzamknutie PIN kódom</string>
-    <string name="passcode_set">Nastaviť PIN</string>
-    <string name="passcode_change_passcode">Zmeniť PIN</string>
-    <string name="passcode_re_enter_passcode">Znova zadajte PIN kód</string>
-    <string name="passcode_enter_old_passcode">Zadajte starý PIN kód</string>
-    <string name="passcode_manage">Spravovať funkciu overovanie PIN kódom</string>
     <string name="stats_totals_plays">Prehratí</string>
     <string name="stats_totals_clicks">Kliknutí</string>
     <string name="stats_totals_views">Zobrazení</string>
@@ -1083,6 +1068,7 @@ Language: sk
     <string name="posts">Príspevky</string>
     <string name="width">Šírka</string>
     <string name="caption">Titulok (voliteľný)</string>
+    <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="featured_in_post">Vložiť obrázok do príspevku</string>
     <string name="blogusername">Používateľské meno</string>
