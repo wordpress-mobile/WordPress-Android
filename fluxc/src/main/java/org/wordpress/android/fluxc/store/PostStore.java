@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PostModelTable;
-import com.wellsql.generated.SiteModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -25,7 +24,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
-import org.wordpress.android.fluxc.persistence.SiteSqlUtils;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
@@ -453,15 +451,11 @@ public class PostStore extends Store {
     }
 
     private void fetchPostList(FetchPostListPayload payload) {
-        // TODO: We shouldn't access SiteSqlUtils from here, fix this!
-        SiteModel site =
-                SiteSqlUtils.getSitesWith(SiteModelTable.ID, payload.listDescriptor.getLocalSiteId()).getAsModel()
-                            .get(0);
-        if (site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPostList(site.getSiteId(), payload.listDescriptor, payload.offset,
+        if (payload.listDescriptor.getSite().isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostList(payload.listDescriptor, payload.offset,
                     NUM_POST_LIST_PER_FETCH);
         } else {
-            mPostXMLRPCClient.fetchPostList(site, payload.listDescriptor, payload.offset,
+            mPostXMLRPCClient.fetchPostList(payload.listDescriptor, payload.offset,
                     NUM_POST_LIST_PER_FETCH);
         }
     }

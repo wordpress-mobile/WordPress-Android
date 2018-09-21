@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model.list
 
+import org.wordpress.android.fluxc.model.SiteModel
+
 data class ListDescriptorTypeIdentifier(val value: Int)
 data class ListDescriptorUniqueIdentifier(val value: Int)
 
@@ -19,7 +21,7 @@ enum class PostListStatus(val value: String) {
 }
 
 class PostListDescriptor @JvmOverloads constructor(
-    val localSiteId: Int,
+    val site: SiteModel,
     val status: PostListStatus = PostListStatus.PUBLISH,
     val order: ListOrder = ListOrder.DESC,
     val orderBy: PostOrderBy = PostOrderBy.DATE,
@@ -27,12 +29,12 @@ class PostListDescriptor @JvmOverloads constructor(
 ) : ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
-        ListDescriptorUniqueIdentifier(("post-$localSiteId-f${status.value}-o${order.value}-ob-${orderBy.value}" +
+        ListDescriptorUniqueIdentifier(("post-${site.id}-f${status.value}-o${order.value}-ob-${orderBy.value}" +
                 "-sq$searchQuery").hashCode())
     }
 
     override val typeIdentifier: ListDescriptorTypeIdentifier by lazy {
-        PostListDescriptor.typeIdentifier(localSiteId)
+        PostListDescriptor.typeIdentifier(site.id)
     }
 
     companion object {
