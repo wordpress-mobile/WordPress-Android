@@ -763,6 +763,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
+            case PENDING:
                 return getString(R.string.menu_publish_now);
             case PUBLISHED:
             case UNKNOWN:
@@ -772,7 +773,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     return getString(R.string.update_verb);
                 }
             case PRIVATE:
-            case PENDING:
             case TRASHED:
             case SCHEDULED:
             default:
@@ -1154,7 +1154,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 // we update the mPost object first, so we can pre-check Post publishability and inform the user
                 updatePostObject();
-                if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                PostStatus status = PostStatus.fromPost(mPost);
+                if (status == PostStatus.DRAFT || status == PostStatus.PENDING) {
                     if (isDiscardable()) {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
