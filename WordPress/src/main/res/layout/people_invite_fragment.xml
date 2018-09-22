@@ -135,7 +135,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="@string/role"
                 android:layout_marginStart="1dp"
-                android:drawableEnd="@drawable/ic_dropdown_24dp"/>
+                android:drawableEnd="@drawable/ic_dropdown_blue_light_24dp"/>
 
         </LinearLayout>
 
