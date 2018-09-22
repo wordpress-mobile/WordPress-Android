@@ -38,7 +38,7 @@ class NotificationRestClient constructor(
         site: SiteModel? = null
     ) {
         val deviceName = DeviceUtils.getInstance().getDeviceName(appContext)
-        val params = mapOf(
+        val params = listOfNotNull(
                 "device_token" to gcmToken,
                 "device_family" to "android",
                 "app_secret_key" to appKey.value,
@@ -48,8 +48,8 @@ class NotificationRestClient constructor(
                 "version_code" to PackageUtils.getVersionCode(appContext).toString(),
                 "os_version" to Build.VERSION.RELEASE,
                 "device_uuid" to uuid,
-                "selected_blog_id" to site?.siteId.toString().takeIf { site != null }
-        )
+                ("selected_blog_id" to site?.siteId.toString()).takeIf { site != null }
+        ).toMap()
 
         val url = WPCOMREST.devices.new_.urlV1
         val request = WPComGsonRequest.buildPostRequest(
