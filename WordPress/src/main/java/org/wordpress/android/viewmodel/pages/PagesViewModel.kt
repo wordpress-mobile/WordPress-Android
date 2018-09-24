@@ -109,7 +109,7 @@ class PagesViewModel
 
     private var _site: SiteModel? = null
     val site: SiteModel
-        get() = checkNotNull(_site) {"Trying to access unitialized site"}
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -351,7 +351,8 @@ class PagesViewModel
 
                 delay(100)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                )
             }
         }
         action.onError = {
