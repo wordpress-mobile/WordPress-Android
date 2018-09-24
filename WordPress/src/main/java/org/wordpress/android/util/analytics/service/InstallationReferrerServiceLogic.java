@@ -10,6 +10,7 @@ import com.android.installreferrer.api.InstallReferrerStateListener;
 import com.android.installreferrer.api.ReferrerDetails;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -120,6 +121,7 @@ public class InstallationReferrerServiceLogic {
         } catch (RuntimeException e) {
             CrashlyticsUtils.logException(e, T.UTILS);
             AppLog.e(T.UTILS, "installation referrer start connection failed!", e);
+            AnalyticsTracker.track(Stat.INSTALLATION_REFERRER_FAILED);
 
             // just bail if we were not able to connect to the installation referrer service
             stopService();
