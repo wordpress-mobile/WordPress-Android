@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -37,7 +38,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns all time insights per site`() = test {
-        val date = "1970"
+        val date = Date(10)
         val visitors = 10
         val views = 15
         val posts = 20
@@ -125,7 +126,7 @@ class InsightsStoreTest {
         val postsFound = 15
         val id: Long = 2
         val title = "title"
-        val date = "date"
+        val date = Date(10)
         val url = "url"
         val likeCount = 5
         val commentCount = 10
@@ -177,7 +178,7 @@ class InsightsStoreTest {
         val postsFound = 15
         val id: Long = 2
         val title = "title"
-        val date = "date"
+        val date = Date(10)
         val url = "url"
         val likeCount = 5
         val commentCount = 10
