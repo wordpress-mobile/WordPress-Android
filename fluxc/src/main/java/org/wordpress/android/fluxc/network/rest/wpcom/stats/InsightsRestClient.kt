@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import java.util.Date
 import javax.inject.Singleton
 
 @Singleton
@@ -112,11 +113,22 @@ constructor(
         }
     }
 
-    suspend fun fetchPostViewsForInsights(site: SiteModel, postId: Long): FetchInsightsPayload<PostViewsResponse> {
+    suspend fun fetchPostViewsForInsights(
+        site: SiteModel,
+        postId: Long,
+        forced: Boolean
+    ): FetchInsightsPayload<PostViewsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.post.item(postId).urlV1_1
 
         val params = mapOf("fields" to "views")
-        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, PostViewsResponse::class.java)
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PostViewsResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
         return when (response) {
             is Success -> {
                 FetchInsightsPayload(response.data)
@@ -148,7 +160,7 @@ constructor(
     }
 
     data class AllTimeResponse(
-        @SerializedName("date") var date: String? = null,
+        @SerializedName("date") var date: Date? = null,
         @SerializedName("stats") val stats: StatsResponse
     ) {
         data class StatsResponse(
@@ -174,7 +186,7 @@ constructor(
         data class PostResponse(
             @SerializedName("ID") val id: Long,
             @SerializedName("title") val title: String,
-            @SerializedName("date") val date: String,
+            @SerializedName("date") val date: Date,
             @SerializedName("URL") val url: String,
             @SerializedName("like_count") val likeCount: Int,
             @SerializedName("discussion") val discussion: Discussion?
