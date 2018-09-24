@@ -756,7 +756,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onGoogleSignupError(String msg) {
-        // allow state loss
+        // Only show the error dialog if the activity is still active
         if (!getSupportFragmentManager().isStateSaved()) {
             BasicFragmentDialog dialog = new BasicFragmentDialog();
             dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
