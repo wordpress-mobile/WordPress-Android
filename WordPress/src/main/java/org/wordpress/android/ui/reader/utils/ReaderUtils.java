@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
@@ -179,7 +178,7 @@ public class ReaderUtils {
      * Lollipop or later, does nothing on earlier Android versions
      */
     public static void setBackgroundToRoundRipple(View view) {
-        if (view != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (view != null) {
             view.setBackgroundResource(R.drawable.ripple_oval);
         }
     }

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.Point;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -196,14 +195,7 @@ public class PlansActivity extends AppCompatActivity {
         });
 
         if (mViewPager.getVisibility() != View.VISIBLE) {
-            // use a circular reveal on API 21+
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                revealViewPager();
-            } else {
-                mViewPager.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
-                showManageBar();
-            }
+            revealViewPager();
         }
     }
 

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -97,11 +96,9 @@ public class ReaderWebView extends WebView {
             this.setWebViewClient(new ReaderWebViewClient(this));
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-            // Lollipop disables third-party cookies by default, but we need them in order
-            // to support authenticated images
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
-            }
+            // Enable third-party cookies since they are disabled by default;
+            // we need third-party cookies to support authenticated images
+            CookieManager.getInstance().setAcceptThirdPartyCookies(this, true);
         }
     }
 
