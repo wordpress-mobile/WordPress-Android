@@ -107,9 +107,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var _site: SiteModel
+    private var _site: SiteModel? = null
     val site: SiteModel
-        get() = _site
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -128,9 +128,12 @@ class PagesViewModel
     }
 
     fun start(site: SiteModel) {
-        _site = site
+        // Check if VM is not already initialized
+        if (_site == null) {
+            _site = site
 
-        loadPagesAsync()
+            loadPagesAsync()
+        }
     }
 
     init {
@@ -348,7 +351,8 @@ class PagesViewModel
 
                 delay(100)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                )
             }
         }
         action.onError = {
