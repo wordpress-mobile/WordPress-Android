@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class InstallationReferrerServiceLogic {
 
         // if not, try to obtain it from Play Store app connection through the Install Referrer API Library if possible
         mReferrerClient = InstallReferrerClient.newBuilder(mContext).build();
-        mReferrerClient.startConnection(new InstallReferrerStateListener() {
+        final InstallReferrerStateListener installReferrerStateListener = new InstallReferrerStateListener() {
             @Override
             public void onInstallReferrerSetupFinished(int responseCode) {
                 switch (responseCode) {
@@ -113,7 +114,16 @@ public class InstallationReferrerServiceLogic {
                 // Google Play by calling the startConnection() method.
                 stopService();
             }
-        });
+        };
+        try {
+            mReferrerClient.startConnection(installReferrerStateListener);
+        } catch (RuntimeException e) {
+            CrashlyticsUtils.logException(e, T.UTILS);
+            AppLog.e(T.UTILS, "installation referrer start connection failed!", e);
+
+            // just bail if we were not able to connect to the installation referrer service
+            stopService();
+        }
     }
 
     private void stopService() {
