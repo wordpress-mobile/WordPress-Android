@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
@@ -52,7 +53,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import kotlin.coroutines.experimental.CoroutineContext;
-import kotlinx.coroutines.experimental.CommonPool;
+import kotlinx.coroutines.experimental.Dispatchers;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -145,6 +146,14 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
+    public NotificationRestClient provideNotificationRestClient(Context appContext, Dispatcher dispatcher,
+                                                        @Named("regular") RequestQueue requestQueue,
+                                                        AccessToken token, UserAgent userAgent) {
+        return new NotificationRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
     public PostRestClient providePostRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AccessToken token, UserAgent userAgent) {
@@ -190,7 +199,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public CoroutineContext provideCoroutineContext() {
-        return CommonPool.INSTANCE;
+        return Dispatchers.Default;
     }
 
     @Singleton

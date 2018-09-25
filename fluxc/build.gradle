@@ -94,8 +94,8 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
 }
 
 version = android.defaultConfig.versionName
