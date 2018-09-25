@@ -4,8 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -15,7 +14,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.modules.UI_CONTEXT
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.activitylog.RewindStatusService
 import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -34,7 +33,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
-    @param:Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -218,7 +217,7 @@ class ActivityLogViewModel @Inject constructor(
             val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.value = newStatus
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
-            GlobalScope.launch(uiContext) {
+            uiScope.launch {
                 val result = activityLogStore.fetchActivities(payload)
                 onActivityLogFetched(result, isLoadingMore)
             }

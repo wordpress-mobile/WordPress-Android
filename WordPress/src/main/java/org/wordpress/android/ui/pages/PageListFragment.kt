@@ -12,10 +12,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.modules.UI_CONTEXT
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -26,7 +26,7 @@ import javax.inject.Named
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:Named(UI_CONTEXT) lateinit var uiContext: CoroutineDispatcher
+    @field:Named(UI_SCOPE) lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -107,7 +107,7 @@ class PageListFragment : Fragment() {
                     onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
                     onItemTapped = { page -> viewModel.onItemTapped(page) },
                     onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
-                    uiContext = uiContext
+                    uiScope = uiScope
             )
             recyclerView.adapter = adapter
         } else {

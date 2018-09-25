@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -14,6 +13,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.string
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
@@ -46,7 +46,7 @@ class SearchListViewModelTest {
     @Before
     fun setUp() {
         page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null)
-        viewModel = SearchListViewModel(resourceProvider, Unconfined)
+        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
         searchPages = MutableLiveData()
         whenever(pagesViewModel.searchPages).thenReturn(searchPages)
         viewModel.start(pagesViewModel)

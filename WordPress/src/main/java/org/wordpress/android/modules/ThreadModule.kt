@@ -2,25 +2,28 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
+import javax.inject.Singleton
 
-const val UI_CONTEXT = "UI_CONTEXT"
-const val COMMON_POOL_CONTEXT = "COMMON_POOL_CONTEXT"
+const val UI_SCOPE = "UI_SCOPE"
+const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
 
 @Module
 class ThreadModule {
+    @Singleton
     @Provides
-    @Named(UI_CONTEXT)
-    fun provideUiContext(): CoroutineDispatcher {
-        return Dispatchers.Main
+    @Named(UI_SCOPE)
+    fun provideUiScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.Main)
     }
 
+    @Singleton
     @Provides
-    @Named(COMMON_POOL_CONTEXT)
-    fun provideBackgroundContext(): CoroutineDispatcher {
-        return Dispatchers.Default
+    @Named(DEFAULT_SCOPE)
+    fun provideBackgroundScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.Default)
     }
 }

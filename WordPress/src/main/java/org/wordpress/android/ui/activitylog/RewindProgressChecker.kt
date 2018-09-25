@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.activitylog
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.NonCancellable.isActive
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.withContext
@@ -13,7 +14,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayloa
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
-import org.wordpress.android.modules.COMMON_POOL_CONTEXT
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -22,7 +23,7 @@ import javax.inject.Singleton
 class RewindProgressChecker
 @Inject constructor(
     private val activityLogStore: ActivityLogStore,
-    @param:Named(COMMON_POOL_CONTEXT) private val backgroundContext: CoroutineDispatcher
+    @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) {
     companion object {
         const val CHECK_DELAY_MILLIS = 10000L
@@ -37,7 +38,7 @@ class RewindProgressChecker
         restoreId: Long,
         now: Boolean = false,
         checkDelay: Long = CHECK_DELAY_MILLIS
-    ) = withContext(backgroundContext) {
+    ) = withContext(defaultScope.coroutineContext) {
         if (!now) {
             delay(checkDelay)
         }

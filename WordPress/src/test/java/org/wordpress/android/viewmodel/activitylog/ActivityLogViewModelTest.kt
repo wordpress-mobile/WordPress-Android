@@ -10,7 +10,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -21,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -95,7 +95,7 @@ class ActivityLogViewModelTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, Unconfined)
+        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, TEST_SCOPE)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
