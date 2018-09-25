@@ -26,7 +26,7 @@ import javax.inject.Named
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:Named(UI_SCOPE) lateinit var uiScope: CoroutineScope
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
