@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
+import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -138,7 +139,7 @@ class ActivityLogListFragment : Fragment() {
         swipeToRefreshHelper.isRefreshing = eventListStatus == FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
         val showLoadMore = eventListStatus == LOADING_MORE
-        log_list_progress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
+        progress?.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun reloadEvents(data: List<ActivityLogListItem>) {
