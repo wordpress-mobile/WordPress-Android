@@ -3,6 +3,9 @@
 
 /connect/site-info/
 
+/devices/new/
+/devices/$deviceId#String/delete/
+
 /is-available/blog/
 /is-available/domain/
 /is-available/email/
@@ -71,6 +74,8 @@
 /sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
 /sites/$site/posts/slug:$post_slug#String/
+
+/sites/$site/stats/visits
 
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/

@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import com.yarolegovich.wellsql.SelectQuery
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -37,17 +38,17 @@ class ActivityLogStore
         val actionType = action.type as? ActivityLogAction ?: return
         when (actionType) {
             ActivityLogAction.FETCH_ACTIVITIES -> {
-                launch(coroutineContext) {
+                GlobalScope.launch(coroutineContext) {
                     emitChange(fetchActivities(action.payload as FetchActivityLogPayload))
                 }
             }
             ActivityLogAction.FETCH_REWIND_STATE -> {
-                launch(coroutineContext) {
+                GlobalScope.launch(coroutineContext) {
                     emitChange(fetchActivitiesRewind(action.payload as FetchRewindStatePayload))
                 }
             }
             ActivityLogAction.REWIND -> {
-                launch(coroutineContext) {
+                GlobalScope.launch(coroutineContext) {
                     emitChange(rewind(action.payload as RewindPayload))
                 }
             }
