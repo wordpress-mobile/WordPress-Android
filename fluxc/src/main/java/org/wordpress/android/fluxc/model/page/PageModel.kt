@@ -17,5 +17,5 @@ data class PageModel(
 ) {
     constructor(post: PostModel, site: SiteModel, parent: PageModel? = null) : this(site, post.id, post.title,
             PageStatus.fromPost(post), Date(DateTimeUtils.timestampFromIso8601Millis(post.dateCreated)),
-            post.isLocallyChanged, post.remotePostId, parent)
+            post.isLocalDraft || post.isLocallyChanged, post.remotePostId, parent)
 }
