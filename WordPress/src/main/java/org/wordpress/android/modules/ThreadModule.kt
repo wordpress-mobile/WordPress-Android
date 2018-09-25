@@ -6,21 +6,18 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
-import javax.inject.Singleton
 
 const val UI_SCOPE = "UI_SCOPE"
 const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
 
 @Module
 class ThreadModule {
-    @Singleton
     @Provides
     @Named(UI_SCOPE)
     fun provideUiScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.Main)
     }
 
-    @Singleton
     @Provides
     @Named(DEFAULT_SCOPE)
     fun provideBackgroundScope(): CoroutineScope {
