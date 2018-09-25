@@ -30,7 +30,6 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
@@ -46,6 +45,7 @@ import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
@@ -124,10 +124,6 @@ class PagesViewModel
     private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
     private var currentPageType = PageListType.PUBLISHED
 
-    companion object {
-        const val PAGE_UPDATE_TIMEOUT = 5L * 1000
-    }
-
     fun start(site: SiteModel) {
         _site = site
 
@@ -184,7 +180,7 @@ class PagesViewModel
     }
 
     private suspend fun waitForPageUpdate(pageId: Long) {
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPDATE_TIMEOUT) { cont ->
+        suspendCoroutine<Unit> { cont ->
             pageUpdateContinuation[pageId] = cont
         }
         pageUpdateContinuation.remove(pageId)
