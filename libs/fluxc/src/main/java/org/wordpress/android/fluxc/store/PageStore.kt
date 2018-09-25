@@ -59,7 +59,7 @@ class PageStore @Inject constructor(
     }
 
     suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(coroutineContext) {
-        if (remoteId == 0L) {
+        if (remoteId <= 0L) {
             return@withContext null
         }
         val post = postStore.getPostByRemotePostId(remoteId, site)
@@ -75,7 +75,7 @@ class PageStore @Inject constructor(
     suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
         updatePostContinuation = cont
 
-        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
         post.updatePageData(page)
 
         val updateAction = PostActionBuilder.newUpdatePostAction(post)
@@ -83,7 +83,7 @@ class PageStore @Inject constructor(
     }
 
     suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(coroutineContext) {
-        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
             post.updatePageData(page)
 
@@ -102,12 +102,33 @@ class PageStore @Inject constructor(
     }
 
     suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(coroutineContext) {
-        val posts = postStore.getPagesForSite(site).asSequence().filterNotNull().associateBy { it.remotePostId }
-        posts.map { getPageFromPost(it.key, site, posts) }.filterNotNull().sortedBy { it.remoteId }
+        val posts = postStore.getPagesForSite(site)
+                .asSequence()
+                .filterNotNull()
+                .filter { PAGE_TYPES.contains(PostStatus.fromPost(it)) }
+                .map {
+                    if (it.remotePostId == 0L) {
+                        // local DB pages have a non-unique remote ID value of 0
+                        // to keep the apart we replace it with page ID (still unique)
+                        // and make it negative (to easily tell it's a temporary value)
+                        it.remotePostId = -it.id.toLong()
+                    }
+                    it
+                }
+                .associateBy { it.remotePostId }
+
+        return@withContext posts.map { getPageFromPost(it.key, site, posts, false) }
+                .filterNotNull()
+                .sortedBy { it.remoteId }
     }
 
-    private fun getPageFromPost(postId: Long, site: SiteModel, posts: Map<Long, PostModel>): PageModel? {
-        if (postId == 0L || !posts.containsKey(postId)) {
+    private fun getPageFromPost(
+        postId: Long,
+        site: SiteModel,
+        posts: Map<Long, PostModel>,
+        skipLocalPages: Boolean = true
+    ): PageModel? {
+        if (skipLocalPages && (postId <= 0L || !posts.containsKey(postId))) {
             return null
         }
         val post = posts[postId]!!
