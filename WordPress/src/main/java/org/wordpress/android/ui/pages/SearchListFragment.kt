@@ -25,7 +25,7 @@ import javax.inject.Named
 
 class SearchListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:Named(UI_SCOPE) lateinit var uiScope: CoroutineScope
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: SearchListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 

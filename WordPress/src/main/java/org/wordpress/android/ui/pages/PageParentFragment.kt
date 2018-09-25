@@ -29,7 +29,7 @@ import javax.inject.Named
 
 class PageParentFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:Named(UI_SCOPE) lateinit var uiScope: CoroutineScope
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
