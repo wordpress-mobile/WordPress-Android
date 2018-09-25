@@ -7,6 +7,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTOR
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
 import java.text.DateFormat
 import java.util.Date
@@ -60,11 +61,14 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
     object Footer : ActivityLogListItem(FOOTER)
 
+    object Loading : ActivityLogListItem(LOADING)
+
     enum class ViewType(val id: Int) {
         EVENT(0),
         PROGRESS(1),
         HEADER(2),
-        FOOTER(3)
+        FOOTER(3),
+        LOADING(4)
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {
