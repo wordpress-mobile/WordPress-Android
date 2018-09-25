@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +23,8 @@ import org.wordpress.android.util.image.ImageType;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
+    private static final String EMPTY_LINE = "\n\t";
+    private static final String DOUBLE_EMPTY_LINE = "\n\t\n\t";
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
@@ -169,20 +173,21 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
-    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
-        String commentText = mNotificationsUtilsWrapper
+    private Spannable getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
+        SpannableStringBuilder builder = mNotificationsUtilsWrapper
                 .getSpannableContentForRanges(mCommentData,
-                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
-
-        return getStringWithNewlineInListsRemoved(commentText);
+                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false);
+        return removeNewLineInList(builder);
     }
 
-    private String getStringWithNewlineInListsRemoved(String noteString) {
-        if (noteString == null) {
-            return "";
+    private Spannable removeNewLineInList(SpannableStringBuilder builder) {
+        String content = builder.toString();
+        while (content.contains(DOUBLE_EMPTY_LINE)) {
+            int doubleSpaceIndex = content.indexOf(DOUBLE_EMPTY_LINE);
+            builder.replace(doubleSpaceIndex, doubleSpaceIndex + DOUBLE_EMPTY_LINE.length(), EMPTY_LINE);
+            content = builder.toString();
         }
-
-        return noteString.replace("\n\t\n\t", "\n\t");
+        return builder;
     }
 
     private long getTimestamp() {
