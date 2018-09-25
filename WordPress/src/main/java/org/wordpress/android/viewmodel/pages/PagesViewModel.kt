@@ -120,7 +120,7 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
+    private var pageUpdateContinuation: Continuation<Unit>? = null
     private var currentPageType = PageListType.PUBLISHED
 
     companion object {
@@ -178,19 +178,18 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
     }
 
-    fun onPageEditFinished(pageId: Long) {
+    fun onPageEditFinished() {
         launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate(pageId)
+            waitForPageUpdate()
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate(pageId: Long) {
+    private suspend fun waitForPageUpdate() {
         suspendCoroutineWithTimeout<Unit>(PAGE_UPDATE_TIMEOUT) { cont ->
-            pageUpdateContinuation[pageId] = cont
+            pageUpdateContinuation = cont
         }
-        pageUpdateContinuation.remove(pageId)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -471,8 +470,10 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
+        pageUpdateContinuation?.let { cont ->
+            pageUpdateContinuation = null
+            cont.resume(Unit)
+        }
     }
 
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
