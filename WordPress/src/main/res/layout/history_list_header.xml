@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.WPTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_text"
+    android:clickable="false"
+    android:gravity="center_vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:paddingBottom="@dimen/margin_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_large"
+    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+    android:textColor="@color/grey_darken_20"
+    tools:text="Today" >
+</org.wordpress.android.widgets.WPTextView>
