@@ -100,7 +100,7 @@ class PagesFragment : Fragment() {
     }
 
     private fun onPageEditFinished(pageId: Long) {
-        viewModel.onPageEditFinished(pageId)
+        viewModel.onPageEditFinished()
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -186,11 +186,10 @@ class PagesFragment : Fragment() {
 
         setupObservers(activity)
 
-        if (isFirstStart) {
-            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-            val nonNullSite = checkNotNull(site)
-            viewModel.start(nonNullSite)
-        } else {
+        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val nonNullSite = checkNotNull(site)
+        viewModel.start(nonNullSite)
+        if (!isFirstStart) {
             restorePreviousSearch = true
         }
     }

@@ -108,9 +108,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var _site: SiteModel
+    private var _site: SiteModel? = null
     val site: SiteModel
-        get() = _site
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -121,13 +121,16 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
+    private var pageUpdateContinuation: Continuation<Unit>? = null
     private var currentPageType = PageListType.PUBLISHED
 
     fun start(site: SiteModel) {
-        _site = site
+        // Check if VM is not already initialized
+        if (_site == null) {
+            _site = site
 
-        loadPagesAsync()
+            loadPagesAsync()
+        }
     }
 
     init {
@@ -171,19 +174,18 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(pageId: Long) {
+    fun onPageEditFinished() {
         launch(uiContext) {
             refreshPages() // show local changes immediately
-            waitForPageUpdate(pageId)
+            waitForPageUpdate()
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate(pageId: Long) {
+    private suspend fun waitForPageUpdate() {
         suspendCoroutine<Unit> { cont ->
-            pageUpdateContinuation[pageId] = cont
+            pageUpdateContinuation = cont
         }
-        pageUpdateContinuation.remove(pageId)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -342,7 +344,8 @@ class PagesViewModel
 
                 delay(ACTION_DELAY)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                )
             }
         }
         action.onError = {
@@ -476,8 +479,10 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
+        pageUpdateContinuation?.let { cont ->
+            pageUpdateContinuation = null
+            cont.resume(Unit)
+        }
     }
 
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
