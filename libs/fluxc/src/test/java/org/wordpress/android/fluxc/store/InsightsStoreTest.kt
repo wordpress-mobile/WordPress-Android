@@ -151,7 +151,7 @@ class InsightsStoreTest {
         assertEquals(likeCount, model.postLikeCount)
         assertEquals(views, model.postViewsCount)
         assertEquals(date, model.postDate)
-        assertEquals(id, model.postID)
+        assertEquals(id, model.postId)
         assertEquals(title, model.postTitle)
         assertEquals(url, model.postURL)
         assertEquals(siteId, model.siteId)
