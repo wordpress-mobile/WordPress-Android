@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class JobServiceId {
+    public static final int JOB_INSTALL_REFERRER_SERVICE_ID = 9000;
     public static final int JOB_STATS_SERVICE_ID = 8000;
     public static final int JOB_NOTIFICATIONS_UPDATE_SERVICE_ID = 7000;
     public static final int JOB_READER_SEARCH_SERVICE_ID = 5000;

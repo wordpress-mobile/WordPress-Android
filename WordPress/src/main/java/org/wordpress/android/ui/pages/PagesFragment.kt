@@ -27,10 +27,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
+import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -41,8 +38,13 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
-import org.wordpress.android.viewmodel.pages.getTitle
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -93,8 +95,12 @@ class PagesFragment : Fragment() {
         }
     }
 
+    fun onSpecificPageRequested(remotePageId: Long) {
+        viewModel.onSpecificPageRequested(remotePageId)
+    }
+
     private fun onPageEditFinished(pageId: Long) {
-        viewModel.onPageEditFinished(pageId)
+        viewModel.onPageEditFinished()
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -180,11 +186,10 @@ class PagesFragment : Fragment() {
 
         setupObservers(activity)
 
-        if (isFirstStart) {
-            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-            val nonNullSite = checkNotNull(site)
-            viewModel.start(nonNullSite)
-        } else {
+        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val nonNullSite = checkNotNull(site)
+        viewModel.start(nonNullSite)
+        if (!isFirstStart) {
             restorePreviousSearch = true
         }
     }
@@ -234,6 +239,14 @@ class PagesFragment : Fragment() {
                 } else {
                     newPageButton.hide()
                 }
+            }
+        })
+
+        viewModel.scrollToPage.observe(this, Observer { requestedPage ->
+            requestedPage?.let { page ->
+                val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
+                pagesPager.currentItem = pagerIndex
+                (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })
     }
@@ -289,18 +302,27 @@ class PagesFragment : Fragment() {
     }
 }
 
-class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        val pageTypes = listOf(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
+        val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }
+
+    private val listFragments = mutableMapOf<PageListType, WeakReference<PageListFragment>>()
 
     override fun getCount(): Int = pageTypes.size
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance(pageTypes[position])
+        val fragment = PageListFragment.newInstance(pageTypes[position])
+        listFragments[pageTypes[position]] = WeakReference(fragment)
+        return fragment
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(pageTypes[position].getTitle())
+        return context.getString(pageTypes[position].title)
+    }
+
+    fun scrollToPage(page: PageModel) {
+        val listFragment = listFragments[PageListType.fromPageStatus(page.status)]?.get()
+        listFragment?.scrollToPage(page.remoteId)
     }
 }

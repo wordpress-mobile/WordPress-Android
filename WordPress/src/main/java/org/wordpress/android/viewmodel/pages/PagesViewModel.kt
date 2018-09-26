@@ -17,10 +17,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
-import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
-import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.UI_CONTEXT
@@ -34,6 +30,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
@@ -43,12 +40,12 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DON
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERROR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 class PagesViewModel
 @Inject constructor(
@@ -72,8 +69,8 @@ class PagesViewModel
     private val _pages = MutableLiveData<List<PageModel>>()
     val pages: LiveData<List<PageModel>> = _pages
 
-    private val _searchPages: MutableLiveData<SortedMap<PageStatus, List<PageModel>>> = MutableLiveData()
-    val searchPages: LiveData<SortedMap<PageStatus, List<PageModel>>> = _searchPages
+    private val _searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>> = MutableLiveData()
+    val searchPages: LiveData<SortedMap<PageListType, List<PageModel>>> = _searchPages
 
     private val _createNewPage = SingleLiveEvent<Unit>()
     val createNewPage: LiveData<Unit> = _createNewPage
@@ -86,6 +83,12 @@ class PagesViewModel
 
     private val _setPageParent = SingleLiveEvent<PageModel?>()
     val setPageParent: LiveData<PageModel?> = _setPageParent
+
+    private val _scrollToPage = SingleLiveEvent<PageModel>()
+    val scrollToPage: LiveData<PageModel?> = _scrollToPage
+
+    private var isInitialized = false
+    private var scrollToPageId: Long? = null
 
     private var _pageMap: MutableMap<Long, PageModel> = mutableMapOf()
     private var pageMap: MutableMap<Long, PageModel>
@@ -104,9 +107,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var _site: SiteModel
+    private var _site: SiteModel? = null
     val site: SiteModel
-        get() = _site
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -117,13 +120,20 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
-    private var currentPageType = PageStatus.PUBLISHED
+    private var pageUpdateContinuation: Continuation<Unit>? = null
+    private var currentPageType = PageListType.PUBLISHED
+
+    companion object {
+        const val PAGE_UPDATE_TIMEOUT = 5L * 1000
+    }
 
     fun start(site: SiteModel) {
-        _site = site
+        // Check if VM is not already initialized
+        if (_site == null) {
+            _site = site
 
-        reloadPagesAsync()
+            loadPagesAsync()
+        }
     }
 
     init {
@@ -136,12 +146,18 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun reloadPagesAsync() = launch(CommonPool) {
+    private fun loadPagesAsync() = launch(CommonPool) {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
         reloadPages(loadState)
+
+        isInitialized = true
+
+        scrollToPageId?.let {
+            onSpecificPageRequested(it)
+        }
     }
 
     private suspend fun reloadPages(state: PageListState = REFRESHING) {
@@ -162,18 +178,18 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }.toMutableMap()
     }
 
-    fun onPageEditFinished(pageId: Long) {
+    fun onPageEditFinished() {
         launch {
-            waitForPageUpdate(pageId)
+            refreshPages() // show local changes immediately
+            waitForPageUpdate()
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate(pageId: Long) {
-        suspendCoroutine<Unit> { cont ->
-            pageUpdateContinuation[pageId] = cont
+    private suspend fun waitForPageUpdate() {
+        suspendCoroutineWithTimeout<Unit>(PAGE_UPDATE_TIMEOUT) { cont ->
+            pageUpdateContinuation = cont
         }
-        pageUpdateContinuation.remove(pageId)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -184,14 +200,16 @@ class PagesViewModel
         }
     }
 
-    fun onPageTypeChanged(type: PageStatus) {
+    fun onPageTypeChanged(type: PageListType) {
         currentPageType = type
         checkIfNewPageButtonShouldBeVisible()
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
-        val isNotEmpty = pageMap.values.any { it.status == currentPageType }
-        _isNewPageButtonVisible.postOnUi(isNotEmpty && currentPageType != TRASHED && _isSearchExpanded.value != true)
+        val isNotEmpty = pageMap.values.any { currentPageType.pageStatuses.contains(it.status) }
+        val hasNoExceptions = !currentPageType.pageStatuses.contains(PageStatus.TRASHED) &&
+                _isSearchExpanded.value != true
+        _isNewPageButtonVisible.postOnUi(isNotEmpty && hasNoExceptions)
     }
 
     fun onSearch(searchQuery: String) {
@@ -202,13 +220,46 @@ class PagesViewModel
                 searchJob = null
                 if (isActive) {
                     _lastSearchQuery = searchQuery
-                    val result = pageStore.groupedSearch(site, searchQuery)
+                    val result = groupedSearch(site, searchQuery)
                     _searchPages.postValue(result)
                 }
             }
         } else {
             clearSearch()
         }
+    }
+
+    fun onSpecificPageRequested(remotePageId: Long) {
+        if (isInitialized) {
+            val page = pageMap[remotePageId]
+            if (page != null) {
+                _scrollToPage.postValue(page)
+            } else {
+                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.pages_open_page_error))
+            }
+        } else {
+            scrollToPageId = remotePageId
+        }
+    }
+
+    private suspend fun groupedSearch(
+        site: SiteModel,
+        searchQuery: String
+    ): SortedMap<PageListType, List<PageModel>> = withContext(CommonPool) {
+        val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
+        return@withContext list.toSortedMap(
+                Comparator { previous, next ->
+                    when {
+                        previous == next -> 0
+                        previous == PageListType.PUBLISHED -> -1
+                        next == PageListType.PUBLISHED -> 1
+                        previous == PageListType.DRAFTS -> -1
+                        next == PageListType.DRAFTS -> 1
+                        previous == PageListType.SCHEDULED -> -1
+                        next == PageListType.SCHEDULED -> 1
+                        else -> throw IllegalArgumentException("Unexpected page type")
+                    }
+                })
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
@@ -237,8 +288,8 @@ class PagesViewModel
         when (action) {
             VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
             SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
-            MOVE_TO_DRAFT -> changePageStatus(page.id, DRAFT)
-            MOVE_TO_TRASH -> changePageStatus(page.id, TRASHED)
+            MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
+            MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
             DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
         }
@@ -247,7 +298,7 @@ class PagesViewModel
 
     private fun publishPageNow(remoteId: Long) {
         pageMap[remoteId]?.date = Date()
-        changePageStatus(remoteId, PUBLISHED)
+        changePageStatus(remoteId, PageStatus.PUBLISHED)
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
@@ -299,7 +350,8 @@ class PagesViewModel
 
                 delay(100)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo))
+                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                )
             }
         }
         action.onError = {
@@ -397,10 +449,11 @@ class PagesViewModel
 
     private fun prepareStatusChangeSnackbar(newStatus: PageStatus, undo: (() -> Unit)? = null): SnackbarMessageHolder {
         val message = when (newStatus) {
-            DRAFT -> string.page_moved_to_draft
-            PUBLISHED -> string.page_moved_to_published
-            TRASHED -> string.page_moved_to_trash
-            SCHEDULED -> string.page_moved_to_scheduled
+            PageStatus.DRAFT -> string.page_moved_to_draft
+            PageStatus.PUBLISHED -> string.page_moved_to_published
+            PageStatus.TRASHED -> string.page_moved_to_trash
+            PageStatus.SCHEDULED -> string.page_moved_to_scheduled
+            else -> throw NotImplementedError("Status change to ${newStatus.getTitle()} not supported")
         }
 
         return if (undo != null) {
@@ -417,8 +470,10 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
+        pageUpdateContinuation?.let { cont ->
+            pageUpdateContinuation = null
+            cont.resume(Unit)
+        }
     }
 
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
@@ -435,9 +490,11 @@ class PagesViewModel
 
 @StringRes fun PageStatus.getTitle(): Int {
     return when (this) {
-        PUBLISHED -> string.pages_published
-        DRAFT -> string.pages_drafts
-        SCHEDULED -> string.pages_scheduled
-        TRASHED -> string.pages_trashed
+        PageStatus.PUBLISHED -> string.pages_published
+        PageStatus.DRAFT -> string.pages_drafts
+        PageStatus.SCHEDULED -> string.pages_scheduled
+        PageStatus.TRASHED -> string.pages_trashed
+        PageStatus.PENDING -> string.pages_pending
+        PageStatus.PRIVATE -> string.pages_private
     }
 }

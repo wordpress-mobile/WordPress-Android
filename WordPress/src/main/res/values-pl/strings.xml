@@ -309,7 +309,6 @@ Language: pl
     <string name="me_section_screen_title">Ja</string>
     <string name="my_site_section_screen_title">Moja witryna</string>
     <string name="notif_settings_screen_title">Ustawienia powiadomień</string>
-    <string name="passcode_screen_title">Hasło WordPress</string>
     <string name="help_screen_title">Pomoc i wsparcie</string>
     <string name="license_screen_title">Licencja</string>
     <string name="release_notes_screen_title">Informacje o wydaniu</string>
@@ -572,7 +571,6 @@ Language: pl
     <string name="media_edit_file_details_card_caption">Szczegóły pliku</string>
     <string name="login_error_suffix">\nMoże spróbujesz innego konta? </string>
     <string name="login_error_generic">Wystąpił błąd połączenia z kontem Google. </string>
-    <string name="login_error_email_not_found">Konto Google \'%s\' nie pasuje do żadnego konta funkcjonującego na WordPress.com</string>
     <string name="login_error_button">Zamknij</string>
     <string name="login_google_button_suffix">Zaloguj się za pośrednictwem Google. </string>
     <string name="enter_wpcom_password_google">Aby kontynuować ze swoim kontem Google, proszę uzupełnić odpowiednie hasłow WordPress.com. Zostaniesz o to zapytany tylko raz.</string>
@@ -875,7 +873,6 @@ Language: pl
     <string name="image_quality">Jakość obrazka</string>
     <string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
     <string name="error_unknown_post_type">Nieznany format wpisu</string>
-    <string name="error_fetch_site_after_creation">Witryna została utworzona, może wystąpić konieczność odświeżenia listy witryn.</string>
     <string name="submit_for_review">Prześlij</string>
     <string name="duplicate_site_detected">Wykryto duplikat witryny</string>
     <string name="cannot_add_duplicate_site">Ta witryna już istnieje w aplikacji, nie możesz jej dodać.</string>
@@ -893,7 +890,6 @@ Language: pl
     <string name="confirm">Potwierdź</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
     <string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST – aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
-    <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria wyszukiwania</string>
     <string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
     <string name="visual_editor_disabled">Edytor wizualny został wyłączony </string>
     <string name="preference_editor_visual">Wizualny</string>
@@ -1343,7 +1339,6 @@ Language: pl
     <string name="reader_toast_err_follow_blog_not_authorized">Nie masz uprawnień dostępu do tej witryny</string>
     <string name="reader_toast_err_follow_blog_not_found">Nie można odnaleźć tej witryny</string>
     <string name="undo">Cofnij</string>
-    <string name="passcodelock_prompt_message">Wprowadź PIN</string>
     <string name="push_auth_expired">Zapytanie wygasło. Zaloguj się na WordPress.com aby spróbować ponownie.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% wyświetleń</string>
     <string name="ignore">Ignoruj</string>
@@ -1497,7 +1492,6 @@ Language: pl
     <string name="reader_label_view_original">Zobacz oryginalny artykuł</string>
     <string name="reader_empty_posts_in_tag">Brak wpisów z tym tagiem</string>
     <string name="reader_empty_comments">Nie ma jeszcze komentarzy</string>
-    <string name="create_new_blog_wpcom">Stwórz blog na WordPress.com</string>
     <string name="browse_our_faq_button">Przejrzyj nasze FAQ</string>
     <string name="reader_menu_block_blog">Zablokuj tę witrynę</string>
     <string name="reader_toast_blog_blocked">Wpisy z tej witryny nie będą więcej pokazywane</string>
@@ -1525,7 +1519,6 @@ Language: pl
     <string name="username_or_password_incorrect">Niepoprawna nazwa użytkownika lub hasło</string>
     <string name="email_invalid">Wpisz poprawny adres email</string>
     <string name="invalid_email_message">Twój adres email nie jest poprawny</string>
-    <string name="passcode_wrong_passcode">Niewłaściwy PIN</string>
     <string name="error_downloading_image">Błąd pobierania obrazka</string>
     <string name="error_load_comment">Nie można było wczytać komentarza</string>
     <string name="error_edit_comment">Przy edytowaniu komentarza wystąpił błąd.</string>
@@ -1549,7 +1542,6 @@ Language: pl
     <string name="blog_not_found">Wystąpił błąd podczas dostępu do tego blogu</string>
     <string name="gallery_error">Nie udało się pobrać medium</string>
     <string name="no_network_message">Brak dostępnej sieci</string>
-    <string name="required_field">Wymagane pole</string>
     <string name="reader_toast_err_remove_tag">Nie udało się usunąć tagu</string>
     <string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
     <string name="reader_title_applog">Dziennik aplikacji</string>
@@ -1558,7 +1550,6 @@ Language: pl
     <string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
     <string name="error_deleting_page">Wystąpił błąd podczas usuwania strony</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="add_account_blog_url">Adres blogu</string>
     <string name="image_settings">Ustawienia obrazka</string>
     <string name="local_changes">Zmiany lokalne</string>
     <string name="privacy_policy">Polityka prywatności</string>
@@ -1616,7 +1607,6 @@ Language: pl
     <string name="connection_error">Błąd połączenia</string>
     <string name="select_categories">Wybierz kategorie</string>
     <string name="share_link">Udostępnij odnośnik</string>
-    <string name="creating_your_site">Tworzenie twojej strony</string>
     <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów…</string>
     <string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego blogu</string>
     <string name="comment_spammed">Komentarz został oznaczony jako spam</string>
@@ -1645,14 +1635,6 @@ Language: pl
     <string name="reader_untitled_post">(Brak tytułu)</string>
     <string name="comments_empty_list">Brak komentarzy </string>
     <string name="empty_list_default">Lista jest pusta</string>
-    <string name="passcode_turn_on">Włącz blokadę PIN</string>
-    <string name="passcode_turn_off">Wyłącz blokadę PIN</string>
-    <string name="passcode_preference_title">Blokada PIN</string>
-    <string name="passcode_set">Ustaw PIN</string>
-    <string name="passcode_change_passcode">Zmień PIN</string>
-    <string name="passcode_re_enter_passcode">Powtórz swój PIN</string>
-    <string name="passcode_enter_old_passcode">Podaj swój stary PIN</string>
-    <string name="passcode_manage">Zarządzaj blokadą PIN</string>
     <string name="stats_totals_plays">Odtworzenia</string>
     <string name="stats_totals_clicks">Kliknięcia</string>
     <string name="stats_totals_views">Wizyty</string>
@@ -1704,6 +1686,7 @@ Language: pl
     <string name="posts">Wpisy</string>
     <string name="width">Szerokość</string>
     <string name="caption">Podpis pod obrazkiem (opcjonalnie)</string>
+    <string name="pages">Strony</string>
     <string name="no_network_title">Brak dostępnej sieci</string>
     <string name="featured_in_post">Załącz obraz w treści wpisu</string>
     <string name="blogusername">nazwa użytkownika blogu</string>

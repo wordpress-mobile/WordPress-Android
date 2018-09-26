@@ -756,13 +756,18 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onGoogleSignupError(String msg) {
-        BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
-                msg,
-                getString(org.wordpress.android.login.R.string.login_error_button),
-                null,
-                null);
-        dialog.show(this.getSupportFragmentManager(), GOOGLE_ERROR_DIALOG_TAG);
+        // Only show the error dialog if the activity is still active
+        if (!getSupportFragmentManager().isStateSaved()) {
+            BasicFragmentDialog dialog = new BasicFragmentDialog();
+            dialog.initialize(GOOGLE_ERROR_DIALOG_TAG, getString(R.string.error),
+                    msg,
+                    getString(org.wordpress.android.login.R.string.login_error_button),
+                    null,
+                    null);
+            dialog.show(getSupportFragmentManager(), GOOGLE_ERROR_DIALOG_TAG);
+        } else {
+            AppLog.d(T.MAIN, "'Google sign up failed' dialog not shown, because the activity wasn't visible.");
+        }
     }
 
     @Override

@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-06 09:54:08+0000
+Translation-Revision-Date: 2018-09-20 07:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Meer informatie]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Heb je geen tijd om te lezen op dit moment? Geen probleem: sla berichten op tot je er wel tijd voor hebt.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Nieuwe functie beschikbaar]</string>
+    <string name="pages_empty_trashed">Je hebt geen verwijderde pagina\'s</string>
+    <string name="pages_empty_scheduled">Je hebt geen geplande pagina\'s</string>
+    <string name="pages_empty_drafts">Je hebt geen concept–pagina\'s</string>
+    <string name="pages_empty_published">Je hebt nog geen pagina\'s gepubliceerd</string>
+    <string name="pages_search_suggestion">Pagina\'s zoeken</string>
+    <string name="pages_empty_search_result">Er komen geen pagina\'s overeen met je zoekopdracht</string>
+    <string name="pages_delete_permanently">Permanent verwijderen</string>
+    <string name="pages_move_to_trash">Verplaatsen naar prullenbak</string>
+    <string name="pages_move_to_draft">Verplaatsen naar concept</string>
+    <string name="pages_publish_now">Nu publiceren</string>
+    <string name="pages_set_parent">Instellen als bovenliggend item</string>
+    <string name="pages_view">Weergeven</string>
+    <string name="pages_trashed">Verwijderd</string>
+    <string name="pages_scheduled">Gepland</string>
+    <string name="pages_drafts">Concepten</string>
+    <string name="pages_published">Gepubliceerd</string>
+    <string name="login_error_sms_throttled">We hebben te vaak geprobeerd om een sms–verificatiecode te versturen. Even geduld en vraag er over een minuut nog een aan.</string>
+    <string name="login_error_email_not_found_v2">Er is geen WordPress.com-account gekoppeld aan dit Google–account.</string>
+    <string name="site_picker_remove_site_empty">Er komen geen sites overeen met je zoekopdracht</string>
+    <string name="reader_empty_followed_blogs_search_title">Er komen geen sites overeen met je zoekopdracht</string>
+    <string name="page_parent_changed">Bovenliggend item van pagina gewijzigd</string>
+    <string name="page_permanently_deleted">Pagina is permanent verwijderd</string>
+    <string name="page_moved_to_scheduled">Pagina is ingepland</string>
+    <string name="page_moved_to_published">Pagina is gepubliceerd</string>
+    <string name="page_moved_to_trash">Pagina is verwijderd</string>
+    <string name="page_moved_to_draft">Pagina is verplaatst naar concepten</string>
+    <string name="top_level">Bovenste niveau</string>
+    <string name="page_delete_dialog_message">Weet je zeker dat je de pagina %s wilt verwijderen?</string>
+    <string name="page_parent_change_error">Er is een probleem opgetreden bij het wijzigen van het bovenliggende item van de pagina</string>
+    <string name="page_status_change_error">Er is een probleem opgetreden bij het wijzigen van de paginastatus</string>
+    <string name="page_delete_error">Er is een probleem opgetreden bij het verwijderen van de pagina</string>
+    <string name="set_parent">Instellen als bovenliggend item</string>
+    <string name="dismiss">negeren</string>
     <string name="quick_start_focus_point_description">tik hier</string>
     <string name="quick_start_sites">Snelstart</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">Je site maken</string>
     <string name="quick_start_list_create_site_subtitle">Ga aan de slag met je site</string>
     <string name="quick_start_list_complete_title">Gefeliciteerd, je hebt Snelstart afgerond</string>
     <string name="quick_start_list_complete_subtitle">Voelt het niet goed om dingen af te strepen?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">Website bekijken</string>
     <string name="quick_start_dialog_view_site_message_short">Tik op %1$s Site bekijken %2$s om een voorbeeld te zien van je site</string>
     <string name="quick_start_dialog_view_site_message">Bekijk een voorbeeld van je nieuwe site om te zien wat je bezoekers zien.</string>
@@ -322,7 +346,6 @@ Language: nl
     <string name="me_section_screen_title">Ik</string>
     <string name="my_site_section_screen_title">Mijn site</string>
     <string name="notif_settings_screen_title">Meldingsinstellingen</string>
-    <string name="passcode_screen_title">WordPress–wachtwoordcode</string>
     <string name="help_screen_title">Help en support</string>
     <string name="license_screen_title">Licentie</string>
     <string name="release_notes_screen_title">Release–opmerkingen</string>
@@ -533,7 +556,6 @@ Language: nl
     <string name="media_edit_file_details_card_caption">Bestanddetails</string>
     <string name="login_error_suffix">\nMisschien een ander account proberen?</string>
     <string name="login_error_generic">Er kon geen verbinding worden gemaakt met het Google–account.</string>
-    <string name="login_error_email_not_found">Het Google–account \'%s\' komt niet overeen met een bestaand account op WordPress.com.</string>
     <string name="login_error_button">Sluit</string>
     <string name="login_google_button_suffix">Log in met Google.</string>
     <string name="enter_wpcom_password_google">Om door te gaan met dit Google–account moet je eerst het wachtwoord van WordPress.com opgeven. Je hoeft dit slechts één keer in te vullen.</string>
@@ -836,7 +858,6 @@ Language: nl
     <string name="image_quality">Afbeeldingskwaliteit</string>
     <string name="error_all_media_upload_canceled">Alle media–uploads zijn vanwege een onverwachte fout geannuleerd. Probeer ze opnieuw te uploaden</string>
     <string name="error_unknown_post_type">Onbekende berichtindeling</string>
-    <string name="error_fetch_site_after_creation">Site is aangemaakt. Je moet mogelijk je sites vernieuwen in de sitekiezer.</string>
     <string name="submit_for_review">Verzenden</string>
     <string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
     <string name="cannot_add_duplicate_site">De site komt al voor in de app. Je kunt deze dus niet toevoegen.</string>
@@ -854,7 +875,6 @@ Language: nl
     <string name="confirm">Bevestigen</string>
     <string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC–eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST–aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
-    <string name="reader_empty_followed_blogs_search_title">Geen sites gevonden</string>
     <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>
     <string name="preference_editor_visual">Visueel</string>
@@ -1288,7 +1308,6 @@ Language: nl
     <string name="post_deleted">Bericht verwijderd</string>
     <string name="page_trashed">Pagina naar de prullenbak verplaatst.</string>
     <string name="undo">Ongedaan maken</string>
-    <string name="passcodelock_prompt_message">Je PIN invullen.</string>
     <string name="push_auth_expired">Je verzoek is verlopen. Log in bij WordPress.com probeer opnieuw.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% van weergaven</string>
     <string name="ignore">Negeren</string>
@@ -1441,7 +1460,6 @@ Language: nl
     <string name="reader_label_view_original">Bekijk oorspronkelijk artikel</string>
     <string name="reader_empty_posts_in_tag">Geen berichten met deze tag</string>
     <string name="reader_empty_comments">Nog geen reacties</string>
-    <string name="create_new_blog_wpcom">Creëer WordPress.com blog</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="contact_us">Contact</string>
@@ -1458,7 +1476,6 @@ Language: nl
     <string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
     <string name="email_invalid">Voer een geldig e–mailadres in</string>
     <string name="invalid_email_message">Je e–mailadres is niet geldig</string>
-    <string name="passcode_wrong_passcode">Verkeerde PIN</string>
     <string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
     <string name="error_load_comment">Kan de reactie niet laden</string>
     <string name="error_edit_comment">Er heeft zich een fout voorgedaan tijdens het bewerken van de reactie</string>
@@ -1482,7 +1499,6 @@ Language: nl
     <string name="blog_not_found">Er heeft zich een fout voorgedaan tijdens het openen van dit blog</string>
     <string name="gallery_error">Media–item kan niet worden opgehaald</string>
     <string name="no_network_message">Er is geen netwerk beschikbaar</string>
-    <string name="required_field">Vereist veld</string>
     <string name="reader_toast_err_remove_tag">Deze tag kan niet worden verwijderd</string>
     <string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
     <string name="reader_title_applog">Applicatielogboek</string>
@@ -1491,7 +1507,6 @@ Language: nl
     <string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
     <string name="error_deleting_page">Er is een fout opgetreden bij het verwijderen van de pagina</string>
     <string name="wordpress_blog">WordPress–blog</string>
-    <string name="add_account_blog_url">Blogadres</string>
     <string name="image_settings">Afbeeldingsinstellingen</string>
     <string name="local_changes">Lokale wijzigingen</string>
     <string name="privacy_policy">Privacybeleid</string>
@@ -1549,7 +1564,6 @@ Language: nl
     <string name="connection_error">Verbindingsfout</string>
     <string name="select_categories">Categorieën selecteren</string>
     <string name="share_link">Deel link</string>
-    <string name="creating_your_site">Je site aanmaken</string>
     <string name="reader_empty_posts_in_tag_updating">Berichten ophalen…</string>
     <string name="cant_share_no_visible_blog">Je kan niet delen naar WordPress zonder een zichtbare blog</string>
     <string name="comment_spammed">Reactie als spam gemarkeerd</string>
@@ -1577,14 +1591,6 @@ Language: nl
     <string name="reader_btn_share">Delen</string>
     <string name="reader_untitled_post">(geen titel)</string>
     <string name="empty_list_default">Deze lijst is leeg</string>
-    <string name="passcode_turn_on">Zet PIN slot aan</string>
-    <string name="passcode_turn_off">Zet PIN slot uit</string>
-    <string name="passcode_preference_title">PIN slot</string>
-    <string name="passcode_set">PIN ingesteld</string>
-    <string name="passcode_change_passcode">Verander PIN</string>
-    <string name="passcode_re_enter_passcode">Voer je PIN opnieuw in</string>
-    <string name="passcode_enter_old_passcode">Voer je oude PIN in</string>
-    <string name="passcode_manage">Beheer PIN slot</string>
     <string name="stats_totals_plays">Afgespeeld</string>
     <string name="stats_totals_clicks">Kliks</string>
     <string name="stats_totals_views">Views</string>
@@ -1636,6 +1642,7 @@ Language: nl
     <string name="posts">Berichten</string>
     <string name="width">Breedte</string>
     <string name="caption">Onderschrift (optioneel)</string>
+    <string name="pages">Pagina\'s</string>
     <string name="no_network_title">Geen netwerk beschikbaar</string>
     <string name="featured_in_post">Plaats afbeelding in bericht</string>
     <string name="blogusername">blogusername</string>

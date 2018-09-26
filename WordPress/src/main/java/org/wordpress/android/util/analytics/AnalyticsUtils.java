@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.analytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,6 +25,12 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.VideoUtils;
 
 import java.io.File;
 import java.util.HashMap;
