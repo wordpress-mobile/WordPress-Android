@@ -8,22 +8,10 @@ Language: pt_BR
 <resources>
     <string name="quick_start_focus_point_description">clique aqui</string>
     <string name="quick_start_sites">Início rápido</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar</string>
     <string name="quick_start_list_complete_title">Parabéns por completar os passos</string>
     <string name="quick_start_list_complete_subtitle">Não é bom tirar alguns itens de sua lista de tarefas?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">Ver seu site</string>
     <string name="quick_start_dialog_view_site_message_short">Clique em %1$s Ver site %2$s para visualizar seu site</string>
     <string name="quick_start_dialog_view_site_message">Visualize seu novo site e veja como ele será apresentado aos seus visitantes.</string>
@@ -339,7 +327,6 @@ Language: pt_BR
     <string name="me_section_screen_title">Eu</string>
     <string name="my_site_section_screen_title">Meu site</string>
     <string name="notif_settings_screen_title">Configurações de notificações</string>
-    <string name="passcode_screen_title">Senha do WordPress</string>
     <string name="help_screen_title">Ajuda e suporte</string>
     <string name="license_screen_title">Licença</string>
     <string name="release_notes_screen_title">Notas da versão</string>
@@ -602,7 +589,6 @@ Language: pt_BR
     <string name="media_edit_file_details_card_caption">Detalhes do arquivo</string>
     <string name="login_error_suffix">\nTalvez tentar com outra conta?</string>
     <string name="login_error_generic">Houve um problema na conexão com a conta do Google.</string>
-    <string name="login_error_email_not_found">A conta do Google \'%s\' não corresponde à nenhuma conta do WordPress.com.</string>
     <string name="login_error_button">Fechar</string>
     <string name="login_google_button_suffix">Acessar com o Google.</string>
     <string name="enter_wpcom_password_google">Para continuar com esta conta do Google, digite a senha da conta correspondente no WordPress.com. Isso só será solicitado uma vez.</string>
@@ -905,7 +891,6 @@ Language: pt_BR
     <string name="image_quality">Qualidade da imagem</string>
     <string name="error_all_media_upload_canceled">Todos os uploads de mídia foram cancelados devido a um erro desconhecido. Tente fazer upload novamente</string>
     <string name="error_unknown_post_type">Formato de post desconhecido</string>
-    <string name="error_fetch_site_after_creation">O site foi criado, talvez seja necessário atualizar seus sites no seletor de sites.</string>
     <string name="submit_for_review">Enviar</string>
     <string name="duplicate_site_detected">Um site duplicado foi detectado.</string>
     <string name="cannot_add_duplicate_site">Esse site já existe no aplicativo, você não pode adicioná–lo.</string>
@@ -923,7 +908,6 @@ Language: pt_BR
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">Não foi possível conectar. Recebemos um erro 403 ao tentar acessar\n       o ponto de extremidade do XMLRPC em seu site. O aplicativo precisa disso para se comunicar com seu site. Entre em contato com seu servidor\n        para resolver este problema.</string>
     <string name="xmlrpc_post_blocked_error">Não foi possível conectar. Seu servidor está bloqueando solicitações POST e\n       o aplicativo precisa delas para se comunicar com o seu site. Entre em contato com seu servidor para resolver este problema.</string>
-    <string name="reader_empty_followed_blogs_search_title">Não há sites correspondentes</string>
     <string name="reader_hint_search_followed_sites">Buscar sites seguidos</string>
     <string name="visual_editor_disabled">Editor visual desativado</string>
     <string name="preference_editor_visual">Visual</string>
@@ -1373,7 +1357,6 @@ Language: pt_BR
     <string name="reader_toast_err_follow_blog_not_authorized">Você não está autorizado a acessar este site</string>
     <string name="reader_toast_err_follow_blog_not_found">Não foi possível encontrar esse site</string>
     <string name="undo">Desfazer</string>
-    <string name="passcodelock_prompt_message">Digite seu PIN</string>
     <string name="push_auth_expired">A solicitação expirou. Faça login no WordPress.com para tentar novamente.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de visualizações</string>
     <string name="ignore">Ignorar</string>
@@ -1527,7 +1510,6 @@ Language: pt_BR
     <string name="reader_label_view_original">Ver o artigo original</string>
     <string name="reader_empty_posts_in_tag">Nenhum post com esta tag</string>
     <string name="reader_empty_comments">Nenhum comentário</string>
-    <string name="create_new_blog_wpcom">Crie um blog do WordPress.com</string>
     <string name="browse_our_faq_button">Veja nossa seção de Perguntas Frequentes</string>
     <string name="reader_menu_block_blog">Bloquear este site</string>
     <string name="reader_toast_blog_blocked">Os posts deste blog não serão mais exibidos</string>
@@ -1555,7 +1537,6 @@ Language: pt_BR
     <string name="username_or_password_incorrect">O nome de usuário ou a senha digitada está incorreta</string>
     <string name="email_invalid">Digite um endereço de e–mail válido</string>
     <string name="invalid_email_message">Seu endereço de e–mail é inválido</string>
-    <string name="passcode_wrong_passcode">PIN errado</string>
     <string name="error_downloading_image">Erro ao baixar a imagem</string>
     <string name="error_load_comment">Não foi possível carregar o comentário</string>
     <string name="error_edit_comment">Ocorreu um erro ao editar o comentário</string>
@@ -1579,7 +1560,6 @@ Language: pt_BR
     <string name="blog_not_found">Ocorreu um erro ao acessar este blog</string>
     <string name="gallery_error">O item de mídia não pode ser recuperado</string>
     <string name="no_network_message">Não há rede disponível</string>
-    <string name="required_field">Campo obrigatório</string>
     <string name="reader_toast_err_remove_tag">Não é possível remover a tag</string>
     <string name="reader_toast_err_add_tag">Não é possível adicionar a tag</string>
     <string name="reader_title_applog">Log do aplicativo</string>
@@ -1588,7 +1568,6 @@ Language: pt_BR
     <string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
     <string name="error_deleting_page">Ocorreu um erro durante a exclusão da página</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Endereço do blog</string>
     <string name="image_settings">Configurações de imagem</string>
     <string name="local_changes">Alterações de local</string>
     <string name="privacy_policy">Política de privacidade</string>
@@ -1646,7 +1625,6 @@ Language: pt_BR
     <string name="connection_error">Erro de conexão</string>
     <string name="select_categories">Selecionar categorias</string>
     <string name="share_link">Compartilhar link</string>
-    <string name="creating_your_site">Criando seu site</string>
     <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
@@ -1675,14 +1653,6 @@ Language: pt_BR
     <string name="reader_untitled_post">(Sem título)</string>
     <string name="comments_empty_list">Nenhum comentário ainda</string>
     <string name="empty_list_default">Esta lista está vazia</string>
-    <string name="passcode_turn_on">Ligar o bloqueio do código PIN</string>
-    <string name="passcode_turn_off">Desligar o bloqueio do código PIN</string>
-    <string name="passcode_preference_title">Código PIN</string>
-    <string name="passcode_set">Definir PIN</string>
-    <string name="passcode_change_passcode">Mudar PIN</string>
-    <string name="passcode_re_enter_passcode">Entre seu PIN novamente</string>
-    <string name="passcode_enter_old_passcode">Entre seu PIN antigo</string>
-    <string name="passcode_manage">Gerenciar seu código PIN.</string>
     <string name="stats_totals_plays">Tocados</string>
     <string name="stats_totals_clicks">Cliques</string>
     <string name="stats_totals_views">Visualizações</string>
@@ -1734,6 +1704,7 @@ Language: pt_BR
     <string name="posts">Posts</string>
     <string name="width">Largura</string>
     <string name="caption">Legenda (opcional)</string>
+    <string name="pages">Páginas</string>
     <string name="no_network_title">Não há rede disponível </string>
     <string name="featured_in_post">Incluir imagem no conteúdo do post</string>
     <string name="blogusername">usrenamedoblog</string>

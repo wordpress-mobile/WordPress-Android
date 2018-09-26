@@ -174,7 +174,6 @@ Language: el_GR
     <string name="image_quality">Ποιότητα εικόνας</string>
     <string name="error_all_media_upload_canceled">Όλες οι μεταφορτώσεις πολυμέσων έχουν ακυρωθεί εξαιτίας άγνωστου σφάλματος. Παρακαλούμε δοκιμάστε ξανά να τα μεταφορτώσετε</string>
     <string name="error_unknown_post_type">Άγνωστη μορφή άρθρου</string>
-    <string name="error_fetch_site_after_creation">Ο ιστότοπος έχει δημιουργηθεί, μπορεί να χρειάζεται ανανέωση των ιστοτόπων σας στον επιλογέα ιστοτόπων.</string>
     <string name="submit_for_review">Υποβολή</string>
     <string name="duplicate_site_detected">Ανιχνεύθηκε πανομοιότυπος ιστότοπος.</string>
     <string name="cannot_add_duplicate_site">Ο ιστότοπος υπάρχιε ήδη στην εφαρμογή, δεν μπορείτε να τον προσθέσετε.</string>
@@ -192,7 +191,6 @@ Language: el_GR
     <string name="confirm">Επιβεβαίωση</string>
     <string name="xmlrpc_endpoint_forbidden_error">Αδυναμία σύνδεσης. Λάβαμε ένα σφάλμα 403 προσπαθώντας να προσπελάσουμε\nτο σημείο επαφής XMLRPC του ιστοτόπου σας. Η εφαρμογή το χρειάζεται ώστε επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε\nαυτό το πρόβλημα.</string>
     <string name="xmlrpc_post_blocked_error">Αδυναμία σύνδεσης. Ο πάροχος φιλοξενίας σας μπλοκάρει τα αιτήματα POST και η εφαρμογή τα χρειάζεται\nώστε να επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε αυτό το πρόβλημα.</string>
-    <string name="reader_empty_followed_blogs_search_title">Δεν βρέθηκαν ιστότοποι να ταιριάζουν</string>
     <string name="reader_hint_search_followed_sites">Αναζήτηση σε παρακολουθούμενους ιστότοπους.</string>
     <string name="visual_editor_disabled">Ο Επεξεργαστής είναι απενεργοποημένος</string>
     <string name="preference_editor_visual">Όπως Εμφανίζεται</string>
@@ -632,7 +630,6 @@ Language: el_GR
     <string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό τον ιστότοπο</string>
     <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστότοπου</string>
     <string name="undo">Αναίρεση</string>
-    <string name="passcodelock_prompt_message">Εισάγετε το PIN σας</string>
     <string name="push_auth_expired">Το αίτημα έληξε. Συνδεθείτε στο WordPress.com για να προσπαθήσετε ξανά.</string>
     <string name="ignore">Αγνοήστε</string>
     <string name="stats_insights_best_ever">Περισσότερες προβολές ποτέ</string>
@@ -777,7 +774,6 @@ Language: el_GR
     <string name="error_publish_empty_post">Δεν μπορείτε να δημοσιεύσετε ένα κενό άρθρο</string>
     <string name="older_month">Παλαιότερο από ένα μήνα</string>
     <string name="browse_our_faq_button">Περιηγηθείτε στις Συχνές Ερωτήσεις</string>
-    <string name="create_new_blog_wpcom">Δημιουργίας ιστολογίου στο WordPress.com</string>
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
     <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
     <string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
@@ -812,7 +808,6 @@ Language: el_GR
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
     <string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
-    <string name="passcode_wrong_passcode">Λάθος PIN</string>
     <string name="invalid_email_message">Η διεύθυνση email σας δεν είναι έγκυρη</string>
     <string name="error_downloading_image">Σφάλμα κατά την ανάκτηση της εικόνας</string>
     <string name="email_invalid">Εισάγετε μια έγκυρη διεύθυνση email</string>
@@ -853,8 +848,6 @@ Language: el_GR
     <string name="post_settings">Ρυθμίσεις άρθρου</string>
     <string name="dlg_confirm_trash_comments">Αποστολή στα σκουπίδια;</string>
     <string name="wordpress_blog">Ιστολόγιο WordPress</string>
-    <string name="required_field">Υποχρεωτικό πεδίο</string>
-    <string name="add_account_blog_url">Διεύθυνση ιστολογίου</string>
     <string name="mnu_comment_trash">Σκουπίδια</string>
     <string name="preview_post">Προεπισκόπηση άρθρου</string>
     <string name="remove_account">Αφαίρεση ιστότοπου</string>
@@ -903,7 +896,6 @@ Language: el_GR
     <string name="delete_page">Διαγραφή σελίδας;</string>
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
     <string name="share_link">Κοινοποίηση συνδέσμου</string>
-    <string name="creating_your_site">Δημιουργώντας τον ιστότοπο</string>
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
     <string name="reader_label_reply">Απάντηση</string>
     <string name="video">Βίντεο</string>
@@ -960,14 +952,6 @@ Language: el_GR
     <string name="stats_totals_views">Εμφανίσεις</string>
     <string name="stats_totals_clicks">Κλικ</string>
     <string name="stats_totals_plays">Αναπαραγωγές</string>
-    <string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
-    <string name="passcode_enter_old_passcode">Πληκτρολογήστε το παλιό σας PIN</string>
-    <string name="passcode_re_enter_passcode">Πληκτρολογήστε το PIN σας ξανά</string>
-    <string name="passcode_change_passcode">Αλλάγή PIN</string>
-    <string name="passcode_set">Το PIN ορίστηκε</string>
-    <string name="passcode_preference_title">Κλείδωμα PIN</string>
-    <string name="passcode_turn_off">Απενεργοποιήστε το κλείδωμα PIN</string>
-    <string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>
     <string name="manage">Διαχείριση</string>
     <string name="discard">Απόρριψη</string>
     <string name="sign_in">Συνδεθείτε</string>
@@ -988,6 +972,7 @@ Language: el_GR
     <string name="reader">Αναγνώστης</string>
     <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
+    <string name="pages">Σελίδες</string>
     <string name="caption">Λεζάντα (προαιρετική)</string>
     <string name="width">Πλάτος</string>
     <string name="posts">Άρθρα</string>

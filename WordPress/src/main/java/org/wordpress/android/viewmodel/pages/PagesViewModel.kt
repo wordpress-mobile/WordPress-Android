@@ -31,7 +31,6 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
@@ -47,6 +46,7 @@ import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
@@ -109,9 +109,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var _site: SiteModel
+    private var _site: SiteModel? = null
     val site: SiteModel
-        get() = _site
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -122,17 +122,16 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
+    private var pageUpdateContinuation: Continuation<Unit>? = null
     private var currentPageType = PageListType.PUBLISHED
 
-    companion object {
-        const val PAGE_UPDATE_TIMEOUT = 5L * 1000
-    }
-
     fun start(site: SiteModel) {
-        _site = site
+        // Check if VM is not already initialized
+        if (_site == null) {
+            _site = site
 
-        loadPagesAsync()
+            loadPagesAsync()
+        }
     }
 
     init {
@@ -176,19 +175,18 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(pageId: Long) {
+    fun onPageEditFinished() {
         uiScope.launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate(pageId)
+            waitForPageUpdate()
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate(pageId: Long) {
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPDATE_TIMEOUT) { cont ->
-            pageUpdateContinuation[pageId] = cont
+    private suspend fun waitForPageUpdate() {
+        suspendCoroutine<Unit> { cont ->
+            pageUpdateContinuation = cont
         }
-        pageUpdateContinuation.remove(pageId)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -482,8 +480,10 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
+        pageUpdateContinuation?.let { cont ->
+            pageUpdateContinuation = null
+            cont.resume(Unit)
+        }
     }
 
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiScope.coroutineContext) {

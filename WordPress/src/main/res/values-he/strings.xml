@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 06:54:08+0000
+Translation-Revision-Date: 2018-09-20 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[מידע נוסף]</string>
+    <string name="news_card_announcement_content_sample_announcement">[אין לך זמן לקרוא כעת? אין בעיה!: ניתן לשמור את הפוסטים לשלב מאוחר יותר.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[תכונה חדשה זמינה]</string>
+    <string name="pages_empty_trashed">אין לך עמודים שהועברו לפח</string>
+    <string name="pages_empty_scheduled">אין לך אף עמוד מתוזמן לפרסום</string>
+    <string name="pages_empty_drafts">אין לך עמודים שנשמרו כטיוטה</string>
+    <string name="pages_empty_published">לא פרסמת עדיין אף עמוד</string>
+    <string name="pages_search_suggestion">חיפוש עמודים</string>
+    <string name="pages_empty_search_result">לא נמצאו עמודים שמתאימים לחיפוש שלך</string>
+    <string name="pages_delete_permanently">מחק לצמיתות</string>
+    <string name="pages_move_to_trash">העברה לפח</string>
+    <string name="pages_move_to_draft">העברה לטיוטות</string>
+    <string name="pages_publish_now">לפרסם כעת</string>
+    <string name="pages_set_parent">הגדרת הורה</string>
+    <string name="pages_view">הצגה</string>
+    <string name="pages_trashed">הועבר לפח</string>
+    <string name="pages_scheduled">מתוזמן לפרסום</string>
+    <string name="pages_drafts">טיוטות</string>
+    <string name="pages_published">פורסם</string>
+    <string name="login_error_sms_throttled">ביצענו יותר מדי ניסיונות לשלוח קוד אימות בהודעת טקסט – אנחנו ממליצים להמתין רגע ולנסות שוב עוד דקה.</string>
+    <string name="login_error_email_not_found_v2">אין חשבון WordPress.com שתואם לחשבון Google זה.</string>
+    <string name="site_picker_remove_site_empty">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
+    <string name="reader_empty_followed_blogs_search_title">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
+    <string name="page_parent_changed">ההורה של העמוד השתנה</string>
+    <string name="page_permanently_deleted">העמוד נמחק לצמיתות</string>
+    <string name="page_moved_to_scheduled">הפרסום של העמוד תוזמן</string>
+    <string name="page_moved_to_published">העמוד פורסם</string>
+    <string name="page_moved_to_trash">העמוד הועבר לפח</string>
+    <string name="page_moved_to_draft">העמוד הועבר לטיוטות</string>
+    <string name="top_level">קטגוריה עליונה</string>
+    <string name="page_delete_dialog_message">האם ברצונך למחוק את העמוד %s?</string>
+    <string name="page_parent_change_error">אירעה בעיה בשינוי ההורה של העמוד</string>
+    <string name="page_status_change_error">אירעה בעיה בשינוי המצב של העמוד</string>
+    <string name="page_delete_error">אירעה בעיה במחיקת העמוד</string>
+    <string name="set_parent">הגדרת הורה</string>
+    <string name="dismiss">בטל</string>
     <string name="quick_start_focus_point_description">יש להקיש כאן</string>
     <string name="quick_start_sites">התחלה מהירה</string>
-    <string name="quick_start_list_view_site_title">‎@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">‎@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">‎@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">‎@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">‎@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">‎@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">‎@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">‎@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">‎@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">‎@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">יצירת האתר שלך</string>
     <string name="quick_start_list_create_site_subtitle">הפעלת האתר שלך</string>
     <string name="quick_start_list_complete_title">ברכותינו על סיום הסיור להתחלה מהירה</string>
     <string name="quick_start_list_complete_subtitle">שמחים שהשלמת את המטרה שהצבת לעצמך!</string>
-    <string name="quick_start_list_choose_theme_title">‎@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">‎@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">הצגת האתר שלך</string>
     <string name="quick_start_dialog_view_site_message_short">יש להקיש על %1$sהצגת האתר%2$s כדי להציג את האתר שלך בתצוגה מקדימה</string>
     <string name="quick_start_dialog_view_site_message">באפשרותך להציג תצוגה מקדימה של האתר החדש כדי לבחון מה יראו המבקרים בו.</string>
@@ -332,7 +356,6 @@ Language: he_IL
     <string name="me_section_screen_title">אני</string>
     <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
-    <string name="passcode_screen_title">קוד סיסמה של WordPress</string>
     <string name="help_screen_title">עזרה ותמיכה</string>
     <string name="license_screen_title">רישיון</string>
     <string name="release_notes_screen_title">הערות לשחרור גרסה</string>
@@ -593,7 +616,6 @@ Language: he_IL
     <string name="media_edit_file_details_card_caption">פרטי הקובץ</string>
     <string name="login_error_suffix">\nמומלץ לנסות חשבון אחר.</string>
     <string name="login_error_generic">הייתה בעיה להתחבר עם חשבון Google.</string>
-    <string name="login_error_email_not_found">חשבון ה-Google‏ \'%s\' לא תואם לחשבון קיים ב–WordPress.com.‏</string>
     <string name="login_error_button">סגור</string>
     <string name="login_google_button_suffix">התחברות עם Google.</string>
     <string name="enter_wpcom_password_google">כדי להמשיך עם חשבון Google, יש לספק סיסמת WordPress.com תואמת. נבקש את הנתונים האלו פעם אחת בלבד.</string>
@@ -896,7 +918,6 @@ Language: he_IL
     <string name="image_quality">איכות תמונה</string>
     <string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
     <string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
-    <string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
     <string name="submit_for_review">שלח</string>
     <string name="duplicate_site_detected">נמצא אתר כפול.</string>
     <string name="cannot_add_duplicate_site">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
@@ -914,7 +935,6 @@ Language: he_IL
     <string name="confirm">אישור</string>
     <string name="xmlrpc_endpoint_forbidden_error">לא ניתן להתחבר. התקבלה שגיאת 403 בניסיון לגשת ל–\n נקודת הקצה XMLRPC של האתר שלך. כדי שהאפליקציה תוכל לבצע התקשרות עם האתר שלך, יש להפעיל אפשרות זו. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="xmlrpc_post_blocked_error">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
-    <string name="reader_empty_followed_blogs_search_title">לא נמצאו אתרים תואמים</string>
     <string name="reader_hint_search_followed_sites">חיפוש באתרים תחת מעקב</string>
     <string name="visual_editor_disabled">עורך ויזואלי מושבת</string>
     <string name="preference_editor_visual">עורך ויזואלי</string>
@@ -1353,7 +1373,6 @@ Language: he_IL
     <string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לאתר זה</string>
     <string name="reader_toast_err_follow_blog_not_found">האתר לא נמצא</string>
     <string name="undo">ביטול פעולה אחרונה</string>
-    <string name="passcodelock_prompt_message">הזנת קוד PIN</string>
     <string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% מהצפיות</string>
     <string name="ignore">להתעלם</string>
@@ -1507,7 +1526,6 @@ Language: he_IL
     <string name="reader_label_view_original">לצפות בפוסט המקורי</string>
     <string name="reader_empty_posts_in_tag">אין פוסטים עם התגית הזו</string>
     <string name="reader_empty_comments">אין תגובות עדיין</string>
-    <string name="create_new_blog_wpcom">יצירת אתר וורדפרס.קום</string>
     <string name="browse_our_faq_button">לעיון בשאלות הנפוצות שלנו</string>
     <string name="reader_menu_block_blog">לחסום את האתר הזה</string>
     <string name="reader_toast_blog_blocked">הפוסטים מהאתר הזה לא יוצגו עוד</string>
@@ -1535,7 +1553,6 @@ Language: he_IL
     <string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
     <string name="email_invalid">הקלד כתובת אימייל חוקית</string>
     <string name="invalid_email_message">כתובת האימייל שלך לא תקפה</string>
-    <string name="passcode_wrong_passcode">PIN שגוי</string>
     <string name="error_downloading_image">שגיאה בזמן הורדת תמונה</string>
     <string name="error_load_comment">לא ניתן היה להעלות את התגובה</string>
     <string name="error_edit_comment">אירעה שגיאה בזמן עריכת התגובה</string>
@@ -1559,7 +1576,6 @@ Language: he_IL
     <string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
     <string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
     <string name="no_network_message">אין רשת זמינה</string>
-    <string name="required_field">שדה חובה</string>
     <string name="reader_toast_err_remove_tag">לא ניתן להסיר תגית זו</string>
     <string name="reader_toast_err_add_tag">לא ניתן להוסיף תגית זו</string>
     <string name="reader_title_applog">יומן יישום</string>
@@ -1568,7 +1584,6 @@ Language: he_IL
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
     <string name="error_deleting_page">אירעה שגיאה בעת מחיקת העמוד</string>
     <string name="wordpress_blog">אתר ב–WordPress</string>
-    <string name="add_account_blog_url">כתובת האתר</string>
     <string name="image_settings">הגדרות תמונה</string>
     <string name="local_changes">שינויים מקומיים</string>
     <string name="privacy_policy">מדיניות פרטיות</string>
@@ -1626,7 +1641,6 @@ Language: he_IL
     <string name="connection_error">שגיאת התחברות</string>
     <string name="select_categories">בחר קטגוריות</string>
     <string name="share_link">קישור לשיתוף</string>
-    <string name="creating_your_site">יוצר את האתר שלך</string>
     <string name="reader_empty_posts_in_tag_updating">מביא רשומות…</string>
     <string name="cant_share_no_visible_blog">אינך יכול לשתף ב–WordPress ללא אתר גלוי</string>
     <string name="comment_spammed">התגובה סומנה כתגובת זבל</string>
@@ -1655,14 +1669,6 @@ Language: he_IL
     <string name="reader_untitled_post">(ללא כותרת)</string>
     <string name="comments_empty_list">עדיין אין תגובות</string>
     <string name="empty_list_default">רשימה זו ריקה</string>
-    <string name="passcode_turn_on">הפעל נעילת קוד אישי</string>
-    <string name="passcode_turn_off">הפסק נעילת קוד אישי</string>
-    <string name="passcode_preference_title">נעילת קוד אישי</string>
-    <string name="passcode_set">קוד אישי הוגדר</string>
-    <string name="passcode_change_passcode">החלף את הקוד האישי שלך</string>
-    <string name="passcode_re_enter_passcode">הקלד שנית את הקוד האישי שלך</string>
-    <string name="passcode_enter_old_passcode">הקלד את הקוד האישי הישן שלך</string>
-    <string name="passcode_manage">ניהול חסימה בקוד אישי</string>
     <string name="stats_totals_plays">ניגונים</string>
     <string name="stats_totals_clicks">קליקים</string>
     <string name="stats_totals_views">צפיות</string>
@@ -1714,6 +1720,7 @@ Language: he_IL
     <string name="posts">פוסטים</string>
     <string name="width">רוחב</string>
     <string name="caption">כיתוב תמונה (אופציונלי)</string>
+    <string name="pages">עמודים</string>
     <string name="no_network_title">הרשת אינה זמינה</string>
     <string name="featured_in_post">הוספת תמונה לתוכן</string>
     <string name="blogusername">שם משתמש</string>

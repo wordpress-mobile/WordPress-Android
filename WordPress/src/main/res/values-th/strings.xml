@@ -177,7 +177,6 @@ Language: th
     <string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
     <string name="page_trashed">หน้าที่ส่งไปถังขยะ</string>
     <string name="undo">ย้อนกลับ</string>
-    <string name="passcodelock_prompt_message">ใส่ PIN ของคุณ</string>
     <string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
     <string name="stats_insights_best_ever">การดูที่ดีที่สุด</string>
     <string name="ignore">ไม่สนใจ</string>
@@ -321,7 +320,6 @@ Language: th
     <string name="older_month">เก่ากว่าหนึ่งเดือน</string>
     <string name="more">กว่า</string>
     <string name="browse_our_faq_button">เรียกดูคำถามที่พบบ่อยของเรา</string>
-    <string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
     <string name="reader_empty_comments">ยังไม่มีความเห็น</string>
     <string name="reader_empty_posts_in_tag">ไม่มีเรื่องกับป้ายกำกับนี้</string>
     <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
@@ -345,7 +343,6 @@ Language: th
     <string name="adding_cat_success">เพิ่มหมวดหมู่สำเร็จแล้ว</string>
     <string name="cat_name_required">ต้องใส่ชื่อหมวดหมู่</string>
     <string name="username_or_password_incorrect">คุณกรอกชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
-    <string name="passcode_wrong_passcode">PIN ไม่ถูกต้อง</string>
     <string name="stats_empty_comments">ยังไม่มีความเห็น</string>
     <string name="stats_bar_graph_empty">สถิติยังไม่พร้อมให้ดู</string>
     <string name="notifications_empty_list">ไม่มีการเตือน</string>
@@ -368,11 +365,9 @@ Language: th
     <string name="invalid_url_message">ตรวจสอบ URL ที่ใส่มาว่าใช้งานได้หรือไม่</string>
     <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
     <string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
-    <string name="required_field">ช่องที่ต้องการ</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
     <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
     <string name="image_settings">การตั้งค่ารูปภาพ</string>
-    <string name="add_account_blog_url">ที่อยู่บล็อก</string>
     <string name="wordpress_blog">บล็อกเวิร์ดเพรส</string>
     <string name="error_blog_hidden">บล็อกนี้ถูกซ่อนและไม่สามารถโหลดได้  ให้เปิดใช้งานมันอีกครั้งในการตั้งค่าและลองดูอีกครั้ง</string>
     <string name="fatal_db_error">มีความผิดพลาดเกิดขึ้นระหว่างการสร้างฐานข้อมูลแอพ  โปรดลองติดตั้งแอพใหม่อีกครั้ง</string>
@@ -426,7 +421,6 @@ Language: th
     <string name="reader_title_applog">log แอพพลิเคชั่น</string>
     <string name="notifications_empty_all">ยังไม่มีคำเตือน</string>
     <string name="share_link">แบ่งปันลิงก์</string>
-    <string name="creating_your_site">กำลังสร้างเว็บของคุณ</string>
     <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
     <string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
@@ -482,15 +476,7 @@ Language: th
     <string name="media_gallery_type_circles">เรียงแบบวงกลม</string>
     <string name="media_gallery_type_slideshow">สไลด์โชว์</string>
     <string name="media_gallery_type_squares">เรียงแบบสี่เหลี่ยม</string>
-    <string name="passcode_manage">จัดการ PIN lock</string>
-    <string name="passcode_enter_old_passcode">ใส่ PIN เ่ก่าของคุณ</string>
-    <string name="passcode_re_enter_passcode">ใส่ PIN ของคุณอีกครั้ง</string>
-    <string name="passcode_change_passcode">เปลี่ยน PIN</string>
-    <string name="passcode_set">การตั้งค่า PIN</string>
     <string name="stats_entry_referrers">ลิงก์อ้างอิง</string>
-    <string name="passcode_preference_title">PIN ล็อค</string>
-    <string name="passcode_turn_off">ปิดการใช้ PIN ล็อค</string>
-    <string name="passcode_turn_on">เปิดการใช้ PIN ล็อค</string>
     <string name="manage">จัดการ</string>
     <string name="discard">เอาออก</string>
     <string name="note_reply_successful">เผยแพร่การตอบกลับแล้ว</string>
@@ -509,6 +495,7 @@ Language: th
     <string name="username">ชื่อผู้ใช้</string>
     <string name="log_in">เข้าสู่ระบบ</string>
     <string name="reader">ผู้อ่าน</string>
+    <string name="pages">หน้า</string>
     <string name="caption">ป้ายชื่อ (ทางเลือก)</string>
     <string name="width">ความกว้าง</string>
     <string name="posts">เรื่อง</string>

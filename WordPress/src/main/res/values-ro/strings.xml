@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-10 06:43:07+0000
+Translation-Revision-Date: 2018-09-13 09:31:56+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Citește mai mult]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Nu ai timp să citești acum? Nicio problemă: salvează articolele pentru mai târziu.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Este disponibilă o funcționalitate nouă]</string>
+    <string name="pages_empty_trashed">Nu ai nicio pagină aruncată la gunoi</string>
+    <string name="pages_empty_scheduled">Nu ai nicio pagină programată</string>
+    <string name="pages_empty_drafts">Nu ai nicio pagină în ciornă</string>
+    <string name="pages_empty_published">Nu ai nicio pagină publicată până acum</string>
+    <string name="pages_search_suggestion">Caută pagini</string>
+    <string name="pages_empty_search_result">Nu se potrivește nicio pagină cu căutarea ta</string>
+    <string name="pages_delete_permanently">Șterge definitiv</string>
+    <string name="pages_move_to_trash">Mută la gunoi</string>
+    <string name="pages_move_to_draft">Mută în ciorne</string>
+    <string name="pages_publish_now">Publică acum</string>
+    <string name="pages_set_parent">Setează un părinte</string>
+    <string name="pages_view">Vezi</string>
+    <string name="pages_trashed">Aruncate la gunoi</string>
+    <string name="pages_scheduled">Programate</string>
+    <string name="pages_drafts">Ciorne</string>
+    <string name="pages_published">Publicate</string>
+    <string name="login_error_sms_throttled">Am făcut prea multe încercări de a trimite un cod de verificare prin SMS — ia o pauză și cere altul nou peste un minut.</string>
+    <string name="login_error_email_not_found_v2">Nu există niciun cont WordPress.com care să se potrivească cu acest cont Google.</string>
+    <string name="site_picker_remove_site_empty">Nu se potrivește niciun sit cu căutarea ta</string>
+    <string name="reader_empty_followed_blogs_search_title">Nu se potrivește niciun sit cu căutarea ta</string>
+    <string name="page_parent_changed">Părintele paginii a fost schimbat</string>
+    <string name="page_permanently_deleted">Pagina a fost ștearsă definitiv</string>
+    <string name="page_moved_to_scheduled">Pagina a fost programată</string>
+    <string name="page_moved_to_published">Pagina a fost publicată</string>
+    <string name="page_moved_to_trash">Pagina a fost aruncată la gunoi</string>
+    <string name="page_moved_to_draft">Pagina a fost mutată în Ciorne</string>
+    <string name="top_level">Nivel superior</string>
+    <string name="page_delete_dialog_message">Sigur vrei să ștergi pagina %s?</string>
+    <string name="page_parent_change_error">A fost o problemă la schimbarea părintelui paginii</string>
+    <string name="page_status_change_error">A fost o problemă la modificarea stării paginii</string>
+    <string name="page_delete_error">A fost o problemă la ștergerea paginii</string>
+    <string name="set_parent">Setează un părinte</string>
+    <string name="dismiss">respinge</string>
     <string name="quick_start_focus_point_description">atinge aici</string>
-    <string name="quick_start_sites">Pornire rapidă</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_sites">Inițiere rapidă</string>
     <string name="quick_start_list_create_site_title">Creează–ți situl</string>
     <string name="quick_start_list_create_site_subtitle">Obții un sit care funcționează și rulează</string>
-    <string name="quick_start_list_complete_title">Felicitări, ai terminat Pornirea rapidă</string>
+    <string name="quick_start_list_complete_title">Felicitări, ai terminat Inițierea rapidă</string>
     <string name="quick_start_list_complete_subtitle">nu-i comod să bifezi lucrurile dintr–o listă?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">Vizualizează–ți situl</string>
     <string name="quick_start_dialog_view_site_message_short">Atinge %1$s Vizualizează situl %2$s pentru a–ți previzualiza situl</string>
     <string name="quick_start_dialog_view_site_message">Previzualizează–ți noul sit pentru a vedea cum apare pentru vizitatorii tăi.</string>
-    <string name="quick_start_dialog_skip_title">Sari peste Pornire rapidă</string>
+    <string name="quick_start_dialog_skip_title">Sari peste Inițiere rapidă</string>
     <string name="quick_start_dialog_skip_message">Turul rapid te va ghida să construiești un sit de bază. Sigur vrei să–l sari?</string>
     <string name="quick_start_dialog_share_site_title">Partajează–ți situl</string>
     <string name="quick_start_dialog_share_site_message_short_sharing">Atinge %1$s Partajare %2$s pentru a continua</string>
@@ -37,7 +61,7 @@ Language: ro
     <string name="quick_start_dialog_publish_post_message_short">Atinge %1$s Creează articol %2$s pentru a crea un articol nou</string>
     <string name="quick_start_dialog_publish_post_message">E timpul! Scrie și publică primul articol.</string>
     <string name="quick_start_dialog_need_help_title">Vrei un pic de ajutor pentru a începe?</string>
-    <string name="quick_start_dialog_need_help_message">Listă noastră de verificări din Pornire rapidă parcurge elementele de bază ale inițializării unui nou sit web.</string>
+    <string name="quick_start_dialog_need_help_message">Listă noastră de verificări din Inițiere rapidă parcurge elementele de bază ale inițializării unui nou sit web.</string>
     <string name="quick_start_dialog_need_help_button_positive">Da</string>
     <string name="quick_start_dialog_need_help_button_neutral">Niciodată</string>
     <string name="quick_start_dialog_need_help_button_negative">Nu</string>
@@ -339,7 +363,6 @@ Language: ro
     <string name="me_section_screen_title">Eu</string>
     <string name="my_site_section_screen_title">Situl meu</string>
     <string name="notif_settings_screen_title">Setări notificări</string>
-    <string name="passcode_screen_title">Cod de acces WordPress</string>
     <string name="help_screen_title">Ajutor și suport</string>
     <string name="license_screen_title">Licență</string>
     <string name="release_notes_screen_title">Note de lansare</string>
@@ -602,7 +625,6 @@ Language: ro
     <string name="media_edit_file_details_card_caption">Detalii fișier</string>
     <string name="login_error_suffix">\nPoate încerci un alt cont?</string>
     <string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
-    <string name="login_error_email_not_found">Contul Google „%s” nu se potrivește cu niciun cont existent pe WordPress.com.</string>
     <string name="login_error_button">Închide</string>
     <string name="login_google_button_suffix">Autentificare cu Google.</string>
     <string name="enter_wpcom_password_google">Pentru a continua cu acest cont Google, te rog furnizează parola WordPress.com care se potrivește. Aceasta va fi cerută o singură dată.</string>
@@ -905,7 +927,6 @@ Language: ro
     <string name="image_quality">Calitate imagine</string>
     <string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
     <string name="error_unknown_post_type">Format de articol necunoscut</string>
-    <string name="error_fetch_site_after_creation">Situl a fost creat, ar trebui să–ți reîmprospătezi siturile în selectorul de sit.</string>
     <string name="submit_for_review">Trimite</string>
     <string name="duplicate_site_detected">A fost detectat un sit duplicat.</string>
     <string name="cannot_add_duplicate_site">Acest sit există deja în aplicație, nu–l poți adăuga.</string>
@@ -923,7 +944,6 @@ Language: ro
     <string name="confirm">Confirmă</string>
     <string name="xmlrpc_endpoint_forbidden_error">N-am putut conecta. Am primit o eroare 403 la încercarea de a accesa\n        punctul-final XMLRPC pentru situl tău. Aplicația are nevoie de el pentru a comunica cu situl tău. Contactează–ți gazda pentru a rezolva\n        această problemă.</string>
     <string name="xmlrpc_post_blocked_error">Nu m-am putut conecta. Gazda ta blochează cererile POST și aplicația trebuie\n        să comunice cu situl tău. Contactează–ți gazda pentru a rezolva această problemă.</string>
-    <string name="reader_empty_followed_blogs_search_title">Nu se potrivește niciun sit</string>
     <string name="reader_hint_search_followed_sites">Caută situri urmărite</string>
     <string name="visual_editor_disabled">Editor vizual dezactivat</string>
     <string name="preference_editor_visual">Vizual</string>
@@ -1373,7 +1393,6 @@ Language: ro
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest sit</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest sit nu a putut fi găsit</string>
     <string name="undo">Revin</string>
-    <string name="passcodelock_prompt_message">Introdu PIN–ul tău</string>
     <string name="push_auth_expired">Cererea a expirat. Autentifică–te pe WordPress.com pentru a încerca din nou.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de vizualizări</string>
     <string name="ignore">Ignoră</string>
@@ -1527,7 +1546,6 @@ Language: ro
     <string name="reader_label_view_original">Vezi articolul original</string>
     <string name="reader_empty_posts_in_tag">Niciun articol cu această etichetă</string>
     <string name="reader_empty_comments">Niciun comentariu încă</string>
-    <string name="create_new_blog_wpcom">Crează un blog la WordPress.com</string>
     <string name="browse_our_faq_button">Răsfoiește Î&amp;R noastre</string>
     <string name="reader_menu_block_blog">Blochează acest sit</string>
     <string name="reader_toast_blog_blocked">Articolele din acest sit nu vor mai fi arătate</string>
@@ -1555,7 +1573,6 @@ Language: ro
     <string name="username_or_password_incorrect">Numele de utilizator sau parola introduse de tine sunt incorecte</string>
     <string name="email_invalid">Introdu o adresă de email validă</string>
     <string name="invalid_email_message">Adresa ta de email nu e validă</string>
-    <string name="passcode_wrong_passcode">PIN greșit</string>
     <string name="error_downloading_image">Eroare la descărcarea imaginii</string>
     <string name="error_load_comment">Nu s–a putut încărca comentariul</string>
     <string name="error_edit_comment">A apărut o eroare în timpul editării comentariului</string>
@@ -1579,7 +1596,6 @@ Language: ro
     <string name="blog_not_found">A apărut o eroare la accesarea blogului</string>
     <string name="gallery_error">Elementul media nu a putut fi readus</string>
     <string name="no_network_message">Nu e nicio rețea disponibilă</string>
-    <string name="required_field">Câmp obligatoriu</string>
     <string name="reader_toast_err_remove_tag">Nu pot înlătura această etichetă</string>
     <string name="reader_toast_err_add_tag">Nu pot adăuga această etichetă</string>
     <string name="reader_title_applog">Jurnal aplicații</string>
@@ -1588,7 +1604,6 @@ Language: ro
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
     <string name="error_deleting_page">A apărut o eroare în timpul ștergerii paginii</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Adresă blog</string>
     <string name="image_settings">Setări imagine</string>
     <string name="local_changes">Schimbări locale</string>
     <string name="privacy_policy">Politică de confidențialitate</string>
@@ -1646,7 +1661,6 @@ Language: ro
     <string name="connection_error">Eroare de conectare</string>
     <string name="select_categories">Selectează categorii</string>
     <string name="share_link">Partajare legătură</string>
-    <string name="creating_your_site">Creez situl tău</string>
     <string name="reader_empty_posts_in_tag_updating">Se aduc articole…</string>
     <string name="cant_share_no_visible_blog">Nu poți partaja pe WordPress fără ca blogul să fie vizibil</string>
     <string name="comment_spammed">Comentariu marcat ca spam</string>
@@ -1675,14 +1689,6 @@ Language: ro
     <string name="reader_untitled_post">(Fără titlu)</string>
     <string name="comments_empty_list">Niciun comentariu până acum</string>
     <string name="empty_list_default">Această listă e goală</string>
-    <string name="passcode_turn_on">Pune blocarea PIN–ului</string>
-    <string name="passcode_turn_off">Scoate blocarea PIN–ului</string>
-    <string name="passcode_preference_title">PIN blocat</string>
-    <string name="passcode_set">PIN setat</string>
-    <string name="passcode_change_passcode">Modifică PIN</string>
-    <string name="passcode_re_enter_passcode">Reintrodu PIN–ul tău</string>
-    <string name="passcode_enter_old_passcode">Introdu vechiul tău PIN</string>
-    <string name="passcode_manage">Gestionează PIN–ul de blocare</string>
     <string name="stats_totals_plays">Rulări</string>
     <string name="stats_totals_clicks">Clicuri</string>
     <string name="stats_totals_views">Vizualizări</string>
@@ -1734,6 +1740,7 @@ Language: ro
     <string name="posts">Articole</string>
     <string name="width">Lățime</string>
     <string name="caption">Text asociat (opțional)</string>
+    <string name="pages">Pagini</string>
     <string name="no_network_title">Nu e disponibilă nicio rețea.</string>
     <string name="featured_in_post">Include imaginea în conținutul articolului</string>
     <string name="blogusername">nume utilizator blog</string>

@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-30 16:54:21+0000
+Translation-Revision-Date: 2018-09-17 21:20:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
+    <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+    <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
+    <string name="pages_empty_drafts">You don\'t have any draft pages</string>
+    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_search_suggestion">Search pages</string>
+    <string name="pages_empty_search_result">No pages matching your search</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_view">View</string>
+    <string name="pages_trashed">Trashed</string>
+    <string name="pages_scheduled">Scheduled</string>
+    <string name="pages_drafts">Drafts</string>
+    <string name="pages_published">Published</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
+    <string name="site_picker_remove_site_empty">No sites matching your search</string>
+    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="top_level">Top level</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="page_parent_change_error">There was a problem changing the page parent</string>
+    <string name="page_status_change_error">There was a problem changing the page status</string>
+    <string name="page_delete_error">There was a problem deleting the page</string>
+    <string name="set_parent">Set Parent</string>
+    <string name="dismiss">dismiss</string>
     <string name="quick_start_focus_point_description">tap here</string>
     <string name="quick_start_sites">Quick Start</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
     <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
     <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_view_site_message_short">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
@@ -339,7 +363,6 @@ Language: en_CA
     <string name="me_section_screen_title">Me</string>
     <string name="my_site_section_screen_title">My site</string>
     <string name="notif_settings_screen_title">Notification settings</string>
-    <string name="passcode_screen_title">WordPress Passcode</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Release notes</string>
@@ -602,7 +625,6 @@ Language: en_CA
     <string name="media_edit_file_details_card_caption">File Details</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_button">Close</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -905,7 +927,6 @@ Language: en_CA
     <string name="image_quality">Image Quality</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
     <string name="error_unknown_post_type">Unknown post format</string>
-    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
     <string name="submit_for_review">Submit</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
@@ -923,7 +944,6 @@ Language: en_CA
     <string name="confirm">Confirm</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
-    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="preference_editor_visual">Visual</string>
@@ -1373,7 +1393,6 @@ Language: en_CA
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>
-    <string name="passcodelock_prompt_message">Enter your PIN</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="ignore">Ignore</string>
@@ -1527,7 +1546,6 @@ Language: en_CA
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
@@ -1555,7 +1573,6 @@ Language: en_CA
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="passcode_wrong_passcode">Wrong PIN</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
@@ -1579,7 +1596,6 @@ Language: en_CA
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="required_field">Required field</string>
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_add_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
@@ -1588,7 +1604,6 @@ Language: en_CA
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_page">An error occurred while deleting the page</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="add_account_blog_url">Blog address</string>
     <string name="image_settings">Image settings</string>
     <string name="local_changes">Local changes</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1646,7 +1661,6 @@ Language: en_CA
     <string name="connection_error">Connection error</string>
     <string name="select_categories">Select categories</string>
     <string name="share_link">Share link</string>
-    <string name="creating_your_site">Creating your site</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -1675,14 +1689,6 @@ Language: en_CA
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="comments_empty_list">No comments yet</string>
     <string name="empty_list_default">This list is empty</string>
-    <string name="passcode_turn_on">Turn PIN lock on</string>
-    <string name="passcode_turn_off">Turn PIN lock off</string>
-    <string name="passcode_preference_title">PIN lock</string>
-    <string name="passcode_set">PIN set</string>
-    <string name="passcode_change_passcode">Change PIN</string>
-    <string name="passcode_re_enter_passcode">Re–enter your PIN</string>
-    <string name="passcode_enter_old_passcode">Enter your old PIN</string>
-    <string name="passcode_manage">Manage PIN lock</string>
     <string name="stats_totals_plays">Plays</string>
     <string name="stats_totals_clicks">Clicks</string>
     <string name="stats_totals_views">Views</string>
@@ -1734,6 +1740,7 @@ Language: en_CA
     <string name="posts">Posts</string>
     <string name="width">Width</string>
     <string name="caption">Caption (optional)</string>
+    <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="blogusername">blogusername</string>

@@ -300,7 +300,6 @@ Language: es_CO
     <string name="image_quality">Calidad de la imagen</string>
     <string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
-    <string name="error_fetch_site_after_creation">El sitio ha sido creado, puede que necesite actualizar sus sitios en el selector de sitio.</string>
     <string name="submit_for_review">Enviar</string>
     <string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
     <string name="cannot_add_duplicate_site">Este sitio ya existe en la aplicación, no se puede Agregar.</string>
@@ -317,7 +316,6 @@ Language: es_CO
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
-    <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide con tu búsqueda</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="visual_editor_disabled">El editor visual se ha desactivado</string>
     <string name="preference_editor_visual">Visual</string>
@@ -750,7 +748,6 @@ Language: es_CO
     <string name="post_deleted">Entrada borrada</string>
     <string name="page_trashed">Página enviada a la papelera</string>
     <string name="undo">Deshacer</string>
-    <string name="passcodelock_prompt_message">Escribe tu PIN</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
     <string name="ignore">Ignorar</string>
@@ -901,7 +898,6 @@ Language: es_CO
     <string name="reader_label_view_original">Ver artículo original</string>
     <string name="reader_empty_posts_in_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
-    <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
     <string name="contact_us">Contacta con nosotros</string>
@@ -918,7 +914,6 @@ Language: es_CO
     <string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
-    <string name="passcode_wrong_passcode">PIN erróneo</string>
     <string name="error_downloading_image">Error al descargar la imagen</string>
     <string name="error_load_comment">No se pudo cargar el comentario</string>
     <string name="error_edit_comment">Ocurrió un error al editar el comentario</string>
@@ -942,7 +937,6 @@ Language: es_CO
     <string name="blog_not_found">Ha ocurrido un error mientras se accedía a este blog</string>
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
     <string name="no_network_message">No hay ninguna conexión de red disponible</string>
-    <string name="required_field">Campo obligatorio</string>
     <string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
     <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
@@ -951,7 +945,6 @@ Language: es_CO
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
     <string name="error_deleting_page">Ocurrió un error al borrar la página</string>
     <string name="wordpress_blog">Blog de WordPress</string>
-    <string name="add_account_blog_url">Dirección del blog</string>
     <string name="image_settings">Ajustes de imagen</string>
     <string name="local_changes">Cambios locales</string>
     <string name="privacy_policy">Política de privacidad</string>
@@ -1005,7 +998,6 @@ Language: es_CO
     <string name="connection_error">Error de conexión</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="share_link">Compartir enlace</string>
-    <string name="creating_your_site">Creando tu sitio</string>
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="reader_label_reply">Responder</string>
@@ -1053,14 +1045,6 @@ Language: es_CO
     <string name="stats_entry_country">País</string>
     <string name="stats_timeframe_days">Días</string>
     <string name="stats_timeframe_weeks">Semanas</string>
-    <string name="passcode_change_passcode">Cambiar PIN</string>
-    <string name="passcode_turn_on">Bloquear PIN</string>
-    <string name="passcode_turn_off">Desbloquear PIN</string>
-    <string name="passcode_preference_title">PIN bloqueado</string>
-    <string name="passcode_set">Introducir PIN</string>
-    <string name="passcode_re_enter_passcode">Vuelve a introducir el PIN</string>
-    <string name="passcode_enter_old_passcode">Introduce tu viejo PIN</string>
-    <string name="passcode_manage">Administrar el PIN de bloqueo</string>
     <string name="stats_totals_plays">Juegos</string>
     <string name="stats_entry_referrers">Referencias</string>
     <string name="stats_view_referrers">Referentes</string>
@@ -1089,6 +1073,7 @@ Language: es_CO
     <string name="log_in">Acceder</string>
     <string name="reader">Lector</string>
     <string name="width">Ancho</string>
+    <string name="pages">Páginas</string>
     <string name="anonymous">Anónimo</string>
     <string name="posts">Entradas</string>
     <string name="caption">Leyenda (opcional)</string>
