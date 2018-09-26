@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -16,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.model.SiteModel
@@ -94,7 +94,7 @@ class RewindStatusServiceTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        rewindStatusService = RewindStatusService(activityLogStore, rewindProgressChecker, Unconfined)
+        rewindStatusService = RewindStatusService(activityLogStore, rewindProgressChecker, TEST_SCOPE)
         rewindAvailable = null
         rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }
         rewindStatusService.rewindProgress.observeForever { rewindProgress = it }
