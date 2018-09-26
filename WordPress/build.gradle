@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "10.9"
-        versionCode 620
+        versionName "10.9.1"
+        versionCode 621
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -208,8 +208,8 @@ dependencies {
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
 }
 
 configurations.all {

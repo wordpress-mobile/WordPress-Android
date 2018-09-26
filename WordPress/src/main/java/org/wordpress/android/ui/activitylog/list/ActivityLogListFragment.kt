@@ -39,22 +39,25 @@ class ActivityLogListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        log_list_view.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val nonNullActivity = checkNotNull(activity)
+
+        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, LinearLayoutManager.VERTICAL, false)
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            if (NetworkUtils.checkConnection(activity)) {
+            if (NetworkUtils.checkConnection(nonNullActivity)) {
                 viewModel.onPullToRefresh()
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
         }
 
-        (activity?.application as WordPress).component()?.inject(this)
+        (nonNullActivity.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+            val nonNullIntent = checkNotNull(nonNullActivity.intent)
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }

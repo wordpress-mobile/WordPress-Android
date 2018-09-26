@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
@@ -13,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -33,7 +33,7 @@ class RewindProgressCheckerTest {
     private lateinit var rewindProgressChecker: RewindProgressChecker
     @Before
     fun setUp() {
-        rewindProgressChecker = RewindProgressChecker(activityLogStore, Unconfined)
+        rewindProgressChecker = RewindProgressChecker(activityLogStore, TEST_SCOPE)
     }
 
     private val finishedRewind = Rewind("rewindId", restoreId, FINISHED, 100, "finished")

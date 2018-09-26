@@ -297,6 +297,10 @@ public class ActivityLauncher {
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);

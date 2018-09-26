@@ -1775,7 +1775,6 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
                 boolean isFirstTimePublish = isFirstTimePublish();
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -1800,9 +1799,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    if (isNewPost()) {
+                    if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                         // new post - user just left the editor without publishing, they probably want
-                        // to keep the post as a draft
+                        // to keep the post as a draft (unless they explicitly changed the status)
                         mPost.setStatus(PostStatus.DRAFT.toString());
                         if (mEditPostSettingsFragment != null) {
                             runOnUiThread(new Runnable() {
@@ -1814,8 +1813,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     }
 
-                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
-                        && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    PostStatus status = PostStatus.fromPost(mPost);
+                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
+                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         savePostLocallyAndFinishAsync(doFinish);
@@ -1838,8 +1838,9 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                  && isPublishable && hasLocalChanges;
+        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
+                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
+                                                      && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
         return (mOriginalPost != null && hasChanges)
@@ -1853,8 +1854,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.PUBLISHED)
-
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
+                   || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
     }
 
     /**
@@ -2272,8 +2273,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
 
-        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
         }
 
@@ -2306,7 +2308,9 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setContent(content);
         }
 
-        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
+        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }

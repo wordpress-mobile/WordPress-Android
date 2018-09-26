@@ -1252,6 +1252,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_request_dialog_button_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
+            case INSTALLATION_REFERRER_FAILED:
+                return "installation_referrer_failed";
             case OPENED_PAGE_PARENT:
                 return "page_parent_opened";
             default:

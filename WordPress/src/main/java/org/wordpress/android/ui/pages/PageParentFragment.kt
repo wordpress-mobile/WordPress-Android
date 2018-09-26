@@ -16,16 +16,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
+import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
+import javax.inject.Named
 
 class PageParentFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
@@ -132,7 +136,10 @@ class PageParentFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
-            adapter = PagesAdapter(onParentSelected = { page -> viewModel.onParentSelected(page) })
+            adapter = PagesAdapter(
+                    onParentSelected = { page -> viewModel.onParentSelected(page) },
+                    uiScope = uiScope
+            )
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter

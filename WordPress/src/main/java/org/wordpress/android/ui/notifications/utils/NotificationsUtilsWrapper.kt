@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.notifications.utils
 
-import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.widget.TextView
 import org.json.JSONObject
 import org.wordpress.android.fluxc.tools.FormattableContent
@@ -19,19 +19,23 @@ import javax.inject.Singleton
  */
 @Singleton
 class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper: FormattableContentMapper) {
-    fun getSpannableContentForRanges(subject: FormattableContent?): Spannable = NotificationsUtils
+    fun getSpannableContentForRanges(subject: FormattableContent?): SpannableStringBuilder = NotificationsUtils
             .getSpannableContentForRanges(subject, null, null as? NoteBlock.OnNoteBlockTextClickListener, false)
 
-    fun getSpannableContentForRanges(subject: JSONObject): Spannable = NotificationsUtils.getSpannableContentForRanges(
-            formattableContentMapper, subject, null, null, false)
+    fun getSpannableContentForRanges(subject: JSONObject): SpannableStringBuilder =
+            NotificationsUtils.getSpannableContentForRanges(
+                    formattableContentMapper, subject, null, null, false
+            )
 
     fun getSpannableContentForRanges(
         blockObject: JSONObject,
         textView: TextView?,
         onNoteBlockTextClickListener: NoteBlock.OnNoteBlockTextClickListener?,
         isFooter: Boolean
-    ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContentMapper, blockObject, textView,
-            onNoteBlockTextClickListener, isFooter)
+    ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
+            formattableContentMapper, blockObject, textView,
+            onNoteBlockTextClickListener, isFooter
+    )
 
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
@@ -47,16 +51,20 @@ class NotificationsUtilsWrapper @Inject constructor(val formattableContentMapper
         textView: TextView?,
         onNoteBlockTextClickListener: NoteBlock.OnNoteBlockTextClickListener?,
         isFooter: Boolean
-    ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
-            textView, onNoteBlockTextClickListener, isFooter)
+    ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
+            formattableContent,
+            textView, onNoteBlockTextClickListener, isFooter
+    )
 
     fun getSpannableContentForRanges(
         formattableContent: FormattableContent?,
         textView: TextView,
         clickHandler: (FormattableRange) -> Unit,
         isFooter: Boolean
-    ): Spannable = NotificationsUtils.getSpannableContentForRanges(formattableContent,
-            textView, clickHandler, isFooter)
+    ): SpannableStringBuilder = NotificationsUtils.getSpannableContentForRanges(
+            formattableContent,
+            textView, clickHandler, isFooter
+    )
 
     fun mapJsonToFormattableContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
             .mapJsonToFormattableContent(formattableContentMapper, blockObject)
