@@ -33,16 +33,4 @@
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/bottom_progress_bar"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible"
-        style="?android:attr/progressBarStyle" >
-    </ProgressBar>
-
 </RelativeLayout>
