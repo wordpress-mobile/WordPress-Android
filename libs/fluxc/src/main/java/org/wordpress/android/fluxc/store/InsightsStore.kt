@@ -67,21 +67,25 @@ class InsightsStore
         val posts = responsePost.response?.posts
         return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
-            val postViews = insightsRestClient.fetchPostViewsForInsights(site, latestPost.id, forced)
             val commentCount = latestPost.discussion?.commentCount ?: 0
-            val viewsCount = postViews.response?.views ?: 0
-            OnInsightsFetched(
-                    InsightsLatestPostModel(
-                            site.siteId,
-                            latestPost.title,
-                            latestPost.url,
-                            latestPost.date,
-                            latestPost.id,
-                            viewsCount,
-                            commentCount,
-                            latestPost.likeCount
-                    )
-            )
+            val postViews = insightsRestClient.fetchPostViewsForInsights(site, latestPost.id, forced)
+            if (postViews.isError) {
+                OnInsightsFetched(postViews.error)
+            } else {
+                val viewsCount = postViews.response?.views ?: 0
+                OnInsightsFetched(
+                        InsightsLatestPostModel(
+                                site.siteId,
+                                latestPost.title,
+                                latestPost.url,
+                                latestPost.date,
+                                latestPost.id,
+                                viewsCount,
+                                commentCount,
+                                latestPost.likeCount
+                        )
+                )
+            }
         } else if (responsePost.isError) {
             OnInsightsFetched(responsePost.error)
         } else {
