@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -9,12 +8,13 @@ import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -22,11 +22,15 @@ import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
-import org.wordpress.android.fluxc.persistence.PostSqlUtils
 
 @Singleton
-class PageStore @Inject constructor(private val postStore: PostStore, private val dispatcher: Dispatcher) {
+class PageStore @Inject constructor(
+    private val postStore: PostStore,
+    private val dispatcher: Dispatcher,
+    private val coroutineContext: CoroutineContext
+) {
     companion object {
         val PAGE_TYPES = listOf(
                 PostStatus.DRAFT,
@@ -34,8 +38,10 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 PostStatus.SCHEDULED,
                 PostStatus.PENDING,
                 PostStatus.PRIVATE,
-                PostStatus.TRASHED)
+                PostStatus.TRASHED
+        )
     }
+
     private var postLoadContinuation: Continuation<OnPostChanged>? = null
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var updatePostContinuation: Continuation<OnPostChanged>? = null
@@ -45,15 +51,15 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         dispatcher.register(this)
     }
 
-    suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(CommonPool) {
+    suspend fun getPageByLocalId(pageId: Int, site: SiteModel): PageModel? = withContext(coroutineContext) {
         val post = postStore.getPostByLocalPostId(pageId)
         return@withContext post?.let {
             PageModel(it, site, getPageByRemoteId(it.parentId, site))
         }
     }
 
-    suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(CommonPool) {
-        if (remoteId == 0L) {
+    suspend fun getPageByRemoteId(remoteId: Long, site: SiteModel): PageModel? = withContext(coroutineContext) {
+        if (remoteId <= 0L) {
             return@withContext null
         }
         val post = postStore.getPostByRemotePostId(remoteId, site)
@@ -62,22 +68,22 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         }
     }
 
-    suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(CommonPool) {
+    suspend fun search(site: SiteModel, searchQuery: String): List<PageModel> = withContext(coroutineContext) {
         getPagesFromDb(site).filter { it.title.toLowerCase().contains(searchQuery.toLowerCase()) }
     }
 
     suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
         updatePostContinuation = cont
 
-        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
         post.updatePageData(page)
 
         val updateAction = PostActionBuilder.newUpdatePostAction(post)
         dispatcher.dispatch(updateAction)
     }
 
-    suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(CommonPool) {
-        val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
+    suspend fun uploadPageToServer(page: PageModel): UploadRequestResult = withContext(coroutineContext) {
+        val post = postStore.getPostByRemotePostId(page.remoteId, site) ?: postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
             post.updatePageData(page)
 
@@ -95,13 +101,34 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         ERROR_NON_EXISTING_PAGE
     }
 
-    suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(CommonPool) {
-        val posts = postStore.getPagesForSite(site).asSequence().filterNotNull().associateBy { it.remotePostId }
-        posts.map { getPageFromPost(it.key, site, posts) }.filterNotNull().sortedBy { it.remoteId }
+    suspend fun getPagesFromDb(site: SiteModel): List<PageModel> = withContext(coroutineContext) {
+        val posts = postStore.getPagesForSite(site)
+                .asSequence()
+                .filterNotNull()
+                .filter { PAGE_TYPES.contains(PostStatus.fromPost(it)) }
+                .map {
+                    if (it.remotePostId == 0L) {
+                        // local DB pages have a non-unique remote ID value of 0
+                        // to keep the apart we replace it with page ID (still unique)
+                        // and make it negative (to easily tell it's a temporary value)
+                        it.remotePostId = -it.id.toLong()
+                    }
+                    it
+                }
+                .associateBy { it.remotePostId }
+
+        return@withContext posts.map { getPageFromPost(it.key, site, posts, false) }
+                .filterNotNull()
+                .sortedBy { it.remoteId }
     }
 
-    private fun getPageFromPost(postId: Long, site: SiteModel, posts: Map<Long, PostModel>): PageModel? {
-        if (postId == 0L || !posts.containsKey(postId)) {
+    private fun getPageFromPost(
+        postId: Long,
+        site: SiteModel,
+        posts: Map<Long, PostModel>,
+        skipLocalPages: Boolean = true
+    ): PageModel? {
+        if (skipLocalPages && (postId <= 0L || !posts.containsKey(postId))) {
             return null
         }
         val post = posts[postId]!!
@@ -122,7 +149,7 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
         }
     }
 
-    suspend fun deletePageFromDb(page: PageModel): Boolean = withContext(CommonPool) {
+    suspend fun deletePageFromDb(page: PageModel): Boolean = withContext(coroutineContext) {
         val post = postStore.getPostByLocalPostId(page.pageId)
         return@withContext if (post != null) {
             PostSqlUtils.deletePost(post) > 0
@@ -162,7 +189,8 @@ class PageStore @Inject constructor(private val postStore: PostStore, private va
                 updatePostContinuation?.resume(event)
                 updatePostContinuation = null
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 
