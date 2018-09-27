@@ -35,6 +35,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
@@ -147,7 +148,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                expectedActivityList()
+                expectedActivityList(false, canLoadMore)
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
@@ -198,7 +199,8 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
-    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false): List<ActivityLogListItem> {
+    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
+            List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
         val first = Event(activityLogList[0], true)
         val second = Event(activityLogList[1], true)
@@ -210,6 +212,9 @@ class ActivityLogViewModelTest {
         activityLogListItems.add(third)
         if (isLastPageAndFreeSite) {
             activityLogListItems.add(Footer)
+        }
+        if (canLoadMore) {
+            activityLogListItems.add(Loading)
         }
         return activityLogListItems
     }

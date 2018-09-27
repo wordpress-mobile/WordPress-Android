@@ -21,6 +21,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -183,6 +184,9 @@ class ActivityLogViewModel @Inject constructor(
                 items.add(ActivityLogListItem.Header(currentItem.formattedDate))
             }
             items.add(currentItem)
+        }
+        if (eventList.isNotEmpty() && !done) {
+            items.add(Loading)
         }
         if (eventList.isNotEmpty() && site.hasFreePlan && done) {
             items.add(Footer)
