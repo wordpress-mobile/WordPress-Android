@@ -13,8 +13,6 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_extra_large">
 
@@ -55,8 +53,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/card_elevation"
-                android:layout_marginLeft="@dimen/card_elevation"
-                android:layout_marginRight="@dimen/card_elevation"
                 android:layout_marginStart="@dimen/card_elevation"
                 android:clickable="true"
                 android:focusable="true"
@@ -83,10 +79,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
                         android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_toEndOf="@id/image_blog"
-                        android:layout_toRightOf="@id/image_blog">
+                        android:layout_toEndOf="@id/image_blog" >
 
                         <TextView
                             android:id="@+id/title_blog"
@@ -112,8 +106,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/card_elevation"
-                android:layout_marginLeft="@dimen/card_elevation"
-                android:layout_marginRight="@dimen/card_elevation"
                 android:layout_marginStart="@dimen/card_elevation"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:clickable="true"
@@ -141,10 +133,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
                         android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_toEndOf="@id/image_website"
-                        android:layout_toRightOf="@id/image_website">
+                        android:layout_toEndOf="@id/image_website" >
 
                         <TextView
                             android:id="@+id/title_website"
@@ -170,8 +160,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/card_elevation"
-                android:layout_marginLeft="@dimen/card_elevation"
-                android:layout_marginRight="@dimen/card_elevation"
                 android:layout_marginStart="@dimen/card_elevation"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:clickable="true"
@@ -199,10 +187,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
                         android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_toEndOf="@id/image_portfolio"
-                        android:layout_toRightOf="@id/image_portfolio">
+                        android:layout_toEndOf="@id/image_portfolio" >
 
                         <TextView
                             android:id="@+id/title_portfolio"

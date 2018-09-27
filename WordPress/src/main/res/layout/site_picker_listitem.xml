@@ -22,8 +22,6 @@
             android:layout_height="@dimen/blavatar_sz"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
-            android:layout_marginLeft="@dimen/site_picker_blavatar_margin_left"
-            android:layout_marginRight="@dimen/site_picker_blavatar_margin_right"
             android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
             android:background="@color/white"
             android:gravity="center_vertical"
@@ -36,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/image_blavatar"
-            android:layout_toRightOf="@id/image_blavatar"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView

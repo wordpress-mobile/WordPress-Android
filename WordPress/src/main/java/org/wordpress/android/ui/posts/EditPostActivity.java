@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -2027,27 +2026,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private String getUploadErrorHtml(String mediaId, String path) {
-        String replacement;
-        if (Build.VERSION.SDK_INT >= 19) {
-            replacement =
-                    String.format(Locale.US,
-                                  "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
-                                  + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
-                                  + "contenteditable=\"false\"></progress>"
-                                  + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
-                                  mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path);
-        } else {
-            // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
-            replacement =
-                    String.format(Locale.US,
-                                  "<span id=\"img_container_%s\" class=\"img_container compat failed\" "
-                                  + "contenteditable=\"false\" data-failed=\"%s\">"
-                                  + "<span class=\"upload-overlay failed\" contenteditable=\"false\">"
-                                  + "Uploading…</span><span class=\"upload-overlay-bg\"></span>"
-                                  + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
-                                  mediaId, getString(R.string.tap_to_try_again), mediaId, path);
-        }
-        return replacement;
+        return String.format(Locale.US,
+                "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
+                + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
+                + "contenteditable=\"false\"></progress>"
+                + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
+                mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path);
     }
 
     private String migrateLegacyDraft(String content) {
@@ -2723,16 +2707,9 @@ public class EditPostActivity extends AppCompatActivity implements
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (addMedia(capturedImageUri, true)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    scanIntent.setData(capturedImageUri);
-                    sendBroadcast(scanIntent);
-                } else {
-                    this.sendBroadcast(new Intent(
-                            Intent.ACTION_MEDIA_MOUNTED,
-                            Uri.parse("file://" + Environment.getExternalStorageDirectory()))
-                    );
-                }
+                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                scanIntent.setData(capturedImageUri);
+                sendBroadcast(scanIntent);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }

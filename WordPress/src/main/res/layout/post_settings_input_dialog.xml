@@ -11,18 +11,14 @@
         android:maxLines="6"
         android:inputType="text"
         android:paddingBottom="@dimen/margin_large"
-        android:layout_marginLeft="@dimen/post_settings_input_dialog_edit_text_side_margin"
         android:layout_marginEnd="@dimen/post_settings_input_dialog_edit_text_side_margin"
-        android:layout_marginStart="@dimen/post_settings_input_dialog_edit_text_side_margin"
-        android:layout_marginRight="@dimen/post_settings_input_dialog_edit_text_side_margin"/>
+        android:layout_marginStart="@dimen/post_settings_input_dialog_edit_text_side_margin" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/post_settings_input_dialog_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/post_settings_input_dialog_hint_side_margin"
         android:layout_marginEnd="@dimen/post_settings_input_dialog_hint_side_margin"
-        android:layout_marginStart="@dimen/post_settings_input_dialog_hint_side_margin"
-        android:layout_marginRight="@dimen/post_settings_input_dialog_hint_side_margin"/>
+        android:layout_marginStart="@dimen/post_settings_input_dialog_hint_side_margin" />
 
 </LinearLayout>

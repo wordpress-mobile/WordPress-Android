@@ -18,8 +18,6 @@
             android:gravity="center"
             android:orientation="vertical"
             android:paddingEnd="@dimen/jetpack_remote_install_container_padding"
-            android:paddingLeft="@dimen/jetpack_remote_install_container_padding"
-            android:paddingRight="@dimen/jetpack_remote_install_container_padding"
             android:paddingStart="@dimen/jetpack_remote_install_container_padding">
 
             <ImageView

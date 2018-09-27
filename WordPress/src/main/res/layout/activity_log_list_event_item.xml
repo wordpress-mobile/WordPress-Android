@@ -21,7 +21,6 @@
         <ImageView
             android:id="@+id/action_icon"
             android:contentDescription="@string/activity_log_icon"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_height="@dimen/activity_log_icon_size"
@@ -37,7 +36,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/activity_log_button"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
@@ -52,10 +50,7 @@
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_log_icon_margin"
-            android:layout_marginRight="@dimen/activity_log_icon_margin"
             android:layout_toEndOf="@id/action_icon"
-            android:layout_toLeftOf="@id/action_button"
-            android:layout_toRightOf="@id/action_icon"
             android:layout_toStartOf="@id/action_button"
             android:layout_width="fill_parent"
             android:orientation="vertical" >

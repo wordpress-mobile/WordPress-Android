@@ -9,6 +9,5 @@
     android:id="@+id/image_like_avatar"
     android:layout_width="@dimen/avatar_sz_small"
     android:layout_height="@dimen/avatar_sz_small"
-    android:layout_marginRight="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
     tools:ignore="ContentDescription"/>

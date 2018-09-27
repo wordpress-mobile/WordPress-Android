@@ -30,7 +30,6 @@
                 android:id="@+id/stats_visitors_and_views_tab_icon"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_marginRight="3dp"
                 android:layout_marginEnd="3dp"
                 android:contentDescription="@null"
                 app:srcCompat="@drawable/ic_star_white_48dp" />
