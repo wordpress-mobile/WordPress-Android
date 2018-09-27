@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 41;
+        return 42;
     }
 
     @Override
@@ -344,6 +344,16 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + " TEXT NOT NULL,NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID "
                         + "TEXT,PUBLISHED INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID "
                         + "INTEGER,AVATAR_URL TEXT,ROLE TEXT)");
+                oldVersion++;
+            case 41:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE LocalDiffModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REVISION_ID INTEGER,POST_ID INTEGER,SITE_ID INTEGER,OPERATION TEXT,VALUE TEXT,"
+                           + "DIFF_TYPE TEXT)");
+                db.execSQL("CREATE TABLE LocalRevisionModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REVISION_ID INTEGER,POST_ID INTEGER,SITE_ID INTEGER,DIFF_FROM_VERSION INTEGER,"
+                           + "TOTAL_ADDITIONS INTEGER,TOTAL_DELETIONS INTEGER,POST_CONTENT TEXT,POST_EXCERPT TEXT,"
+                           + "POST_TITLE TEXT,POST_DATE_GMT TEXT,POST_MODIFIED_GMT TEXT,POST_AUTHOR_ID TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
