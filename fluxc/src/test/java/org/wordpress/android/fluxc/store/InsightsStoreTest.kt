@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
 import org.junit.Before
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
@@ -28,11 +30,12 @@ import kotlin.test.assertNotNull
 class InsightsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var insightsRestClient: InsightsRestClient
+    @Mock lateinit var sqlUtils: InsightsSqlUtils
     private lateinit var store: InsightsStore
     private val siteId = 3L
     @Before
     fun setUp() {
-        store = InsightsStore(insightsRestClient, Unconfined)
+        store = InsightsStore(insightsRestClient, sqlUtils, Unconfined)
         whenever(site.siteId).thenReturn(siteId)
     }
 
@@ -44,11 +47,12 @@ class InsightsStoreTest {
         val posts = 20
         val viewsBestDay = "Monday"
         val viewsBestDayTotal = 25
+        val response = AllTimeResponse(
+                date,
+                StatsResponse(visitors, views, posts, viewsBestDay, viewsBestDayTotal)
+        )
         val fetchInsightsPayload = FetchInsightsPayload(
-                AllTimeResponse(
-                        date,
-                        StatsResponse(visitors, views, posts, viewsBestDay, viewsBestDayTotal)
-                )
+                response
         )
         val forced = true
         whenever(insightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(fetchInsightsPayload)
@@ -63,6 +67,7 @@ class InsightsStoreTest {
         assertEquals(posts, model.posts)
         assertEquals(viewsBestDay, model.viewsBestDay)
         assertEquals(viewsBestDayTotal, model.viewsBestDayTotal)
+        verify(sqlUtils).insert(site, response)
     }
 
     @Test
@@ -87,10 +92,11 @@ class InsightsStoreTest {
         val highestHour = 15
         val highestDayPercent = 2.0
         val highestHourPercent = 5.0
+        val response = MostPopularResponse(
+                highestDayOfWeek, highestHour, highestDayPercent, highestHourPercent
+        )
         val fetchInsightsPayload = FetchInsightsPayload(
-                MostPopularResponse(
-                        highestDayOfWeek, highestHour, highestDayPercent, highestHourPercent
-                )
+                response
         )
         val forced = true
         whenever(insightsRestClient.fetchMostPopularInsights(site, forced)).thenReturn(fetchInsightsPayload)
@@ -103,6 +109,7 @@ class InsightsStoreTest {
         assertEquals(highestHour, model.highestHour)
         assertEquals(highestDayPercent, model.highestDayPercent)
         assertEquals(highestHourPercent, model.highestHourPercent)
+        verify(sqlUtils).insert(site, response)
     }
 
     @Test
@@ -139,8 +146,9 @@ class InsightsStoreTest {
         )
         val forced = true
         whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
+        val viewsResponse = PostViewsResponse(views)
         whenever(insightsRestClient.fetchPostViewsForInsights(site, id, forced)).thenReturn(FetchInsightsPayload(
-                PostViewsResponse(views)
+                viewsResponse
         ))
 
         val allTimeInsights = store.fetchLatestPostInsights(site, forced)
@@ -155,6 +163,8 @@ class InsightsStoreTest {
         assertEquals(title, model.postTitle)
         assertEquals(url, model.postURL)
         assertEquals(siteId, model.siteId)
+        verify(sqlUtils).insert(site, latestPost)
+        verify(sqlUtils).insert(site, viewsResponse)
     }
 
     @Test

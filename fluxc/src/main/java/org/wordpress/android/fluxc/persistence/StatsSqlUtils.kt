@@ -8,44 +8,28 @@ import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class StatsSqlUtils
-@Inject constructor(val gson: Gson) {
-    fun <T> insertInsight(site: SiteModel, type: InsightsTypes, item: T) = insert(site, item, type.name)
-
-    fun <T> insertTimeStats(site: SiteModel, type: TimeStatsTypes, item: T) = insert(site, item, type.name)
-
-    private fun <T> insert(site: SiteModel, item: T, type: String) {
+@Inject constructor(private val gson: Gson) {
+    fun <T> insert(site: SiteModel, type: Key, item: T) {
         val json = gson.toJson(item)
         WellSql.delete(StatsBlockBuilder::class.java)
-                .where()
-                .equals(StatsBlockTable.TYPE, type)
-                .endWhere()
-                .execute()
-        WellSql.insert(StatsBlockBuilder(localSiteId = site.id, type = type, json = json))
-                .execute()
+                    .where()
+                    .equals(StatsBlockTable.TYPE, type.name)
+                    .endWhere()
+                    .execute()
+        WellSql.insert(StatsBlockBuilder(localSiteId = site.id, type = type.name, json = json))
+                    .execute()
     }
 
-    fun <T> selectInsight(site: SiteModel, type: InsightsTypes, classOfT: Class<T>): T? =
-            select(site, type.name, classOfT)
-
-    fun <T> selectTimeStats(site: SiteModel, type: TimeStatsTypes, classOfT: Class<T>): T? =
-            select(site, type.name, classOfT)
-
-    private fun <T> select(
-        site: SiteModel,
-        type: String,
-        classOfT: Class<T>
-    ): T? {
+    fun <T> select(site: SiteModel, type: Key, classOfT: Class<T>): T? {
         val model = WellSql.select(StatsBlockBuilder::class.java)
                 .where()
                 .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
-                .equals(StatsBlockTable.TYPE, type)
+                .equals(StatsBlockTable.TYPE, type.name)
                 .endWhere().asModel.firstOrNull()
         if (model != null) {
             return gson.fromJson(model.json, classOfT)
@@ -67,5 +51,9 @@ class StatsSqlUtils
         }
 
         override fun getId() = mId
+    }
+
+    enum class Key {
+        ALL_TIME_INSIGHTS, MOST_POPULAR_INSIGHTS, LATEST_POST_DETAIL_INSIGHTS, LATEST_POST_DETAIL_VIEWS
     }
 }
