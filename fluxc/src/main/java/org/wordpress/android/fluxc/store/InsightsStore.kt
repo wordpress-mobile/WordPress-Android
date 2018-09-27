@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.arch.lifecycle.LiveData
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -7,7 +8,10 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
@@ -16,6 +20,7 @@ import kotlin.coroutines.experimental.CoroutineContext
 class InsightsStore
 @Inject constructor(
     private val insightsRestClient: InsightsRestClient,
+    private val statsSqlUtils: StatsSqlUtils,
     private val coroutineContext: CoroutineContext
 ) {
     suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
@@ -23,6 +28,7 @@ class InsightsStore
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
+                statsSqlUtils.insertInsight(site, ALL_TIME_STATS, payload.response)
                 val data = payload.response
                 val stats = data.stats
                 OnInsightsFetched(
@@ -47,6 +53,7 @@ class InsightsStore
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
                 val data = payload.response
+                statsSqlUtils.insertInsight(site, MOST_POPULAR_DAY_AND_HOUR, data)
                 OnInsightsFetched(
                         InsightsMostPopularModel(
                                 data.highestDayOfWeek,

@@ -96,6 +96,9 @@ dependencies {
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
+
+    api "android.arch.persistence.room:runtime:$roomVersion"
+    kapt "android.arch.persistence.room:compiler:$roomVersion"
 }
 
 version = android.defaultConfig.versionName
