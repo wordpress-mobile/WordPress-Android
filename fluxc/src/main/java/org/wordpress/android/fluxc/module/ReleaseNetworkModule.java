@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.module;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 
 import com.android.volley.Network;
@@ -45,6 +46,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
+import org.wordpress.android.fluxc.persistence.room.StatsDatabase;
 
 import java.io.File;
 
@@ -195,6 +197,12 @@ public class ReleaseNetworkModule {
                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new InsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public StatsDatabase provideStatsDatabase(Context appContext) {
+        return Room.databaseBuilder(appContext, StatsDatabase.class, "database-stats").build();
     }
 
     @Singleton
