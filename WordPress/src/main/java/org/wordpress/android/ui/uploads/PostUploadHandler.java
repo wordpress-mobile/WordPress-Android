@@ -271,7 +271,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         private void prepareUploadAnalytics(String postContent) {
             // Other methods (like 'uploadNextPost') synchronize over `sQueuedPostsList` before setting
             // `sCurrentUploadingPostAnalyticsProperties` to null. Make sure racing conditions are avoid here
-            // by synchronizing over sQueuedPostsList. See https://github.com/wordpress-mobile/WordPress-Android/issues/7990
+            // by synchronizing over sQueuedPostsList.
+            // See https://github.com/wordpress-mobile/WordPress-Android/issues/7990
             synchronized (sQueuedPostsList) {
                 // Calculate the words count
                 sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
