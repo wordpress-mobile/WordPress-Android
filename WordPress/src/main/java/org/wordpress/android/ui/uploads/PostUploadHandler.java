@@ -304,7 +304,6 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             if (!mPost.getTagNameList().isEmpty()) {
                 sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
             }
-            sCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
         }
 
         /**
