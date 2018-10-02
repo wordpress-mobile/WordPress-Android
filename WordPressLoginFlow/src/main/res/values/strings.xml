@@ -55,6 +55,7 @@
     <string name="login_empty_username">Please enter a username</string>
     <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
+    <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_google_button_prefix">Or you can</string>
