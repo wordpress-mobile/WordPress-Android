@@ -3,7 +3,6 @@ package org.wordpress.android.login;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -25,7 +24,7 @@ public interface LoginListener {
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
-    void addGoogleLoginFragment(@NonNull Fragment fragment);
+    void addGoogleLoginFragment();
 
     // Login Request Magic Link callbacks
     void showMagicLinkSentScreen(String email);
