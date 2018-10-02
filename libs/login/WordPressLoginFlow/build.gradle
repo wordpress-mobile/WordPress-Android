@@ -44,7 +44,7 @@ dependencies {
     if (project.hasProperty("fluxCVersion")) {
         implementation "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
     } else {
-        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
+        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:d4e583f21840111065f12e743cbf31de4307266b'
     }
 
     implementation 'com.github.bumptech.glide:glide:4.6.1'
