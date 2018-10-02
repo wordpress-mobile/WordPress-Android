@@ -6,7 +6,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/blue_wordpress"
+    android:background="@color/login_toolbar_color"
     android:elevation="@dimen/appbar_elevation"
     app:contentInsetLeft="@dimen/toolbar_content_offset"
     app:contentInsetStart="@dimen/toolbar_content_offset"
@@ -20,5 +20,5 @@
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/ic_my_sites_white_32dp"/>
+        app:srcCompat="@drawable/login_toolbar_icon"/>
 </android.support.v7.widget.Toolbar>
