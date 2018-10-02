@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -239,12 +240,16 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
     // Ideally we would hide "get started" bar on server side
     @SuppressLint("SetJavaScriptEnabled")
-    private static void hideGetStartedBar(@NonNull WebView webView) {
+    private static void hideGetStartedBar(@NonNull final WebView webView) {
         webView.getSettings().setJavaScriptEnabled(true);
         String javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n"
                             + "document.getElementById('wpadminbar').style.display = 'none';\n";
 
-        webView.evaluateJavascript(javascript, null);
+        webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+            @Override public void onReceiveValue(String value) {
+                webView.getSettings().setJavaScriptEnabled(false);
+            }
+        });
     }
 
     private void disableUntil(@IdRes int textViewId) {
