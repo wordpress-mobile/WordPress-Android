@@ -393,7 +393,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             int pos = deviceLanguageCode.indexOf("_");
             if (pos > -1) {
                 String newLang = deviceLanguageCode.substring(0, pos);
-                if (languageCodeToID.containsKey(newLang)){
+                if (languageCodeToID.containsKey(newLang)) {
                     langID = languageCodeToID.get(newLang);
                 }
             }
