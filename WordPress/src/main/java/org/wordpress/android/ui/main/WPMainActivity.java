@@ -105,6 +105,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_ME;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
@@ -292,14 +293,40 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
-
-        if (ActivityUtils.isDeepLinking(getIntent())) {
-            handleDeepLink();
-        }
     }
 
     private void handleDeepLink() {
-        mBottomNav.setCurrentPosition(PAGE_ME);
+        Uri uri = getIntent().getData();
+        if (uri == null) {
+            return;
+        }
+
+        List<String> segments = uri.getPathSegments();
+
+        if (segments != null) {
+            String section = segments.get(0);
+            switch (section) {
+                case "me":
+                    switchToMeTab(segments.get(1));
+                    break;
+                case "post":
+                    onNewPostButtonClicked();
+                    break;
+            }
+        }
+
+        setIntent(new Intent());
+    }
+
+    private void switchToMeTab(String extra) {
+        if (extra == null) {
+            mBottomNav.setCurrentPosition(PAGE_ME);
+            return;
+        }
+
+        if (extra.equals("account")) {
+            ActivityLauncher.viewAccountSettings(getContext());
+        }
     }
 
     private @Nullable String getAuthToken() {
@@ -515,6 +542,10 @@ public class WPMainActivity extends AppCompatActivity implements
         // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
+        }
+
+        if (ActivityUtils.isDeepLinking(getIntent())) {
+            handleDeepLink();
         }
 
         ProfilingUtils.split("WPMainActivity.onResume");
