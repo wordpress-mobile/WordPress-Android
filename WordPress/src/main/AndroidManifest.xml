@@ -83,7 +83,24 @@
         <activity
             android:name=".ui.main.WPMainActivity"
             android:theme="@style/Calypso.NoActionBar"
-            android:label=""/>
+            android:label="">
+            <intent-filter>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/me"
+                    android:scheme="https"/>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/me/.*"
+                    android:scheme="https" >
+                </data>
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 
         <!-- Account activities -->
         <activity
