@@ -575,7 +575,7 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
-        if (mSiteStore.getSites().size() == 0) {
+        if (!mSiteStore.hasSite()) {
             // No site yet - Move to My Sites fragment that shows the create new site screen
             mBottomNav.setCurrentPosition(PAGE_MY_SITE);
             return;
