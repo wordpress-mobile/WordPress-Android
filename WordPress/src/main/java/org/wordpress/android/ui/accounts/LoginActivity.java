@@ -135,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
             switch (getLoginMode()) {
                 case FULL:
+                case WPCOM_LOGIN_ONLY:
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     break;
                 case SELFHOSTED_ONLY:
@@ -234,6 +235,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
+            case WPCOM_LOGIN_ONLY:
                 ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
                 setResult(Activity.RESULT_OK);
                 finish();
