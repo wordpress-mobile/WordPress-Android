@@ -75,15 +75,7 @@
                 <!-- Samsung multiwindow support -->
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
-        </activity>
 
-        <!-- Main tab activity -->
-        <activity
-            android:name=".ui.main.WPMainActivity"
-            android:theme="@style/Calypso.NoActionBar"
-            android:label="">
             <intent-filter>
                 <data
                     android:host="wordpress.com"
@@ -100,6 +92,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
+
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <!-- Main tab activity -->
+        <activity
+            android:name=".ui.main.WPMainActivity"
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="">
+
         </activity>
 
         <!-- Account activities -->
