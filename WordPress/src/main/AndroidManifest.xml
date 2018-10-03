@@ -6,12 +6,6 @@
 
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true" />
-
     <!-- Normal permissions, access automatically granted to app -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
