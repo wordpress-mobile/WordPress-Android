@@ -422,13 +422,11 @@ public class PostsListFragment extends Fragment
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
-        mSwipeRefreshLayout.setEnabled(!isPostAdapterEmpty());
     }
 
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
             mActionableEmptyView.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setEnabled(true);
         }
     }
 
