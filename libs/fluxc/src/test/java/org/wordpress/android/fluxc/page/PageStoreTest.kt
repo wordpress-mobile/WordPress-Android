@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
@@ -17,25 +18,29 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.FETCH_PAGES
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PENDING
+import org.wordpress.android.fluxc.model.page.PageStatus.PRIVATE
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.test
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -56,7 +61,8 @@ class PageStoreTest {
             initPage(4, 0, "page 4", "trash"),
             initPage(5, 0, "page 5", "private"),
             initPage(6, 0, "page 6", "pending"),
-            initPage(7, 0, "page 7", "draft")
+            initPage(7, 0, "page 7", "draft"),
+            initPage(7, 0, "page 8", "unknown")
     )
 
     private val pageHierarchy = listOf(
@@ -76,7 +82,7 @@ class PageStoreTest {
         actionCaptor = argumentCaptor()
         val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
         whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-        store = PageStore(postStore, dispatcher)
+        store = PageStore(postStore, dispatcher, Dispatchers.Unconfined)
     }
 
     @Test
@@ -85,46 +91,6 @@ class PageStoreTest {
 
         assertThat(result).hasSize(1)
         assertThat(result[0].title).isEqualTo(pageWithQuery.title)
-    }
-
-    @Test
-    fun searchOrdersResultsByStatus() {
-        val trashStatus = "trash"
-        val draftStatus = "draft"
-        val publishStatus = "publish"
-        val futureStatus = "future"
-        val title = "title"
-        val trashedSite1 = initPage(1, title = title, status = trashStatus)
-        val draftSite1 = initPage(2, title = title, status = draftStatus)
-        val publishedSite1 = initPage(3, title = title, status = publishStatus)
-        val scheduledSite1 = initPage(4, title = title, status = futureStatus)
-        val scheduledSite2 = initPage(5, title = title, status = futureStatus)
-        val publishedSite2 = initPage(6, title = title, status = publishStatus)
-        val draftSite2 = initPage(7, title = title, status = draftStatus)
-        val trashedSite2 = initPage(8, title = title, status = trashStatus)
-        val pages = listOf(
-                trashedSite1,
-                draftSite1,
-                publishedSite1,
-                scheduledSite1,
-                scheduledSite2,
-                publishedSite2,
-                draftSite2,
-                trashedSite2
-        )
-        whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-
-        val result = runBlocking { store.groupedSearch(site, title) }
-
-        assertThat(result.keys).contains(PUBLISHED, DRAFT, SCHEDULED, TRASHED)
-        assertPage(result, 0, PageStatus.PUBLISHED)
-        assertPage(result, 1, PageStatus.PUBLISHED)
-        assertPage(result, 0, PageStatus.DRAFT)
-        assertPage(result, 1, PageStatus.DRAFT)
-        assertPage(result, 0, PageStatus.SCHEDULED)
-        assertPage(result, 1, PageStatus.SCHEDULED)
-        assertPage(result, 0, PageStatus.TRASHED)
-        assertPage(result, 1, PageStatus.TRASHED)
     }
 
     private fun assertPage(map: Map<PageStatus, List<PageModel>>, position: Int, status: PageStatus) {
@@ -141,7 +107,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun requestPagesFetchesFromServerAndReturnsEvent() = runBlocking {
+    fun requestPagesFetchesFromServerAndReturnsEvent() = test {
         val expected = OnPostChanged(5, false)
         expected.causeOfChange = FETCH_PAGES
         var event: OnPostChanged? = null
@@ -158,7 +124,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = runBlocking<Unit> {
+    fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
         val firstEvent = OnPostChanged(5, true)
         val lastEvent = OnPostChanged(5, false)
         firstEvent.causeOfChange = FETCH_PAGES
@@ -185,7 +151,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun deletePageTest() = runBlocking<Unit> {
+    fun deletePageTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
         val event = OnPostChanged(0)
@@ -208,10 +174,11 @@ class PageStoreTest {
     }
 
     @Test
-    fun deletePageWithErrorTest() = runBlocking<Unit> {
+    fun deletePageWithErrorTest() = test {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(0)
+        event.causeOfChange = PostAction.DELETE_POST
         event.error = PostError(UNKNOWN_POST)
         val page = createPageFromPost(post, site, null)
         var result: OnPostChanged? = null
@@ -219,14 +186,12 @@ class PageStoreTest {
             result = store.deletePageFromServer(page)
         }
         delay(10)
-        store.onPostChanged(event)
-        delay(10)
 
         assertThat(result?.error?.type).isEqualTo(event.error.type)
     }
 
     @Test
-    fun requestPagesAndVerifyAllPageTypesPresent() = runBlocking<Unit> {
+    fun requestPagesAndVerifyAllPageTypesPresent() = test {
         val event = OnPostChanged(4, false)
         event.causeOfChange = FETCH_PAGES
         launch {
@@ -241,7 +206,7 @@ class PageStoreTest {
         assertThat(payload.site).isEqualTo(site)
 
         val pageTypes = payload.statusTypes
-        assertThat(pageTypes.size).isEqualTo(4)
+        assertThat(pageTypes.size).isEqualTo(6)
         assertThat(pageTypes.filter { it == PostStatus.PUBLISHED }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.DRAFT }.size).isEqualTo(1)
         assertThat(pageTypes.filter { it == PostStatus.TRASHED }.size).isEqualTo(1)
@@ -252,15 +217,17 @@ class PageStoreTest {
 
         val pages = store.getPagesFromDb(site)
 
-        assertThat(pages.size).isEqualTo(5)
+        assertThat(pages.size).isEqualTo(7)
         assertThat(pages.filter { it.status == PUBLISHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == DRAFT }.size).isEqualTo(2)
         assertThat(pages.filter { it.status == TRASHED }.size).isEqualTo(1)
         assertThat(pages.filter { it.status == SCHEDULED }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PRIVATE }.size).isEqualTo(1)
+        assertThat(pages.filter { it.status == PENDING }.size).isEqualTo(1)
     }
 
     @Test
-    fun getTopLevelPageByLocalId() = runBlocking {
+    fun getTopLevelPageByLocalId() = test {
         doAnswer { invocation -> pageHierarchy.firstOrNull { it.id == invocation.arguments.first() } }
                 .`when`(postStore).getPostByLocalPostId(any())
 
@@ -273,7 +240,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun getChildPageByRemoteId() = runBlocking {
+    fun getChildPageByRemoteId() = test {
         doAnswer { invocation -> pageHierarchy.firstOrNull { it.remotePostId == invocation.arguments.first() } }
                 .`when`(postStore).getPostByRemotePostId(any(), any())
 
@@ -292,7 +259,7 @@ class PageStoreTest {
     }
 
     @Test
-    fun getPages() = runBlocking<Unit> {
+    fun getPages() = test {
         whenever(postStore.getPagesForSite(site)).thenReturn(pageHierarchy)
 
         val pages = store.getPagesFromDb(site)

@@ -16,6 +16,10 @@ import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
 import org.wordpress.android.fluxc.model.post.PostLocation;
@@ -27,10 +31,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponsePart;
+import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.RevisionResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
@@ -248,6 +257,35 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchRevisions(final PostModel post, final SiteModel site) {
+        String url;
+        if (post.isPage()) {
+            url = WPCOMREST.sites.site(site.getSiteId()).page.post(post.getRemotePostId()).diffs.getUrlV1_1();
+        } else {
+            url = WPCOMREST.sites.site(site.getSiteId()).post.item(post.getRemotePostId()).diffs.getUrlV1_1();
+        }
+
+        final WPComGsonRequest<RevisionsResponse> request = WPComGsonRequest.buildGetRequest(url, null,
+                RevisionsResponse.class,
+                new Listener<RevisionsResponse>() {
+                    @Override
+                    public void onResponse(RevisionsResponse response) {
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(
+                                new FetchRevisionsResponsePayload(post, revisionsResponseToRevisionsModel(response))));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchRevisionsResponsePayload payload = new FetchRevisionsResponsePayload(post, null);
+                        payload.error = error;
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     private PostModel postResponseToPostModel(PostWPComRestResponse from) {
         PostModel post = new PostModel();
         post.setRemotePostId(from.ID);
@@ -396,6 +434,46 @@ public class PostRestClient extends BaseWPComRestClient {
         }
 
         return params;
+    }
+
+    private RevisionsModel revisionsResponseToRevisionsModel(RevisionsResponse response) {
+        ArrayList<RevisionModel> revisions = new ArrayList<>();
+        for (DiffResponse diffResponse : response.getDiffs()) {
+            RevisionResponse revision = response.getRevisions().get(Integer.toString(diffResponse.getTo()));
+
+            ArrayList<Diff> titleDiffs = new ArrayList<>();
+            for (DiffResponsePart titleDiffPart : diffResponse.getDiff().getPost_title()) {
+                Diff diff = new Diff(DiffOperations.fromString(titleDiffPart.getOp()),
+                        titleDiffPart.getValue());
+                titleDiffs.add(diff);
+            }
+
+            ArrayList<Diff> contentDiffs = new ArrayList<>();
+            for (DiffResponsePart contentDiffPart : diffResponse.getDiff().getPost_content()) {
+                Diff diff = new Diff(DiffOperations.fromString(contentDiffPart.getOp()),
+                        contentDiffPart.getValue());
+                contentDiffs.add(diff);
+            }
+
+            RevisionModel revisionModel =
+                    new RevisionModel(
+                            revision.getId(),
+                            diffResponse.getFrom(),
+                            diffResponse.getDiff().getTotals().getAdd(),
+                            diffResponse.getDiff().getTotals().getDel(),
+                            revision.getPost_content(),
+                            revision.getPost_excerpt(),
+                            revision.getPost_title(),
+                            revision.getPost_date_gmt(),
+                            revision.getPost_modified_gmt(),
+                            revision.getPost_author(),
+                            titleDiffs,
+                            contentDiffs
+                    );
+            revisions.add(revisionModel);
+        }
+
+        return new RevisionsModel(revisions);
     }
 
     private Map<String, String> getFetchPostListParameters(final boolean getPages,

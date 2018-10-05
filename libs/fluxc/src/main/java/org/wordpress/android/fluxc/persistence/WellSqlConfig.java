@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 41;
+        return 43;
     }
 
     @Override
@@ -337,14 +337,32 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 40:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,DESCRIPTOR_DB_VALUE INTEGER,"
-                           + "STATE_DB_VALUE INTEGER,_id INTEGER PRIMARY KEY AUTOINCREMENT)");
+                db.execSQL("DROP TABLE IF EXISTS ActivityLog");
+                db.execSQL(
+                        "CREATE TABLE ActivityLog (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
+                        + "REMOTE_SITE_ID INTEGER,ACTIVITY_ID TEXT NOT NULL,SUMMARY TEXT NOT NULL,FORMATTABLE_CONTENT"
+                        + " TEXT NOT NULL,NAME TEXT,TYPE TEXT,GRIDICON TEXT,STATUS TEXT,REWINDABLE INTEGER,REWIND_ID "
+                        + "TEXT,PUBLISHED INTEGER,DISCARDED INTEGER,DISPLAY_NAME TEXT,ACTOR_TYPE TEXT,WPCOM_USER_ID "
+                        + "INTEGER,AVATAR_URL TEXT,ROLE TEXT)");
+                oldVersion++;
+            case 41:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE LocalDiffModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REVISION_ID INTEGER,POST_ID INTEGER,SITE_ID INTEGER,OPERATION TEXT,VALUE TEXT,"
+                           + "DIFF_TYPE TEXT)");
+                db.execSQL("CREATE TABLE LocalRevisionModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                           + "REVISION_ID INTEGER,POST_ID INTEGER,SITE_ID INTEGER,DIFF_FROM_VERSION INTEGER,"
+                           + "TOTAL_ADDITIONS INTEGER,TOTAL_DELETIONS INTEGER,POST_CONTENT TEXT,POST_EXCERPT TEXT,"
+                           + "POST_TITLE TEXT,POST_DATE_GMT TEXT,POST_MODIFIED_GMT TEXT,POST_AUTHOR_ID TEXT)");
+                oldVersion++;
+            case 42:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,DESCRIPTOR_UNIQUE_IDENTIFIER_DB_VALUE INTEGER,"
                            + "DESCRIPTOR_TYPE_IDENTIFIER_DB_VALUE INTEGER,STATE_DB_VALUE INTEGER,"
                            + "_id INTEGER PRIMARY KEY AUTOINCREMENT)");
-                db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,_id INTEGER PRIMARY KEY "
-                           + "AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE,"
-                           + "UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
+                db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,"
+                           + "_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) "
+                           + "ON DELETE CASCADE,UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
                 db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT");
                 oldVersion++;
         }

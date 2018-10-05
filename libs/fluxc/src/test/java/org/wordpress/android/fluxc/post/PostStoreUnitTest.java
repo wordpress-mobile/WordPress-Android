@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.post;
 import android.content.Context;
 
 import com.yarolegovich.wellsql.WellSql;
+import com.yarolegovich.wellsql.core.Identifiable;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,11 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
+import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
@@ -26,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -39,7 +47,12 @@ public class PostStoreUnitTest {
     public void setUp() {
         Context appContext = RuntimeEnvironment.application.getApplicationContext();
 
-        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, PostModel.class);
+        List<Class<? extends Identifiable>> modelsToTest = new ArrayList<>();
+        modelsToTest.add(PostModel.class);
+        modelsToTest.add(LocalDiffModel.class);
+        modelsToTest.add(LocalRevisionModel.class);
+
+        WellSqlConfig config = new SingleStoreWellSqlConfigForTests(appContext, modelsToTest, "");
         WellSql.init(config);
         config.reset();
     }
@@ -354,5 +367,68 @@ public class PostStoreUnitTest {
         // delete the post and again check the count
         PostSqlUtils.deletePost(testPost);
         assertEquals(PostStore.getNumLocalChanges(), 0);
+    }
+
+    @Test
+    public void testSavingAndRetrievalOfLocalRevision() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+
+        RevisionModel retrievedRevision = mPostStore.getLocalRevision(site, postModel);
+
+        assertTrue(testRevisionModel.equals(retrievedRevision));
+    }
+
+    @Test
+    public void testUpdatingLocalRevision() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+
+        testRevisionModel.setPostContent("new content");
+        testRevisionModel.getContentDiffs().add(new Diff(DiffOperations.ADD, "new line"));
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+
+        RevisionModel retrievedRevision = mPostStore.getLocalRevision(site, postModel);
+
+        assertTrue(testRevisionModel.equals(retrievedRevision));
+    }
+
+    @Test
+    public void testDeleteLocalRevision() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+        assertNotNull(mPostStore.getLocalRevision(site, postModel));
+
+        mPostStore.deleteLocalRevision(testRevisionModel, site, postModel);
+        assertNull(mPostStore.getLocalRevision(site, postModel));
+    }
+
+    @Test
+    public void testDeleteLocalRevisionOfAPostOrPage() {
+        RevisionModel testRevisionModel = PostTestUtils.generateSamplePostRevision();
+        SiteModel site = new SiteModel();
+        site.setSiteId(77);
+
+        PostModel postModel = PostTestUtils.generateSampleLocalDraftPost();
+        postModel.setRemoteSiteId(77);
+
+        mPostStore.setLocalRevision(testRevisionModel, site, postModel);
+        assertNotNull(mPostStore.getLocalRevision(site, postModel));
+
+        mPostStore.deleteLocalRevisionOfAPostOrPage(postModel);
+        assertNull(mPostStore.getLocalRevision(site, postModel));
     }
 }

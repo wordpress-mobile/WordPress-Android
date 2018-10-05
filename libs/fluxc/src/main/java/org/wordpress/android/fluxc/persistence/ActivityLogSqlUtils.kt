@@ -13,13 +13,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
+import org.wordpress.android.fluxc.tools.FormattableContentMapper
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActivityLogSqlUtils
-@Inject constructor() {
+@Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
     fun insertOrUpdateActivities(siteModel: SiteModel, activityModels: List<ActivityLogModel>): Int {
         val activityIds = activityModels.map { it.activityID }
         val activitiesToUpdate = WellSql.select(ActivityLogBuilder::class.java).where()
@@ -50,7 +51,7 @@ class ActivityLogSqlUtils
                 .endWhere()
                 .orderBy(ActivityLogTable.PUBLISHED, order)
                 .asModel
-                .map { it.build() }
+                .map { it.build(formattableContentMapper) }
     }
 
     fun getActivityByRewindId(rewindId: String): ActivityLogModel? {
@@ -60,7 +61,7 @@ class ActivityLogSqlUtils
                 .endWhere()
                 .asModel
                 .firstOrNull()
-                ?.build()
+                ?.build(formattableContentMapper)
     }
 
     fun getActivityByActivityId(activityId: String): ActivityLogModel? {
@@ -70,7 +71,7 @@ class ActivityLogSqlUtils
                 .endWhere()
                 .asModel
                 .firstOrNull()
-                ?.build()
+                ?.build(formattableContentMapper)
     }
 
     fun deleteActivityLog(): Int {
@@ -123,7 +124,8 @@ class ActivityLogSqlUtils
                 remoteSiteId = site.siteId,
                 activityID = this.activityID,
                 summary = this.summary,
-                text = this.text,
+                formattableContent = this.content?.let { formattableContentMapper.mapFormattableContentToJson(it) }
+                        ?: "",
                 name = this.name,
                 type = this.type,
                 gridicon = this.gridicon,
@@ -176,7 +178,7 @@ class ActivityLogSqlUtils
         @Column var remoteSiteId: Long,
         @Column var activityID: String,
         @Column var summary: String,
-        @Column var text: String,
+        @Column var formattableContent: String,
         @Column var name: String? = null,
         @Column var type: String? = null,
         @Column var gridicon: String? = null,
@@ -199,7 +201,7 @@ class ActivityLogSqlUtils
 
         override fun getId() = mId
 
-        fun build(): ActivityLogModel {
+        fun build(formattableContentMapper: FormattableContentMapper): ActivityLogModel {
             val actor = if (actorType != null ||
                     displayName != null ||
                     wpcomUserID != null ||
@@ -209,7 +211,7 @@ class ActivityLogSqlUtils
             } else null
             return ActivityLogModel(activityID,
                     summary,
-                    text,
+                    formattableContentMapper.mapToFormattableContent(formattableContent),
                     name,
                     type,
                     gridicon,
