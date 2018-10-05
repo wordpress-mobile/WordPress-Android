@@ -3,7 +3,11 @@ package org.wordpress.android.fluxc.post;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.revisions.Diff;
+import org.wordpress.android.fluxc.model.revisions.DiffOperations;
+import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostTestUtils {
@@ -49,5 +53,34 @@ public class PostTestUtils {
 
     public static int getPostsCount() {
         return getPosts().size();
+    }
+
+    public static RevisionModel generateSamplePostRevision() {
+        ArrayList<Diff> testTitleDiffs = new ArrayList<>();
+        testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy title"));
+        testTitleDiffs.add(new Diff(DiffOperations.COPY, "copy another title"));
+        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add new title"));
+        testTitleDiffs.add(new Diff(DiffOperations.DELETE, "del title"));
+        testTitleDiffs.add(new Diff(DiffOperations.ADD, "add different title"));
+
+        ArrayList<Diff> testContentDiff = new ArrayList<>();
+        testContentDiff.add(new Diff(DiffOperations.COPY, "copy some content"));
+        testContentDiff.add(new Diff(DiffOperations.ADD, "add new content"));
+        testContentDiff.add(new Diff(DiffOperations.DELETE, "del all the content"));
+
+        return new RevisionModel(
+                1,
+                2,
+                5,
+                6,
+                "post content",
+                "post excerpt",
+                "post title",
+                "2018-09-04 12:19:34Z",
+                "2018-09-05 13:19:34Z",
+                "111111111",
+                testTitleDiffs,
+                testContentDiff
+        );
     }
 }

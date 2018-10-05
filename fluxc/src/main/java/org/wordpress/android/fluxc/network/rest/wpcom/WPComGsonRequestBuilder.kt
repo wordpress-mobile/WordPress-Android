@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
+import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
@@ -39,13 +40,23 @@ class WPComGsonRequestBuilder
         restClient: BaseWPComRestClient,
         url: String,
         params: Map<String, String>,
-        clazz: Class<T>
+        clazz: Class<T>,
+        enableCaching: Boolean = false,
+        cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
+        forced: Boolean = false
     ) = suspendCoroutine<Response<T>> { cont ->
-        restClient.add(WPComGsonRequest.buildGetRequest(url, params, clazz, {
+        val request = WPComGsonRequest.buildGetRequest(url, params, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
-        }))
+        })
+        if (enableCaching) {
+            request.enableCaching(cacheTimeToLive)
+        }
+        if (forced) {
+            request.setShouldForceUpdate()
+        }
+        restClient.add(request)
     }
 
     /**
