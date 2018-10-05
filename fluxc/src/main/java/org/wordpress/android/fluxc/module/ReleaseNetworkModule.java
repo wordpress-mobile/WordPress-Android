@@ -6,6 +6,8 @@ import com.android.volley.Network;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
@@ -15,6 +17,10 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient;
 import org.wordpress.android.fluxc.network.discovery.DiscoveryXMLRPCClient;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrEmptyArray;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrEmptyArrayDeserializer;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalse;
+import org.wordpress.android.fluxc.network.rest.JsonObjectOrFalseDeserializer;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient;
@@ -24,10 +30,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
@@ -46,7 +54,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import kotlin.coroutines.experimental.CoroutineContext;
-import kotlinx.coroutines.experimental.CommonPool;
+import kotlinx.coroutines.experimental.Dispatchers;
 import okhttp3.OkHttpClient;
 
 @Module
@@ -139,6 +147,14 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
+    public NotificationRestClient provideNotificationRestClient(Context appContext, Dispatcher dispatcher,
+                                                        @Named("regular") RequestQueue requestQueue,
+                                                        AccessToken token, UserAgent userAgent) {
+        return new NotificationRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
     public PostRestClient providePostRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AccessToken token, UserAgent userAgent) {
@@ -173,6 +189,16 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
+    public InsightsRestClient provideStatsRestClient(Context appContext, Dispatcher dispatcher,
+                                                     @Named("regular") RequestQueue requestQueue,
+                                                     AccessToken token, UserAgent userAgent,
+                                                     WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new InsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
+                userAgent);
+    }
+
+    @Singleton
+    @Provides
     public JetpackRestClient provideJetpackRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AccessToken token, UserAgent userAgent,
@@ -184,7 +210,7 @@ public class ReleaseNetworkModule {
     @Singleton
     @Provides
     public CoroutineContext provideCoroutineContext() {
-        return CommonPool.INSTANCE;
+        return Dispatchers.Default;
     }
 
     @Singleton
@@ -283,5 +309,16 @@ public class ReleaseNetworkModule {
                                                      @Named("regular") RequestQueue requestQueue,
                                                      AccessToken token, UserAgent userAgent) {
         return new ReaderRestClient(appContext, dispatcher, requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public Gson provideGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());
+        gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrEmptyArray.class,
+                new JsonObjectOrEmptyArrayDeserializer());
+        return gsonBuilder.create();
     }
 }
