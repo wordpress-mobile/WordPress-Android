@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
@@ -36,7 +37,7 @@ class JetpackStore
         val actionType = action.type as? JetpackAction ?: return
         when (actionType) {
             JetpackAction.INSTALL_JETPACK -> {
-                launch(coroutineContext) { install(action.payload as SiteModel, actionType) }
+                GlobalScope.launch(coroutineContext) { install(action.payload as SiteModel, actionType) }
             }
         }
     }
@@ -67,7 +68,7 @@ class JetpackStore
     private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
-        launch(coroutineContext) {
+        GlobalScope.launch(coroutineContext) {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
