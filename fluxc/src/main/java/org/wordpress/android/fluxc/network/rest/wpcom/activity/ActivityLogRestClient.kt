@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType.API_ER
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
+import org.wordpress.android.fluxc.tools.FormattableContent
 import java.util.Date
 import javax.inject.Singleton
 
@@ -138,7 +139,7 @@ constructor(
                     ActivityLogModel(
                             activityID = it.activity_id,
                             summary = it.summary,
-                            text = it.content.text,
+                            content = it.content,
                             name = it.name,
                             type = it.type,
                             gridicon = it.gridicon,
@@ -227,7 +228,7 @@ constructor(
         class Page(val orderedItems: List<ActivityResponse>)
         data class ActivityResponse(
             val summary: String?,
-            val content: Content?,
+            val content: FormattableContent?,
             val name: String?,
             val actor: Actor?,
             val type: String?,
@@ -240,7 +241,6 @@ constructor(
             val activity_id: String?
         )
 
-        class Content(val text: String?)
         class Actor(
             val type: String?,
             val name: String?,
