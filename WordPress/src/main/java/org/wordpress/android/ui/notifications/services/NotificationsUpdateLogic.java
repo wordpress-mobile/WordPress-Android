@@ -51,7 +51,7 @@ public class NotificationsUpdateLogic {
         params.put("num_note_items", "20");
         params.put("fields", RestClientUtils.NOTIFICATION_FIELDS);
         if (!TextUtils.isEmpty(mLocale)) {
-            params.put("locale", mLocale);
+            params.put("locale", mLocale.toLowerCase());
         }
         RestListener listener = new RestListener();
         WordPress.getRestClientUtilsV1_1().getNotifications(params, listener, listener);
