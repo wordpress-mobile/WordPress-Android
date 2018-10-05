@@ -312,10 +312,17 @@ public class WPMainActivity extends AppCompatActivity implements
                 case "post":
                     onNewPostButtonClicked();
                     break;
+                case "stats":
+                    switchToStatsTab(segments);
             }
         }
 
         setIntent(new Intent());
+    }
+
+    private void switchToStatsTab(List<String> segments) {
+        mBottomNav.setCurrentPosition(PAGE_MY_SITE);
+        ActivityLauncher.viewBlogStats(getContext(), mSelectedSite);
     }
 
     private void switchToMeTab(String extra) {

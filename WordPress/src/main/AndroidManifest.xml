@@ -89,6 +89,14 @@
                     android:host="wordpress.com"
                     android:pathPattern="/post"
                     android:scheme="https"/>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/stats"
+                    android:scheme="https"/>
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/stats/.*"
+                    android:scheme="https"/>
 
                 <action android:name="android.intent.action.VIEW" />
 
