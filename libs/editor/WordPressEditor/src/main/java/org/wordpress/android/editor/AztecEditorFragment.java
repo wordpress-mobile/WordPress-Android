@@ -1794,8 +1794,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         attributes.removeAttribute(ATTR_ALT);
                     }
 
-                    attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
-                    attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                    if (!TextUtils.isEmpty(metaData.getWidth())) {
+                        attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                    } else{
+                        attributes.removeAttribute(ATTR_DIMEN_WIDTH);
+                    }
+
+                    if (!TextUtils.isEmpty(metaData.getHeight())) {
+                        attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                    } else{
+                        attributes.removeAttribute(ATTR_DIMEN_HEIGHT);
+                    }
 
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
                         AztecAttributes linkAttributes =
