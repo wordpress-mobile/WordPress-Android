@@ -1796,13 +1796,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                     if (!TextUtils.isEmpty(metaData.getWidth())) {
                         attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
-                    } else{
+                    } else {
                         attributes.removeAttribute(ATTR_DIMEN_WIDTH);
                     }
 
                     if (!TextUtils.isEmpty(metaData.getHeight())) {
                         attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
-                    } else{
+                    } else {
                         attributes.removeAttribute(ATTR_DIMEN_HEIGHT);
                     }
 

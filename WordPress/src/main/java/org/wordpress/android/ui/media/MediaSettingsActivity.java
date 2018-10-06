@@ -102,6 +102,48 @@ public class MediaSettingsActivity extends AppCompatActivity
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
     public static final int RESULT_MEDIA_DELETED = RESULT_FIRST_USER;
 
+    public enum MediaSettingsImageSize {
+        THUMBNAIL(R.string.size_thumbnail_label, R.string.size_thumbnail_class, 150),
+        MEDIUM(R.string.size_medium_label, R.string.size_medium_class, 300),
+        LARGE(R.string.size_large_label, R.string.size_large_class, 1024),
+        FULL(R.string.size_full_label, R.string.size_full_class, -1);
+
+        private final int mLabel;
+        private final int mCssClass;
+        private final int mSize;
+
+        MediaSettingsImageSize(@StringRes int label, @StringRes int cssClass, int size) {
+            mLabel = label;
+            mCssClass = cssClass;
+            mSize = size;
+        }
+
+        public int getSize() {
+            return mSize;
+        }
+
+        @StringRes
+        public int getLabel() {
+            return mLabel;
+        }
+
+        @StringRes
+        public int getCssClass() {
+            return mCssClass;
+        }
+
+
+        public static MediaSettingsImageSize fromCssClass(Context context, String cssClass) {
+            for (MediaSettingsImageSize mediaSettingsImageSize : values()) {
+                if (context.getString(mediaSettingsImageSize.mCssClass).equals(cssClass)) {
+                    return mediaSettingsImageSize;
+                }
+            }
+            return FULL;
+        }
+    }
+
+
     private long mDownloadId;
     private String mTitle;
     private boolean mDidRegisterEventBus;
@@ -111,8 +153,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     private EditorImageMetaData mEditorImageMetaData;
     private ArrayList<String> mMediaIdList;
     private String[] mAlignmentKeyArray;
-    private String[] mImageSizeKeyArray;
-    private String[] mImageSizeLabelArray;
+
+    private MediaSettingsImageSize mImageSize = MediaSettingsImageSize.FULL;
 
     private ImageView mImageView;
     private ImageView mImagePlay;
@@ -145,9 +187,9 @@ public class MediaSettingsActivity extends AppCompatActivity
     @Inject ImageManager mImageManager;
 
     /**
-     * @param activity calling activity
-     * @param site site this media is associated with
-     * @param media media model to display
+     * @param activity    calling activity
+     * @param site        site this media is associated with
+     * @param media       media model to display
      * @param mediaIdList optional list of media IDs to page through in preview screen
      */
     public static void showForResult(@NonNull Activity activity,
@@ -180,8 +222,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     /**
-     * @param activity calling activity
-     * @param site site this media is associated with
+     * @param activity    calling activity
+     * @param site        site this media is associated with
      * @param editorMedia editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
@@ -647,27 +689,14 @@ public class MediaSettingsActivity extends AppCompatActivity
      * Initialize the image width SeekBar and accompanying EditText
      */
     private void setupImageSizeSeekBar() {
-        mImageSizeKeyArray = getResources().getStringArray(R.array.image_size_key_array);
-        mImageSizeLabelArray = getResources().getStringArray(R.array.image_size_label_array);
-
-        if (mImageSizeKeyArray.length != mImageSizeLabelArray.length) {
-            throw new RuntimeException("Length of Image Size Key and Label arrays is not same");
-        }
-
-        int imageSizeKey = Arrays.asList(mImageSizeKeyArray).indexOf(mEditorImageMetaData.getSize());
-
         // image size is parsed from html, so we can get non standard values (anything that matches ^size-.*)
-        // in this case we should default to full size
-        if (imageSizeKey == -1) {
-            imageSizeKey = mImageSizeLabelArray.length - 1;
-            AppLog.w(AppLog.T.MEDIA, "Unrecognized image size class passed to MediaSettings from editor: "
-                                     + mEditorImageMetaData.getSize());
-        }
+        // in this case we will default to full size
+        mImageSize = MediaSettingsImageSize.fromCssClass(this, mEditorImageMetaData.getSize());
 
-        mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
-        mImageSizeSeekBarView.setProgress(imageSizeKey);
+        mImageSizeSeekBarView.setMax(MediaSettingsImageSize.values().length - 1);
+        mImageSizeSeekBarView.setProgress(Arrays.asList(MediaSettingsImageSize.values()).indexOf(mImageSize));
 
-        mImageSizeView.setText(mImageSizeLabelArray[imageSizeKey]);
+        mImageSizeView.setText(mImageSize.getLabel());
 
         mImageSizeSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -680,7 +709,8 @@ public class MediaSettingsActivity extends AppCompatActivity
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mImageSizeView.setText(mImageSizeLabelArray[progress]);
+                mImageSize = MediaSettingsImageSize.values()[progress];
+                mImageSizeView.setText(mImageSize.getLabel());
             }
         });
     }
@@ -905,7 +935,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             }
         } else {
             String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
-            String size = mImageSizeKeyArray[mImageSizeSeekBarView.getProgress()];
+            String size = getString(mImageSize.getCssClass());
             String linkUrl = EditTextUtils.getText(mLinkView);
             boolean linkTargetBlank = mLinkTargetNewWindowView.isChecked();
 
@@ -925,6 +955,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 mEditorImageMetaData.setCaption(thisCaption);
                 mEditorImageMetaData.setLinkUrl(linkUrl);
                 mEditorImageMetaData.setLinkTargetBlank(linkTargetBlank);
+                updateImageSizeParameters();
 
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
@@ -934,6 +965,31 @@ public class MediaSettingsActivity extends AppCompatActivity
                 this.setResult(Activity.RESULT_CANCELED);
             }
         }
+    }
+
+    private void updateImageSizeParameters() {
+        if (mImageSize == MediaSettingsImageSize.FULL) {
+            mEditorImageMetaData.setWidth(null);
+            mEditorImageMetaData.setHeight(null);
+            return;
+        }
+
+        int imageWidth = mEditorImageMetaData.getWidthInt();
+        int imageHeight = mEditorImageMetaData.getHeightInt();
+
+        float aspectRatio = (imageWidth / imageHeight);
+
+        if (imageWidth > imageHeight) {
+            imageHeight = Math.round(mImageSize.getSize() / aspectRatio);
+        } else if (imageWidth < imageHeight) {
+            imageWidth = Math.round(mImageSize.getSize() * aspectRatio);
+        } else {
+            imageHeight = mImageSize.getSize();
+            imageWidth = mImageSize.getSize();
+        }
+
+        mEditorImageMetaData.setWidth(Integer.toString(imageWidth));
+        mEditorImageMetaData.setHeight(Integer.toString(imageHeight));
     }
 
     /*
@@ -946,7 +1002,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
-                                                        permissionList)) {
+                permissionList)) {
             return;
         }
 
@@ -988,8 +1044,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     /*
-    * Depending on the media source it either removes it from post or deletes it from MediaBrowser
-    */
+     * Depending on the media source it either removes it from post or deletes it from MediaBrowser
+     */
     private void deleteMediaWithConfirmation() {
         if (mDeleteMediaConfirmationDialog != null) {
             mDeleteMediaConfirmationDialog.show();
