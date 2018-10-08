@@ -898,9 +898,9 @@ public class MediaSettingsActivity extends AppCompatActivity
             boolean linkTargetBlank = mLinkTargetNewWindowView.isChecked();
             boolean hasSizeChanged = !StringUtils.equals(mEditorImageMetaData.getSize(), size);
 
-            boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
+            boolean hasChanged = hasSizeChanged
+                                 || !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                                  || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
-                                 || hasSizeChanged
                                  || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
                                  || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment)
                                  || !StringUtils.equals(mEditorImageMetaData.getLinkUrl(), linkUrl)
@@ -915,8 +915,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 mEditorImageMetaData.setLinkUrl(linkUrl);
                 mEditorImageMetaData.setLinkTargetBlank(linkTargetBlank);
 
-                // size affects multiple attributes, so we want to make sure we updated them it only if they
-                // were changed
+                // size affects multiple attributes, so we want to make sure we updated them only if they were changed
                 if (hasSizeChanged) {
                     updateImageSizeParameters();
                 }
