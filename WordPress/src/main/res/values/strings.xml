@@ -1255,15 +1255,15 @@
     <!-- Image Size -->
     <string name="image_size">Size</string>
 
-    <string name="size_thumbnail_label">Thumbnail</string>
-    <string name="size_medium_label">Medium</string>
-    <string name="size_large_label">Large</string>
-    <string name="size_full_label">Full Size</string>
+    <string name="image_size_thumbnail_label">Thumbnail</string>
+    <string name="image_size_medium_label">Medium</string>
+    <string name="image_size_large_label">Large</string>
+    <string name="image_size_full_label">Full Size</string>
 
-    <string name="size_thumbnail_class">size-thumbnail</string>
-    <string name="size_medium_class">size-medium</string>
-    <string name="size_large_class">size-large</string>
-    <string name="size_full_class">size-full</string>
+    <string name="image_size_thumbnail_class">size-thumbnail</string>
+    <string name="image_size_medium_class">size-medium</string>
+    <string name="image_size_large_class">size-large</string>
+    <string name="image_size_full_class">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
