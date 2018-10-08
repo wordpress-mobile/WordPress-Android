@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -1127,7 +1128,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         private final int mCssClass;
         private final int mSize;
 
-        MediaSettingsImageSize(@StringRes int label, @StringRes int cssClass, int size) {
+        MediaSettingsImageSize(@StringRes int label, @StringRes int cssClass, @IntegerRes int size) {
             mLabel = label;
             mCssClass = cssClass;
             mSize = size;
@@ -1137,16 +1138,13 @@ public class MediaSettingsActivity extends AppCompatActivity
             return mSize;
         }
 
-        @StringRes
         public int getLabel() {
             return mLabel;
         }
 
-        @StringRes
         public int getCssClass() {
             return mCssClass;
         }
-
 
         public static MediaSettingsImageSize fromCssClass(Context context, String cssClass) {
             for (MediaSettingsImageSize mediaSettingsImageSize : values()) {
