@@ -47,7 +47,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
-import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -66,6 +65,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
 import org.wordpress.android.ui.pages.PagesFragment;
+import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -128,6 +128,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
+import org.wordpress.android.ui.stats.refresh.InsightsFragment;
 import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
@@ -430,6 +431,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeServiceAdapter object);
 
     void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
+
+    void inject(InsightsFragment insightsFragment);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

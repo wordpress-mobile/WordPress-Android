@@ -279,6 +279,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.stats.refresh.StatsListActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
