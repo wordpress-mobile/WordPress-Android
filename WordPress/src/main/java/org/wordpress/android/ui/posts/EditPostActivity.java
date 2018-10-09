@@ -43,7 +43,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -867,11 +866,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // hide soft keyboard
-        View view = getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        ActivityUtils.hideKeyboard(this);
 
         // slide in the photo picker
         if (!isAlreadyShowing) {
@@ -1143,11 +1138,10 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_preview_post) {
                 mViewPager.setCurrentItem(PAGE_PREVIEW);
             } else if (itemId == R.id.menu_post_settings) {
-                InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
-                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.refreshViews();
                 }
+                ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
