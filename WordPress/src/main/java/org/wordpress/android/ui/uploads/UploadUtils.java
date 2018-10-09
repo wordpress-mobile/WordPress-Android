@@ -273,7 +273,7 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        boolean userCanPublish = SiteUtils.isAccessedViaWPComRest(site) ? site.getHasCapabilityPublishPosts() : true;
+        boolean userCanPublish = !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
