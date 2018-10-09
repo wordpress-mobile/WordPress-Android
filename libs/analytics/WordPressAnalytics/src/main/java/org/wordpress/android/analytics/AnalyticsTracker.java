@@ -17,6 +17,7 @@ public final class AnalyticsTracker {
     public static final String READER_DETAIL_TYPE_BLOG_PREVIEW = "preview-blog";
     public static final String READER_DETAIL_TYPE_TAG_PREVIEW = "preview-tag";
     public static final String ACTIVITY_LOG_ACTIVITY_ID_KEY = "activity_id";
+    public static final String NOTIFICATIONS_SELECTED_FILTER = "selected_filter";
 
     public enum Stat {
         APPLICATION_OPENED,
@@ -333,6 +334,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_SETTINGS_DETAILS_OPENED,
         NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED,
         NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED,
+        NOTIFICATION_TAPPED_SEGMENTED_CONTROL,
         THEMES_ACCESSED_THEMES_BROWSER,
         THEMES_ACCESSED_SEARCH,
         THEMES_CHANGED_THEME,
