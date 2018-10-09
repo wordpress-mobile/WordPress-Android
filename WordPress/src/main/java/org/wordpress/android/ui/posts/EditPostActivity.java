@@ -130,6 +130,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -224,6 +225,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
+    private static final int PAGE_HISTORY = 3;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
@@ -463,7 +465,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding
@@ -496,6 +498,9 @@ public class EditPostActivity extends AppCompatActivity implements
                             }
                         }
                     });
+                } else if (position == PAGE_HISTORY) {
+                    setTitle(R.string.history_title);
+                    hidePhotoPicker();
                 }
             }
         });
@@ -1052,6 +1057,7 @@ public class EditPostActivity extends AppCompatActivity implements
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
                 saveMenuItem.setTitle(getSaveButtonText());
+                saveMenuItem.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
             }
         }
 
@@ -1131,7 +1137,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 return false;
             }
 
-            if (itemId == R.id.menu_preview_post) {
+            if (itemId == R.id.menu_history) {
+                ActivityUtils.hideKeyboard(this);
+                mViewPager.setCurrentItem(PAGE_HISTORY);
+            } else if (itemId == R.id.menu_preview_post) {
                 mViewPager.setCurrentItem(PAGE_PREVIEW);
             } else if (itemId == R.id.menu_post_settings) {
                 InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
@@ -1904,7 +1913,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 3;
+        private static final int NUM_PAGES_EDITOR = 4;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -1927,6 +1936,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                 case 1:
                     return EditPostSettingsFragment.newInstance();
+                case 3:
+                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
                     return EditPostPreviewFragment.newInstance(mPost);
             }
