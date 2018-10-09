@@ -296,39 +296,49 @@ public class UploadUtils {
             }
         } else {
             if (post != null) {
-                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
-                if (isDraft) {
-                    if (userCanPublish) {
-                        View.OnClickListener publishPostListener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                UploadUtils.publishPost(activity, post, site, dispatcher);
-                            }
-                        };
-                        UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                                R.string.button_publish, publishPostListener);
-                    } else {
-                        UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
+                PostStatus status = PostStatus.fromPost(post);
+                int snackbarMessageRes;
+                int snackbarButtonRes = 0;
+                View.OnClickListener publishPostListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // jump to Editor Preview mode to show this Post
+                        ActivityLauncher.browsePostOrPage(activity, site, post);
                     }
-                } else {
-                    boolean isScheduled = PostStatus.fromPost(post) == PostStatus.SCHEDULED;
-                    int messageRes;
+                };
 
-                    if (post.isPage()) {
-                        messageRes = isScheduled ? R.string.page_scheduled : R.string.page_published;
-                    } else {
-                        messageRes = isScheduled ? R.string.post_scheduled
-                                : (userCanPublish ? R.string.post_published : R.string.post_submitted);
-                    }
-
-                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes, R.string.button_view,
-                            new View.OnClickListener() {
+                switch (status) {
+                    case DRAFT:
+                        snackbarMessageRes = R.string.editor_draft_saved_online;
+                        if (userCanPublish) {
+                            publishPostListener = new View.OnClickListener() {
                                 @Override
-                                public void onClick(View view) {
-                                    // jump to Editor Preview mode to show this Post
-                                    ActivityLauncher.browsePostOrPage(activity, site, post);
+                                public void onClick(View v) {
+                                    UploadUtils.publishPost(activity, post, site, dispatcher);
                                 }
-                            });
+                            };
+                            snackbarButtonRes = R.string.button_publish;
+                        }
+                        break;
+                    case PUBLISHED:
+                        snackbarButtonRes = R.string.button_view;
+                        snackbarMessageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                        break;
+                    case SCHEDULED:
+                        snackbarButtonRes = R.string.button_view;
+                        snackbarMessageRes = post.isPage() ? R.string.page_scheduled : R.string.post_published;
+                        break;
+                    default:
+                        snackbarButtonRes = R.string.button_view;
+                        snackbarMessageRes = post.isPage() ? R.string.page_updated : R.string.post_updated;
+                        break;
+                }
+
+                if (snackbarButtonRes > 0) {
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
+                            publishPostListener);
+                } else {
+                    UploadUtils.showSnackbar(snackbarAttachView, snackbarMessageRes);
                 }
             }
         }
