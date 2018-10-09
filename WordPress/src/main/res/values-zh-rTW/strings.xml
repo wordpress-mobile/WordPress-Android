@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 08:54:09+0000
+Translation-Revision-Date: 2018-09-20 10:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[閱讀更多]</string>
+    <string name="news_card_announcement_content_sample_announcement">[現在沒時間閱讀嗎？沒問題：儲存文章等有空時再讀。]</string>
+    <string name="news_card_announcement_title_sample_announcement">[新功能已可使用]</string>
+    <string name="pages_empty_trashed">你沒有任何移至垃圾桶的頁面</string>
+    <string name="pages_empty_scheduled">你沒有任何已排程頁面</string>
+    <string name="pages_empty_drafts">你沒有任何草稿頁面</string>
+    <string name="pages_empty_published">你尚未發佈任何頁面</string>
+    <string name="pages_search_suggestion">搜尋頁面</string>
+    <string name="pages_empty_search_result">沒有頁面符合你的搜尋條件</string>
+    <string name="pages_delete_permanently">永久刪除</string>
+    <string name="pages_move_to_trash">移至垃圾桶</string>
+    <string name="pages_move_to_draft">移至草稿</string>
+    <string name="pages_publish_now">立即發佈</string>
+    <string name="pages_set_parent">設定上層項目</string>
+    <string name="pages_view">檢視</string>
+    <string name="pages_trashed">已移至垃圾桶</string>
+    <string name="pages_scheduled">已排程</string>
+    <string name="pages_drafts">草稿</string>
+    <string name="pages_published">已發佈</string>
+    <string name="login_error_sms_throttled">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
+    <string name="login_error_email_not_found_v2">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
+    <string name="site_picker_remove_site_empty">沒有網站符合你的搜尋條件</string>
+    <string name="reader_empty_followed_blogs_search_title">沒有網站符合你的搜尋條件</string>
+    <string name="page_parent_changed">頁面上層項目已變更</string>
+    <string name="page_permanently_deleted">頁面已永久刪除</string>
+    <string name="page_moved_to_scheduled">頁面已排程</string>
+    <string name="page_moved_to_published">頁面已發佈</string>
+    <string name="page_moved_to_trash">頁面已移至垃圾桶</string>
+    <string name="page_moved_to_draft">頁面已移至草稿</string>
+    <string name="top_level">最上層</string>
+    <string name="page_delete_dialog_message">你確定要刪除 %s 頁面？</string>
+    <string name="page_parent_change_error">變更頁面上層項目時發生問題</string>
+    <string name="page_status_change_error">變更頁面狀態時發生問題</string>
+    <string name="page_delete_error">刪除頁面時發生問題</string>
+    <string name="set_parent">設定上層項目</string>
+    <string name="dismiss">關閉</string>
     <string name="quick_start_focus_point_description">點選這裡</string>
     <string name="quick_start_sites">快速入門</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">建立網站</string>
     <string name="quick_start_list_create_site_subtitle">讓你的網站上線運作</string>
     <string name="quick_start_list_complete_title">恭喜完成快速入門</string>
     <string name="quick_start_list_complete_subtitle">清單中又少了一件事情，感覺不錯吧！</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">檢視你的網站</string>
     <string name="quick_start_dialog_view_site_message_short">點選%1$s檢視網站%2$s，以預覽你的網站</string>
     <string name="quick_start_dialog_view_site_message">預覽你的新網站即可查看訪客將會看到的內容。</string>
@@ -331,7 +355,6 @@ Language: zh_TW
     <string name="me_section_screen_title">我</string>
     <string name="my_site_section_screen_title">我的網站</string>
     <string name="notif_settings_screen_title">通知設定</string>
-    <string name="passcode_screen_title">WordPress 密碼</string>
     <string name="help_screen_title">說明與支援</string>
     <string name="license_screen_title">授權</string>
     <string name="release_notes_screen_title">版本備註</string>
@@ -588,7 +611,6 @@ Language: zh_TW
     <string name="media_edit_file_details_card_caption">檔案詳細資料</string>
     <string name="login_error_suffix">\n要嘗試其他帳號嗎？</string>
     <string name="login_error_generic">連線 Google 帳號時發生一些問題。</string>
-    <string name="login_error_email_not_found">沒有任何與 Google 帳號「%s」匹配的 WordPress.com 帳號。</string>
     <string name="login_error_button">關閉</string>
     <string name="login_google_button_suffix">透過 Google 登入。</string>
     <string name="enter_wpcom_password_google">若要繼續使用此 Google 帳號，請提供相符的 WordPress.com 密碼。只會詢問一次。</string>
@@ -887,7 +909,6 @@ Language: zh_TW
     <string name="keep_editing">繼續編輯</string>
     <string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
     <string name="error_unknown_post_type">未知的文章格式</string>
-    <string name="error_fetch_site_after_creation">網站已建立，你可能需要重新整理網站挑選器中的網站清單。</string>
     <string name="submit_for_review">送出</string>
     <string name="duplicate_site_detected">已偵測到重複的網站。</string>
     <string name="cannot_add_duplicate_site">應用程式中已有此網站，你無法再度新增該網站。</string>
@@ -903,7 +924,6 @@ Language: zh_TW
     <string name="retry">重試</string>
     <string name="confirm">確認</string>
     <string name="xmlrpc_post_blocked_error">無法連結。你的主機服務提供者封鎖了 POST 請求，但此應用程式需要\n需要使用 POST 請求才能與你的網站通訊。請聯絡你的主機服務提供者，以解決此問題。</string>
-    <string name="reader_empty_followed_blogs_search_title">找不到相符的網站</string>
     <string name="reader_hint_search_followed_sites">搜尋關注的網站</string>
     <string name="visual_editor_disabled">視覺化編輯器已停用</string>
     <string name="preference_editor_visual">視覺化</string>
@@ -1327,7 +1347,6 @@ Language: zh_TW
     <string name="button_edit">編輯</string>
     <string name="button_publish">發表</string>
     <string name="undo">復原</string>
-    <string name="passcodelock_prompt_message">輸入 PIN 碼</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
     <string name="stats_insights_best_ever">最佳的瀏覽次數</string>
     <string name="ignore">忽略</string>
@@ -1455,7 +1474,6 @@ Language: zh_TW
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="cab_selected">已選取：%d</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
-    <string name="create_new_blog_wpcom">建立 WordPress.com 網誌</string>
     <string name="reader_empty_comments">尚未有留言</string>
     <string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
     <string name="reader_label_view_original">查看原始文章</string>
@@ -1512,7 +1530,6 @@ Language: zh_TW
     <string name="error_edit_comment">編輯回應時發生錯誤</string>
     <string name="error_load_comment">無法載入回應</string>
     <string name="error_downloading_image">下載圖片時發生錯誤</string>
-    <string name="passcode_wrong_passcode">錯誤的 PIN</string>
     <string name="invalid_email_message">你的電子郵件地址無效</string>
     <string name="email_invalid">輸入有效的電子郵件地址</string>
     <string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
@@ -1567,21 +1584,18 @@ Language: zh_TW
     <string name="privacy_policy">隱私權政策</string>
     <string name="local_changes">本機變更</string>
     <string name="image_settings">圖片設定</string>
-    <string name="add_account_blog_url">網誌位址</string>
     <string name="wordpress_blog">WordPress 網誌</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="reader_toast_err_add_tag">無法新增此標籤</string>
     <string name="reader_toast_err_remove_tag">無法移除此標籤</string>
-    <string name="required_field">必填欄位</string>
     <string name="notifications_empty_all">尚未有任何通知。</string>
     <string name="invalid_site_url_message">檢查輸入的網站 URL 是否有效</string>
     <string name="error_refresh_media">目前無法重新整理媒體</string>
     <string name="error_deleting_page">刪除頁面時發生錯誤</string>
     <string name="plugin_not_found">存取此外掛程式時發生錯誤</string>
     <string name="share_link">分享連結</string>
-    <string name="creating_your_site">建立你的網站</string>
     <string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
     <string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>
     <string name="reader_likes_multi">%,d 人說這個讚</string>
@@ -1638,14 +1652,6 @@ Language: zh_TW
     <string name="stats_totals_views">點閱數</string>
     <string name="stats_totals_clicks">點擊率</string>
     <string name="stats_totals_plays">播放次數</string>
-    <string name="passcode_manage">管理 PIN 鎖定</string>
-    <string name="passcode_enter_old_passcode">輸入你的舊 PIN</string>
-    <string name="passcode_re_enter_passcode">重新輸入你的 PIN</string>
-    <string name="passcode_change_passcode">變更 PIN</string>
-    <string name="passcode_set">PIN 設定</string>
-    <string name="passcode_preference_title">PIN 鎖定</string>
-    <string name="passcode_turn_off">關閉 PIN 鎖定</string>
-    <string name="passcode_turn_on">開啟 PIN 鎖定</string>
     <string name="manage">管理</string>
     <string name="discard">放棄</string>
     <string name="sign_in">登入</string>
@@ -1664,6 +1670,7 @@ Language: zh_TW
     <string name="username">使用者帳號</string>
     <string name="log_in">登入</string>
     <string name="reader">閱讀器</string>
+    <string name="pages">頁面</string>
     <string name="caption">說明（可選）</string>
     <string name="width">寬度</string>
     <string name="posts">文章</string>

@@ -2,12 +2,10 @@
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar_main"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
     android:background="@color/color_primary"
     android:elevation="@dimen/appbar_elevation"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    tools:targetApi="LOLLIPOP"/>
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>

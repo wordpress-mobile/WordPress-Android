@@ -414,7 +414,6 @@ Language: vi_VN
     <string name="reader_toast_err_follow_blog_not_authorized">Bạn không có quyền truy cập blog này</string>
     <string name="reader_toast_err_follow_blog_not_found">Site này không tồn tại</string>
     <string name="undo">Làm lại</string>
-    <string name="passcodelock_prompt_message">Nhập mã PIN</string>
     <string name="push_auth_expired">Yêu cầu đã hết hạn. Đăng nhập vào Wordpress.com để thử lại.</string>
     <string name="ignore">Bỏ qua</string>
     <string name="stats_insights_best_ever">Lượt xem tốt nhất từng có</string>
@@ -545,7 +544,6 @@ Language: vi_VN
     <string name="stats_empty_comments_desc">Nếu bạn cho phép bình luận trên trang web của bạn, theo dõi các bình luận hàng đầu của bạn và khám phá những gì nội dung khơi nguồn cuộc trò chuyện sống động nhất, dựa trên 1.000 bình luận gần đây nhất.</string>
     <string name="ssl_certificate_details">Chi tiết</string>
     <string name="cab_selected">%d đã chọn</string>
-    <string name="create_new_blog_wpcom">Tạo blog WordPress.com</string>
     <string name="reader_empty_comments">Chưa có bình luận</string>
     <string name="reader_empty_posts_in_tag">Không có bài viết với thẻ này</string>
     <string name="reader_label_view_original">Xem bài viết gốc</string>
@@ -593,7 +591,6 @@ Language: vi_VN
     <string name="error_edit_comment">Một lỗi đã xảy ra trong khi sửa bình luận</string>
     <string name="error_load_comment">Không thể tải bình luận</string>
     <string name="error_downloading_image">Lỗi tải ảnh về</string>
-    <string name="passcode_wrong_passcode">Sai mã PIN</string>
     <string name="invalid_email_message">Địa chỉ email của bạn không hợp lệ</string>
     <string name="username_or_password_incorrect">Tên người dùng và mật khẩu bạn đã nhập không đúng</string>
     <string name="email_invalid">Nhập một địa chỉ email hợp lệ</string>
@@ -632,7 +629,6 @@ Language: vi_VN
     <string name="new_post">Bài viết mới</string>
     <string name="new_media">Media mới</string>
     <string name="image_settings">Thiết đặt ảnh</string>
-    <string name="add_account_blog_url">Địa chỉ blog</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
     <string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
@@ -655,7 +651,6 @@ Language: vi_VN
     <string name="privacy_policy">Chính sách bảo mật</string>
     <string name="http_authorization_required">Cần được cấp phép</string>
     <string name="local_changes">Các thay đổi nội bộ</string>
-    <string name="required_field">Dòng bắt buộc</string>
     <string name="local_draft">Bản nháp nội bộ</string>
     <string name="comment_status_spam">Spam</string>
     <string name="comment_status_trash">Cho vào thùng rác</string>
@@ -671,7 +666,6 @@ Language: vi_VN
     <string name="delete_page">Xóa trang?</string>
     <string name="delete_post">Xóa bài viết?</string>
     <string name="share_link">Chia sẻ liên kết</string>
-    <string name="creating_your_site">Tạo site của bạn</string>
     <string name="reader_empty_posts_in_tag_updating">Đang tìm nạp bài viết…</string>
     <string name="reader_label_reply">Trả lời</string>
     <string name="video">Video</string>
@@ -718,10 +712,6 @@ Language: vi_VN
     <string name="media_edit_caption_text">Tiêu đề</string>
     <string name="media_edit_description_text">Mô tả</string>
     <string name="themes">Chủ đề</string>
-    <string name="passcode_set">Mã PIN đã đặt</string>
-    <string name="passcode_preference_title">Khóa mã PIN</string>
-    <string name="passcode_turn_off">Tắt khóa mã PIN</string>
-    <string name="passcode_turn_on">Bật khóa mã PIN</string>
     <string name="media_gallery_type_slideshow">Trình chiếu</string>
     <string name="stats">Thống kê</string>
     <string name="stats_view_visitors_and_views">Khách ghé thăm và lượt xem</string>
@@ -730,10 +720,6 @@ Language: vi_VN
     <string name="stats_view_referrers">Liên kết giới thiệu</string>
     <string name="stats_entry_referrers">Liên kết giới thiệu </string>
     <string name="stats_totals_plays">Chơi</string>
-    <string name="passcode_manage">Quản lý khóa mã PIN</string>
-    <string name="passcode_enter_old_passcode">Nhập mã PIN cũ của bạn</string>
-    <string name="passcode_re_enter_passcode">Nhập lại mã PIN của bạn</string>
-    <string name="passcode_change_passcode">Thay đổi mã PIN</string>
     <string name="discard">Hủy bỏ</string>
     <string name="sign_in">Đăng nhập</string>
     <string name="note_reply_successful">Trả lời đã xuất bản</string>
@@ -753,6 +739,7 @@ Language: vi_VN
     <string name="caption">Tiêu đề (tùy chọn)</string>
     <string name="featured_in_post">Bao gồm ảnh trong nội dung bài viết</string>
     <string name="no_network_title">Không có mạng</string>
+    <string name="pages">Trang</string>
     <string name="width">Chiều rộng</string>
     <string name="posts">Bài viết</string>
     <string name="anonymous">Ẩn danh</string>

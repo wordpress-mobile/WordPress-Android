@@ -21,7 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_medium"
         android:background="@color/grey_lighten_20"/>
 

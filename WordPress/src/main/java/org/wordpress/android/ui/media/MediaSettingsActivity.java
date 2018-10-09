@@ -16,7 +16,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -479,14 +478,12 @@ public class MediaSettingsActivity extends AppCompatActivity
      * adjust the toolbar so it doesn't overlap the status bar
      */
     private void adjustToolbar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                int statusHeight = getResources().getDimensionPixelSize(resourceId);
-                View toolbar = findViewById(R.id.toolbar);
-                toolbar.getLayoutParams().height += statusHeight;
-                toolbar.setPadding(0, statusHeight, 0, 0);
-            }
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            int statusHeight = getResources().getDimensionPixelSize(resourceId);
+            View toolbar = findViewById(R.id.toolbar);
+            toolbar.getLayoutParams().height += statusHeight;
+            toolbar.setPadding(0, statusHeight, 0, 0);
         }
     }
 

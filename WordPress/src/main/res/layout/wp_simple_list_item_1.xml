@@ -19,8 +19,6 @@
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:textAlignment="viewStart">
     </org.wordpress.android.widgets.WPTextView>
 

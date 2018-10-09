@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -256,16 +255,9 @@ public class PostPreviewActivity extends AppCompatActivity implements
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocallyChanged()) {
             RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
-
-            if (VERSION.SDK_INT < 17) {
-                // passing "0" removes the param (necessary since removeRule() is API 17+)
-                paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
-                paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
-            } else {
-                paramsMessage.removeRule(RelativeLayout.LEFT_OF);
-                paramsMessage.removeRule(RelativeLayout.START_OF);
-                paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
-            }
+            paramsMessage.removeRule(RelativeLayout.LEFT_OF);
+            paramsMessage.removeRule(RelativeLayout.START_OF);
+            paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
 
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.snackbar_message_margin_bottom);

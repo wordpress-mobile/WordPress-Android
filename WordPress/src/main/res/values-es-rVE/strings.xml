@@ -416,7 +416,6 @@ Language: es_VE
     <string name="button_edit">Editar</string>
     <string name="button_back">Atrás</string>
     <string name="undo">Deshacer</string>
-    <string name="passcodelock_prompt_message">Escribe tu PIN</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="ignore">Ignorar</string>
     <string name="stats_insights_best_ever">El mejor día</string>
@@ -560,7 +559,6 @@ Language: es_VE
     <string name="older_month">Hace más de 1 mes</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="comment_trashed">El comentario se ha enviado a la papelera.</string>
-    <string name="create_new_blog_wpcom">Crear un blog de WordPress.com</string>
     <string name="comment">Comentario</string>
     <string name="signing_out">Cerrando sesión…</string>
     <string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
@@ -600,7 +598,6 @@ Language: es_VE
     <string name="error_edit_comment">Ocurrió un error al editar el comentario</string>
     <string name="error_load_comment">No se pudo cargar el comentario</string>
     <string name="error_downloading_image">Error al descargar la imagen</string>
-    <string name="passcode_wrong_passcode">PIN erróneo</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
@@ -654,19 +651,16 @@ Language: es_VE
     <string name="privacy_policy">Política de privacidad</string>
     <string name="local_changes">Cambios locales</string>
     <string name="image_settings">Ajustes de imagen</string>
-    <string name="add_account_blog_url">Dirección del blog</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
-    <string name="required_field">Campo obligatorio</string>
     <string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
     <string name="notifications_empty_all">No hay notificaciones… todavía.</string>
     <string name="remove_account">Eliminar sitio</string>
     <string name="invalid_site_url_message">Comprueba que la URL del sitio introducida es válida</string>
     <string name="share_link">Compartir enlace</string>
-    <string name="creating_your_site">Creando tu sitio</string>
     <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
@@ -722,14 +716,6 @@ Language: es_VE
     <string name="stats_totals_views">Vistas</string>
     <string name="stats_totals_clicks">Clics</string>
     <string name="stats_totals_plays">Juegos</string>
-    <string name="passcode_manage">Administrar el PIN de bloqueo</string>
-    <string name="passcode_enter_old_passcode">Introduce tu viejo PIN</string>
-    <string name="passcode_re_enter_passcode">Vuelve a introducir el PIN</string>
-    <string name="passcode_change_passcode">Cambiar PIN</string>
-    <string name="passcode_set">Introducir PIN</string>
-    <string name="passcode_preference_title">PIN bloqueado</string>
-    <string name="passcode_turn_off">Desbloquear PIN</string>
-    <string name="passcode_turn_on">Bloquear PIN</string>
     <string name="stats_view_tags_and_categories">Etiquetas y categorías</string>
     <string name="manage">Gestionar</string>
     <string name="discard">Descartar</string>
@@ -750,6 +736,7 @@ Language: es_VE
     <string name="reader">Lector</string>
     <string name="featured_in_post">Incluír imagen en el contenido del mensaje</string>
     <string name="no_network_title">No hay red disponible</string>
+    <string name="pages">Páginas</string>
     <string name="caption">Leyenda (opcional)</string>
     <string name="width">Ancho</string>
     <string name="posts">Entradas</string>

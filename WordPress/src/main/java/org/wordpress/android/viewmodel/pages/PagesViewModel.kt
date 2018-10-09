@@ -4,9 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
-import kotlinx.coroutines.experimental.CoroutineDispatcher
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.isActive
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -18,8 +19,8 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.modules.COMMON_POOL_CONTEXT
-import org.wordpress.android.modules.UI_CONTEXT
+import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -30,7 +31,6 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
@@ -46,6 +46,7 @@ import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
+import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
@@ -56,8 +57,8 @@ class PagesViewModel
     private val pageStore: PageStore,
     private val dispatcher: Dispatcher,
     private val actionPerfomer: ActionPerformer,
-    @Named(UI_CONTEXT) private val uiContext: CoroutineDispatcher,
-    @Named(COMMON_POOL_CONTEXT) private val commonPoolContext: CoroutineDispatcher
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -108,9 +109,9 @@ class PagesViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private lateinit var _site: SiteModel
+    private var _site: SiteModel? = null
     val site: SiteModel
-        get() = _site
+        get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
     private var _arePageActionsEnabled = true
     val arePageActionsEnabled: Boolean
@@ -121,17 +122,16 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private val pageUpdateContinuation = mutableMapOf<Long, Continuation<Unit>>()
+    private var pageUpdateContinuation: Continuation<Unit>? = null
     private var currentPageType = PageListType.PUBLISHED
 
-    companion object {
-        const val PAGE_UPDATE_TIMEOUT = 5L * 1000
-    }
-
     fun start(site: SiteModel) {
-        _site = site
+        // Check if VM is not already initialized
+        if (_site == null) {
+            _site = site
 
-        loadPagesAsync()
+            loadPagesAsync()
+        }
     }
 
     init {
@@ -144,7 +144,7 @@ class PagesViewModel
         actionPerfomer.onCleanup()
     }
 
-    private fun loadPagesAsync() = launch(commonPoolContext) {
+    private fun loadPagesAsync() = defaultScope.launch {
         refreshPages()
 
         val loadState = if (pageMap.isEmpty()) FETCHING else REFRESHING
@@ -175,23 +175,22 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished(pageId: Long) {
-        launch(uiContext) {
+    fun onPageEditFinished() {
+        uiScope.launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate(pageId)
+            waitForPageUpdate()
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate(pageId: Long) {
-        suspendCoroutineWithTimeout<Unit>(PAGE_UPDATE_TIMEOUT) { cont ->
-            pageUpdateContinuation[pageId] = cont
+    private suspend fun waitForPageUpdate() {
+        suspendCoroutine<Unit> { cont ->
+            pageUpdateContinuation = cont
         }
-        pageUpdateContinuation.remove(pageId)
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
-        launch(uiContext) {
+        uiScope.launch {
             pageMap[pageId]?.let { page ->
                 setParent(page, parentId)
             }
@@ -213,7 +212,7 @@ class PagesViewModel
     fun onSearch(searchQuery: String, delay: Int = SEARCH_DELAY) {
         searchJob?.cancel()
         if (searchQuery.isNotEmpty()) {
-            searchJob = launch(uiContext) {
+            searchJob = uiScope.launch {
                 delay(delay)
                 searchJob = null
                 if (isActive) {
@@ -243,7 +242,7 @@ class PagesViewModel
     private suspend fun groupedSearch(
         site: SiteModel,
         searchQuery: String
-    ): SortedMap<PageListType, List<PageModel>> = withContext(commonPoolContext) {
+    ): SortedMap<PageListType, List<PageModel>> = withContext(defaultScope.coroutineContext) {
         val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
         return@withContext list.toSortedMap(
                 Comparator { previous, next ->
@@ -275,7 +274,7 @@ class PagesViewModel
         _isSearchExpanded.value = false
         clearSearch()
 
-        launch(uiContext) {
+        uiScope.launch {
             delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
@@ -300,7 +299,7 @@ class PagesViewModel
     }
 
     fun onDeleteConfirmed(remoteId: Long) {
-        launch(commonPoolContext) {
+        defaultScope.launch {
             pageMap[remoteId]?.let { deletePage(it) }
         }
     }
@@ -314,7 +313,7 @@ class PagesViewModel
     }
 
     fun onPullToRefresh() {
-        launch(uiContext) {
+        uiScope.launch {
             reloadPages(FETCHING)
         }
     }
@@ -323,7 +322,7 @@ class PagesViewModel
         val oldParent = page.parent?.remoteId ?: 0
 
         val action = PageAction(UPLOAD) {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 if (page.parent?.remoteId != parentId) {
                     val updatedPage = updateParent(page, parentId)
 
@@ -332,7 +331,7 @@ class PagesViewModel
             }
         }
         action.undo = {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 pageMap[page.remoteId]?.let { changed ->
                     val updatedPage = updateParent(changed, oldParent)
 
@@ -341,7 +340,7 @@ class PagesViewModel
             }
         }
         action.onSuccess = {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 reloadPages()
 
                 delay(ACTION_DELAY)
@@ -351,14 +350,14 @@ class PagesViewModel
             }
         }
         action.onError = {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 refreshPages()
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
 
-        launch(uiContext) {
+        uiScope.launch {
             _arePageActionsEnabled = false
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
@@ -375,7 +374,7 @@ class PagesViewModel
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(REMOVE) {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 pageMap = pageMap.filter { it.key != page.remoteId }
 
                 checkIfNewPageButtonShouldBeVisible()
@@ -384,7 +383,7 @@ class PagesViewModel
             }
         }
         action.onSuccess = {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 delay(ACTION_DELAY)
                 reloadPages()
 
@@ -392,14 +391,14 @@ class PagesViewModel
             }
         }
         action.onError = {
-            launch(commonPoolContext) {
+            defaultScope.launch {
                 refreshPages()
 
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
             }
         }
 
-        launch {
+        uiScope.launch {
             actionPerfomer.performAction(action)
         }
     }
@@ -409,7 +408,7 @@ class PagesViewModel
             val oldStatus = page.status
             val action = PageAction(UPLOAD) {
                 val updatedPage = updatePageStatus(page, status)
-                launch(commonPoolContext) {
+                defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
 
@@ -418,7 +417,7 @@ class PagesViewModel
             }
             action.undo = {
                 val updatedPage = updatePageStatus(page, oldStatus)
-                launch(commonPoolContext) {
+                defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
 
@@ -426,7 +425,7 @@ class PagesViewModel
                 }
             }
             action.onSuccess = {
-                launch(commonPoolContext) {
+                defaultScope.launch {
                     delay(ACTION_DELAY)
                     reloadPages()
 
@@ -435,14 +434,14 @@ class PagesViewModel
                 }
             }
             action.onError = {
-                launch(commonPoolContext) {
+                defaultScope.launch {
                     action.undo()
 
                     _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
 
-            launch(uiContext) {
+            uiScope.launch {
                 _arePageActionsEnabled = false
                 actionPerfomer.performAction(action)
                 _arePageActionsEnabled = true
@@ -481,17 +480,19 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation[event.post.remotePostId]?.resume(Unit)
-        pageUpdateContinuation[0]?.resume(Unit)
+        pageUpdateContinuation?.let { cont ->
+            pageUpdateContinuation = null
+            cont.resume(Unit)
+        }
     }
 
-    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiContext) {
-        this.value = value
+    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiScope.coroutineContext) {
+        setValue(value)
     }
 
     private fun <T> MutableLiveData<T>.postOnUi(value: T) {
         val liveData = this
-        launch(uiContext) {
+        uiScope.launch {
             liveData.value = value
         }
     }

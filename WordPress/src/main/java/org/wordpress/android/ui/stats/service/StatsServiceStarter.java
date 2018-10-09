@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.service;
 
-import android.annotation.TargetApi;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -58,7 +57,6 @@ public class StatsServiceStarter {
         }
     }
 
-    @TargetApi(21)
     private static PersistableBundle passBundleExtrasToPersistableBundle(Bundle originalExtras) {
         PersistableBundle bundle = new PersistableBundle();
         if (originalExtras != null) {
@@ -90,7 +88,6 @@ public class StatsServiceStarter {
         return bundle;
     }
 
-    @TargetApi(21)
     private static int getNewStartId() {
         if (jobId == (Integer.MAX_VALUE - 1)) {
             // just restart count to avoid overflow

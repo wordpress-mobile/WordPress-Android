@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -45,7 +45,7 @@ class PagesViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, Unconfined, Unconfined)
+        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, TEST_SCOPE, TEST_SCOPE)
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()

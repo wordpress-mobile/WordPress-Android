@@ -8,22 +8,10 @@ Language: ja_JP
 <resources>
     <string name="quick_start_focus_point_description">ここをタップ</string>
     <string name="quick_start_sites">クイックスタート</string>
-    <string name="quick_start_list_view_site_title">\@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">\@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_share_site_title">\@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_share_site_subtitle">\@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_publish_post_title">\@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_publish_post_subtitle">\@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_follow_site_title">\@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_follow_site_subtitle">\@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_customize_site_title">\@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_customize_site_subtitle">\@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
     <string name="quick_start_list_create_site_subtitle">サイトを稼働させる</string>
     <string name="quick_start_list_complete_title">クイックスタートを完了しました</string>
     <string name="quick_start_list_complete_subtitle">リストから消したいものがありますか ?</string>
-    <string name="quick_start_list_choose_theme_title">\@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_choose_theme_subtitle">\@string/quick_start_dialog_choose_theme_message</string>
     <string name="quick_start_dialog_view_site_title">サイトを表示</string>
     <string name="quick_start_dialog_view_site_message_short">サイトをプレビューするには、%1$sサイトを表示%2$sをタップします。</string>
     <string name="quick_start_dialog_view_site_message">新しいサイトをプレビューして訪問者に表示される内容を確認できます。</string>
@@ -334,7 +322,6 @@ Language: ja_JP
     <string name="me_section_screen_title">自分</string>
     <string name="my_site_section_screen_title">自分のサイト</string>
     <string name="notif_settings_screen_title">通知設定</string>
-    <string name="passcode_screen_title">WordPress パスコード</string>
     <string name="help_screen_title">ヘルプとサポート</string>
     <string name="license_screen_title">ライセンス</string>
     <string name="release_notes_screen_title">リリースノート</string>
@@ -592,7 +579,6 @@ Language: ja_JP
     <string name="media_edit_file_details_card_caption">ファイルの詳細</string>
     <string name="login_error_suffix">\n別のアカウントを試してみますか ?</string>
     <string name="login_error_generic">Google アカウントへの接続で何らかの問題が発生しました。</string>
-    <string name="login_error_email_not_found">Google アカウント「%s」は、WordPress.com 上での既存のアカウントと一致しません。</string>
     <string name="login_error_button">閉じる</string>
     <string name="login_google_button_suffix">Google でログインする。</string>
     <string name="enter_wpcom_password_google">この Google アカウントで続行するには、一致する WordPress.com パスワードを入力してください。この操作が必要になるのは一度だけです。</string>
@@ -895,7 +881,6 @@ Language: ja_JP
     <string name="image_quality">画質</string>
     <string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
     <string name="error_unknown_post_type">投稿フォーマットが不明です</string>
-    <string name="error_fetch_site_after_creation">サイトは作成されているので、サイトピッカーでサイトを最新表示してください。</string>
     <string name="submit_for_review">送信</string>
     <string name="duplicate_site_detected">重複サイトが検出されました。</string>
     <string name="cannot_add_duplicate_site">このサイトはすでにアプリに存在します。新たに追加することはできません。</string>
@@ -913,7 +898,6 @@ Language: ja_JP
     <string name="confirm">確認</string>
     <string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとした際に403エラーを受け取りました。サイトと通信するために、アプリはこのエンドポイントにアクセスする必要があります。この問題を解決するには、ホスティングサービスに連絡してください。</string>
     <string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
-    <string name="reader_empty_followed_blogs_search_title">一致するサイトがありません</string>
     <string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
     <string name="visual_editor_disabled">ビジュアルエディターが無効になっています</string>
     <string name="preference_editor_visual">ビジュアル</string>
@@ -1353,7 +1337,6 @@ Language: ja_JP
     <string name="reader_toast_err_follow_blog_not_authorized">このサイトにアクセスする権限がありません</string>
     <string name="reader_toast_err_follow_blog_not_found">サイトが見つかりませんでした</string>
     <string name="undo">元に戻す</string>
-    <string name="passcodelock_prompt_message">PIN コードを入力</string>
     <string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
     <string name="stats_insights_most_popular_percent_views">表示数の%1$d%%</string>
     <string name="ignore">無視</string>
@@ -1507,7 +1490,6 @@ Language: ja_JP
     <string name="reader_label_view_original">元の記事を表示</string>
     <string name="reader_empty_posts_in_tag">このタグを使った投稿はありません</string>
     <string name="reader_empty_comments">コメントはまだありません</string>
-    <string name="create_new_blog_wpcom">WordPress.com ブログを作成</string>
     <string name="browse_our_faq_button">よく聞かれる質問を表示</string>
     <string name="reader_menu_block_blog">このサイトをブロック</string>
     <string name="reader_toast_blog_blocked">このサイトからの投稿は今後表示されません</string>
@@ -1535,7 +1517,6 @@ Language: ja_JP
     <string name="username_or_password_incorrect">入力されたユーザー名またはパスワードが間違っています</string>
     <string name="email_invalid">有効なメールアドレスを入力してください</string>
     <string name="invalid_email_message">無効なメールアドレスです</string>
-    <string name="passcode_wrong_passcode">不正な PIN 番号</string>
     <string name="error_downloading_image">画像ダウンロードエラー</string>
     <string name="error_load_comment">コメントを読み込めませんでした</string>
     <string name="error_edit_comment">コメント編集の際にエラーが発生しました</string>
@@ -1559,7 +1540,6 @@ Language: ja_JP
     <string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
     <string name="gallery_error">メディア項目を読み込めませんでした。</string>
     <string name="no_network_message">利用可能なネットワークがありません</string>
-    <string name="required_field">記入必須欄</string>
     <string name="reader_toast_err_remove_tag">このタグを削除できません</string>
     <string name="reader_toast_err_add_tag">このブログを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
@@ -1568,7 +1548,6 @@ Language: ja_JP
     <string name="error_refresh_media">メディアファイルを再読み込みできませんでした</string>
     <string name="error_deleting_page">ページの削除中にエラーが発生しました</string>
     <string name="wordpress_blog">WordPress ブログ</string>
-    <string name="add_account_blog_url">ブログアドレス</string>
     <string name="image_settings">画像設定</string>
     <string name="local_changes">ローカルの変更</string>
     <string name="privacy_policy">プライバシーポリシー</string>
@@ -1626,7 +1605,6 @@ Language: ja_JP
     <string name="connection_error">接続エラー</string>
     <string name="select_categories">カテゴリーを選択</string>
     <string name="share_link">リンクを共有</string>
-    <string name="creating_your_site">サイトを作成しています</string>
     <string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
     <string name="cant_share_no_visible_blog">公開ブログがないため WordPress で共有できません</string>
     <string name="comment_spammed">コメントをスパムとしてマークしました</string>
@@ -1654,14 +1632,6 @@ Language: ja_JP
     <string name="reader_btn_share">共有</string>
     <string name="reader_untitled_post">(無題)</string>
     <string name="empty_list_default">リストが空です</string>
-    <string name="passcode_turn_on">PIN 番号ロックを有効化</string>
-    <string name="passcode_turn_off">PIN 番号ロックを無効化</string>
-    <string name="passcode_preference_title">PIN 番号ロック</string>
-    <string name="passcode_set">PIN 番号変更</string>
-    <string name="passcode_change_passcode">PIN 番号変更</string>
-    <string name="passcode_re_enter_passcode">PIN 番号再入力</string>
-    <string name="passcode_enter_old_passcode">旧 PIN 番号を入力</string>
-    <string name="passcode_manage">PIN 番号ロック管理</string>
     <string name="stats_totals_plays">再生回数</string>
     <string name="stats_totals_clicks">クリック数</string>
     <string name="stats_totals_views">表示</string>
@@ -1713,6 +1683,7 @@ Language: ja_JP
     <string name="posts">投稿</string>
     <string name="width">横幅</string>
     <string name="caption">キャプション (オプション)</string>
+    <string name="pages">ページ</string>
     <string name="no_network_title">利用可能なネットワークがありません</string>
     <string name="featured_in_post">投稿本文中に画像を含める</string>
     <string name="blogusername">blogusername</string>

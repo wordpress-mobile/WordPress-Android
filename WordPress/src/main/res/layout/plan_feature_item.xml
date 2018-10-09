@@ -12,7 +12,6 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_extra_large"
         tools:background="@drawable/ic_reader_blue_wordpress_18dp"
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:contentDescription="@null"/>
@@ -22,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_toRightOf="@+id/image_icon"
         android:ellipsize="end"
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_large"
@@ -36,7 +34,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_feature_title"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_toRightOf="@+id/image_icon"
         android:ellipsize="end"
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_medium"

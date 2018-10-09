@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:paddingLeft="?dialogPreferredPadding"
-    android:paddingRight="?dialogPreferredPadding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingEnd="?dialogPreferredPadding"
@@ -28,7 +26,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/publicize_divider_height"
-            android:layout_marginLeft="@dimen/publicize_default_margin"
             android:layout_gravity="center_vertical"
             android:background="@color/reader_divider_grey"
             android:layout_marginStart="@dimen/publicize_default_margin"/>
