@@ -348,7 +348,7 @@ class PostUploadNotifier {
         }
 
         // add draft Publish action for drafts
-        if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+        if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
             Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
                                                                             isFirstTimePublish, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
