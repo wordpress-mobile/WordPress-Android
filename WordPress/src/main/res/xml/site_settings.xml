@@ -80,6 +80,7 @@
             android:id="@+id/pref_site_password"
             android:enabled="false"
             android:inputType="textPassword"
+            android:importantForAccessibility="no"
             android:key="@string/pref_key_site_password"
             android:maxLength="@integer/max_length_password"
             android:title="@string/site_settings_password_title"
