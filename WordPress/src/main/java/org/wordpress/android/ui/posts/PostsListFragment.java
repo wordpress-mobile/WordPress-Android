@@ -29,6 +29,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.DeletePost;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -719,46 +723,44 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        switch (event.causeOfChange) {
-            // if a Post is updated, let's refresh the whole list, because we can't really know
-            // from FluxC which post has changed, or when. So to make sure, we go to the source,
-            // which is the FluxC PostStore.
-            case UPDATE_POST:
-                if (!event.isError()) {
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
-            case FETCH_POSTS:
-            case FETCH_PAGES:
-                mIsFetchingPosts = false;
-                if (!isAdded()) {
-                    return;
-                }
+        // if a Post is updated, let's refresh the whole list, because we can't really know
+        // from FluxC which post has changed, or when. So to make sure, we go to the source,
+        // which is the FluxC PostStore.
+        if (event.causeOfChange instanceof UpdatePost) {
+            if (!event.isError()) {
+                loadPosts(LoadMode.IF_CHANGED);
+            }
 
-                setRefreshing(false);
-                hideLoadMoreProgress();
-                if (!event.isError()) {
-                    mCanLoadMorePosts = event.canLoadMore;
-                    loadPosts(LoadMode.IF_CHANGED);
-                } else {
-                    PostError error = event.error;
-                    switch (error.type) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
+        } else if (event.causeOfChange instanceof FetchPosts || event.causeOfChange instanceof FetchPages) {
+            mIsFetchingPosts = false;
+            if (!isAdded()) {
+                return;
+            }
+
+            setRefreshing(false);
+            hideLoadMoreProgress();
+            if (!event.isError()) {
+                mCanLoadMorePosts = event.canLoadMore;
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                PostError error = event.error;
+                switch (error.type) {
+                    case UNAUTHORIZED:
+                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                        break;
+                    default:
+                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                        break;
                 }
-                break;
-            case DELETE_POST:
-                if (event.isError()) {
-                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
-                    ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
+            }
+
+        } else if (event.causeOfChange instanceof DeletePost) {
+            if (event.isError()) {
+                String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
+                ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
+                loadPosts(LoadMode.IF_CHANGED);
+            }
+
         }
     }
 
