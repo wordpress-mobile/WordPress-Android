@@ -322,7 +322,14 @@ public class UploadUtils {
                         break;
                     case PUBLISHED:
                         snackbarButtonRes = R.string.button_view;
-                        snackbarMessageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+
+                        if (post.isPage()) {
+                            snackbarMessageRes = R.string.page_published;
+                        } else if (userCanPublish) {
+                            snackbarMessageRes = R.string.post_published;
+                        } else {
+                            snackbarMessageRes = R.string.post_submitted;
+                        }
                         break;
                     case SCHEDULED:
                         snackbarButtonRes = R.string.button_view;
