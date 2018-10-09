@@ -301,8 +301,8 @@ class PostUploadNotifier {
                 notificationTitle += mContext.getString(R.string.draft_uploaded);
                 break;
             case SCHEDULED:
-                notificationTitle += mContext.getString(post.isPage() ?
-                        R.string.page_scheduled : R.string.post_scheduled);
+                notificationTitle += mContext.getString(
+                        post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
                 break;
             case PUBLISHED:
                 if (post.isPage()) {
