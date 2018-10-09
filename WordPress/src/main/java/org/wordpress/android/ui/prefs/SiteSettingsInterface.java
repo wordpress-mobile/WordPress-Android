@@ -194,23 +194,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getTitle() {
-        return mSettings.title == null ? "" : mSettings.title;
+        return mSettings.getTitle() == null ? "" : mSettings.getTitle();
     }
 
     public @NonNull String getTagline() {
-        return mSettings.tagline == null ? "" : mSettings.tagline;
+        return mSettings.getTagline() == null ? "" : mSettings.getTagline();
     }
 
     public @NonNull String getAddress() {
-        return mSettings.address == null ? "" : mSettings.address;
+        return mSettings.getAddress() == null ? "" : mSettings.getAddress();
     }
 
     public @NonNull String getQuotaDiskSpace() {
-        return mSettings.quotaDiskSpace == null ? "" : mSettings.quotaDiskSpace;
+        return mSettings.getQuotaDiskSpace() == null ? "" : mSettings.getQuotaDiskSpace();
     }
 
     public int getPrivacy() {
-        return mSettings.privacy;
+        return mSettings.getPrivacy();
     }
 
     public @NonNull String getPrivacyDescription() {
@@ -228,49 +228,49 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getLanguageCode() {
-        return mSettings.language == null ? "" : mSettings.language;
+        return mSettings.getLanguage() == null ? "" : mSettings.getLanguage();
     }
 
     public @NonNull String getUsername() {
-        return mSettings.username == null ? "" : mSettings.username;
+        return mSettings.getUsername() == null ? "" : mSettings.getUsername();
     }
 
     public @NonNull String getPassword() {
-        return mSettings.password == null ? "" : mSettings.password;
+        return mSettings.getPassword() == null ? "" : mSettings.getPassword();
     }
 
     public @NonNull Map<String, String> getFormats() {
-        mSettings.postFormats = new HashMap<>();
+        mSettings.setPostFormats(new HashMap<String, String>());
         String[] postFormatDisplayNames = mContext.getResources().getStringArray(R.array.post_format_display_names);
         String[] postFormatKeys = mContext.getResources().getStringArray(R.array.post_format_keys);
         // Add standard post format (only for .com)
-        mSettings.postFormats.put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
+        mSettings.getPostFormats().put(STANDARD_POST_FORMAT_KEY, STANDARD_POST_FORMAT);
         // Add default post formats
         for (int i = 0; i < postFormatKeys.length && i < postFormatDisplayNames.length; ++i) {
-            mSettings.postFormats.put(postFormatKeys[i], postFormatDisplayNames[i]);
+            mSettings.getPostFormats().put(postFormatKeys[i], postFormatDisplayNames[i]);
         }
         if (mSite == null) {
-            return mSettings.postFormats;
+            return mSettings.getPostFormats();
         }
         // Add (or replace) site-specific post formats
         List<PostFormatModel> postFormats = mSiteStore.getPostFormats(mSite);
         for (PostFormatModel postFormat : postFormats) {
-            mSettings.postFormats.put(postFormat.getSlug(), postFormat.getDisplayName());
+            mSettings.getPostFormats().put(postFormat.getSlug(), postFormat.getDisplayName());
         }
-        return mSettings.postFormats;
+        return mSettings.getPostFormats();
     }
 
     public @NonNull CategoryModel[] getCategories() {
-        if (mSettings.categories == null) {
-            mSettings.categories = new CategoryModel[0];
+        if (mSettings.getCategories() == null) {
+            mSettings.setCategories(new CategoryModel[0]);
         }
-        return mSettings.categories;
+        return mSettings.getCategories();
     }
 
     public @NonNull SparseArrayCompat<String> getCategoryNames() {
         SparseArrayCompat<String> categoryNames = new SparseArrayCompat<>();
-        if (mSettings.categories != null && mSettings.categories.length > 0) {
-            for (CategoryModel model : mSettings.categories) {
+        if (mSettings.getCategories() != null && mSettings.getCategories().length > 0) {
+            for (CategoryModel model : mSettings.getCategories()) {
                 categoryNames.put(model.id, Html.fromHtml(model.name).toString());
             }
         }
@@ -279,7 +279,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public int getDefaultCategory() {
-        return mSettings.defaultCategory;
+        return mSettings.getDefaultCategory();
     }
 
     public @NonNull String getDefaultCategoryForDisplay() {
@@ -293,10 +293,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull String getDefaultPostFormat() {
-        if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
-            mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
+        if (TextUtils.isEmpty(mSettings.getDefaultPostFormat()) || !getFormats().containsKey(
+                mSettings.getDefaultPostFormat())) {
+            mSettings.setDefaultPostFormat(STANDARD_POST_FORMAT_KEY);
         }
-        return mSettings.defaultPostFormat;
+        return mSettings.getDefaultPostFormat();
     }
 
     public @NonNull String getDefaultPostFormatDisplay() {
@@ -308,15 +309,15 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getShowRelatedPosts() {
-        return mSettings.showRelatedPosts;
+        return mSettings.getShowRelatedPosts();
     }
 
     public boolean getShowRelatedPostHeader() {
-        return mSettings.showRelatedPostHeader;
+        return mSettings.getShowRelatedPostHeader();
     }
 
     public boolean getShowRelatedPostImages() {
-        return mSettings.showRelatedPostImages;
+        return mSettings.getShowRelatedPostImages();
     }
 
     public @NonNull String getRelatedPostsDescription() {
@@ -328,23 +329,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowComments() {
-        return mSettings.allowComments;
+        return mSettings.getAllowComments();
     }
 
     public boolean getSendPingbacks() {
-        return mSettings.sendPingbacks;
+        return mSettings.getSendPingbacks();
     }
 
     public boolean getReceivePingbacks() {
-        return mSettings.receivePingbacks;
+        return mSettings.getReceivePingbacks();
     }
 
     public boolean getShouldCloseAfter() {
-        return mSettings.shouldCloseAfter;
+        return mSettings.getShouldCloseAfter();
     }
 
     public int getCloseAfter() {
-        return mSettings.closeCommentAfter;
+        return mSettings.getCloseCommentAfter();
     }
 
     public @NonNull String getCloseAfterDescriptionForPeriod() {
@@ -373,7 +374,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public int getCommentSorting() {
-        return mSettings.sortCommentsBy;
+        return mSettings.getSortCommentsBy();
     }
 
     public @NonNull String getSortingDescription() {
@@ -393,11 +394,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getShouldThreadComments() {
-        return mSettings.shouldThreadComments;
+        return mSettings.getShouldThreadComments();
     }
 
     public int getThreadingLevels() {
-        return mSettings.threadingLevels;
+        return mSettings.getThreadingLevels();
     }
 
     public int getThreadingLevelsForDescription() {
@@ -420,11 +421,11 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getShouldPageComments() {
-        return mSettings.shouldPageComments;
+        return mSettings.getShouldPageComments();
     }
 
     public int getPagingCount() {
-        return mSettings.commentsPerPage;
+        return mSettings.getCommentsPerPage();
     }
 
     public int getPagingCountForDescription() {
@@ -446,30 +447,30 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getManualApproval() {
-        return mSettings.commentApprovalRequired;
+        return mSettings.getCommentApprovalRequired();
     }
 
     public boolean getIdentityRequired() {
-        return mSettings.commentsRequireIdentity;
+        return mSettings.getCommentsRequireIdentity();
     }
 
     public boolean getUserAccountRequired() {
-        return mSettings.commentsRequireUserAccount;
+        return mSettings.getCommentsRequireUserAccount();
     }
 
     public boolean getUseCommentWhitelist() {
-        return mSettings.commentAutoApprovalKnownUsers;
+        return mSettings.getCommentAutoApprovalKnownUsers();
     }
 
     public int getMultipleLinks() {
-        return mSettings.maxLinks;
+        return mSettings.getMaxLinks();
     }
 
     public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) {
-            mSettings.holdForModeration = new ArrayList<>();
+        if (mSettings.getHoldForModeration() == null) {
+            mSettings.setHoldForModeration(new ArrayList<String>());
         }
-        return mSettings.holdForModeration;
+        return mSettings.getHoldForModeration();
     }
 
     public @NonNull String getModerationHoldDescription() {
@@ -477,10 +478,10 @@ public abstract class SiteSettingsInterface {
     }
 
     public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) {
-            mSettings.blacklist = new ArrayList<>();
+        if (mSettings.getBlacklist() == null) {
+            mSettings.setBlacklist(new ArrayList<String>());
         }
-        return mSettings.blacklist;
+        return mSettings.getBlacklist();
     }
 
     public @NonNull String getBlacklistDescription() {
@@ -492,15 +493,16 @@ public abstract class SiteSettingsInterface {
     }
 
     public String getSharingLabel() {
-        return mSettings.sharingLabel;
+        return mSettings.getSharingLabel();
     }
 
     public @NonNull String getSharingButtonStyle(Context context) {
-        if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
-            mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
+        if (TextUtils.isEmpty(mSettings.getSharingButtonStyle())) {
+            mSettings.setSharingButtonStyle(
+                    context.getResources().getStringArray(R.array.sharing_button_style_array)[0]);
         }
 
-        return mSettings.sharingButtonStyle;
+        return mSettings.getSharingButtonStyle();
     }
 
     public @NonNull String getSharingButtonStyleDisplayText(Context context) {
@@ -517,23 +519,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowReblogButton() {
-        return mSettings.allowReblogButton;
+        return mSettings.getAllowReblogButton();
     }
 
     public boolean getAllowLikeButton() {
-        return mSettings.allowLikeButton;
+        return mSettings.getAllowLikeButton();
     }
 
     public boolean getAllowCommentLikes() {
         // We have different settings for comment likes for wpcom and Jetpack sites
-        return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
+        return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.getAllowCommentLikes();
     }
 
     public @NonNull String getTwitterUsername() {
-        if (mSettings.twitterUsername == null) {
-            mSettings.twitterUsername = "";
+        if (mSettings.getTwitterUsername() == null) {
+            mSettings.setTwitterUsername("");
         }
-        return mSettings.twitterUsername;
+        return mSettings.getTwitterUsername();
     }
 
     public @NonNull String getKeysDescription(int count) {
@@ -547,59 +549,75 @@ public abstract class SiteSettingsInterface {
     }
 
     public String getStartOfWeek() {
-        return mSettings.startOfWeek;
+        return mSettings.getStartOfWeek();
     }
 
     public void setStartOfWeek(String startOfWeek) {
-        mSettings.startOfWeek = startOfWeek;
+        mSettings.setStartOfWeek(startOfWeek);
     }
 
     public String getDateFormat() {
-        return mSettings.dateFormat;
+        return mSettings.getDateFormat();
     }
 
     public void setDateFormat(String dateFormat) {
-        mSettings.dateFormat = dateFormat;
+        mSettings.setDateFormat(dateFormat);
     }
 
     public String getTimeFormat() {
-        return mSettings.timeFormat;
+        return mSettings.getTimeFormat();
     }
 
     public void setTimeFormat(String timeFormat) {
-        mSettings.timeFormat = timeFormat;
+        mSettings.setTimeFormat(timeFormat);
     }
 
     public String getTimezone() {
-        return mSettings.timezone;
+        return mSettings.getTimezone();
     }
 
     public void setTimezone(String timezone) {
-        mSettings.timezone = timezone;
+        mSettings.setTimezone(timezone);
     }
 
     public int getPostsPerPage() {
-        return mSettings.postsPerPage;
+        return mSettings.getPostsPerPage();
     }
 
     public void setPostsPerPage(int postsPerPage) {
-        mSettings.postsPerPage = postsPerPage;
+        mSettings.setPostsPerPage(postsPerPage);
     }
 
     public boolean getAmpSupported() {
-        return mSettings.ampSupported;
+        return mSettings.getAmpSupported();
     }
 
     public void setAmpSupported(boolean supported) {
-        mSettings.ampSupported = supported;
+        mSettings.setAmpSupported(supported);
     }
 
     public boolean getAmpEnabled() {
-        return mSettings.ampEnabled;
+        return mSettings.getAmpEnabled();
     }
 
     public void setAmpEnabled(boolean enabled) {
-        mSettings.ampEnabled = enabled;
+        mSettings.setAmpEnabled(enabled);
+    }
+
+    public boolean isPortfolioEnabled() {
+        return mSettings.isPortfolioEnabled();
+    }
+
+    public void setPortfolioEnabled(boolean isPortfolioEnabled) {
+        mSettings.setPortfolioEnabled(isPortfolioEnabled);
+    }
+
+    public int getPortfolioPostsPerPage() {
+        return mSettings.getPortfolioPostsPerPage();
+    }
+
+    public void setPortfolioPostsPerPage(int portfolioPostsPerPage) {
+        mSettings.setPortfolioPostsPerPage(portfolioPostsPerPage);
     }
 
     public boolean isJetpackMonitorEnabled() {
@@ -688,23 +706,23 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setTitle(String title) {
-        mSettings.title = title;
+        mSettings.setTitle(title);
     }
 
     public void setTagline(String tagline) {
-        mSettings.tagline = tagline;
+        mSettings.setTagline(tagline);
     }
 
     public void setAddress(String address) {
-        mSettings.address = address;
+        mSettings.setAddress(address);
     }
 
     public void setQuotaDiskSpace(String quotaDiskSpace) {
-        mSettings.quotaDiskSpace = quotaDiskSpace;
+        mSettings.setQuotaDiskSpace(quotaDiskSpace);
     }
 
     public void setPrivacy(int privacy) {
-        mSettings.privacy = privacy;
+        mSettings.setPrivacy(privacy);
     }
 
     public boolean setLanguageCode(String languageCode) {
@@ -712,118 +730,118 @@ public abstract class SiteSettingsInterface {
             || TextUtils.isEmpty(mLanguageCodes.get(languageCode))) {
             return false;
         }
-        mSettings.language = languageCode;
-        mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
+        mSettings.setLanguage(languageCode);
+        mSettings.setLanguageId(Integer.valueOf(mLanguageCodes.get(languageCode)));
         return true;
     }
 
     public void setLanguageId(int languageId) {
         // want to prevent O(n) language code lookup if there is no change
-        if (mSettings.languageId != languageId) {
-            mSettings.languageId = languageId;
-            mSettings.language = languageIdToLanguageCode(Integer.toString(languageId));
+        if (mSettings.getLanguageId() != languageId) {
+            mSettings.setLanguageId(languageId);
+            mSettings.setLanguage(languageIdToLanguageCode(Integer.toString(languageId)));
         }
     }
 
     public void setSiteIconMediaId(int siteIconMediaId) {
-        mSettings.siteIconMediaId = siteIconMediaId;
+        mSettings.setSiteIconMediaId(siteIconMediaId);
     }
 
 
     public void setUsername(String username) {
-        mSettings.username = username;
+        mSettings.setUsername(username);
     }
 
     public void setPassword(String password) {
-        mSettings.password = password;
+        mSettings.setPassword(password);
     }
 
     public void setAllowComments(boolean allowComments) {
-        mSettings.allowComments = allowComments;
+        mSettings.setAllowComments(allowComments);
     }
 
     public void setSendPingbacks(boolean sendPingbacks) {
-        mSettings.sendPingbacks = sendPingbacks;
+        mSettings.setSendPingbacks(sendPingbacks);
     }
 
     public void setReceivePingbacks(boolean receivePingbacks) {
-        mSettings.receivePingbacks = receivePingbacks;
+        mSettings.setReceivePingbacks(receivePingbacks);
     }
 
     public void setShouldCloseAfter(boolean shouldCloseAfter) {
-        mSettings.shouldCloseAfter = shouldCloseAfter;
+        mSettings.setShouldCloseAfter(shouldCloseAfter);
     }
 
     public void setCloseAfter(int period) {
-        mSettings.closeCommentAfter = period;
+        mSettings.setCloseCommentAfter(period);
     }
 
     public void setCommentSorting(int method) {
-        mSettings.sortCommentsBy = method;
+        mSettings.setSortCommentsBy(method);
     }
 
     public void setShouldThreadComments(boolean shouldThread) {
-        mSettings.shouldThreadComments = shouldThread;
+        mSettings.setShouldThreadComments(shouldThread);
     }
 
     public void setThreadingLevels(int levels) {
-        mSettings.threadingLevels = levels;
+        mSettings.setThreadingLevels(levels);
     }
 
     public void setShouldPageComments(boolean shouldPage) {
-        mSettings.shouldPageComments = shouldPage;
+        mSettings.setShouldPageComments(shouldPage);
     }
 
     public void setPagingCount(int count) {
-        mSettings.commentsPerPage = count;
+        mSettings.setCommentsPerPage(count);
     }
 
     public void setManualApproval(boolean required) {
-        mSettings.commentApprovalRequired = required;
+        mSettings.setCommentApprovalRequired(required);
     }
 
     public void setIdentityRequired(boolean required) {
-        mSettings.commentsRequireIdentity = required;
+        mSettings.setCommentsRequireIdentity(required);
     }
 
     public void setUserAccountRequired(boolean required) {
-        mSettings.commentsRequireUserAccount = required;
+        mSettings.setCommentsRequireUserAccount(required);
     }
 
     public void setUseCommentWhitelist(boolean useWhitelist) {
-        mSettings.commentAutoApprovalKnownUsers = useWhitelist;
+        mSettings.setCommentAutoApprovalKnownUsers(useWhitelist);
     }
 
     public void setMultipleLinks(int count) {
-        mSettings.maxLinks = count;
+        mSettings.setMaxLinks(count);
     }
 
     public void setModerationKeys(List<String> keys) {
-        mSettings.holdForModeration = keys;
+        mSettings.setHoldForModeration(keys);
     }
 
     public void setBlacklistKeys(List<String> keys) {
-        mSettings.blacklist = keys;
+        mSettings.setBlacklist(keys);
     }
 
     public void setSharingLabel(String sharingLabel) {
-        mSettings.sharingLabel = sharingLabel;
+        mSettings.setSharingLabel(sharingLabel);
     }
 
     public void setSharingButtonStyle(String sharingButtonStyle) {
         if (TextUtils.isEmpty(sharingButtonStyle)) {
-            mSettings.sharingButtonStyle = STANDARD_SHARING_BUTTON_STYLE;
+            mSettings.setSharingButtonStyle(STANDARD_SHARING_BUTTON_STYLE);
         } else {
-            mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase(Locale.ROOT);
+            mSettings.setSharingButtonStyle(sharingButtonStyle.toLowerCase(Locale.ROOT));
         }
     }
 
     public void setAllowReblogButton(boolean allowReblogButton) {
-        mSettings.allowReblogButton = allowReblogButton;
+        mSettings.setAllowReblogButton(allowReblogButton);
     }
 
     public void setAllowLikeButton(boolean allowLikeButton) {
-        mSettings.allowLikeButton = allowLikeButton;
+        mSettings.setAllowLikeButton(allowLikeButton);
     }
 
     public void setAllowCommentLikes(boolean allowCommentLikes) {
@@ -831,16 +849,16 @@ public abstract class SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             mJpSettings.commentLikes = allowCommentLikes;
         } else {
-            mSettings.allowCommentLikes = allowCommentLikes;
+            mSettings.setAllowCommentLikes(allowCommentLikes);
         }
     }
 
     public void setTwitterUsername(String twitterUsername) {
-        mSettings.twitterUsername = twitterUsername;
+        mSettings.setTwitterUsername(twitterUsername);
     }
 
     public void setDefaultCategory(int category) {
-        mSettings.defaultCategory = category;
+        mSettings.setDefaultCategory(category);
     }
 
     /**
@@ -850,22 +868,22 @@ public abstract class SiteSettingsInterface {
      */
     public void setDefaultFormat(String format) {
         if (TextUtils.isEmpty(format)) {
-            mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
+            mSettings.setDefaultPostFormat(STANDARD_POST_FORMAT_KEY);
         } else {
-            mSettings.defaultPostFormat = format.toLowerCase(Locale.ROOT);
+            mSettings.setDefaultPostFormat(format.toLowerCase(Locale.ROOT));
         }
     }
 
     public void setShowRelatedPosts(boolean relatedPosts) {
-        mSettings.showRelatedPosts = relatedPosts;
+        mSettings.setShowRelatedPosts(relatedPosts);
     }
 
     public void setShowRelatedPostHeader(boolean showHeader) {
-        mSettings.showRelatedPostHeader = showHeader;
+        mSettings.setShowRelatedPostHeader(showHeader);
     }
 
     public void setShowRelatedPostImages(boolean showImages) {
-        mSettings.showRelatedPostImages = showImages;
+        mSettings.setShowRelatedPostImages(showImages);
     }
 
     /**
@@ -891,13 +909,13 @@ public abstract class SiteSettingsInterface {
      */
     public boolean isSameFormatList(CharSequence[] ids) {
         if (ids == null) {
-            return mSettings.postFormats == null;
+            return mSettings.getPostFormats() == null;
         }
-        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.size()) {
+        if (mSettings.getPostFormats() == null || ids.length != mSettings.getPostFormats().size()) {
             return false;
         }
 
-        String[] keys = mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
+        String[] keys = mSettings.getPostFormats().keySet().toArray(new String[mSettings.getPostFormats().size()]);
         for (int i = 0; i < ids.length; ++i) {
             if (!keys[i].equals(ids[i])) {
                 return false;
@@ -916,14 +934,14 @@ public abstract class SiteSettingsInterface {
      */
     public boolean isSameCategoryList(CharSequence[] ids) {
         if (ids == null) {
-            return mSettings.categories == null;
+            return mSettings.getCategories() == null;
         }
-        if (mSettings.categories == null || ids.length != mSettings.categories.length) {
+        if (mSettings.getCategories() == null || ids.length != mSettings.getCategories().length) {
             return false;
         }
 
         for (int i = 0; i < ids.length; ++i) {
-            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) {
+            if (Integer.valueOf(ids[i].toString()) != mSettings.getCategories()[i].id) {
                 return false;
             }
         }
@@ -953,10 +971,11 @@ public abstract class SiteSettingsInterface {
      */
     protected void credentialsVerified(boolean valid) {
         Exception e = valid ? null : new AuthenticationError();
-        if (mSettings.hasVerifiedCredentials != valid) {
+        if (mSettings.getHasVerifiedCredentials() != valid) {
             notifyCredentialsVerifiedOnUiThread(e);
         }
-        mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
+        mRemoteSettings.setHasVerifiedCredentials(valid);
+        mSettings.setHasVerifiedCredentials(valid);
     }
 
     /**
@@ -986,19 +1005,19 @@ public abstract class SiteSettingsInterface {
         Cursor localSettings = SiteSettingsTable.getSettings(mSite.getId());
 
         if (localSettings != null && localSettings.getCount() > 0) {
-            mSettings.isInLocalTable = true;
+            mSettings.setInLocalTable(true);
             SparseArrayCompat<CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
-            mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
-            if (mSettings.language == null) {
+            mSettings.setLanguage(languageIdToLanguageCode(Integer.toString(mSettings.getLanguageId())));
+            if (mSettings.getLanguage() == null) {
                 setLanguageCode(LanguageUtils.getPatchedCurrentDeviceLanguage(null));
             }
-            mRemoteSettings.language = mSettings.language;
-            mRemoteSettings.languageId = mSettings.languageId;
-            mRemoteSettings.siteIconMediaId = mSettings.siteIconMediaId;
+            mRemoteSettings.setLanguage(mSettings.getLanguage());
+            mRemoteSettings.setLanguageId(mSettings.getLanguageId());
+            mRemoteSettings.setSiteIconMediaId(mSettings.getSiteIconMediaId());
         } else {
-            mSettings.isInLocalTable = false;
-            mSettings.localTableId = mSite.getId();
+            mSettings.setInLocalTable(false);
+            mSettings.setLocalTableId(mSite.getId());
             setAddress(mSite.getUrl());
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());

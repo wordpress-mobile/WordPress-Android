@@ -22,7 +22,7 @@ class SelfHostedSiteSettings extends SiteSettingsInterface {
     @Override
     public void saveSettings() {
         super.saveSettings();
-        mSite.setUsername(mSettings.username);
-        mSite.setPassword(mSettings.password);
+        mSite.setUsername(mSettings.getUsername());
+        mSite.setPassword(mSettings.getPassword());
     }
 }

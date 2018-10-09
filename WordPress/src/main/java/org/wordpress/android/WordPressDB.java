@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 66;
+    private static final int DATABASE_VERSION = 67;
 
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
@@ -174,6 +174,10 @@ public class WordPressDB {
             case 65:
                 // add external users only to publicize services table
                 PublicizeTable.resetServicesTable(mDb);
+            case 66:
+                // add portfolio
+                mDb.execSQL(SiteSettingsModel.ADD_PORTFOLIO_ENABLED);
+                mDb.execSQL(SiteSettingsModel.ADD_PORTFOLIO_POST_PER_PAGE);
         }
         mDb.setVersion(DATABASE_VERSION);
     }
