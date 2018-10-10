@@ -246,7 +246,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (ActivityUtils.isDeepLinking(getIntent())) {
-                    handleDeepLink();
+                    handleAppBannerDeepLink();
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -298,7 +298,7 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void handleDeepLink() {
+    private void handleAppBannerDeepLink() {
         Uri uri = getIntent().getData();
         if (uri == null) {
             return;
