@@ -320,8 +320,6 @@ public class WPMainActivity extends AppCompatActivity implements
                 mBottomNav.setCurrentPosition(PAGE_READER);
                 break;
         }
-
-        setIntent(new Intent());
     }
 
     private void switchToStatsTab() {
