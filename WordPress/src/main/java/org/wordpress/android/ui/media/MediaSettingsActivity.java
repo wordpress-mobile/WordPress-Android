@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -111,8 +112,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     private EditorImageMetaData mEditorImageMetaData;
     private ArrayList<String> mMediaIdList;
     private String[] mAlignmentKeyArray;
-    private String[] mImageSizeKeyArray;
-    private String[] mImageSizeLabelArray;
+
+    private MediaSettingsImageSize mImageSize = MediaSettingsImageSize.FULL;
 
     private ImageView mImageView;
     private ImageView mImagePlay;
@@ -145,9 +146,9 @@ public class MediaSettingsActivity extends AppCompatActivity
     @Inject ImageManager mImageManager;
 
     /**
-     * @param activity calling activity
-     * @param site site this media is associated with
-     * @param media media model to display
+     * @param activity    calling activity
+     * @param site        site this media is associated with
+     * @param media       media model to display
      * @param mediaIdList optional list of media IDs to page through in preview screen
      */
     public static void showForResult(@NonNull Activity activity,
@@ -180,8 +181,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     /**
-     * @param activity calling activity
-     * @param site site this media is associated with
+     * @param activity    calling activity
+     * @param site        site this media is associated with
      * @param editorMedia editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
@@ -647,27 +648,14 @@ public class MediaSettingsActivity extends AppCompatActivity
      * Initialize the image width SeekBar and accompanying EditText
      */
     private void setupImageSizeSeekBar() {
-        mImageSizeKeyArray = getResources().getStringArray(R.array.image_size_key_array);
-        mImageSizeLabelArray = getResources().getStringArray(R.array.image_size_label_array);
-
-        if (mImageSizeKeyArray.length != mImageSizeLabelArray.length) {
-            throw new RuntimeException("Length of Image Size Key and Label arrays is not same");
-        }
-
-        int imageSizeKey = Arrays.asList(mImageSizeKeyArray).indexOf(mEditorImageMetaData.getSize());
-
         // image size is parsed from html, so we can get non standard values (anything that matches ^size-.*)
-        // in this case we should default to full size
-        if (imageSizeKey == -1) {
-            imageSizeKey = mImageSizeLabelArray.length - 1;
-            AppLog.w(AppLog.T.MEDIA, "Unrecognized image size class passed to MediaSettings from editor: "
-                                     + mEditorImageMetaData.getSize());
-        }
+        // in this case we will default to the full size
+        mImageSize = MediaSettingsImageSize.fromCssClass(this, mEditorImageMetaData.getSize());
 
-        mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
-        mImageSizeSeekBarView.setProgress(imageSizeKey);
+        mImageSizeSeekBarView.setMax(MediaSettingsImageSize.values().length - 1);
+        mImageSizeSeekBarView.setProgress(Arrays.asList(MediaSettingsImageSize.values()).indexOf(mImageSize));
 
-        mImageSizeView.setText(mImageSizeLabelArray[imageSizeKey]);
+        mImageSizeView.setText(mImageSize.getLabel());
 
         mImageSizeSeekBarView.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -680,7 +668,8 @@ public class MediaSettingsActivity extends AppCompatActivity
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mImageSizeView.setText(mImageSizeLabelArray[progress]);
+                mImageSize = MediaSettingsImageSize.values()[progress];
+                mImageSizeView.setText(mImageSize.getLabel());
             }
         });
     }
@@ -905,13 +894,14 @@ public class MediaSettingsActivity extends AppCompatActivity
             }
         } else {
             String alignment = mAlignmentKeyArray[mAlignmentSpinnerView.getSelectedItemPosition()];
-            String size = mImageSizeKeyArray[mImageSizeSeekBarView.getProgress()];
+            String size = getString(mImageSize.getCssClass());
             String linkUrl = EditTextUtils.getText(mLinkView);
             boolean linkTargetBlank = mLinkTargetNewWindowView.isChecked();
+            boolean hasSizeChanged = !StringUtils.equals(mEditorImageMetaData.getSize(), size);
 
-            boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
+            boolean hasChanged = hasSizeChanged
+                                 || !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
                                  || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
-                                 || !StringUtils.equals(mEditorImageMetaData.getSize(), size)
                                  || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
                                  || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment)
                                  || !StringUtils.equals(mEditorImageMetaData.getLinkUrl(), linkUrl)
@@ -926,6 +916,11 @@ public class MediaSettingsActivity extends AppCompatActivity
                 mEditorImageMetaData.setLinkUrl(linkUrl);
                 mEditorImageMetaData.setLinkTargetBlank(linkTargetBlank);
 
+                // size affects multiple attributes, so we want to make sure we updated them only if they were changed
+                if (hasSizeChanged) {
+                    updateImageSizeParameters();
+                }
+
                 Intent intent = new Intent();
                 intent.putExtra(ARG_EDITOR_IMAGE_METADATA, mEditorImageMetaData);
 
@@ -934,6 +929,35 @@ public class MediaSettingsActivity extends AppCompatActivity
                 this.setResult(Activity.RESULT_CANCELED);
             }
         }
+    }
+
+    private void updateImageSizeParameters() {
+        if (mImageSize == MediaSettingsImageSize.FULL) {
+            mEditorImageMetaData.setWidth(null);
+            mEditorImageMetaData.setHeight(null);
+            return;
+        }
+
+        int imageWidth = mEditorImageMetaData.getWidthInt();
+        int imageHeight = mEditorImageMetaData.getHeightInt();
+        int newImageSize = getResources().getInteger(mImageSize.getSize());
+
+        float aspectRatio = ((float) imageWidth / (float) imageHeight);
+
+        if (imageWidth > imageHeight) {
+            imageHeight = Math.round(newImageSize / aspectRatio);
+            imageWidth = newImageSize;
+        } else if (imageWidth < imageHeight) {
+            imageWidth = Math.round(newImageSize * aspectRatio);
+            imageHeight = newImageSize;
+        } else {
+            // image is square
+            imageHeight = newImageSize;
+            imageWidth = newImageSize;
+        }
+
+        mEditorImageMetaData.setWidth(Integer.toString(imageWidth));
+        mEditorImageMetaData.setHeight(Integer.toString(imageHeight));
     }
 
     /*
@@ -946,7 +970,7 @@ public class MediaSettingsActivity extends AppCompatActivity
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
-                                                        permissionList)) {
+                permissionList)) {
             return;
         }
 
@@ -988,8 +1012,8 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     /*
-    * Depending on the media source it either removes it from post or deletes it from MediaBrowser
-    */
+     * Depending on the media source it either removes it from post or deletes it from MediaBrowser
+     */
     private void deleteMediaWithConfirmation() {
         if (mDeleteMediaConfirmationDialog != null) {
             mDeleteMediaConfirmationDialog.show();
@@ -1090,6 +1114,45 @@ public class MediaSettingsActivity extends AppCompatActivity
         } catch (Exception e) {
             AppLog.e(AppLog.T.UTILS, e);
             ToastUtils.showToast(this, R.string.error_copy_to_clipboard);
+        }
+    }
+
+    public enum MediaSettingsImageSize {
+        THUMBNAIL(R.string.image_size_thumbnail_label, R.string.image_size_thumbnail_class,
+                R.integer.image_size_thumbnail_px),
+        MEDIUM(R.string.image_size_medium_label, R.string.image_size_medium_class, R.integer.image_size_medium_px),
+        LARGE(R.string.image_size_large_label, R.string.image_size_large_class, R.integer.image_size_large_px),
+        FULL(R.string.image_size_full_label, R.string.image_size_full_class, -1);
+
+        private final int mLabel;
+        private final int mCssClass;
+        private final int mSize;
+
+        MediaSettingsImageSize(@StringRes int label, @StringRes int cssClass, @IntegerRes int size) {
+            mLabel = label;
+            mCssClass = cssClass;
+            mSize = size;
+        }
+
+        public int getSize() {
+            return mSize;
+        }
+
+        public int getLabel() {
+            return mLabel;
+        }
+
+        public int getCssClass() {
+            return mCssClass;
+        }
+
+        public static MediaSettingsImageSize fromCssClass(Context context, String cssClass) {
+            for (MediaSettingsImageSize mediaSettingsImageSize : values()) {
+                if (context.getString(mediaSettingsImageSize.mCssClass).equals(cssClass)) {
+                    return mediaSettingsImageSize;
+                }
+            }
+            return FULL;
         }
     }
 }
