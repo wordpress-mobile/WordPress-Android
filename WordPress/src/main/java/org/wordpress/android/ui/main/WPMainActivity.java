@@ -306,21 +306,19 @@ public class WPMainActivity extends AppCompatActivity implements
 
         String host = StringUtils.notNullStr(uri.getHost());
 
-        if (host != null) {
-            switch (host) {
-                case "notifications":
-                    mBottomNav.setCurrentPosition(PAGE_NOTIFS);
-                    break;
-                case "post":
-                    onNewPostButtonClicked();
-                    break;
-                case "stats":
-                    switchToStatsTab();
-                    break;
-                case "read":
-                    mBottomNav.setCurrentPosition(PAGE_READER);
-                    break;
-            }
+        switch (host) {
+            case "notifications":
+                mBottomNav.setCurrentPosition(PAGE_NOTIFS);
+                break;
+            case "post":
+                onNewPostButtonClicked();
+                break;
+            case "stats":
+                switchToStatsTab();
+                break;
+            case "read":
+                mBottomNav.setCurrentPosition(PAGE_READER);
+                break;
         }
 
         setIntent(new Intent());
