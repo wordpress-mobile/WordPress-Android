@@ -41,7 +41,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "11.0"
+        versionName "11.0-rc-1"
         versionCode 623
         minSdkVersion 21
         targetSdkVersion 26
