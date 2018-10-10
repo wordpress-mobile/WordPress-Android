@@ -81,6 +81,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -244,6 +245,8 @@ public class WPMainActivity extends AppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
+                } else if (ActivityUtils.isDeepLinking(getIntent())) {
+                    handleDeepLink();
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -301,39 +304,31 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
-        List<String> segments = uri.getPathSegments();
+        String host = StringUtils.notNullStr(uri.getHost());
 
-        if (segments != null) {
-            String section = segments.get(0);
-            switch (section) {
-                case "me":
-                    switchToMeTab(segments.get(1));
+        if (host != null) {
+            switch (host) {
+                case "notifications":
+                    mBottomNav.setCurrentPosition(PAGE_NOTIFS);
                     break;
                 case "post":
                     onNewPostButtonClicked();
                     break;
                 case "stats":
-                    switchToStatsTab(segments);
+                    switchToStatsTab();
+                    break;
+                case "read":
+                    mBottomNav.setCurrentPosition(PAGE_READER);
+                    break;
             }
         }
 
         setIntent(new Intent());
     }
 
-    private void switchToStatsTab(List<String> segments) {
+    private void switchToStatsTab() {
         mBottomNav.setCurrentPosition(PAGE_MY_SITE);
         ActivityLauncher.viewBlogStats(getContext(), mSelectedSite);
-    }
-
-    private void switchToMeTab(String extra) {
-        if (extra == null) {
-            mBottomNav.setCurrentPosition(PAGE_ME);
-            return;
-        }
-
-        if (extra.equals("account")) {
-            ActivityLauncher.viewAccountSettings(getContext());
-        }
     }
 
     private @Nullable String getAuthToken() {
@@ -549,10 +544,6 @@ public class WPMainActivity extends AppCompatActivity implements
         // Update account to update the notification unseen status
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
-        }
-
-        if (ActivityUtils.isDeepLinking(getIntent())) {
-            handleDeepLink();
         }
 
         ProfilingUtils.split("WPMainActivity.onResume");

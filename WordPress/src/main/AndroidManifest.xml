@@ -78,25 +78,17 @@
 
             <intent-filter>
                 <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/me"
-                    android:scheme="https"/>
+                    android:host="stats"
+                    android:scheme="wordpress" />
                 <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/me/.*"
-                    android:scheme="https"/>
+                    android:host="read"
+                    android:scheme="wordpress" />
                 <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/post"
-                    android:scheme="https"/>
+                    android:host="post"
+                    android:scheme="wordpress" />
                 <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/stats"
-                    android:scheme="https"/>
-                <data
-                    android:host="wordpress.com"
-                    android:pathPattern="/stats/.*"
-                    android:scheme="https"/>
+                    android:host="notifications"
+                    android:scheme="wordpress" />
 
                 <action android:name="android.intent.action.VIEW" />
 
