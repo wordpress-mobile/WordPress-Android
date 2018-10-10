@@ -55,7 +55,12 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * error placeholder depending on the ImageType.
      */
     @JvmOverloads
-    fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String, requestListener: RequestListener<Drawable>? = null) {
+    fun loadIntoCircle(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
         val context = imageView.context
         GlideApp.with(context)
                 .load(imgUrl)
