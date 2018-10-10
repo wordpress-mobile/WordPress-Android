@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +36,7 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -61,8 +66,9 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
+import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.DataInputStream;
@@ -92,7 +98,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected String mPhotoUrl;
     protected String mUsername;
     protected WPLoginInputRow mInputPassword;
-    protected WPNetworkImageView mHeaderAvatar;
+    protected ImageView mHeaderAvatar;
     protected WPTextView mHeaderDisplayName;
     protected WPTextView mHeaderEmailAddress;
     protected boolean mIsAvatarAdded;
@@ -113,6 +119,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Inject protected AccountStore mAccount;
     @Inject protected Dispatcher mDispatcher;
+    @Inject protected ImageManager mImageManager;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -271,7 +278,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
                 new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
-                mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
+                mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR, mPhotoUrl);
             }
         } else {
             mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
@@ -291,8 +298,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mHeaderEmailAddress.setText(mEmailAddress);
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);
             }
-
-            mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
+            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR, mPhotoUrl);
         }
     }
 
@@ -570,36 +576,39 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDialog.show(getActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
     }
 
-    protected void loadAvatar(String avatarUrl, String injectFilePath) {
-        if (injectFilePath != null && !injectFilePath.isEmpty()) {
+    protected void loadAvatar(final String avatarUrl, String injectFilePath) {
+        final boolean newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty();
+        if (newAvatarUploaded) {
             // Remove specific URL entry from bitmap cache. Update it via injected request cache.
             WordPress.getBitmapCache().removeSimilar(avatarUrl);
-
-            try {
-                // Inject request cache with new image. Gravatar backend (plus CDNs) can't be
-                // trusted to update the image quick enough.
-                injectCache(new File(injectFilePath), avatarUrl);
-            } catch (IOException exception) {
-                AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - "
-                                + exception.toString() + " - " + exception.getMessage());
-                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
-            }
-
-            mHeaderAvatar.resetImage();
-            mHeaderAvatar.removeCurrentUrlFromSkiplist();
         }
 
-        mHeaderAvatar.setImageUrl(avatarUrl, ImageType.AVATAR, new WPNetworkImageView.ImageLoadListener() {
-            @Override
-            public void onError() {
-                AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
-                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
-            }
+        Bitmap bitmap = WordPress.getBitmapCache().get(avatarUrl);
+        // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
+        // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
+        // which temporary saves the new image into a local bitmap cache.
+        if (bitmap != null) {
+            mImageManager.load(mHeaderAvatar, bitmap);
+        } else {
+            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR,
+                    newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
+                        @Override
+                        public void onLoadFailed(@Nullable Exception e) {
+                            AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
+                            showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
+                        }
 
-            @Override
-            public void onLoaded() {
-            }
-        });
+                        @Override
+                        public void onResourceReady(@NotNull Drawable resource) {
+                            if (newAvatarUploaded && resource instanceof BitmapDrawable) {
+                                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                                // create a copy since the original bitmap may by automatically recycled
+                                bitmap = bitmap.copy(bitmap.getConfig(), true);
+                                WordPress.getBitmapCache().put(avatarUrl, bitmap);
+                            }
+                        }
+                    });
+        }
     }
 
     private void populateViews() {

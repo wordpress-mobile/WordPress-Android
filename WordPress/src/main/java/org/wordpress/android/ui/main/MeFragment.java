@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Cache;
@@ -28,6 +32,7 @@ import com.yalantis.ucrop.UCropActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -52,7 +57,9 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.util.image.ImageManager.RequestListener;
+import org.wordpress.android.util.image.ImageType;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -75,7 +82,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     private ViewGroup mAvatarCard;
     private View mProgressBar;
     private ViewGroup mAvatarContainer;
-    private WPNetworkImageView mAvatarImageView;
+    private ImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
     private TextView mUsernameTextView;
     private TextView mLoginLogoutTextView;
@@ -97,6 +104,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ImageManager mImageManager;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -306,37 +314,40 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), avatarSz);
     }
 
-    private void loadAvatar(String avatarUrl, String injectFilePath) {
-        if (injectFilePath != null && !injectFilePath.isEmpty()) {
+    private void loadAvatar(final String avatarUrl, String injectFilePath) {
+        final boolean newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty();
+        if (newAvatarUploaded) {
             // invalidate the specific gravatar entry from the bitmap cache. It will be updated via the injected
             // request cache.
             WordPress.getBitmapCache().removeSimilar(avatarUrl);
-
-            try {
-                // fool the network requests cache by injecting the new image. The Gravatar backend (plus CDNs)
-                // can't be trusted to have updated the image quick enough.
-                injectCache(new File(injectFilePath), avatarUrl);
-            } catch (IOException e) {
-                EventBus.getDefault().post(new GravatarLoadFinished(false));
-            }
-
-            // reset the WPNetworkImageView
-            mAvatarImageView.resetImage();
-            mAvatarImageView.removeCurrentUrlFromSkiplist();
         }
 
-        mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, new WPNetworkImageView
-                .ImageLoadListener() {
-            @Override
-            public void onLoaded() {
-                EventBus.getDefault().post(new GravatarLoadFinished(true));
-            }
+        Bitmap bitmap = WordPress.getBitmapCache().get(avatarUrl);
+        // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
+        // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
+        // which temporary saves the new image into a local bitmap cache.
+        if (bitmap != null) {
+            mImageManager.load(mAvatarImageView, bitmap);
+        } else {
+            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR,
+                    newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
+                        @Override
+                        public void onLoadFailed(@Nullable Exception e) {
+                            EventBus.getDefault().post(new GravatarLoadFinished(false));
+                        }
 
-            @Override
-            public void onError() {
-                EventBus.getDefault().post(new GravatarLoadFinished(false));
-            }
-        });
+                        @Override
+                        public void onResourceReady(@NotNull Drawable resource) {
+                            if (newAvatarUploaded && resource instanceof BitmapDrawable) {
+                                Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                                // create a copy since the original bitmap may by automatically recycled
+                                bitmap = bitmap.copy(bitmap.getConfig(), true);
+                                WordPress.getBitmapCache().put(avatarUrl, bitmap);
+                            }
+                            EventBus.getDefault().post(new GravatarLoadFinished(true));
+                        }
+                    });
+        }
     }
 
     private void signOutWordPressComWithConfirmation() {

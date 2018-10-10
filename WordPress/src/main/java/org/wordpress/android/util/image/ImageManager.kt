@@ -54,13 +54,15 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * Loads an image from the "imgUrl" into the ImageView and applies circle transformation. Adds placeholder and
      * error placeholder depending on the ImageType.
      */
-    fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
+    @JvmOverloads
+    fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String, requestListener: RequestListener<Drawable>? = null) {
         val context = imageView.context
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
                 .addPlaceholder(context, imageType)
                 .circleCrop()
+                .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
     }
