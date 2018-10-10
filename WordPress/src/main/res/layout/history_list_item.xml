@@ -26,9 +26,9 @@
             android:layout_height="@dimen/activity_log_icon_size"
             android:layout_margin="@dimen/activity_log_icon_margin"
             android:layout_width="@dimen/activity_log_icon_size"
-            android:src="@drawable/bg_oval_grey_user"
-            app:wpDefaultImageDrawable="@drawable/bg_oval_grey_user"
-            app:wpErrorImageDrawable="@drawable/bg_oval_grey_user" >
+            android:src="@drawable/bg_oval_grey_user_32dp"
+            app:wpDefaultImageDrawable="@drawable/bg_oval_grey_user_32dp"
+            app:wpErrorImageDrawable="@drawable/bg_oval_grey_user_32dp" >
         </org.wordpress.android.widgets.WPNetworkImageView>
 
         <LinearLayout
