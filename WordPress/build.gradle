@@ -47,7 +47,6 @@ android {
         targetSdkVersion 26
 
         multiDexEnabled true
-        vectorDrawables.useSupportLibrary = true
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
     }
