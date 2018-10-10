@@ -2,56 +2,38 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.wellsql.generated.PostModelTable;
-import com.yarolegovich.wellsql.ConditionClauseBuilder;
-import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.generated.ListActionBuilder;
-import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.list.ListOrder;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite.PostStatusForRestSite;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
-import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffModel;
 import org.wordpress.android.fluxc.model.revisions.LocalDiffType;
 import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
-import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
-import org.wordpress.android.fluxc.store.ListStore.ListError;
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,7 +41,6 @@ import javax.inject.Singleton;
 @Singleton
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
-    public static final int NUM_POST_LIST_PER_FETCH = 100;
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
@@ -67,46 +48,6 @@ public class PostStore extends Store {
             PostStatus.PRIVATE,
             PostStatus.PUBLISHED,
             PostStatus.SCHEDULED));
-
-    public static class FetchPostListPayload extends Payload<BaseNetworkError> {
-        public PostListDescriptor listDescriptor;
-        public int offset;
-
-        public FetchPostListPayload(PostListDescriptor listDescriptor, int offset) {
-            this.listDescriptor = listDescriptor;
-            this.offset = offset;
-        }
-    }
-
-    public static class PostListItem {
-        public Long remotePostId;
-        public String lastModified;
-
-        public PostListItem(Long remotePostId, String lastModified) {
-            this.remotePostId = remotePostId;
-            this.lastModified = lastModified;
-        }
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public static class FetchPostListResponsePayload extends Payload<PostError> {
-        @NotNull public PostListDescriptor listDescriptor;
-        @NotNull public List<PostListItem> postListItems;
-        public boolean loadedMore;
-        public boolean canLoadMore;
-
-        public FetchPostListResponsePayload(@NonNull PostListDescriptor listDescriptor,
-                                            @NonNull List<PostListItem> postListItems,
-                                            boolean loadedMore,
-                                            boolean canLoadMore,
-                                            @Nullable PostError error) {
-            this.listDescriptor = listDescriptor;
-            this.postListItems = postListItems;
-            this.loadedMore = loadedMore;
-            this.canLoadMore = canLoadMore;
-            this.error = error;
-        }
-    }
 
     public static class FetchPostsPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
@@ -398,29 +339,13 @@ public class PostStore extends Store {
     }
 
     /**
-     * Given a list of remote IDs for a post and the site to which it belongs, returns the posts as map where the
-     * key is the remote post ID and the value is the {@link PostModel}.
-     */
-    public Map<Long, PostModel> getPostsByRemotePostIds(List<Long> remoteIds, SiteModel site) {
-        if (site == null) {
-            return Collections.emptyMap();
-        }
-        List<PostModel> postList = PostSqlUtils.getPostsByRemoteIds(remoteIds, site.getId());
-        Map<Long, PostModel> postMap = new HashMap<>(postList.size());
-        for (PostModel post : postList) {
-            postMap.put(post.getRemotePostId(), post);
-        }
-        return postMap;
-    }
-
-    /**
      * Given a remote ID for a post and the site to which it belongs, returns that post as a {@link PostModel}.
      */
     public PostModel getPostByRemotePostId(long remoteId, SiteModel site) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                                        .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
-                                        .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
-                                        .getAsModel();
+                .where().equals(PostModelTable.REMOTE_POST_ID, remoteId)
+                .equals(PostModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
+                .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -429,53 +354,6 @@ public class PostStore extends Store {
         }
     }
 
-    public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
-        String searchQuery = null;
-        if (postListDescriptor instanceof PostListDescriptorForRestSite) {
-            PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
-            searchQuery = descriptor.getSearchQuery();
-            if (!(descriptor.getStatus() == PostStatusForRestSite.ANY
-                || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
-                // Any other status shouldn't be in the local drafts results
-                return Collections.emptyList();
-            }
-        }
-        String orderBy = null;
-        switch (postListDescriptor.getOrderBy()) {
-            case DATE:
-                orderBy = PostModelTable.DATE_CREATED;
-                break;
-            case LAST_MODIFIED:
-                orderBy = PostModelTable.DATE_LOCALLY_CHANGED;
-                break;
-            case TITLE:
-                orderBy = PostModelTable.TITLE;
-                break;
-            case COMMENT_COUNT:
-                // Local drafts can't have comments
-                orderBy = PostModelTable.DATE_CREATED;
-                break;
-            case ID:
-                orderBy = PostModelTable.ID;
-                break;
-        }
-        int order;
-        if (postListDescriptor.getOrder() == ListOrder.ASC) {
-            order = SelectQuery.ORDER_ASCENDING;
-        } else {
-            order = SelectQuery.ORDER_DESCENDING;
-        }
-        ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
-                WellSql.select(PostModel.class).where().beginGroup()
-                       .equals(PostModelTable.IS_LOCAL_DRAFT, true)
-                       .equals(PostModelTable.LOCAL_SITE_ID, postListDescriptor.getSite().getId())
-                       .equals(PostModelTable.IS_PAGE, false).endGroup();
-        if (!TextUtils.isEmpty(searchQuery)) {
-            clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
-                                         .contains(PostModelTable.CONTENT, searchQuery).endGroup();
-        }
-        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
-    }
     /**
      * returns the total number of posts with local changes across all sites
      */
@@ -492,12 +370,6 @@ public class PostStore extends Store {
         }
 
         switch ((PostAction) actionType) {
-            case FETCH_POST_LIST:
-                fetchPostList((FetchPostListPayload) action.getPayload());
-                break;
-            case FETCHED_POST_LIST:
-                fetchedPostList((FetchPostListResponsePayload) action.getPayload());
-                break;
             case FETCH_POSTS:
                 fetchPosts((FetchPostsPayload) action.getPayload(), false);
                 break;
@@ -561,45 +433,6 @@ public class PostStore extends Store {
         }
     }
 
-    private void fetchPostList(FetchPostListPayload payload) {
-        if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
-            PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
-            mPostRestClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
-        } else if (payload.listDescriptor instanceof PostListDescriptorForXmlRpcSite) {
-            PostListDescriptorForXmlRpcSite descriptor = (PostListDescriptorForXmlRpcSite) payload.listDescriptor;
-            mPostXMLRPCClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
-        }
-    }
-
-    private void fetchedPostList(FetchPostListResponsePayload payload) {
-        ListError fetchedListItemsError = null;
-        List<Long> postIds;
-        if (payload.isError()) {
-            fetchedListItemsError =
-                    new ListError(ListErrorType.GENERIC_ERROR, payload.error.message);
-            postIds = Collections.emptyList();
-        } else {
-            postIds = new ArrayList<>(payload.postListItems.size());
-            SiteModel site = payload.listDescriptor.getSite();
-            for (PostListItem item : payload.postListItems) {
-                postIds.add(item.remotePostId);
-            }
-            Map<Long, PostModel> posts = getPostsByRemotePostIds(postIds, site);
-            for (PostListItem item : payload.postListItems) {
-                PostModel post = posts.get(item.remotePostId);
-                // Dispatch a fetch action for the posts that are changed
-                if (post != null && !post.getLastModified().equals(item.lastModified)) {
-                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
-                }
-            }
-        }
-
-        FetchedListItemsPayload fetchedListItemsPayload =
-                new FetchedListItemsPayload(payload.listDescriptor, postIds,
-                        payload.loadedMore, payload.canLoadMore, fetchedListItemsError);
-        mDispatcher.dispatch(ListActionBuilder.newFetchedListItemsAction(fetchedListItemsPayload));
-    }
-
     private void fetchPosts(FetchPostsPayload payload, boolean pages) {
         int offset = 0;
         if (payload.loadMore) {
@@ -607,10 +440,10 @@ public class PostStore extends Store {
         }
 
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset, NUM_POSTS_PER_FETCH);
+            mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset, NUM_POSTS_PER_FETCH);
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
         }
     }
 
@@ -635,10 +468,6 @@ public class PostStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ListItemsRemovedPayload listActionPayload = new ListItemsRemovedPayload(
-                    PostListDescriptor.calculateTypeIdentifier(payload.post.getLocalSiteId()),
-                    Collections.singletonList(payload.post.getRemotePostId()));
-            mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(listActionPayload));
             PostSqlUtils.deletePost(payload.post);
         }
 
@@ -736,19 +565,11 @@ public class PostStore extends Store {
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.UPDATE_POST;
         emitChange(onPostChanged);
-
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
     }
 
     private void removePost(PostModel post) {
-        if (post == null) {
-            return;
-        }
-        mDispatcher.dispatch(ListActionBuilder.newListItemsRemovedAction(
-                new ListItemsRemovedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()),
-                        Collections.singletonList(post.getRemotePostId()))));
         int rowsAffected = PostSqlUtils.deletePost(post);
+
         OnPostChanged onPostChanged = new OnPostChanged(rowsAffected);
         onPostChanged.causeOfChange = PostAction.REMOVE_POST;
         emitChange(onPostChanged);

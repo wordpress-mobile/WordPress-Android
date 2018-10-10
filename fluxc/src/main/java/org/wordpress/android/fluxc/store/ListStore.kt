@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -25,7 +24,6 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -122,8 +120,7 @@ class ListStore @Inject constructor(
 
         when (payload.listDescriptor) {
             is PostListDescriptor -> {
-                val fetchPostListPayload = FetchPostListPayload(payload.listDescriptor, offset)
-                mDispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
+                // TODO: Dispatch an action to fetch the post list using the offset
             }
         }
     }

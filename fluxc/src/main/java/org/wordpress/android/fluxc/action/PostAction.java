@@ -4,8 +4,6 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload;
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload;
@@ -16,8 +14,6 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 @ActionEnum
 public enum PostAction implements IAction {
     // Remote actions
-    @Action(payloadType = FetchPostListPayload.class)
-    FETCH_POST_LIST,
     @Action(payloadType = FetchPostsPayload.class)
     FETCH_POSTS,
     @Action(payloadType = FetchPostsPayload.class)
@@ -32,8 +28,6 @@ public enum PostAction implements IAction {
     FETCH_REVISIONS,
 
     // Remote responses
-    @Action(payloadType = FetchPostListResponsePayload.class)
-    FETCHED_POST_LIST,
     @Action(payloadType = FetchPostsResponsePayload.class)
     FETCHED_POSTS,
     @Action(payloadType = FetchPostResponsePayload.class)
