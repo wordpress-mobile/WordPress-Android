@@ -21,6 +21,4 @@ class ListModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     override fun setId(id: Int) {
         this.id = id
     }
-
-    var listDescriptor: ListDescriptor? = null
 }

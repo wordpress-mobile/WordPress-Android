@@ -13,13 +13,11 @@ import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @RunWith(RobolectricTestRunner::class)
-// TODO: Update the tests for the latest changes in ListDescriptor
 class ListSqlUtilsTest {
     private lateinit var listSqlUtils: ListSqlUtils
     private val testSite by lazy {
@@ -46,13 +44,11 @@ class ListSqlUtilsTest {
          * 1. Insert a test list
          * 2. Wait 1 second before the update to ensure `lastModified` value will be different
          * 3. Insert the same list which should update instead
-         * 4. Verify the listDescriptors are the same
-         * 5. Verify the `lastModified` values are different
+         * 4. Verify the `lastModified` values are different
          */
         val insertedList = insertOrUpdateAndThenAssertList(listDescriptor)
         Thread.sleep(1000)
         val updatedList = insertOrUpdateAndThenAssertList(listDescriptor)
-        assertEquals(insertedList.listDescriptor, updatedList.listDescriptor)
         assertNotEquals(insertedList.lastModified, updatedList.lastModified)
     }
 
@@ -85,7 +81,6 @@ class ListSqlUtilsTest {
         listSqlUtils.insertOrUpdateList(listDescriptor)
         val listModel = listSqlUtils.getList(listDescriptor)
         assertNotNull(listModel)
-        assertEquals(listDescriptor, listModel?.listDescriptor)
         return listModel!!
     }
 }

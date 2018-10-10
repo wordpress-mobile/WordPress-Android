@@ -50,7 +50,7 @@ class ListSqlUtils @Inject constructor() {
      * This function returns the [ListModel] record for the given [listDescriptor] if there is one.
      */
     fun getList(listDescriptor: ListDescriptor): ListModel? {
-        val listModel = WellSql.select(ListModel::class.java)
+        return WellSql.select(ListModel::class.java)
                 .where()
                 .equals(ListModelTable.DESCRIPTOR_UNIQUE_IDENTIFIER_DB_VALUE, listDescriptor.uniqueIdentifier.value)
                 // Checking the type identifier shouldn't be necessary since we have a unique value, but if we don't
@@ -60,8 +60,6 @@ class ListSqlUtils @Inject constructor() {
                 .endWhere()
                 .asModel
                 .firstOrNull()
-        listModel?.listDescriptor = listDescriptor
-        return listModel
     }
 
     fun getListsWithTypeIdentifier(descriptorTypeIdentifier: ListDescriptorTypeIdentifier): List<ListModel> {
