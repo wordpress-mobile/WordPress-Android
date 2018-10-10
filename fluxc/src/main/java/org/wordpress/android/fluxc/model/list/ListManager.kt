@@ -11,13 +11,13 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * @param dispatcher The dispatcher to be used for FluxC actions
  * @param listDescriptor The list descriptor that will be used for FluxC actions and comparison with
  * other [ListManager]s
+ * @param localItems The list of ordered local items that should be shown at the top of the list
  * @param items The [ListItemModel]s which contains the `remoteItemId`s
  * @param listData The map that holds the items as values for the `remoteItemId`s as keys
- * @param loadMoreOffset Tells how many items before last one should trigger loading more data
+ * @param loadMoreOffset The offset from the end of list that'll be used to fetch the next page
  * @param isFetchingFirstPage A helper property to be used to show/hide pull-to-refresh progress bar
  * @param isLoadingMore A helper property to be used to show/hide load more progress bar
- * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched. If it's `false` [loadMore]
- * action will not be triggered.
+ * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched
  * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
  *
  * @property size The number of items in the list
@@ -36,6 +36,29 @@ class ListManager<T>(
     private val fetchItem: (Long) -> Unit
 ) {
     companion object {
+        /**
+         * A helper function to calculate whether two items from two different [ListManager]s are the same. Since
+         * [ListManager] supports local items, we can't always rely on the `remoteItemId` to compare two different
+         * items. This function tries to compare `remoteItemId`s of the items if both of them are remote items. If at
+         * least one of them is a local item, it'll use the [areItemsTheSame] to defer the comparison to the caller.
+         *
+         * Here is the full set of rules:
+         *
+         * 1. Check if both items are remote items, if so compare their `remoteItemId`s and return the result.
+         * 2. Get the items from the [listData] and check if both of them are null. If so, for our intents these are
+         * the same items, since no other data about them are exposed.
+         * 3. Check if either item is null in which case it means that the items are different since we know both of
+         * them can't be null due to step 2.
+         * 4. Defer the comparison of the items to the caller. The caller should most likely use the local ids.
+         *
+         * @param new The new [ListManager]
+         * @param old The old [ListManager]
+         * @param newPosition The position of the item in the new [ListManager]
+         * @param oldPosition The position of the item in the old [ListManager]
+         * @param areItemsTheSame A function to compare the two items which should not compare the contents of them.
+         *
+         * @return whether two items are the same regardless of their contents.
+         */
         fun <T> areItemsTheSame(
             new: ListManager<T>,
             old: ListManager<T>,
@@ -64,8 +87,8 @@ class ListManager<T>(
     /**
      * These three private properties help us prevent duplicate requests within short time frames. Since [ListManager]
      * instances are meant to be short lived, this will not actually prevent duplicate requests and it's not actually
-     * its job to do so. However, since its instances will be used by adapters, it can create a lot of unnecessary
-     * actions, especially load more and fetch item actions.
+     * its job to do so. However, since its instances will be used by adapters, it can dispatch a lot of unnecessary
+     * actions.
      */
     private var dispatchedRefreshAction = false
     private var dispatchedLoadMoreAction = false
@@ -97,7 +120,7 @@ class ListManager<T>(
                 return it[position]
             }
         }
-        val remoteItemIndex = position - (localItems?.size ?: 0)
+        val remoteItemIndex = position - localItemSize
         val remoteItemId = items[remoteItemIndex].remoteItemId
         val item = listData[remoteItemId]
         if (item == null && shouldFetchIfNull) {
@@ -126,8 +149,7 @@ class ListManager<T>(
     }
 
     /**
-     * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager]. See [getRemoteItem]
-     * for more details.
+     * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager].
      *
      * [canLoadMore] & [dispatchedLoadMoreAction] will be checked before dispatching the action.
      */

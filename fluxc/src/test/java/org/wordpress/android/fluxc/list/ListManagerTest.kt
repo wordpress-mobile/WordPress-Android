@@ -93,12 +93,12 @@ class ListManagerTest {
     }
 
     /**
-     * Tests [ListManager.getRemoteItem] triggering `fetchItem` function if the remote item is `null`.
+     * Tests [ListManager.getItem] triggering `fetchItem` function if the remote item is `null`.
      *
-     * Calling [ListManager.getRemoteItem] a second time should not trigger the `fetchItem` again.
+     * Calling [ListManager.getItem] a second time should not trigger the `fetchItem` again.
      */
     @Test
-    fun testGetRemoteItemTriggersItemFetch() {
+    fun testGetItemTriggersItemFetch() {
         var fetchedFirstTime = false
         var fetchedSecondTime = false
         val indexToGet = 22 // doesn't matter
@@ -126,10 +126,10 @@ class ListManagerTest {
     }
 
     /**
-     * Tests [ListManager.getRemoteItem] NOT triggering `fetchItem` function if the item is not null.
+     * Tests [ListManager.getItem] NOT triggering `fetchItem` function if the item is not null.
      */
     @Test
-    fun testGetRemoteItemDoesNotTriggerFetchIfTheItemIsNotNull() {
+    fun testGetItemDoesNotTriggerFetchIfTheItemIsNotNull() {
         var fetched = false
         val indexToGet = 22 // doesn't matter
         val remoteItemId = 333L // doesn't matter
@@ -149,10 +149,10 @@ class ListManagerTest {
         assertFalse(fetched)
     }
     /**
-     * Tests [ListManager.getRemoteItem] NOT triggering `fetchItem` function if `shouldFetchIfNull` flag is `false`.
+     * Tests [ListManager.getItem] NOT triggering `fetchItem` function if `shouldFetchIfNull` flag is `false`.
      */
     @Test
-    fun testGetRemoteItemDoesNotTriggerItemFetchIfShouldFetchIfNullIsFalse() {
+    fun testGetItemDoesNotTriggerItemFetchIfShouldFetchIfNullIsFalse() {
         var fetched = false
         val indexToGet = 22 // doesn't matter
         val remoteItemId = 333L // doesn't matter
@@ -173,13 +173,13 @@ class ListManagerTest {
     }
 
     /**
-     * Tests [ListManager.getRemoteItem] triggering load more when the requested index is closer to the end of the list
+     * Tests [ListManager.getItem] triggering load more when the requested index is closer to the end of the list
      * than the offset.
      *
-     * Calling [ListManager.getRemoteItem] a second time should not dispatch a second action.
+     * Calling [ListManager.getItem] a second time should not dispatch a second action.
      */
     @Test
-    fun testGetRemoteItemTriggersLoadMore() {
+    fun testGetItemTriggersLoadMore() {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
@@ -199,11 +199,11 @@ class ListManagerTest {
     }
 
     /**
-     * [ListManager.getRemoteItem] should NOT dispatch an action to load more items if the requested index is NOT closer
+     * [ListManager.getItem] should NOT dispatch an action to load more items if the requested index is NOT closer
      * to the end of list than the offset, `isLoadingMore` flag is false and `shouldLoadMoreIfNecessary` flag is true.
      */
     @Test
-    fun testGetRemoteItemDoesNotTriggerLoadMoreDueToIndex() {
+    fun testGetItemDoesNotTriggerLoadMoreDueToIndex() {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
@@ -217,11 +217,11 @@ class ListManagerTest {
     }
 
     /**
-     * [ListManager.getRemoteItem] should NOT dispatch an action to load more items if the requested index is closer to
+     * [ListManager.getItem] should NOT dispatch an action to load more items if the requested index is closer to
      * the end of list than the offset and `isLoadingMore` flag is false, BUT `shouldLoadMoreIfNecessary` flag is false.
      */
     @Test
-    fun testGetRemoteItemDoesNotTriggerLoadMoreIfShouldLoadMoreIfNecessaryIsFalse() {
+    fun testGetItemDoesNotTriggerLoadMoreIfShouldLoadMoreIfNecessaryIsFalse() {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
@@ -235,12 +235,12 @@ class ListManagerTest {
     }
 
     /**
-     * [ListManager.getRemoteItem] should NOT dispatch an action to load more items if the requested index is closer to
+     * [ListManager.getItem] should NOT dispatch an action to load more items if the requested index is closer to
      * the end of list than the offset and `shouldLoadMoreIfNecessary` flag is true, BUT the `canLoadMore` flag
      * is false.
      */
     @Test
-    fun testGetRemoteItemDoesNotTriggerLoadMoreIfCanLoadMoreIsFalse() {
+    fun testGetItemDoesNotTriggerLoadMoreIfCanLoadMoreIsFalse() {
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
@@ -251,6 +251,28 @@ class ListManagerTest {
         )
         listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, never()).dispatch(actionCaptor.capture())
+    }
+
+    /**
+     * Simple test to check the local items are returned in the initial indexes of the [ListManager] when available.
+     */
+    @Test
+    fun testGetLocalItem() {
+        val localItems = listOf("localItem1", "localItem2")
+        val listManager = ListManager(
+                dispatcher,
+                listDescriptor,
+                localItems,
+                emptyList(),
+                emptyMap(),
+                10,
+                false,
+                false,
+                false
+        ) {}
+        localItems.forEachIndexed { index, item ->
+            assertEquals(listManager.getItem(index), item)
+        }
     }
 
     /**
