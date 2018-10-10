@@ -43,7 +43,7 @@ android {
         applicationId "org.wordpress.android"
         versionName "10.9.2"
         versionCode 622
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 26
 
         multiDexEnabled true
