@@ -8,6 +8,7 @@ import javax.inject.Inject
 import org.wordpress.android.fluxc.action.PostAction
 import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
 import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
@@ -55,10 +56,23 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        if (continuation != null && eventType.action == event.causeOfChange) {
-            continuation!!.resume(!event.isError)
+        if (continuation != null) {
+            val postAction = postCauseOfChangeToPostAction(event.causeOfChange)
+            if (eventType.action == postAction) {
+                continuation!!.resume(!event.isError)
+            }
         }
     }
+
+    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): PostAction =
+            when (postCauseOfChange) {
+                is CauseOfOnPostChanged.DeletePost -> PostAction.DELETE_POST
+                CauseOfOnPostChanged.FetchPages -> PostAction.FETCH_PAGES
+                CauseOfOnPostChanged.FetchPosts -> PostAction.FETCH_POST
+                CauseOfOnPostChanged.RemoveAllPosts -> PostAction.REMOVE_ALL_POSTS
+                is CauseOfOnPostChanged.RemovePost -> PostAction.REMOVE_POST
+                is CauseOfOnPostChanged.UpdatePost -> PostAction.UPDATE_POST
+            }
 
     data class PageAction(val event: EventType, val perform: () -> Unit) {
         var onSuccess: () -> Unit = { }

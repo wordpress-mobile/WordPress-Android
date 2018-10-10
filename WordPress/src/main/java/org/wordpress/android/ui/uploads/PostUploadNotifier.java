@@ -295,18 +295,27 @@ class PostUploadNotifier {
         notificationTitle = "\"" + postTitle + "\" ";
         notificationMessage = site.getName();
 
-        if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(R.string.draft_uploaded);
-        } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
-        } else {
-            if (post.isPage()) {
+        PostStatus status = PostStatus.fromPost(post);
+        switch (status) {
+            case DRAFT:
+                notificationTitle += mContext.getString(R.string.draft_uploaded);
+                break;
+            case SCHEDULED:
                 notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.page_published : R.string.page_updated);
-            } else {
-                notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.post_published : R.string.post_updated);
-            }
+                        post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
+                break;
+            case PUBLISHED:
+                if (post.isPage()) {
+                    notificationTitle += mContext.getString(
+                            isFirstTimePublish ? R.string.page_published : R.string.page_updated);
+                } else {
+                    notificationTitle += mContext.getString(
+                            isFirstTimePublish ? R.string.post_published : R.string.post_updated);
+                }
+                break;
+            default:
+                notificationTitle += mContext.getString(post.isPage() ? R.string.page_updated : R.string.post_updated);
+                break;
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
@@ -339,7 +348,7 @@ class PostUploadNotifier {
         }
 
         // add draft Publish action for drafts
-        if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+        if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
             Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
                                                                             isFirstTimePublish, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
