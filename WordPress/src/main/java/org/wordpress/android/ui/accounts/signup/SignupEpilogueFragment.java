@@ -60,6 +60,7 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
+import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
@@ -120,6 +121,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected AccountStore mAccount;
     @Inject protected Dispatcher mDispatcher;
     @Inject protected ImageManager mImageManager;
+    @Inject protected AppPrefsWrapper mAppPrefsWrapper;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -581,6 +583,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         if (newAvatarUploaded) {
             // Remove specific URL entry from bitmap cache. Update it via injected request cache.
             WordPress.getBitmapCache().removeSimilar(avatarUrl);
+            // Changing the signature invalidates Glide's cache
+            mAppPrefsWrapper.setAvatarVersion(mAppPrefsWrapper.getAvatarVersion() + 1);
         }
 
         Bitmap bitmap = WordPress.getBitmapCache().get(avatarUrl);
@@ -607,7 +611,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                 WordPress.getBitmapCache().put(avatarUrl, bitmap);
                             }
                         }
-                    });
+                    }, mAppPrefsWrapper.getAvatarVersion());
         }
     }
 

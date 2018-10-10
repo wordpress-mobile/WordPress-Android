@@ -50,6 +50,7 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
+import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -105,6 +106,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ImageManager mImageManager;
+    @Inject AppPrefsWrapper mAppPrefsWrapper;
 
     public static MeFragment newInstance() {
         return new MeFragment();
@@ -320,6 +322,8 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
             // invalidate the specific gravatar entry from the bitmap cache. It will be updated via the injected
             // request cache.
             WordPress.getBitmapCache().removeSimilar(avatarUrl);
+            // Changing the signature invalidates Glide's cache
+            mAppPrefsWrapper.setAvatarVersion(mAppPrefsWrapper.getAvatarVersion() + 1);
         }
 
         Bitmap bitmap = WordPress.getBitmapCache().get(avatarUrl);
@@ -346,7 +350,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
                             }
                             EventBus.getDefault().post(new GravatarLoadFinished(true));
                         }
-                    });
+                    }, mAppPrefsWrapper.getAvatarVersion());
         }
     }
 
