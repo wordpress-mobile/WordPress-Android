@@ -10,8 +10,12 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -33,6 +37,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mPostId;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -51,15 +56,26 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            mInterceptedUri = uri.toString();
+            if (isLoggedIn()) {
+                mInterceptedUri = uri.toString();
 
-            mBlogId = uri.getQueryParameter("blogId");
-            mPostId = uri.getQueryParameter("postId");
+                String host = StringUtils.notNullStr(uri.getHost());
 
-            // if user is signed in wpcom show the post right away - otherwise show welcome activity
-            // and then show the post once the user has signed in
-            if (mAccountStore.hasAccessToken()) {
-                showPost();
+                switch (host) {
+                    case "stats":
+                        showStats();
+                        break;
+                    case "reader":
+
+                        break;
+                    case "post":
+                        showEditor();
+                        break;
+                    case "notifications":
+                        showNotifications();
+                        break;
+                }
+
                 finish();
             } else {
                 ActivityLauncher.loginForDeeplink(this);
@@ -67,6 +83,31 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    private void showNotifications() {
+        int i = 0;
+    }
+
+    private void showStats() {
+        long siteId = mAccountStore.getAccount().getPrimarySiteId();
+        SiteModel siteModel = mSiteStore.getSiteBySiteId(siteId);
+        ActivityLauncher.viewBlogStats(this, siteModel);
+    }
+
+    private void showEditor() {
+
+        ActivityLauncher.addNewPostOrPageForResult();
+    }
+
+    private void showPost(Uri uri) {
+        mBlogId = uri.getQueryParameter("blogId");
+        mPostId = uri.getQueryParameter("postId");
+        showPost();
+    }
+
+    private boolean isLoggedIn() {
+        return mAccountStore.hasAccessToken();
     }
 
     @Override
