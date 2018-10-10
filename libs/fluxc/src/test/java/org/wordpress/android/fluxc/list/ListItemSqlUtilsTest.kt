@@ -130,7 +130,7 @@ class ListItemSqlUtilsTest {
                 assertTrue {
                     // `contains` approach wouldn't work here since the `id` fields might be different
                     itemList.zip(remainingItems).fold(true) { acc, (first, second) ->
-                        acc && first.contentEquals(second)
+                        acc && first.listId == second.listId && first.remoteItemId == second.remoteItemId
                     }
                 }
             }
