@@ -294,10 +294,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             }
         }
 
-        if (postArray.isEmpty()) {
-            return null;
-        }
-
         return new PostsModel(postArray);
     }
 
