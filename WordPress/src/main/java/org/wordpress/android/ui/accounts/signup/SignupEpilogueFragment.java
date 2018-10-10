@@ -65,6 +65,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -256,7 +257,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         mDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
         mEmailAddress = getArguments().getString(ARG_EMAIL_ADDRESS);
-        mPhotoUrl = getArguments().getString(ARG_PHOTO_URL);
+        mPhotoUrl = StringUtils.notNullStr(getArguments().getString(ARG_PHOTO_URL));
         mUsername = getArguments().getString(ARG_USERNAME);
         mIsEmailSignup = getArguments().getBoolean(ARG_IS_EMAIL_SIGNUP);
     }
@@ -295,7 +296,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             mIsAvatarAdded = savedInstanceState.getBoolean(KEY_IS_AVATAR_ADDED);
 
             if (mIsEmailSignup) {
-                mPhotoUrl = savedInstanceState.getString(KEY_PHOTO_URL);
+                mPhotoUrl = StringUtils.notNullStr(savedInstanceState.getString(KEY_PHOTO_URL));
                 mEmailAddress = savedInstanceState.getString(KEY_EMAIL_ADDRESS);
                 mHeaderEmailAddress.setText(mEmailAddress);
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);

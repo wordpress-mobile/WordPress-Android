@@ -67,7 +67,8 @@
                             android:id="@+id/signup_epilogue_header_avatar"
                             android:layout_height="match_parent"
                             android:layout_width="match_parent"
-                            android:importantForAccessibility="no" />
+                            android:importantForAccessibility="no"
+                            app:srcCompat="@drawable/ic_gridicons_user_circle_100dp"/>
 
                         <ImageButton
                             android:id="@+id/signup_epilogue_header_avatar_add"
