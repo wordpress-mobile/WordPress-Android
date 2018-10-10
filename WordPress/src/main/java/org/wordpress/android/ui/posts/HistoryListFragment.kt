@@ -79,6 +79,12 @@ class HistoryListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
         viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
 
+        actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
+            resources.getString(R.string.history_empty_subtitle_page)
+        } else {
+            resources.getString(R.string.history_empty_subtitle_post)
+        }
+
         setObservers()
     }
 
