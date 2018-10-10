@@ -90,7 +90,11 @@ class HistoryViewModel @Inject constructor(
 
         if (revisions.isNotEmpty()) {
             val last = items.last() as Revision
-            val footer = resourceProvider.getString(R.string.history_footer, last.formattedDate, last.formattedTime)
+            val footer = if (post.isPage) {
+                resourceProvider.getString(R.string.history_footer_page, last.formattedDate, last.formattedTime)
+            } else {
+                resourceProvider.getString(R.string.history_footer_post, last.formattedDate, last.formattedTime)
+            }
             items.add(HistoryListItem.Footer(footer))
         }
 
