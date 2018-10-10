@@ -649,7 +649,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override protected void onStop() {
         super.onStop();
-        if (mAztecImageLoader != null) {
+        if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
         }
