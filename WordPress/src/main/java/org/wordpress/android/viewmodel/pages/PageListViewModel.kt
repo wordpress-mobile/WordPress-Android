@@ -4,10 +4,12 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -26,8 +28,11 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import javax.inject.Inject
+import javax.inject.Named
 
-class PageListViewModel @Inject constructor() : ViewModel() {
+class PageListViewModel @Inject constructor(
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
+) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
@@ -115,10 +120,12 @@ class PageListViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    private fun loadPagesAsync(pages: List<PageModel>) = launch {
+    private fun loadPagesAsync(pages: List<PageModel>) = uiScope.launch {
         val pageItems = pages
+                .asSequence()
                 .sortedBy { it.title }
                 .filter { listType.pageStatuses.contains(it.status) }
+                .toList()
                 .let {
                     when (listType) {
                         PUBLISHED -> preparePublishedPages(it, pagesViewModel.arePageActionsEnabled)
