@@ -74,7 +74,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject MediaStore mMediaStore;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
-        ((WordPress) WordPress.getContext()).component().inject(this);
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         AppLog.i(T.POSTS, "PostUploadHandler > Created");
         mDispatcher.register(this);
         mPostUploadNotifier = postUploadNotifier;
@@ -269,42 +269,50 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         private void prepareUploadAnalytics(String postContent) {
-            // Calculate the words count
-            sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
-            sCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-            sCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
-                    : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+            // Other methods (like 'uploadNextPost') synchronize over `sQueuedPostsList` before setting
+            // `sCurrentUploadingPostAnalyticsProperties` to null. Make sure racing conditions are avoid here
+            // by synchronizing over sQueuedPostsList.
+            // See https://github.com/wordpress-mobile/WordPress-Android/issues/7990
+            synchronized (sQueuedPostsList) {
+                // Calculate the words count
+                sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
+                sCurrentUploadingPostAnalyticsProperties
+                        .put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
+                sCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
+                        : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
-            if (hasGallery()) {
-                sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
+                if (hasGallery()) {
+                    sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
+                }
+                if (!mHasImage) {
+                    // Check if there is a img tag in the post. Media added in any editor other than legacy.
+                    String imageTagsPattern = "<img[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>";
+                    Pattern pattern = Pattern.compile(imageTagsPattern);
+                    Matcher matcher = pattern.matcher(postContent);
+                    mHasImage = matcher.find();
+                }
+                if (mHasImage) {
+                    sCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
+                }
+                if (!mHasVideo) {
+                    // Check if there is a video tag in the post. Media added in any editor other than legacy.
+                    String videoTagsPattern =
+                            "<video[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>|\\[wpvideo\\s+([^\\]]+)\\]";
+                    Pattern pattern = Pattern.compile(videoTagsPattern);
+                    Matcher matcher = pattern.matcher(postContent);
+                    mHasVideo = matcher.find();
+                }
+                if (mHasVideo) {
+                    sCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
+                }
+                if (mHasCategory) {
+                    sCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
+                }
+                if (!mPost.getTagNameList().isEmpty()) {
+                    sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
+                }
+                sCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
             }
-            if (!mHasImage) {
-                // Check if there is a img tag in the post. Media added in any editor other than legacy.
-                String imageTagsPattern = "<img[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>";
-                Pattern pattern = Pattern.compile(imageTagsPattern);
-                Matcher matcher = pattern.matcher(postContent);
-                mHasImage = matcher.find();
-            }
-            if (mHasImage) {
-                sCurrentUploadingPostAnalyticsProperties.put("with_photos", true);
-            }
-            if (!mHasVideo) {
-                // Check if there is a video tag in the post. Media added in any editor other than legacy.
-                String videoTagsPattern = "<video[^>]+src\\s*=\\s*[\"]([^\"]+)[\"][^>]*>|\\[wpvideo\\s+([^\\]]+)\\]";
-                Pattern pattern = Pattern.compile(videoTagsPattern);
-                Matcher matcher = pattern.matcher(postContent);
-                mHasVideo = matcher.find();
-            }
-            if (mHasVideo) {
-                sCurrentUploadingPostAnalyticsProperties.put("with_videos", true);
-            }
-            if (mHasCategory) {
-                sCurrentUploadingPostAnalyticsProperties.put("with_categories", true);
-            }
-            if (!mPost.getTagNameList().isEmpty()) {
-                sCurrentUploadingPostAnalyticsProperties.put("with_tags", true);
-            }
-            sCurrentUploadingPostAnalyticsProperties.put("via_new_editor", AppPrefs.isVisualEditorEnabled());
         }
 
         /**

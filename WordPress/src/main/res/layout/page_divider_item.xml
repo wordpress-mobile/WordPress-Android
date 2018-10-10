@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/page_item_horizontal_padding"
         android:layout_marginStart="@dimen/page_item_horizontal_padding"
         android:textColor="@color/wp_grey_darken_20"
         android:textSize="14sp"

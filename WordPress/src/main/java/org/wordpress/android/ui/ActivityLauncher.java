@@ -251,7 +251,7 @@ public class ActivityLauncher {
         intent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, page.getRemoteId());
         fragment.startActivityForResult(intent, RequestCodes.PAGE_PARENT);
 
-        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PAGE_PARENT, page.getSite());
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGE_PARENT, page.getSite());
     }
 
     public static void viewCurrentBlogComments(Context context, SiteModel site) {
@@ -297,6 +297,10 @@ public class ActivityLauncher {
     }
 
     public static void viewActivityLogList(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);

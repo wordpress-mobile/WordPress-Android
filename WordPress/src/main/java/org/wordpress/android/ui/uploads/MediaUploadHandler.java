@@ -41,7 +41,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     @Inject SiteStore mSiteStore;
 
     MediaUploadHandler() {
-        ((WordPress) WordPress.getContext()).component().inject(this);
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         AppLog.i(T.MEDIA, "MediaUploadHandler > Created");
         mDispatcher.register(this);
         EventBus.getDefault().register(this);

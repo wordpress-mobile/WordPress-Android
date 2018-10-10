@@ -1,11 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-04 09:02:42+0000
+Translation-Revision-Date: 2018-09-17 10:03:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Lexoni më tepër]</string>
+    <string name="news_card_announcement_content_sample_announcement">[S’keni kohë ta lexoni që tani? S’ka problem: ruajini postimet për kur të keni kohë.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Ka të gatshme veçori të re]</string>
+    <string name="pages_empty_trashed">S’keni faqe të shpëna te hedhurinat</string>
+    <string name="pages_empty_scheduled">S’keni faqe të planifikuara për botim</string>
+    <string name="pages_empty_drafts">S’keni ndonjë faqe skicë</string>
+    <string name="pages_empty_published">S’keni botuar ende ndonjë faqe</string>
+    <string name="pages_search_suggestion">Faqe kërkimesh</string>
+    <string name="pages_empty_search_result">Kërkimi juaj s’ka përputhje me ndonjë faqe</string>
+    <string name="pages_delete_permanently">Fshije Përgjithmonë</string>
+    <string name="pages_move_to_trash">Shpjere te Hedhurinat</string>
+    <string name="pages_move_to_draft">Shpjere te Skica</string>
+    <string name="pages_publish_now">Botoje Që Tani</string>
+    <string name="pages_set_parent">Caktoje prind</string>
+    <string name="pages_view">Shihni</string>
+    <string name="pages_trashed">Shpënë te Hedhurinat</string>
+    <string name="pages_scheduled">Planifikuar</string>
+    <string name="pages_drafts">Skica</string>
+    <string name="pages_published">I botuar</string>
+    <string name="login_error_sms_throttled">Provuam shumë herë t’ju dërgonin një kod verifikimi SMS — bëni ca pushim, dhe kërkoni një të ri pas ndonjë minute.</string>
+    <string name="login_error_email_not_found_v2">S’ka llogari WordPress.com që përputhet me këtë llogari Google.</string>
+    <string name="site_picker_remove_site_empty">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
+    <string name="reader_empty_followed_blogs_search_title">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
+    <string name="page_parent_changed">Faqja mëmë është ndryshuar</string>
+    <string name="page_permanently_deleted">Faqja është fshirë përgjithmonë</string>
+    <string name="page_moved_to_scheduled">Faqja është planifikuar për botim</string>
+    <string name="page_moved_to_published">Faqja është botuar</string>
+    <string name="page_moved_to_trash">Faqja është shpënë te hedhurinat</string>
+    <string name="page_moved_to_draft">Faqja është kaluar te Skicat</string>
+    <string name="top_level">Shkalla e epërme</string>
+    <string name="page_delete_dialog_message">Jeni i sigurt se doni të fshihet faqja %s?</string>
+    <string name="page_parent_change_error">Pati një problem me ndryshimin e faqes mëmë</string>
+    <string name="page_status_change_error">Pati një problem me ndryshimin e gjendjes së faqes</string>
+    <string name="page_delete_error">Pati një problem me fshirjen e faqes</string>
+    <string name="set_parent">Caktojeni Mëmë</string>
+    <string name="dismiss">hidhe tej</string>
+    <string name="quick_start_focus_point_description">prekeni këtu</string>
+    <string name="quick_start_sites">Nisje e Shpejtë</string>
+    <string name="quick_start_list_create_site_title">Krijoni sajtin tuaj</string>
+    <string name="quick_start_list_create_site_subtitle">Krijojeni dhe vëreni në punë sajtin tuaj</string>
+    <string name="quick_start_list_complete_title">Urime për përfundimin e Turit të Shpejtë</string>
+    <string name="quick_start_list_complete_subtitle">a nuk ju kënaq t’i hiqni vizë gjërave në një listë?</string>
+    <string name="quick_start_dialog_view_site_title">Shihni sajtin tuaj</string>
+    <string name="quick_start_dialog_view_site_message_short">Prekni %1$s Shihni Sajtin %2$s që të shihni si do të dukej sajti juaj</string>
+    <string name="quick_start_dialog_view_site_message">Bëni një paraparje të sajtit tuaj që të shihni ç’do të shohin vizitorët tuaj.</string>
+    <string name="quick_start_dialog_skip_title">Anashkalo Nisjen e Shpejtë</string>
+    <string name="quick_start_dialog_skip_message">Turi i shpejtë do t’ju udhëheqë përmes ndërtimit të një sajti të thjeshtë.  Jeni i sigurt se doni të anashkalohet?</string>
+    <string name="quick_start_dialog_share_site_title">Ndajeni sajtin tuaj me të tjerë</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Prekni %1$s Ndarje Me të Tjerë %2$s që të vazhdohet</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Prekni %1$s Lidhje %2$s që të shtoni llogari tuaja nga media shoqërore</string>
+    <string name="quick_start_dialog_share_site_message">Lidhni llogaritë tuaja nga media shoqërore -– sajti juaj do të ndajë vetvetiu me të tjerët postimet e reja.</string>
+    <string name="quick_start_dialog_publish_post_title">Botoni një postim</string>
+    <string name="quick_start_dialog_publish_post_message_short">Prekni %1$s Krijo Postim %2$s që të krijohet një postim i ri</string>
+    <string name="quick_start_dialog_publish_post_message">Erdhi dita! Hartoni dhe botoni postimin tuaj të parë fare.</string>
+    <string name="quick_start_dialog_need_help_title">Doni pakëz ndihmë për t’ia filluar?</string>
+    <string name="quick_start_dialog_need_help_message">Lista jonë e hapave Nisje e Shpejtë do t’ju udhëheqë përmes hapave bazë të krijimit të një sajti të ri.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Po</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Kurrë</string>
+    <string name="quick_start_dialog_need_help_button_negative">Jo</string>
+    <string name="quick_start_dialog_follow_sites_title">Ndiqni sajte të tjerë</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Prekni %1$s Kërkoni %2$s që të shihni për sajte me interesa të ngjashëm</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Prekni %1$s Lexues %2$s që të vazhdohet</string>
+    <string name="quick_start_dialog_follow_sites_message">Gjeni sajte që janë afër jush, dhe ndiqini ata që të merrni të rejat kur botojnë të tilla.</string>
+    <string name="quick_start_dialog_customize_site_title">Përshtatni sajtin tuaj</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Prekni %1$s Tema %2$s që të vazhdohet</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Prekni %1$s Përshtateni %2$s që të nisni personalizimin e sajtit tuaj</string>
+    <string name="quick_start_dialog_customize_site_message">Ndryshoni ngjyra, shkronja, dhe figura për një sajt të personalizuar në mënyrë të përkryer.</string>
+    <string name="quick_start_dialog_continue_setup_title">Vazhdo me rregullimin e sajtit</string>
+    <string name="quick_start_dialog_continue_setup_message">Erdhi koha të përfundohet rregullimi i sajtit tuaj!  Lista jonë e hapave ju udhëheq nëpër ata vijuesit.</string>
+    <string name="quick_start_dialog_choose_theme_title">Zgjidhni një temë</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Prekni %1$s Tema %2$s që të zbuloni tema të reja</string>
+    <string name="quick_start_dialog_choose_theme_message">Shfletoni krejt temat tuaja që të gjeni përputhjen e përsosur.</string>
+    <string name="quick_start_button_skip_positive">Anashkaloje</string>
+    <string name="quick_start_button_skip_negative">Anuloje</string>
+    <string name="quick_start_button_skip">Anashkaloji krejt</string>
+    <string name="quick_start_button_positive">Jepi</string>
+    <string name="quick_start_button_negative_short">Anuloje</string>
+    <string name="quick_start_button_negative">Jo tani</string>
+    <string name="content_description_done">U bë</string>
+    <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
+    <string name="reader_empty_followed_tags_title">Pa etiketa të ndjekura</string>
+    <string name="reader_empty_followed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
+    <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack–ut.</string>
+    <string name="install_jetpack_retry">Riprovoni</string>
+    <string name="install_jetpack_continue">Vazhdo</string>
+    <string name="jetpack_installation_problem_message">Jetpack–u s’u instalua dot këtë herë</string>
+    <string name="jetpack_installation_problem">Pati një problem</string>
+    <string name="jetpack_installed_message">E instaluat Jetpack–un në sajtin tuaj. Përgëzime!</string>
+    <string name="jetpack_installed">Jetpack–u u instalua</string>
+    <string name="installing_jetpack_message">Po instalohet Jetpack–u në sajtin tuaj. Kjo mund të dojë ca minuta të plotësohet</string>
+    <string name="installing_jetpack">Iinstalim i Jetpack–ut</string>
+    <string name="install_jetpack_message">Kredencialet e hyrjes në sajtin tuaj nuk do të depozitohen dhe përdoren vetëm për qëllimin e instalimit të Jetpack–ut</string>
+    <string name="install_jetpack">Instaloni Jetpack–un</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ për Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Duke instaluar Jetpack–un, pajtoheni me </string>
+    <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>
+    <string name="themes_empty_list">Kërkimi juaj s’ka përputhje me ndonjë temë</string>
+    <string name="reader_label_post_search_explainer">Ç’do të donit të gjenit?</string>
+    <string name="site_settings_tags_empty_title_search">Kërkimi juaj s’ka përputhje për ndonjë etiketë</string>
+    <string name="site_settings_tags_empty_title">S’keni ndonjë etiketë</string>
+    <string name="site_settings_tags_empty_subtitle">Shtoni këtu etiketat që përdorni më shpesh, që të mund t’i përzgjidhni shpejt e shpejt, kur etiketoni postimet tuaja</string>
+    <string name="site_settings_tags_empty_button">Krijoni një etiketë</string>
+    <string name="media_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
+    <string name="sign_out_wpcom_confirm_with_no_changes">Të dilet nga WordPress–i?</string>
+    <string name="sign_out_wpcom_confirm_with_changes">Keni te postime ndryshime që s’janë ngarkuar te sajti juaj. Dalja nga llogaria do të sjellë humbjen e këtyre ndryshimeve. Të bëhet dalja sido qoftë?</string>
     <string name="people_empty_list_filtered_viewers">Ende pa parës</string>
     <string name="people_empty_list_filtered_email_followers">Ende pa ndjekës me email</string>
     <string name="people_empty_list_filtered_followers">Ende pa ndjekës</string>
@@ -255,7 +361,6 @@ Language: sq_AL
     <string name="me_section_screen_title">Unë</string>
     <string name="my_site_section_screen_title">Sajti im</string>
     <string name="notif_settings_screen_title">Rregullime njoftimesh</string>
-    <string name="passcode_screen_title">Kodkalim WordPress</string>
     <string name="help_screen_title">Ndihmë dhe Asistencë</string>
     <string name="license_screen_title">Licencë</string>
     <string name="release_notes_screen_title">Shënime hedhjeje në qarkullim</string>
@@ -518,7 +623,6 @@ Language: sq_AL
     <string name="media_edit_file_details_card_caption">Hollësi Kartele</string>
     <string name="login_error_suffix">\nNdoshta të provohej me një llogari tjetër?</string>
     <string name="login_error_generic">Pati problem në lidhjen me llogarinë Google.</string>
-    <string name="login_error_email_not_found">Llogaria Google \'%s\' s’ka përputhje me ndonjë llogari ekzistuese te WordPress.com.</string>
     <string name="login_error_button">Mbylle</string>
     <string name="login_google_button_suffix">Hyni me Google.</string>
     <string name="enter_wpcom_password_google">Që të vazhdohet me këtë llogari Google, ju lutemi, jepni fjalëkalimin për te WordPress.com. Kjo do t’ju kërkohet vetëm një herë.</string>
@@ -821,7 +925,6 @@ Language: sq_AL
     <string name="image_quality">Cilësi Figure</string>
     <string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
     <string name="error_unknown_post_type">Format i panjohur postimesh</string>
-    <string name="error_fetch_site_after_creation">Sajti është krijuar, mund t’ju duhet të rifreskoni sajtet tuaj te zgjedhësi i sajteve.</string>
     <string name="submit_for_review">Parashtroje</string>
     <string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
     <string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
@@ -837,9 +940,8 @@ Language: sq_AL
     <string name="media_upload_error">Ndodhi një gabim ngarkimi mediash</string>
     <string name="retry">Riprovoni</string>
     <string name="confirm">Ripohojeni</string>
-    <string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403, kur provuat të hyjmë\n        te mEndpoint XMLRPC e sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">S’u bë dot lidhja. Morëm një gabim 403, kur provuat të hyjmë\n        te endpoint XMLRPC e sajtit tuaj. Kjo i duhet aplikacionit, që të mund të komunikojë me sajtin tuaj.\n        Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
     <string name="xmlrpc_post_blocked_error">S’u bë dot lidhja. Strehuesi juaj i bllokon kërkesat POST, dhe aplikacionit\n        i duhen që të mund të komunikojë me sajtin tuaj. Lidhuni me strehuesin tuaj që ta zgjidhni këtë problem.</string>
-    <string name="reader_empty_followed_blogs_search_title">S’ka sajte me përputhje</string>
     <string name="reader_hint_search_followed_sites">Kërkoni te sajtet vijues</string>
     <string name="visual_editor_disabled">Përpunuesi Pamor i çaktivizuar</string>
     <string name="preference_editor_visual">Pamor</string>
@@ -997,7 +1099,7 @@ Language: sq_AL
     <string name="delete_site_hint">Fshije sajtin</string>
     <string name="export_site_hint">Eksportojeni sajtin tuaj si një kartelë XML</string>
     <string name="primary_domain">Përkatësi Parësore</string>
-    <string name="error_deleting_site_summary">Pati një gabim në fshirjen e sajtit tuaj. Për më tepër, ju lutemi, lidhuni me ata të asistencës</string>
+    <string name="error_deleting_site_summary">Pati një gabim në fshirjen e sajtit tuaj. Për më tepër, ju lutemi, lidhuni me ata të asistencës.</string>
     <string name="error_deleting_site">Gabim në fshirjen e sajtit</string>
     <string name="site_settings_export_content_title">Eksportim lënde</string>
     <string name="confirm_delete_site_prompt">Ju lutemi, shtypni %1$s në fushën më poshtë, që ta ripohoni. Sajti juaj mandej do të zhduket përgjithmonë.</string>
@@ -1219,7 +1321,7 @@ Language: sq_AL
     <string name="stats_referrers_spam">I padëshiruar</string>
     <string name="page_updated">Faqja u përditësua</string>
     <string name="post_updated">Postimi u përditësua</string>
-    <string name="page_published">Faqja u botua</string>
+    <string name="page_published">Faqja është botuar</string>
     <string name="post_published">Postimi u botua</string>
     <string name="theme_no_search_result_found">Na ndjeni, s’u gjetën tema.</string>
     <string name="reader_label_gap_marker">Ngarko më tepër postime</string>
@@ -1289,7 +1391,6 @@ Language: sq_AL
     <string name="reader_toast_err_follow_blog_not_authorized">S’jeni i autorizuar të hyni në këtë sajt</string>
     <string name="reader_toast_err_follow_blog_not_found">Ky sajt s’u gjet dot</string>
     <string name="undo">Zhbëje</string>
-    <string name="passcodelock_prompt_message">Jepni PIN–in tuaj</string>
     <string name="push_auth_expired">Kërkesa skadoi. Hyni te WordPress.com që të riprovoni.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% e parjeve</string>
     <string name="ignore">Shpërfille</string>
@@ -1443,7 +1544,6 @@ Language: sq_AL
     <string name="reader_label_view_original">Shihni artikullin origjinal</string>
     <string name="reader_empty_posts_in_tag">S’ka postime me këtë etiketë</string>
     <string name="reader_empty_comments">Ende pa komente</string>
-    <string name="create_new_blog_wpcom">Krijoni blog WordPress.com</string>
     <string name="browse_our_faq_button">Shfletoni FAQ–en tonë</string>
     <string name="reader_menu_block_blog">Bllokoje këtë sajt</string>
     <string name="reader_toast_blog_blocked">Postimet prej këtij sajti s’do të shfaqen më</string>
@@ -1471,7 +1571,6 @@ Language: sq_AL
     <string name="username_or_password_incorrect">Emri i përdoruesit apo fjalëkalimi që dhatë është i pasaktë</string>
     <string name="email_invalid">Jepni një adresë email të vlefshme</string>
     <string name="invalid_email_message">Adresa juaj email s’është e vlefshme</string>
-    <string name="passcode_wrong_passcode">PIN i gabuar</string>
     <string name="error_downloading_image">Gabim në shkarkim figure</string>
     <string name="error_load_comment">S\'u ngarkua dot komenti</string>
     <string name="error_edit_comment">Ndodhi një gabim gjatë përpunimit të komentit</string>
@@ -1495,7 +1594,6 @@ Language: sq_AL
     <string name="blog_not_found">Ndodhi një gabim gjatë hyrjes te ky blog</string>
     <string name="gallery_error">S’u mor dot objekti media</string>
     <string name="no_network_message">S’ka rrjet gati</string>
-    <string name="required_field">Fushë e domosdoshme</string>
     <string name="reader_toast_err_remove_tag">I pazoti ta heqë këtë etiketë</string>
     <string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
@@ -1504,7 +1602,6 @@ Language: sq_AL
     <string name="error_refresh_media">Media s’u rifreskua dot tani</string>
     <string name="error_deleting_page">Ndodhi një gabim teksa fshihej faqja</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Adresë blogu</string>
     <string name="image_settings">Rregullime figurash</string>
     <string name="local_changes">Ndryshime vendore</string>
     <string name="privacy_policy">Rregulla privatësie</string>
@@ -1562,7 +1659,6 @@ Language: sq_AL
     <string name="connection_error">Gabim lidhjeje</string>
     <string name="select_categories">Përzgjidhni kategori</string>
     <string name="share_link">Ndajeni lidhjen me të tjerët</string>
-    <string name="creating_your_site">Po krijohet sajti juaj</string>
     <string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
     <string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
     <string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
@@ -1591,14 +1687,6 @@ Language: sq_AL
     <string name="reader_untitled_post">(Pa titull)</string>
     <string name="comments_empty_list">Ende pa komente</string>
     <string name="empty_list_default">Kjo listë është e zbrazët</string>
-    <string name="passcode_turn_on">Çaktivizo kyçje PIN–i</string>
-    <string name="passcode_turn_off">Aktivizo kyçje PIN–i</string>
-    <string name="passcode_preference_title">Kyçje PIN–i</string>
-    <string name="passcode_set">PIN u caktua</string>
-    <string name="passcode_change_passcode">Ndërroni PIN–in</string>
-    <string name="passcode_re_enter_passcode">Rijepni PIN–in tuaj</string>
-    <string name="passcode_enter_old_passcode">Jepni PIN–in tuaj të vjetër</string>
-    <string name="passcode_manage">Administroni kyçje PIN–i</string>
     <string name="stats_totals_plays">Luajtje</string>
     <string name="stats_totals_clicks">Klikime</string>
     <string name="stats_totals_views">Parje</string>
@@ -1650,6 +1738,7 @@ Language: sq_AL
     <string name="posts">Postime</string>
     <string name="width">Gjerësi</string>
     <string name="caption">Përshkrim (në dëshirë)</string>
+    <string name="pages">Faqe</string>
     <string name="no_network_title">S’ka rrjet gati</string>
     <string name="featured_in_post">Përfshi figura në lëndë postimi</string>
     <string name="blogusername">emërpërdoruesiblogu</string>

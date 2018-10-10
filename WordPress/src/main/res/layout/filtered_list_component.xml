@@ -59,8 +59,6 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
             android:layout_marginEnd="@dimen/empty_list_title_side_margin"
-            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-            android:layout_marginRight="@dimen/empty_list_title_side_margin"
             android:layout_marginStart="@dimen/empty_list_title_side_margin"
             android:gravity="center"
             android:text="@string/empty_list_default"
@@ -72,7 +70,6 @@
             android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"/>
     </RelativeLayout>
 

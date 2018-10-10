@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -190,14 +189,8 @@ public class PostsListFragment extends Fragment
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        // hide the fab so we can animate it in - note that we only do this on Lollipop and higher
-        // due to a bug in the current implementation which prevents it from being hidden
-        // correctly on pre-L devices (which makes animating it in/out ugly)
-        // https://code.google.com/p/android/issues/detail?id=175331
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mFabView.setVisibility(View.GONE);
-        }
-
+        // hide the fab so we can animate it
+        mFabView.setVisibility(View.GONE);
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -430,13 +423,11 @@ public class PostsListFragment extends Fragment
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
-        mSwipeRefreshLayout.setEnabled(!isPostAdapterEmpty());
     }
 
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
             mActionableEmptyView.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setEnabled(true);
         }
     }
 

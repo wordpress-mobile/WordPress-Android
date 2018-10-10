@@ -17,8 +17,8 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
@@ -102,7 +102,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -113,6 +112,7 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
@@ -392,11 +392,14 @@ public class ReaderPostListFragment extends Fragment
                 mLastTappedSiteSearchResult = null;
             }
 
-            ReaderTag tag = AppPrefs.getReaderTag();
+            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+            ReaderTag readerTag = AppPrefs.getReaderTag();
 
-            if (ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH).equals(tag)) {
-                setCurrentTag(tag);
+            if (discoverTag != null && discoverTag.equals(readerTag)) {
+                setCurrentTag(readerTag);
                 updateCurrentTag();
+            } else if (discoverTag == null) {
+                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
             }
         }
     }
@@ -1536,7 +1539,7 @@ public class ReaderPostListFragment extends Fragment
 
     private final NewsCardListener mNewsCardListener = new NewsCardListener() {
         @Override public void onItemShown(@NotNull NewsItem item) {
-            mViewModel.onNewsCardShown(item);
+            mViewModel.onNewsCardShown(item, getCurrentTag());
         }
 
         @Override public void onItemClicked(@NotNull NewsItem item) {

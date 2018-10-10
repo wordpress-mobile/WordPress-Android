@@ -17,7 +17,7 @@ sealed class PageItem(open val type: Type) {
     abstract class Page(
         open val id: Long,
         open val title: String,
-        open val labelRes: Int?,
+        open val labels: List<Int>,
         open var indent: Int,
         open val actions: Set<Action>,
         open var actionsEnabled: Boolean
@@ -26,29 +26,29 @@ sealed class PageItem(open val type: Type) {
     data class PublishedPage(
         override val id: Long,
         override val title: String,
-        override val labelRes: Int? = null,
+        override val labels: List<Int> = emptyList(),
         override var indent: Int = 0,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, labelRes, indent, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
+    ) : Page(id, title, labels, indent, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
 
     data class DraftPage(
         override val id: Long,
         override val title: String,
-        override val labelRes: Int? = null,
+        override val labels: List<Int> = emptyList(),
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, labelRes, 0, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH), actionsEnabled)
+    ) : Page(id, title, labels, 0, setOf(VIEW_PAGE, SET_PARENT, PUBLISH_NOW, MOVE_TO_TRASH), actionsEnabled)
 
     data class ScheduledPage(
         override val id: Long,
         override val title: String,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
+    ) : Page(id, title, emptyList(), 0, setOf(VIEW_PAGE, SET_PARENT, MOVE_TO_DRAFT, MOVE_TO_TRASH), actionsEnabled)
 
     data class TrashedPage(
         override val id: Long,
         override val title: String,
         override var actionsEnabled: Boolean = true
-    ) : Page(id, title, null, 0, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY), actionsEnabled)
+    ) : Page(id, title, emptyList(), 0, setOf(VIEW_PAGE, MOVE_TO_DRAFT, DELETE_PERMANENTLY), actionsEnabled)
 
     data class ParentPage(
         val id: Long,
@@ -57,7 +57,7 @@ sealed class PageItem(open val type: Type) {
         override val type: Type
     ) : PageItem(type)
 
-    data class Divider(val title: String) : PageItem(DIVIDER)
+    data class Divider(val title: String = "") : PageItem(DIVIDER)
 
     data class Empty(
         @StringRes val textResource: Int = R.string.empty_list_default,

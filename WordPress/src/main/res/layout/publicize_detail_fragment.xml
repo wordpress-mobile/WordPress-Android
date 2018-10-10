@@ -2,7 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     android:layout_width="match_parent"
@@ -10,8 +10,6 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/content_margin"
     android:paddingEnd="@dimen/content_margin"
-    android:paddingLeft="@dimen/content_margin"
-    android:paddingRight="@dimen/content_margin"
     android:paddingStart="@dimen/content_margin" >
 
     <android.support.v7.widget.CardView
@@ -20,10 +18,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
         android:visibility="gone"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP"
-        tools:visibility="visible">
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
+        tools:visibility="visible" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,8 +31,6 @@
             <org.wordpress.android.widgets.WPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:text="@string/connected_accounts_label"
                 android:textColor="@color/blue_wordpress"
@@ -48,7 +43,6 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_large"
                 android:layout_marginStart="@dimen/margin_extra_large"/>
 
@@ -57,12 +51,11 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_service"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        tools:targetApi="LOLLIPOP">
+        android:layout_width="match_parent"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/cardview_default_radius" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,8 +67,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:ellipsize="end"
                 android:textColor="@color/blue_wordpress"
@@ -89,8 +80,6 @@
                 android:id="@+id/text_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:ellipsize="end"
                 android:textColor="@color/grey_darken_20"
                 android:textSize="@dimen/text_sz_medium"
@@ -103,8 +92,6 @@
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_large"
                 android:ellipsize="end"
                 android:textColor="@color/grey_darken_20"
@@ -119,8 +106,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_extra_large"
-                android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:ellipsize="end"
                 android:text="@string/learn_more"

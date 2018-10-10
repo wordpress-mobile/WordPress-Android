@@ -13,10 +13,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/related_posts_dialog_padding_left"
         android:paddingStart="@dimen/related_posts_dialog_padding_left"
         android:paddingTop="@dimen/related_posts_dialog_padding_top"
-        android:paddingRight="@dimen/related_posts_dialog_padding_right"
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
         android:orientation="vertical"

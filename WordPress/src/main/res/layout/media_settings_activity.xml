@@ -37,9 +37,9 @@
                     android:background="@drawable/media_settings_background"
                     android:scaleType="centerCrop"
                     tools:layout_height="224dp"
-                    tools:src="@drawable/ic_gridicons_audio"
                     android:contentDescription="@string/media_settings_image_preview_desc"
-                    tools:targetApi="lollipop" />
+                    tools:src="@drawable/ic_gridicons_audio" >
+                </ImageView>
 
                 <ImageView
                     android:id="@+id/image_gradient_scrim"
@@ -101,8 +101,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/media_settings_margin"
-                        android:paddingRight="@dimen/media_settings_margin"
                         android:paddingTop="@dimen/margin_extra_large"
                         android:paddingStart="@dimen/media_settings_margin"
                         android:paddingEnd="@dimen/media_settings_margin">
@@ -111,7 +109,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_large"
-                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/media_edit_customize_card_caption"
                             android:textColor="@color/blue_wordpress"
@@ -122,7 +119,6 @@
                             style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/image_size" />
 
@@ -131,7 +127,6 @@
                             style="@style/MediaSettings.Value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:layout_marginTop="@dimen/margin_medium"
                             tools:text="Large" />
@@ -141,8 +136,6 @@
                             style="@style/Widget.AppCompat.SeekBar.Discrete"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="-8dp"
-                            android:layout_marginRight="-8dp"
                             android:layout_marginTop="@dimen/margin_large"
                             tools:max="3"
                             android:layout_marginStart="-8dp"
@@ -159,8 +152,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/media_settings_margin"
-                        android:paddingRight="@dimen/media_settings_margin"
                         android:paddingStart="@dimen/media_settings_margin"
                         android:paddingEnd="@dimen/media_settings_margin">
 
@@ -170,7 +161,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/margin_small"
-                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:text="@string/image_alignment" />
 
@@ -178,7 +168,6 @@
                             android:id="@+id/alignment_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/margin_small"
                             android:layout_marginStart="@dimen/margin_small"
                             android:layout_marginTop="@dimen/margin_small"
                             android:prompt="@string/image_alignment" />
@@ -195,8 +184,6 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/margin_extra_large"
-                        android:paddingLeft="@dimen/media_settings_margin"
-                        android:paddingRight="@dimen/media_settings_margin"
                         android:paddingStart="@dimen/media_settings_margin"
                         android:paddingEnd="@dimen/media_settings_margin">
 
@@ -247,8 +234,6 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_extra_large"
-                    android:paddingLeft="@dimen/media_settings_margin"
-                    android:paddingRight="@dimen/media_settings_margin"
                     android:paddingTop="@dimen/margin_extra_large"
                     android:paddingEnd="@dimen/media_settings_margin"
                     android:paddingStart="@dimen/media_settings_margin">
@@ -257,7 +242,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_large"
-                        android:layout_marginLeft="@dimen/margin_small"
                         android:layout_marginStart="@dimen/margin_small"
                         android:text="@string/media_edit_file_details_card_caption"
                         android:textColor="@color/blue_wordpress"
@@ -362,7 +346,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/margin_small"
                     android:layout_marginStart="@dimen/margin_small"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/margin_extra_large"
@@ -390,7 +373,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/text_copy_url"
                                 android:layout_toStartOf="@+id/text_copy_url"
                                 android:ellipsize="end"
                                 android:singleLine="true"
@@ -401,20 +383,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/margin_extra_large"
-                            android:layout_marginRight="@dimen/margin_extra_large"
                             android:background="@drawable/button_frame"
                             android:paddingBottom="@dimen/margin_small"
-                            android:paddingLeft="@dimen/margin_extra_large"
-                            android:paddingRight="@dimen/margin_extra_large"
                             android:paddingTop="@dimen/margin_small"
                             android:text="@string/copy"
                             android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
                             android:textSize="@dimen/text_sz_medium"
-                    android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingEnd="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"/></RelativeLayout></LinearLayout>
 
                     <View
@@ -466,6 +444,7 @@
                                 tools:text="text_filetype" />
                     </LinearLayout>
                     <View
+                        android:id="@+id/divider_filetype"
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
@@ -556,7 +535,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:contentDescription="@string/fab_content_description_preview"
         android:visibility="gone"
         app:backgroundTint="@color/blue_wordpress"
@@ -575,8 +553,8 @@
         android:elevation="@dimen/card_elevation"
         android:textAppearance="?android:attr/progressBarStyle"
         android:visibility="gone"
-        tools:targetApi="lollipop"
-        tools:visibility="visible" />
+        tools:visibility="visible" >
+    </ProgressBar>
 
     <FrameLayout
         android:id="@+id/fragment_container"

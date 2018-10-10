@@ -1,9 +1,7 @@
 package org.wordpress.android.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.MediaCodecInfo;
-import android.os.Build;
 import android.support.annotation.NonNull;
 
 import org.m4m.AudioFormat;
@@ -25,7 +23,6 @@ import java.io.IOException;
  * Audio track is encoded with Advanced Audio Coding (AAC). Not resampled. Output sample rate and channel
  * count are the same as for input.
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class WPVideoUtils {
     // Default parameters for the video encoder
     private static final String VIDEO_MIME_TYPE = "video/avc"; // H.264 Advanced Video Coding

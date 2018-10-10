@@ -10,7 +10,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -21,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -35,6 +35,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import java.util.Calendar
@@ -82,7 +83,7 @@ class ActivityLogViewModelTest {
     val activity = ActivityLogModel(
             "activityId",
             "",
-            "",
+            null,
             null,
             null,
             null,
@@ -95,7 +96,7 @@ class ActivityLogViewModelTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, Unconfined)
+        viewModel = ActivityLogViewModel(store, rewindStatusService, resourceProvider, TEST_SCOPE)
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
@@ -147,7 +148,7 @@ class ActivityLogViewModelTest {
 
         assertEquals(
                 viewModel.events.value,
-                expectedActivityList()
+                expectedActivityList(false, canLoadMore)
         )
 
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
@@ -198,7 +199,8 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
-    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false): List<ActivityLogListItem> {
+    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
+            List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
         val first = Event(activityLogList[0], true)
         val second = Event(activityLogList[1], true)
@@ -210,6 +212,9 @@ class ActivityLogViewModelTest {
         activityLogListItems.add(third)
         if (isLastPageAndFreeSite) {
             activityLogListItems.add(Footer)
+        }
+        if (canLoadMore) {
+            activityLogListItems.add(Loading)
         }
         return activityLogListItems
     }
@@ -327,7 +332,7 @@ class ActivityLogViewModelTest {
         birthday.set(1985, 8, 27)
 
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel("", "", "", "", "", "",
+        val activity = ActivityLogModel("", "", null, "", "", "",
                 "", true, "", birthday.time)
         list.add(activity)
         list.add(activity.copy())

@@ -54,8 +54,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/content_margin"
-                    android:layout_marginRight="@dimen/content_margin"
                     android:orientation="vertical"
                     android:layout_marginStart="@dimen/content_margin"
                     android:layout_marginEnd="@dimen/content_margin">

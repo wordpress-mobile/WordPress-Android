@@ -5,23 +5,27 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONObject;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
 
-    public FooterNoteBlock(JSONObject noteObject, ImageManager imageManager,
+    public FooterNoteBlock(FormattableContent noteObject,
+                           ImageManager imageManager,
+                           NotificationsUtilsWrapper notificationsUtilsWrapper,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
-        super(noteObject, imageManager, onNoteBlockTextClickListener);
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
     }
 
-    public void setClickableSpan(JSONObject rangeObject, String noteType) {
+    public void setClickableSpan(FormattableRange rangeObject, String noteType) {
         if (rangeObject == null) {
             return;
         }
@@ -73,18 +77,15 @@ public class FooterNoteBlock extends NoteBlock {
         return view;
     }
 
+    @NotNull
     private String getNoticonGlyph() {
-        if (getNoteData() == null) {
-            return "";
-        }
-
-        return JSONUtils.queryJSON(getNoteData(), "ranges[first].value", "");
+        return FormattableContentUtilsKt.getRangeValueOrEmpty(getNoteData(), 0);
     }
 
     @Override
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
-                                                               getOnNoteBlockTextClickListener(), true);
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(getNoteData(), null,
+                getOnNoteBlockTextClickListener(), true);
     }
 
     public Object getViewHolder(View view) {
@@ -104,8 +105,8 @@ public class FooterNoteBlock extends NoteBlock {
                     onRangeClick();
                 }
             });
-            mTextView = (TextView) view.findViewById(R.id.note_footer_text);
-            mNoticonView = (TextView) view.findViewById(R.id.note_footer_noticon);
+            mTextView = view.findViewById(R.id.note_footer_text);
+            mNoticonView = view.findViewById(R.id.note_footer_noticon);
         }
 
         public TextView getTextView() {

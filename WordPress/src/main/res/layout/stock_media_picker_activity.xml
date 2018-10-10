@@ -11,8 +11,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="@dimen/appbar_elevation"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        tools:targetApi="lollipop">
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.SearchView
             android:id="@+id/search_view"
@@ -56,7 +55,6 @@
             android:background="@color/white"
             android:elevation="@dimen/message_bar_elevation"
             android:visibility="gone"
-            tools:targetApi="lollipop"
             tools:visibility="visible">
 
             <TextView

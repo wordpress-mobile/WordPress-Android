@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                                     xmlns:tools="http://schemas.android.com/tools"
@@ -8,8 +10,7 @@
                                     android:stateListAnimator="@anim/pressed_card"
                                     card_view:cardBackgroundColor="@color/white"
                                     card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                                    card_view:cardElevation="@dimen/card_elevation"
-                                    tools:targetApi="LOLLIPOP">
+                                    card_view:cardElevation="@dimen/card_elevation" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,8 +29,6 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             tools:text="text_title"
             android:layout_marginEnd="@dimen/margin_extra_large"
@@ -39,8 +38,6 @@
             android:id="@+id/text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:maxLines="4"
             android:importantForAccessibility="no"
@@ -54,8 +51,6 @@
             android:drawablePadding="@dimen/margin_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             tools:text="text_date"
             android:layout_marginEnd="@dimen/margin_extra_large"
@@ -64,8 +59,6 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:orientation="horizontal"
             android:layout_marginStart="@dimen/margin_extra_large"
@@ -76,7 +69,6 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center"
-                android:layout_marginRight="@dimen/margin_small"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_gridicons_cloud_upload"
                 android:layout_marginEnd="@dimen/margin_small"/>
