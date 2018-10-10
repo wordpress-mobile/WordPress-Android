@@ -197,7 +197,8 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
+        HistoryListFragment.HistoryItemClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -1559,6 +1560,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         handleBackPressed();
+    }
+
+    @Override
+    public void onHistoryItemClicked(long revisionId, @NonNull String formattedDate, @NonNull String formattedTime) {
     }
 
     private boolean isNewPost() {
