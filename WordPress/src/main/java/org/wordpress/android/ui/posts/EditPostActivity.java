@@ -210,6 +210,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
+    public static final String TAG_HISTORY_LOAD_DIALOG = "history_load_dialog_tag";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -1470,6 +1471,7 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
+            case TAG_HISTORY_LOAD_DIALOG:
                 // the dialog is automatically dismissed
                 break;
             default:
@@ -1488,6 +1490,9 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
+            case TAG_HISTORY_LOAD_DIALOG:
+                // TODO: Load revision.
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1564,6 +1569,14 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onHistoryItemClicked(long revisionId, @NonNull String formattedDate, @NonNull String formattedTime) {
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
+                getString(R.string.history_load_dialog_title),
+                getString(R.string.history_load_dialog_message, formattedDate, formattedTime),
+                getString(R.string.history_load_dialog_button_positive),
+                getString(R.string.cancel),
+                null);
+        dialog.show(getSupportFragmentManager(), TAG_HISTORY_LOAD_DIALOG);
     }
 
     private boolean isNewPost() {

@@ -136,7 +136,10 @@ class HistoryListFragment : Fragment() {
     }
 
     private fun showLoadDialog(revision: HistoryListItem.Revision) {
-        // TODO: Show load confirmation dialog.
+        if (activity is HistoryItemClickInterface) {
+            (activity as HistoryItemClickInterface).onHistoryItemClicked(
+                    revision.revisionId, revision.formattedDate, revision.formattedTime)
+        }
     }
 
     private fun updateRefreshing(listStatus: HistoryViewModel.HistoryListStatus?) {
