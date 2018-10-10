@@ -38,9 +38,9 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
-import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsError;
-import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsErrorType;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
+import org.wordpress.android.fluxc.store.ListStore.ListError;
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
 import org.wordpress.android.util.AppLog;
@@ -572,11 +572,11 @@ public class PostStore extends Store {
     }
 
     private void fetchedPostList(FetchPostListResponsePayload payload) {
-        FetchedListItemsError fetchedListItemsError = null;
+        ListError fetchedListItemsError = null;
         List<Long> postIds;
         if (payload.isError()) {
             fetchedListItemsError =
-                    new FetchedListItemsError(FetchedListItemsErrorType.GENERIC_ERROR, payload.error.message);
+                    new ListError(ListErrorType.GENERIC_ERROR, payload.error.message);
             postIds = Collections.emptyList();
         } else {
             postIds = new ArrayList<>(payload.postListItems.size());
