@@ -730,7 +730,6 @@ public class PostsListFragment extends Fragment
             if (!event.isError()) {
                 loadPosts(LoadMode.IF_CHANGED);
             }
-
         } else if (event.causeOfChange instanceof FetchPosts || event.causeOfChange instanceof FetchPages) {
             mIsFetchingPosts = false;
             if (!isAdded()) {
@@ -753,14 +752,12 @@ public class PostsListFragment extends Fragment
                         break;
                 }
             }
-
         } else if (event.causeOfChange instanceof DeletePost) {
             if (event.isError()) {
                 String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
                 ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                 loadPosts(LoadMode.IF_CHANGED);
             }
-
         }
     }
 
