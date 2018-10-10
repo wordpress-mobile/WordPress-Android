@@ -34,7 +34,7 @@
                 android:id="@+id/image_avatar_or_blavatar"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_large"
-                app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar" >
             </ImageView>
@@ -180,7 +180,7 @@
                 android:background="?android:selectableItemBackground"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/margin_large"
-                app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
                 android:contentDescription="@string/reader_blavatar_desc"
                 style="@style/ReaderImageView.Avatar.Small" >
             </ImageView>
@@ -226,7 +226,7 @@
                     android:layout_marginEnd="@dimen/margin_extra_small"
                     android:layout_marginStart="-2dp"
                     android:layout_width="@dimen/reader_count_icon"
-                    app:srcCompat="@drawable/ic_external_grey_min_24dp" >
+                    android:src="@drawable/ic_external_grey_min_24dp" >
                 </ImageView>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -258,7 +258,7 @@
                 android:layout_toStartOf="@id/count_comments"
                 android:minWidth="@dimen/reader_button_minimum_height"
                 android:padding="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_bookmark_selector_18dp" >
+                android:src="@drawable/ic_bookmark_selector_18dp" >
             </ImageView>
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -296,7 +296,7 @@
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 android:tint="@color/grey_text_min"
-                app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" >
+                android:src="@drawable/ic_ellipsis_grey_lighten_10_24dp" >
             </ImageView>
 
         </RelativeLayout>

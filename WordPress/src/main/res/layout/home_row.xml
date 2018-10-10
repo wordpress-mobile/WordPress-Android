@@ -1,5 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="?android:selectableItemBackground"
@@ -12,7 +12,7 @@
         android:layout_marginTop="12dip"
         android:gravity="center|center"
         android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/app_icon"
+        android:src="@mipmap/app_icon"
         android:layout_marginStart="8dip"
         android:layout_marginEnd="8dp"/>
 
