@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -723,15 +724,20 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        // if a Post is updated, let's refresh the whole list, because we can't really know
-        // from FluxC which post has changed, or when. So to make sure, we go to the source,
-        // which is the FluxC PostStore.
-        if (event.causeOfChange instanceof UpdatePost) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
+            // if a Post is updated, let's refresh the whole list, because we can't really know
+            // from FluxC which post has changed, or when. So to make sure, we go to the source,
+            // which is the FluxC PostStore.
+            /*
+             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
+             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
+             * both the original comment and this note is kept for record keeping.
+             */
             if (!event.isError()) {
                 loadPosts(LoadMode.IF_CHANGED);
             }
-
-        } else if (event.causeOfChange instanceof FetchPosts || event.causeOfChange instanceof FetchPages) {
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.FetchPosts
+                   || event.causeOfChange instanceof CauseOfOnPostChanged.FetchPages) {
             mIsFetchingPosts = false;
             if (!isAdded()) {
                 return;
@@ -753,14 +759,12 @@ public class PostsListFragment extends Fragment
                         break;
                 }
             }
-
-        } else if (event.causeOfChange instanceof DeletePost) {
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.DeletePost) {
             if (event.isError()) {
                 String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
                 ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                 loadPosts(LoadMode.IF_CHANGED);
             }
-
         }
     }
 

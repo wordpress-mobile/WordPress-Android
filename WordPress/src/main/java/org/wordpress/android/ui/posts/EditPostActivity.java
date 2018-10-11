@@ -79,9 +79,9 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.UpdatePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -649,7 +649,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override protected void onStop() {
         super.onStop();
-        if (mAztecImageLoader != null) {
+        if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
         }
@@ -762,6 +762,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
+            case PENDING:
                 return getString(R.string.menu_publish_now);
             case PUBLISHED:
             case UNKNOWN:
@@ -771,7 +772,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     return getString(R.string.update_verb);
                 }
             case PRIVATE:
-            case PENDING:
             case TRASHED:
             case SCHEDULED:
             default:
@@ -1003,9 +1003,11 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
-        if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(showMenuItems);
-            if (mPost != null) {
+        if (saveAsDraftMenuItem != null && mPost != null) {
+            if (PostStatus.fromPost(mPost) == PostStatus.PRIVATE) {
+                saveAsDraftMenuItem.setVisible(false);
+            } else {
+                saveAsDraftMenuItem.setVisible(showMenuItems);
                 saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
             }
         }
@@ -1153,7 +1155,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 // we update the mPost object first, so we can pre-check Post publishability and inform the user
                 updatePostObject();
-                if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                PostStatus status = PostStatus.fromPost(mPost);
+                if (status == PostStatus.DRAFT || status == PostStatus.PENDING) {
                     if (isDiscardable()) {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -3412,7 +3415,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange instanceof UpdatePost) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
