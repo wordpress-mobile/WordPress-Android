@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.support.annotation.Nullable;
+
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
 import com.wellsql.generated.PostModelTable;
@@ -113,6 +115,16 @@ public class PostSqlUtils {
                 .orderBy(PostModelTable.IS_LOCAL_DRAFT, SelectQuery.ORDER_DESCENDING)
                 .orderBy(PostModelTable.DATE_CREATED, SelectQuery.ORDER_DESCENDING)
                 .getAsModel();
+    }
+
+    public static List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
+        if (remoteIds != null && remoteIds.size() > 0) {
+            return WellSql.select(PostModel.class)
+                          .where().isIn(PostModelTable.REMOTE_POST_ID, remoteIds)
+                          .equals(PostModelTable.LOCAL_SITE_ID, localSiteId).endWhere()
+                          .getAsModel();
+        }
+        return Collections.emptyList();
     }
 
     public static PostModel insertPostForResult(PostModel post) {

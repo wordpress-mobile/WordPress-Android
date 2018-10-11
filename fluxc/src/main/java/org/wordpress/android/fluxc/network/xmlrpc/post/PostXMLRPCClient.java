@@ -1,11 +1,13 @@
 package org.wordpress.android.fluxc.network.xmlrpc.post;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostsModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -26,11 +29,12 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
-import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
+import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -38,6 +42,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -109,28 +114,65 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset) {
-        Map<String, Object> contentStruct = new HashMap<>();
+    public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset,
+                              final int number) {
+        SiteModel site = listDescriptor.getSite();
+        List<String> fields = new ArrayList<>();
+        fields.add("post_id");
+        fields.add("post_modified");
+        List<Object> params =
+                getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
+                        offset, number, fields, listDescriptor.getOrderBy().getValue(),
+                        listDescriptor.getOrder().getValue());
 
-        contentStruct.put("number", PostStore.NUM_POSTS_PER_FETCH);
-        contentStruct.put("offset", offset);
+        final boolean loadedMore = offset > 0;
 
-        if (getPages) {
-            contentStruct.put("post_type", "page");
-        }
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
+                new Listener<Object[]>() {
+                    @Override
+                    public void onResponse(Object[] response) {
+                        boolean canLoadMore = response != null && response.length == number;
+                        List<PostListItem> postListItems = postListItemsFromPostsResponse(response);
+                        PostError postError = response == null ? new PostError(PostErrorType.INVALID_RESPONSE) : null;
+                        FetchPostListResponsePayload responsePayload =
+                                new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
+                                        canLoadMore, postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostListAction(responsePayload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
 
-        List<Object> params = new ArrayList<>(4);
-        params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
-        params.add(contentStruct);
+                        FetchPostListResponsePayload responsePayload =
+                                new FetchPostListResponsePayload(listDescriptor, Collections.<PostListItem>emptyList(),
+                                        loadedMore, false, postError);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostListAction(responsePayload));
+                    }
+                });
+
+        add(request);
+    }
+
+    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset, final int number) {
+        List<Object> params =
+                getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), getPages,
+                        offset, number, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
                         boolean canLoadMore = false;
-                        if (response != null && response.length == PostStore.NUM_POSTS_PER_FETCH) {
+                        if (response != null && response.length == number) {
                             canLoadMore = true;
                         }
 
@@ -165,8 +207,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(postError, getPages);
                         mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
-                }
-        );
+                });
 
         add(request);
     }
@@ -275,6 +316,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         request.disableRetries();
         add(request);
+    }
+
+    private @NotNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
+        if (response == null) {
+            return Collections.emptyList();
+        }
+        List<PostListItem> postListItems = new ArrayList<>();
+        for (Object responseObject : response) {
+            Map<?, ?> postMap = (Map<?, ?>) responseObject;
+            String postID = MapUtils.getMapStr(postMap, "post_id");
+            String postModified = MapUtils.getMapStr(postMap, "post_modified");
+
+            postListItems.add(new PostListItem(Long.parseLong(postID), postModified));
+        }
+        return postListItems;
     }
 
     private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site) {
@@ -538,5 +594,40 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         contentStruct.put("post_password", post.getPassword());
 
         return contentStruct;
+    }
+
+    private List<Object> getFetchPostListParameters(
+            final Long selfHostedSiteId,
+            final String username,
+            final String password,
+            final boolean getPages,
+            final int offset,
+            final int number,
+            @Nullable List<String> fields,
+            @Nullable String orderBy,
+            @Nullable String order) {
+        Map<String, Object> contentStruct = new HashMap<>();
+        contentStruct.put("number", number);
+        contentStruct.put("offset", offset);
+        if (!TextUtils.isEmpty(orderBy)) {
+            contentStruct.put("orderby", orderBy);
+        }
+        if (!TextUtils.isEmpty(order)) {
+            contentStruct.put("order", order);
+        }
+
+        if (getPages) {
+            contentStruct.put("post_type", "page");
+        }
+
+        List<Object> params = new ArrayList<>(4);
+        params.add(selfHostedSiteId);
+        params.add(username);
+        params.add(password);
+        params.add(contentStruct);
+        if (fields != null && fields.size() > 0) {
+            params.add(fields);
+        }
+        return params;
     }
 }
