@@ -2,10 +2,8 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.wellsql.generated.PostModelTable;
-import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -429,18 +427,21 @@ public class PostStore extends Store {
         }
     }
 
+    /**
+     * Returns the local posts for the given post list descriptor.
+     */
     public List<PostModel> getLocalPostsForDescriptor(PostListDescriptor postListDescriptor) {
         String searchQuery = null;
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
             searchQuery = descriptor.getSearchQuery();
             if (!(descriptor.getStatus() == PostStatusForRestSite.ANY
-                || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
+                  || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
                 // Any other status shouldn't be in the local drafts results
                 return Collections.emptyList();
             }
         }
-        String orderBy = null;
+        String orderBy;
         switch (postListDescriptor.getOrderBy()) {
             case DATE:
                 orderBy = PostModelTable.DATE_CREATED;
@@ -458,6 +459,9 @@ public class PostStore extends Store {
             case ID:
                 orderBy = PostModelTable.ID;
                 break;
+            default:
+                orderBy = null;
+                break;
         }
         int order;
         if (postListDescriptor.getOrder() == ListOrder.ASC) {
@@ -465,16 +469,7 @@ public class PostStore extends Store {
         } else {
             order = SelectQuery.ORDER_DESCENDING;
         }
-        ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
-                WellSql.select(PostModel.class).where().beginGroup()
-                       .equals(PostModelTable.IS_LOCAL_DRAFT, true)
-                       .equals(PostModelTable.LOCAL_SITE_ID, postListDescriptor.getSite().getId())
-                       .equals(PostModelTable.IS_PAGE, false).endGroup();
-        if (!TextUtils.isEmpty(searchQuery)) {
-            clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
-                                         .contains(PostModelTable.CONTENT, searchQuery).endGroup();
-        }
-        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
+        return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
     /**
      * returns the total number of posts with local changes across all sites
