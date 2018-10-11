@@ -9,6 +9,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FO
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
+import org.wordpress.android.util.toFormattedDateString
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
@@ -33,7 +34,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val buttonIcon: Icon = HISTORY,
         val isProgressBarVisible: Boolean = false
     ) : ActivityLogListItem(EVENT), IActionableItem {
-        val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
+        val formattedDate: String = date.toFormattedDateString()
         val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
