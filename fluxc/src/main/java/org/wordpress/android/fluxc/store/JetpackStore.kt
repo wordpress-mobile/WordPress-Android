@@ -54,8 +54,10 @@ class JetpackStore
         reloadSite(site)
         val reloadedSite = siteStore.getSiteByLocalId(site.id)
         return@withContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
-            val onJetpackInstall = OnJetpackInstalled(installedPayload.success ||
-                    reloadedSite.isJetpackInstalled, action)
+            val onJetpackInstall = OnJetpackInstalled(
+                    installedPayload.success ||
+                            reloadedSite.isJetpackInstalled, action
+            )
             emitChange(onJetpackInstall)
             onJetpackInstall
         } else {
@@ -107,7 +109,11 @@ class JetpackStore
         SITE_IS_JETPACK
     }
 
-    class JetpackInstallError(var type: JetpackInstallErrorType, var message: String? = null) : Store.OnChangedError
+    class JetpackInstallError(
+        val type: JetpackInstallErrorType,
+        val apiError: String? = null,
+        val message: String? = null
+    ) : Store.OnChangedError
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     fun onSiteChanged(event: OnSiteChanged) {

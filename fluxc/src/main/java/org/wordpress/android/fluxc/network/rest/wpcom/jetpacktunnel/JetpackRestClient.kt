@@ -50,7 +50,10 @@ constructor(
                     response.error.apiError == "INVALID_INPUT" -> USERNAME_OR_PASSWORD_MISSING
                     else -> GENERIC_ERROR
                 }
-                JetpackInstalledPayload(JetpackInstallError(error, response.error.message), site)
+                JetpackInstalledPayload(
+                        JetpackInstallError(error, response.error.apiError, response.error.message),
+                        site
+                )
             }
         }
     }
