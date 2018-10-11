@@ -7,6 +7,7 @@ import org.wordpress.android.ui.history.HistoryListItem.ViewType.FOOTER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.HEADER
 import org.wordpress.android.ui.history.HistoryListItem.ViewType.REVISION
 import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.toFormattedDateString
 import java.text.DateFormat
 import java.util.ArrayList
 import java.util.Date
@@ -36,7 +37,7 @@ sealed class HistoryListItem(val type: ViewType) {
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
         private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
         val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
-        val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(postDate)
+        val formattedDate: String = postDate.toFormattedDateString()
         val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(postDate)
 
         constructor(model: RevisionModel) : this(
