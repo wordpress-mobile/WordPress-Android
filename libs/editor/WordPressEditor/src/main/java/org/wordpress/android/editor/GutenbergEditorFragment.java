@@ -630,7 +630,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (mContent == null || mSource == null) {
+        if (mReactRootView == null || mSource == null) {
             return;
         }
 
@@ -647,6 +647,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
         mSource.displayStyledAndFormattedHtml(postContent);
 //        mContent.fromHtml(postContent, true);
+
+        Bundle appProps = mReactRootView.getAppProperties();
+        if (appProps == null) {
+            appProps = new Bundle();
+        }
+        appProps.putString("initialHtml", postContent);
+        mReactRootView.setAppProperties(appProps);
 
         updateFailedAndUploadingMedia();
 
