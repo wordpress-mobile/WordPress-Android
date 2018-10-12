@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -259,6 +260,7 @@ class ListManagerTest {
     @Test
     fun testGetLocalItem() {
         val localItems = listOf("localItem1", "localItem2")
+        val fetchList = { _: ListDescriptor, _: Boolean, _: Int -> }
         val listManager = ListManager(
                 dispatcher,
                 listDescriptor,
@@ -268,8 +270,10 @@ class ListManagerTest {
                 10,
                 false,
                 false,
-                false
-        ) {}
+                false,
+                fetchItem = {},
+                fetchList = fetchList
+        )
         localItems.forEachIndexed { index, item ->
             assertEquals(listManager.getItem(index), item)
         }
@@ -296,8 +300,9 @@ class ListManagerTest {
         whenever(listItems[indexToGet]).thenReturn(listItemModel)
         val listData = if (remoteItem != null) mapOf(Pair(remoteItemId, remoteItem)) else Collections.emptyMap()
         val fetchFunction = fetchItem ?: {}
+        val fetchList = { _: ListDescriptor, _: Boolean, _: Int -> }
         val listManager = ListManager(dispatcher, listDescriptor, null, listItems, listData, loadMoreOffset,
-                isFetchingFirstPage, isLoadingMore, canLoadMore, fetchFunction)
+                isFetchingFirstPage, isLoadingMore, canLoadMore, fetchFunction, fetchList)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
         assertEquals(isLoadingMore, listManager.isLoadingMore)
         assertEquals(numberOfItems, listManager.size)
