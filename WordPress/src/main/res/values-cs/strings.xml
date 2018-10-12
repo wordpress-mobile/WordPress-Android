@@ -832,7 +832,7 @@ Language: cs_CZ
     <string name="media_upload_error">Došlo k chybě nahrávání médií</string>
     <string name="retry">Znovu</string>
     <string name="confirm">Potvrdit</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Došlo k chybě 403 při pokusu o přístup k vašemu XMLRPC mEndpoint. Aplikace potřebuje tuto aplikaci, aby mohla komunikovat s vaším webem. Obraťte se na svojí hostingovou společnost, abyste vyřešili tento problém.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Došlo k chybě 403 při pokusu o přístup k vašemu XMLRPC endpoint. Aplikace potřebuje tuto aplikaci, aby mohla komunikovat s vaším webem. Obraťte se na svojí hostingovou společnost, abyste vyřešili tento problém.</string>
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="visual_editor_disabled">Vizuální editor zakázán</string>

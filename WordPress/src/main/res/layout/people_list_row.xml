@@ -18,8 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/people_list_row_role_margin_top"
-        android:layout_toEndOf="@id/person_avatar"
-        android:layout_toRightOf="@id/person_avatar">
+        android:layout_toEndOf="@id/person_avatar" >
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_role"
@@ -27,11 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/person_display_name"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/person_display_name"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_medium"
             android:ellipsize="end"
             android:gravity="end|center_vertical"
@@ -43,9 +39,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_display_name"
             style="@style/PersonTextView"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@id/person_role"
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
@@ -56,10 +50,8 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_username"
             style="@style/PersonTextView"
-            android:layout_alignLeft="@id/person_display_name"
             android:layout_alignStart="@id/person_display_name"
             android:layout_below="@id/person_display_name"
-            android:layout_toLeftOf="@id/person_role"
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
@@ -70,12 +62,10 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/follower_subscribed_date"
             style="@style/PersonTextView"
-            android:layout_alignLeft="@id/person_display_name"
             android:layout_alignStart="@id/person_display_name"
             android:layout_below="@id/person_username"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_small"
-            android:layout_toLeftOf="@id/person_role"
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"

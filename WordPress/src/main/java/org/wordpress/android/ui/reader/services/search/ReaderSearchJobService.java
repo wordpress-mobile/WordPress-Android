@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.search;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 
@@ -14,7 +13,6 @@ import static org.wordpress.android.ui.reader.services.search.ReaderSearchServic
  * service which searches for reader posts on wordpress.com
  */
 
-@TargetApi(21)
 public class ReaderSearchJobService extends JobService implements ServiceCompletionListener {
     private ReaderSearchLogic mReaderSearchLogic;
 

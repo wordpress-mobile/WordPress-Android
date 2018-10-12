@@ -1,4 +1,3 @@
-* It sure would be nice if the listing of Site Pages in your dashboard reflected the actual layout and ordering of pages on your site. Oh, wait! Now it does.
-* The Stats Widget was looking a little dusty. We polished it up with clearer number formatting that reflects the language you write in and some new icons.
-* We brought more visual consistency to different screens throughout the app, so getting around is easier
-* Broke out the fly swatter and got rid of some bugs.
+* Spend more time communicating, and less time tapping: now you can navigate to comment, blog and post details directly from the Activity Log.
+* We've restyled a few more screens to keep improving consistency across the app.
+* Plus some bug fixes and general reliability improvements, as always.

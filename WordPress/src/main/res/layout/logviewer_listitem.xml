@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium"
     android:paddingTop="@dimen/margin_extra_small"
     android:paddingEnd="@dimen/margin_medium"
     android:paddingStart="@dimen/margin_medium">
@@ -24,7 +22,6 @@
         android:id="@+id/text_log"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_small"
         android:gravity="top"
         android:textSize="@dimen/text_sz_medium"
         tools:text="application log text"

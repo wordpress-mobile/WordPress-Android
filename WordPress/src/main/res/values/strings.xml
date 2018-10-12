@@ -8,7 +8,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
@@ -1120,10 +1120,15 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
-    <string name="async_promo_title">Publish with Confidence</string>
-    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_title_publish">Publish with Confidence</string>
+    <string name="async_promo_title_schedule">Schedule with Confidence</string>
+    <string name="async_promo_description_publish_page">You can now leave the editor and your page will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_publish_post">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_page">You can now leave the editor and your page will save and schedule behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_post">You can now leave the editor and your post will save and schedule behind the scenes! Give it a try!</string>
     <string name="async_promo_link">How does it work?</string>
     <string name="async_promo_publish_now">Publish now</string>
+    <string name="async_promo_schedule_now">Schedule now</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1181,6 +1186,7 @@
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
+    <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
@@ -1249,24 +1255,15 @@
     <!-- Image Size -->
     <string name="image_size">Size</string>
 
-    <string name="size_thumbnail">Thumbnail</string>
-    <string name="size_medium">Medium</string>
-    <string name="size_large">Large</string>
-    <string name="size_full">Full Size</string>
+    <string name="image_size_thumbnail_label">Thumbnail</string>
+    <string name="image_size_medium_label">Medium</string>
+    <string name="image_size_large_label">Large</string>
+    <string name="image_size_full_label">Full Size</string>
 
-    <string-array name="image_size_key_array" translatable="false">
-        <item>size-thumbnail</item>
-        <item>size-medium</item>
-        <item>size-large</item>
-        <item>size-full</item>
-    </string-array>
-
-    <string-array name="image_size_label_array" translatable="false">
-        <item>@string/size_thumbnail</item>
-        <item>@string/size_medium</item>
-        <item>@string/size_large</item>
-        <item>@string/size_full</item>
-    </string-array>
+    <string name="image_size_thumbnail_class">size-thumbnail</string>
+    <string name="image_size_medium_class">size-medium</string>
+    <string name="image_size_large_class">size-large</string>
+    <string name="image_size_full_class">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>

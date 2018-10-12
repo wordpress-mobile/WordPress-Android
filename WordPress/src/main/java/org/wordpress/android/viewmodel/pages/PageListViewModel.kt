@@ -117,6 +117,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
         val pageItems = pages
+                .sortedBy { it.title }
                 .filter { listType.pageStatuses.contains(it.status) }
                 .let {
                     when (listType) {
@@ -144,7 +145,7 @@ class PageListViewModel @Inject constructor() : ViewModel() {
             }
         } else {
             val pagesWithBottomGap = newPages.toMutableList()
-            pagesWithBottomGap.addAll(listOf(Divider(""), Divider("")))
+            pagesWithBottomGap.addAll(listOf(Divider(), Divider()))
             _pages.postValue(pagesWithBottomGap)
         }
     }

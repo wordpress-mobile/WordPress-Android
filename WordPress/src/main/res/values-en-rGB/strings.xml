@@ -942,7 +942,7 @@ Language: en_GB
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="retry">Retry</string>
     <string name="confirm">Confirm</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>

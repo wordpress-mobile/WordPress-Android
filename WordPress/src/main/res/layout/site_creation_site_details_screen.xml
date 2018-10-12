@@ -14,8 +14,6 @@
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_extra_large">
 
@@ -63,7 +61,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_tagline_left"
             android:layout_marginStart="@dimen/margin_tagline_left"
             android:layout_marginTop="@dimen/margin_small"
             android:text="@string/site_creation_tagline_helper"/>

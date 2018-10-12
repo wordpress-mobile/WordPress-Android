@@ -12,8 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:background="@color/white"
         android:visibility="gone"
         tools:visibility="visible"
@@ -43,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/margin_small"
                 android:layout_marginStart="@dimen/margin_small"
                 android:textAllCaps="true"
                 tools:text="TODAY" />
@@ -69,8 +66,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_extra_large"
             android:paddingStart="@dimen/margin_extra_large">
@@ -85,7 +80,6 @@
                     android:id="@+id/note_avatar"
                     android:layout_width="@dimen/notifications_avatar_sz"
                     android:layout_height="@dimen/notifications_avatar_sz"
-                    android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
                     android:layout_marginTop="@dimen/margin_small"
                     android:contentDescription="@null"/>
@@ -94,7 +88,6 @@
                     android:id="@+id/note_icon"
                     android:layout_width="@dimen/note_icon_sz"
                     android:layout_height="@dimen/note_icon_sz"
-                    android:layout_marginLeft="31dp"
                     android:layout_marginStart="31dp"
                     android:layout_marginTop="35dp"
                     android:background="@drawable/shape_oval_blue_white_stroke"

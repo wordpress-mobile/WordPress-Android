@@ -107,14 +107,14 @@ public class LocaleManager {
 
         // NOTE: Earlier versions of Android require both of these to be set, otherwise
         // RTL may not be implemented properly.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            config.setLocale(locale);
-            context = context.createConfigurationContext(config);
-        }
+        config.setLocale(locale);
+        context = context.createConfigurationContext(config);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             config.locale = locale;
             res.updateConfiguration(config, res.getDisplayMetrics());
         }
+
         return context;
     }
 

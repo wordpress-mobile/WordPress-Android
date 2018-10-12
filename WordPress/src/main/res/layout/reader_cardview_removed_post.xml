@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:stateListAnimator="@anim/pressed_card"
-    card_view:cardBackgroundColor="@color/white"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="@dimen/reader_card_elevation"
-    tools:targetApi="LOLLIPOP">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/cardview_default_radius"
+    app:cardElevation="@dimen/reader_card_elevation" >
 
     <RelativeLayout
         android:id="@+id/removed_item_container"
@@ -19,8 +18,6 @@
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingLeft="@dimen/reader_card_content_padding"
-        android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingStart="@dimen/reader_card_content_padding">
 
         <TextView
@@ -28,8 +25,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:layout_toLeftOf="@+id/undo_remove"
             android:layout_toStartOf="@+id/undo_remove"
             android:ellipsize="marquee"
             android:singleLine="true"
@@ -42,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:drawablePadding="@dimen/margin_small"
             android:text="@string/undo"
             android:textColor="@color/blue_medium"

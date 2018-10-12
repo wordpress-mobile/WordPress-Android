@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="LinearProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/blue_wordpress</item>
-    </style>
-</resources>

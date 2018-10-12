@@ -23,7 +23,6 @@
             android:id="@+id/text_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_time_grey_darken_10_16dp"
             android:drawablePadding="@dimen/margin_small"
             android:padding="@dimen/margin_medium"
             android:textColor="@color/grey_text_min"
@@ -50,8 +49,6 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:paddingBottom="@dimen/margin_large"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_large"
             android:paddingStart="@dimen/margin_extra_large"
             android:paddingEnd="@dimen/margin_extra_large">
@@ -60,7 +57,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/btn_more"
                 android:orientation="vertical"
                 android:layout_toStartOf="@+id/btn_more">
 
@@ -80,8 +76,6 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_extra_large"
-                    android:layout_marginRight="@dimen/margin_extra_large"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:orientation="horizontal"
                     android:textAlignment="viewStart"
@@ -94,7 +88,6 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
-                        android:layout_marginRight="@dimen/margin_small"
                         android:contentDescription="@null"
                         tools:src="@drawable/ic_gridicons_page"
                         android:layout_marginEnd="@dimen/margin_small" />
@@ -118,9 +111,7 @@
                 android:id="@+id/btn_more"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_medium"
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/show_more_desc"

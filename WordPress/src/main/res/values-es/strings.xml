@@ -942,7 +942,7 @@ Language: es
     <string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu mEndpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="visual_editor_disabled">El editor visual se ha desactivado</string>

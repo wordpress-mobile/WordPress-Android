@@ -26,7 +26,6 @@
         android:layout_gravity="center_vertical"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/publicize_name_size"
-        android:layout_marginLeft="@dimen/publicize_name_margin"
         android:layout_marginStart="@dimen/publicize_name_margin"/>
 
 </LinearLayout>

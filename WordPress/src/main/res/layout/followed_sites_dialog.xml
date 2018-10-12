@@ -16,8 +16,6 @@
         android:layout_width="match_parent"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
-        android:paddingLeft="@dimen/related_posts_dialog_padding_left"
-        android:paddingRight="@dimen/related_posts_dialog_padding_right"
         android:paddingStart="@dimen/related_posts_dialog_padding_left"
         android:paddingTop="@dimen/related_posts_dialog_padding_top"
         android:orientation="vertical" >

@@ -1539,7 +1539,7 @@ public class ReaderPostListFragment extends Fragment
 
     private final NewsCardListener mNewsCardListener = new NewsCardListener() {
         @Override public void onItemShown(@NotNull NewsItem item) {
-            mViewModel.onNewsCardShown(item);
+            mViewModel.onNewsCardShown(item, getCurrentTag());
         }
 
         @Override public void onItemClicked(@NotNull NewsItem item) {

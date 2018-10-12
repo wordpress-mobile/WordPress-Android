@@ -25,8 +25,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium">
 
@@ -37,8 +35,6 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
                 app:srcCompat="@drawable/ic_checkmark_grey_min_24dp"/>
@@ -62,8 +58,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -75,8 +69,6 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
                 app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
@@ -100,8 +92,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -113,8 +103,6 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
                 app:srcCompat="@drawable/ic_trash_grey_min_24dp"/>
@@ -139,8 +127,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium">
 
@@ -151,8 +137,6 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
                 app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
@@ -176,8 +160,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -189,8 +171,6 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
                 app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>

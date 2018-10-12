@@ -824,7 +824,7 @@ Language: es_CL
     <string name="media_upload_error">Error al cargar medios</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error de 403 al intentar acceder al mEndpoint XMLRPC de\n        tu sitio. La aplicación lo necesita para comunicarse con tu sitio.\n        Ponte en contacto con tu hosting para resolver este problema.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error de 403 al intentar acceder al endpoint XMLRPC de\n        tu sitio. La aplicación lo necesita para comunicarse con tu sitio.\n        Ponte en contacto con tu hosting para resolver este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
     <string name="visual_editor_disabled">Editor Visual deshabilitado</string>

@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -75,7 +74,6 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
-import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -83,6 +81,7 @@ import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -99,9 +98,9 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
@@ -131,7 +130,6 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -156,6 +154,7 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -763,6 +762,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         switch (PostStatus.fromPost(mPost)) {
             case DRAFT:
+            case PENDING:
                 return getString(R.string.menu_publish_now);
             case PUBLISHED:
             case UNKNOWN:
@@ -772,7 +772,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     return getString(R.string.update_verb);
                 }
             case PRIVATE:
-            case PENDING:
             case TRASHED:
             case SCHEDULED:
             default:
@@ -997,30 +996,39 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
-        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
-        MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
+        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
+        MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
+
+        if (saveAsDraftMenuItem != null && mPost != null) {
+            if (PostStatus.fromPost(mPost) == PostStatus.PRIVATE) {
+                saveAsDraftMenuItem.setVisible(false);
+            } else {
+                saveAsDraftMenuItem.setVisible(showMenuItems);
+                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
+            }
+        }
+
+        if (historyMenuItem != null) {
+            boolean hasHistory = mSite.isWPCom() || mSite.isJetpackConnected();
+            historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
+        }
 
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
         }
 
-        if (settingsMenuItem != null) {
-            settingsMenuItem.setVisible(showMenuItems);
-        }
-
-        if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(showMenuItems);
-            if (mPost != null) {
-                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
-            }
-        }
-
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (settingsMenuItem != null) {
+            settingsMenuItem.setTitle(mIsPage ? R.string.page_settings : R.string.post_settings);
+            settingsMenuItem.setVisible(showMenuItems);
         }
 
         if (discardChanges != null) {
@@ -1056,6 +1064,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
 
@@ -1113,7 +1122,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (itemId == R.id.menu_save_post || (itemId == R.id.menu_save_as_draft_or_publish && !userCanPublishPosts)) {
             if (AppPrefs.isAsyncPromoRequired() && userCanPublishPosts
                 && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
-                showAsyncPromoDialog();
+                showAsyncPromoDialog(mPost.isPage(), PostStatus.fromPost(mPost) == PostStatus.SCHEDULED);
             } else {
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
@@ -1146,7 +1155,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
                 // we update the mPost object first, so we can pre-check Post publishability and inform the user
                 updatePostObject();
-                if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                PostStatus status = PostStatus.fromPost(mPost);
+                if (status == PostStatus.DRAFT || status == PostStatus.PENDING) {
                     if (isDiscardable()) {
                         String message = getString(
                                 mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
@@ -1770,7 +1780,6 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void run() {
                 // check if the opened post had some unsaved local changes
-                boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
                 boolean isFirstTimePublish = isFirstTimePublish();
 
                 boolean postUpdateSuccessful = updatePostObject();
@@ -1795,9 +1804,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
-                    if (isNewPost()) {
+                    if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
                         // new post - user just left the editor without publishing, they probably want
-                        // to keep the post as a draft
+                        // to keep the post as a draft (unless they explicitly changed the status)
                         mPost.setStatus(PostStatus.DRAFT.toString());
                         if (mEditPostSettingsFragment != null) {
                             runOnUiThread(new Runnable() {
@@ -1809,8 +1818,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                     }
 
-                    if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
-                        && NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    PostStatus status = PostStatus.fromPost(mPost);
+                    if ((status == PostStatus.DRAFT || status == PostStatus.PENDING) && isPublishable
+                        && !hasFailedMedia() && NetworkUtils.isNetworkAvailable(getBaseContext())) {
                         savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
                         savePostLocallyAndFinishAsync(doFinish);
@@ -1833,8 +1843,9 @@ public class EditPostActivity extends AppCompatActivity implements
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
-        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                  && isPublishable && hasLocalChanges;
+        boolean hasUnpublishedLocalDraftChanges = (PostStatus.fromPost(mPost) == PostStatus.DRAFT
+                                                   || PostStatus.fromPost(mPost) == PostStatus.PENDING)
+                                                      && isPublishable && hasLocalChanges;
 
         // if post was modified or has unpublished local changes, save it
         return (mOriginalPost != null && hasChanges)
@@ -1848,8 +1859,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean isFirstTimePublish() {
         return (PostStatus.fromPost(mPost) == PostStatus.UNKNOWN || PostStatus.fromPost(mPost) == PostStatus.PUBLISHED)
-
-               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT);
+               && (mPost.isLocalDraft() || PostStatus.fromPost(mOriginalPost) == PostStatus.DRAFT
+                   || PostStatus.fromPost(mOriginalPost) == PostStatus.PENDING);
     }
 
     /**
@@ -2020,27 +2031,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private String getUploadErrorHtml(String mediaId, String path) {
-        String replacement;
-        if (Build.VERSION.SDK_INT >= 19) {
-            replacement =
-                    String.format(Locale.US,
-                                  "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
-                                  + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
-                                  + "contenteditable=\"false\"></progress>"
-                                  + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
-                                  mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path);
-        } else {
-            // Before API 19, the WebView didn't support progress tags. Use an upload overlay instead of a progress bar
-            replacement =
-                    String.format(Locale.US,
-                                  "<span id=\"img_container_%s\" class=\"img_container compat failed\" "
-                                  + "contenteditable=\"false\" data-failed=\"%s\">"
-                                  + "<span class=\"upload-overlay failed\" contenteditable=\"false\">"
-                                  + "Uploading…</span><span class=\"upload-overlay-bg\"></span>"
-                                  + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
-                                  mediaId, getString(R.string.tap_to_try_again), mediaId, path);
-        }
-        return replacement;
+        return String.format(Locale.US,
+                "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
+                + "<progress id=\"progress_%s\" value=\"0\" class=\"wp_media_indicator failed\" "
+                + "contenteditable=\"false\"></progress>"
+                + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
+                mediaId, getString(R.string.tap_to_try_again), mediaId, mediaId, path);
     }
 
     private String migrateLegacyDraft(String content) {
@@ -2282,8 +2278,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
         boolean titleChanged = PostUtils.updatePostTitleIfDifferent(mPost, title);
         boolean contentChanged = PostUtils.updatePostContentIfDifferent(mPost, content);
+        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
 
-        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
         }
 
@@ -2316,7 +2313,9 @@ public class EditPostActivity extends AppCompatActivity implements
             mPost.setContent(content);
         }
 
-        if (!mPost.isLocalDraft() && (titleChanged || contentChanged)) {
+        boolean statusChanged = mOriginalPost != null && mPost.getStatus() != mOriginalPost.getStatus();
+
+        if (!mPost.isLocalDraft() && (titleChanged || contentChanged || statusChanged)) {
             mPost.setIsLocallyChanged(true);
             mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
         }
@@ -2713,16 +2712,9 @@ public class EditPostActivity extends AppCompatActivity implements
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (addMedia(capturedImageUri, true)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    scanIntent.setData(capturedImageUri);
-                    sendBroadcast(scanIntent);
-                } else {
-                    this.sendBroadcast(new Intent(
-                            Intent.ACTION_MEDIA_MOUNTED,
-                            Uri.parse("file://" + Environment.getExternalStorageDirectory()))
-                    );
-                }
+                final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                scanIntent.setData(capturedImageUri);
+                sendBroadcast(scanIntent);
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
@@ -3423,7 +3415,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange == PostAction.UPDATE_POST) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();
@@ -3510,12 +3502,18 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void showAsyncPromoDialog() {
+    private void showAsyncPromoDialog(boolean isPage, boolean isScheduled) {
+        int title = isScheduled ? R.string.async_promo_title_schedule : R.string.async_promo_title_publish;
+        int description = isScheduled
+            ? (isPage ? R.string.async_promo_description_schedule_page : R.string.async_promo_description_schedule_post)
+            : (isPage ? R.string.async_promo_description_publish_page : R.string.async_promo_description_publish_post);
+        int button = isScheduled ? R.string.async_promo_schedule_now : R.string.async_promo_publish_now;
+
         final PromoDialog asyncPromoDialog = new PromoDialog();
         asyncPromoDialog.initialize(ASYNC_PROMO_DIALOG_TAG,
-                getString(R.string.async_promo_title),
-                getString(R.string.async_promo_description),
-                getString(R.string.async_promo_publish_now),
+                getString(title),
+                getString(description),
+                getString(button),
                 R.drawable.img_publish_button_124dp,
                 getString(R.string.keep_editing),
                 getString(R.string.async_promo_link));
