@@ -36,7 +36,7 @@ class ListManager<T>(
     val isLoadingMore: Boolean,
     val canLoadMore: Boolean,
     private val fetchItem: (Long) -> Unit,
-    private val fetchList: (ListDescriptor, Boolean, Int) -> Unit
+    private val fetchList: (ListDescriptor, Int) -> Unit
 ) {
     companion object {
         /**

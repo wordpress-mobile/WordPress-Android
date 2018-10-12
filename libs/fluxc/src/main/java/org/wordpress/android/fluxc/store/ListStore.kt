@@ -117,7 +117,7 @@ class ListStore @Inject constructor(
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
         val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
-        payload.fetchList(payload.listDescriptor, payload.loadMore, offset)
+        payload.fetchList(payload.listDescriptor, offset)
     }
 
     /**
@@ -257,14 +257,14 @@ class ListStore @Inject constructor(
      *
      * @property listDescriptor List to be fetched
      * @property loadMore Indicates whether the first page should be fetched or more data should be loaded.
-     * @property fetchList A function that tells ListStore how to fetch a list given the [ListDescriptor], whether to
-     * load more data and an offset calculated by [ListStore]. Please check [ListItemDataSource.fetchList] as that's
-     * how the fetch function is initially passed to [ListStore] in [getListManager].
+     * @property fetchList A function that tells ListStore how to fetch a list given the [ListDescriptor] and the offset
+     * calculated by [ListStore]. Please check [ListItemDataSource.fetchList] as that's how the fetch function is
+     * initially passed to [ListStore] in [getListManager].
      */
     class FetchListPayload(
         val listDescriptor: ListDescriptor,
         val loadMore: Boolean = false,
-        val fetchList: (ListDescriptor, Boolean, Int) -> Unit
+        val fetchList: (ListDescriptor, Int) -> Unit
     ) : Payload<BaseNetworkError>()
 
     /**
