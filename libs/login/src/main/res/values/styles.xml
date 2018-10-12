@@ -15,7 +15,7 @@
     </style>
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="colorButtonNormal">@color/login_base_button_normal_color</item>
     </style>
 
     <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
