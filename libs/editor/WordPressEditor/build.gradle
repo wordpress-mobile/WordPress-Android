@@ -18,6 +18,12 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 
+//project.ext.react = [
+//    entryFile: "index.js"
+//]
+//
+//apply from: "../../gutenberg-mobile/node_modules/react-native/react.gradle"
+//
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -27,6 +33,9 @@ android {
         versionName "1.3"
         minSdkVersion 16
         targetSdkVersion 26
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
     }
     buildTypes {
         release {
@@ -56,6 +65,13 @@ dependencies {
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:v1.3.9')
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:v1.3.9')
 
+    implementation project(':react-native-svg')
+    implementation project(':react-native-aztec')
+    implementation project(':react-native-recyclerview-list')
+
+    // React Native
+    implementation "com.facebook.react:react-native:+" // From node_modules.
+
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
     implementation "org.jsoup:jsoup:1.10.3"
@@ -63,6 +79,12 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r224109'
+    }
 }
 
 signing {

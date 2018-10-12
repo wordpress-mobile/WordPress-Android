@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/gutenberg-mobile" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/gutenberg-mobile/gutenberg" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libs/gutenberg-mobile/react-native-aztec" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools_stef/105aeef7bf863675956c" vcs="Git" />
   </component>
 </project>

@@ -27,6 +27,12 @@ apply plugin: 'io.fabric'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
+project.ext.react = [
+        entryFile: "index.js"
+]
+
+apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
+
 android {
     useLibrary 'org.apache.http.legacy'
 
@@ -47,6 +53,10 @@ android {
         targetSdkVersion 26
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
     }
 
     flavorDimensions "buildType"
