@@ -53,7 +53,9 @@ import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.common.LifecycleState;
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
+import com.facebook.soloader.SoLoader;
 import com.github.godness84.RNRecyclerViewList.RNRecyclerviewListPackage;
 import com.horcrux.svg.SvgPackage;
 
@@ -237,6 +239,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SoLoader.init(getContext(), /* native exopackage */ false);
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
@@ -437,6 +441,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onPause() {
         super.onPause();
         mEditorWasPaused = true;
+
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostPause(getActivity());
+        }
     }
 
     @Override
@@ -454,6 +462,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
+
+        if (mReactInstanceManager != null) {
+            mReactInstanceManager.onHostResume(getActivity(), (DefaultHardwareBackBtnHandler) getActivity());
+        }
     }
 
     @Override
@@ -464,6 +476,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             mEditorDragAndDropListener = (EditorDragAndDropListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement EditorDragAndDropListener");
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReactRootView != null) {
+            mReactRootView.unmountReactApplication();
+            mReactRootView = null;
+        }
+        if (mReactInstanceManager != null) {
+            // onDestroy may be called on a ReactFragment after another ReactFragment has been
+            // created and resumed with the same React Instance Manager. Make sure we only clean up
+            // host's React Instance Manager if no other React Fragment is actively using it.
+            if (mReactInstanceManager.getLifecycleState() != LifecycleState.RESUMED) {
+                mReactInstanceManager.onHostDestroy(getActivity());
+            }
         }
     }
 
