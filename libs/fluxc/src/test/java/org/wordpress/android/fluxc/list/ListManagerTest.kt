@@ -57,7 +57,7 @@ class ListManagerTest {
      */
     @Test
     fun testRefreshTriggersFetch() {
-        val fetchList = { _: ListDescriptor, _: Boolean, _: Int ->
+        val fetchList = { _: ListDescriptor, _: Int ->
             assertFalse(true)
         }
         val listManager = setupListManager(
@@ -186,7 +186,7 @@ class ListManagerTest {
      */
     @Test
     fun testGetItemTriggersLoadMore() {
-        val fetchList = { _: ListDescriptor, _: Boolean, _: Int ->
+        val fetchList = { _: ListDescriptor, _: Int ->
             assertFalse(true)
         }
         val listManager = setupListManager(
@@ -270,7 +270,7 @@ class ListManagerTest {
     @Test
     fun testGetLocalItem() {
         val localItems = listOf("localItem1", "localItem2")
-        val fetchList = { _: ListDescriptor, _: Boolean, _: Int -> }
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = ListManager(
                 dispatcher,
                 listDescriptor,
@@ -302,7 +302,7 @@ class ListManagerTest {
         remoteItemId: Long,
         remoteItem: PostModel?,
         fetchItem: ((Long) -> Unit)? = null,
-        fetchList: ((ListDescriptor, Boolean, Int) -> Unit)? = null
+        fetchList: ((ListDescriptor, Int) -> Unit)? = null
     ): ListManager<PostModel> {
         val listItems: List<ListItemModel> = mock()
         val listItemModel = ListItemModel()
@@ -311,7 +311,7 @@ class ListManagerTest {
         whenever(listItems[indexToGet]).thenReturn(listItemModel)
         val listData = if (remoteItem != null) mapOf(Pair(remoteItemId, remoteItem)) else Collections.emptyMap()
         val fetchItemFunction = fetchItem ?: {}
-        val fetchListFunction = fetchList ?: { _: ListDescriptor, _: Boolean, _: Int -> }
+        val fetchListFunction = fetchList ?: { _: ListDescriptor, _: Int -> }
         val listManager = ListManager(dispatcher, listDescriptor, null, listItems, listData, loadMoreOffset,
                 isFetchingFirstPage, isLoadingMore, canLoadMore, fetchItemFunction, fetchListFunction)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
