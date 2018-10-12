@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -21,11 +20,9 @@ import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
-import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -97,16 +94,17 @@ class ListStore @Inject constructor(
                 canLoadMore = listState?.canLoadMore() ?: false,
                 fetchItem = { remoteItemId ->
                     dataSource.fetchItem(listDescriptor, remoteItemId)
-                }
+                },
+                fetchList = dataSource::fetchList
         )
     }
 
     /**
      * Handles the [ListAction.FETCH_LIST] action.
      *
-     * This acts as an intermediary action. It will update the state and emit the change. Afterwards, depending on
-     * the type of the list, another action will be dispatched so the Store for that type can handle the fetch action
-     * and later use the [ListAction.FETCHED_LIST_ITEMS] action to let the [ListStore] know about it.
+     * This acts as an intermediary action. It will update the state and emit the change. Afterwards,
+     * [FetchListPayload.fetchList] will be used to do the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action
+     * should be used to let the [ListStore] know the results of the fetch.
      *
      * See [handleFetchedListItems] for what happens after items are fetched.
      */
@@ -119,13 +117,7 @@ class ListStore @Inject constructor(
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
         val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
-
-        when (payload.listDescriptor) {
-            is PostListDescriptor -> {
-                val fetchPostListPayload = FetchPostListPayload(payload.listDescriptor, offset)
-                mDispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
-            }
-        }
+        payload.fetchList(payload.listDescriptor, payload.loadMore, offset)
     }
 
     /**
@@ -265,10 +257,14 @@ class ListStore @Inject constructor(
      *
      * @property listDescriptor List to be fetched
      * @property loadMore Indicates whether the first page should be fetched or more data should be loaded.
+     * @property fetchList A function that tells ListStore how to fetch a list given the [ListDescriptor], whether to
+     * load more data and an offset calculated by [ListStore]. Please check [ListItemDataSource.fetchList] as that's
+     * how the fetch function is initially passed to [ListStore] in [getListManager].
      */
     class FetchListPayload(
         val listDescriptor: ListDescriptor,
-        val loadMore: Boolean = false
+        val loadMore: Boolean = false,
+        val fetchList: (ListDescriptor, Boolean, Int) -> Unit
     ) : Payload<BaseNetworkError>()
 
     /**

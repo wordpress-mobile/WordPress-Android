@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * @param isLoadingMore A helper property to be used to show/hide load more progress bar
  * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched
  * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
+ * @param fetchList A function which fetches the list for the given [ListDescriptor]. It'll be used to pass information
+ * back to `ListStore` through [FetchListPayload] for it to do the eventual fetching.
  *
  * @property size The number of items in the list
  *
@@ -33,7 +35,8 @@ class ListManager<T>(
     val isFetchingFirstPage: Boolean,
     val isLoadingMore: Boolean,
     val canLoadMore: Boolean,
-    private val fetchItem: (Long) -> Unit
+    private val fetchItem: (Long) -> Unit,
+    private val fetchList: (ListDescriptor, Boolean, Int) -> Unit
 ) {
     companion object {
         /**
@@ -141,7 +144,8 @@ class ListManager<T>(
      */
     fun refresh(): Boolean {
         if (!isFetchingFirstPage && !dispatchedRefreshAction) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
+            val fetchListPayload = FetchListPayload(listDescriptor, false, fetchList)
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(fetchListPayload))
             dispatchedRefreshAction = true
             return true
         }
@@ -155,7 +159,7 @@ class ListManager<T>(
      */
     private fun loadMore() {
         if (canLoadMore && !dispatchedLoadMoreAction) {
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true, fetchList)))
             dispatchedLoadMoreAction = true
         }
     }
