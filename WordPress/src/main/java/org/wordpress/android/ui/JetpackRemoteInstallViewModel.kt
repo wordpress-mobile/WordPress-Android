@@ -13,6 +13,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.JetpackStore
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installed
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Start
@@ -24,6 +28,11 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewState.Type.START
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
+private const val INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
+private const val CONTEXT = "JetpackRemoteInstall"
+private const val EMPTY_TYPE = "EMPTY_TYPE"
+private const val EMPTY_MESSAGE = "EMPTY_MESSAGE"
+
 class JetpackRemoteInstallViewModel
 @Inject constructor(
     private val jetpackStore: JetpackStore,
@@ -33,8 +42,8 @@ class JetpackRemoteInstallViewModel
 ) : ViewModel() {
     private val mutableViewState = MutableLiveData<JetpackRemoteInstallViewState>()
     val liveViewState: LiveData<JetpackRemoteInstallViewState> = mutableViewState
-    private val mutableJetpackConnectionFlow = SingleLiveEvent<JetpackConnectionData>()
-    val liveJetpackConnectionFlow: LiveData<JetpackConnectionData> = mutableJetpackConnectionFlow
+    private val mutableActionOnResult = SingleLiveEvent<JetpackResultActionData>()
+    val liveActionOnResult: LiveData<JetpackResultActionData> = mutableActionOnResult
     private var siteModel: SiteModel? = null
 
     init {
@@ -79,9 +88,23 @@ class JetpackRemoteInstallViewModel
     }
 
     private fun connectJetpack(siteId: Int) {
-        val site = siteStore.getSiteByLocalId(siteId)
         val hasAccessToken = accountStore.hasAccessToken()
-        mutableJetpackConnectionFlow.postValue(JetpackConnectionData(site, hasAccessToken))
+        val action = if (hasAccessToken) CONNECT else LOGIN
+        triggerResultAction(siteId, action, hasAccessToken)
+    }
+
+    private fun triggerResultAction(
+        siteId: Int,
+        action: Action,
+        hasAccessToken: Boolean = accountStore.hasAccessToken()
+    ) {
+        mutableActionOnResult.postValue(
+                JetpackResultActionData(
+                        siteStore.getSiteByLocalId(siteId),
+                        hasAccessToken,
+                        action
+                )
+        )
     }
 
     // Network Callbacks
@@ -92,11 +115,15 @@ class JetpackRemoteInstallViewModel
         if (event.isError) {
             AnalyticsTracker.track(
                     AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED,
-                    "JetpackRemoteInstall",
-                    event.error?.apiError ?: "EMPTY_TYPE",
-                    event.error?.message ?: "EMPTY_MESSAGE"
+                    CONTEXT,
+                    event.error?.apiError ?: EMPTY_TYPE,
+                    event.error?.message ?: EMPTY_MESSAGE
             )
-            mutableViewState.postValue(Error { startRemoteInstall(site) })
+            if (event.error?.apiError == INVALID_CREDENTIALS) {
+                triggerResultAction(site.id, MANUAL_INSTALL)
+            } else {
+                mutableViewState.postValue(Error { startRemoteInstall(site) })
+            }
             return
         }
         if (event.success) {
@@ -108,5 +135,9 @@ class JetpackRemoteInstallViewModel
         }
     }
 
-    data class JetpackConnectionData(val site: SiteModel, val loggedIn: Boolean)
+    data class JetpackResultActionData(val site: SiteModel, val loggedIn: Boolean, val action: Action) {
+        enum class Action {
+            LOGIN, MANUAL_INSTALL, CONNECT
+        }
+    }
 }
