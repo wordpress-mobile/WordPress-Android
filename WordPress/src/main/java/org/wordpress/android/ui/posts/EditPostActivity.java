@@ -270,7 +270,7 @@ public class EditPostActivity extends AppCompatActivity implements
     WPViewPager mViewPager;
 
     private PostModel mPost;
-    private PostModel mPostWithLocalChanges;
+    private PostModel mPostForUndo;
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
@@ -1206,7 +1206,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_discard_changes) {
                 AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 showDialogProgress(true);
-                mPostWithLocalChanges = mPost.clone();
+                mPostForUndo = mPost.clone();
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
@@ -1595,7 +1595,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void loadRevision() {
         showDialogProgress(true);
-        mPostWithLocalChanges = mPost.clone();
+        mPostForUndo = mPost.clone();
         mPost.setTitle(mRevision.getPostTitle());
         mPost.setContent(mRevision.getPostContent());
         mPost.setStatus(PostStatus.DRAFT.toString());
@@ -1607,9 +1607,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(View view) {
                         // TODO: Add analytics tracking for loaded revision undo.
-                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                        mPost = mPostWithLocalChanges.clone();
+                        mPost = mPostForUndo.clone();
                         refreshEditorContent();
                     }
                 })
@@ -3493,9 +3493,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostWithLocalChanges.clone();
+                                        mPost = mPostForUndo.clone();
                                         refreshEditorContent();
                                     }
                                 })
