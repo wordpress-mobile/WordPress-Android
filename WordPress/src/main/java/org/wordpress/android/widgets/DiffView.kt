@@ -2,18 +2,18 @@ package org.wordpress.android.widgets
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.AppCompatTextView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.util.AttributeSet
-import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.ADD
 import org.wordpress.android.fluxc.model.revisions.DiffOperations.DELETE
 
-class DiffView : TextView {
+class DiffView : AppCompatTextView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
