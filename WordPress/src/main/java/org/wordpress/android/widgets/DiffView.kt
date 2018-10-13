@@ -24,18 +24,15 @@ class DiffView : TextView {
         diffs.forEach { diff ->
             val diffContent = SpannableString(diff.value)
 
-            val endIndexOffset = if (diffContent.endsWith("\n")) 1 else 0
-
             if (diff.operation == ADD) {
                 diffContent.setSpan(
-                        ColoredUnderlineSpan(
+                        ColorUnderlineSpan(
                                 ContextCompat.getColor(
                                         context,
                                         R.color.revision_diff_add_action_underline
                                 )
-                        ), 0, diffContent.length - endIndexOffset, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                diffContent.setSpan(StrikethroughSpan(), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 diffContent.setSpan(
                         BackgroundColorSpan(
                                 ContextCompat.getColor(
@@ -45,15 +42,15 @@ class DiffView : TextView {
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             } else if (diff.operation == DELETE) {
+                diffContent.setSpan(StrikethroughSpan(), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 diffContent.setSpan(
-                        ColoredUnderlineSpan(
+                        ColorUnderlineSpan(
                                 ContextCompat.getColor(
                                         context,
                                         R.color.revision_diff_del_action_underline
                                 )
-                        ), 0, diffContent.length - endIndexOffset, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                diffContent.setSpan(StrikethroughSpan(), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 diffContent.setSpan(
                         BackgroundColorSpan(
                                 ContextCompat.getColor(
