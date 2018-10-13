@@ -110,6 +110,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -1231,7 +1232,9 @@ public class EditPostActivity extends AppCompatActivity implements
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setMessage(getString(R.string.local_changes_discarding));
+            mProgressDialog.setMessage(mIsDiscardingChanges
+                    ? getString(R.string.local_changes_discarding)
+                    : getString(R.string.history_loading_revision));
             mProgressDialog.show();
         } else if (mProgressDialog != null) {
             mProgressDialog.dismiss();
@@ -1497,7 +1500,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
             case TAG_HISTORY_LOAD_DIALOG:
-                // TODO: Load revision.
+                // TODO: Add analytics tracking for load button.
+                mViewPager.setCurrentItem(PAGE_CONTENT);
+                loadRevision();
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1586,6 +1591,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 getString(R.string.cancel),
                 null);
         dialog.show(getSupportFragmentManager(), TAG_HISTORY_LOAD_DIALOG);
+    }
+
+    private void loadRevision() {
+        showDialogProgress(true);
+        mPostWithLocalChanges = mPost.clone();
+        mPost.setTitle(mRevision.getPostTitle());
+        mPost.setContent(mRevision.getPostContent());
+        mPost.setStatus(PostStatus.DRAFT.toString());
+        refreshEditorContent();
+        showDialogProgress(false);
     }
 
     private boolean isNewPost() {
