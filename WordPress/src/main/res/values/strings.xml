@@ -1201,6 +1201,15 @@
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
+    <!-- History -->
+    <string name="description_user">User avatar</string>
+    <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
+    <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
+    <string name="history_empty_title">No history yet</string>
+    <string name="history_footer_page">Page Created on %1$s at %2$s</string>
+    <string name="history_footer_post">Post Created on %1$s at %2$s</string>
+    <string name="history_title" translatable="false">@string/menu_history</string>
+
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
     <string name="post_format_audio">Audio</string>
@@ -1255,24 +1264,15 @@
     <!-- Image Size -->
     <string name="image_size">Size</string>
 
-    <string name="size_thumbnail">Thumbnail</string>
-    <string name="size_medium">Medium</string>
-    <string name="size_large">Large</string>
-    <string name="size_full">Full Size</string>
+    <string name="image_size_thumbnail_label">Thumbnail</string>
+    <string name="image_size_medium_label">Medium</string>
+    <string name="image_size_large_label">Large</string>
+    <string name="image_size_full_label">Full Size</string>
 
-    <string-array name="image_size_key_array" translatable="false">
-        <item>size-thumbnail</item>
-        <item>size-medium</item>
-        <item>size-large</item>
-        <item>size-full</item>
-    </string-array>
-
-    <string-array name="image_size_label_array" translatable="false">
-        <item>@string/size_thumbnail</item>
-        <item>@string/size_medium</item>
-        <item>@string/size_large</item>
-        <item>@string/size_full</item>
-    </string-array>
+    <string name="image_size_thumbnail_class">size-thumbnail</string>
+    <string name="image_size_medium_class">size-medium</string>
+    <string name="image_size_large_class">size-large</string>
+    <string name="image_size_full_class">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>

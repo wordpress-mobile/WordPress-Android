@@ -12,7 +12,6 @@ import android.support.design.widget.BottomNavigationView.OnNavigationItemResele
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -224,14 +223,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    /*
-     * ideally we'd use a color selector to tint the icon based on its selected state, but prior to
-     * API 21 setting a color selector via XML will crash the app, and setting it programmatically
-     * will have no effect
-     */
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        val color = ContextCompat.getColor(context, if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
-        getImageViewForPosition(position)?.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
+        getImageViewForPosition(position)?.isSelected = isSelected
     }
 
     @DrawableRes

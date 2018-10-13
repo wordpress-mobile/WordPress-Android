@@ -28,4 +28,9 @@
     <!-- Support -->
     <integer name="max_length_support_name">50</integer>
 
+    <!-- Image Sizes -->
+    <integer name="image_size_thumbnail_px">150</integer>
+    <integer name="image_size_medium_px">300</integer>
+    <integer name="image_size_large_px">1024</integer>
+
 </resources>

@@ -90,7 +90,12 @@ class JetpackRemoteInstallViewModel
     fun onEventsUpdated(event: OnJetpackInstalled) {
         val site = siteModel ?: return
         if (event.isError) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
+            AnalyticsTracker.track(
+                    AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED,
+                    "JetpackRemoteInstall",
+                    event.error?.apiError ?: "EMPTY_TYPE",
+                    event.error?.message ?: "EMPTY_MESSAGE"
+            )
             mutableViewState.postValue(Error { startRemoteInstall(site) })
             return
         }
