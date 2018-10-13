@@ -1600,6 +1600,21 @@ public class EditPostActivity extends AppCompatActivity implements
         mPost.setContent(mRevision.getPostContent());
         mPost.setStatus(PostStatus.DRAFT.toString());
         refreshEditorContent();
+
+        Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                .setAction(getString(R.string.undo), new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO: Add analytics tracking for loaded revision undo.
+                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                        mPost = mPostWithLocalChanges.clone();
+                        refreshEditorContent();
+                    }
+                })
+                .show();
+
         showDialogProgress(false);
     }
 
