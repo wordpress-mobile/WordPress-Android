@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
+import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -46,7 +47,7 @@ class HistoryListFragment : Fragment() {
     }
 
     interface HistoryItemClickInterface {
-        fun onHistoryItemClicked(revisionId: Long, formattedDate: String, formattedTime: String)
+        fun onHistoryItemClicked(revision: Revision)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -135,10 +136,9 @@ class HistoryListFragment : Fragment() {
         })
     }
 
-    private fun showLoadDialog(revision: HistoryListItem.Revision) {
+    private fun showLoadDialog(revision: Revision) {
         if (activity is HistoryItemClickInterface) {
-            (activity as HistoryItemClickInterface).onHistoryItemClicked(
-                    revision.revisionId, revision.formattedDate, revision.formattedTime)
+            (activity as HistoryItemClickInterface).onHistoryItemClicked(revision)
         }
     }
 

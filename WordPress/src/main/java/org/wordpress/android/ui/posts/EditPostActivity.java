@@ -1572,13 +1572,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onHistoryItemClicked(long revisionId, @NonNull String formattedDate, @NonNull String formattedTime) {
-        mRevisionId = revisionId;
+    public void onHistoryItemClicked(@NonNull Revision revision) {
+        // TODO: Add analytics tracking for history list item.
+        mRevision = revision;
 
         BasicFragmentDialog dialog = new BasicFragmentDialog();
         dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
                 getString(R.string.history_load_dialog_title),
-                getString(R.string.history_load_dialog_message, formattedDate, formattedTime),
+                getString(R.string.history_load_dialog_message, mRevision.getFormattedDate(),
+                        mRevision.getFormattedTime()),
                 getString(R.string.history_load_dialog_button_positive),
                 getString(R.string.cancel),
                 null);
