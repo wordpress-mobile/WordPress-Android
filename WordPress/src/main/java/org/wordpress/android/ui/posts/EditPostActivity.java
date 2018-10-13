@@ -219,7 +219,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
-    private static final String STATE_KEY_REVISION_ID = "stateKeyRevisionId";
+    private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
@@ -273,6 +273,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
+    private Revision mRevision;
+
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
     private EditPostPreviewFragment mEditPostPreviewFragment;
@@ -287,7 +289,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean mIsDialogProgressShown;
     private boolean mIsDiscardingChanges;
     private boolean mIsUpdatingPost;
-    private long mRevisionId;
 
     private View mPhotoPickerContainer;
     private PhotoPickerFragment mPhotoPickerFragment;
@@ -412,7 +413,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
-            mRevisionId = savedInstanceState.getLong(STATE_KEY_REVISION_ID);
+            mRevision = (Revision) savedInstanceState.getSerializable(STATE_KEY_REVISION);
 
             showDialogProgress(mIsDialogProgressShown);
 
@@ -703,7 +704,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putLong(STATE_KEY_REVISION_ID, mRevisionId);
+        outState.putSerializable(STATE_KEY_REVISION, mRevision);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
