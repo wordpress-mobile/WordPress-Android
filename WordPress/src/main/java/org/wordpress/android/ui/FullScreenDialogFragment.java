@@ -408,6 +408,7 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set {@link FullScreenDialogFragment} action text.
          *
          * @param text {@link String} to set as action text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setAction(@NonNull String text) {
             this.mAction = text;
@@ -480,6 +481,7 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set {@link FullScreenDialogFragment} title text.
          *
          * @param text {@link String} to set as title text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setTitle(@NonNull String text) {
             this.mTitle = text;
@@ -490,6 +492,7 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set {@link FullScreenDialogFragment} title text.
          *
          * @param textId resource ID to set as title text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setTitle(@StringRes int textId) {
             this.mTitle = mContext.getString(textId);
