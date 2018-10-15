@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.history
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -24,6 +25,7 @@ sealed class HistoryListItem(val type: ViewType) {
     data class Header(val text: String) : HistoryListItem(HEADER)
 
     @Parcelize
+    @SuppressLint("ParcelCreator")
     data class Revision(
         val revisionId: Long,
         val diffFromVersion: Long,
