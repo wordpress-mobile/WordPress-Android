@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
@@ -23,7 +22,6 @@ import javax.inject.Named
 class StatsViewModel
 @Inject constructor(
     private val insightsDomain: InsightsDomain,
-    private val dispatcher: Dispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
@@ -50,14 +48,6 @@ class StatsViewModel
         }
     }
 
-//    init {
-//        dispatcher.register(this)
-//    }
-
-    override fun onCleared() {
-        dispatcher.unregister(this)
-    }
-
     private fun loadStats() = defaultScope.launch {
         val loadState = FETCHING
         reloadStats(loadState)
@@ -71,15 +61,16 @@ class StatsViewModel
         val result = insightsDomain.loadInsightItems()
     }
 
+    // TODO: To be implemented in the future
     fun onMenuAction(action: Action, page: Page): Boolean {
         return when (action) {
             else -> true
         }
     }
 
+    // TODO: To be implemented in the future
     fun onItemTapped(pageItem: Page) {
     }
-
 
     fun onPullToRefresh() {
         uiScope.launch {

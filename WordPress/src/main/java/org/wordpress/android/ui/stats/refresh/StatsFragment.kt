@@ -63,12 +63,6 @@ class StatsFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-//            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
-//            if (pageId != -1L) {
-//                onPageEditFinished(pageId)
-//            }
-//        }
     }
 
     private fun initializeViews(activity: FragmentActivity) {
