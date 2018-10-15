@@ -1,19 +1,26 @@
 package org.wordpress.android.fluxc.store
 
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
+import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
+import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
+import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
+import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
-import org.wordpress.android.fluxc.model.list.ListType
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -41,9 +48,10 @@ class ListStore @Inject constructor(
         val actionType = action.type as? ListAction ?: return
 
         when (actionType) {
-            ListAction.FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
-            ListAction.FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
-            ListAction.DELETE_LIST_ITEMS -> handleDeleteListItems(action.payload as DeleteListItemsPayload)
+            FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
+            FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
+            LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
+            LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
         }
     }
 
@@ -54,31 +62,40 @@ class ListStore @Inject constructor(
     /**
      * This is the function that'll be used to consume lists.
      *
-     * @property listDescriptor List to be consumed
-     * @property dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
+     * @param listDescriptor List to be consumed
+     * @param localItems The list of ordered local items that should be shown at the top of the list
+     * @param dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
      * for more details.
-     * @property loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
+     * @param loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
      *
      * @return An immutable list manager that exposes enough information about a list to be used by adapters. See
      * [ListManager] for more details.
      */
-    fun <T> getListManager(
+    suspend fun <T> getListManager(
         listDescriptor: ListDescriptor,
+        localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
-    ): ListManager<T> {
+    ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
         val listItems = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
-        return ListManager(
+        val listState = if (listModel != null) getListState(listModel) else null
+        val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
+        return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
+                localItems = localItems,
                 items = listItems,
-                dataSource = dataSource,
+                listData = listData,
                 loadMoreOffset = loadMoreOffset,
-                isFetchingFirstPage = if (listModel != null) getListState(listModel).isFetchingFirstPage() else false,
-                isLoadingMore = if (listModel != null) getListState(listModel).isLoadingMore() else false
+                isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
+                isLoadingMore = listState?.isLoadingMore() ?: false,
+                canLoadMore = listState?.canLoadMore() ?: false,
+                fetchItem = { remoteItemId ->
+                    dataSource.fetchItem(listDescriptor, remoteItemId)
+                }
         )
     }
 
@@ -96,9 +113,15 @@ class ListStore @Inject constructor(
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(listOf(payload.listDescriptor), null))
 
-        when (payload.listDescriptor.type) {
-            ListType.POST -> TODO()
-            ListType.WOO_ORDER -> TODO()
+        val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+            "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
+        }
+        val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
+
+        when (payload.listDescriptor) {
+            is PostListDescriptor -> {
+                // TODO: Dispatch an action to fetch the post list using the offset
+            }
         }
     }
 
@@ -136,14 +159,25 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * Handles the [ListAction.DELETE_LIST_ITEMS] action.
+     * Handles the [ListAction.LIST_ITEMS_CHANGED] action.
      *
-     * It'll find every list for the given [ListDescriptor]s, remove the given items from each one and emit the changes.
+     * Whenever an item of a list is changed, we'll emit the [OnListChanged] event so the consumer of the lists can
+     * update themselves.
      */
-    private fun handleDeleteListItems(payload: DeleteListItemsPayload) {
-        val lists = payload.listDescriptors.mapNotNull { listSqlUtils.getList(it) }
+    private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
+        emitChange(OnListItemsChanged(payload.type, error = null))
+    }
+
+    /**
+     * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
+     *
+     * Items in [ListItemsRemovedPayload.remoteItemIds] will be removed from lists with
+     * [ListDescriptorTypeIdentifier] after which [OnListChanged] event will be emitted.
+     */
+    private fun handleListItemsRemoved(payload: ListItemsRemovedPayload) {
+        val lists = listSqlUtils.getListsWithTypeIdentifier(payload.type)
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
-        emitChange(OnListChanged(payload.listDescriptors, error = null))
+        emitChange(OnListItemsChanged(payload.type, error = null))
     }
 
     /**
@@ -183,28 +217,45 @@ class ListStore @Inject constructor(
     }
 
     /**
-     * The event to be emitted when there is a change to a [ListModel] or its items.
+     * The event to be emitted when there is a change to a [ListModel].
      */
     class OnListChanged(
         val listDescriptors: List<ListDescriptor>,
-        error: FetchedListItemsError?
-    ) : Store.OnChanged<FetchedListItemsError>() {
+        error: ListError?
+    ) : Store.OnChanged<ListError>() {
         init {
             this.error = error
         }
     }
 
     /**
-     * This is the payload for [ListAction.DELETE_LIST_ITEMS]. When an item is deleted, we'll need to remove it from
-     * several lists. It's the caller Stores responsibility to decide which lists an item should be deleted from.
-     *
-     * @property listDescriptors Lists to be deleted from.
-     * @property remoteItemIds Items to delete.
+     * The event to be emitted when there is a change to items for a specific [ListDescriptorTypeIdentifier].
      */
-    class DeleteListItemsPayload(
-        val listDescriptors: List<ListDescriptor>,
-        val remoteItemIds: List<Long>
-    ) : Payload<BaseNetworkError>()
+    class OnListItemsChanged(
+        val type: ListDescriptorTypeIdentifier,
+        error: ListError?
+    ) : Store.OnChanged<ListError>() {
+        init {
+            this.error = error
+        }
+    }
+
+    /**
+     * This is the payload for [ListAction.LIST_ITEMS_CHANGED].
+     *
+     * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
+     * [ListDescriptor]s are updated.
+     */
+    class ListItemsChangedPayload(val type: ListDescriptorTypeIdentifier)
+
+    /**
+     * This is the payload for [ListAction.LIST_ITEMS_REMOVED].
+     *
+     * @property type [ListDescriptorTypeIdentifier] which will tell [ListStore] and the clients which
+     * [ListDescriptor]s are updated.
+     * @property remoteItemIds Remote item ids to be removed from the lists matching the [ListDescriptorTypeIdentifier].
+     */
+    class ListItemsRemovedPayload(val type: ListDescriptorTypeIdentifier, val remoteItemIds: List<Long>)
 
     /**
      * This is the payload for [ListAction.FETCH_LIST].
@@ -224,28 +275,27 @@ class ListStore @Inject constructor(
      * from other Stores. The same list descriptor will need to be used in this payload so [ListStore] can decide
      * which list to update.
      * @property remoteItemIds Fetched item ids
-     * @property loadedMore Indicates whether the first page is fetched or loaded more data
-     * @property canLoadMore Indicates whether there is more data to be loaded from the server. If it's false,
-     * [ListStore] will not trigger any more actions to load more data.
+     * @property loadedMore Indicates whether the first page is fetched or we loaded more data
+     * @property canLoadMore Indicates whether there is more data to be loaded from the server.
      */
     class FetchedListItemsPayload(
         val listDescriptor: ListDescriptor,
         val remoteItemIds: List<Long>,
         val loadedMore: Boolean,
         val canLoadMore: Boolean,
-        error: FetchedListItemsError?
-    ) : Payload<FetchedListItemsError>() {
+        error: ListError?
+    ) : Payload<ListError>() {
         init {
             this.error = error
         }
     }
 
-    class FetchedListItemsError(
-        val type: FetchedListItemsErrorType,
+    class ListError(
+        val type: ListErrorType,
         val message: String? = null
     ) : Store.OnChangedError
 
-    enum class FetchedListItemsErrorType {
+    enum class ListErrorType {
         GENERIC_ERROR
     }
 }
