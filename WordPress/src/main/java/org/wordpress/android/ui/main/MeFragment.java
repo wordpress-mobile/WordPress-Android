@@ -337,7 +337,8 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {
-                            EventBus.getDefault().post(new GravatarLoadFinished(false));
+                            ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar,
+                                    ToastUtils.Duration.SHORT);
                         }
 
                         @Override
@@ -348,7 +349,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
                                 bitmap = bitmap.copy(bitmap.getConfig(), true);
                                 WordPress.getBitmapCache().put(avatarUrl, bitmap);
                             }
-                            EventBus.getDefault().post(new GravatarLoadFinished(true));
                         }
                     }, mAppPrefsWrapper.getAvatarVersion());
         }
@@ -510,29 +510,14 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
     }
 
     public void onEventMainThread(GravatarUploadFinished event) {
+        showGravatarProgressBar(false);
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED);
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, event.filePath);
         } else {
-            showGravatarProgressBar(false);
             ToastUtils.showToast(getActivity(), R.string.error_updating_gravatar, ToastUtils.Duration.SHORT);
         }
-    }
-
-    public static class GravatarLoadFinished {
-        public final boolean success;
-
-        public GravatarLoadFinished(boolean success) {
-            this.success = success;
-        }
-    }
-
-    public void onEventMainThread(GravatarLoadFinished event) {
-        if (!event.success && mIsUpdatingGravatar) {
-            ToastUtils.showToast(getActivity(), R.string.error_refreshing_gravatar, ToastUtils.Duration.SHORT);
-        }
-        showGravatarProgressBar(false);
     }
 
     // injects a fabricated cache entry to the request cache
