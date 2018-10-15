@@ -43,7 +43,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -74,12 +73,12 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
-import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -130,6 +129,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -224,6 +224,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
+    private static final int PAGE_HISTORY = 3;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
@@ -463,7 +464,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding
@@ -496,6 +497,9 @@ public class EditPostActivity extends AppCompatActivity implements
                             }
                         }
                     });
+                } else if (position == PAGE_HISTORY) {
+                    setTitle(R.string.history_title);
+                    hidePhotoPicker();
                 }
             }
         });
@@ -649,7 +653,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override protected void onStop() {
         super.onStop();
-        if (mAztecImageLoader != null) {
+        if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
         }
@@ -862,11 +866,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // hide soft keyboard
-        View view = getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        ActivityUtils.hideKeyboard(this);
 
         // slide in the photo picker
         if (!isAlreadyShowing) {
@@ -1013,7 +1013,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (historyMenuItem != null) {
-            boolean hasHistory = mSite.isWPCom() || mSite.isJetpackConnected();
+            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
             historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
         }
 
@@ -1054,6 +1054,7 @@ public class EditPostActivity extends AppCompatActivity implements
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
                 saveMenuItem.setTitle(getSaveButtonText());
+                saveMenuItem.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
             }
         }
 
@@ -1134,14 +1135,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 return false;
             }
 
-            if (itemId == R.id.menu_preview_post) {
+            if (itemId == R.id.menu_history) {
+                ActivityUtils.hideKeyboard(this);
+                mViewPager.setCurrentItem(PAGE_HISTORY);
+            } else if (itemId == R.id.menu_preview_post) {
                 mViewPager.setCurrentItem(PAGE_PREVIEW);
             } else if (itemId == R.id.menu_post_settings) {
-                InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
-                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.refreshViews();
                 }
+                ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
@@ -1908,7 +1911,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 3;
+        private static final int NUM_PAGES_EDITOR = 4;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -1931,6 +1934,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                 case 1:
                     return EditPostSettingsFragment.newInstance();
+                case 3:
+                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
                     return EditPostPreviewFragment.newInstance(mPost);
             }
@@ -3415,7 +3420,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange == PostAction.UPDATE_POST) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
                 invalidateOptionsMenu();

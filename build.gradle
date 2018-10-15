@@ -52,7 +52,7 @@ subprojects {
     }
 
     dependencies {
-        ktlint 'com.github.shyiko:ktlint:0.21.0'
+        ktlint 'com.github.shyiko:ktlint:0.28.0'
     }
 
     task ktlint(type: JavaExec) {
@@ -69,5 +69,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'c111d8ae342829b4c0d9cfd7ce5cd95942a27ca2'
+    fluxCVersion = 'f0e022e366e20a32d663031504202717a99862fd'
 }
