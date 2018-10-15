@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_VIEWS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_VIEWS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.store.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.LATEST_POST
@@ -91,7 +91,13 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `returns latest post views response from stats utils`() {
-        whenever(statsSqlUtils.select(site, LATEST_POST_DETAIL_VIEWS, PostViewsResponse::class.java)).thenReturn(
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        LATEST_POST_DETAIL_VIEWS_INSIGHTS,
+                        PostViewsResponse::class.java
+                )
+        ).thenReturn(
                 POST_VIEWS
         )
 
@@ -104,6 +110,6 @@ class InsightsSqlUtilsTest {
     fun `inserts latest post views response to stats utils`() {
         insightsSqlUtils.insert(site, POST_VIEWS)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_VIEWS, POST_VIEWS)
+        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_VIEWS_INSIGHTS, POST_VIEWS)
     }
 }
