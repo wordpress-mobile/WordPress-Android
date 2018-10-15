@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -20,17 +19,14 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.WEEKS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class StatsFragment : Fragment() {
@@ -116,12 +112,12 @@ class StatsFragment : Fragment() {
         })
     }
 
-    private fun refreshProgressBars(listState: PageListState?) {
+    private fun refreshProgressBars(statsListState: StatsListState?) {
         if (!isAdded || view == null) {
             return
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = listState == FETCHING
+        swipeToRefreshHelper.isRefreshing = statsListState == FETCHING
     }
 }
 
