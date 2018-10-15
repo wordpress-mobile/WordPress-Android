@@ -9,8 +9,8 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.ListStatus.DONE
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.ListStatus.FETCHING
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -41,8 +41,8 @@ class StatsListViewModel
 
 data class NotImplemented(val text: String) : InsightsItem(NOT_IMPLEMENTED)
 
-data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: ListStatus) {
-    enum class ListStatus {
+data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {
+    enum class StatsListState {
         DONE,
         ERROR,
         FETCHING

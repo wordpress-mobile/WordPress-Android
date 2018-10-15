@@ -13,8 +13,8 @@ import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.ListStatus
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.ListStatus.FETCHING
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -27,8 +27,8 @@ class StatsViewModel
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
-    private val _listState = MutableLiveData<ListStatus>()
-    val listState: LiveData<ListStatus> = _listState
+    private val _listState = MutableLiveData<StatsListState>()
+    val listState: LiveData<StatsListState> = _listState
 
     private var isInitialized = false
 
@@ -50,9 +50,9 @@ class StatsViewModel
         }
     }
 
-    init {
-        dispatcher.register(this)
-    }
+//    init {
+//        dispatcher.register(this)
+//    }
 
     override fun onCleared() {
         dispatcher.unregister(this)
@@ -65,7 +65,7 @@ class StatsViewModel
         isInitialized = true
     }
 
-    private suspend fun reloadStats(state: ListStatus = FETCHING) {
+    private suspend fun reloadStats(state: StatsListState = FETCHING) {
         _listState.setOnUi(state)
 
         val result = insightsDomain.loadInsightItems()
