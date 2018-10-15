@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * @param isLoadingMore A helper property to be used to show/hide load more progress bar
  * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched
  * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
- * @param fetchList A function which fetches the list for the given [ListDescriptor]. It'll be used to pass information
- * back to `ListStore` through [FetchListPayload] for it to do the eventual fetching.
+ * @param fetchList A function which fetches the list for the given [ListDescriptor]. It'll be passed back to
+ * `ListStore` through [FetchListPayload] for it to do the eventual fetching.
  *
  * @property size The number of items in the list
  *
