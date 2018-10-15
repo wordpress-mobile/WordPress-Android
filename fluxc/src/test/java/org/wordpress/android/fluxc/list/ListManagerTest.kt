@@ -57,9 +57,7 @@ class ListManagerTest {
      */
     @Test
     fun testRefreshTriggersFetch() {
-        val fetchList = { _: ListDescriptor, _: Int ->
-            assertFalse(true)
-        }
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
@@ -186,9 +184,7 @@ class ListManagerTest {
      */
     @Test
     fun testGetItemTriggersLoadMore() {
-        val fetchList = { _: ListDescriptor, _: Int ->
-            assertFalse(true)
-        }
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
