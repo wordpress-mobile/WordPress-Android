@@ -9,8 +9,7 @@ sealed class PostListDescriptor(
     val orderBy: PostListOrderBy,
     val order: ListOrder,
     val pageSize: Int
-) :
-        ListDescriptor {
+) : ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
         when (this) {
