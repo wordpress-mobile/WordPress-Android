@@ -31,7 +31,7 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, LATEST_POST_DETAIL_VIEWS, data)
     }
 
-    fun selectAllTimeStats(site: SiteModel): AllTimeResponse? {
+    fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
         return statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
 
@@ -39,11 +39,11 @@ class InsightsSqlUtils
         return statsSqlUtils.select(site, MOST_POPULAR_INSIGHTS, MostPopularResponse::class.java)
     }
 
-    fun selectLatestPostDetailResponse(site: SiteModel): PostResponse? {
+    fun selectLatestPostDetail(site: SiteModel): PostResponse? {
         return statsSqlUtils.select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
     }
 
-    fun selectLatestPostViewsResponse(site: SiteModel): PostViewsResponse? {
+    fun selectLatestPostViews(site: SiteModel): PostViewsResponse? {
         return statsSqlUtils.select(site, LATEST_POST_DETAIL_VIEWS, PostViewsResponse::class.java)
     }
 }

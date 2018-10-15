@@ -38,7 +38,7 @@ class InsightsStore
     }
 
     fun getAllTimeInsights(site: SiteModel): InsightsAllTimeModel? {
-        return sqlUtils.selectAllTimeStats(site)?.toDomainModel(site)
+        return sqlUtils.selectAllTimeInsights(site)?.toDomainModel(site)
     }
 
     private fun AllTimeResponse.toDomainModel(site: SiteModel): InsightsAllTimeModel {
@@ -110,8 +110,8 @@ class InsightsStore
     }
 
     fun getLatestPostInsights(site: SiteModel): InsightsLatestPostModel? {
-        val latestPostDetailResponse = sqlUtils.selectLatestPostDetailResponse(site)
-        val latestPostViewsResponse = sqlUtils.selectLatestPostViewsResponse(site)
+        val latestPostDetailResponse = sqlUtils.selectLatestPostDetail(site)
+        val latestPostViewsResponse = sqlUtils.selectLatestPostViews(site)
         return if (latestPostDetailResponse != null && latestPostViewsResponse != null) {
             (latestPostDetailResponse to latestPostViewsResponse).toDomainModel(site)
         } else {
