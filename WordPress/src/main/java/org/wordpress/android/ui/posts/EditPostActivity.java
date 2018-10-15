@@ -414,7 +414,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
-            mRevision = (Revision) savedInstanceState.getSerializable(STATE_KEY_REVISION);
+            mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
 
             showDialogProgress(mIsDialogProgressShown);
 
@@ -705,7 +705,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(STATE_KEY_REVISION, mRevision);
+        outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
