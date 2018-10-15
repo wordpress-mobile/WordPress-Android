@@ -25,7 +25,4 @@ class ListItemModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable 
     override fun setId(id: Int) {
         this.id = id
     }
-
-    fun contentEquals(other: ListItemModel): Boolean =
-        this.listId == other.listId && this.remoteItemId == other.remoteItemId
 }

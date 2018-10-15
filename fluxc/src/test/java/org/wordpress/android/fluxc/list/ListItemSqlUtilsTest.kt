@@ -6,10 +6,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
-import org.wordpress.android.fluxc.model.list.ListType.POST
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
@@ -37,12 +39,12 @@ class ListItemSqlUtilsTest {
     @Test
     fun testInsertItemList() {
         // Insert an item list for the passed in [ListDescriptor] and assert that it's inserted correctly
-        generateInsertAndAssertListItems(ListDescriptor(POST, 333))
+        generateInsertAndAssertListItems(PostListDescriptorForRestSite(testSite()))
     }
 
     @Test
     fun testListIdForeignKeyCascadeDelete() {
-        val listDescriptor = ListDescriptor(POST, 333)
+        val listDescriptor = PostListDescriptorForRestSite(testSite())
         val testList = generateInsertAndAssertListItems(listDescriptor)
 
         /**
@@ -56,8 +58,8 @@ class ListItemSqlUtilsTest {
     @Test
     fun testDeleteItem() {
         val testRemoteItemId = 1245L // value doesn't matter
-        val listDescriptor1 = ListDescriptor(POST, 333)
-        val listDescriptor2 = ListDescriptor(POST, 444)
+        val listDescriptor1 = PostListDescriptorForRestSite(testSite(123))
+        val listDescriptor2 = PostListDescriptorForXmlRpcSite(testSite(124))
 
         /**
          * 1. Insert a test list for 2 different list descriptors.
@@ -88,7 +90,7 @@ class ListItemSqlUtilsTest {
          * 2. Delete all items for a list
          * 3. Verify that list items is empty
          */
-        val testList = generateInsertAndAssertListItems(ListDescriptor(POST, 333))
+        val testList = generateInsertAndAssertListItems(PostListDescriptorForRestSite(testSite()))
         listItemSqlUtils.deleteItems(testList.id)
         assertEquals(0, listItemSqlUtils.getListItems(testList.id).size)
     }
@@ -101,7 +103,7 @@ class ListItemSqlUtilsTest {
          * 3. Verify that they are inserted correctly
          */
         val listIds = (1..20).toList()
-        val lists = listIds.map { insertTestList(ListDescriptor(POST, it)) }
+        val lists = listIds.map { insertTestList(PostListDescriptorForRestSite(testSite(it))) }
         val items = (1..300L).mapIndexed { index, itemId ->
             ListItemModel(listId = listIds[index % listIds.size], remoteItemId = itemId)
         }
@@ -128,7 +130,7 @@ class ListItemSqlUtilsTest {
                 assertTrue {
                     // `contains` approach wouldn't work here since the `id` fields might be different
                     itemList.zip(remainingItems).fold(true) { acc, (first, second) ->
-                        acc && first.contentEquals(second)
+                        acc && first.listId == second.listId && first.remoteItemId == second.remoteItemId
                     }
                 }
             }
@@ -145,7 +147,7 @@ class ListItemSqlUtilsTest {
          * 2. Generate 2 [ListItemModel]s with the exact same values and insert the first one in the DB
          * 3. Verify that first [ListItemModel] is inserted correctly
          */
-        val testList = insertTestList(ListDescriptor(POST, 333))
+        val testList = insertTestList(PostListDescriptorForXmlRpcSite(testSite()))
         val listItemModel = ListItemModel(testList.id, testRemoteItemId)
         val listItemModel2 = ListItemModel(testList.id, testRemoteItemId)
         listItemSqlUtils.insertItemList(listOf(listItemModel))
@@ -193,4 +195,11 @@ class ListItemSqlUtilsTest {
      */
     private fun generateItemList(listModel: ListModel, count: Int): List<ListItemModel> =
             (1..count).map { ListItemModel(listModel.id, it.toLong()) }
+
+    private fun testSite(localSiteId: Int = 111): SiteModel {
+        val site = SiteModel()
+        site.id = localSiteId
+        site.siteId = 222
+        return site
+    }
 }

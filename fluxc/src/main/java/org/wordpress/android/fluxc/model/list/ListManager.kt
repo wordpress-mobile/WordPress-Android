@@ -5,17 +5,20 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 
 /**
- * This is an immutable class which helps us expose the list details to a client. It's designed to be initiated from
- * `ListStore`.
+ * This is a helper class by which FluxC communicates a list's data and its state with its clients. It's designed to be
+ * short lived as `ListStore.OnListChanged` should trigger the client to ask FluxC for a new instance.
  *
  * @param dispatcher The dispatcher to be used for FluxC actions
  * @param listDescriptor The list descriptor that will be used for FluxC actions and comparison with
  * other [ListManager]s
+ * @param localItems The list of ordered local items that should be shown at the top of the list
  * @param items The [ListItemModel]s which contains the `remoteItemId`s
- * @param dataSource The data source which knows actions like how to query an item by `remoteItemId` or how to fetch it.
- * @param loadMoreOffset Tells how many items before last one should trigger loading more data
+ * @param listData The map that holds the items as values for the `remoteItemId`s as keys
+ * @param loadMoreOffset The offset from the end of list that'll be used to fetch the next page
  * @param isFetchingFirstPage A helper property to be used to show/hide pull-to-refresh progress bar
  * @param isLoadingMore A helper property to be used to show/hide load more progress bar
+ * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched
+ * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
  *
  * @property size The number of items in the list
  *
@@ -23,26 +26,88 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 class ListManager<T>(
     private val dispatcher: Dispatcher,
     private val listDescriptor: ListDescriptor,
+    private val localItems: List<T>?,
     private val items: List<ListItemModel>,
-    private val dataSource: ListItemDataSource<T>,
+    private val listData: Map<Long, T>,
     private val loadMoreOffset: Int,
     val isFetchingFirstPage: Boolean,
-    val isLoadingMore: Boolean
+    val isLoadingMore: Boolean,
+    val canLoadMore: Boolean,
+    private val fetchItem: (Long) -> Unit
 ) {
-    val size: Int = items.size
+    companion object {
+        /**
+         * A helper function to calculate whether two items from two different [ListManager]s are the same. Since
+         * [ListManager] supports local items, we can't always rely on the `remoteItemId` to compare two different
+         * items. This function tries to compare `remoteItemId`s of the items if both of them are remote items. If at
+         * least one of them is a local item, it'll use the [areItemsTheSame] to defer the comparison to the caller.
+         *
+         * Here is the full set of rules:
+         *
+         * 1. Check if both items are remote items, if so compare their `remoteItemId`s and return the result.
+         * 2. Get the items from the [listData] and check if both of them are null. If so, for our intents these are
+         * the same items, since no other data about them are exposed.
+         * 3. Check if either item is null in which case it means that the items are different since we know both of
+         * them can't be null due to step 2.
+         * 4. Defer the comparison of the items to the caller. The caller should most likely use the local ids.
+         *
+         * @param new The new [ListManager]
+         * @param old The old [ListManager]
+         * @param newPosition The position of the item in the new [ListManager]
+         * @param oldPosition The position of the item in the old [ListManager]
+         * @param areItemsTheSame A function to compare the two items which should not compare the contents of them.
+         *
+         * @return whether two items are the same regardless of their contents.
+         */
+        fun <T> areItemsTheSame(
+            new: ListManager<T>,
+            old: ListManager<T>,
+            newPosition: Int,
+            oldPosition: Int,
+            areItemsTheSame: (T, T) -> Boolean
+        ): Boolean {
+            if (newPosition >= new.localItemSize && oldPosition >= old.localItemSize) {
+                return new.remoteItemId(newPosition - new.localItemSize) ==
+                        old.remoteItemId(oldPosition - old.localItemSize)
+            }
+            val oldItem = old.getItem(oldPosition, false)
+            val newItem = new.getItem(newPosition, false)
+            if (oldItem == null && newItem == null) {
+                return true
+            }
+            if (oldItem == null || newItem == null) {
+                return false
+            }
+            return areItemsTheSame(oldItem, newItem)
+        }
+    }
+
+    private val localItemSize: Int = localItems?.size ?: 0
+    val size: Int = items.size + localItemSize
+    /**
+     * These three private properties help us prevent duplicate requests within short time frames. Since [ListManager]
+     * instances are meant to be short lived, this will not actually prevent duplicate requests and it's not actually
+     * its job to do so. However, since its instances will be used by adapters, it can dispatch a lot of unnecessary
+     * actions.
+     */
+    private var dispatchedRefreshAction = false
+    private var dispatchedLoadMoreAction = false
+    private val fetchRemoteItemSet = HashSet<Long>()
+
+    private fun remoteItemId(remoteItemIndex: Int): Long {
+        return items[remoteItemIndex].remoteItemId
+    }
 
     /**
-     * Returns the item in a given position. It's meant to be used by adapters.
-     *
-     * The [ListItemDataSource.getItem] function will be utilized to get the item by its `remoteItemId`.
+     * Returns the item in a given position if it's available.
      *
      * @param position The index of the item
-     * @param shouldFetchIfNull Indicates whether the [ListManager] should initiate a fetch
+     * @param shouldFetchIfNull Indicates whether the [ListManager] should initiate a fetch if the item is
+     * not available.
      * @param shouldLoadMoreIfNecessary Indicates whether the [ListManager] should dispatch an action to load more data
      * if the end of the list is closer than the [loadMoreOffset].
-     * if [ListItemDataSource.getItem] returns `null`
      */
-    fun getRemoteItem(
+    fun getItem(
         position: Int,
         shouldFetchIfNull: Boolean = true,
         shouldLoadMoreIfNecessary: Boolean = true
@@ -50,23 +115,18 @@ class ListManager<T>(
         if (shouldLoadMoreIfNecessary && position > size - loadMoreOffset) {
             loadMore()
         }
-        val listItemModel = items[position]
-        val remoteItemId = listItemModel.remoteItemId
-        val item = dataSource.getItem(listDescriptor, remoteItemId)
+        localItems?.let {
+            if (position < it.size) {
+                return it[position]
+            }
+        }
+        val remoteItemIndex = position - localItemSize
+        val remoteItemId = items[remoteItemIndex].remoteItemId
+        val item = listData[remoteItemId]
         if (item == null && shouldFetchIfNull) {
-            dataSource.fetchItem(listDescriptor, remoteItemId)
+            fetchItemIfNecessary(remoteItemId)
         }
         return item
-    }
-
-    /**
-     * Returns the index of an item for [remoteItemId] if it exists. It's meant to be paired up with
-     * `notifyItemChanged(position)` of recycler view (or similar for other list views) when an item [T] is updated
-     * by FluxC.
-     */
-    fun indexOfItem(remoteItemId: Long): Int? {
-        val index = items.indexOfFirst { it.remoteItemId == remoteItemId }
-        return if (index != -1) index else null
     }
 
     /**
@@ -74,41 +134,40 @@ class ListManager<T>(
      * `OnListChanged` should be used to observe changes to lists and a new instance should be requested from
      * `ListStore`.
      *
-     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
+     * [isFetchingFirstPage] & [dispatchedRefreshAction] will be checked before dispatching the action to prevent
+     * duplicate requests.
      *
      * @return whether the refresh action is dispatched
      */
-    fun refresh() {
-        if (!isFetchingFirstPage) {
+    fun refresh(): Boolean {
+        if (!isFetchingFirstPage && !dispatchedRefreshAction) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor)))
+            dispatchedRefreshAction = true
+            return true
         }
+        return false
     }
 
     /**
-     * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager]. See [getRemoteItem]
-     * for more details.
+     * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager].
      *
-     * [isFetchingFirstPage] will be checked before dispatching the action to prevent duplicate requests.
+     * [canLoadMore] & [dispatchedLoadMoreAction] will be checked before dispatching the action.
      */
     private fun loadMore() {
-        if (!isLoadingMore) {
+        if (canLoadMore && !dispatchedLoadMoreAction) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true)))
+            dispatchedLoadMoreAction = true
         }
     }
 
     /**
-     * Compares the listDescriptors and remoteItemIds with another [ListManager] and returns the result. It's added
-     * to be used with `OnListChanged` to decide whether to reload the full list or not.
-     *
-     * IMPORTANT: It will NOT compare the contents of items.
-     *
-     * This is likely to be re-worked soon, but for now, it provides a convenient function for what we need.
+     * Calls the [fetchItem] function if the given [remoteItemId] is not in the [fetchRemoteItemSet] and adds the id
+     * to the [fetchRemoteItemSet]. This is to prevent fetching the same item more than once.
      */
-    fun hasDataChanged(otherListManager: ListManager<T>): Boolean {
-        if (listDescriptor != otherListManager.listDescriptor || items.size != otherListManager.items.size)
-            return true
-        return !items.zip(otherListManager.items).fold(true) { result, pair ->
-            result && pair.first.remoteItemId == pair.second.remoteItemId
+    private fun fetchItemIfNecessary(remoteItemId: Long) {
+        if (!fetchRemoteItemSet.contains(remoteItemId)) {
+            fetchItem(remoteItemId)
+            fetchRemoteItemSet.add(remoteItemId)
         }
     }
 }
