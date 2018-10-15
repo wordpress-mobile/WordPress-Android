@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/margin_small"
@@ -86,17 +86,21 @@
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="TITLE"
-                        android:layout_alignParentStart="true"/>
+                        tools:text="TITLE"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_totals_label"
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="VIEWS"
-                        android:layout_alignParentEnd="true"/>
-                </RelativeLayout>
+                        tools:text="VIEWS"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/stats_list_linearlayout"
