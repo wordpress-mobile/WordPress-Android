@@ -28,7 +28,12 @@ class StatsListViewModel
 
     private val mutableData: MutableLiveData<InsightsUiState> = MutableLiveData()
     val data: LiveData<InsightsUiState> = mutableData
-    fun start() {
+
+    private lateinit var statsType: StatsListType
+
+    fun start(statsType: StatsListType) {
+        this.statsType = statsType
+
         if (mutableData.value == null) {
             mutableData.value = InsightsUiState(status = FETCHING)
         }
