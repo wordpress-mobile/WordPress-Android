@@ -1201,6 +1201,15 @@
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
+    <!-- History -->
+    <string name="description_user">User avatar</string>
+    <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
+    <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
+    <string name="history_empty_title">No history yet</string>
+    <string name="history_footer_page">Page Created on %1$s at %2$s</string>
+    <string name="history_footer_post">Post Created on %1$s at %2$s</string>
+    <string name="history_title" translatable="false">@string/menu_history</string>
+
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
     <string name="post_format_audio">Audio</string>
