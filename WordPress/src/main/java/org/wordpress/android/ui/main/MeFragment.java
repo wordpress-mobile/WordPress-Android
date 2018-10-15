@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -62,15 +60,8 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -518,49 +509,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_updating_gravatar, ToastUtils.Duration.SHORT);
         }
-    }
-
-    // injects a fabricated cache entry to the request cache
-    private void injectCache(File file, String avatarUrl) throws IOException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ROOT);
-        final long currentTimeMs = System.currentTimeMillis();
-        final Date currentTime = new Date(currentTimeMs);
-        final long fiveMinutesLaterMs = currentTimeMs + 5 * 60 * 1000;
-        final Date fiveMinutesLater = new Date(fiveMinutesLaterMs);
-
-        Cache.Entry entry = new Cache.Entry();
-
-        entry.data = new byte[(int) file.length()];
-        DataInputStream dis = new DataInputStream(new FileInputStream(file));
-        dis.readFully(entry.data);
-        dis.close();
-
-        entry.etag = null;
-        entry.softTtl = fiveMinutesLaterMs;
-        entry.ttl = fiveMinutesLaterMs;
-        entry.serverDate = currentTimeMs;
-        entry.lastModified = currentTimeMs;
-
-        entry.responseHeaders = new TreeMap<>();
-        entry.responseHeaders.put("Accept-Ranges", "bytes");
-        entry.responseHeaders.put("Access-Control-Allow-Origin", "*");
-        entry.responseHeaders.put("Cache-Control", "max-age=300");
-        entry.responseHeaders.put("Content-Disposition", "inline; filename=\""
-                                                         + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
-        entry.responseHeaders.put("Content-Length", String.valueOf(file.length()));
-        entry.responseHeaders.put("Content-Type", "image/jpeg");
-        entry.responseHeaders.put("Date", sdf.format(currentTime));
-        entry.responseHeaders.put("Expires", sdf.format(fiveMinutesLater));
-        entry.responseHeaders.put("Last-Modified", sdf.format(currentTime));
-        entry.responseHeaders.put("Link", "<" + avatarUrl + ">; rel=\"canonical\"");
-        entry.responseHeaders.put("Server", "injected cache");
-        entry.responseHeaders.put("Source-Age", "0");
-        entry.responseHeaders.put("X-Android-Received-Millis", String.valueOf(currentTimeMs));
-        entry.responseHeaders.put("X-Android-Response-Source", "NETWORK 200");
-        entry.responseHeaders.put("X-Android-Selected-Protocol", "http/1.1");
-        entry.responseHeaders.put("X-Android-Sent-Millis", String.valueOf(currentTimeMs));
-
-        WordPress.sRequestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
     }
 
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
