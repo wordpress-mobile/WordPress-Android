@@ -98,15 +98,10 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final int offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
-        Map<String, String> params =
-                getFetchPostListParameters(false, offset, listDescriptor.getPageSize(), null,
-                        "ID,modified");
-        params.put("status", listDescriptor.getStatus().getValue());
-        params.put("order", listDescriptor.getOrder().getValue());
-        params.put("order_by", listDescriptor.getOrderBy().getValue());
-        if (!TextUtils.isEmpty(listDescriptor.getSearchQuery())) {
-            params.put("search", listDescriptor.getSearchQuery());
-        }
+        String fields = "ID,modified";
+        Map<String, String> params = getFetchPostListParameters(false, offset, listDescriptor.getPageSize(),
+                listDescriptor.getStatus().getValue(), fields, listDescriptor.getOrder().getValue(),
+                listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
         final boolean loadedMore = offset > 0;
 
@@ -144,7 +139,8 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
-                getFetchPostListParameters(getPages, offset, number, statusList, null);
+                getFetchPostListParameters(getPages, offset, number, PostStatus.postStatusListToString(statusList),
+                        null, null, null, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -479,8 +475,11 @@ public class PostRestClient extends BaseWPComRestClient {
     private Map<String, String> getFetchPostListParameters(final boolean getPages,
                                                            final int offset,
                                                            final int number,
-                                                           @Nullable final List<PostStatus> statusList,
-                                                           @Nullable String fields) {
+                                                           @Nullable final String status,
+                                                           @Nullable final String fields,
+                                                           @Nullable final String order,
+                                                           @Nullable final String orderBy,
+                                                           @Nullable final String searchQuery) {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
@@ -490,10 +489,18 @@ public class PostRestClient extends BaseWPComRestClient {
             params.put("type", "page");
         }
 
-        if (statusList != null && statusList.size() > 0) {
-            params.put("status", PostStatus.postStatusListToString(statusList));
+        if (!TextUtils.isEmpty(order)) {
+            params.put("order", order);
         }
-
+        if (!TextUtils.isEmpty(orderBy)) {
+            params.put("order_by", orderBy);
+        }
+        if (!TextUtils.isEmpty(status)) {
+            params.put("status", status);
+        }
+        if (!TextUtils.isEmpty(searchQuery)) {
+            params.put("search", searchQuery);
+        }
         if (offset > 0) {
             params.put("offset", String.valueOf(offset));
         }
