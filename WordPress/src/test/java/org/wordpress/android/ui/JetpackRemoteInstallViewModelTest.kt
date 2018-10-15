@@ -29,6 +29,8 @@ import org.wordpress.android.fluxc.store.JetpackStore.JetpackInstallErrorType.GE
 import org.wordpress.android.fluxc.store.JetpackStore.OnJetpackInstalled
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Error
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installed
 import org.wordpress.android.ui.JetpackRemoteInstallViewState.Installing
@@ -49,15 +51,17 @@ class JetpackRemoteInstallViewModelTest {
 
     private lateinit var viewModel: JetpackRemoteInstallViewModel
     private val viewStates = mutableListOf<JetpackRemoteInstallViewState>()
-    private var mJetpackResultActionData: JetpackResultActionData? = null
+    private var jetpackResultActionData: JetpackResultActionData? = null
 
     @Before
     fun setUp() {
         whenever(site.id).thenReturn(siteId)
         viewModel = JetpackRemoteInstallViewModel(jetpackStore, dispatcher, accountStore, siteStore)
         viewModel.liveViewState.observeForever { if (it != null) viewStates.add(it) }
-        viewModel.liveActionOnResult.observeForever { if (it != null) mJetpackResultActionData = it }
+        viewModel.liveActionOnResult.observeForever { if (it != null) jetpackResultActionData = it }
         actionCaptor = argumentCaptor()
+        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
     }
 
     @Test
@@ -95,9 +99,10 @@ class JetpackRemoteInstallViewModelTest {
         // Continue after Jetpack is installed
         installedState.onClick()
 
-        val connectionData = mJetpackResultActionData!!
+        val connectionData = jetpackResultActionData!!
         assertTrue(connectionData.loggedIn)
         assertTrue(connectionData.site == updatedSite)
+        assertTrue(connectionData.action == CONNECT)
     }
 
     @Test
@@ -121,8 +126,23 @@ class JetpackRemoteInstallViewModelTest {
     }
 
     @Test
+    fun `on invalid credentials triggers manual install`() = runBlocking {
+        val installError = JetpackInstallError(GENERIC_ERROR, "INVALID_CREDENTIALS", message = "msg")
+        viewModel.start(site, null)
+
+        val startState = viewStates[0]
+        assertStartState(startState)
+
+        viewModel.onEventsUpdated(OnJetpackInstalled(installError, INSTALL_JETPACK))
+
+        val connectionData = jetpackResultActionData!!
+        assertTrue(connectionData.action == MANUAL_INSTALL)
+        assertTrue(connectionData.site == site)
+    }
+
+    @Test
     fun `on login retries jetpack connect with access token`() = runBlocking {
-        assertNull(mJetpackResultActionData)
+        assertNull(jetpackResultActionData)
 
         val updatedSite = mock<SiteModel>()
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(updatedSite)
@@ -130,7 +150,7 @@ class JetpackRemoteInstallViewModelTest {
 
         viewModel.onLogin(siteId)
 
-        val connectionData = mJetpackResultActionData!!
+        val connectionData = jetpackResultActionData!!
         assertTrue(connectionData.loggedIn)
         assertTrue(connectionData.site == updatedSite)
     }

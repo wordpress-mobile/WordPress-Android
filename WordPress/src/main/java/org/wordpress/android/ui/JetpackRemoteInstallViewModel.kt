@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_RESTART
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.JetpackActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -64,33 +66,53 @@ class JetpackRemoteInstallViewModel
     }
 
     fun onLogin(siteId: Int) {
-        connectJetpack(siteId)
+        connect(siteId)
     }
 
     private fun Type?.toState(site: SiteModel): JetpackRemoteInstallViewState {
         if (this == null) {
-            return Start { startRemoteInstall(site) }
+            return Start {
+                start(site)
+            }
         }
         return when (this) {
-            START -> Start { startRemoteInstall(site) }
+            START -> Start {
+                start(site)
+            }
             INSTALLING -> {
                 startRemoteInstall(site)
                 JetpackRemoteInstallViewState.Installing
             }
-            INSTALLED -> Installed { connectJetpack(site.id) }
-            ERROR -> Error { startRemoteInstall(site) }
+            INSTALLED -> Installed { connect(site.id) }
+            ERROR -> Error { restart(site) }
         }
+    }
+
+    private fun start(site: SiteModel) {
+        AnalyticsTracker.track(INSTALL_JETPACK_REMOTE_START)
+        startRemoteInstall(site)
+    }
+
+    private fun restart(site: SiteModel) {
+        AnalyticsTracker.track(INSTALL_JETPACK_REMOTE_RESTART)
+        startRemoteInstall(site)
+    }
+
+    private fun connect(siteId: Int) {
+        val hasAccessToken = accountStore.hasAccessToken()
+        val action = if (hasAccessToken) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_CONNECT)
+            CONNECT
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_LOGIN)
+            LOGIN
+        }
+        triggerResultAction(siteId, action, hasAccessToken)
     }
 
     private fun startRemoteInstall(site: SiteModel) {
         mutableViewState.postValue(JetpackRemoteInstallViewState.Installing)
         dispatcher.dispatch(JetpackActionBuilder.newInstallJetpackAction(site))
-    }
-
-    private fun connectJetpack(siteId: Int) {
-        val hasAccessToken = accountStore.hasAccessToken()
-        val action = if (hasAccessToken) CONNECT else LOGIN
-        triggerResultAction(siteId, action, hasAccessToken)
     }
 
     private fun triggerResultAction(
@@ -120,18 +142,25 @@ class JetpackRemoteInstallViewModel
                     event.error?.message ?: EMPTY_MESSAGE
             )
             if (event.error?.apiError == INVALID_CREDENTIALS) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW)
                 triggerResultAction(site.id, MANUAL_INSTALL)
             } else {
-                mutableViewState.postValue(Error { startRemoteInstall(site) })
+                mutableViewState.postValue(Error {
+                    restart(site)
+                })
             }
             return
         }
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
-            mutableViewState.postValue(Installed { connectJetpack(site.id) })
+            mutableViewState.postValue(Installed {
+                connect(site.id)
+            })
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
-            mutableViewState.postValue(Error { startRemoteInstall(site) })
+            mutableViewState.postValue(Error {
+                restart(site)
+            })
         }
     }
 
