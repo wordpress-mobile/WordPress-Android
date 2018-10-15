@@ -72,7 +72,7 @@ class StatsFragment : Fragment() {
     }
 
     private fun initializeViews(activity: FragmentActivity) {
-        pagesPager.adapter = PagesPagerAdapter(activity, childFragmentManager)
+        pagesPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(pagesPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
@@ -121,7 +121,7 @@ class StatsFragment : Fragment() {
     }
 }
 
-class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
         val statsTypes = listOf(INSIGHTS, DAYS, WEEKS, MONTHS)
     }
