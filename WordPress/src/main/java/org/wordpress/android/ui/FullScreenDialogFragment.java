@@ -38,9 +38,11 @@ public class FullScreenDialogFragment extends DialogFragment {
     private OnConfirmListener mOnConfirmListener;
     private OnDismissListener mOnDismissListener;
     private String mAction;
+    private String mSubtitle;
     private String mTitle;
 
     private static final String ARG_ACTION = "ARG_ACTION";
+    private static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final int ID_ACTION = 1;
 
@@ -81,6 +83,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ACTION, builder.mAction);
         bundle.putString(ARG_TITLE, builder.mTitle);
+        bundle.putString(ARG_SUBTITLE, builder.mSubtitle);
         return bundle;
     }
 
@@ -200,8 +203,9 @@ public class FullScreenDialogFragment extends DialogFragment {
      */
     private void initBuilderArguments() {
         Bundle bundle = getArguments();
-        mTitle = bundle.getString(ARG_TITLE);
         mAction = bundle.getString(ARG_ACTION);
+        mTitle = bundle.getString(ARG_TITLE);
+        mSubtitle = bundle.getString(ARG_SUBTITLE);
     }
 
     /**
@@ -212,6 +216,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     private void initToolbar(View view) {
         Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
         toolbar.setTitle(mTitle);
+        toolbar.setSubtitle(mSubtitle);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_close_white_24dp));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,6 +320,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         OnConfirmListener mOnConfirmListener;
         OnDismissListener mOnDismissListener;
         String mAction;
+        String mSubtitle;
         String mTitle;
 
         /**
@@ -371,6 +377,28 @@ public class FullScreenDialogFragment extends DialogFragment {
 
             this.mClass = contentClass;
             this.mArguments = contentArguments;
+            return this;
+        }
+
+        /**
+         * Set {@link FullScreenDialogFragment} subtitle text.
+         *
+         * @param text {@link String} to set as subtitle text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setSubtitle(@NonNull String text) {
+            this.mSubtitle = text;
+            return this;
+        }
+
+        /**
+         * Set {@link FullScreenDialogFragment} subtitle text.
+         *
+         * @param textId resource ID to set as subtitle text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setSubtitle(@StringRes int textId) {
+            this.mSubtitle = mContext.getString(textId);
             return this;
         }
 
