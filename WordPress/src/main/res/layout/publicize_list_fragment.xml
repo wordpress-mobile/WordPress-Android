@@ -116,7 +116,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center_vertical"
                             android:contentDescription="@null"
-                            app:srcCompat="@drawable/ic_cog_blue_wordpress_24dp"/>
+                            android:src="@drawable/ic_cog_blue_wordpress_24dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/text_manage_button"

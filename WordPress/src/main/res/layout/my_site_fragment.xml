@@ -68,7 +68,7 @@
                             android:contentDescription="@string/my_site_icon_content_description"
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
-                            tools:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+                            tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                             android:importantForAccessibility="no"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            app:srcCompat="@drawable/ic_arrow_left_grey"
+                            android:src="@drawable/ic_arrow_left_grey"
                             style="@style/MySiteListRowIcon" >
                         </ImageView>
 
@@ -151,7 +151,7 @@
                     android:id="@+id/my_site_quick_start_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_list_checkmark_grey_24dp"/>
+                    android:src="@drawable/ic_list_checkmark_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_quick_start_text"
@@ -197,7 +197,7 @@
                     android:id="@+id/my_site_stats_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_stats_alt_grey_24dp"/>
+                    android:src="@drawable/ic_stats_alt_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_stats_text_view"
@@ -214,7 +214,7 @@
                 <ImageView
                     android:id="@+id/my_site_activity_log_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_history_alt_grey_24dp"
+                    android:src="@drawable/ic_history_alt_grey_24dp"
                     android:importantForAccessibility="no"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -233,7 +233,7 @@
                     android:id="@+id/my_site_plan_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_plans_grey_24dp"/>
+                    android:src="@drawable/ic_plans_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plan_text_view"
@@ -266,7 +266,7 @@
                     android:id="@+id/my_site_pages_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_pages_grey_24dp"/>
+                    android:src="@drawable/ic_pages_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_pages_text_view"
@@ -288,7 +288,7 @@
                         android:id="@+id/my_site_blog_posts_icon"
                         style="@style/MySiteListRowIcon"
                         android:importantForAccessibility="no"
-                        app:srcCompat="@drawable/ic_posts_grey_24dp"/>
+                        android:src="@drawable/ic_posts_grey_24dp"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_blog_posts_text_view"
@@ -308,7 +308,7 @@
                     android:id="@+id/my_site_media_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_media_grey_24dp"/>
+                    android:src="@drawable/ic_media_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_media_text_view"
@@ -326,7 +326,7 @@
                     android:id="@+id/my_site_comments_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_comment_grey_24dp"/>
+                    android:src="@drawable/ic_comment_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_comments_text_view"
@@ -351,7 +351,7 @@
                     android:id="@+id/my_site_themes_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_themes_grey_24dp"/>
+                    android:src="@drawable/ic_themes_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_themes_text_view"
@@ -376,7 +376,7 @@
                     android:id="@+id/my_site_people_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_user_grey_24dp"/>
+                    android:src="@drawable/ic_user_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_people_management_text_view"
@@ -394,7 +394,7 @@
                     android:id="@+id/my_site_plugins_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/plugins"
-                    app:srcCompat="@drawable/ic_plugins_white_24dp"/>
+                    android:src="@drawable/ic_plugins_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plugins_text_view"
@@ -412,7 +412,7 @@
                     android:id="@+id/my_site_sharing_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_share_grey_dark_24dp"/>
+                    android:src="@drawable/ic_share_grey_dark_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_sharing_text_view"
@@ -430,7 +430,7 @@
                     android:id="@+id/my_site_settings_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_cog_grey_24dp"/>
+                    android:src="@drawable/ic_cog_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_settings_text_view"
@@ -455,7 +455,7 @@
                     android:id="@+id/my_site_view_site_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_globe_grey_24dp"/>
+                    android:src="@drawable/ic_globe_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_view_site_text_view"
@@ -466,7 +466,7 @@
                     android:id="@+id/my_site_view_site_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_external_black_24dp"/>
+                    android:src="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
 
@@ -480,7 +480,7 @@
                     android:id="@+id/my_site_view_admin_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_my_sites_grey_24dp"/>
+                    android:src="@drawable/ic_my_sites_grey_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_view_admin_text_view"
@@ -491,7 +491,7 @@
                     android:id="@+id/my_site_admin_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_external_black_24dp"/>
+                    android:src="@drawable/ic_external_black_24dp"/>
 
             </LinearLayout>
 
