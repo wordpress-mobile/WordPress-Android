@@ -71,14 +71,10 @@ class JetpackRemoteInstallViewModel
 
     private fun Type?.toState(site: SiteModel): JetpackRemoteInstallViewState {
         if (this == null) {
-            return Start {
-                start(site)
-            }
+            return Start { start(site) }
         }
         return when (this) {
-            START -> Start {
-                start(site)
-            }
+            START -> Start { start(site) }
             INSTALLING -> {
                 startRemoteInstall(site)
                 JetpackRemoteInstallViewState.Installing
@@ -153,14 +149,10 @@ class JetpackRemoteInstallViewModel
         }
         if (event.success) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
-            mutableViewState.postValue(Installed {
-                connect(site.id)
-            })
+            mutableViewState.postValue(Installed { connect(site.id) })
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_FAILED)
-            mutableViewState.postValue(Error {
-                restart(site)
-            })
+            mutableViewState.postValue(Error { restart(site) })
         }
     }
 
