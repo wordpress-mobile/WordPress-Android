@@ -114,16 +114,15 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset,
-                              final int number) {
+    public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset) {
         SiteModel site = listDescriptor.getSite();
         List<String> fields = new ArrayList<>();
         fields.add("post_id");
         fields.add("post_modified");
         List<Object> params =
                 getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, number, fields, listDescriptor.getOrderBy().getValue(),
-                        listDescriptor.getOrder().getValue());
+                        offset, listDescriptor.getPageSize(), fields,
+                        listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
 
         final boolean loadedMore = offset > 0;
 
@@ -131,7 +130,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
-                        boolean canLoadMore = response != null && response.length == number;
+                        boolean canLoadMore =
+                                response != null && response.length == listDescriptor.getPageSize();
                         List<PostListItem> postListItems = postListItemsFromPostsResponse(response);
                         PostError postError = response == null ? new PostError(PostErrorType.INVALID_RESPONSE) : null;
                         FetchPostListResponsePayload responsePayload =

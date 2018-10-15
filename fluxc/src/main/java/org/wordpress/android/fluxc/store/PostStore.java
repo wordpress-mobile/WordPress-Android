@@ -57,7 +57,6 @@ import javax.inject.Singleton;
 @Singleton
 public class PostStore extends Store {
     public static final int NUM_POSTS_PER_FETCH = 20;
-    public static final int NUM_POST_LIST_PER_FETCH = 100;
 
     public static final List<PostStatus> DEFAULT_POST_STATUS_LIST = Collections.unmodifiableList(Arrays.asList(
             PostStatus.DRAFT,
@@ -559,10 +558,10 @@ public class PostStore extends Store {
     private void fetchPostList(FetchPostListPayload payload) {
         if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
-            mPostRestClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
+            mPostRestClient.fetchPostList(descriptor, payload.offset);
         } else if (payload.listDescriptor instanceof PostListDescriptorForXmlRpcSite) {
             PostListDescriptorForXmlRpcSite descriptor = (PostListDescriptorForXmlRpcSite) payload.listDescriptor;
-            mPostXMLRPCClient.fetchPostList(descriptor, payload.offset, NUM_POST_LIST_PER_FETCH);
+            mPostXMLRPCClient.fetchPostList(descriptor, payload.offset);
         }
     }
 
