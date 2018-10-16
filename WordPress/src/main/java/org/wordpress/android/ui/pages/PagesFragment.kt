@@ -77,7 +77,7 @@ class PagesFragment : Fragment() {
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
-        initializeViewModels(nonNullActivity, savedInstanceState == null)
+        initializeViewModels(nonNullActivity, savedInstanceState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -93,6 +93,11 @@ class PagesFragment : Fragment() {
                 onPageParentSet(pageId, parentId)
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable(WordPress.SITE, viewModel.site)
+        super.onSaveInstanceState(outState)
     }
 
     fun onSpecificPageRequested(remotePageId: Long) {
@@ -181,17 +186,21 @@ class PagesFragment : Fragment() {
         })
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, isFirstStart: Boolean) {
+    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         setupObservers(activity)
 
-        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val site = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            restorePreviousSearch = true
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+
         val nonNullSite = checkNotNull(site)
         viewModel.start(nonNullSite)
-        if (!isFirstStart) {
-            restorePreviousSearch = true
-        }
     }
 
     private fun setupObservers(activity: FragmentActivity) {
