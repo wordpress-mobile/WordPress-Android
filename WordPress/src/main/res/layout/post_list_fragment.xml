@@ -55,7 +55,7 @@
             android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed"
-            app:srcCompat="@drawable/ic_create_white_24dp"/>
+            android:src="@drawable/ic_create_white_24dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

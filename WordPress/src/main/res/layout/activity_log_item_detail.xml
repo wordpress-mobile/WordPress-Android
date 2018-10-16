@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -30,9 +29,8 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
-                    app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
-                    android:contentDescription="@null"
-                    tools:src="@drawable/badge"/>
+                    android:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+                    android:contentDescription="@null"/>
 
                 <ImageView
                     android:id="@+id/activityJetpackActorIcon"
@@ -40,9 +38,8 @@
                     android:layout_height="36dp"
                     android:layout_marginEnd="12dp"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/ic_plans_grey_36dp"
-                    android:contentDescription="@string/activity_log_jetpack_icon"
-                    tools:src="@drawable/ic_plans_grey_36dp"/>
+                    android:src="@drawable/ic_plans_grey_36dp"
+                    android:contentDescription="@string/activity_log_jetpack_icon"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -138,8 +135,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_history_blue_24dp"
-                    tools:src="@drawable/ic_history_blue_24dp"/>
+                    android:src="@drawable/ic_history_blue_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

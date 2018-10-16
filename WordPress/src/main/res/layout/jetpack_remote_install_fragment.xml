@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -26,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
                 android:contentDescription="@string/content_description_people_looking_charts"
-                app:srcCompat="@drawable/ic_plans_jetpack_green_88dp"/>
+                android:src="@drawable/ic_plans_jetpack_green_88dp"/>
 
             <TextView
                 android:id="@+id/jetpack_install_title"

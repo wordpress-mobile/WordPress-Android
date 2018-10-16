@@ -98,7 +98,7 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"
-                        card_view:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
+                        android:src="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
                 </LinearLayout>
 
