@@ -2,6 +2,9 @@ package org.wordpress.android.util;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class FormatUtils {
     /*

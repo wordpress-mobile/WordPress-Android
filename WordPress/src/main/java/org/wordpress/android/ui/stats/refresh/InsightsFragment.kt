@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import javax.inject.Inject
 
 class InsightsFragment : Fragment() {
@@ -24,23 +25,27 @@ class InsightsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        activity!!.let { activity ->
 
-        log_list_view.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            val site = activity.intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
-        (activity?.application as WordPress).component()?.inject(this)
+            log_list_view.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
-        val viewModelProvider = ViewModelProviders.of(this, viewModelFactory)
-        mViewModel = viewModelProvider.get(InsightsViewModel::class.java)
+            (activity.application as WordPress).component()?.inject(this)
 
-        val adapter = InsightsAdapter()
+            val viewModelProvider = ViewModelProviders.of(this, viewModelFactory)
+            mViewModel = viewModelProvider.get(InsightsViewModel::class.java)
 
-        log_list_view.adapter = adapter
+            val adapter = InsightsAdapter()
 
-        mViewModel.data.observe(this, Observer {
-            if (it != null) {
-                adapter.update(it.data)
-            }
-        })
-        mViewModel.start()
+            log_list_view.adapter = adapter
+
+            mViewModel.data.observe(this, Observer {
+                if (it != null) {
+                    adapter.update(it.data)
+                }
+            })
+            mViewModel.start(site)
+        }
     }
 }

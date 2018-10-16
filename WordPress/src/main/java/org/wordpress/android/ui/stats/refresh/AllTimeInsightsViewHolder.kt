@@ -1,18 +1,18 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 
-class NotImplementedViewHolder(
+class AllTimeInsightsViewHolder(
     parent: ViewGroup
 ) : InsightsViewHolder(
         parent,
-        layout.stats_not_implemented_block
+        layout.stats_list_block
 ) {
-    private val title: TextView = itemView.findViewById(R.id.not_implemented_block_title)
-    fun bind(insightsItem: NotImplemented) {
-        title.text = insightsItem.text
+    private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
+    fun bind(insightsItem: AllTimeInsightsItem) {
+
     }
 }
