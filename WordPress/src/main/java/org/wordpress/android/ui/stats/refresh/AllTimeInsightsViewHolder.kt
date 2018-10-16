@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import org.wordpress.android.R
@@ -13,6 +14,10 @@ class AllTimeInsightsViewHolder(
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
     fun bind(insightsItem: AllTimeInsightsItem) {
-
+        list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+        if (list.adapter == null) {
+            list.adapter = BlockListAdapter()
+        }
+        (list.adapter as BlockListAdapter).update(insightsItem.items)
     }
 }
