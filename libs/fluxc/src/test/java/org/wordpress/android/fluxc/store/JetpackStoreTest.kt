@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -33,7 +33,7 @@ class JetpackStoreTest {
 
     @Before
     fun setUp() {
-        jetpackStore = JetpackStore(jetpackRestClient, siteStore, Unconfined, dispatcher)
+        jetpackStore = JetpackStore(jetpackRestClient, siteStore, Dispatchers.Unconfined, dispatcher)
         val siteId = 1
         whenever(site.id).thenReturn(siteId)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
@@ -45,7 +45,7 @@ class JetpackStoreTest {
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(JetpackInstalledPayload(site, success))
 
         var result: OnJetpackInstalled? = null
-        launch(Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
+        launch(Dispatchers.Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
 
         jetpackStore.onSiteChanged(OnSiteChanged(1))
 
@@ -74,7 +74,7 @@ class JetpackStoreTest {
         whenever(jetpackRestClient.installJetpack(site)).thenReturn(payload)
 
         var result: OnJetpackInstalled? = null
-        launch(Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
+        launch(Dispatchers.Unconfined) { result = jetpackStore.install(site, INSTALL_JETPACK) }
 
         jetpackStore.onSiteChanged(OnSiteChanged(1))
 
