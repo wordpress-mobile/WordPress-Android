@@ -376,7 +376,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         if (post.isPage()) {
-            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
+            post.setParentId(MapUtils.getMapLong(postMap, "post_parent"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
             post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
         } else {
