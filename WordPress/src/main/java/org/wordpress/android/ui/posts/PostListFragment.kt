@@ -70,7 +70,6 @@ class PostListFragment : Fragment(),
         PostListAdapter.OnPostButtonClickListener {
     private val rvScrollPositionSaver = RecyclerViewScrollPositionManager()
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var mPostListAdapter: PostListAdapter? = null
     private var fabView: View? = null
 
     private var swipeRefreshLayout: CustomSwipeRefreshLayout? = null
@@ -93,24 +92,14 @@ class PostListFragment : Fragment(),
     @Inject internal lateinit var postStore: PostStore
     @Inject internal lateinit var dispatcher: Dispatcher
 
-    private val postListAdapter: PostListAdapter
-        get() {
-            if (mPostListAdapter == null) {
-                val postListAdapter = PostListAdapter(nonNullActivity, site)
-                postListAdapter.setOnLoadMoreListener(this)
-                postListAdapter.setOnPostsLoadedListener(this)
-                postListAdapter.setOnPostSelectedListener(this)
-                postListAdapter.setOnPostButtonClickListener(this)
-                mPostListAdapter = postListAdapter
-            }
-            return mPostListAdapter!!
-        }
-
-    var isRefreshing: Boolean
-        get() = swipeToRefreshHelper?.isRefreshing == true
-        private set(refreshing) {
-            swipeToRefreshHelper?.isRefreshing = refreshing
-        }
+    private val postListAdapter: PostListAdapter by lazy {
+        val postListAdapter = PostListAdapter(nonNullActivity, site)
+        postListAdapter.setOnLoadMoreListener(this)
+        postListAdapter.setOnPostsLoadedListener(this)
+        postListAdapter.setOnPostSelectedListener(this)
+        postListAdapter.setOnPostButtonClickListener(this)
+        postListAdapter
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,11 +150,11 @@ class PostListFragment : Fragment(),
         actionableEmptyView = view.findViewById(R.id.actionable_empty_view)
 
         val context = nonNullActivity
-        recyclerView?.layoutManager = LinearLayoutManager(context)
-
         val spacingVertical = context.resources.getDimensionPixelSize(R.dimen.card_gutters)
         val spacingHorizontal = context.resources.getDimensionPixelSize(R.dimen.content_margin)
+        recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical))
+        recyclerView?.adapter = postListAdapter
 
         // hide the fab so we can animate it
         fabView?.visibility = View.GONE
@@ -223,7 +212,6 @@ class PostListFragment : Fragment(),
                         return@RefreshListener
                     }
                     if (!NetworkUtils.checkConnection(nonNullActivity)) {
-                        isRefreshing = false
                         updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
                         return@RefreshListener
                     }
@@ -245,12 +233,6 @@ class PostListFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-
-        recyclerView?.let {
-            if (it.adapter == null) {
-                it.adapter = postListAdapter
-            }
-        }
 
         // always (re) load when resumed to reflect changes made elsewhere
         loadPosts(LoadMode.IF_CHANGED)
@@ -339,7 +321,7 @@ class PostListFragment : Fragment(),
     }
 
     private fun hideEmptyView() {
-        if (isAdded && actionableEmptyView != null) {
+        if (isAdded) {
             actionableEmptyView?.visibility = View.GONE
         }
     }
@@ -385,7 +367,10 @@ class PostListFragment : Fragment(),
                     }
 
                     override fun calculateDtToFit(
-                        viewStart: Int, viewEnd: Int, boxStart: Int, boxEnd: Int,
+                        viewStart: Int,
+                        viewEnd: Int,
+                        boxStart: Int,
+                        boxEnd: Int,
                         snapPreference: Int
                     ): Int {
                         // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
@@ -442,11 +427,9 @@ class PostListFragment : Fragment(),
                 if (!post.isLocalDraft) {
                     properties["post_id"] = post.remotePostId
                 }
-                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
-                AnalyticsUtils.trackWithSiteDetails(
-                        AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site,
-                        properties
-                )
+                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] =
+                        PostUtils.contentContainsGutenbergBlocks(post.content)
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
 
                 if (UploadService.isPostUploadingOrQueued(post)) {
                     // If the post is uploading media, allow the media to continue uploading, but don't upload the
@@ -458,13 +441,17 @@ class PostListFragment : Fragment(),
             PostListButton.BUTTON_RETRY -> {
                 // restart the UploadService with retry parameters
                 val intent = UploadService.getUploadPostServiceIntent(
-                        nonNullActivity, post, PostUtils.isFirstTimePublish(post), false, true
+                        nonNullActivity,
+                        post,
+                        PostUtils.isFirstTimePublish(post),
+                        false,
+                        true
                 )
                 nonNullActivity.startService(intent)
             }
-            PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> showPublishConfirmationDialog(
-                    post
-            )
+            PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
+                showPublishConfirmationDialog(post)
+            }
             PostListButton.BUTTON_VIEW -> ActivityLauncher.browsePostOrPage(nonNullActivity, site, post)
             PostListButton.BUTTON_PREVIEW -> ActivityLauncher.viewPostPreviewForResult(nonNullActivity, site, post)
             PostListButton.BUTTON_STATS -> ActivityLauncher.viewStatsSinglePostDetails(
@@ -473,32 +460,34 @@ class PostListFragment : Fragment(),
                     post,
                     false
             )
-            PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> if (!UploadService.isPostUploadingOrQueued(post)) {
-                var message = getString(R.string.dialog_confirm_delete_post)
+            PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
+                if (!UploadService.isPostUploadingOrQueued(post)) {
+                    var message = getString(R.string.dialog_confirm_delete_post)
 
-                if (post.isLocalDraft) {
-                    message = getString(R.string.dialog_confirm_delete_permanently_post)
+                    if (post.isLocalDraft) {
+                        message = getString(R.string.dialog_confirm_delete_permanently_post)
+                    }
+
+                    val builder = AlertDialog.Builder(
+                            ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
+                    )
+                    builder.setTitle(getString(R.string.delete_post))
+                            .setMessage(message)
+                            .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true)
+                    builder.create().show()
+                } else {
+                    val builder = AlertDialog.Builder(
+                            ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
+                    )
+                    builder.setTitle(getText(R.string.delete_post))
+                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
+                            .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true)
+                    builder.create().show()
                 }
-
-                val builder = AlertDialog.Builder(
-                        ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-                )
-                builder.setTitle(getString(R.string.delete_post))
-                        .setMessage(message)
-                        .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
-                        .setNegativeButton(R.string.cancel, null)
-                        .setCancelable(true)
-                builder.create().show()
-            } else {
-                val builder = AlertDialog.Builder(
-                        ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-                )
-                builder.setTitle(getText(R.string.delete_post))
-                        .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
-                        .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
-                        .setNegativeButton(R.string.cancel, null)
-                        .setCancelable(true)
-                builder.create().show()
             }
         }
     }
@@ -617,13 +606,13 @@ class PostListFragment : Fragment(),
             if (!event.isError) {
                 loadPosts(LoadMode.IF_CHANGED)
             }
-        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts || event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
+        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts ||
+                event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
             isFetchingPosts = false
             if (!isAdded) {
                 return
             }
 
-            isRefreshing = false
             hideLoadMoreProgress()
             if (!event.isError) {
                 canLoadMorePosts = event.canLoadMore
@@ -681,8 +670,7 @@ class PostListFragment : Fragment(),
             return
         }
 
-        val post = postStore.getPostByLocalPostId(event.media.localPostId)
-        if (post != null) {
+        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
             if (event.media.isError || event.canceled) {
                 // if a media is cancelled or ends in error, and the post is not uploading nor queued,
                 // (meaning there is no other pending media to be uploaded for this post)
@@ -699,8 +687,7 @@ class PostListFragment : Fragment(),
 
     fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
         if (isAdded) {
-            val post = postStore.getPostByLocalPostId(event.media.localPostId)
-            if (post != null) {
+            postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
                 postListAdapter.updateProgressForPost(post)
             }
         }
@@ -761,12 +748,11 @@ class PostListFragment : Fragment(),
             val fragment = PostListFragment()
             val bundle = Bundle()
             bundle.putSerializable(WordPress.SITE, site)
-            if (targetPost != null) {
-                bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.id)
+            targetPost?.let {
+                bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, it.id)
             }
             fragment.arguments = bundle
             return fragment
         }
     }
 }
-

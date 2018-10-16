@@ -124,10 +124,6 @@ public class PostsListActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isRefreshing() {
-        return mPostList.isRefreshing();
-    }
-
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

@@ -175,15 +175,13 @@ class PostListAdapter(
     }
 
     private fun canShowStatsForPost(post: PostModel): Boolean {
-        return (isStatsSupported
-                && PostStatus.fromPost(post) == PostStatus.PUBLISHED
-                && !post.isLocalDraft
-                && !post.isLocallyChanged)
+        return (isStatsSupported && PostStatus.fromPost(post) == PostStatus.PUBLISHED &&
+                !post.isLocalDraft && !post.isLocallyChanged)
     }
 
     private fun canPublishPost(post: PostModel?): Boolean {
-        return (post != null && !UploadService.isPostUploadingOrQueued(post)
-                && (post.isLocallyChanged || post.isLocalDraft || PostStatus.fromPost(post) == PostStatus.DRAFT))
+        return (post != null && !UploadService.isPostUploadingOrQueued(post) &&
+                (post.isLocallyChanged || post.isLocalDraft || PostStatus.fromPost(post) == PostStatus.DRAFT))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -246,15 +244,12 @@ class PostListAdapter(
         }
 
         // load more posts when we near the end
-        if (onLoadMoreListener != null && position >= posts.size - 1
-                && position >= PostListFragment.POSTS_REQUEST_COUNT - 1) {
+        if (position >= posts.size - 1 && position >= PostListFragment.POSTS_REQUEST_COUNT - 1) {
             onLoadMoreListener?.onLoadMore()
         }
 
         holder.itemView.setOnClickListener {
-            if (onPostSelectedListener != null) {
-                onPostSelectedListener?.onPostSelected(post)
-            }
+            onPostSelectedListener?.onPostSelected(post)
         }
     }
 
@@ -284,9 +279,8 @@ class PostListAdapter(
     }
 
     private fun updatePostUploadProgressBar(view: ProgressBar, post: PostModel) {
-        if (!uploadStore.isFailedPost(post) && (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(
-                        post
-                ))) {
+        if (!uploadStore.isFailedPost(post) && (UploadService.isPostUploadingOrQueued(post) ||
+                        UploadService.hasInProgressMediaUploadsForPost(post))) {
             view.visibility = View.VISIBLE
             val overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100)
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -367,8 +361,7 @@ class PostListAdapter(
                     else ->
                         // no-op
                         return
-                }// no-op
-                // no-op
+                }
             }
 
             val resources = context.resources
@@ -397,9 +390,8 @@ class PostListAdapter(
         holder: PostViewHolder,
         post: PostModel
     ) {
-        val canRetry = uploadStore.getUploadErrorForPost(post) != null && !UploadService.hasInProgressMediaUploadsForPost(
-                post
-        )
+        val canRetry = uploadStore.getUploadErrorForPost(post) != null &&
+                !UploadService.hasInProgressMediaUploadsForPost(post)
         val canShowViewButton = !canRetry
         val canShowStatsButton = canShowStatsForPost(post)
         val canShowPublishButton = canRetry || canPublishPost(post)
@@ -532,10 +524,10 @@ class PostListAdapter(
     }
 
     fun updateProgressForPost(post: PostModel) {
-        if (recyclerView != null) {
+        recyclerView?.let {
             val position = getPositionForPost(post)
             if (position > -1) {
-                val viewHolder = recyclerView?.findViewHolderForAdapterPosition(position)
+                val viewHolder = it.findViewHolderForAdapterPosition(position)
                 if (viewHolder is PostViewHolder) {
                     updatePostUploadProgressBar(viewHolder.progressBar, post)
                 }
@@ -628,7 +620,8 @@ class PostListAdapter(
     }
 
     @SuppressLint("StaticFieldLeak")
-    private inner class LoadPostsTask internal constructor(private val mLoadMode: LoadMode) : AsyncTask<Void, Void, Boolean>() {
+    private inner class LoadPostsTask internal constructor(private val mLoadMode: LoadMode)
+        : AsyncTask<Void, Void, Boolean>() {
         private var mTmpPosts: MutableList<PostModel>? = null
         private val mMediaIdsToUpdate = ArrayList<Long>()
 
@@ -716,4 +709,3 @@ class PostListAdapter(
         }
     }
 }
-
