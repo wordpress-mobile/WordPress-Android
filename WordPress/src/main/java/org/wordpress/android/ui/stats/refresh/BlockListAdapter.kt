@@ -4,6 +4,7 @@ import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -56,10 +57,17 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             private val icon = itemView.findViewById<ImageView>(R.id.icon)
             private val text = itemView.findViewById<TextView>(R.id.text)
             private val value = itemView.findViewById<TextView>(R.id.value)
+            private val divider = itemView.findViewById<View>(R.id.divider)
+
             fun bind(item: Item) {
                 icon.setImageResource(item.icon)
                 text.setText(item.text)
                 value.text = item.value
+                divider.visibility = if (item.showDivider) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
             }
         }
     }

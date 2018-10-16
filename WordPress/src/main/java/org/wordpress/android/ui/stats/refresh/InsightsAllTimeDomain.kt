@@ -23,7 +23,7 @@ class InsightsAllTimeDomain
 
     private fun allTimeInsightsItem(model: InsightsAllTimeModel): AllTimeInsightsItem {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_insights_all_time))
+        items.add(Title(R.string.stats_insights_all_time_stats))
         items.add(Item(R.drawable.ic_posts_grey_dark_24dp, R.string.posts, model.posts.toFormattedString()))
         items.add(Item(R.drawable.ic_posts_grey_dark_24dp, R.string.stats_views, model.views.toFormattedString()))
         items.add(Item(R.drawable.ic_user_grey_24dp, R.string.stats_visitors, model.visitors.toFormattedString()))
@@ -31,7 +31,8 @@ class InsightsAllTimeDomain
                 Item(
                         R.drawable.ic_user_grey_24dp,
                         R.string.stats_insights_best_ever,
-                        model.viewsBestDayTotal.toFormattedString()
+                        model.viewsBestDayTotal.toFormattedString(),
+                        showDivider = false
                 )
         )
         return AllTimeInsightsItem(items)
