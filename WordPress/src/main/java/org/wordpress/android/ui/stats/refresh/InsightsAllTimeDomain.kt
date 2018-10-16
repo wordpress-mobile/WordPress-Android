@@ -34,7 +34,7 @@ class InsightsAllTimeDomain
             if (model.views > 0) {
                 items.add(
                         Item(
-                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.drawable.ic_visible_on_grey_dark_24dp,
                                 R.string.stats_views,
                                 model.views.toFormattedString()
                         )
@@ -43,7 +43,7 @@ class InsightsAllTimeDomain
             if (model.visitors > 0) {
                 items.add(
                         Item(
-                                R.drawable.ic_user_grey_24dp,
+                                R.drawable.ic_user_grey_dark_24dp,
                                 R.string.stats_visitors,
                                 model.visitors.toFormattedString()
                         )
@@ -52,7 +52,7 @@ class InsightsAllTimeDomain
             if (model.viewsBestDayTotal > 0) {
                 items.add(
                         Item(
-                                R.drawable.ic_user_grey_24dp,
+                                R.drawable.ic_trophy_grey_dark_24dp,
                                 R.string.stats_insights_best_ever,
                                 model.viewsBestDayTotal.toFormattedString(),
                                 showDivider = false
