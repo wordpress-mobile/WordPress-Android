@@ -47,7 +47,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
-import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -66,6 +65,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
 import org.wordpress.android.ui.pages.PagesFragment;
+import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -82,6 +82,7 @@ import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostPreviewFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
+import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
@@ -332,6 +333,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostsListFragment object);
 
     void inject(PostsListAdapter object);
+
+    void inject(HistoryListFragment object);
 
     void inject(NotificationsListFragment object);
 

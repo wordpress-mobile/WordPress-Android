@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -117,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/people_invite_role_info_desc"
-                    app:srcCompat="@drawable/ic_info_black_24dp"
+                    android:src="@drawable/ic_info_black_24dp"
                     android:paddingEnd="@dimen/margin_small"
                     android:paddingStart="@dimen/margin_small"/>
             </LinearLayout>

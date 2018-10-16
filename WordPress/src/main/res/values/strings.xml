@@ -1201,6 +1201,15 @@
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
 
+    <!-- History -->
+    <string name="description_user">User avatar</string>
+    <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
+    <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
+    <string name="history_empty_title">No history yet</string>
+    <string name="history_footer_page">Page Created on %1$s at %2$s</string>
+    <string name="history_footer_post">Post Created on %1$s at %2$s</string>
+    <string name="history_title" translatable="false">@string/menu_history</string>
+
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
     <string name="post_format_audio">Audio</string>
@@ -1260,10 +1269,10 @@
     <string name="image_size_large_label">Large</string>
     <string name="image_size_full_label">Full Size</string>
 
-    <string name="image_size_thumbnail_class">size-thumbnail</string>
-    <string name="image_size_medium_class">size-medium</string>
-    <string name="image_size_large_class">size-large</string>
-    <string name="image_size_full_class">size-full</string>
+    <string name="image_size_thumbnail_class" translatable="false">size-thumbnail</string>
+    <string name="image_size_medium_class" translatable="false">size-medium</string>
+    <string name="image_size_large_class" translatable="false">size-large</string>
+    <string name="image_size_full_class" translatable="false">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
@@ -2327,7 +2336,7 @@
     which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
     the out-of-date announcement might redirect the user to the new feature. -->
     <!--suppress UnusedResources -->
-    <string name="news_card_announcement_title_sample_announcement" >[New feature available]</string>
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
     <!--suppress UnusedResources -->
     <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
     <!--suppress UnusedResources -->

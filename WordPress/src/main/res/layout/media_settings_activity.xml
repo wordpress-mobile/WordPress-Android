@@ -56,7 +56,7 @@
                     android:layout_height="60dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/play_video_selector_large"
+                    android:src="@drawable/play_video_selector_large"
                     android:contentDescription="@string/media_settings_play"
                     tools:visibility="visible" />
             </FrameLayout>
@@ -542,7 +542,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
-        app:srcCompat="@drawable/ic_fullscreen_white_24dp"
+        android:src="@drawable/ic_fullscreen_white_24dp"
         tools:visibility="visible" />
 
     <ProgressBar

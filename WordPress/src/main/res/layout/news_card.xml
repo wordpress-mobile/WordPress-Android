@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,7 +27,7 @@
             android:focusable="true"
             android:padding="@dimen/margin_small"
             android:tint="@color/grey"
-            app:srcCompat="@drawable/ic_close_white_24dp"/>
+            android:src="@drawable/ic_close_white_24dp"/>
 
         <ImageView
             android:id="@+id/news_image"
@@ -38,7 +37,7 @@
             android:layout_marginEnd="@dimen/negative_margin_medium"
             android:layout_toStartOf="@+id/news_dismiss"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
+            android:src="@drawable/img_illustration_notifications_152dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/news_title"

@@ -276,7 +276,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            app:srcCompat="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_black_24dp" />
                     </RelativeLayout>
 
                     <View style="@style/PostSettingsDivider" />
@@ -293,7 +293,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            app:srcCompat="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_black_24dp" />
                     </RelativeLayout>
 
                     <View style="@style/PostSettingsDivider" />
@@ -310,7 +310,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            app:srcCompat="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_black_24dp" />
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -346,7 +346,7 @@
                             android:id="@+id/plugin_description_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
 
                     </RelativeLayout>
 
@@ -375,7 +375,7 @@
                             android:id="@+id/plugin_installation_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
 
                     </RelativeLayout>
 
@@ -404,7 +404,7 @@
                             android:id="@+id/plugin_whatsnew_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
 
                     </RelativeLayout>
 
@@ -433,7 +433,7 @@
                             android:id="@+id/plugin_faq_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
 
                     </RelativeLayout>
                 </LinearLayout>
