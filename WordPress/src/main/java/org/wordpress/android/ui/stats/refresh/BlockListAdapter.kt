@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
@@ -26,6 +27,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
         return when (BlockListItem.Type.values()[viewType]) {
             BlockListItem.Type.TITLE -> TitleViewHolder(parent)
             BlockListItem.Type.ITEM -> ItemViewHolder(parent)
+            BlockListItem.Type.EMPTY -> EmptyViewHolder(parent)
         }
     }
 
@@ -53,6 +55,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
                 text.setText(item.text)
             }
         }
+
         class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_item) {
             private val icon = itemView.findViewById<ImageView>(R.id.icon)
             private val text = itemView.findViewById<TextView>(R.id.text)
@@ -70,5 +73,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
                 }
             }
         }
+
+        class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_empty_item)
     }
 }
