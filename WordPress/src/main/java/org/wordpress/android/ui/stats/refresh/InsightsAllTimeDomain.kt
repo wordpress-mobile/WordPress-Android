@@ -22,7 +22,7 @@ class InsightsAllTimeDomain
         }
     }
 
-    private fun allTimeInsightsItem(model: InsightsAllTimeModel): AllTimeInsightsItem {
+    private fun allTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
         if (model.posts == 0 && model.views == 0 && model.visitors == 0 && model.viewsBestDayTotal == 0) {
@@ -60,6 +60,6 @@ class InsightsAllTimeDomain
                 )
             }
         }
-        return AllTimeInsightsItem(items)
+        return ListInsightItem(items)
     }
 }
