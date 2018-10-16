@@ -402,7 +402,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 contentStruct.put("post_format", post.getPostFormat());
             }
         } else {
-            contentStruct.put("parent", post.getParentId());
+            contentStruct.put("post_parent", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
