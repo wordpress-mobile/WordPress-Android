@@ -29,8 +29,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -47,8 +47,8 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
+import org.wordpress.android.ui.posts.adapters.PostListAdapter;
+import org.wordpress.android.ui.posts.adapters.PostListAdapter.LoadMode;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -78,16 +78,16 @@ import de.greenrobot.event.EventBus;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class PostsListFragment extends Fragment
-        implements PostsListAdapter.OnPostsLoadedListener,
-        PostsListAdapter.OnLoadMoreListener,
-        PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener {
+        implements PostListAdapter.OnPostsLoadedListener,
+        PostListAdapter.OnLoadMoreListener,
+        PostListAdapter.OnPostSelectedListener,
+        PostListAdapter.OnPostButtonClickListener {
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
     private final RecyclerViewScrollPositionManager mRVScrollPositionSaver = new RecyclerViewScrollPositionManager();
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private PostsListAdapter mPostsListAdapter;
+    private PostListAdapter mPostListAdapter;
     private View mFabView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -260,20 +260,20 @@ public class PostsListFragment extends Fragment
         );
     }
 
-    private @Nullable PostsListAdapter getPostListAdapter() {
-        if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite);
-            mPostsListAdapter.setOnLoadMoreListener(this);
-            mPostsListAdapter.setOnPostsLoadedListener(this);
-            mPostsListAdapter.setOnPostSelectedListener(this);
-            mPostsListAdapter.setOnPostButtonClickListener(this);
+    private @Nullable PostListAdapter getPostListAdapter() {
+        if (mPostListAdapter == null) {
+            mPostListAdapter = new PostListAdapter(getActivity(), mSite);
+            mPostListAdapter.setOnLoadMoreListener(this);
+            mPostListAdapter.setOnPostsLoadedListener(this);
+            mPostListAdapter.setOnPostSelectedListener(this);
+            mPostListAdapter.setOnPostButtonClickListener(this);
         }
 
-        return mPostsListAdapter;
+        return mPostListAdapter;
     }
 
     private boolean isPostAdapterEmpty() {
-        return (mPostsListAdapter != null && mPostsListAdapter.getItemCount() == 0);
+        return (mPostListAdapter != null && mPostListAdapter.getItemCount() == 0);
     }
 
     private void loadPosts(LoadMode mode) {
@@ -451,8 +451,8 @@ public class PostsListFragment extends Fragment
 
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
         if (mTargetPost != null) {
-            if (mPostsListAdapter != null) {
-                final int position = mPostsListAdapter.getPositionForPost(mTargetPost);
+            if (mPostListAdapter != null) {
+                final int position = mPostListAdapter.getPositionForPost(mTargetPost);
                 if (position > -1) {
                     RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getActivity()) {
                         private static final int SCROLL_OFFSET_DP = 23;
@@ -761,10 +761,10 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaChanged(OnMediaChanged event) {
-        if (isAdded() && !event.isError() && mPostsListAdapter != null) {
+        if (isAdded() && !event.isError() && mPostListAdapter != null) {
             if (event.mediaList != null && event.mediaList.size() > 0) {
                 MediaModel mediaModel = event.mediaList.get(0);
-                mPostsListAdapter.mediaChanged(mediaModel);
+                mPostListAdapter.mediaChanged(mediaModel);
             }
         }
     }
@@ -792,7 +792,7 @@ public class PostsListFragment extends Fragment
                     loadPosts(LoadMode.FORCED);
                 }
             } else {
-                mPostsListAdapter.updateProgressForPost(post);
+                mPostListAdapter.updateProgressForPost(post);
             }
         }
     }
@@ -802,7 +802,7 @@ public class PostsListFragment extends Fragment
         if (isAdded()) {
             PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
             if (post != null) {
-                mPostsListAdapter.updateProgressForPost(post);
+                mPostListAdapter.updateProgressForPost(post);
             }
         }
     }
