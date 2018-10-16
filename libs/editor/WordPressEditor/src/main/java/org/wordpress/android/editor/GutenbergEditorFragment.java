@@ -185,6 +185,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
 
+    final String propNameInitialData = "initialData";
+
     final String initialHtml =
             "<!-- wp:image -->\n"
             + "<figure class=\"wp-block-image\"><img alt=\"\"/></figure>\n"
@@ -279,7 +281,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (initialProps == null) {
             initialProps = new Bundle();
         }
-        initialProps.putString("initialHtml", initialHtml);
+        initialProps.putString(propNameInitialData, initialHtml);
+
 
         // The string here (e.g. "MyReactNativeApp") has to match
         // the string in AppRegistry.registerComponent() in index.js
@@ -652,7 +655,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (appProps == null) {
             appProps = new Bundle();
         }
-        appProps.putString("initialHtml", postContent);
+        appProps.putString(propNameInitialData, postContent);
         mReactRootView.setAppProperties(appProps);
 
         updateFailedAndUploadingMedia();
