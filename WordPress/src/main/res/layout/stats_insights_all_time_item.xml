@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:baselineAligned="false"
     android:padding="@dimen/margin_extra_large"
     android:orientation="vertical">
@@ -33,10 +33,9 @@
                     android:id="@+id/stats_visitors_and_views_tab_icon"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_posts_grey_dark_24dp" />
+                    android:src="@drawable/ic_posts_grey_dark_24dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
@@ -80,10 +79,9 @@
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
+                    android:src="@drawable/ic_visible_on_grey_dark_12dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
@@ -134,10 +132,9 @@
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
+                    android:src="@drawable/ic_user_grey_dark_12dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"
@@ -181,10 +178,9 @@
                 <ImageView
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:layout_marginRight="3dp"
                     android:layout_marginEnd="3dp"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_trophy_alert_yellow_32dp" />
+                    android:src="@drawable/ic_trophy_alert_yellow_32dp" />
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
                     style="@style/StatsInsightsLabel"

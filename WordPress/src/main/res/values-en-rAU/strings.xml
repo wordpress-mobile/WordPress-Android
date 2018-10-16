@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 10:31:59+0000
+Translation-Revision-Date: 2018-09-12 14:00:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
+    <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+    <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
+    <string name="pages_empty_drafts">You don\'t have any draft pages</string>
+    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_search_suggestion">Search pages</string>
+    <string name="pages_empty_search_result">No pages matching your search</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_view">View</string>
+    <string name="pages_trashed">Trashed</string>
+    <string name="pages_scheduled">Scheduled</string>
+    <string name="pages_drafts">Drafts</string>
+    <string name="pages_published">Published</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
+    <string name="site_picker_remove_site_empty">No sites matching your search</string>
+    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="top_level">Top level</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="page_parent_change_error">There was a problem changing the page parent</string>
+    <string name="page_status_change_error">There was a problem changing the page status</string>
+    <string name="page_delete_error">There was a problem deleting the page</string>
+    <string name="set_parent">Set Parent</string>
+    <string name="dismiss">dismiss</string>
+    <string name="quick_start_focus_point_description">tap here</string>
+    <string name="quick_start_sites">Quick Start</string>
+    <string name="quick_start_list_create_site_title">Create your site</string>
+    <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
+    <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
+    <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
+    <string name="quick_start_dialog_view_site_title">View your site</string>
+    <string name="quick_start_dialog_view_site_message_short">Tap %1$s View Site %2$s to preview your site</string>
+    <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
+    <string name="quick_start_dialog_skip_title">Skip Quick Start</string>
+    <string name="quick_start_dialog_skip_message">The quick tour will guide you through building a basic site.  Are you sure you want to skip?</string>
+    <string name="quick_start_dialog_share_site_title">Share your site</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Tap %1$s Sharing %2$s to continue</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
+    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
+    <string name="quick_start_dialog_publish_post_title">Publish a post</string>
+    <string name="quick_start_dialog_publish_post_message_short">Tap %1$s Create Post %2$s to create a new post</string>
+    <string name="quick_start_dialog_publish_post_message">It\'s time!  Draft and publish your very first post.</string>
+    <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
+    <string name="quick_start_dialog_need_help_message">Our Quick Start checklist walks you through the basics of setting up a new website.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Yes</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Never</string>
+    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Tap %1$s Reader %2$s to continue</string>
+    <string name="quick_start_dialog_follow_sites_message">Find sites that speak to you, and follow them to get updates when they publish.</string>
+    <string name="quick_start_dialog_customize_site_title">Customise your site</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Tap %1$s Themes %2$s to continue</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Tap %1$s Customise %2$s to start personalising your site</string>
+    <string name="quick_start_dialog_customize_site_message">Change colours, fonts, and images for a perfectly personalised site.</string>
+    <string name="quick_start_dialog_continue_setup_title">Continue with site setup</string>
+    <string name="quick_start_dialog_continue_setup_message">Time to finish setting up your site!  Our checklist walks you through the next steps.</string>
+    <string name="quick_start_dialog_choose_theme_title">Choose a theme</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Tap %1$s Themes %2$s to discover new themes</string>
+    <string name="quick_start_dialog_choose_theme_message">Browse all our themes to find your perfect fit.</string>
+    <string name="quick_start_button_skip_positive">Skip</string>
+    <string name="quick_start_button_skip_negative">Cancel</string>
+    <string name="quick_start_button_skip">Skip all</string>
+    <string name="quick_start_button_positive">Go</string>
+    <string name="quick_start_button_negative_short">Cancel</string>
+    <string name="quick_start_button_negative">Not now</string>
+    <string name="content_description_done">Done</string>
+    <string name="my_site_create_new_site_title">You don\'t have any sites</string>
+    <string name="reader_empty_followed_tags_title">No followed tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favourite topics</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="install_jetpack_retry">Retry</string>
+    <string name="install_jetpack_continue">Continue</string>
+    <string name="jetpack_installation_problem_message">Jetpack could not be installed at this time</string>
+    <string name="jetpack_installation_problem">There was a problem</string>
+    <string name="jetpack_installed_message">You have Jetpack installed on your site. Congratulations!</string>
+    <string name="jetpack_installed">Jetpack installed</string>
+    <string name="installing_jetpack_message">Installing Jetpack on your site. This can take up to a few minutes to complete</string>
+    <string name="installing_jetpack">Installing Jetpack</string>
+    <string name="install_jetpack_message">Your website credentials will not be stored and are used only for the purpose of installing Jetpack</string>
+    <string name="install_jetpack">Install Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">By setting up Jetpack you agree to our </string>
+    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin.</string>
     <string name="themes_empty_list">No themes matching your search</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="site_settings_tags_empty_title_search">No tags matching your search</string>
@@ -191,7 +288,7 @@ Language: en_AU
     <string name="stats_tab_tap_content_description">showing %s</string>
     <string name="stats_legend">stats graph legend</string>
     <string name="fab_create_desc">create</string>
-    <string name="fab_add_tag_desc">create tag</string>
+    <string name="fab_add_tag_desc">Create Tag</string>
     <string name="stats_bar_week_desc">Week of %s</string>
     <string name="stats_bar_date_value_desc">%s, %d views</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -266,7 +363,6 @@ Language: en_AU
     <string name="me_section_screen_title">Me</string>
     <string name="my_site_section_screen_title">My site</string>
     <string name="notif_settings_screen_title">Notification settings</string>
-    <string name="passcode_screen_title">WordPress Passcode</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="license_screen_title">License</string>
     <string name="release_notes_screen_title">Release notes</string>
@@ -419,8 +515,7 @@ Language: en_AU
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimise your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
     <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
-    <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Install Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Toggle text</string>
     <string name="plugin_info_your_version">Your WordPress Version</string>
     <string name="plugin_info_requires_version">Requires WordPress Version</string>
@@ -530,7 +625,6 @@ Language: en_AU
     <string name="media_edit_file_details_card_caption">File Details</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_button">Close</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -833,7 +927,6 @@ Language: en_AU
     <string name="image_quality">Image Quality</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
     <string name="error_unknown_post_type">Unknown post format</string>
-    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
     <string name="submit_for_review">Submit</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
@@ -849,9 +942,8 @@ Language: en_AU
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="retry">Retry</string>
     <string name="confirm">Confirm</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
-    <string name="reader_empty_followed_blogs_search_title">No matching sites</string>
     <string name="reader_hint_search_followed_sites">Search followed sites</string>
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="preference_editor_visual">Visual</string>
@@ -1301,7 +1393,6 @@ Language: en_AU
     <string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this site</string>
     <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>
-    <string name="passcodelock_prompt_message">Enter your PIN</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="ignore">Ignore</string>
@@ -1455,7 +1546,6 @@ Language: en_AU
     <string name="reader_label_view_original">View original article</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_comments">No comments yet</string>
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
@@ -1483,7 +1573,6 @@ Language: en_AU
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="passcode_wrong_passcode">Wrong PIN</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
@@ -1507,7 +1596,6 @@ Language: en_AU
     <string name="blog_not_found">An error occurred when accessing this blog</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
     <string name="no_network_message">There is no network available</string>
-    <string name="required_field">Required field</string>
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="reader_toast_err_add_tag">Unable to add this tag</string>
     <string name="reader_title_applog">Application log</string>
@@ -1516,7 +1604,6 @@ Language: en_AU
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_page">An error occurred while deleting the page</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="add_account_blog_url">Blog address</string>
     <string name="image_settings">Image settings</string>
     <string name="local_changes">Local changes</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1574,7 +1661,6 @@ Language: en_AU
     <string name="connection_error">Connection error</string>
     <string name="select_categories">Select categories</string>
     <string name="share_link">Share link</string>
-    <string name="creating_your_site">Creating your site</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="comment_spammed">Comment marked as spam</string>
@@ -1586,7 +1672,6 @@ Language: en_AU
     <string name="pick_video">Select video</string>
     <string name="pick_photo">Select photo</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_share_intent">Unable to share</string>
@@ -1604,14 +1689,6 @@ Language: en_AU
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="comments_empty_list">No comments yet</string>
     <string name="empty_list_default">This list is empty</string>
-    <string name="passcode_turn_on">Turn PIN lock on</string>
-    <string name="passcode_turn_off">Turn PIN lock off</string>
-    <string name="passcode_preference_title">PIN lock</string>
-    <string name="passcode_set">PIN set</string>
-    <string name="passcode_change_passcode">Change PIN</string>
-    <string name="passcode_re_enter_passcode">Re–enter your PIN</string>
-    <string name="passcode_enter_old_passcode">Enter your old PIN</string>
-    <string name="passcode_manage">Manage PIN lock</string>
     <string name="stats_totals_plays">Plays</string>
     <string name="stats_totals_clicks">Clicks</string>
     <string name="stats_totals_views">Views</string>
@@ -1663,6 +1740,7 @@ Language: en_AU
     <string name="posts">Posts</string>
     <string name="width">Width</string>
     <string name="caption">Caption (optional)</string>
+    <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="blogusername">blogusername</string>

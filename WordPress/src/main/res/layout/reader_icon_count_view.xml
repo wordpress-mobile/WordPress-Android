@@ -9,8 +9,6 @@
     android:minHeight="@dimen/reader_button_minimum_height"
     android:orientation="horizontal"
     android:paddingEnd="@dimen/margin_medium"
-    android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium"
     android:paddingStart="@dimen/margin_medium" >
 
     <ImageView
@@ -28,7 +26,6 @@
         android:importantForAccessibility="no"
         android:layout_gravity="center_vertical"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_extra_small"
         android:layout_marginStart="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
         android:textColor="@color/reader_count_text"

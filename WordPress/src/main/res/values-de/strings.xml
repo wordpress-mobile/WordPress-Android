@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-21 08:54:08+0000
+Translation-Revision-Date: 2018-09-20 07:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Weitere Informationen]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Gerade keine Zeit zum Lesen? Kein Problem: Speichere Beiträge und lies sie später.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Neue Funktion verfügbar]</string>
+    <string name="pages_empty_trashed">Du hast keine Seiten im Papierkorb</string>
+    <string name="pages_empty_scheduled">Du hast keine geplanten Seiten</string>
+    <string name="pages_empty_drafts">Du hast keine Seitenentwürfe</string>
+    <string name="pages_empty_published">Du hast noch keine Seiten veröffentlicht</string>
+    <string name="pages_search_suggestion">Seiten suchen</string>
+    <string name="pages_empty_search_result">Keine Seiten entsprechen deiner Suche</string>
+    <string name="pages_delete_permanently">Unwiderruflich löschen</string>
+    <string name="pages_move_to_trash">In Papierkorb verschieben</string>
+    <string name="pages_move_to_draft">In Entwurf verschieben</string>
+    <string name="pages_publish_now">Jetzt veröffentlichen</string>
+    <string name="pages_set_parent">Übergeordnete Seite festlegen</string>
+    <string name="pages_view">Anzeigen</string>
+    <string name="pages_trashed">Im Papierkorb</string>
+    <string name="pages_scheduled">Geplant</string>
+    <string name="pages_drafts">Entwürfe</string>
+    <string name="pages_published">Veröffentlicht</string>
+    <string name="login_error_sms_throttled">Wir haben zu viele Versuche unternommen, einen SMS–Verifizierungscode zu senden – atme kurz durch und fordere in einer Minute einen neuen an.</string>
+    <string name="login_error_email_not_found_v2">Kein WordPress.com-Konto stimmt mit diesem Google–Konto überein.</string>
+    <string name="site_picker_remove_site_empty">Keine Websites entsprechen deiner Suche</string>
+    <string name="reader_empty_followed_blogs_search_title">Keine Websites entsprechen deiner Suche</string>
+    <string name="page_parent_changed">Übergeordnete Seite wurde geändert</string>
+    <string name="page_permanently_deleted">Seite wurde dauerhaft gelöscht</string>
+    <string name="page_moved_to_scheduled">Seite wurde geplant</string>
+    <string name="page_moved_to_published">Seite wurde veröffentlicht</string>
+    <string name="page_moved_to_trash">Seite wurde in den Papierkorb verschoben</string>
+    <string name="page_moved_to_draft">Seite wurde in Entwurf verschoben</string>
+    <string name="top_level">Oberste Ebene</string>
+    <string name="page_delete_dialog_message">Möchtest du die Seite %s wirklich löschen?</string>
+    <string name="page_parent_change_error">Beim Ändern der übergeordneten Seite ist ein Problem aufgetreten</string>
+    <string name="page_status_change_error">Beim Ändern des Seitenstatus ist ein Problem aufgetreten</string>
+    <string name="page_delete_error">Beim Löschen der Seite ist ein Problem aufgetreten</string>
+    <string name="set_parent">Übergeordnete festlegen</string>
+    <string name="dismiss">verwerfen</string>
+    <string name="quick_start_focus_point_description">Hier tippen</string>
+    <string name="quick_start_sites">Schnellstart</string>
+    <string name="quick_start_list_create_site_title">Erstelle deine Website</string>
+    <string name="quick_start_list_create_site_subtitle">Website einrichten</string>
+    <string name="quick_start_list_complete_title">Glückwunsch zum Abschluss des Schnellstarts</string>
+    <string name="quick_start_list_complete_subtitle">Fühlt es sich nicht gut an, Dinge von einer Liste abzuhaken?</string>
+    <string name="quick_start_dialog_view_site_title">Deine Website ansehen</string>
+    <string name="quick_start_dialog_view_site_message_short">Tippe auf %1$s Website anzeigen %2$s, um dir eine Vorschau deiner Website anzusehen</string>
+    <string name="quick_start_dialog_view_site_message">Zeige eine Vorschau deiner neuen Website an, um zu sehen, wie sie deinen Besuchern angezeigt wird.</string>
+    <string name="quick_start_dialog_skip_title">Schnellstart überspringen</string>
+    <string name="quick_start_dialog_skip_message">Die Schnellstart–Tour leitet dich durch die Erstellung einer grundlegenden Website. Bist du sicher, dass du sie überspringen möchtest?</string>
+    <string name="quick_start_dialog_share_site_title">Website teilen</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Tippe auf %1$s Teilen %2$s, um fortzufahren</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Tippe auf die %1$s Verbindungen %2$s, um deine Social Media–Konten hinzuzufügen</string>
+    <string name="quick_start_dialog_share_site_message">Verknüpfe deine Social Media–Konten, sodass deine Website automatisch neue Beiträge teilt.</string>
+    <string name="quick_start_dialog_publish_post_title">Beitrag veröffentlichen</string>
+    <string name="quick_start_dialog_publish_post_message_short">Tippe auf %1$s Beitrag erstellen %2$s, um einen neuen Beitrag zu erstellen</string>
+    <string name="quick_start_dialog_publish_post_message">Es ist Zeit! Entwirf und veröffentliche deinen allerersten Beitrag.</string>
+    <string name="quick_start_dialog_need_help_title">Benötigst du ein wenig Hilfe beim Start?</string>
+    <string name="quick_start_dialog_need_help_message">Unsere Schnellstart–Checkliste leitet dich durch die Grundlagen für die Einrichtung einer neuen Website.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ja</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nie</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nein</string>
+    <string name="quick_start_dialog_follow_sites_title">Anderen Websites folgen</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tippe auf %1$s Suche %2$s, um Websites zu ähnlichen Themen zu finden</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Tippe auf %1$s Reader %2$s, um fortzufahren</string>
+    <string name="quick_start_dialog_follow_sites_message">Suche Websites, die dich ansprechen, und folge diesen, um informiert zu werden, wenn auf diesen Inhalte veröffentlicht werden.</string>
+    <string name="quick_start_dialog_customize_site_title">Passe deine Website an</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Tippe auf %1$s Themes %2$s, um fortzufahren</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Tippe auf %1$s Anpassen %2$s, um mit der Personalisierung deiner Website zu beginnen</string>
+    <string name="quick_start_dialog_customize_site_message">Ändere Farben, Schriften und Bilder, um eine perfekt personalisierte Website zu erhalten.</string>
+    <string name="quick_start_dialog_continue_setup_title">Fahre mit der Website–Einrichtung fort</string>
+    <string name="quick_start_dialog_continue_setup_message">Schließe nun die Einrichtung deiner Website ab! Unsere Checkliste leitet dich durch die nächsten Schritte.</string>
+    <string name="quick_start_dialog_choose_theme_title">Wähle ein Theme</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Tippe auf %1$s Themes %2$s, um neue Themes zu entdecken</string>
+    <string name="quick_start_dialog_choose_theme_message">Durchsuche alle unsere Themes, um das für dich perfekte Theme zu finden.</string>
+    <string name="quick_start_button_skip_positive">Überspringen</string>
+    <string name="quick_start_button_skip_negative">Abbrechen</string>
+    <string name="quick_start_button_skip">Alles überspringen</string>
+    <string name="quick_start_button_positive">Los</string>
+    <string name="quick_start_button_negative_short">Abbrechen</string>
+    <string name="quick_start_button_negative">Später</string>
+    <string name="content_description_done">Fertig</string>
+    <string name="my_site_create_new_site_title">Du hast keine Websites</string>
+    <string name="reader_empty_followed_tags_title">Du folgst keinen Tags</string>
+    <string name="reader_empty_followed_tags_subtitle">Füge hier Tags hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
+    <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack–Verbindung verwendet hast.</string>
+    <string name="install_jetpack_retry">Erneut versuchen</string>
+    <string name="install_jetpack_continue">Weiter</string>
+    <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
+    <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
+    <string name="jetpack_installed_message">Du hast Jetpack auf deiner Website installiert. Glückwunsch!</string>
+    <string name="jetpack_installed">Jetpack installiert</string>
+    <string name="installing_jetpack_message">Jetpack wird auf deiner Website installiert. Dieser Vorgang kann einige Minuten dauern</string>
+    <string name="installing_jetpack">Jetpack installieren</string>
+    <string name="install_jetpack_message">Deine Website–Anmeldedaten werden nicht gespeichert und werden verwendet, um Jetpack zu installieren</string>
+    <string name="install_jetpack">Jetpack installieren</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Mit der Einrichtung von Jetpack erhalten wir deine Zustimmung zu unseren </string>
+    <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack–Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>
     <string name="site_settings_tags_empty_title_search">Keine Schlagwörter entsprechen deiner Suche</string>
@@ -187,7 +284,6 @@ Language: de
     <string name="stats_tab_tap_content_description">%s wird angezeigt</string>
     <string name="stats_legend">Legende des Statistikdiagramms</string>
     <string name="fab_create_desc">erstellen</string>
-    <string name="fab_add_tag_desc">Schlagwort erstellen</string>
     <string name="stats_bar_week_desc">Woche von %s</string>
     <string name="stats_bar_date_value_desc">%s, %d Aufrufe</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -260,7 +356,6 @@ Language: de
     <string name="me_section_screen_title">Ich</string>
     <string name="my_site_section_screen_title">Meine Website</string>
     <string name="notif_settings_screen_title">Benachrichtigungseinstellungen</string>
-    <string name="passcode_screen_title">WordPress–Zugangscode</string>
     <string name="help_screen_title">Hilfe und Support</string>
     <string name="license_screen_title">Lizenz</string>
     <string name="release_notes_screen_title">Versionshinweise</string>
@@ -412,7 +507,6 @@ Language: de
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimiert deine Bilder und stellt sie über den Server-Standort bereit, der am nächsten an deinen Website-Besuchern liegt. Unser globales Netzwerk für Content–Auslieferung verkürzt die Ladezeiten deiner Website.</string>
     <string name="site_settings_serve_images_from_our_servers">Bereitstellen von Bildern über unsere Server</string>
     <string name="site_settings_speed_up_your_site">Erhöhe die Geschwindigkeit deiner Website</string>
-    <string name="stats_jetpack_connection_setup">Jetpack einrichten</string>
     <string name="plugin_chevron_icon_content_description">Text umschalten</string>
     <string name="plugin_info_your_version">Deine WordPress Version</string>
     <string name="plugin_info_requires_version">Benötigt WordPress Version %</string>
@@ -521,7 +615,6 @@ Language: de
     <string name="media_edit_file_details_card_caption">Datei–Details</string>
     <string name="login_error_suffix">\nVielleicht probierst du es mit einem anderen Konto?</string>
     <string name="login_error_generic">Beim Verbinden mit dem Google–Konto ist ein Problem aufgetreten.</string>
-    <string name="login_error_email_not_found">Das Google-Konto „%s“ stimmt mit keinem vorhandenen WordPress.com–Konto überein.</string>
     <string name="login_error_button">Schließen</string>
     <string name="login_google_button_suffix">Mit Google anmelden.</string>
     <string name="enter_wpcom_password_google">Bitte melde dich mit dem WordPress.com-Passwort an, um mit diesem Google–Konto fortzufahren. Es wird nur einmal benötigt.</string>
@@ -824,7 +917,6 @@ Language: de
     <string name="image_quality">Bildqualität</string>
     <string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien–Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
     <string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
-    <string name="error_fetch_site_after_creation">Die Website wurde erstellt. Gegebenenfalls musst du deine Websites in der Website–Auswahl aktualisieren.</string>
     <string name="submit_for_review">Abschicken</string>
     <string name="duplicate_site_detected">Es wurde eine doppelte Website entdeckt.</string>
     <string name="cannot_add_duplicate_site">Diese Website existiert bereits in der App, du kannst sie nicht hinzufügen.</string>
@@ -842,7 +934,6 @@ Language: de
     <string name="confirm">Bestätigen</string>
     <string name="xmlrpc_endpoint_forbidden_error">Konnte nicht verbinden. Wir haben einen 403-Fehler erhalten, als wir versucht haben, den\n XMLRPC–Endpunkt deiner Website aufzurufen. Die App braucht diesen, um mit deiner Website zu kommunizieren. Kontaktiere deinen Host, um\n dieses Problem zu beheben.</string>
     <string name="xmlrpc_post_blocked_error">Konnte nicht verbinden. Dein Host blockiert POST–Anforderungen und die App benötigt\n diese, um mit deiner Website zu kommunizieren. Kontaktiere deinen Host, um dieses Problem zu beheben.</string>
-    <string name="reader_empty_followed_blogs_search_title">Keine entsprechenden Websites gefunden</string>
     <string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
     <string name="visual_editor_disabled">Visueller Editor deaktiviert</string>
     <string name="preference_editor_visual">Visuell</string>
@@ -1276,7 +1367,6 @@ Language: de
     <string name="post_deleted">Beitrag gelöscht</string>
     <string name="page_trashed">Seite in den Papierkorb verschoben</string>
     <string name="undo">Rückgängig</string>
-    <string name="passcodelock_prompt_message">Gib deine PIN ein</string>
     <string name="push_auth_expired">Die Anfrage ist nicht mehr gültig. Melde dich bei WordPress.com an, um es erneut zu versuchen.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% der Aufrufe</string>
     <string name="ignore">Ignorieren</string>
@@ -1430,7 +1520,6 @@ Language: de
     <string name="reader_label_view_original">Zeige Original–Beitrag</string>
     <string name="reader_empty_posts_in_tag">Keine Beiträge mit diesem Tag.</string>
     <string name="reader_empty_comments">Keine Kommentare bisher</string>
-    <string name="create_new_blog_wpcom">Erstelle ein WordPress.com Blog</string>
     <string name="browse_our_faq_button">Die FAQ durchsuchen</string>
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
     <string name="contact_us">Kontaktiere uns</string>
@@ -1447,7 +1536,6 @@ Language: de
     <string name="username_or_password_incorrect">Der Benutzername oder das Passwort ist falsch</string>
     <string name="email_invalid">Gib eine gültige E-Mail–Adresse ein</string>
     <string name="invalid_email_message">Deine E-Mail–Adresse ist ungültig</string>
-    <string name="passcode_wrong_passcode">Falsche PIN</string>
     <string name="error_downloading_image">Fehler beim Herunterladen des Bildes</string>
     <string name="error_load_comment">Kommentar konnte nicht geladen werden</string>
     <string name="error_edit_comment">Beim Bearbeiten des Kommentars ist ein Fehler aufgetreten</string>
@@ -1471,7 +1559,6 @@ Language: de
     <string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
     <string name="gallery_error">Das Medien–Objekt konnte nicht abgerufen werden</string>
     <string name="no_network_message">Es ist kein Netzwerk verfügbar</string>
-    <string name="required_field">Pflichtfeld</string>
     <string name="reader_toast_err_remove_tag">Tag konnte nicht entfernt werden</string>
     <string name="reader_toast_err_add_tag">Hinzufügen des Tags nicht möglich</string>
     <string name="reader_title_applog">Anwendungslog</string>
@@ -1480,7 +1567,6 @@ Language: de
     <string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
     <string name="error_deleting_page">Beim Löschen der Seite ist ein Fehler aufgetreten</string>
     <string name="wordpress_blog">WordPress–Blog</string>
-    <string name="add_account_blog_url">Blog–Adresse</string>
     <string name="image_settings">Bild–Einstellungen</string>
     <string name="local_changes">Lokale Änderungen</string>
     <string name="privacy_policy">Datenschutzbestimmung</string>
@@ -1538,7 +1624,6 @@ Language: de
     <string name="connection_error">Fehler beim Verbinden</string>
     <string name="select_categories">Kategorien auswählen</string>
     <string name="share_link">Link teilen</string>
-    <string name="creating_your_site">Erstelle deine Website</string>
     <string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
     <string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
     <string name="comment_spammed">Kommentar als Spam markiert</string>
@@ -1550,7 +1635,6 @@ Language: de
     <string name="pick_video">Video auswählen</string>
     <string name="pick_photo">Foto auswählen</string>
     <string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
-    <string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
     <string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>
     <string name="reader_toast_err_view_image">Kann das Bild nicht anzeigen</string>
     <string name="reader_toast_err_share_intent">Teilen nicht möglich</string>
@@ -1567,14 +1651,6 @@ Language: de
     <string name="reader_btn_share">Teilen</string>
     <string name="reader_untitled_post">(Ohne Titel)</string>
     <string name="empty_list_default">Diese Liste ist leer</string>
-    <string name="passcode_turn_on">Stelle PIN–Sperre an</string>
-    <string name="passcode_turn_off">Stelle PIN–Sperre aus</string>
-    <string name="passcode_preference_title">PIN–Sperre</string>
-    <string name="passcode_set">PIN gesetzt</string>
-    <string name="passcode_change_passcode">PIN ändern</string>
-    <string name="passcode_re_enter_passcode">PIN erneut eingeben</string>
-    <string name="passcode_enter_old_passcode">Gib deine alte PIN ein</string>
-    <string name="passcode_manage">PIN–Sperre bearbeiten</string>
     <string name="stats_totals_plays">Abgespielt</string>
     <string name="stats_totals_clicks">Klicks</string>
     <string name="stats_totals_views">Aufrufe</string>
@@ -1626,6 +1702,7 @@ Language: de
     <string name="posts">Beiträge</string>
     <string name="width">Breite</string>
     <string name="caption">Bildunterschrift (optional)</string>
+    <string name="pages">Seiten</string>
     <string name="no_network_title">Kein Netzwerk verfügbar</string>
     <string name="featured_in_post">Bild im Beitragsinhalt verwenden</string>
     <string name="blogusername">blogusername</string>

@@ -365,7 +365,6 @@ Language: nb_NO
     <string name="image_quality">Bildekvalitet</string>
     <string name="error_all_media_upload_canceled">Alle medieopplastninger har blitt avbrutt på grunn av en ukjent feil. Vennligst prøv på nytt</string>
     <string name="error_unknown_post_type">Ukjent innleggsformat</string>
-    <string name="error_fetch_site_after_creation">Nettstedet har blitt laget, og du kan måtte oppfriske nettstedene dine i nettstedsvelgeren.</string>
     <string name="submit_for_review">Send inn</string>
     <string name="duplicate_site_detected">En duplikatside har blitt oppdaget.</string>
     <string name="cannot_add_duplicate_site">Dette nettstedet finnes allerede i appen, så du kan ikke legge den til.</string>
@@ -382,7 +381,6 @@ Language: nb_NO
     <string name="retry">Prøv igjen</string>
     <string name="confirm">Bekreft</string>
     <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST–forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
-    <string name="reader_empty_followed_blogs_search_title">Ingen samsvarende nettsteder</string>
     <string name="reader_hint_search_followed_sites">Søk i fulgte nettsteder</string>
     <string name="visual_editor_disabled">Visuell redigerer deaktivert</string>
     <string name="preference_editor_visual">Visuelt</string>
@@ -815,7 +813,6 @@ Language: nb_NO
     <string name="post_deleted">Innlegg slettet</string>
     <string name="page_trashed">Siden er lagt i papirkurven</string>
     <string name="undo">Angre</string>
-    <string name="passcodelock_prompt_message">Skriv inn PIN</string>
     <string name="push_auth_expired">Forespørselen har utløpt. Logg inn på WordPress.com og prøv igjen.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% av visninger</string>
     <string name="ignore">Ignorer</string>
@@ -966,7 +963,6 @@ Language: nb_NO
     <string name="reader_label_view_original">Vis den opprinnelige artikkelen</string>
     <string name="reader_empty_posts_in_tag">Ingen poster med dette merket</string>
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
-    <string name="create_new_blog_wpcom">Lag en WordPress.com–blogg</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
     <string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
     <string name="contact_us">Kontakt oss</string>
@@ -983,7 +979,6 @@ Language: nb_NO
     <string name="username_or_password_incorrect">Brukernavnet og/eller passordet du skrev inn er feil</string>
     <string name="email_invalid">Skriv inn en gyldig E–postadresse</string>
     <string name="invalid_email_message">E–postadressen din er ikke gyldig</string>
-    <string name="passcode_wrong_passcode">Feil PIN</string>
     <string name="error_downloading_image">Feil ved nedlastning av bilde</string>
     <string name="error_load_comment">Klarte ikke å laste inn kommentaren</string>
     <string name="error_edit_comment">En feil oppstod under redigering av kommentaren</string>
@@ -1007,7 +1002,6 @@ Language: nb_NO
     <string name="blog_not_found">En feil oppstod under å få tilgang til denne bloggen</string>
     <string name="gallery_error">Mediegjenstanden kunne ikke bli hentet inn</string>
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
-    <string name="required_field">Påkrevd felt</string>
     <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette stikkordet</string>
     <string name="reader_toast_err_add_tag">Kunne ikke legge til dette stikkordet</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
@@ -1016,7 +1010,6 @@ Language: nb_NO
     <string name="error_refresh_media">Media kunne ikke bli oppfrisket for øyeblikket</string>
     <string name="error_deleting_page">En feil oppstod under sletting av denne siden</string>
     <string name="wordpress_blog">WordPress–blogg</string>
-    <string name="add_account_blog_url">Bloggadresse</string>
     <string name="image_settings">Bildeinnstillinger</string>
     <string name="local_changes">Lokale endringer</string>
     <string name="privacy_policy">Retningslinjer for personvern</string>
@@ -1071,7 +1064,6 @@ Language: nb_NO
     <string name="connection_error">Tilkoblingsfeil</string>
     <string name="select_categories">Velg kategorier</string>
     <string name="share_link">Del lenke</string>
-    <string name="creating_your_site">Oppretter ditt nettsted</string>
     <string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uten en synlig blogg</string>
     <string name="comment_spammed">Kommentar merket som useriøs</string>
@@ -1083,7 +1075,6 @@ Language: nb_NO
     <string name="pick_video">Velg video</string>
     <string name="pick_photo">Velg bilde</string>
     <string name="reader_likes_you_and_one">Du og en annen har likt dette</string>
-    <string name="reader_empty_followed_tags">Du følger ingen stikkord</string>
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
     <string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
@@ -1100,14 +1091,6 @@ Language: nb_NO
     <string name="reader_btn_share">Del</string>
     <string name="reader_untitled_post">(Uten tittel)</string>
     <string name="empty_list_default">Denne listen er tom</string>
-    <string name="passcode_turn_on">Slå PIN–lås på</string>
-    <string name="passcode_turn_off">Slå av PIN–lås</string>
-    <string name="passcode_preference_title">Lås PIN</string>
-    <string name="passcode_set">PIN endret</string>
-    <string name="passcode_change_passcode">Bytt PIN</string>
-    <string name="passcode_re_enter_passcode">Skriv inn PIN på nytt</string>
-    <string name="passcode_enter_old_passcode">Skriv inn gammel PIN</string>
-    <string name="passcode_manage">Håndter PIN kode</string>
     <string name="stats_totals_plays">Avspillinger</string>
     <string name="stats_totals_clicks">Klikk</string>
     <string name="stats_totals_views">Visninger</string>
@@ -1159,6 +1142,7 @@ Language: nb_NO
     <string name="posts">Innlegg</string>
     <string name="width">Bredde</string>
     <string name="caption">Bildetekst (valgfritt)</string>
+    <string name="pages">Sider</string>
     <string name="no_network_title">Ingen nettverk tilgjengelige</string>
     <string name="featured_in_post">Legg til bilde i innlegget</string>
     <string name="blogusername">Bloggbrukernavn</string>

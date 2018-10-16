@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
+import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -34,6 +35,8 @@ import java.util.List;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 
 class PostUploadNotifier {
     private final Context mContext;
@@ -292,18 +295,27 @@ class PostUploadNotifier {
         notificationTitle = "\"" + postTitle + "\" ";
         notificationMessage = site.getName();
 
-        if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(R.string.draft_uploaded);
-        } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
-        } else {
-            if (post.isPage()) {
+        PostStatus status = PostStatus.fromPost(post);
+        switch (status) {
+            case DRAFT:
+                notificationTitle += mContext.getString(R.string.draft_uploaded);
+                break;
+            case SCHEDULED:
                 notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.page_published : R.string.page_updated);
-            } else {
-                notificationTitle += mContext.getString(
-                        isFirstTimePublish ? R.string.post_published : R.string.post_updated);
-            }
+                        post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
+                break;
+            case PUBLISHED:
+                if (post.isPage()) {
+                    notificationTitle += mContext.getString(
+                            isFirstTimePublish ? R.string.page_published : R.string.page_updated);
+                } else {
+                    notificationTitle += mContext.getString(
+                            isFirstTimePublish ? R.string.post_published : R.string.post_updated);
+                }
+                break;
+            default:
+                notificationTitle += mContext.getString(post.isPage() ? R.string.page_updated : R.string.post_updated);
+                break;
         }
 
         notificationBuilder.setSmallIcon(R.drawable.ic_my_sites_24dp);
@@ -316,13 +328,8 @@ class PostUploadNotifier {
         notificationBuilder.setAutoCancel(true);
 
         long notificationId = getNotificationIdForPost(post);
-        // Tap notification intent (open the post list)
-        Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
-        // TODO: If the post is a page, we need to use the new PagesActivity instead
-//        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
+
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                                                                     (int) notificationId,
                                                                     notificationIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -341,7 +348,7 @@ class PostUploadNotifier {
         }
 
         // add draft Publish action for drafts
-        if (PostStatus.fromPost(post) == PostStatus.DRAFT) {
+        if (PostStatus.fromPost(post) == PostStatus.DRAFT || PostStatus.fromPost(post) == PostStatus.PENDING) {
             Intent publishIntent = UploadService.getUploadPostServiceIntent(mContext, post,
                                                                             isFirstTimePublish, true, false);
             PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, publishIntent,
@@ -450,13 +457,7 @@ class PostUploadNotifier {
                         mContext.getString(R.string.notification_channel_normal_id));
 
         long notificationId = getNotificationIdForPost(post);
-        // Tap notification intent (open the post list)
-        Intent notificationIntent = new Intent(mContext, PostsListActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        notificationIntent.putExtra(WordPress.SITE, site);
-        // TODO: If the post is a page, we need to use the new PagesActivity instead
-//        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        Intent notificationIntent = getNotificationIntent(post, site, notificationId);
         notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
@@ -494,6 +495,24 @@ class PostUploadNotifier {
         EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
         doNotify(notificationId, notificationBuilder.build());
+    }
+
+    @NonNull
+    private Intent getNotificationIntent(@NonNull PostModel post, @NonNull SiteModel site, long notificationId) {
+        // Tap notification intent (open the post/page list)
+        Intent notificationIntent;
+        if (post.isPage()) {
+            notificationIntent = new Intent(mContext, PagesActivity.class);
+            notificationIntent.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, post.getRemotePostId());
+        } else {
+            notificationIntent = new Intent(mContext, PostsListActivity.class);
+        }
+
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        notificationIntent.putExtra(WordPress.SITE, site);
+        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        return notificationIntent;
     }
 
     void updateNotificationErrorForMedia(@NonNull List<MediaModel> mediaList, @NonNull SiteModel site,

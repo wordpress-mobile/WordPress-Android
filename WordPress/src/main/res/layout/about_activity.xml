@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,8 +22,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/transparent"
             android:theme="@style/WordPress.TransparentToolbar"
-            app:layout_scrollFlags="scroll|enterAlways"
-            tools:targetApi="LOLLIPOP"/>
+            app:layout_scrollFlags="scroll|enterAlways" >
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,8 +45,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -58,7 +55,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/ic_my_sites_white_50dp"/>
+                    android:src="@drawable/ic_my_sites_white_50dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/about_first_line"

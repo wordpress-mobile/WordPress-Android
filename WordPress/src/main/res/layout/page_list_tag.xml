@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<org.wordpress.android.widgets.WPTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textColor="@color/alert_yellow_dark"
+    android:background="@drawable/page_list_tag_background"
+    android:textSize="12sp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    tools:text="Local Draft"
+    tools:visibility="visible" />

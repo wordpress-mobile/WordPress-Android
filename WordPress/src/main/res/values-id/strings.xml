@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-21 06:54:08+0000
+Translation-Revision-Date: 2018-09-20 08:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Baca selengkapnya]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Tidak ada waktu untuk membaca sekarang? Tidak masalah: simpan pos untuk dibaca nanti.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Tersedia fitur baru]</string>
+    <string name="pages_empty_trashed">Anda tidak punya halaman yang dibuang</string>
+    <string name="pages_empty_scheduled">Anda tidak punya halaman yang dijadwalkan</string>
+    <string name="pages_empty_drafts">Anda tidak punya halaman konsep</string>
+    <string name="pages_empty_published">Anda belum menerbitkan halaman apa pun</string>
+    <string name="pages_search_suggestion">Cari halaman</string>
+    <string name="pages_empty_search_result">Tidak ada halaman yang cocok dengan pencarian Anda</string>
+    <string name="pages_delete_permanently">Hapus Permanen</string>
+    <string name="pages_move_to_trash">Pindahkan ke Sampah</string>
+    <string name="pages_move_to_draft">Pindahkan ke Konsep</string>
+    <string name="pages_publish_now">Publikasikan Sekarang</string>
+    <string name="pages_set_parent">Atur induk</string>
+    <string name="pages_view">Lihat</string>
+    <string name="pages_trashed">Dibuang</string>
+    <string name="pages_scheduled">Dijadwalkan</string>
+    <string name="pages_drafts">Konsep</string>
+    <string name="pages_published">Dipublikasikan</string>
+    <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
+    <string name="login_error_email_not_found_v2">Tidak ada akun WordPress.com yang cocok dengan akun Google ini.</string>
+    <string name="site_picker_remove_site_empty">Tidak ada situs yang cocok dengan pencarian Anda</string>
+    <string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok dengan pencarian Anda</string>
+    <string name="page_parent_changed">Induk halaman telah diubah</string>
+    <string name="page_permanently_deleted">Halaman telah dihapus permanen</string>
+    <string name="page_moved_to_scheduled">Halaman telah dijadwalkan</string>
+    <string name="page_moved_to_published">Halaman telah dipublikasikan</string>
+    <string name="page_moved_to_trash">Halaman telah dibuang</string>
+    <string name="page_moved_to_draft">Halaman telah dipindahkan ke Konsep</string>
+    <string name="top_level">Level teratas</string>
+    <string name="page_delete_dialog_message">Anda yakin ingin menghapus halaman %s?</string>
+    <string name="page_parent_change_error">Ada masalah saat mengubah induk halaman</string>
+    <string name="page_status_change_error">Ada masalah saat mengubah status halaman</string>
+    <string name="page_delete_error">Ada masalah saat menghapus halaman</string>
+    <string name="set_parent">Atur Induk</string>
+    <string name="dismiss">tutup</string>
+    <string name="quick_start_focus_point_description">ketuk di sini</string>
+    <string name="quick_start_sites">Mulai Cepat</string>
+    <string name="quick_start_list_create_site_title">Buat situs Anda</string>
+    <string name="quick_start_list_create_site_subtitle">Jalankan situs Anda</string>
+    <string name="quick_start_list_complete_title">Selamat, Anda telah menyelesaikan Mulai Cepat</string>
+    <string name="quick_start_list_complete_subtitle">bukankah menyenangkan rasanya saat mencoret satu hal dari daftar?</string>
+    <string name="quick_start_dialog_view_site_title">Lihat situs Anda</string>
+    <string name="quick_start_dialog_view_site_message_short">Ketuk %1$s Lihat Situs %2$s untuk mempratinjau situs Anda</string>
+    <string name="quick_start_dialog_view_site_message">Pratinjau situs baru Anda untuk mengetahui tampilan situs yang akan dilihat oleh pengunjung.</string>
+    <string name="quick_start_dialog_skip_title">Lewati Mulai Cepat</string>
+    <string name="quick_start_dialog_skip_message">Tur singkat akan memandu Anda dalam membuat situs dasar. Anda yakin ingin melewatinya?</string>
+    <string name="quick_start_dialog_share_site_title">Bagikan situs Anda</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Ketuk %1$s Berbagi %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Ketuk %1$s Koneksi %2$s untuk menambahkan akun media sosial Anda</string>
+    <string name="quick_start_dialog_share_site_message">Sambungkan ke akun media sosial Anda. Situs akan membagikan pos baru secara otomatis.</string>
+    <string name="quick_start_dialog_publish_post_title">Publikasikan pos</string>
+    <string name="quick_start_dialog_publish_post_message_short">Ketuk %1$s Buat Pos %2$s untuk membuat pos baru</string>
+    <string name="quick_start_dialog_publish_post_message">Sekarang waktunya! Buat konsep dan publikasikan pos pertama Anda.</string>
+    <string name="quick_start_dialog_need_help_title">Perlu sedikit bantuan untuk memulai?</string>
+    <string name="quick_start_dialog_need_help_message">Anda akan dipandu menggunakan daftar periksa Mulai Cepat untuk dasar–dasar menyiapkan situs web baru.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ya</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Tidak pernah</string>
+    <string name="quick_start_dialog_need_help_button_negative">Tidak</string>
+    <string name="quick_start_dialog_follow_sites_title">Ikuti situs lain</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Ketuk %1$s Cari %2$s untuk mencari situs dengan minat serupa</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Ketuk %1$s Pembaca %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_follow_sites_message">Temukan situs yang menarik dan ikuti untuk mendapatkan pemberitahuan saat mereka memublikasikan sesuatu.</string>
+    <string name="quick_start_dialog_customize_site_title">Sesuaikan situs Anda</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Ketuk %1$s Tema %2$s untuk melanjutkan</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Ketuk %1$s Sesuaikan %2$s untuk memulai personalisasi situs</string>
+    <string name="quick_start_dialog_customize_site_message">Ubah warna, font, dan gambar untuk mendapatkan situs yang dipersonalisasikan dengan sempurna.</string>
+    <string name="quick_start_dialog_continue_setup_title">Lanjutkan penyiapan situs</string>
+    <string name="quick_start_dialog_continue_setup_message">Waktunya menyelesaikan penyiapan situs Anda! Daftar periksa kami memberikan panduan bagi Anda untuk langkah selanjutnya.</string>
+    <string name="quick_start_dialog_choose_theme_title">Pilih tema</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Ketuk %1$s Themes %2$s untuk menemukan tema baru</string>
+    <string name="quick_start_dialog_choose_theme_message">Jelajahi semua tema kami untuk menemukan yang paling cocok.</string>
+    <string name="quick_start_button_skip_positive">Lewati</string>
+    <string name="quick_start_button_skip_negative">Batal</string>
+    <string name="quick_start_button_skip">Lewati semua</string>
+    <string name="quick_start_button_positive">Ayo</string>
+    <string name="quick_start_button_negative_short">Batal</string>
+    <string name="quick_start_button_negative">Jangan sekarang</string>
+    <string name="content_description_done">Selesai</string>
+    <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
+    <string name="reader_empty_followed_tags_title">Tidak ada tag yang diikuti</string>
+    <string name="reader_empty_followed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
+    <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
+    <string name="install_jetpack_retry">Coba lagi</string>
+    <string name="install_jetpack_continue">Lanjutkan</string>
+    <string name="jetpack_installation_problem_message">Jetpack tidak dapat diinstal untuk saat ini</string>
+    <string name="jetpack_installation_problem">Ada masalah</string>
+    <string name="jetpack_installed_message">Jetpack sudah diinstal di situs Anda. Selamat!</string>
+    <string name="jetpack_installed">Jetpack sudah diinstal</string>
+    <string name="installing_jetpack_message">Menginstal Jetpack di situs Anda. Mungkin perlu waktu beberapa menit untuk menyelesaikan proses ini</string>
+    <string name="installing_jetpack">Menginstal Jetpack</string>
+    <string name="install_jetpack_message">Kredensial situs web Anda tidak akan disimpan dan hanya akan digunakan untuk tujuan penginstalan Jetpack</string>
+    <string name="install_jetpack">Instal Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Dengan menyiapkan Jetpack, Anda menyetujui </string>
+    <string name="stats_jetpack_connection_setup_info">Untuk menggunakan Statistik di situs WordPress, Anda perlu menginstal plugin Jetpack.</string>
     <string name="themes_empty_list">Tidak ada tema yang cocok dengan pencarian Anda</string>
     <string name="reader_label_post_search_explainer">Apa yang ingin Anda cari?</string>
     <string name="site_settings_tags_empty_title_search">Tidak ada tag yang cocok dengan pencarian Anda</string>
@@ -248,7 +345,6 @@ Language: id
     <string name="me_section_screen_title">Saya</string>
     <string name="my_site_section_screen_title">Situs saya</string>
     <string name="notif_settings_screen_title">Pengaturan pemberitahuan</string>
-    <string name="passcode_screen_title">Kode Sandi WordPress</string>
     <string name="help_screen_title">Bantuan dan Dukungan</string>
     <string name="license_screen_title">Lisensi</string>
     <string name="release_notes_screen_title">Catatan rilis</string>
@@ -490,7 +586,6 @@ Language: id
     <string name="media_edit_file_details_card_caption">Detail File</string>
     <string name="login_error_suffix">\nCoba masuk dengan akun lain?</string>
     <string name="login_error_generic">Ada masalah saat menyambungkan ke akun Google.</string>
-    <string name="login_error_email_not_found">Akun Google \'%s\' tidak cocok dengan akun WordPress.com mana pun.</string>
     <string name="login_error_button">Tutup</string>
     <string name="login_google_button_suffix">Login dengan Google.</string>
     <string name="enter_wpcom_password_google">Untuk melanjutkan dengan akun Google ini, silakan masukkan kata sandi WordPress.com yang sesuai. Tindakan ini hanya akan ditanyakan satu kali.</string>
@@ -781,7 +876,6 @@ Language: id
     <string name="keep_editing">Lanjutkan menyunting</string>
     <string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
     <string name="error_unknown_post_type">Format pos tidak diketahui</string>
-    <string name="error_fetch_site_after_creation">Situs telah dibuat, Anda mungkin perlu menyegarkan situs di pemilih situs.</string>
     <string name="submit_for_review">Kirim</string>
     <string name="duplicate_site_detected">Situs duplikat terdeteksi.</string>
     <string name="cannot_add_duplicate_site">Situs ini sudah ada dalam aplikasi, Anda tidak bisa menambahkannya.</string>
@@ -799,7 +893,6 @@ Language: id
     <string name="confirm">Konfirmasi</string>
     <string name="xmlrpc_endpoint_forbidden_error">Tidak dapat terhubung. Kami menerima error 403 saat mencoba mengakses\n titik akhir XMLRPC situs Anda. Aplikasi ini memerlukannya agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi\n masalah ini.</string>
     <string name="xmlrpc_post_blocked_error">Tidak dapat terhubung. Host Anda memblokir permintaan POST yang dibutuhkan aplikasi\n agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi masalah ini.</string>
-    <string name="reader_empty_followed_blogs_search_title">Tidak ada situs yang cocok</string>
     <string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
     <string name="visual_editor_disabled">Editor Visual nonaktif</string>
     <string name="preference_editor_visual">Visual</string>
@@ -1223,7 +1316,6 @@ Language: id
     <string name="post_deleted">Pos dihapus</string>
     <string name="page_trashed">Halaman dibuang ke tong sampah</string>
     <string name="undo">Urungkan</string>
-    <string name="passcodelock_prompt_message">Masukkan PIN</string>
     <string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% dilihat</string>
     <string name="ignore">Abaikan</string>
@@ -1372,7 +1464,6 @@ Language: id
     <string name="reader_label_view_original">Lihat artikel asli</string>
     <string name="reader_empty_posts_in_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_empty_comments">Belum ada komentar</string>
-    <string name="create_new_blog_wpcom">Buat blog WordPress.com</string>
     <string name="browse_our_faq_button">Telusuri Tanya Jawab Umum kami</string>
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
     <string name="contact_us">Hubungi kami</string>
@@ -1389,7 +1480,6 @@ Language: id
     <string name="username_or_password_incorrect">Nama pengguna atau password yang Anda masukkan tidak tepat</string>
     <string name="email_invalid">Masukkan alamat email yang sah</string>
     <string name="invalid_email_message">Alamat emailmu tidak sah</string>
-    <string name="passcode_wrong_passcode">PIN keliru</string>
     <string name="error_downloading_image">Galat saat mengunduh gambar</string>
     <string name="error_load_comment">Gagal memuat tanggapan</string>
     <string name="error_edit_comment">Terjadi galat saat sedang mengedit tanggapan</string>
@@ -1412,7 +1502,6 @@ Language: id
     <string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
     <string name="gallery_error">Item media gagal diambil</string>
     <string name="no_network_message">Tidak ada jaringan yang tersedia</string>
-    <string name="required_field">Isian wajib</string>
     <string name="reader_toast_err_remove_tag">Tidak bisa menghapus tag ini</string>
     <string name="reader_toast_err_add_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
@@ -1421,7 +1510,6 @@ Language: id
     <string name="error_refresh_media">Media tidak bisa disegarkan saat ini</string>
     <string name="error_deleting_page">Terjadi error saat menghapus halaman</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Alamat blog</string>
     <string name="image_settings">Pengaturan gambar</string>
     <string name="local_changes">Perubahan lokal</string>
     <string name="privacy_policy">Kebijakan privasi</string>
@@ -1476,7 +1564,6 @@ Language: id
     <string name="connection_error">Galat sambungan</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="share_link">Bagikan tautan</string>
-    <string name="creating_your_site">Membuat situs Anda</string>
     <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="cant_share_no_visible_blog">Anda tidak bisa berbagi ke WordPress tanpa satupun blog yang terlihat oleh publik</string>
     <string name="comment_spammed">Komentar ditandai sebagai spam</string>
@@ -1488,7 +1575,6 @@ Language: id
     <string name="pick_video">Pilih video</string>
     <string name="pick_photo">Pilih foto</string>
     <string name="reader_likes_you_and_one">Anda dan satu orang lainnya menyukai ini</string>
-    <string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
@@ -1505,14 +1591,6 @@ Language: id
     <string name="reader_btn_share">Bagikan</string>
     <string name="reader_untitled_post">(Tanpa Judul)</string>
     <string name="empty_list_default">List ini masih kosong</string>
-    <string name="passcode_turn_on">Nyalakan kunci PIN</string>
-    <string name="passcode_turn_off">Matikan kunci PIN</string>
-    <string name="passcode_preference_title">Kunci PIN</string>
-    <string name="passcode_set">Pasang PIN</string>
-    <string name="passcode_change_passcode">Ubah PIN</string>
-    <string name="passcode_re_enter_passcode">Masukkan kembali PIN Anda</string>
-    <string name="passcode_enter_old_passcode">Masukkan PIN lama Anda</string>
-    <string name="passcode_manage">Atur kunci PIN</string>
     <string name="stats_totals_plays">Pemutaran</string>
     <string name="stats_totals_clicks">Klik</string>
     <string name="stats_totals_views">Tampilan</string>
@@ -1563,6 +1641,7 @@ Language: id
     <string name="posts">Tulisan</string>
     <string name="width">Lebar</string>
     <string name="caption">Subjudul (opsional)</string>
+    <string name="pages">Halaman</string>
     <string name="no_network_title">Tidak ada jaringan</string>
     <string name="featured_in_post">Sertakan gambar dalam konten tulisan</string>
     <string name="blogusername">blogusername</string>

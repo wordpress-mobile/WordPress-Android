@@ -3,8 +3,6 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
-import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -13,23 +11,23 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R.string
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.networking.PageUploadUtil
-import org.wordpress.android.ui.pages.PageItem.Divider
-import org.wordpress.android.ui.pages.PageItem.DraftPage
-import org.wordpress.android.ui.pages.PageItem.Empty
-import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.test
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
-import org.wordpress.android.viewmodel.test
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import java.util.Date
+import java.util.SortedMap
 
 @RunWith(MockitoJUnitRunner::class)
 class PagesViewModelTest {
@@ -38,104 +36,105 @@ class PagesViewModelTest {
 
     @Mock lateinit var pageStore: PageStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var resourceProvider: ResourceProvider
-    @Mock lateinit var uploadUtil: PageUploadUtil
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var actionPerformer: ActionPerformer
     private lateinit var viewModel: PagesViewModel
+    private lateinit var listStates: MutableList<PageListState>
+    private lateinit var pages: MutableList<List<PageModel>>
+    private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
+    private lateinit var pageModel: PageModel
 
     @Before
     fun setUp() {
-        viewModel = PagesViewModel(pageStore, dispatcher, resourceProvider, uploadUtil, Unconfined)
+        viewModel = PagesViewModel(pageStore, dispatcher, actionPerformer, TEST_SCOPE, TEST_SCOPE)
+        listStates = mutableListOf()
+        pages = mutableListOf()
+        searchPages = mutableListOf()
+        viewModel.listState.observeForever { if (it != null) listStates.add(it) }
+        viewModel.pages.observeForever { if (it != null) pages.add(it) }
+        viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
+        pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null)
     }
 
     @Test
-    fun clearsResultAndLoadsDataOnStart() = runBlocking<Unit> {
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(
-                PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
-        )
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(1, false))
-        val listStateObserver = viewModel.listState.test()
-        val refreshPagesObserver = viewModel.refreshPages.test()
-        val searchResultObserver = viewModel.searchResult.test()
+    fun clearsResultAndLoadsDataOnStart() = test {
+        val pageModel = initPageRepo()
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false))
 
         viewModel.start(site)
 
-        assertEquals(searchResultObserver.await(), listOf(Empty(string.pages_search_suggestion, true)))
-
-        val listStates = listStateObserver.awaitValues(2)
-
         assertThat(listStates).containsExactly(REFRESHING, DONE)
-        refreshPagesObserver.awaitNullableValues(2)
+        assertThat(pages).hasSize(2)
+        assertThat(pages.last()).containsOnly(pageModel)
+    }
+
+    private suspend fun initPageRepo(): PageModel {
+        val expectedPages = listOf(
+                pageModel
+        )
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(
+                expectedPages
+        )
+        return pageModel
     }
 
     @Test
-    fun onSearchReturnsResultsFromStore() = runBlocking<Unit> {
+    fun onSiteWithoutPages() = test {
+        whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false))
+
+        viewModel.start(site)
+
+        assertThat(listStates).containsExactly(FETCHING, DONE)
+        assertThat(pages).hasSize(2)
+    }
+
+    @Test
+    fun onSearchReturnsResultsFromStore() = test {
         initSearch()
-        whenever(resourceProvider.getString(string.pages_drafts)).thenReturn("Drafts")
         val query = "query"
-        val title = "title"
-        val drafts = listOf( PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
-        val expectedResult = listOf(Divider("Drafts"), DraftPage(1, title))
-        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf(DRAFT to drafts))
+        val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null))
+        val expectedResult = sortedMapOf(DRAFTS to drafts)
+        whenever(pageStore.search(site, query)).thenReturn(drafts)
 
-        val observer = viewModel.searchResult.test()
+        viewModel.onSearch(query, 0)
 
-        viewModel.onSearch(query)
-
-        val result = observer.await()
+        val result = viewModel.searchPages.value
 
         assertThat(result).isEqualTo(expectedResult)
     }
 
     @Test
-    fun onEmptySearchResultEmitsEmptyItem() = runBlocking<Unit> {
+    fun onEmptySearchResultEmitsEmptyItem() = runBlocking {
         initSearch()
         val query = "query"
-        val pageItems = listOf(Empty(string.pages_empty_search_result, true))
-        whenever(pageStore.groupedSearch(site, query)).thenReturn(sortedMapOf())
+        whenever(pageStore.search(site, query)).thenReturn(listOf())
 
-        val data = viewModel.searchResult.test()
+        viewModel.onSearch(query, 0)
 
-        viewModel.onSearch(query)
+        val result = viewModel.searchPages.value
 
-        val result = data.await()
-
-        assertThat(result).isEqualTo(pageItems)
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun onEmptyQueryClearsSearch() = runBlocking<Unit> {
+    fun onEmptyQueryClearsSearch() = runBlocking {
         initSearch()
         val query = ""
-        val pageItems = listOf(Empty(string.pages_search_suggestion, true))
 
-        val data = viewModel.searchResult.test()
+        viewModel.onSearch(query, 0)
 
-        viewModel.onSearch(query)
+        val result = viewModel.searchPages.value
 
-        val result = data.await()
-
-        assertThat(result).isEqualTo(pageItems)
-    }
-
-    @Test
-    fun onSiteWithoutPages() = runBlocking<Unit> {
-        whenever(pageStore.getPagesFromDb(site)).thenReturn(emptyList())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
-        val listStateObserver = viewModel.listState.test()
-        val refreshPagesObserver = viewModel.refreshPages.test()
-
-        viewModel.start(site)
-
-        val listStates = listStateObserver.awaitValues(2)
-
-        assertThat(listStates).containsExactly(FETCHING, DONE)
-        refreshPagesObserver.awaitNullableValues(2)
+        assertThat(result).isNull()
     }
 
     private suspend fun initSearch() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(OnPostChanged(0, false))
+        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
+                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false))
         viewModel.start(site)
     }
 }

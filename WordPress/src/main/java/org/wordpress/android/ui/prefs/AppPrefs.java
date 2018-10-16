@@ -176,7 +176,10 @@ public class AppPrefs {
         LAST_USED_USER_ID,
 
         // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED
+        IS_QUICK_START_DISABLED,
+
+        // used to indicate that we already obtained and tracked the installation referrer
+        IS_INSTALLATION_REFERRER_OBTAINED
     }
 
     private static SharedPreferences prefs() {
@@ -780,5 +783,13 @@ public class AppPrefs {
 
     public static void setPromptedQuickStartTask(@Nullable String task) {
         setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
+    }
+
+    public static void setInstallationReferrerObtained(Boolean isObtained) {
+        setBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, isObtained);
+    }
+
+    public static boolean isInstallationReferrerObtained() {
+        return getBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, false);
     }
 }

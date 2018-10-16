@@ -36,6 +36,7 @@ import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.Map;
 
@@ -379,12 +380,34 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     }
 
     private void createNewSite(String siteTitle, String siteSlug) {
-        final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
+        final String deviceLanguageCode = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
+        /* Convert the device language code (codes defined by ISO 639-1) to a Language ID.
+         * Language IDs, used only by WordPress, are integer values that map to a language code.
+         * http://bit.ly/2H7gksN
+         */
+        Map<String, String> languageCodeToID = LocaleManager.generateLanguageMap(this);
+        String langID = null;
+        if (languageCodeToID.containsKey(deviceLanguageCode)) {
+            langID = languageCodeToID.get(deviceLanguageCode);
+        } else {
+            int pos = deviceLanguageCode.indexOf("_");
+            if (pos > -1) {
+                String newLang = deviceLanguageCode.substring(0, pos);
+                if (languageCodeToID.containsKey(newLang)) {
+                    langID = languageCodeToID.get(newLang);
+                }
+            }
+        }
+
+        if (langID == null) {
+            // fallback to device language code if there is no match
+            langID = deviceLanguageCode;
+        }
 
         NewSitePayload newSitePayload = new NewSitePayload(
                 siteSlug,
                 siteTitle,
-                language,
+                langID,
                 SiteStore.SiteVisibility.PUBLIC,
                 false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));

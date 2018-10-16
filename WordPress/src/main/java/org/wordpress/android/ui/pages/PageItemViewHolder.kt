@@ -31,7 +31,8 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     ) : PageItemViewHolder(parentView, layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(id.page_more)
-        private val pageLabel = itemView.findViewById<TextView>(id.page_label)
+        private val firstLabel = itemView.findViewById<TextView>(id.first_label)
+        private val secondLabel = itemView.findViewById<TextView>(id.second_label)
         private val pageItemContainer = itemView.findViewById<ViewGroup>(id.page_item)
         private val largeStretcher = itemView.findViewById<View>(id.large_stretcher)
         private val smallStretcher = itemView.findViewById<View>(id.small_stretcher)
@@ -48,21 +49,29 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 else
                     pageItem.title
 
-                if (pageItem.labelRes == null) {
-                    pageLabel.visibility = View.GONE
+                if (pageItem.labels.isEmpty()) {
+                    firstLabel.visibility = View.GONE
                     smallStretcher.visibility = View.VISIBLE
                     largeStretcher.visibility = View.GONE
                 } else {
-                    pageLabel.text = parent.context.getString(pageItem.labelRes!!)
-                    pageLabel.visibility = View.VISIBLE
+                    firstLabel.text = parent.context.getString(pageItem.labels.first())
+                    firstLabel.visibility = View.VISIBLE
                     smallStretcher.visibility = View.GONE
                     largeStretcher.visibility = View.VISIBLE
+                }
+
+                if (pageItem.labels.size <= 1) {
+                    secondLabel.visibility = View.GONE
+                } else {
+                    secondLabel.text = parent.context.getString(pageItem.labels[1])
+                    secondLabel.visibility = View.VISIBLE
                 }
 
                 itemView.setOnClickListener { onItemTapped(pageItem) }
 
                 pageMore.setOnClickListener { moreClick(pageItem, it) }
-                pageMore.visibility = if (pageItem.actions.isNotEmpty()) View.VISIBLE else View.GONE
+                pageMore.visibility =
+                        if (pageItem.actions.isNotEmpty() && pageItem.actionsEnabled) View.VISIBLE else View.INVISIBLE
             }
         }
 

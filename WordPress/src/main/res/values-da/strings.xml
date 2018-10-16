@@ -75,7 +75,6 @@ Language: da_DK
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d følgere</string>
     <string name="reader_short_like_count_one">1 Like</string>
-    <string name="passcodelock_prompt_message">Indtast din PIN</string>
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% af visninger</string>
     <string name="ignore">Ignorer</string>
@@ -220,7 +219,6 @@ Language: da_DK
     <string name="reader_label_view_original">Vis oprindelig artikel</string>
     <string name="reader_empty_posts_in_tag">Ingen indlæg med dette tag</string>
     <string name="reader_empty_comments">Endnu ingen kommentarer</string>
-    <string name="create_new_blog_wpcom">Opret en WordPress.com–blog</string>
     <string name="browse_our_faq_button">Gennemse vores FAQ</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
     <string name="contact_us">Kontakt os</string>
@@ -237,7 +235,6 @@ Language: da_DK
     <string name="username_or_password_incorrect">Brugernavnet eller adgangskoden, du indtastede, er forkert</string>
     <string name="email_invalid">Indtast en gyldig e–mailadresse</string>
     <string name="invalid_email_message">Din e–mailadresse er ikke gyldig</string>
-    <string name="passcode_wrong_passcode">Forkert PIN</string>
     <string name="error_downloading_image">Kunne ikke downloade billede</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
@@ -259,12 +256,10 @@ Language: da_DK
     <string name="blog_not_found">Der skete en fejl ved tilgangen til denne blog</string>
     <string name="gallery_error">Mediet kunne ikke hentes</string>
     <string name="no_network_message">Der er intet netværk tilgængeligt</string>
-    <string name="required_field">Påkrævet felt</string>
     <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette tag</string>
     <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette tag</string>
     <string name="reader_title_applog">Applikationslog</string>
     <string name="wordpress_blog">WordPress–blog</string>
-    <string name="add_account_blog_url">Blog–adresse</string>
     <string name="image_settings">Billedeindstillinger</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="privacy_policy">Privatlivspolitik</string>
@@ -313,7 +308,6 @@ Language: da_DK
     <string name="connection_error">Forbindelsesfejl</string>
     <string name="select_categories">Vælg kategorier</string>
     <string name="share_link">Del link</string>
-    <string name="creating_your_site">Opretter dit websted</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
     <string name="cant_share_no_visible_blog">Du kan ikke dele til WordPress uden en synlig blog</string>
     <string name="comment_spammed">Kommentar markeret som spam</string>
@@ -325,7 +319,6 @@ Language: da_DK
     <string name="pick_video">Vælg video</string>
     <string name="pick_photo">Vælg foto</string>
     <string name="reader_likes_you_and_one">Du og en anden synes godt om dette</string>
-    <string name="reader_empty_followed_tags">Du følger ikke nogen tags</string>
     <string name="reader_toast_err_url_intent">Kunne ikke åbne %s</string>
     <string name="reader_toast_err_view_image">Kunne ikke vise billede</string>
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
@@ -342,14 +335,6 @@ Language: da_DK
     <string name="reader_btn_share">Del</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
     <string name="empty_list_default">Listen er tom</string>
-    <string name="passcode_turn_on">Aktiver PIN–lås</string>
-    <string name="passcode_turn_off">Deaktiver PIN–lås</string>
-    <string name="passcode_preference_title">PIN–lås</string>
-    <string name="passcode_set">PIN ændret</string>
-    <string name="passcode_change_passcode">Ændr PIN</string>
-    <string name="passcode_re_enter_passcode">Genindtast PIN–kode</string>
-    <string name="passcode_enter_old_passcode">Indtast gammel PIN–kode</string>
-    <string name="passcode_manage">Håndter PIN–lås</string>
     <string name="stats_totals_plays">Afspilninger</string>
     <string name="stats_totals_clicks">Klik</string>
     <string name="stats_totals_views">Visninger</string>
@@ -398,6 +383,7 @@ Language: da_DK
     <string name="posts">Indlæg</string>
     <string name="width">Bredde</string>
     <string name="caption">Billedtekst (valgfri)</string>
+    <string name="pages">Sider</string>
     <string name="no_network_title">Intet netværk tilgængeligt</string>
     <string name="featured_in_post">Inkluder billede i indhold</string>
     <string name="blogusername">blogusername</string>

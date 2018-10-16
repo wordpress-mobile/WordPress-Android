@@ -18,16 +18,14 @@
         android:contentDescription="@string/fab_add_tag_desc"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_width="wrap_content"
         android:visibility="invisible"
         app:borderWidth="0dp"
         app:rippleColor="@color/fab_pressed"
-        app:srcCompat="@drawable/ic_plus_white_24dp"
+        android:src="@drawable/ic_plus_white_24dp"
         tools:visibility="visible" >
     </android.support.design.widget.FloatingActionButton>
 

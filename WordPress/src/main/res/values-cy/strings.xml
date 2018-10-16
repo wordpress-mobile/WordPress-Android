@@ -20,7 +20,6 @@ Language: cy_GB
     <string name="retry">Ceisiwch eto</string>
     <string name="confirm">Cadarnhau</string>
     <string name="xmlrpc_post_blocked_error">Methu cysylltu. Mae eich gwesteiwr yn rhwystro ceisiadau POST, ac mae\'r ap angen\n       hynny er mwyn cyfathrebu â\'ch gwefan. Cysylltwch â eich gwesteiwr i ddatrys y broblem.</string>
-    <string name="reader_empty_followed_blogs_search_title">Dim gwefannau cyfatebol</string>
     <string name="reader_hint_search_followed_sites">Chwilio drwy\'r gwefannau rwy\'n eu dilyn</string>
     <string name="visual_editor_disabled">Golygydd Gweledol wedi ei analluogi</string>
     <string name="preference_editor_visual">Gweledol</string>
@@ -444,7 +443,6 @@ Language: cy_GB
     <string name="button_view">Gweld</string>
     <string name="button_publish">Cyhoeddi</string>
     <string name="undo">Dadwneud</string>
-    <string name="passcodelock_prompt_message">Rhowch eich PIN</string>
     <string name="push_auth_expired">Daeth y cais i ben. Mewngofnodwch i WordPress.com a cheisio eto.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% golwg</string>
     <string name="ignore">Anwybyddu</string>
@@ -592,7 +590,6 @@ Language: cy_GB
     <string name="reader_label_like">Hoffi</string>
     <string name="reader_label_view_original">Darllen yr erthygl wreiddiol</string>
     <string name="reader_empty_comments">Dim sylwadau eto</string>
-    <string name="create_new_blog_wpcom">Creu blog WordPress.com</string>
     <string name="browse_our_faq_button">Porwch ein Cwestiynnau Cyffredin</string>
     <string name="reader_label_liked_by">Hoffwyd gan</string>
     <string name="reader_toast_err_generic">Methu cyflawni\'r weithred hon</string>
@@ -610,7 +607,6 @@ Language: cy_GB
     <string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
     <string name="email_invalid">Rhowch gyfeiriad e–bost dilys</string>
     <string name="invalid_email_message">Nid yw eich cyfeiriad e–bost yn ddilys</string>
-    <string name="passcode_wrong_passcode">PIN anghywir</string>
     <string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
     <string name="error_load_comment">Methu llwytho\'r sylw</string>
     <string name="error_edit_comment">Digwyddodd gwall wrth olygu\'r sylw</string>
@@ -633,14 +629,12 @@ Language: cy_GB
     <string name="no_network_message">Nid oes rhwydwaith ar gael</string>
     <string name="gallery_error">Methu estyn y cyfrwng</string>
     <string name="invalid_url_message">Gwiriwch fod URL y blog yn ddilys</string>
-    <string name="required_field">Maes angenrheidiol</string>
     <string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
     <string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
     <string name="reader_title_applog">Cofnod yr ap</string>
     <string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
     <string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Cyfeiriad y blog</string>
     <string name="image_settings">Gosodiadau delweddau</string>
     <string name="local_changes">Newidiadau lleol</string>
     <string name="privacy_policy">Polisi preifatrwydd</string>
@@ -694,7 +688,6 @@ Language: cy_GB
     <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_link">Rhannu dolen</string>
-    <string name="creating_your_site">Creu eich gwefan</string>
     <string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
     <string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
     <string name="reader_label_reply">Ateb</string>
@@ -706,7 +699,6 @@ Language: cy_GB
     <string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
     <string name="pick_photo">Dewis ffoto</string>
     <string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
-    <string name="reader_empty_followed_tags">Nid ydych yn dlyn unrhyw dagiau</string>
     <string name="reader_toast_err_url_intent">Methu agor %s</string>
     <string name="reader_toast_err_view_image">Methu â gweld delwedd</string>
     <string name="reader_toast_err_share_intent">Methu â rhannu</string>
@@ -724,14 +716,6 @@ Language: cy_GB
     <string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
     <string name="reader_hint_comment_on_comment">Ateb sylw…</string>
     <string name="stats_view_tags_and_categories">Tagiau a Chategorïau</string>
-    <string name="passcode_turn_on">Troi clo PIN ymlaen</string>
-    <string name="passcode_turn_off">Diffodd clo PIN</string>
-    <string name="passcode_preference_title">Clo PIN</string>
-    <string name="passcode_change_passcode">Newid PIN</string>
-    <string name="passcode_set">PIN wedi ei osod</string>
-    <string name="passcode_re_enter_passcode">Ail gyflwynwch eich PIN</string>
-    <string name="passcode_enter_old_passcode">Rhowch eich hen PIN</string>
-    <string name="passcode_manage">Rheoli clo PIN</string>
     <string name="stats_totals_plays">Chwarae</string>
     <string name="stats_totals_clicks">Cliciau</string>
     <string name="stats_totals_views">Golwg</string>
@@ -779,6 +763,7 @@ Language: cy_GB
     <string name="reader">Darllennydd</string>
     <string name="anonymous">Di–enw</string>
     <string name="posts">Cofnodion</string>
+    <string name="pages">Tudalennau</string>
     <string name="caption">Egluryn (dewisol)</string>
     <string name="width">Lled</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>

@@ -7,13 +7,10 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,11 +19,9 @@ import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -147,20 +142,17 @@ public class SitePickerActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
+        mMenuSearch = menu.findItem(R.id.menu_search);
+        mMenuEdit = menu.findItem(R.id.menu_edit);
+        mMenuAdd = menu.findItem(R.id.menu_add);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        mMenuEdit = menu.findItem(R.id.menu_edit);
-        mMenuAdd = menu.findItem(R.id.menu_add);
-        mMenuSearch = menu.findItem(R.id.menu_search);
-
         updateMenuItemVisibility();
         setupSearchView();
-
         return true;
     }
 
@@ -293,7 +285,7 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void setupRecycleView() {
-        mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecycleView = findViewById(R.id.recycler_view);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
         mRecycleView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecycleView.setItemAnimator(null);
@@ -480,14 +472,14 @@ public class SitePickerActivity extends AppCompatActivity
     private void enableSearchMode() {
         setIsInSearchModeAndSetNewAdapter(true);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void disableSearchMode() {
         hideSoftKeyboard();
         setIsInSearchModeAndSetNewAdapter(false);
         mRecycleView.swapAdapter(getAdapter(), true);
-        updateMenuItemVisibility();
+        invalidateOptionsMenu();
     }
 
     private void hideSoftKeyboard() {
@@ -657,19 +649,7 @@ public class SitePickerActivity extends AppCompatActivity
                     new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
             builder.setTitle(R.string.site_picker_add_site);
             builder.setAdapter(
-                    new ArrayAdapter<CharSequence>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items) {
-                        @NonNull
-                        @Override
-                        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                            TextView tv = (TextView) super.getView(position, convertView, parent);
-                            Drawable leftDrawable = AppCompatResources
-                                    .getDrawable(tv.getContext(), R.drawable.ic_add_outline_grey_dark_24dp);
-                            tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
-                            tv.setCompoundDrawablePadding(
-                                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
-                            return tv;
-                        }
-                    },
+                    new ArrayAdapter<>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

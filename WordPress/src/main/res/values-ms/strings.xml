@@ -39,7 +39,6 @@ Language: ms
     <string name="media_edit_file_details_card_caption">Perincian Fail</string>
     <string name="login_error_suffix">\nMungkin cuba akaun yang lain?</string>
     <string name="login_error_generic">Terdapat kesusahan bersambung dengan akaun Google.</string>
-    <string name="login_error_email_not_found">Akaun Google \'%s\' tidak sepadan dengan mana–mana akaun di WordPress.com.</string>
     <string name="login_error_button">Tutup</string>
     <string name="login_google_button_suffix">Log masuk dengan Google.</string>
     <string name="enter_wpcom_password_google">Untuk teruskan dengan akaun Google ini, sila berikan kata laluan WordPress.com yang sepadan. Ianya hanya akan diminta sekali.</string>
@@ -342,7 +341,6 @@ Language: ms
     <string name="image_quality">Kualiti Imej</string>
     <string name="error_all_media_upload_canceled">Semua muat naik media telah dibatalkan disebabkan ralat yang tidak diketahui. Sila cuba muat naik semula</string>
     <string name="error_unknown_post_type">Format kiriman tidak diketahui</string>
-    <string name="error_fetch_site_after_creation">Laman telah dicipta, anda mungkin perlu menyegar semula laman anda dalam pemilih laman.</string>
     <string name="submit_for_review">Hantar</string>
     <string name="duplicate_site_detected">Laman duplikasi telah dikesan.</string>
     <string name="cannot_add_duplicate_site">Laman ini telahpun wujud dalam aplikasi, anda tidak boleh menambahnya.</string>
@@ -359,7 +357,6 @@ Language: ms
     <string name="retry">Cuba Semula</string>
     <string name="confirm">Sahkan</string>
     <string name="xmlrpc_post_blocked_error">Tidak boleh berhubung. Hos anda menyekat permintaan POST, dan aplikasi\n        memerlukannya untuk berkomunikasi dengan laman anda. Hubungi hos anda untuk menyelesaikan masalah ini.</string>
-    <string name="reader_empty_followed_blogs_search_title">Tiada laman sepadan</string>
     <string name="reader_hint_search_followed_sites">Cari laman yang diikuti</string>
     <string name="visual_editor_disabled">Penyunting Visual dilumpuhkan</string>
     <string name="preference_editor_visual">Visual</string>
@@ -792,7 +789,6 @@ Language: ms
     <string name="post_deleted">Kiriman dihapuskan</string>
     <string name="page_trashed">Halaman dihantar ke sampah</string>
     <string name="undo">Kembali ke asal</string>
-    <string name="passcodelock_prompt_message">Masukkan PIN anda</string>
     <string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% yang dilihat</string>
     <string name="ignore">Abaikan</string>
@@ -943,7 +939,6 @@ Language: ms
     <string name="reader_label_view_original">Lihat artikel asal</string>
     <string name="reader_empty_posts_in_tag">Tiada kiriman dengan tag ini</string>
     <string name="reader_empty_comments">Belum ada ulasan</string>
-    <string name="create_new_blog_wpcom">Cipta blog WordPress.com</string>
     <string name="browse_our_faq_button">Layar Soalan Lazim kami</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
     <string name="contact_us">Hubungi kami</string>
@@ -960,7 +955,6 @@ Language: ms
     <string name="username_or_password_incorrect">Nama pengguna atau kata laluan yang anda masukkan adalah tidak betul</string>
     <string name="email_invalid">Masukkan alamat emel yang sah</string>
     <string name="invalid_email_message">Alamat emel anda tidak sah</string>
-    <string name="passcode_wrong_passcode">PIN Salah</string>
     <string name="error_downloading_image">Ralat memuat turun imej</string>
     <string name="error_load_comment">Tidak dapat memuatkan komen</string>
     <string name="error_edit_comment">Ralat berlaku semasa mengedit komen</string>
@@ -984,7 +978,6 @@ Language: ms
     <string name="blog_not_found">Ralat berlaku apabila mencapai blog ini</string>
     <string name="gallery_error">Butir media tidak boleh didapatkan kembali</string>
     <string name="no_network_message">Tiada rangkaian tersedia</string>
-    <string name="required_field">Medan yang diperlukan</string>
     <string name="reader_toast_err_remove_tag">Tidak dapat membuang tag ini</string>
     <string name="reader_toast_err_add_tag">Tidak dapat menambah tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
@@ -993,7 +986,6 @@ Language: ms
     <string name="error_refresh_media">Media tidak dapat disegar semula pada masa ini</string>
     <string name="error_deleting_page">Ralat berlaku semasa menghapuskan halaman</string>
     <string name="wordpress_blog">Blog WordPress</string>
-    <string name="add_account_blog_url">Alamat blog</string>
     <string name="image_settings">Tetapan imej</string>
     <string name="local_changes">Perubahan setempat</string>
     <string name="privacy_policy">Polisi privasi</string>
@@ -1048,7 +1040,6 @@ Language: ms
     <string name="connection_error">Ralat sambungan</string>
     <string name="select_categories">Pilih kategori</string>
     <string name="share_link">Kongsi pautan</string>
-    <string name="creating_your_site">Cipta laman anda</string>
     <string name="reader_empty_posts_in_tag_updating">Mengambil kiriman…</string>
     <string name="cant_share_no_visible_blog">Anda tidak boleh berkongsi ke WordPress tanpa blog yang kelihatan</string>
     <string name="comment_spammed">Ulasan ditanda sebagai spam</string>
@@ -1060,7 +1051,6 @@ Language: ms
     <string name="pick_video">Pilih video</string>
     <string name="pick_photo">Pilih gambar</string>
     <string name="reader_likes_you_and_one">Anda dan seorang lagi sukakannya</string>
-    <string name="reader_empty_followed_tags">Anda tidak mengikut apa–apa tag</string>
     <string name="reader_toast_err_url_intent">Tidak dapat membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat imej</string>
     <string name="reader_toast_err_share_intent">Tidak dapat dikongsi</string>
@@ -1077,14 +1067,6 @@ Language: ms
     <string name="reader_btn_share">Kongsi</string>
     <string name="reader_untitled_post">(Tanpa tajuk)</string>
     <string name="empty_list_default">Senarai ini kosong</string>
-    <string name="passcode_turn_on">Pasangkan kunci PIN</string>
-    <string name="passcode_turn_off">Matikan kunci PIN</string>
-    <string name="passcode_preference_title">Kunci PIN</string>
-    <string name="passcode_set">Tetapan PIN</string>
-    <string name="passcode_change_passcode">Tukar PIN</string>
-    <string name="passcode_re_enter_passcode">Masukkan kembali PIN anda</string>
-    <string name="passcode_enter_old_passcode">Masukkan PIN lama anda</string>
-    <string name="passcode_manage">Urus kunci PIN</string>
     <string name="stats_totals_plays">Mainan</string>
     <string name="stats_totals_clicks">Klik</string>
     <string name="stats_totals_views">Paparan</string>
@@ -1136,6 +1118,7 @@ Language: ms
     <string name="posts">Kiriman</string>
     <string name="width">Lebar</string>
     <string name="caption">Sari kata (pilihan)</string>
+    <string name="pages">Laman</string>
     <string name="no_network_title">Tiada rangkaian yang tersedia</string>
     <string name="featured_in_post">Sertakan imej dalam kandungan kiriman</string>
     <string name="blogusername">namapenggunablog</string>

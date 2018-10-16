@@ -220,7 +220,6 @@ Language: hr
     <string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovoj web–stranici</string>
     <string name="reader_toast_err_follow_blog_not_found">Web–stranicu nije moguće pronaći</string>
     <string name="undo">Poništi</string>
-    <string name="passcodelock_prompt_message">Unesi svoj PIN</string>
     <string name="push_auth_expired">Zahtjev je istekao. Za ponovni pokušaj prijavite se u WordPress.com.</string>
     <string name="ignore">Ignoriraj</string>
     <string name="stats_insights_best_ever">Najviše pregleda</string>
@@ -357,7 +356,6 @@ Language: hr
     <string name="mnu_comment_liked">Lajkao</string>
     <string name="comment">Komentar</string>
     <string name="signing_out">Odjava …</string>
-    <string name="create_new_blog_wpcom">Kreiraj WordPress.com blog</string>
     <string name="reader_label_comments_closed">Komentari su zatvoreni</string>
     <string name="reader_title_photo_viewer">%1$d od %2$d</string>
     <string name="error_publish_empty_post">Nije moguće objaviti praznu objavu</string>
@@ -398,7 +396,6 @@ Language: hr
     <string name="forgot_password">Izgubili ste lozinku?</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
     <string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web–stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
-    <string name="passcode_wrong_passcode">Pogrešan PIN</string>
     <string name="notifications_empty_list">Nema obavijesti</string>
     <string name="no_network_message">Mreža nedostupna</string>
     <string name="gallery_error">Nije moguće dohvatiti medijski zapis.</string>
@@ -435,7 +432,6 @@ Language: hr
     <string name="mnu_comment_spam">Spam</string>
     <string name="create_a_link">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
-    <string name="add_account_blog_url">Blog adresa</string>
     <string name="notifications_empty_all">Nema obavijesti… još.</string>
     <string name="privacy_policy">Pravila privatnosti</string>
     <string name="open_source_licenses">Licence otvorenog softvera</string>
@@ -477,7 +473,6 @@ Language: hr
     <string name="wordpress_blog">WordPress blog</string>
     <string name="reader_toast_err_add_tag">Nije moguće dodati ovu oznaku</string>
     <string name="reader_toast_err_remove_tag">Nije moguće ukloniti ovu oznaku</string>
-    <string name="required_field">Obavezno polje</string>
     <string name="post_not_found">Dogodila se greška tijekom učitavanja objave. Osvježite objave i pokušajte ponovno.</string>
     <string name="file_not_found">Nije moguće pronaći medijski zapis za prijenos. Jeli obrisan ili premješten?</string>
     <string name="file_error_create">Nije moguće kreirati privremeni zapis za prijenos medijskog zapisa. Provjerite da ima dovoljno slobodnog mjesta na vašem uređaju.</string>
@@ -488,7 +483,6 @@ Language: hr
     <string name="delete_post">Obriši objavu?</string>
     <string name="delete_page">Obriši stranicu?</string>
     <string name="share_link">Podjeli poveznicu</string>
-    <string name="creating_your_site">Napravi svoju stranicu</string>
     <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava…</string>
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
     <string name="reader_likes_multi">%,d ljudi se ovo sviđa</string>
@@ -501,7 +495,6 @@ Language: hr
     <string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
     <string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
     <string name="reader_btn_follow">Prati</string>
-    <string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
     <string name="empty_list_default">Popis je prazan</string>
     <string name="reader_untitled_post">(Bez naslova)</string>
     <string name="reader_btn_share">Podjeli</string>
@@ -532,8 +525,6 @@ Language: hr
     <string name="stats_timeframe_yesterday">Jučer</string>
     <string name="theme_activate_button">Aktiviraj</string>
     <string name="stats_view_tags_and_categories">Oznake i kategorije</string>
-    <string name="passcode_preference_title">Zaključavanje PIN–om</string>
-    <string name="passcode_change_passcode">Promjeni PIN</string>
     <string name="themes">Teme</string>
     <string name="stats_totals_plays">Reprodukcije</string>
     <string name="share_action">Podjeli</string>
@@ -548,12 +539,6 @@ Language: hr
     <string name="media_edit_description_text">Opis</string>
     <string name="media_edit_caption_text">Podnatpis</string>
     <string name="media_edit_failure">Neuspjelo ažuriranje</string>
-    <string name="passcode_manage">Upravljanje PIN zaključavanjem</string>
-    <string name="passcode_enter_old_passcode">Unesite stari PIN</string>
-    <string name="passcode_re_enter_passcode">Ponovno unesite PIN</string>
-    <string name="passcode_set">PIN set</string>
-    <string name="passcode_turn_off">Isključi zaključavanje PIN–om</string>
-    <string name="passcode_turn_on">Uključi zaključavanje PIN–om</string>
     <string name="sign_in">Prijavi se</string>
     <string name="new_notifications">%d novih obavijesti</string>
     <string name="more_notifications">i %d više.</string>
@@ -572,6 +557,7 @@ Language: hr
     <string name="no_network_title">Nema dostupne mreže</string>
     <string name="width">Širina</string>
     <string name="anonymous">Anonimno</string>
+    <string name="pages">Stranice</string>
     <string name="caption">Opis (opcionalan)</string>
     <string name="posts">Objave</string>
     <string name="featured_in_post">Uključi sliku u sadržaj objave</string>

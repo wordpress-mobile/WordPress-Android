@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.update;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
@@ -14,7 +13,6 @@ import java.util.EnumSet;
 
 import static org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter.ARG_UPDATE_TASKS;
 
-@TargetApi(21)
 public class ReaderUpdateJobService extends JobService implements ServiceCompletionListener {
     private ReaderUpdateLogic mReaderUpdateLogic;
 

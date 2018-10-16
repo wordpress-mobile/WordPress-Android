@@ -12,17 +12,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.pages_list_fragment.*
+import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageListViewModel
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
+import javax.inject.Named
 
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -31,26 +35,10 @@ class PageListFragment : Fragment() {
     companion object {
         private const val typeKey = "type_key"
 
-        enum class Type(val text: Int) {
-            PUBLISHED(R.string.pages_published),
-            DRAFTS(R.string.pages_drafts),
-            SCHEDULED(R.string.pages_scheduled),
-            TRASH(R.string.pages_trashed);
-
-            companion object {
-                fun getType(position: Int): Type {
-                    if (position >= values().size) {
-                        throw Throwable("Selected position $position is out of range of page list types")
-                    }
-                    return values()[position]
-                }
-            }
-        }
-
-        fun newInstance(type: Type): PageListFragment {
+        fun newInstance(listType: PageListType): PageListFragment {
             val fragment = PageListFragment()
             val bundle = Bundle()
-            bundle.putSerializable(typeKey, type)
+            bundle.putSerializable(typeKey, listType)
             fragment.arguments = bundle
             return fragment
         }
@@ -64,12 +52,10 @@ class PageListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = checkNotNull(activity)
-        val type = checkNotNull(arguments?.getSerializable(typeKey) as Type?)
-
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, type)
+        initializeViewModels(nonNullActivity)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -79,14 +65,16 @@ class PageListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, type: Type) {
+    private fun initializeViewModels(activity: FragmentActivity) {
+        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+
+        val listType = arguments?.getSerializable(typeKey) as PageListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get<PageListViewModel>(type.name, PageListViewModel::class.java)
+                .get(listType.name, PageListViewModel::class.java)
+
+        viewModel.start(listType, pagesViewModel)
 
         setupObservers()
-
-        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        viewModel.start(getPageType(type), pagesViewModel)
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
@@ -104,29 +92,31 @@ class PageListFragment : Fragment() {
         viewModel.pages.observe(this, Observer { data ->
             data?.let { setPages(data) }
         })
-    }
 
-    private fun getPageType(type: Type): PageStatus {
-        return when (type) {
-            Type.PUBLISHED -> PageStatus.PUBLISHED
-            Type.DRAFTS -> PageStatus.DRAFT
-            Type.SCHEDULED -> PageStatus.SCHEDULED
-            else -> PageStatus.TRASHED
-        }
+        viewModel.scrollToPosition.observe(this, Observer { position ->
+            position?.let {
+                recyclerView.smoothScrollToPosition(position)
+            }
+        })
     }
 
     private fun setPages(pages: List<PageItem>) {
         val adapter: PagesAdapter
         if (recyclerView.adapter == null) {
             adapter = PagesAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) },
-                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() }
+                    onMenuAction = { action, page -> viewModel.onMenuAction(action, page) },
+                    onItemTapped = { page -> viewModel.onItemTapped(page) },
+                    onEmptyActionButtonTapped = { viewModel.onEmptyListNewPageButtonTapped() },
+                    uiScope = uiScope
             )
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PagesAdapter
         }
         adapter.update(pages)
+    }
+
+    fun scrollToPage(remotePageId: Long) {
+        viewModel.onScrollToPageRequested(remotePageId)
     }
 }

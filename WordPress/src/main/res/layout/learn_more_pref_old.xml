@@ -4,9 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="16dp"
               android:paddingStart="12dp"
-              android:paddingRight="12dp"
               android:paddingEnd="12dp"
               android:paddingTop="16dp"
               android:paddingBottom="16dp">

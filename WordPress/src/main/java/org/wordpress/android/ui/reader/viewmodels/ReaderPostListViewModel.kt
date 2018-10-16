@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
@@ -19,18 +20,22 @@ class ReaderPostListViewModel @Inject constructor(
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
+    private val onTagChanged: Observer<NewsItem?> = Observer { it: NewsItem? -> _newsItemSourceMediator.value = it }
+
     /**
-     * News Card shouldn't be shown when the initialTag is null. InitialTag may be null for Blog previews for instance.
+     * First tag for which the card was shown.
      */
     private var initialTag: ReaderTag? = null
     private var isStarted = false
 
+    /**
+     * Tag may be null for Blog previews for instance.
+     */
     fun start(tag: ReaderTag?) {
         if (isStarted) {
             return
         }
         tag?.let {
-            initialTag = tag
             onTagChanged(tag)
             newsManager.pull()
         }
@@ -43,10 +48,10 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onTagChanged(tag: ReaderTag?) {
         newsTrackerHelper.reset()
-        initialTag?.let { initialTag ->
+        tag?.let { newTag ->
             // show the card only when the initial tag is selected in the filter
-            if (tag == initialTag) {
-                _newsItemSourceMediator.addSource(newsItemSource) { _newsItemSourceMediator.value = it }
+            if (initialTag == null || newTag == initialTag) {
+                _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
             } else {
                 _newsItemSourceMediator.removeSource(newsItemSource)
                 _newsItemSourceMediator.value = null
@@ -59,7 +64,11 @@ class ReaderPostListViewModel @Inject constructor(
         newsManager.dismiss(item)
     }
 
-    fun onNewsCardShown(item: NewsItem) {
+    fun onNewsCardShown(
+        item: NewsItem,
+        currentTag: ReaderTag
+    ) {
+        initialTag = currentTag
         if (newsTrackerHelper.shouldTrackNewsCardShown(item.version)) {
             newsTracker.trackNewsCardShown(READER, item.version)
             newsTrackerHelper.itemTracked(item.version)

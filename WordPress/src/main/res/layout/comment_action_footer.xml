@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/layout_buttons"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -25,8 +24,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium">
 
@@ -37,11 +34,9 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_checkmark_grey_min_24dp"/>
+                android:src="@drawable/ic_checkmark_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_moderate_text"
@@ -62,8 +57,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -75,11 +68,9 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_spam_grey_min_24dp"/>
+                android:src="@drawable/ic_spam_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_spam_text"
@@ -100,8 +91,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -113,11 +102,9 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_trash_grey_min_24dp"/>
+                android:src="@drawable/ic_trash_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_trash_text"
@@ -139,8 +126,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium">
 
@@ -151,11 +136,9 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_star_outline_grey_min_24dp"/>
+                android:src="@drawable/ic_star_outline_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_like_text"
@@ -176,8 +159,6 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
             android:paddingStart="@dimen/margin_small"
             android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
@@ -189,11 +170,9 @@
                 android:contentDescription="@null"
                 android:paddingBottom="0dp"
                 android:paddingEnd="@dimen/margin_medium"
-                android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium"
                 android:paddingStart="@dimen/margin_medium"
                 android:paddingTop="0dp"
-                app:srcCompat="@drawable/ic_pencil_grey_min_24dp"/>
+                android:src="@drawable/ic_pencil_grey_min_24dp"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/btn_edit_text"

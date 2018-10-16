@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
-import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -27,8 +26,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -42,13 +41,13 @@ import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -256,16 +255,9 @@ public class PostPreviewActivity extends AppCompatActivity implements
         // if both buttons are visible, show them below the message instead of to the right of it
         if (mPost.isLocallyChanged()) {
             RelativeLayout.LayoutParams paramsMessage = (RelativeLayout.LayoutParams) messageText.getLayoutParams();
-
-            if (VERSION.SDK_INT < 17) {
-                // passing "0" removes the param (necessary since removeRule() is API 17+)
-                paramsMessage.addRule(RelativeLayout.LEFT_OF, 0);
-                paramsMessage.addRule(RelativeLayout.CENTER_VERTICAL, 0);
-            } else {
-                paramsMessage.removeRule(RelativeLayout.LEFT_OF);
-                paramsMessage.removeRule(RelativeLayout.START_OF);
-                paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
-            }
+            paramsMessage.removeRule(RelativeLayout.LEFT_OF);
+            paramsMessage.removeRule(RelativeLayout.START_OF);
+            paramsMessage.removeRule(RelativeLayout.CENTER_VERTICAL);
 
             ViewGroup.MarginLayoutParams marginsMessage = (ViewGroup.MarginLayoutParams) messageText.getLayoutParams();
             marginsMessage.bottomMargin = getResources().getDimensionPixelSize(R.dimen.snackbar_message_margin_bottom);
@@ -386,7 +378,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange == PostAction.UPDATE_POST) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             hideProgress();
 
             if (!event.isError()) {

@@ -7,7 +7,6 @@ Language: uz
 -->
 <resources>
     <string name="site_creation_creating_retry">Qayta urinib ko\'ring</string>
-    <string name="creating_your_site">Saytingiz yaratilmoqda</string>
     <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
     <string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
@@ -33,7 +32,6 @@ Language: uz
     <string name="reader_label_removed_tag">%s o‘chirildi</string>
     <string name="reader_likes_one">Bir kishi yoqtirgan</string>
     <string name="reader_likes_only_you">Siz yoqtirgansiz</string>
-    <string name="reader_empty_followed_tags">Birorta ham teg kuzatmayapsiz</string>
     <string name="reader_hint_comment_on_comment">Fikrga javob yozish</string>
     <string name="media_gallery_type_circles">Doiralar</string>
     <string name="themes">Shablonlar</string>
@@ -63,14 +61,6 @@ Language: uz
     <string name="stats_totals_plays">Ko‘rishlar</string>
     <string name="stats_view_referrers">Referrerlar</string>
     <string name="stats_entry_referrers">Referrer</string>
-    <string name="passcode_manage">PIN kod moslamalari</string>
-    <string name="passcode_enter_old_passcode">Eski PIN kodni kiriting</string>
-    <string name="passcode_re_enter_passcode">PIN kodni qayta kiriting</string>
-    <string name="passcode_change_passcode">PIN kodni o‘zgartirish</string>
-    <string name="passcode_set">PIN kod o‘zgartirildi</string>
-    <string name="passcode_preference_title">PIN qulf</string>
-    <string name="passcode_turn_off">PIN qulfni bekor qilish</string>
-    <string name="passcode_turn_on">PIN qulfdan foydalanish</string>
     <string name="media_gallery_type_slideshow">Slaydshou</string>
     <string name="manage">Boshqarish</string>
     <string name="discard">Bekor qilish</string>
@@ -93,6 +83,7 @@ Language: uz
     <string name="anonymous">Anonim</string>
     <string name="featured_in_post">Postga rasm qo‘shish</string>
     <string name="no_network_title">Netvork mavjud emas</string>
+    <string name="pages">Sahifalar</string>
     <string name="width">En</string>
     <string name="posts">Postlar</string>
     <string name="caption">Titr (ixtiyoriy)</string>

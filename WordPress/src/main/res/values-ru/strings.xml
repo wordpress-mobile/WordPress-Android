@@ -1,11 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 09:11:05+0000
+Translation-Revision-Date: 2018-09-12 14:08:44+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="news_card_announcement_action_sample_announcement">[Читать далее]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Нет времени прочесть сейчас? Сохраните на потом!]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Доступна новая возможность]</string>
+    <string name="pages_empty_trashed">У вас нет страниц в корзине</string>
+    <string name="pages_empty_scheduled">У вас нет запланированных к публикации страниц</string>
+    <string name="pages_empty_drafts">У вас нет страниц в черновиках</string>
+    <string name="pages_empty_published">Вы еще не опубликовали ни одной страницы</string>
+    <string name="pages_search_suggestion">Поиск страниц</string>
+    <string name="pages_empty_search_result">Нет страниц по критериям поиска</string>
+    <string name="pages_delete_permanently">Удалить навсегда</string>
+    <string name="pages_move_to_trash">Переместить в корзину</string>
+    <string name="pages_move_to_draft">Переместить в черновики</string>
+    <string name="pages_publish_now">Опубликовать</string>
+    <string name="pages_set_parent">Установить родителя</string>
+    <string name="pages_view">Просмотр</string>
+    <string name="pages_trashed">Корзина</string>
+    <string name="pages_scheduled">Запланировано</string>
+    <string name="pages_drafts">Черновики</string>
+    <string name="pages_published">Опубликовано</string>
+    <string name="login_error_sms_throttled">Слишком много попыток отправить СМС–код проверки, отдохните и запросите снова через пару минут.</string>
+    <string name="login_error_email_not_found_v2">Ни одна учетная запись WordPress.com не совпадает с этой записью в Google.</string>
+    <string name="site_picker_remove_site_empty">Нет сайтов по критериям поиска</string>
+    <string name="reader_empty_followed_blogs_search_title">Нет сайтов по критериям поиска</string>
+    <string name="page_parent_changed">Родитель для страницы сменен</string>
+    <string name="page_permanently_deleted">Страница удалена навсегда</string>
+    <string name="page_moved_to_scheduled">Страница запланирована к публикации</string>
+    <string name="page_moved_to_published">Страница опубликована</string>
+    <string name="page_moved_to_trash">Страница перемещена в корзину</string>
+    <string name="page_moved_to_draft">Страница перемещена в черновики</string>
+    <string name="top_level">Верхний уровень</string>
+    <string name="page_delete_dialog_message">Вы точно хотите удалить страницу  %s?</string>
+    <string name="page_parent_change_error">Возникла проблема смены родителя страницы</string>
+    <string name="page_status_change_error">Возникла проблема установления статуса страницы</string>
+    <string name="page_delete_error">Возникла проблема при удалении страницы</string>
+    <string name="set_parent">Установить родителя</string>
+    <string name="dismiss">закрыть</string>
+    <string name="quick_start_focus_point_description">нажмите здесь</string>
+    <string name="quick_start_sites">Быстрый старт</string>
+    <string name="quick_start_list_create_site_title">Создайте ваш сайт</string>
+    <string name="quick_start_list_create_site_subtitle">Запустите ваш сайт</string>
+    <string name="quick_start_list_complete_title">Вы прошли \"Быстрый старт\"! Поздравляем!</string>
+    <string name="quick_start_list_complete_subtitle">правда хорошо просто выбирать из списка?</string>
+    <string name="quick_start_dialog_view_site_title">Посмотреть ваш сайт</string>
+    <string name="quick_start_dialog_view_site_message_short">Нажмите %1$s Посмотреть сайт %2$s для просмотра вашего сайта</string>
+    <string name="quick_start_dialog_view_site_message">Посмотрите ваш новый сайт, чтобы увидеть его как он предстанет посетителям.</string>
+    <string name="quick_start_dialog_skip_title">Пропустить быстрый старт</string>
+    <string name="quick_start_dialog_skip_message">Этот быстрый тур поможет создать базовый сайт. Вы точно хотите пропустить его?</string>
+    <string name="quick_start_dialog_share_site_title">Делитесь содержимым сайта</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Нажмите %1$s Поделиться %2$s для продолжения</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Нажмите %1$s Подключения %2$s для добавления учетных записей в соцсетях</string>
+    <string name="quick_start_dialog_share_site_message">Подключите ваши учетные записи в соцсетях и ваш сайт автоматически будет делиться новыми записями.</string>
+    <string name="quick_start_dialog_publish_post_title">Опубликовать запись</string>
+    <string name="quick_start_dialog_publish_post_message_short">Нажмите %1$s Создать запись %2$s для создания новой записи</string>
+    <string name="quick_start_dialog_publish_post_message">Самое время! Сохраните в черновики и опубликуйте вашу первую запись.</string>
+    <string name="quick_start_dialog_need_help_title">Нужна помощь с тем, как начать?</string>
+    <string name="quick_start_dialog_need_help_message">Наш Быстрый старт проведет вас по списку основных шагов по созданию нового сайта.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Да</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Никогда</string>
+    <string name="quick_start_dialog_need_help_button_negative">Нет</string>
+    <string name="quick_start_dialog_follow_sites_title">Подписка на другие сайты</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Нажмите %1$s Поиск %2$s, чтобы найти сайты с похожими интересами</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Нажмите %1$s Читалка %2$s для продолжения</string>
+    <string name="quick_start_dialog_follow_sites_message">Найдите сайты взаимодействующие с вами и подпишитесь на них для получения новых публикаций с них.</string>
+    <string name="quick_start_dialog_customize_site_title">Настройте ваш сайт</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Нажмите %1$s Темы %2$s для продолжения</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Нажмите %1$s Настроить %2$s для начала персонализации вашего сайта</string>
+    <string name="quick_start_dialog_customize_site_message">Смените цвета, шрифты и изображения для отлично настроенного под ваши вкусы сайта.</string>
+    <string name="quick_start_dialog_continue_setup_title">Продолжить настройку сайта</string>
+    <string name="quick_start_dialog_continue_setup_message">Пора завершить настройку вашего сайта! Наш список проведет вас по следующим шагам.</string>
+    <string name="quick_start_dialog_choose_theme_title">Выберите тему</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Нажмите %1$s Темы %2$s для поиска новых тем</string>
+    <string name="quick_start_dialog_choose_theme_message">Посмотреть все наши темы, чтобы найти наиболее подходящую.</string>
+    <string name="quick_start_button_skip_positive">Пропустить</string>
+    <string name="quick_start_button_skip_negative">Отмена</string>
+    <string name="quick_start_button_skip">Пропустить все</string>
+    <string name="quick_start_button_positive">Вперед</string>
+    <string name="quick_start_button_negative_short">Отмена</string>
+    <string name="quick_start_button_negative">Не сейчас</string>
+    <string name="content_description_done">Готово</string>
+    <string name="my_site_create_new_site_title">У вас нет сайтов</string>
+    <string name="reader_empty_followed_tags_title">Нет подписок на метки</string>
+    <string name="reader_empty_followed_tags_subtitle">Добавьте метки здесь, чтобы найти записи по вашим любимым темам</string>
+    <string name="login_to_to_connect_jetpack">Войдите в учетную запись WordPress.com, с которой был подключен Jetpack.</string>
+    <string name="install_jetpack_retry">Повторить</string>
+    <string name="install_jetpack_continue">Продолжить</string>
+    <string name="jetpack_installation_problem_message">Сейчас Jetpack не может быть установлен</string>
+    <string name="jetpack_installation_problem">Возникла проблема</string>
+    <string name="jetpack_installed_message">Jetpack установлен на вашем сайте. Поздравляем!</string>
+    <string name="jetpack_installed">Jetpack установлен</string>
+    <string name="installing_jetpack_message">Установка Jetpack на сайт. Это может занять пару минут</string>
+    <string name="installing_jetpack">Устанавливается Jetpack</string>
+    <string name="install_jetpack_message">Данные для входа на ваш сайт не будут сохранены и будут использоваться только для установки Jetpack</string>
+    <string name="install_jetpack">Установить Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Устанавливая Jetpack вы соглашаетесь с нашими</string>
+    <string name="stats_jetpack_connection_setup_info">Для использования Статистики на вашем сайте WordPress требуется установить плагин Jetpack.</string>
     <string name="themes_empty_list">Нет тем по вашему поиску</string>
     <string name="reader_label_post_search_explainer">Что вы хотите найти?</string>
     <string name="site_settings_tags_empty_title_search">Нет меток по вашему поиску</string>
@@ -191,6 +288,7 @@ Language: ru
     <string name="stats_tab_tap_content_description">показано %s</string>
     <string name="stats_legend">легенда графика статистики</string>
     <string name="fab_create_desc">создать</string>
+    <string name="fab_add_tag_desc">Создать метку</string>
     <string name="stats_bar_week_desc">Неделя %s</string>
     <string name="stats_bar_date_value_desc">%s, %d просмотров</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -265,7 +363,6 @@ Language: ru
     <string name="me_section_screen_title">Профиль</string>
     <string name="my_site_section_screen_title">Мой сайт</string>
     <string name="notif_settings_screen_title">Настройки уведомления</string>
-    <string name="passcode_screen_title">Ключ WordPress</string>
     <string name="help_screen_title">Помощь и поддержка</string>
     <string name="license_screen_title">Лицензия</string>
     <string name="release_notes_screen_title">Заметки о выпуске</string>
@@ -418,7 +515,6 @@ Language: ru
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack оптимизирует изображения и отдает их посетителям с ближайшего к ним сервера. Использование нашей глобальной CDN повысит скорость загрузки вашего сайта.</string>
     <string name="site_settings_serve_images_from_our_servers">Отдавать изображения с наших серверов</string>
     <string name="site_settings_speed_up_your_site">Ускорить ваш сайт</string>
-    <string name="stats_jetpack_connection_setup_info">Чтобы использовать статистику на вашем сайте WordPress, вам необходимо установить плагин Jetpack. Вы хотите установить Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Установить Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Включить/Выключить текст</string>
     <string name="plugin_info_your_version">Ваша версия WordPress</string>
@@ -529,7 +625,6 @@ Language: ru
     <string name="media_edit_file_details_card_caption">Информация о файле</string>
     <string name="login_error_suffix">\nВозможно попробуете другую учетную запись?</string>
     <string name="login_error_generic">Возникла ошибка подключения к учетной записи Google.</string>
-    <string name="login_error_email_not_found">Учетная запись Google \'%s\' не соответствует ни одной учетной записи WordPress.com.</string>
     <string name="login_error_button">Закрыть</string>
     <string name="login_google_button_suffix">Войти через Google.</string>
     <string name="enter_wpcom_password_google">Чтобы войти через эту учетную запись Google, пожалуйста укажите соответствующий пароль WordPress.com. Это запрашивается только один раз.</string>
@@ -832,7 +927,6 @@ Language: ru
     <string name="image_quality">Качество изображений</string>
     <string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из–за неизвестной ошибки. Попробуйте начать загрузку заново</string>
     <string name="error_unknown_post_type">Неизвестный формат записи</string>
-    <string name="error_fetch_site_after_creation">Создан новый сайт. Возможно, вам следует обновить список сайтов в подборке.</string>
     <string name="submit_for_review">Отправить</string>
     <string name="duplicate_site_detected">Обнаружена копия сайта.</string>
     <string name="cannot_add_duplicate_site">Этот сайт уже существует в приложении, его нельзя добавить.</string>
@@ -850,7 +944,6 @@ Language: ru
     <string name="confirm">Подтвердить</string>
     <string name="xmlrpc_endpoint_forbidden_error">Не удалось подключиться. При попытке подключиться к конечной точке XMLRPC вашего сайта мы получили\n ошибку 403. Это необходимо для обмена данными между приложением и вашим сайтом. Свяжитесь с хостинг–провайдером, чтобы решить\n эту проблему.</string>
     <string name="xmlrpc_post_blocked_error">Не удалось подключиться. Ваш хостинг-провайдер блокирует запросы POST, которые нужны приложению\n для обмена данными с вашим сайтом. Свяжитесь с хостинг–провайдером, чтобы решить эту проблему.</string>
-    <string name="reader_empty_followed_blogs_search_title">Нет подходящих сайтов</string>
     <string name="reader_hint_search_followed_sites">Искать на веб–сайтах, на которые вы подписаны</string>
     <string name="visual_editor_disabled">Визуальный редактор отключен</string>
     <string name="preference_editor_visual">Визуальный</string>
@@ -1300,7 +1393,6 @@ Language: ru
     <string name="reader_toast_err_follow_blog_not_authorized">У вас нет разрешения на доступ к этому сайту.</string>
     <string name="reader_toast_err_follow_blog_not_found">Не удаётся найти этот сайт.</string>
     <string name="undo">Назад</string>
-    <string name="passcodelock_prompt_message">Введите ваш PIN–код</string>
     <string name="push_auth_expired">Время запроса истекло. Авторизуйтесь на WordPress.com и попробуйте еще раз.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% просмотров</string>
     <string name="ignore">Пропустить</string>
@@ -1454,7 +1546,6 @@ Language: ru
     <string name="reader_label_view_original">Просмотреть исходную публикацию</string>
     <string name="reader_empty_posts_in_tag">Нет записей с этой меткой.</string>
     <string name="reader_empty_comments">Пока нет комментариев</string>
-    <string name="create_new_blog_wpcom">Создать блог на WordPress.com</string>
     <string name="browse_our_faq_button">Поиск в списке часто задаваемых вопросов</string>
     <string name="reader_menu_block_blog">Заблокировать этот сайт</string>
     <string name="reader_toast_blog_blocked">Записи с этого сайта больше не будут отображаться</string>
@@ -1482,7 +1573,6 @@ Language: ru
     <string name="username_or_password_incorrect">Имя пользователя или пароль введены неверно</string>
     <string name="email_invalid">Введите правильный email адрес</string>
     <string name="invalid_email_message">Ваш адрес email не подходит</string>
-    <string name="passcode_wrong_passcode">Неправильный PIN–код</string>
     <string name="error_downloading_image">Ошибка при загрузке картинки</string>
     <string name="error_load_comment">Невозможно загрузить комментарии</string>
     <string name="error_edit_comment">Во время редактирования комментария произошла ошибка</string>
@@ -1506,7 +1596,6 @@ Language: ru
     <string name="blog_not_found">Ошибка при попытке подключиться к блогу</string>
     <string name="gallery_error">Медиа–файл не может быть восстановлен</string>
     <string name="no_network_message">Нет доступной сети.</string>
-    <string name="required_field">Обязательное поле</string>
     <string name="reader_toast_err_remove_tag">Не удается удалить эту метку</string>
     <string name="reader_toast_err_add_tag">Не удается добавить эту метку</string>
     <string name="reader_title_applog">Лог приложения</string>
@@ -1515,7 +1604,6 @@ Language: ru
     <string name="error_refresh_media">В данный момент не удалось обновить медиафайлы.</string>
     <string name="error_deleting_page">При удалении страницы произошла ошибка</string>
     <string name="wordpress_blog">Блог WordPress</string>
-    <string name="add_account_blog_url">Адрес блога</string>
     <string name="image_settings">Настройки изображений</string>
     <string name="local_changes">Локальные изменения</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
@@ -1573,7 +1661,6 @@ Language: ru
     <string name="connection_error">Ошибка соединения</string>
     <string name="select_categories">Выберите категории</string>
     <string name="share_link">Поделиться ссылкой</string>
-    <string name="creating_your_site">Создайте свой сайт</string>
     <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
@@ -1585,7 +1672,6 @@ Language: ru
     <string name="pick_video">Выберите видео</string>
     <string name="pick_photo">Выберите фото</string>
     <string name="reader_likes_you_and_one">Вам и ещё одному понравилось это</string>
-    <string name="reader_empty_followed_tags">Вы не подписаны ни на одну метку.</string>
     <string name="reader_toast_err_url_intent">Не удаётся открыть %s</string>
     <string name="reader_toast_err_view_image">Не удаётся просмотреть изображение</string>
     <string name="reader_toast_err_share_intent">Не в состоянии поделиться</string>
@@ -1603,14 +1689,6 @@ Language: ru
     <string name="reader_untitled_post">(Без названия)</string>
     <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>
-    <string name="passcode_turn_on">Включить блокировку PIN</string>
-    <string name="passcode_turn_off">Выключить блокировку PIN</string>
-    <string name="passcode_preference_title">Блокировка PIN–кодом</string>
-    <string name="passcode_set">PIN установлен</string>
-    <string name="passcode_change_passcode">Изменить PIN</string>
-    <string name="passcode_re_enter_passcode">Введите ваш PIN заново</string>
-    <string name="passcode_enter_old_passcode">Введите ваш старый PIN</string>
-    <string name="passcode_manage">Управление PIN</string>
     <string name="stats_totals_plays">Проиграно раз</string>
     <string name="stats_totals_clicks">Клики</string>
     <string name="stats_totals_views">Просмотры</string>
@@ -1662,6 +1740,7 @@ Language: ru
     <string name="posts">Записи</string>
     <string name="width">Ширина</string>
     <string name="caption">Подпись (необязательно)</string>
+    <string name="pages">Страницы</string>
     <string name="no_network_title">Сеть недоступна</string>
     <string name="featured_in_post">Включить изображение в текст записи</string>
     <string name="blogusername">имя пользователя</string>

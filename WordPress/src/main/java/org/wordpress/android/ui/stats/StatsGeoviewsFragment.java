@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.http.SslError;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +22,7 @@ import org.wordpress.android.ui.stats.service.StatsServiceLogic;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.image.ImageType;
 
 import java.util.List;
 
@@ -85,13 +82,6 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     @SuppressLint("RtlSetMargins")
     private void showMap(final List<GeoviewModel> countries) {
         if (!isAdded()) {
-            return;
-        }
-
-        // Disable the map on API 18 or lower (Android 4.3 or lower).
-        // See: https://github.com/wordpress-mobile/WordPress-Android/issues/6146
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            AppLog.w(AppLog.T.STATS, "Geo map is disabled on API 18 or lower. Current API: " + Build.VERSION.SDK_INT);
             return;
         }
 
@@ -277,16 +267,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
             holder.setEntryText(entry);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // On Android >= 5.0, use the emoji flag
-                holder.alternativeImage.setText(currentRowData.getFlagEmoji());
-                holder.alternativeImage.setVisibility(View.VISIBLE);
-            } else {
-                // On other Android versions, use the Gravatar image
-                mImageManager.load(holder.networkImageView, ImageType.BLAVATAR,
-                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.mHeaderAvatarSizePx));
-                holder.networkImageView.setVisibility(View.VISIBLE);
-            }
+            holder.alternativeImage.setText(currentRowData.getFlagEmoji());
+            holder.alternativeImage.setVisibility(View.VISIBLE);
 
             return rowView;
         }

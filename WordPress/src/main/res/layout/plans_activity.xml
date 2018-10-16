@@ -65,8 +65,6 @@
             android:gravity="center"
             android:linksClickable="false"
             android:minHeight="@dimen/toolbar_height"
-            android:paddingLeft="@dimen/content_margin"
-            android:paddingRight="@dimen/content_margin"
             android:text="@string/plans_manage"
             android:textColor="@color/white"
             android:textColorLink="@color/blue_light"

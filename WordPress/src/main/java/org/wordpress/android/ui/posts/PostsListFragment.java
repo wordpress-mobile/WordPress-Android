@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -31,6 +30,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -54,10 +54,10 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener;
@@ -184,14 +184,8 @@ public class PostsListFragment extends Fragment
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        // hide the fab so we can animate it in - note that we only do this on Lollipop and higher
-        // due to a bug in the current implementation which prevents it from being hidden
-        // correctly on pre-L devices (which makes animating it in/out ugly)
-        // https://code.google.com/p/android/issues/detail?id=175331
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mFabView.setVisibility(View.GONE);
-        }
-
+        // hide the fab so we can animate it
+        mFabView.setVisibility(View.GONE);
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -416,13 +410,11 @@ public class PostsListFragment extends Fragment
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
-        mSwipeRefreshLayout.setEnabled(!isPostAdapterEmpty());
     }
 
     private void hideEmptyView() {
         if (isAdded() && mActionableEmptyView != null) {
             mActionableEmptyView.setVisibility(View.GONE);
-            mSwipeRefreshLayout.setEnabled(true);
         }
     }
 
@@ -706,45 +698,47 @@ public class PostsListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        switch (event.causeOfChange) {
+        if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             // if a Post is updated, let's refresh the whole list, because we can't really know
             // from FluxC which post has changed, or when. So to make sure, we go to the source,
             // which is the FluxC PostStore.
-            case UPDATE_POST:
-                if (!event.isError()) {
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
-            case FETCH_POSTS:
-                mIsFetchingPosts = false;
-                if (!isAdded()) {
-                    return;
-                }
+            /*
+             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
+             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
+             * both the original comment and this note is kept for record keeping.
+             */
+            if (!event.isError()) {
+                loadPosts(LoadMode.IF_CHANGED);
+            }
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.FetchPosts
+                   || event.causeOfChange instanceof CauseOfOnPostChanged.FetchPages) {
+            mIsFetchingPosts = false;
+            if (!isAdded()) {
+                return;
+            }
 
-                setRefreshing(false);
-                hideLoadMoreProgress();
-                if (!event.isError()) {
-                    mCanLoadMorePosts = event.canLoadMore;
-                    loadPosts(LoadMode.IF_CHANGED);
-                } else {
-                    PostError error = event.error;
-                    switch (error.type) {
-                        case UNAUTHORIZED:
-                            updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
-                            break;
-                        default:
-                            updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
-                            break;
-                    }
+            setRefreshing(false);
+            hideLoadMoreProgress();
+            if (!event.isError()) {
+                mCanLoadMorePosts = event.canLoadMore;
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                PostError error = event.error;
+                switch (error.type) {
+                    case UNAUTHORIZED:
+                        updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
+                        break;
+                    default:
+                        updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
+                        break;
                 }
-                break;
-            case DELETE_POST:
-                if (event.isError()) {
-                    String message = getString(R.string.error_deleting_post);
-                    ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
-                    loadPosts(LoadMode.IF_CHANGED);
-                }
-                break;
+            }
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.DeletePost) {
+            if (event.isError()) {
+                String message = getString(R.string.error_deleting_post);
+                ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
+                loadPosts(LoadMode.IF_CHANGED);
+            }
         }
     }
 

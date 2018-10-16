@@ -169,9 +169,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
         // RtL language support
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        }
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
 
         TextView message = (TextView) view.findViewById(android.R.id.message);
         WPPrefUtils.layoutAsDialogMessage(message);
@@ -184,9 +182,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         // This is a small hack to try to make it align with the input for earlier versions
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
             leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_small);
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_large);
         }
         layoutParams.setMargins(0, layoutParams.topMargin, 0, bottomMargin);
         MarginLayoutParamsCompat.setMarginStart(layoutParams, leftMargin);

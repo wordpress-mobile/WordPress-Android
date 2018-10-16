@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-15 09:08:33+0000
+Translation-Revision-Date: 2018-08-30 10:57:13+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+    <string name="quick_start_focus_point_description">kliknout zde</string>
+    <string name="quick_start_sites">Rychlý start</string>
+    <string name="quick_start_list_create_site_title">Vytvořit stránku</string>
+    <string name="quick_start_dialog_view_site_title">Zobrazit stránku</string>
+    <string name="quick_start_dialog_need_help_button_positive">Ano</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Ne</string>
+    <string name="quick_start_button_skip_positive">Přeskočit</string>
+    <string name="quick_start_button_skip_negative"> Zrušit</string>
+    <string name="quick_start_button_skip">Přeskočit vše</string>
+    <string name="quick_start_button_negative_short">Zrušit</string>
+    <string name="quick_start_button_negative">Né teď</string>
+    <string name="content_description_done">Hotovo</string>
+    <string name="install_jetpack">Instalovat Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="reader_gallery_images_desc">galerie obrázků</string>
     <string name="blavatar_desc">ikona stránky</string>
     <string name="theme_image_desc">obrázek šablony</string>
@@ -162,6 +178,7 @@ Language: cs_CZ
     <string name="stats_tab_tap_content_description">zobrazování %s</string>
     <string name="stats_legend">legenda grafu statistik</string>
     <string name="fab_create_desc">vytvořit</string>
+    <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="stats_bar_week_desc">Týden z %s</string>
     <string name="stats_bar_date_value_desc">%s, %d zobrazení</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -236,7 +253,6 @@ Language: cs_CZ
     <string name="me_section_screen_title">Já</string>
     <string name="my_site_section_screen_title">Mé stránky</string>
     <string name="notif_settings_screen_title">Nastavení upozornění</string>
-    <string name="passcode_screen_title">WordPress Passcode</string>
     <string name="help_screen_title">Podpora a pomoc</string>
     <string name="license_screen_title">Licence</string>
     <string name="release_notes_screen_title">Poznámky k vydání</string>
@@ -389,8 +405,7 @@ Language: cs_CZ
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a načítá je z nejbližších serverů. Pomocí naší globální sítě serverů pro doručování obsahu se zvýší rychlost načítání vašeho webu.</string>
     <string name="site_settings_serve_images_from_our_servers">Načítejte obrázky z našich serverů</string>
     <string name="site_settings_speed_up_your_site">Zrychlete svůj web</string>
-    <string name="stats_jetpack_connection_setup_info">Pro použití Stats na tomto WordPress webu bude potřeba nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
-    <string name="stats_jetpack_connection_setup">Nastavit Jetpack</string>
+    <string name="stats_jetpack_connection_setup">Instalovat Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Přepnout text</string>
     <string name="plugin_info_your_version">Verze WordPressu</string>
     <string name="plugin_info_requires_version">Požadovaná verze WordPressu</string>
@@ -500,7 +515,6 @@ Language: cs_CZ
     <string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
     <string name="login_error_suffix">Možná zkuste jiný účet?</string>
     <string name="login_error_generic">Při připojování ke Google účtu se objevily nějaké potíže.</string>
-    <string name="login_error_email_not_found">Účet Google \'%s\' neodpovídá žádnému existujícímu účtu na WordPress.com.</string>
     <string name="login_error_button">Zavřít</string>
     <string name="login_google_button_suffix">Přihlásit se pomocí Google.</string>
     <string name="enter_wpcom_password_google">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
@@ -803,7 +817,6 @@ Language: cs_CZ
     <string name="image_quality">Kvalita obrázku</string>
     <string name="error_all_media_upload_canceled">Všechna nahrání médií byla zrušena kvůli neznámé chybě. Opakujte nahrávání</string>
     <string name="error_unknown_post_type">Neznámý formát příspěvku</string>
-    <string name="error_fetch_site_after_creation">Stránky byly vytvořeny, pravděpodobně budete muset stránky obnovit.</string>
     <string name="submit_for_review">Odeslat</string>
     <string name="duplicate_site_detected">Bylo zjištěna duplicitní stránka.</string>
     <string name="cannot_add_duplicate_site">Tyto stránky již v aplikaci existují, nelze je přidat.</string>
@@ -819,9 +832,8 @@ Language: cs_CZ
     <string name="media_upload_error">Došlo k chybě nahrávání médií</string>
     <string name="retry">Znovu</string>
     <string name="confirm">Potvrdit</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Došlo k chybě 403 při pokusu o přístup k vašemu XMLRPC mEndpoint. Aplikace potřebuje tuto aplikaci, aby mohla komunikovat s vaším webem. Obraťte se na svojí hostingovou společnost, abyste vyřešili tento problém.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Došlo k chybě 403 při pokusu o přístup k vašemu XMLRPC endpoint. Aplikace potřebuje tuto aplikaci, aby mohla komunikovat s vaším webem. Obraťte se na svojí hostingovou společnost, abyste vyřešili tento problém.</string>
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
-    <string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
     <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="visual_editor_disabled">Vizuální editor zakázán</string>
     <string name="preference_editor_visual">Vizuální</string>
@@ -1271,7 +1283,6 @@ Language: cs_CZ
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
     <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>
-    <string name="passcodelock_prompt_message">Zadejte PIN</string>
     <string name="push_auth_expired">Žádost vypršela. Přihlaste se znovu přes WordPress.com </string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% shlédnutí</string>
     <string name="ignore">Ignorovat</string>
@@ -1425,7 +1436,6 @@ Language: cs_CZ
     <string name="reader_label_view_original">Zobrazit původní článek</string>
     <string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
     <string name="reader_empty_comments">Žádné komentáře</string>
-    <string name="create_new_blog_wpcom">Vytvořit web na WordPress.com</string>
     <string name="browse_our_faq_button">Prohledat časté dotazy</string>
     <string name="reader_menu_block_blog">Zablokovat tento web</string>
     <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
@@ -1453,7 +1463,6 @@ Language: cs_CZ
     <string name="username_or_password_incorrect">Vložené uživatelské jméno nebo heslo je neplatné</string>
     <string name="email_invalid">Vlož platnou emailovou adresu</string>
     <string name="invalid_email_message">Tvoje emailová adresa není platná</string>
-    <string name="passcode_wrong_passcode">Špatný PIN</string>
     <string name="error_downloading_image">Chyba při stahování obrázku</string>
     <string name="error_load_comment">Nemohl nahrát komentář</string>
     <string name="error_edit_comment">Nastala chyba při opravě komentáře</string>
@@ -1477,7 +1486,6 @@ Language: cs_CZ
     <string name="blog_not_found">Nastala chyba při přístupu na tento web</string>
     <string name="gallery_error">Multimediální položka nemohla být stažena</string>
     <string name="no_network_message">Není dostupná žádná síť</string>
-    <string name="required_field">Povinné pole</string>
     <string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
     <string name="reader_toast_err_add_tag">Nelze přidat tento štítek</string>
     <string name="reader_title_applog">Protokol aplikace</string>
@@ -1486,7 +1494,6 @@ Language: cs_CZ
     <string name="error_refresh_media">Média se nepodařilo obnovit</string>
     <string name="error_deleting_page">Při mazání stránky se vyskytla chyba.</string>
     <string name="wordpress_blog">WordPress web</string>
-    <string name="add_account_blog_url">Zadej URL webu</string>
     <string name="image_settings">Vlastnosti obrázku</string>
     <string name="local_changes">Místní změny</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
@@ -1544,7 +1551,6 @@ Language: cs_CZ
     <string name="connection_error">Ztráta spojení</string>
     <string name="select_categories">Vyberte rubriku</string>
     <string name="share_link">Sdílet odkaz</string>
-    <string name="creating_your_site">Vytvářím vaši stránku</string>
     <string name="reader_empty_posts_in_tag_updating">Načítám příspěvky…</string>
     <string name="cant_share_no_visible_blog">Nemůžete sdílet s WordPressem bez viditelného webu</string>
     <string name="comment_spammed">Komentář byl označen jako spam</string>
@@ -1556,7 +1562,6 @@ Language: cs_CZ
     <string name="pick_video">Vyberte video</string>
     <string name="pick_photo">Vyberte fotku</string>
     <string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
-    <string name="reader_empty_followed_tags">Nesledujete žádné štítky</string>
     <string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
     <string name="reader_toast_err_view_image">Nelze zobrazit obrázek</string>
     <string name="reader_toast_err_share_intent">Nelze sdílet</string>
@@ -1573,14 +1578,6 @@ Language: cs_CZ
     <string name="reader_btn_share">Sdílet</string>
     <string name="reader_untitled_post">(bez názvu)</string>
     <string name="empty_list_default">Tento seznam je prázdný</string>
-    <string name="passcode_turn_on">Zapnout zámek PIN</string>
-    <string name="passcode_turn_off">Vypnout zámek PIN</string>
-    <string name="passcode_preference_title">Zámek PIN</string>
-    <string name="passcode_set">Nastavení PINU</string>
-    <string name="passcode_change_passcode">Změnit PIN</string>
-    <string name="passcode_re_enter_passcode">Potvrdit PIN</string>
-    <string name="passcode_enter_old_passcode">Zadat starý PIN</string>
-    <string name="passcode_manage">Spravovat PIN</string>
     <string name="stats_totals_plays">Přehrávání</string>
     <string name="stats_totals_clicks">Prokliky</string>
     <string name="stats_totals_views">Zobrazení</string>
@@ -1632,6 +1629,7 @@ Language: cs_CZ
     <string name="posts">Příspěvky</string>
     <string name="width">Šířka</string>
     <string name="caption">Popis (nepovinné)</string>
+    <string name="pages">Stránky</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
     <string name="blogusername">Jmémo blogera</string>

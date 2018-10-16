@@ -3,7 +3,7 @@ package org.wordpress.android.viewmodel.pages
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -19,9 +20,14 @@ import org.wordpress.android.ui.pages.PageItem.Type.PARENT
 import org.wordpress.android.ui.pages.PageItem.Type.TOP_LEVEL_PARENT
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import javax.inject.Named
 
 class PageParentViewModel
-@Inject constructor(private val pageStore: PageStore, private val resourceProvider: ResourceProvider) : ViewModel() {
+@Inject constructor(
+    private val pageStore: PageStore,
+    private val resourceProvider: ResourceProvider,
+    @param:Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
+) : ViewModel() {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<List<PageItem>> = _pages
 
@@ -49,24 +55,24 @@ class PageParentViewModel
         }
     }
 
-    private fun loadPages(pageId: Long) = launch(CommonPool) {
+    private fun loadPages(pageId: Long) = defaultScope.launch {
         page = pageStore.getPageByRemoteId(pageId, site)
 
         val parents = mutableListOf<PageItem>(
-                ParentPage(0, resourceProvider.getString(R.string.top_level),
+                ParentPage(
+                        0, resourceProvider.getString(R.string.top_level),
                         page?.parent == null,
-                        TOP_LEVEL_PARENT)
+                        TOP_LEVEL_PARENT
+                )
         )
 
         val choices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
         val parentChoices = choices.filter { isNotChild(it, choices) }
         if (parentChoices.isNotEmpty()) {
             parents.add(Divider(resourceProvider.getString(R.string.pages)))
-            parents.addAll(
-                    parentChoices.map {
-                        ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
-                    }
-            )
+            parents.addAll(parentChoices.map {
+                ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+            })
         }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage

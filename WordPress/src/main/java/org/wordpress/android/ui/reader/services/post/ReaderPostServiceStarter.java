@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.post;
 
-import android.annotation.TargetApi;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -85,7 +84,6 @@ public class ReaderPostServiceStarter {
         }
     }
 
-    @TargetApi(21)
     private static void doScheduleJobWithBundle(Context context, PersistableBundle extras, int jobId) {
         // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
         // it's preferable to use it only since enforcement in API 26 to not break any old behavior
@@ -107,7 +105,6 @@ public class ReaderPostServiceStarter {
         }
     }
 
-    @TargetApi(21)
     private static void putReaderTagExtras(PersistableBundle extras, ReaderTag tag) {
         extras.putString(ARG_TAG_PARAM_SLUG, tag.getTagSlug());
         extras.putString(ARG_TAG_PARAM_DISPLAY_NAME, tag.getTagDisplayName());

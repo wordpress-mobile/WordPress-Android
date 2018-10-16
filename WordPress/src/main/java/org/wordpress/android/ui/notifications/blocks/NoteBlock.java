@@ -19,16 +19,16 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableMedia;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.FormattableContentUtilsKt;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPTextView;
@@ -38,13 +38,10 @@ import org.wordpress.android.widgets.WPTextView;
  * This basic block can support a media item (image/video) and/or text.
  */
 public class NoteBlock {
-    private static final String PROPERTY_MEDIA_TYPE = "type";
-    private static final String PROPERTY_MEDIA_URL = "url";
-
-    private final JSONObject mNoteData;
+    private final FormattableContent mNoteData;
     private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     protected final ImageManager mImageManager;
-    private JSONObject mMediaItem;
+    protected final NotificationsUtilsWrapper mNotificationsUtilsWrapper;
     private boolean mIsBadge;
     private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
@@ -60,11 +57,13 @@ public class NoteBlock {
         void showSitePreview(long siteId, String siteUrl);
     }
 
-    public NoteBlock(JSONObject noteObject, ImageManager imageManager,
+    public NoteBlock(FormattableContent noteObject, ImageManager imageManager,
+                     NotificationsUtilsWrapper notificationsUtilsWrapper,
                      OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         mNoteData = noteObject;
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
         mImageManager = imageManager;
+        mNotificationsUtilsWrapper = notificationsUtilsWrapper;
     }
 
     OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
@@ -75,40 +74,37 @@ public class NoteBlock {
         return BlockType.BASIC;
     }
 
-    JSONObject getNoteData() {
+    FormattableContent getNoteData() {
         return mNoteData;
     }
 
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
-                                                               mOnNoteBlockTextClickListener, false);
+        return mNotificationsUtilsWrapper.getSpannableContentForRanges(mNoteData, null,
+                mOnNoteBlockTextClickListener, false);
     }
 
     String getMetaHomeTitle() {
-        return JSONUtils.queryJSON(mNoteData, "meta.titles.home", "");
+        return FormattableContentUtilsKt.getMetaTitlesHomeOrEmpty(mNoteData);
     }
 
     long getMetaSiteId() {
-        return JSONUtils.queryJSON(mNoteData, "meta.ids.site", -1);
+        return FormattableContentUtilsKt.getMetaIdsSiteIdOrZero(mNoteData);
     }
 
     public String getMetaSiteUrl() {
-        return JSONUtils.queryJSON(mNoteData, "meta.links.home", "");
+        return FormattableContentUtilsKt.getMetaLinksHomeOrEmpty(mNoteData);
     }
 
     private boolean isPingBack() {
         return mIsPingback;
     }
+
     public void setIsPingback() {
         mIsPingback = true;
     }
 
-    JSONObject getNoteMediaItem() {
-        if (mMediaItem == null) {
-            mMediaItem = JSONUtils.queryJSON(mNoteData, "media[0]", new JSONObject());
-        }
-
-        return mMediaItem;
+    FormattableMedia getNoteMediaItem() {
+        return FormattableContentUtilsKt.getMediaOrNull(mNoteData, 0);
     }
 
     public void setIsBadge() {
@@ -124,35 +120,33 @@ public class NoteBlock {
     }
 
     private boolean hasMediaArray() {
-        return mNoteData.has("media");
+        return mNoteData.getMedia() != null && !mNoteData.getMedia().isEmpty();
     }
 
     boolean hasImageMediaItem() {
-        String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
         return hasMediaArray()
-                && (mediaType.startsWith("image") || mediaType.equals("badge"))
-                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+               && getNoteMediaItem() != null
+               && !TextUtils.isEmpty(getNoteMediaItem().getType())
+               && (getNoteMediaItem().getType().startsWith("image") || getNoteMediaItem().getType().equals("badge"))
+               && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
     }
 
     private boolean hasVideoMediaItem() {
         return hasMediaArray()
-                && getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video")
-                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+               && getNoteMediaItem() != null
+               && !TextUtils.isEmpty(getNoteMediaItem().getType())
+               && getNoteMediaItem().getType().startsWith("video")
+               && !TextUtils.isEmpty(getNoteMediaItem().getUrl());
     }
 
     public boolean containsBadgeMediaType() {
-        try {
-            JSONArray mediaArray = mNoteData.getJSONArray("media");
-            for (int i = 0; i < mediaArray.length(); i++) {
-                JSONObject mediaObject = mediaArray.getJSONObject(i);
-                if (mediaObject.optString(PROPERTY_MEDIA_TYPE, "").equals("badge")) {
+        if (mNoteData.getMedia() != null) {
+            for (FormattableMedia mediaObject : mNoteData.getMedia()) {
+                if ("badge".equals(mediaObject.getType())) {
                     return true;
                 }
             }
-        } catch (JSONException e) {
-            return false;
         }
-
         return false;
     }
 
@@ -165,7 +159,7 @@ public class NoteBlock {
             // Request image, and animate it when loaded
             mImageManager
                     .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
-                            getNoteMediaItem().optString("url", ""), null,
+                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), null,
                             new ImageManager.RequestListener<Drawable>() {
                                 @Override
                                 public void onLoadFailed(@Nullable Exception e) {
@@ -195,7 +189,7 @@ public class NoteBlock {
 
         // Note video
         if (hasVideoMediaItem()) {
-            noteBlockHolder.getVideoView().setVideoURI(Uri.parse(getNoteMediaItem().optString("url", "")));
+            noteBlockHolder.getVideoView().setVideoURI(Uri.parse(StringUtils.notNullStr(getNoteMediaItem().getUrl())));
             noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.hideVideoView();

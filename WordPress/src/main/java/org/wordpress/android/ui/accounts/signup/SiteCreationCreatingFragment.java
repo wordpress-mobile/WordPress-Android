@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.accounts.signup;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -228,9 +231,25 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-
+            hideGetStartedBar(view);
+            
             mIsPageFinished = true;
         }
+    }
+
+    // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
+    // Ideally we would hide "get started" bar on server side
+    @SuppressLint("SetJavaScriptEnabled")
+    private static void hideGetStartedBar(@NonNull final WebView webView) {
+        webView.getSettings().setJavaScriptEnabled(true);
+        String javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n"
+                            + "document.getElementById('wpadminbar').style.display = 'none';\n";
+
+        webView.evaluateJavascript(javascript, new ValueCallback<String>() {
+            @Override public void onReceiveValue(String value) {
+                webView.getSettings().setJavaScriptEnabled(false);
+            }
+        });
     }
 
     private void disableUntil(@IdRes int textViewId) {

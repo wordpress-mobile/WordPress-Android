@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.Menu
@@ -28,15 +27,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.DRAFTS
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.PUBLISHED
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.SCHEDULED
-import org.wordpress.android.ui.pages.PageListFragment.Companion.Type.TRASH
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.util.DisplayUtils
@@ -44,8 +38,13 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
-import org.wordpress.android.widgets.RecyclerItemDecoration
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -96,8 +95,12 @@ class PagesFragment : Fragment() {
         }
     }
 
+    fun onSpecificPageRequested(remotePageId: Long) {
+        viewModel.onSpecificPageRequested(remotePageId)
+    }
+
     private fun onPageEditFinished(pageId: Long) {
-        viewModel.onPageEditFinished(pageId)
+        viewModel.onPageEditFinished()
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -124,24 +127,21 @@ class PagesFragment : Fragment() {
             }
 
             override fun onPageSelected(position: Int) {
-                val type = when (Type.getType(position)) {
-                    PUBLISHED -> PageStatus.PUBLISHED
-                    DRAFTS -> PageStatus.DRAFT
-                    SCHEDULED -> PageStatus.SCHEDULED
-                    TRASH -> PageStatus.TRASHED
-                }
-                viewModel.onPageTypeChanged(type)
+                viewModel.onPageTypeChanged(PagesPagerAdapter.pageTypes[position])
             }
         })
+
+        val searchFragment = SearchListFragment.newInstance()
+        activity.supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.searchFrame, searchFragment)
+                .commit()
     }
 
     private fun initializeSearchView() {
-        searchRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        searchRecyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
-
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return viewModel.onSearchExpanded()
+                return viewModel.onSearchExpanded(restorePreviousSearch)
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
@@ -186,20 +186,15 @@ class PagesFragment : Fragment() {
 
         setupObservers(activity)
 
-        if (isFirstStart) {
-            val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
-            val nonNullSite = checkNotNull(site)
-            viewModel.start(nonNullSite)
-        } else {
+        val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
+        val nonNullSite = checkNotNull(site)
+        viewModel.start(nonNullSite)
+        if (!isFirstStart) {
             restorePreviousSearch = true
         }
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.searchResult.observe(this, Observer { result ->
-            result?.let { setSearchResult(result) }
-        })
-
         viewModel.listState.observe(this, Observer {
             refreshProgressBars(it)
         })
@@ -211,11 +206,11 @@ class PagesFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
-                if (holder.buttonTitle.isNullOrEmpty()) {
-                    Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG).show()
+                if (holder.buttonTitleRes == null) {
+                    Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
-                    val snackbar = Snackbar.make(parent, holder.message, Snackbar.LENGTH_LONG)
-                    snackbar.setAction(holder.buttonTitle) { _ -> holder.buttonAction() }
+                    val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
                     snackbar.show()
                 }
             }
@@ -246,6 +241,14 @@ class PagesFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.scrollToPage.observe(this, Observer { requestedPage ->
+            requestedPage?.let { page ->
+                val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
+                pagesPager.currentItem = pagerIndex
+                (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -273,7 +276,7 @@ class PagesFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
-        searchRecyclerView.visibility = View.GONE
+        searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
         }
@@ -282,24 +285,10 @@ class PagesFragment : Fragment() {
     private fun showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
-        searchRecyclerView.visibility = View.VISIBLE
+        searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
-    }
-
-    private fun setSearchResult(pages: List<PageItem>) {
-        val adapter: PagesAdapter
-        if (searchRecyclerView.adapter == null) {
-            adapter = PagesAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
-                    { page -> viewModel.onItemTapped(page) }
-            )
-            searchRecyclerView.adapter = adapter
-        } else {
-            adapter = searchRecyclerView.adapter as PagesAdapter
-        }
-        adapter.update(pages)
     }
 
     private fun displayDeleteDialog(page: Page) {
@@ -313,18 +302,27 @@ class PagesFragment : Fragment() {
     }
 }
 
-class PagesPagerAdapter(val context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm) {
+class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        const val PAGE_TABS = 4
+        val pageTypes = listOf(PUBLISHED, DRAFTS, SCHEDULED, TRASHED)
     }
 
-    override fun getCount(): Int = PAGE_TABS
+    private val listFragments = mutableMapOf<PageListType, WeakReference<PageListFragment>>()
+
+    override fun getCount(): Int = pageTypes.size
 
     override fun getItem(position: Int): Fragment {
-        return PageListFragment.newInstance(Type.getType(position))
+        val fragment = PageListFragment.newInstance(pageTypes[position])
+        listFragments[pageTypes[position]] = WeakReference(fragment)
+        return fragment
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return Type.getType(position).text.let { context.getString(it) }
+        return context.getString(pageTypes[position].title)
+    }
+
+    fun scrollToPage(page: PageModel) {
+        val listFragment = listFragments[PageListType.fromPageStatus(page.status)]?.get()
+        listFragment?.scrollToPage(page.remoteId)
     }
 }

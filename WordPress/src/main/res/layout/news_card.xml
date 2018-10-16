@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,14 +21,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:background="?android:selectableItemBackground"
             android:clickable="true"
             android:contentDescription="@string/dismiss"
             android:focusable="true"
             android:padding="@dimen/margin_small"
             android:tint="@color/grey"
-            app:srcCompat="@drawable/ic_close_white_24dp"/>
+            android:src="@drawable/ic_close_white_24dp"/>
 
         <ImageView
             android:id="@+id/news_image"
@@ -37,17 +35,14 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/negative_margin_medium"
-            android:layout_marginRight="@dimen/negative_margin_medium"
-            android:layout_toLeftOf="@+id/news_dismiss"
             android:layout_toStartOf="@+id/news_dismiss"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
+            android:src="@drawable/img_illustration_notifications_152dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/news_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/news_image"
             android:layout_toStartOf="@+id/news_image"
             android:ellipsize="end"
             android:gravity="start"
@@ -61,7 +56,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/news_title"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_toLeftOf="@+id/news_image"
             android:layout_toStartOf="@+id/news_image"
             android:ellipsize="end"
             android:gravity="start"
@@ -74,7 +68,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/news_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_toLeftOf="@id/news_image"
             android:layout_toStartOf="@+id/news_image"
             android:maxLines="1"
             android:textColor="@color/reader_hyperlink"

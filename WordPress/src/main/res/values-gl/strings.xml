@@ -461,7 +461,6 @@ Language: gl_ES
     <string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
     <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>
-    <string name="passcodelock_prompt_message">Introduce o PIN</string>
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
     <string name="ignore">Ignorar</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de visitas</string>
@@ -592,7 +591,6 @@ Language: gl_ES
     <string name="stats_empty_geoviews_desc">Nesta lista verás que países e rexións xeran máis tráfico no teu sitio</string>
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
-    <string name="create_new_blog_wpcom">Crear un blogue en WordPress.com</string>
     <string name="reader_empty_comments">Sen comentarios aínda</string>
     <string name="reader_empty_posts_in_tag">Non hai artigos con esta etiqueta</string>
     <string name="reader_label_view_original">Ver o artigo orixinal</string>
@@ -650,7 +648,6 @@ Language: gl_ES
     <string name="invalid_url_message">Comproba se a URL introducida é válida</string>
     <string name="notifications_empty_list">Sen notificacións</string>
     <string name="error_generic">Houbo un erro</string>
-    <string name="passcode_wrong_passcode">PIN incorrecto</string>
     <string name="email_invalid">Introduce un enderezo de correo electrónico válido</string>
     <string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
     <string name="gallery_error">Non foi posible obter o elemento multimedia</string>
@@ -667,14 +664,12 @@ Language: gl_ES
     <string name="adding_cat_failed">Fallou a adición da categoría</string>
     <string name="sdcard_message">Para cargar ficheiros fai é necesario ter unha tarxeta SD montada</string>
     <string name="error_deleting_post">Houbo un erro mentres se eliminaba a entrada</string>
-    <string name="required_field">Campo obrigatorio</string>
     <string name="notifications_empty_all">Sen notificacións … de momento.</string>
     <string name="new_post">Artigo novo</string>
     <string name="new_media">Ficheiro novo</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="local_changes">Cambios locais</string>
     <string name="image_settings">Configuración da imaxe</string>
-    <string name="add_account_blog_url">Enderezo do blogue</string>
     <string name="wordpress_blog">Blogue feito con WordPress</string>
     <string name="reader_toast_err_add_tag">Non foi posible engadir esta etiqueta</string>
     <string name="add_new_category">Engadir categoría nova</string>
@@ -731,7 +726,6 @@ Language: gl_ES
     <string name="learn_more">Saber máis</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
     <string name="share_link">Enlace para compartir</string>
-    <string name="creating_your_site">Creando o teu sitio</string>
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="reader_label_reply">Responder</string>
     <string name="video">Vídeo</string>
@@ -745,7 +739,6 @@ Language: gl_ES
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>
     <string name="reader_toast_err_tag_exists">Xa segues esta etiqueta</string>
     <string name="reader_toast_err_tag_invalid">Non é unha etiqueta válida</string>
-    <string name="reader_empty_followed_tags">Non segues etiqueta ningunha</string>
     <string name="reader_untitled_post">(Sen título)</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_btn_follow">Seguir</string>
@@ -761,14 +754,6 @@ Language: gl_ES
     <string name="reader_toast_err_view_image">Non foi posible mostrar a imaxe</string>
     <string name="reader_toast_err_url_intent">No foi posible abrir %s</string>
     <string name="stats_totals_plays">Reproducións</string>
-    <string name="passcode_manage">Administrar o bloqueo con PIN</string>
-    <string name="passcode_enter_old_passcode">Introduce o PIN anterior</string>
-    <string name="passcode_re_enter_passcode">Volve introducir o PIN</string>
-    <string name="passcode_change_passcode">Cambiar o PIN</string>
-    <string name="passcode_set">PIN establecido</string>
-    <string name="passcode_preference_title">Bloqueo con PIN</string>
-    <string name="passcode_turn_off">Desactivar o bloqueo con PIN</string>
-    <string name="passcode_turn_on">Activar o bloqueo con PIN</string>
     <string name="stats_view_tags_and_categories">Etiquetas e categorías</string>
     <string name="stats_view_referrers">Referencias</string>
     <string name="stats_timeframe_today">Hoxe</string>
@@ -813,6 +798,7 @@ Language: gl_ES
     <string name="password">Contrasinal</string>
     <string name="username">Nome de usuario</string>
     <string name="reader">Guía de Lectura</string>
+    <string name="pages">Páxinas</string>
     <string name="caption">Lenda (opcional)</string>
     <string name="width">Largo</string>
     <string name="posts">Artigos</string>
