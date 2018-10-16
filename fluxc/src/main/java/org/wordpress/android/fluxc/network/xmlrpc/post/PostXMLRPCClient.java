@@ -72,8 +72,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        if (response != null && response instanceof Map) {
-                            PostModel postModel = postResponseObjectToPostModel(response, site);
+                        if (response instanceof Map) {
+                            PostModel postModel = postResponseObjectToPostModel((Map) response, site);
                             FetchPostResponsePayload payload;
                             if (postModel != null) {
                                 if (origin == PostAction.PUSH_POST) {
@@ -333,18 +333,17 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return postListItems;
     }
 
-    private PostsModel postsResponseToPostsModel(Object[] response, SiteModel site) {
-        List<Map<?, ?>> postsList = new ArrayList<>();
+    private PostsModel postsResponseToPostsModel(@Nullable Object[] response, SiteModel site) {
+        List<PostModel> postArray = new ArrayList<>();
+        if (response == null) {
+            return null;
+        }
+        if (response.length == 0) {
+            return new PostsModel(postArray);
+        }
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
-            postsList.add(postMap);
-        }
-
-        List<PostModel> postArray = new ArrayList<>();
-        PostModel post;
-
-        for (Object postObject : postsList) {
-            post = postResponseObjectToPostModel(postObject, site);
+            PostModel post = postResponseObjectToPostModel(postMap, site);
             if (post != null) {
                 postArray.add(post);
             }
@@ -357,12 +356,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return new PostsModel(postArray);
     }
 
-    private static PostModel postResponseObjectToPostModel(Object postObject, SiteModel site) {
-        // Sanity checks
-        if (!(postObject instanceof Map)) {
-            return null;
-        }
-
+    private static PostModel postResponseObjectToPostModel(@NonNull Map postObject, SiteModel site) {
         Map<?, ?> postMap = (Map<?, ?>) postObject;
         PostModel post = new PostModel();
 
