@@ -254,7 +254,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         toolbar.setTitle(mTitle);
         toolbar.setSubtitle(mSubtitle);
         toolbar.setBackgroundColor(getResources().getColor(mToolbarColor != 0 ? mToolbarColor : R.color.color_primary));
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_close_white_24dp));
+        toolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
