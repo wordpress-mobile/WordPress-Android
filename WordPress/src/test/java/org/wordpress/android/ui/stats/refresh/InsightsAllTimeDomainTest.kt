@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
 
@@ -70,29 +69,5 @@ class InsightsAllTimeDomainTest {
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is Empty)
-    }
-
-    @Test
-    fun `item contains posts when not empty`() = test {
-        val forced = false
-        val posts = 5
-        val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, posts, "MONDAY", 0)
-        whenever(
-                insightsStore.fetchAllTimeInsights(
-                        site,
-                        forced
-                )
-        ).thenReturn(OnInsightsFetched(emptyModel))
-
-        val result = insightsAllTimeDomain.allTimeInsights(site, forced)
-
-        assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
-        val items = (result as ListInsightItem).items
-        assertEquals(items.size, 2)
-        assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
-        assertTrue(items[1] is Item)
-        assertEquals((items[1] as Item).icon, R.string.stats_insights_all_time_stats)
     }
 }
