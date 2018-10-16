@@ -35,8 +35,8 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.ui.posts.PostListFragment
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.PostsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -92,7 +92,7 @@ class PostListAdapter(
     @Inject internal lateinit var imageManager: ImageManager
 
     interface OnPostButtonClickListener {
-        fun onPostButtonClicked(buttonId: Int, post: PostModel)
+        fun onPostButtonClicked(buttonType: Int, postClicked: PostModel)
     }
 
     enum class LoadMode {
@@ -247,7 +247,7 @@ class PostListAdapter(
 
         // load more posts when we near the end
         if (onLoadMoreListener != null && position >= posts.size - 1
-                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
+                && position >= PostListFragment.POSTS_REQUEST_COUNT - 1) {
             onLoadMoreListener?.onLoadMore()
         }
 
