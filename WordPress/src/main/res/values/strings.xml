@@ -780,6 +780,9 @@
 
     <!-- Stats refresh -->
     <string name="stats_no_data_yet">No data yet</string>
+    <string name="stats_empty_insights_title">No insights added yet</string>
+    <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
+    <string name="stats_button_manage_insights">Manage insights</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
