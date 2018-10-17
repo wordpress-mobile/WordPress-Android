@@ -152,20 +152,15 @@ class ListManager<T>(
         return false
     }
 
-    fun positionOfLocalItem(predicate: (T) -> Boolean): Int? {
-        localItems?.let { localItems ->
-            val index = localItems.indexOfFirst(predicate)
-            return if (index == -1) null else index
-        }
-        return null
-    }
-
-    fun positionOfRemoteItem(remoteItemId: Long): Int? {
-        val index = items.indexOfFirst { it.remoteItemId == remoteItemId }
-        if (index == -1) {
-            return null
-        }
-        return localItemSize + index
+    fun findIndices(predicate: (T) -> Boolean): List<Int> {
+        val localIndices = localItems?.mapIndexedNotNull { index, localItem ->
+            if (predicate(localItem)) index else null
+        } ?: emptyList()
+        val remoteIndices = items.asSequence().mapIndexedNotNull { index, listItem ->
+            val item = listData[listItem.remoteItemId] ?: return@mapIndexedNotNull null
+            if (predicate(item)) index else null
+        }.map { it + localItemSize }.toList()
+        return localIndices.plus(remoteIndices)
     }
 
     /**
