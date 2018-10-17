@@ -66,8 +66,9 @@ class RevisionModel(
 
         return revisionId == other.revisionId && diffFromVersion == other.diffFromVersion &&
                 totalAdditions == other.totalAdditions && totalDeletions == other.totalDeletions &&
-                postContent == other.postContent && postExcerpt == other.postExcerpt && postTitle == other.postTitle &&
-                postAuthorId == other.postAuthorId &&
+                postContent == other.postContent && postExcerpt == other.postExcerpt &&
+                postTitle == other.postTitle && postAuthorId == other.postAuthorId &&
+                postDateGmt == other.postDateGmt && postModifiedGmt == other.postModifiedGmt &&
                 titleDiffs.toArray() contentDeepEquals other.titleDiffs.toArray() &&
                 contentDiffs.toArray() contentDeepEquals other.contentDiffs.toArray()
     }
