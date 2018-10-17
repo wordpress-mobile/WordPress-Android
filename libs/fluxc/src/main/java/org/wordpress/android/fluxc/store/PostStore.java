@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListOrder;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite.PostStatusForRestSite;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
@@ -441,9 +440,8 @@ public class PostStore extends Store {
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
             searchQuery = descriptor.getSearchQuery();
-            if (!(descriptor.getStatus() == PostStatusForRestSite.ANY
-                  || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
-                // Any other status shouldn't be in the local drafts results
+            if (!(descriptor.getStatusList().contains(PostStatus.DRAFT))) {
+                // Drafts should not be included
                 return Collections.emptyList();
             }
         }
