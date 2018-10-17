@@ -970,6 +970,9 @@
 
     <!-- Stats refreshed insights -->
     <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
