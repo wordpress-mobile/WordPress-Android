@@ -811,6 +811,12 @@ class DiffCallback(
         if (oldItem == null || newItem == null) {
             return false
         }
+        if (oldItem.isLocallyChanged && newItem.isLocallyChanged) {
+            return oldItem == newItem
+        }
+        if (oldItem.isLocallyChanged || newItem.isLocallyChanged) {
+            return false
+        }
         return oldItem.lastModified == newItem.lastModified
     }
 }
