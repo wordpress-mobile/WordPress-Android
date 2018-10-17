@@ -48,7 +48,7 @@ class StatsListViewModel
 
 data class NotImplemented(val text: String) : InsightsItem(NOT_IMPLEMENTED)
 
-data class Failed(@StringRes val failedType: Int, val errorMessage: String): InsightsItem(FAILED)
+data class Failed(@StringRes val failedType: Int, val errorMessage: String) : InsightsItem(FAILED)
 
 data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {
     enum class StatsListState {
