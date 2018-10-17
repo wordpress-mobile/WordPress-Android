@@ -58,7 +58,7 @@ class StatsViewModel
     private suspend fun reloadStats(state: StatsListState = FETCHING) {
         _listState.setOnUi(state)
 
-        val result = insightsDomain.loadInsightItems()
+        val result = insightsDomain.loadInsightItems(_site!!)
     }
 
     // TODO: To be implemented in the future
