@@ -45,8 +45,14 @@ class InsightsDomain
 
     suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false): List<InsightsItem> =
             withContext(scope.coroutineContext) {
-                return@withContext statsStore.getInsights()
+                val items = statsStore.getInsights()
                         .map { async { load(site, it, forced) } }
                         .map { it.await() }
+
+                if (items.isEmpty()) {
+                    return@withContext listOf(Empty())
+                } else {
+                    return@withContext items
+                }
             }
 }
