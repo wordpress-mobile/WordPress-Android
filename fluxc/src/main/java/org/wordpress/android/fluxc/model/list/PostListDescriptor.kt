@@ -18,7 +18,7 @@ sealed class PostListDescriptor(
             is PostListDescriptorForRestSite -> {
                 val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-$site.id-st$statusStr-o${order.value}-ob${orderBy.value}" +
+                        ("rest-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
