@@ -66,9 +66,11 @@ class PostRevisionModelTest {
         val sampleRevision2 = PostTestUtils.generateSamplePostRevision()
 
         assertEquals(sampleRevision1, sampleRevision2)
+        assertEquals(sampleRevision1.hashCode(), sampleRevision2.hashCode())
 
         sampleRevision1.titleDiffs[0] = Diff(DiffOperations.COPY, "wrong value")
         assertNotEquals(sampleRevision1, sampleRevision2)
+        assertNotEquals(sampleRevision1.hashCode(), sampleRevision2.hashCode())
     }
 
     @Test
