@@ -152,6 +152,10 @@ class ListManager<T>(
         return false
     }
 
+    fun hasRemoteItem(remoteItemId: Long): Boolean {
+        return items.any { it.remoteItemId == remoteItemId }
+    }
+
     fun findIndices(predicate: (T) -> Boolean): List<Int> {
         val localIndices = localItems?.mapIndexedNotNull { index, localItem ->
             if (predicate(localItem)) index else null
