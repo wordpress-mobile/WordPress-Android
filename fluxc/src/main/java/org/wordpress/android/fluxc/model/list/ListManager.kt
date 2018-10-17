@@ -152,6 +152,22 @@ class ListManager<T>(
         return false
     }
 
+    fun positionOfLocalItem(predicate: (T) -> Boolean): Int? {
+        localItems?.let { localItems ->
+            val index = localItems.indexOfFirst(predicate)
+            return if (index == -1) null else index
+        }
+        return null
+    }
+
+    fun positionOfRemoteItem(remoteItemId: Long): Int? {
+        val index = items.indexOfFirst { it.remoteItemId == remoteItemId }
+        if (index == -1) {
+            return null
+        }
+        return localItemSize + index
+    }
+
     /**
      * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager].
      *
