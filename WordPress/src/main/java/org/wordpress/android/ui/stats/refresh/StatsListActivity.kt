@@ -10,7 +10,7 @@ class StatsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.insights_list_activity)
+        setContentView(R.layout.stats_list_activity)
 
         setSupportActionBar(toolbar)
         supportActionBar?.let {
