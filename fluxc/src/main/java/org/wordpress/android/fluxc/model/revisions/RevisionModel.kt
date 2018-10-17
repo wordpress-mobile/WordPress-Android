@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model.revisions
 
 import java.util.ArrayList
+import java.util.Arrays
 
 class RevisionModel(
     var revisionId: Long,
@@ -84,6 +85,8 @@ class RevisionModel(
         result = 31 * result + (postDateGmt?.hashCode() ?: 0)
         result = 31 * result + (postModifiedGmt?.hashCode() ?: 0)
         result = 31 * result + (postAuthorId?.hashCode() ?: 0)
+        result = 31 * result + (Arrays.hashCode(contentDiffs.toArray()))
+        result = 31 * result + (Arrays.hashCode(titleDiffs.toArray()))
         return result
     }
 }
