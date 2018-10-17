@@ -54,6 +54,7 @@ private const val MAX_DISPLAYED_UPLOAD_PROGRESS = 90
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
+private const val VIEW_TYPE_LOADING = 2
 
 /**
  * Adapter for Posts/Pages list
@@ -133,7 +134,9 @@ class PostListAdapter(
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - 1) {
             VIEW_TYPE_ENDLIST_INDICATOR
-        } else VIEW_TYPE_POST
+        } else if (listManager?.getItem(position) != null) {
+            VIEW_TYPE_POST
+        } else VIEW_TYPE_LOADING
     }
 
     override fun getItemCount(): Int {
@@ -152,6 +155,9 @@ class PostListAdapter(
             val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
             view.layoutParams.height = endlistIndicatorHeight
             EndListViewHolder(view)
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            val view = layoutInflater.inflate(R.layout.post_loading_layout, parent, false)
+            LoadingViewHolder(view)
         } else {
             val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
             PostViewHolder(view)
@@ -170,7 +176,11 @@ class PostListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // nothing to do if this is the static endlist indicator
-        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
+        val viewType = getItemViewType(position)
+        if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
+            return
+        }
+        if (viewType == VIEW_TYPE_LOADING) {
             return
         }
 
@@ -231,7 +241,6 @@ class PostListAdapter(
                 onPostSelectedListener?.onPostSelected(post)
             }
         }
-        // TODO: Handle the null case with a loading bar or something
     }
 
     private fun showFeaturedImage(post: PostModel, imgFeatured: ImageView) {
@@ -582,6 +591,7 @@ class PostListAdapter(
         val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
     }
 
+    private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     /*
