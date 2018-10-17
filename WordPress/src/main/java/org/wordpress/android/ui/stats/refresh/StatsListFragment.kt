@@ -59,7 +59,7 @@ class StatsListFragment : Fragment() {
 
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
-        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 5)))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
