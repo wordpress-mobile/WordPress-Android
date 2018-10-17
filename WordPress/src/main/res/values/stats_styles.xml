@@ -134,6 +134,12 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
+    <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_small</item>

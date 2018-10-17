@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -46,10 +47,14 @@ class LatestPostSummaryDomain
                         model.postCommentCount.toFormattedString()
                 )
                 items.add(Columns(headers = headers, values = values))
+                items.add(Link(text = R.string.stats_insights_view_more) {})
+            } else {
+                items.add(Link(R.drawable.ic_share_blue_medium_24dp, R.string.stats_insights_share_post) {})
             }
         } else {
             val emptyMessage = resourceProvider.getString(R.string.stats_insights_latest_post_empty)
             items.add(Text(SpannableStringBuilder(emptyMessage)))
+            items.add(Link(R.drawable.ic_create_blue_medium_24dp, R.string.stats_insights_create_post) {})
         }
         return ListInsightItem(items)
     }

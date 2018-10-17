@@ -2,9 +2,11 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.Adapter
+import android.support.v7.widget.RecyclerView.VISIBLE
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,10 +15,12 @@ import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHold
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ItemViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TextViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
@@ -41,7 +45,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> ColumnsViewHolder(parent)
-            LINK -> TODO()
+            LINK -> LinkViewHolder(parent)
         }
     }
 
@@ -58,6 +62,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             is ItemViewHolder -> holder.bind(item as Item)
             is TextViewHolder -> holder.bind(item as Text)
             is ColumnsViewHolder -> holder.bind(item as Columns)
+            is LinkViewHolder -> holder.bind(item as Link)
         }
     }
 
@@ -113,6 +118,23 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
                 firstValue.text = columns.values[0]
                 secondValue.text = columns.values[1]
                 thirdValue.text = columns.values[2]
+            }
+        }
+
+        class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_link_item) {
+            private val icon = itemView.findViewById<ImageView>(R.id.icon)
+            private val text = itemView.findViewById<TextView>(R.id.text)
+            private val link = itemView.findViewById<View>(R.id.link_wrapper)
+
+            fun bind(item: Link) {
+                if (item.icon != null) {
+                    icon.visibility = VISIBLE
+                    icon.setImageResource(item.icon)
+                } else {
+                    icon.visibility = GONE
+                }
+                text.setText(item.text)
+                link.setOnClickListener { item.action() }
             }
         }
     }

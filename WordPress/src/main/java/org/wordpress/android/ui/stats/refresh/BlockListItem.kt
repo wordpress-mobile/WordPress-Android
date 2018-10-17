@@ -21,6 +21,6 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(ITEM)
     data class Text(val text: Spannable? = null) : BlockListItem(TEXT)
     data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
-    data class Link(@DrawableRes val icon: Int?, @StringRes val text: String, val action: () -> Unit) : BlockListItem(LINK)
+    data class Link(@DrawableRes val icon: Int? = null, @StringRes val text: Int, val action: () -> Unit) : BlockListItem(LINK)
     object Empty : BlockListItem(EMPTY)
 }
