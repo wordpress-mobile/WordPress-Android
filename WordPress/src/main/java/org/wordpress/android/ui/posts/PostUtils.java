@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -14,13 +13,12 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.text.BreakIterator;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -258,22 +256,6 @@ public class PostUtils {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
                                                     WordPress.getContext());
         }
-    }
-
-    public static boolean postListsAreEqual(List<PostModel> lhs, List<PostModel> rhs) {
-        if (lhs == null || rhs == null || lhs.size() != rhs.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < rhs.size(); i++) {
-            PostModel newPost = rhs.get(i);
-            PostModel currentPost = lhs.get(i);
-
-            if (!newPost.equals(currentPost)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     static boolean shouldPublishImmediately(PostModel postModel) {

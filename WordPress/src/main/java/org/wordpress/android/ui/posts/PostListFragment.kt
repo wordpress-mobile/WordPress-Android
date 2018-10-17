@@ -270,7 +270,6 @@ class PostListFragment : Fragment(),
                     if (!isAdded) {
                         return@RefreshListener
                     }
-                    // TODO: Do this differently
                     if (!NetworkUtils.checkConnection(nonNullActivity)) {
                         updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
                         return@RefreshListener
@@ -319,8 +318,8 @@ class PostListFragment : Fragment(),
      * Upload started, reload so correct status on uploading post appears
      */
     fun onEventMainThread(event: PostEvents.PostUploadStarted) {
-        if (isAdded && site.id == event.mLocalBlogId) {
-            // TODO: Update single row
+        if (isAdded && site.id == event.post.localSiteId) {
+            postListAdapter.updateRowForPost(event.post)
         }
     }
 
@@ -328,8 +327,8 @@ class PostListFragment : Fragment(),
      * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
      */
     fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
-        if (isAdded && site.id == event.localSiteId) {
-            // TODO: Update single row
+        if (isAdded && site.id == event.post.localSiteId) {
+            postListAdapter.updateRowForPost(event.post)
         }
     }
 

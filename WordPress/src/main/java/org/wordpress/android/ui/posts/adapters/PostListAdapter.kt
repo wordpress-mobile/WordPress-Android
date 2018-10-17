@@ -509,7 +509,7 @@ class PostListAdapter(
     fun getPositionForPost(post: PostModel): Int? =
             listManager?.findIndices {
                 if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
-            }?.first()
+            }?.firstOrNull()
 
     fun updateRowForPost(post: PostModel) {
         getPositionForPost(post)?.let { position ->
