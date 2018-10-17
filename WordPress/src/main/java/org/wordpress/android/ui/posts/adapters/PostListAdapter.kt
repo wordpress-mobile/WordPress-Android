@@ -238,6 +238,7 @@ class PostListAdapter(
                 onPostSelectedListener?.onPostSelected(post)
             }
         }
+        // TODO: Handle the null case with a loading bar or something
     }
 
     private fun showFeaturedImage(postId: Int, imgFeatured: ImageView) {
@@ -498,15 +499,16 @@ class PostListAdapter(
         animOut.start()
     }
 
-    fun getPositionForPost(post: PostModel): Int? {
-        return listManager?.getPositionOfItem(post.remotePostId)
-    }
-
-    fun loadPosts(mode: LoadMode) {
-        if (isLoadingPosts) {
-            AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts")
+    fun getPositionForPost(post: PostModel): Int? =
+        if (post.isLocalDraft) {
+            listManager?.positionOfLocalItem { it.id == post.id }
         } else {
-            LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+            listManager?.positionOfRemoteItem(post.remotePostId)
+        }
+
+    fun updateRowForPost(post: PostModel) {
+        getPositionForPost(post)?.let { position ->
+            notifyItemChanged(position)
         }
     }
 
@@ -545,7 +547,7 @@ class PostListAdapter(
 
     fun unhidePost(post: PostModel) {
         if (hiddenPosts.remove(post)) {
-            loadPosts(LoadMode.IF_CHANGED)
+            // TODO: Handle this when the hide post is implemented
         }
     }
 
@@ -599,6 +601,7 @@ class PostListAdapter(
 //        }
     }
 
+    // TODO: Completely remove this!
     @SuppressLint("StaticFieldLeak")
     private inner class LoadPostsTask internal constructor(private val mLoadMode: LoadMode)
         : AsyncTask<Void, Void, Boolean>() {
@@ -690,8 +693,4 @@ class PostListAdapter(
 //            }
         }
     }
-}
-
-fun <T> ListManager<T>.getPositionOfItem(remoteItemId: Long): Int? {
-    return null
 }

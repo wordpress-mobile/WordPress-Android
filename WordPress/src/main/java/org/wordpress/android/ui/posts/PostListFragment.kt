@@ -92,9 +92,7 @@ class PostListFragment : Fragment(),
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
-    private var canLoadMorePosts = true
     private var targetPost: PostModel? = null
-    private var isFetchingPosts: Boolean = false
     private var shouldCancelPendingDraftNotification = false
     private var postIdForPostToBeDeleted = 0
 
@@ -153,8 +151,6 @@ class PostListFragment : Fragment(),
 
         EventBus.getDefault().register(this)
         dispatcher.register(this)
-
-        refreshListManagerFromStore(listDescriptor, fetchAfter = (savedInstanceState == null))
     }
 
     private fun refreshListManagerFromStore(listDescriptor: ListDescriptor, fetchAfter: Boolean) {
@@ -236,21 +232,8 @@ class PostListFragment : Fragment(),
         fabView?.visibility = View.GONE
         fabView?.setOnClickListener { newPost() }
 
-        // TODO: This shouldn't be necessary anymore
-//        if (savedInstanceState == null) {
-//            if (UploadService.hasPendingOrInProgressPostUploads()) {
-//                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
-//                // changes there. Otherwise, a duplicate-post situation can happen when:
-//                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
-//                // the PUSH_POST action completes and a PUSHED_POST is emitted.
-//                loadPosts(LoadMode.IF_CHANGED)
-//            } else {
-//                // refresh normally
-//                requestPosts(false)
-//            }
-//        }
-
         initSwipeToRefreshHelper()
+        refreshListManagerFromStore(listDescriptor, fetchAfter = (savedInstanceState == null))
 
         return view
     }
@@ -298,10 +281,6 @@ class PostListFragment : Fragment(),
         )
     }
 
-    private fun loadPosts(mode: LoadMode) {
-        postListAdapter.loadPosts(mode)
-    }
-
     private fun newPost() {
         if (!isAdded) {
             return
@@ -312,8 +291,7 @@ class PostListFragment : Fragment(),
     override fun onResume() {
         super.onResume()
 
-        // always (re) load when resumed to reflect changes made elsewhere
-        loadPosts(LoadMode.IF_CHANGED)
+        // TODO: refresh from store
 
         // scale in the fab after a brief delay if it's not already showing
         if (fabView?.visibility != View.VISIBLE) {
@@ -343,7 +321,7 @@ class PostListFragment : Fragment(),
      */
     fun onEventMainThread(event: PostEvents.PostUploadStarted) {
         if (isAdded && site.id == event.mLocalBlogId) {
-            loadPosts(LoadMode.FORCED)
+            // TODO: Update single row
         }
     }
 
@@ -352,7 +330,7 @@ class PostListFragment : Fragment(),
      */
     fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
         if (isAdded && site.id == event.localSiteId) {
-            loadPosts(LoadMode.FORCED)
+            // TODO: Update single row
         }
     }
 
@@ -403,7 +381,7 @@ class PostListFragment : Fragment(),
             return
         }
 
-        if (postCount == 0 && !isFetchingPosts) {
+        if (postCount == 0 && listManager?.isFetchingFirstPage != true) {
             if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
                 updateEmptyView(EmptyViewMessageType.NO_CONTENT)
             } else {
@@ -644,30 +622,7 @@ class PostListFragment : Fragment(),
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
         // TODO: do we need this at all?
-//        if (event.causeOfChange is CauseOfOnPostChanged.UpdatePost) {
-//            // if a Post is updated, let's refresh the whole list, because we can't really know
-//            // from FluxC which post has changed, or when. So to make sure, we go to the source,
-//            // which is the FluxC PostStore.
-//            /*
-//             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
-//             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
-//             * both the original comment and this note is kept for record keeping.
-//             */
-//            if (!event.isError) {
-//                loadPosts(LoadMode.IF_CHANGED)
-//            }
-//        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts ||
-//                event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
-//            isFetchingPosts = false
-//            if (!isAdded) {
-//                return
-//            }
-//
-//            hideLoadMoreProgress()
-//            if (!event.isError) {
-//                canLoadMorePosts = event.canLoadMore
-//                loadPosts(LoadMode.IF_CHANGED)
-//            } else {
+        // TODO: We just need to handle the errors, I think...
 //                val error = event.error
 //                when (error.type) {
 //                    PostStore.PostErrorType.UNAUTHORIZED -> updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
@@ -704,7 +659,9 @@ class PostListFragment : Fragment(),
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (isAdded && event.post != null && event.post.localSiteId == site.id) {
-            loadPosts(LoadMode.FORCED)
+            postListAdapter.getPositionForPost(event.post)?.let {
+                postListAdapter.notifyItemChanged(it)
+            }
             UploadUtils.onPostUploadedSnackbarHandler(
                     nonNullActivity,
                     nonNullActivity.findViewById(R.id.coordinator),
@@ -744,8 +701,7 @@ class PostListFragment : Fragment(),
                 // (meaning there is no other pending media to be uploaded for this post)
                 // then we should refresh it to show its new state
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    // TODO: replace loadPosts for getPostListAdapter().notifyItemChanged(); kind of thing
-                    loadPosts(LoadMode.FORCED)
+                    postListAdapter.updateRowForPost(post)
                 }
             } else {
                 postListAdapter.updateProgressForPost(post)
@@ -847,7 +803,12 @@ class DiffCallback(
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldItem = old?.getItem(oldItemPosition, false, false)
         val newItem = new.getItem(newItemPosition, false, false)
-        return (oldItem == null && newItem == null) || (oldItem != null &&
-                newItem != null && oldItem.lastModified == newItem.lastModified)
+        if (oldItem == null && newItem == null) {
+            return true
+        }
+        if (oldItem == null || newItem == null) {
+            return false
+        }
+        return oldItem.lastModified == newItem.lastModified
     }
 }
