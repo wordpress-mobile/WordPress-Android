@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This script defines some shared functions that are used by the update-name* set.
+
 function check_version_code() {
     git checkout develop >> $LOGFILE 2>> $LOGFILE
     previous_alpha_version_code=`grep -E 'versionCode' $BUILD_FILE | grep -Eo "[0-9]+"`
