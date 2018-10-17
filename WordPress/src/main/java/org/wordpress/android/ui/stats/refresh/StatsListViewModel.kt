@@ -9,6 +9,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
@@ -49,6 +50,8 @@ class StatsListViewModel
 data class NotImplemented(val text: String) : InsightsItem(NOT_IMPLEMENTED)
 
 data class Failed(@StringRes val failedType: Int, val errorMessage: String) : InsightsItem(FAILED)
+
+data class Empty(val isButtonVisible: Boolean = true) : InsightsItem(EMPTY)
 
 data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {
     enum class StatsListState {

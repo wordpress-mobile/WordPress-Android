@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
@@ -27,6 +28,7 @@ class InsightsAdapter : Adapter<InsightsViewHolder>() {
             NOT_IMPLEMENTED -> NotImplementedViewHolder(parent)
             LIST_INSIGHTS -> ListInsightsViewHolder(parent)
             FAILED -> FailedViewHolder(parent)
+            EMPTY -> EmptyViewHolder(parent)
         }
     }
 
@@ -42,6 +44,7 @@ class InsightsAdapter : Adapter<InsightsViewHolder>() {
             is NotImplementedViewHolder -> holder.bind(item as NotImplemented)
             is ListInsightsViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)
+            is EmptyViewHolder -> holder.bind(item as Empty)
         }
     }
 }
