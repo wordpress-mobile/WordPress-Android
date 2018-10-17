@@ -7,6 +7,8 @@ import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
+import android.support.v7.util.DiffUtil
+import android.support.v7.util.DiffUtil.DiffResult
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
@@ -18,6 +20,13 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import de.greenrobot.event.EventBus
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.isActive
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -25,13 +34,21 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListDescriptor
+import org.wordpress.android.fluxc.model.list.ListItemDataSource
+import org.wordpress.android.fluxc.model.list.ListManager
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
+import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
+import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -64,8 +81,6 @@ import java.util.HashMap
 import javax.inject.Inject
 
 class PostListFragment : Fragment(),
-        PostListAdapter.OnPostsLoadedListener,
-        PostListAdapter.OnLoadMoreListener,
         PostListAdapter.OnPostSelectedListener,
         PostListAdapter.OnPostButtonClickListener {
     private val rvScrollPositionSaver = RecyclerViewScrollPositionManager()
@@ -90,12 +105,20 @@ class PostListFragment : Fragment(),
 
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var postStore: PostStore
+    @Inject internal lateinit var listStore: ListStore
     @Inject internal lateinit var dispatcher: Dispatcher
 
+    private var listManager: ListManager<PostModel>? = null
+    private var refreshListDataJob: Job? = null
+    private val listDescriptor: PostListDescriptor by lazy {
+        if (site.isUsingWpComRestApi) {
+            PostListDescriptorForRestSite(site)
+        } else {
+            PostListDescriptorForXmlRpcSite(site)
+        }
+    }
     private val postListAdapter: PostListAdapter by lazy {
         val postListAdapter = PostListAdapter(nonNullActivity, site)
-        postListAdapter.setOnLoadMoreListener(this)
-        postListAdapter.setOnPostsLoadedListener(this)
         postListAdapter.setOnPostSelectedListener(this)
         postListAdapter.setOnPostButtonClickListener(this)
         postListAdapter
@@ -130,6 +153,59 @@ class PostListFragment : Fragment(),
 
         EventBus.getDefault().register(this)
         dispatcher.register(this)
+
+        refreshListManagerFromStore(listDescriptor, fetchAfter = (savedInstanceState == null))
+    }
+
+    private fun refreshListManagerFromStore(listDescriptor: ListDescriptor, fetchAfter: Boolean) {
+        refreshListDataJob?.cancel()
+        refreshListDataJob = GlobalScope.launch(Dispatchers.Main) {
+            val listManager = withContext(Dispatchers.Default) { getListDataFromStore(listDescriptor) }
+            if (isActive && this@PostListFragment.listDescriptor == listDescriptor) {
+                val diffResult = withContext(Dispatchers.Default) {
+                    DiffUtil.calculateDiff(DiffCallback(this@PostListFragment.listManager, listManager))
+                }
+                if (isActive && this@PostListFragment.listDescriptor == listDescriptor) {
+                    updateListManager(listManager, diffResult)
+                    if (fetchAfter) {
+                        listManager.refresh()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun localItems(): List<PostModel>? {
+        return postStore.getLocalPostsForDescriptor(listDescriptor)
+    }
+
+    private suspend fun getListDataFromStore(listDescriptor: ListDescriptor): ListManager<PostModel> =
+            listStore.getListManager(listDescriptor, localItems(), object : ListItemDataSource<PostModel> {
+                override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
+                    val postToFetch = PostModel()
+                    postToFetch.remotePostId = remoteItemId
+                    val payload = RemotePostPayload(postToFetch, site)
+                    dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+                }
+
+                override fun fetchList(listDescriptor: ListDescriptor, offset: Int) {
+                    if (listDescriptor is PostListDescriptor) {
+                        val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
+                        dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
+                    }
+                }
+
+                override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
+                    return postStore.getPostsByRemotePostIds(remoteItemIds, site)
+                }
+            })
+
+    private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult) {
+        this.listManager = listManager
+        swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
+        progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
+        postListAdapter.setListManager(listManager, diffResult)
+        onPostsLoaded(listManager.size)
     }
 
     override fun onDestroy() {
@@ -160,18 +236,19 @@ class PostListFragment : Fragment(),
         fabView?.visibility = View.GONE
         fabView?.setOnClickListener { newPost() }
 
-        if (savedInstanceState == null) {
-            if (UploadService.hasPendingOrInProgressPostUploads()) {
-                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
-                // changes there. Otherwise, a duplicate-post situation can happen when:
-                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
-                // the PUSH_POST action completes and a PUSHED_POST is emitted.
-                loadPosts(LoadMode.IF_CHANGED)
-            } else {
-                // refresh normally
-                requestPosts(false)
-            }
-        }
+        // TODO: This shouldn't be necessary anymore
+//        if (savedInstanceState == null) {
+//            if (UploadService.hasPendingOrInProgressPostUploads()) {
+//                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
+//                // changes there. Otherwise, a duplicate-post situation can happen when:
+//                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
+//                // the PUSH_POST action completes and a PUSHED_POST is emitted.
+//                loadPosts(LoadMode.IF_CHANGED)
+//            } else {
+//                // refresh normally
+//                requestPosts(false)
+//            }
+//        }
 
         initSwipeToRefreshHelper()
 
@@ -211,11 +288,12 @@ class PostListFragment : Fragment(),
                     if (!isAdded) {
                         return@RefreshListener
                     }
+                    // TODO: Do this differently
                     if (!NetworkUtils.checkConnection(nonNullActivity)) {
                         updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
                         return@RefreshListener
                     }
-                    requestPosts(false)
+                    listManager?.refresh()
                 }
         )
     }
@@ -248,36 +326,17 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun requestPosts(loadMore: Boolean) {
-        if (!isAdded || isFetchingPosts) {
-            return
-        }
-
-        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
-            return
-        }
-
-        if (postListAdapter.itemCount == 0) {
-            updateEmptyView(EmptyViewMessageType.LOADING)
-        }
-
-        isFetchingPosts = true
-        if (loadMore) {
-            showLoadMoreProgress()
-        }
-
-        val payload = FetchPostsPayload(site, loadMore)
-        dispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload))
-    }
-
-    private fun showLoadMoreProgress() {
-        progressLoadMore?.visibility = View.VISIBLE
-    }
-
-    private fun hideLoadMoreProgress() {
-        progressLoadMore?.visibility = View.GONE
-    }
+// TODO: Do this with ListManager
+//    private fun requestPosts(loadMore: Boolean) {
+//        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+//            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
+//            return
+//        }
+//
+//        if (postListAdapter.itemCount == 0) {
+//            updateEmptyView(EmptyViewMessageType.LOADING)
+//        }
+//    }
 
     /*
      * Upload started, reload so correct status on uploading post appears
@@ -339,7 +398,7 @@ class PostListFragment : Fragment(),
     /*
      * called by the adapter after posts have been loaded
      */
-    override fun onPostsLoaded(postCount: Int) {
+    private fun onPostsLoaded(postCount: Int) {
         if (!isAdded) {
             return
         }
@@ -357,8 +416,7 @@ class PostListFragment : Fragment(),
 
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
         targetPost?.let { targetPost ->
-            val position = postListAdapter.getPositionForPost(targetPost)
-            if (position > -1) {
+            postListAdapter.getPositionForPost(targetPost)?.let { position ->
                 val smoothScroller = object : LinearSmoothScroller(nonNullActivity) {
                     private val SCROLL_OFFSET_DP = 23
 
@@ -385,15 +443,6 @@ class PostListFragment : Fragment(),
                 recyclerView?.layoutManager?.startSmoothScroll(smoothScroller)
             }
             this.targetPost = null
-        }
-    }
-
-    /*
-     * called by the adapter to load more posts when the user scrolls towards the last post
-     */
-    override fun onLoadMore() {
-        if (canLoadMorePosts && !isFetchingPosts) {
-            requestPosts(true)
         }
     }
 
@@ -594,43 +643,62 @@ class PostListFragment : Fragment(),
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        if (event.causeOfChange is CauseOfOnPostChanged.UpdatePost) {
-            // if a Post is updated, let's refresh the whole list, because we can't really know
-            // from FluxC which post has changed, or when. So to make sure, we go to the source,
-            // which is the FluxC PostStore.
-            /*
-             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
-             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
-             * both the original comment and this note is kept for record keeping.
-             */
-            if (!event.isError) {
-                loadPosts(LoadMode.IF_CHANGED)
-            }
-        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts ||
-                event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
-            isFetchingPosts = false
-            if (!isAdded) {
-                return
-            }
+        // TODO: do we need this at all?
+//        if (event.causeOfChange is CauseOfOnPostChanged.UpdatePost) {
+//            // if a Post is updated, let's refresh the whole list, because we can't really know
+//            // from FluxC which post has changed, or when. So to make sure, we go to the source,
+//            // which is the FluxC PostStore.
+//            /*
+//             * Please note that the above comment is no longer correct as `CauseOfOnPostChanged.UpdatePost` has fields
+//             * for local and remote post id. However, this class will be completely refactored in an upcoming PR, so
+//             * both the original comment and this note is kept for record keeping.
+//             */
+//            if (!event.isError) {
+//                loadPosts(LoadMode.IF_CHANGED)
+//            }
+//        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts ||
+//                event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
+//            isFetchingPosts = false
+//            if (!isAdded) {
+//                return
+//            }
+//
+//            hideLoadMoreProgress()
+//            if (!event.isError) {
+//                canLoadMorePosts = event.canLoadMore
+//                loadPosts(LoadMode.IF_CHANGED)
+//            } else {
+//                val error = event.error
+//                when (error.type) {
+//                    PostStore.PostErrorType.UNAUTHORIZED -> updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
+//                    else -> updateEmptyView(EmptyViewMessageType.GENERIC_ERROR)
+//                }
+//            }
+//        } else if (event.causeOfChange is CauseOfOnPostChanged.DeletePost) {
+//            if (event.isError) {
+//                val message = getString(R.string.error_deleting_post)
+//                ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
+//                loadPosts(LoadMode.IF_CHANGED)
+//            }
+//        }
+    }
 
-            hideLoadMoreProgress()
-            if (!event.isError) {
-                canLoadMorePosts = event.canLoadMore
-                loadPosts(LoadMode.IF_CHANGED)
-            } else {
-                val error = event.error
-                when (error.type) {
-                    PostStore.PostErrorType.UNAUTHORIZED -> updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
-                    else -> updateEmptyView(EmptyViewMessageType.GENERIC_ERROR)
-                }
-            }
-        } else if (event.causeOfChange is CauseOfOnPostChanged.DeletePost) {
-            if (event.isError) {
-                val message = getString(R.string.error_deleting_post)
-                ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
-                loadPosts(LoadMode.IF_CHANGED)
-            }
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListChanged(event: OnListChanged) {
+        if (!event.listDescriptors.contains(listDescriptor)) {
+            return
         }
+        refreshListManagerFromStore(listDescriptor, false)
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListItemsChanged(event: OnListItemsChanged) {
+        if (listDescriptor.typeIdentifier != event.type) {
+            return
+        }
+        refreshListManagerFromStore(listDescriptor, false)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -731,8 +799,7 @@ class PostListFragment : Fragment(),
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
             // now that we know which Posts to refresh, let's do it
             for (post in postsToRefresh) {
-                val position = postListAdapter.getPositionForPost(post)
-                if (position > -1) {
+                postListAdapter.getPositionForPost(post)?.let { position ->
                     postListAdapter.notifyItemChanged(position)
                 }
             }
@@ -740,7 +807,6 @@ class PostListFragment : Fragment(),
     }
 
     companion object {
-        const val POSTS_REQUEST_COUNT = 20
         const val TAG = "post_list_fragment_tag"
 
         @JvmStatic
@@ -754,5 +820,34 @@ class PostListFragment : Fragment(),
             fragment.arguments = bundle
             return fragment
         }
+    }
+}
+
+class DiffCallback(
+    private val old: ListManager<PostModel>?,
+    private val new: ListManager<PostModel>
+) : DiffUtil.Callback() {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        if (old == null) {
+            return false
+        }
+        return ListManager.areItemsTheSame(new, old, newItemPosition, oldItemPosition) { oldItem, newItem ->
+            oldItem.id == newItem.id
+        }
+    }
+
+    override fun getOldListSize(): Int {
+        return old?.size ?: 0
+    }
+
+    override fun getNewListSize(): Int {
+        return new.size
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = old?.getItem(oldItemPosition, false, false)
+        val newItem = new.getItem(newItemPosition, false, false)
+        return (oldItem == null && newItem == null) || (oldItem != null &&
+                newItem != null && oldItem.lastModified == newItem.lastModified)
     }
 }
