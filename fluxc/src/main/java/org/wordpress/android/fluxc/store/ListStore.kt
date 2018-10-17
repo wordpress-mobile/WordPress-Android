@@ -74,12 +74,18 @@ class ListStore @Inject constructor(
         listDescriptor: ListDescriptor,
         localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
+        remoteItemIdsToInclude: List<Long>? = null,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
-        val listItems = if (listModel != null) {
+        val itemsFromDb = if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id)
         } else emptyList()
+        val initialItems = remoteItemIdsToInclude?.let { remoteIdsToInclude ->
+            val dbRemoteItemIds = itemsFromDb.map { it.remoteItemId }
+            remoteIdsToInclude.filter { !dbRemoteItemIds.contains(it) }
+        }?.map { ListItemModel(remoteItemId = it, listId = 0) } ?: emptyList()
+        val listItems = initialItems.plus(itemsFromDb)
         val listState = if (listModel != null) getListState(listModel) else null
         val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
         return@withContext ListManager(
@@ -111,7 +117,7 @@ class ListStore @Inject constructor(
     private fun handleFetchList(payload: FetchListPayload) {
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListChanged(listOf(payload.listDescriptor), null))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), false, null))
 
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
@@ -150,7 +156,7 @@ class ListStore @Inject constructor(
         } else {
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
-        emitChange(OnListChanged(listOf(payload.listDescriptor), payload.error))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), !payload.loadedMore, payload.error))
     }
 
     /**
@@ -216,6 +222,7 @@ class ListStore @Inject constructor(
      */
     class OnListChanged(
         val listDescriptors: List<ListDescriptor>,
+        val loadedFirstPage: Boolean,
         error: ListError?
     ) : Store.OnChanged<ListError>() {
         init {
