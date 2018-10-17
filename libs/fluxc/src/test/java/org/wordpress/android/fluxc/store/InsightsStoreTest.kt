@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Unconfined
 import org.junit.Before
@@ -8,14 +9,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
+import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
+import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse.StatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
@@ -28,41 +32,27 @@ import kotlin.test.assertNotNull
 class InsightsStoreTest {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var insightsRestClient: InsightsRestClient
+    @Mock lateinit var sqlUtils: InsightsSqlUtils
     private lateinit var store: InsightsStore
     private val siteId = 3L
     @Before
     fun setUp() {
-        store = InsightsStore(insightsRestClient, Unconfined)
+        store = InsightsStore(insightsRestClient, sqlUtils, Unconfined)
         whenever(site.siteId).thenReturn(siteId)
     }
 
     @Test
     fun `returns all time insights per site`() = test {
-        val date = Date(10)
-        val visitors = 10
-        val views = 15
-        val posts = 20
-        val viewsBestDay = "Monday"
-        val viewsBestDayTotal = 25
         val fetchInsightsPayload = FetchInsightsPayload(
-                AllTimeResponse(
-                        date,
-                        StatsResponse(visitors, views, posts, viewsBestDay, viewsBestDayTotal)
-                )
+                ALL_TIME_RESPONSE
         )
         val forced = true
         whenever(insightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(fetchInsightsPayload)
 
         val allTimeInsights = store.fetchAllTimeInsights(site, forced)
 
-        assertNotNull(allTimeInsights.model)
-        val model = allTimeInsights.model!!
-        assertEquals(date, model.date)
-        assertEquals(visitors, model.visitors)
-        assertEquals(views, model.views)
-        assertEquals(posts, model.posts)
-        assertEquals(viewsBestDay, model.viewsBestDay)
-        assertEquals(viewsBestDayTotal, model.viewsBestDayTotal)
+        assertAllTimeInsights(allTimeInsights.model)
+        verify(sqlUtils).insert(site, ALL_TIME_RESPONSE)
     }
 
     @Test
@@ -82,27 +72,38 @@ class InsightsStoreTest {
     }
 
     @Test
+    fun `returns all time insights from db`() {
+        whenever(sqlUtils.selectAllTimeInsights(site)).thenReturn(ALL_TIME_RESPONSE)
+
+        val result = store.getAllTimeInsights(site)
+
+        assertAllTimeInsights(result)
+    }
+
+    private fun assertAllTimeInsights(model: InsightsAllTimeModel?) {
+        assertNotNull(model)
+        model?.let {
+            assertEquals(DATE, model.date)
+            assertEquals(VISITORS, model.visitors)
+            assertEquals(VIEWS, model.views)
+            assertEquals(POSTS, model.posts)
+            assertEquals(VIEWS_BEST_DAY, model.viewsBestDay)
+            assertEquals(VIEWS_BEST_DAY_TOTAL, model.viewsBestDayTotal)
+        }
+    }
+
+    @Test
     fun `returns most popular insights per site`() = test {
-        val highestDayOfWeek = 10
-        val highestHour = 15
-        val highestDayPercent = 2.0
-        val highestHourPercent = 5.0
         val fetchInsightsPayload = FetchInsightsPayload(
-                MostPopularResponse(
-                        highestDayOfWeek, highestHour, highestDayPercent, highestHourPercent
-                )
+                MOST_POPULAR_RESPONSE
         )
         val forced = true
         whenever(insightsRestClient.fetchMostPopularInsights(site, forced)).thenReturn(fetchInsightsPayload)
 
         val allTimeInsights = store.fetchMostPopularInsights(site, forced)
 
-        assertNotNull(allTimeInsights.model)
-        val model = allTimeInsights.model!!
-        assertEquals(highestDayOfWeek, model.highestDayOfWeek)
-        assertEquals(highestHour, model.highestHour)
-        assertEquals(highestDayPercent, model.highestDayPercent)
-        assertEquals(highestHourPercent, model.highestHourPercent)
+        assertMostPopularInsights(allTimeInsights.model)
+        verify(sqlUtils).insert(site, MOST_POPULAR_RESPONSE)
     }
 
     @Test
@@ -122,39 +123,53 @@ class InsightsStoreTest {
     }
 
     @Test
+    fun `returns most popular insights from db`() {
+        whenever(sqlUtils.selectMostPopularInsights(site)).thenReturn(MOST_POPULAR_RESPONSE)
+
+        val result = store.getMostPopularInsights(site)
+
+        assertMostPopularInsights(result)
+    }
+
+    private fun assertMostPopularInsights(model: InsightsMostPopularModel?) {
+        assertNotNull(model)
+        model?.let {
+            assertEquals(HIGHEST_DAY_OF_WEEK, model.highestDayOfWeek)
+            assertEquals(HIGHEST_HOUR, model.highestHour)
+            assertEquals(HIGHEST_DAY_PERCENT, model.highestDayPercent)
+            assertEquals(HIGHEST_HOUR_PERCENT, model.highestHourPercent)
+        }
+    }
+
+    @Test
     fun `returns latest post insights per site`() = test {
-        val postsFound = 15
-        val id: Long = 2
-        val title = "title"
-        val date = Date(10)
-        val url = "url"
-        val likeCount = 5
-        val commentCount = 10
-        val views = 20
-        val latestPost = PostResponse(id, title, date, url, likeCount, Discussion(commentCount))
         val fetchInsightsPayload = FetchInsightsPayload(
                 PostsResponse(
-                        postsFound, listOf(latestPost)
+                        POSTS_FOUND, listOf(LATEST_POST)
                 )
         )
         val forced = true
         whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
-        whenever(insightsRestClient.fetchPostViewsForInsights(site, id, forced)).thenReturn(FetchInsightsPayload(
-                PostViewsResponse(views)
+        val viewsResponse = PostViewsResponse(VIEWS)
+        whenever(insightsRestClient.fetchPostViewsForInsights(site, ID, forced)).thenReturn(FetchInsightsPayload(
+                viewsResponse
         ))
 
         val allTimeInsights = store.fetchLatestPostInsights(site, forced)
 
-        assertNotNull(allTimeInsights.model)
-        val model = allTimeInsights.model!!
-        assertEquals(commentCount, model.postCommentCount)
-        assertEquals(likeCount, model.postLikeCount)
-        assertEquals(views, model.postViewsCount)
-        assertEquals(date, model.postDate)
-        assertEquals(id, model.postId)
-        assertEquals(title, model.postTitle)
-        assertEquals(url, model.postURL)
-        assertEquals(siteId, model.siteId)
+        assertLatestPostInsights(allTimeInsights.model)
+        verify(sqlUtils).insert(site, LATEST_POST)
+        verify(sqlUtils).insert(site, viewsResponse)
+    }
+
+    @Test
+    fun `returns latest post insights from db`() {
+        whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
+        whenever(sqlUtils.selectLatestPostViews(site)).thenReturn(PostViewsResponse(VIEWS))
+
+        val result = store.getLatestPostInsights(site)
+
+        assertLatestPostInsights(result)
     }
 
     @Test
@@ -171,6 +186,20 @@ class InsightsStoreTest {
         val error = allTimeInsights.error!!
         assertEquals(type, error.type)
         assertEquals(message, error.message)
+    }
+
+    private fun assertLatestPostInsights(model: InsightsLatestPostModel?) {
+        assertNotNull(model)
+        model?.let {
+            assertEquals(COMMENT_COUNT, model.postCommentCount)
+            assertEquals(LIKE_COUNT, model.postLikeCount)
+            assertEquals(VIEWS, model.postViewsCount)
+            assertEquals(DATE, model.postDate)
+            assertEquals(ID, model.postId)
+            assertEquals(TITLE, model.postTitle)
+            assertEquals(URL, model.postURL)
+            assertEquals(siteId, model.siteId)
+        }
     }
 
     @Test
