@@ -7,6 +7,11 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,82 +20,118 @@ import kotlin.coroutines.experimental.CoroutineContext
 @Singleton
 class InsightsStore
 @Inject constructor(
-    private val insightsRestClient: InsightsRestClient,
+    private val restClient: InsightsRestClient,
+    private val sqlUtils: InsightsSqlUtils,
     private val coroutineContext: CoroutineContext
 ) {
+    // All time insights
     suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val payload = insightsRestClient.fetchAllTimeInsights(site, forced)
+        val payload = restClient.fetchAllTimeInsights(site, forced)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
-                val data = payload.response
-                val stats = data.stats
-                OnInsightsFetched(
-                        InsightsAllTimeModel(
-                                site.siteId,
-                                data.date,
-                                stats.visitors,
-                                stats.views,
-                                stats.posts,
-                                stats.viewsBestDay,
-                                stats.viewsBestDayTotal
-                        )
-                )
+                sqlUtils.insert(site, payload.response)
+                OnInsightsFetched(payload.response.toDomainModel(site))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
+    fun getAllTimeInsights(site: SiteModel): InsightsAllTimeModel? {
+        return sqlUtils.selectAllTimeInsights(site)?.toDomainModel(site)
+    }
+
+    private fun AllTimeResponse.toDomainModel(site: SiteModel): InsightsAllTimeModel {
+        val stats = this.stats
+        return InsightsAllTimeModel(
+                site.siteId,
+                this.date,
+                stats.visitors,
+                stats.views,
+                stats.posts,
+                stats.viewsBestDay,
+                stats.viewsBestDayTotal
+        )
+    }
+
+    // Most popular insights
     suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val payload = insightsRestClient.fetchMostPopularInsights(site, forced)
+        val payload = restClient.fetchMostPopularInsights(site, forced)
         return@withContext when {
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
                 val data = payload.response
+                sqlUtils.insert(site, data)
                 OnInsightsFetched(
-                        InsightsMostPopularModel(
-                                data.highestDayOfWeek,
-                                data.highestHour,
-                                data.highestDayPercent,
-                                data.highestHourPercent
-                        )
+                        data.toDomainModel(site)
                 )
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
+    fun getMostPopularInsights(site: SiteModel): InsightsMostPopularModel? {
+        return sqlUtils.selectMostPopularInsights(site)?.toDomainModel(site)
+    }
+
+    private fun MostPopularResponse.toDomainModel(site: SiteModel): InsightsMostPopularModel {
+        return InsightsMostPopularModel(
+                site.siteId,
+                this.highestDayOfWeek,
+                this.highestHour,
+                this.highestDayPercent,
+                this.highestHourPercent
+        )
+    }
+
+    // Latest post insights
     suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val responsePost = insightsRestClient.fetchLatestPostForInsights(site, forced)
+        val responsePost = restClient.fetchLatestPostForInsights(site, forced)
         val postsFound = responsePost.response?.postsFound
 
         val posts = responsePost.response?.posts
         return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
-            val commentCount = latestPost.discussion?.commentCount ?: 0
-            val postViews = insightsRestClient.fetchPostViewsForInsights(site, latestPost.id, forced)
-            if (postViews.isError) {
-                OnInsightsFetched(postViews.error)
-            } else {
-                val viewsCount = postViews.response?.views ?: 0
-                OnInsightsFetched(
-                        InsightsLatestPostModel(
-                                site.siteId,
-                                latestPost.title,
-                                latestPost.url,
-                                latestPost.date,
-                                latestPost.id,
-                                viewsCount,
-                                commentCount,
-                                latestPost.likeCount
-                        )
-                )
+            val postViews = restClient.fetchPostViewsForInsights(site, latestPost.id, forced)
+            when {
+                postViews.response != null -> {
+                    sqlUtils.insert(site, latestPost)
+                    sqlUtils.insert(site, postViews.response)
+                    OnInsightsFetched((latestPost to postViews.response).toDomainModel(site))
+                }
+                postViews.isError -> OnInsightsFetched(postViews.error)
+                else -> OnInsightsFetched()
             }
         } else if (responsePost.isError) {
             OnInsightsFetched(responsePost.error)
         } else {
             OnInsightsFetched()
         }
+    }
+
+    fun getLatestPostInsights(site: SiteModel): InsightsLatestPostModel? {
+        val latestPostDetailResponse = sqlUtils.selectLatestPostDetail(site)
+        val latestPostViewsResponse = sqlUtils.selectLatestPostViews(site)
+        return if (latestPostDetailResponse != null && latestPostViewsResponse != null) {
+            (latestPostDetailResponse to latestPostViewsResponse).toDomainModel(site)
+        } else {
+            null
+        }
+    }
+
+    private fun Pair<PostResponse, PostViewsResponse>.toDomainModel(site: SiteModel): InsightsLatestPostModel {
+        val viewsCount = second.views
+        val commentCount = first.discussion?.commentCount ?: 0
+        return InsightsLatestPostModel(
+                site.siteId,
+                first.title,
+                first.url,
+                first.date,
+                first.id,
+                viewsCount,
+                commentCount,
+                first.likeCount
+        )
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
