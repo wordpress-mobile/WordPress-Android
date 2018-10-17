@@ -276,33 +276,6 @@ public class PostUtils {
         return true;
     }
 
-    public static int indexOfPostInList(final PostModel post, final List<PostModel> posts) {
-        if (post == null) {
-            return -1;
-        }
-        for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getId() == post.getId()
-                && posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public static @NotNull
-    List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
-        List<Integer> list = new ArrayList<>();
-        if (mediaId == 0) {
-            return list;
-        }
-        for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getFeaturedImageId() == mediaId) {
-                list.add(i);
-            }
-        }
-        return list;
-    }
-
     static boolean shouldPublishImmediately(PostModel postModel) {
         if (!shouldPublishImmediatelyOptionBeAvailable(postModel)) {
             return false;

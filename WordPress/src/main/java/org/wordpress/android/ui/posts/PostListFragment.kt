@@ -59,7 +59,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.posts.adapters.PostListAdapter.LoadMode
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
@@ -441,8 +440,11 @@ class PostListFragment : Fragment(),
 
         // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
         val post = postStore.getPostByLocalPostId(postClicked.id)
+        // This is mostly a sanity check and the list should never go out of sync, but if there is an edge case, we
+        // should refresh the list
         if (post == null) {
-            loadPosts(LoadMode.FORCED)
+            // TODO: Can we safely remove this check?
+            listManager?.refresh()
             return
         }
 

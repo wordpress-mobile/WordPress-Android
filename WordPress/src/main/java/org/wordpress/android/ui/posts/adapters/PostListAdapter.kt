@@ -4,12 +4,9 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.AsyncTask
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.util.SparseArrayCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
@@ -23,7 +20,6 @@ import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
 import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.builder.DiffResult
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -38,14 +34,12 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.posts.PostListFragment
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.SiteUtils
@@ -81,7 +75,6 @@ class PostListAdapter(
     private var isLoadingPosts: Boolean = false
 
     private val hiddenPosts = ArrayList<PostModel>()
-    private val featuredImageUrls = SparseArrayCompat<String>()
 
     private var recyclerView: RecyclerView? = null
     private val layoutInflater: LayoutInflater
@@ -206,7 +199,7 @@ class PostListAdapter(
                     holder.excerpt.visibility = View.GONE
                 }
 
-                showFeaturedImage(post.id, holder.featuredImage)
+                showFeaturedImage(post, holder.featuredImage)
 
                 // local drafts say "delete" instead of "trash"
                 if (post.isLocalDraft) {
@@ -241,8 +234,22 @@ class PostListAdapter(
         // TODO: Handle the null case with a loading bar or something
     }
 
-    private fun showFeaturedImage(postId: Int, imgFeatured: ImageView) {
-        val imageUrl = featuredImageUrls.get(postId)
+    private fun showFeaturedImage(post: PostModel, imgFeatured: ImageView) {
+        var imageUrl: String? = null
+        if (post.featuredImageId != 0L) {
+            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
+            if (media != null) {
+                imageUrl = media.url
+            } else {
+                val mediaToDownload = MediaModel()
+                mediaToDownload.mediaId = post.featuredImageId
+                mediaToDownload.localSiteId = site.id
+                val payload = MediaPayload(site, mediaToDownload)
+                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+            }
+        } else {
+            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
+        }
         if (imageUrl == null) {
             imgFeatured.visibility = View.GONE
             imageManager.cancelRequestAndClearImageView(imgFeatured)
@@ -500,11 +507,9 @@ class PostListAdapter(
     }
 
     fun getPositionForPost(post: PostModel): Int? =
-        if (post.isLocalDraft) {
-            listManager?.positionOfLocalItem { it.id == post.id }
-        } else {
-            listManager?.positionOfRemoteItem(post.remotePostId)
-        }
+            listManager?.findIndices {
+                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
+            }?.first()
 
     fun updateRowForPost(post: PostModel) {
         getPositionForPost(post)?.let { position ->
@@ -584,113 +589,15 @@ class PostListAdapter(
      * and set its featured image url to the passed url
      */
     fun mediaChanged(mediaModel: MediaModel) {
+        if (mediaModel.id == 0) {
+            // nothing to do
+            return
+        }
         // Multiple posts could have the same featured image
-        // TODO: fix this!
-//        val indexList = PostUtils.indexesOfFeaturedMediaIdInList(mediaModel.mediaId, posts)
-//        for (position in indexList) {
-//            val post = listManager.getItem(position)
-//            if (post != null) {
-//                val imageUrl = mediaModel.url
-//                if (imageUrl != null) {
-//                    featuredImageUrls.put(post.id, imageUrl)
-//                } else {
-//                    featuredImageUrls.remove(post.id)
-//                }
-//                notifyItemChanged(position)
-//            }
-//        }
-    }
-
-    // TODO: Completely remove this!
-    @SuppressLint("StaticFieldLeak")
-    private inner class LoadPostsTask internal constructor(private val mLoadMode: LoadMode)
-        : AsyncTask<Void, Void, Boolean>() {
-        private var mTmpPosts: MutableList<PostModel>? = null
-        private val mMediaIdsToUpdate = ArrayList<Long>()
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            isLoadingPosts = true
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-            isLoadingPosts = false
-        }
-
-        override fun doInBackground(vararg nada: Void): Boolean? {
-            mTmpPosts = postStore.getPostsForSite(site)
-
-            // Make sure we don't return any hidden posts
-            if (hiddenPosts.size > 0) {
-                mTmpPosts!!.removeAll(hiddenPosts)
-            }
-
-            // Go no further if existing post list is the same
-            // TODO: fix this!
-//            if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(posts, mTmpPosts)) {
-//                // Always update the list if there are uploading posts
-//                var postsAreUploading = false
-//                for (post in mTmpPosts!!) {
-//                    if (UploadService.isPostUploadingOrQueued(post)) {
-//                        postsAreUploading = true
-//                        break
-//                    }
-//                }
-//
-//                if (!postsAreUploading) {
-//                    return false
-//                }
-//            }
-
-            // Generate the featured image url for each post
-            featuredImageUrls.clear()
-            val isPrivate = !SiteUtils.isPhotonCapable(site)
-            for (post in mTmpPosts!!) {
-                var imageUrl: String? = null
-                if (post.featuredImageId != 0L) {
-                    val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
-                    if (media != null) {
-                        imageUrl = media.url
-                    } else {
-                        // If the media isn't found it means the featured image info hasn't been added to
-                        // the local media library yet, so add to the list of media IDs to request info for
-                        mMediaIdsToUpdate.add(post.featuredImageId)
-                    }
-                } else {
-                    imageUrl = ReaderImageScanner(post.content, isPrivate).largestImage
-                }
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    featuredImageUrls.put(post.id, imageUrl)
-                }
-            }
-
-            return true
-        }
-
-        override fun onPostExecute(result: Boolean?) {
-            // TODO: fix this!
-//            if (result!!) {
-//                posts.clear()
-//                mTmpPosts?.let { posts.addAll(it) }
-//                notifyDataSetChanged()
-//
-//                if (mMediaIdsToUpdate.size > 0) {
-//                    for (mediaId in mMediaIdsToUpdate) {
-//                        val mediaToDownload = MediaModel()
-//                        mediaToDownload.mediaId = mediaId
-//                        mediaToDownload.localSiteId = site.id
-//                        val payload = MediaPayload(site, mediaToDownload)
-//                        dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-//                    }
-//                }
-//            }
-//
-//            isLoadingPosts = false
-//
-//            if (onPostsLoadedListener != null) {
-//                onPostsLoadedListener?.onPostsLoaded(posts.size)
-//            }
+        listManager?.findIndices { post ->
+            post.featuredImageId == mediaModel.mediaId
+        }?.forEach { position ->
+            notifyItemChanged(position)
         }
     }
 }
