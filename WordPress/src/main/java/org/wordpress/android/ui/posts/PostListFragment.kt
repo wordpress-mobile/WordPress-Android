@@ -199,7 +199,9 @@ class PostListFragment : Fragment(),
         this.listManager = listManager
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
+        // val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager, diffResult)
+        // recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
         onPostsLoaded(listManager.size)
     }
 
@@ -387,7 +389,9 @@ class PostListFragment : Fragment(),
             }
         } else if (postCount > 0) {
             hideEmptyView()
-            rvScrollPositionSaver.restoreScrollOffset(recyclerView)
+            recyclerView?.let {
+                rvScrollPositionSaver.restoreScrollOffset(it)
+            }
         }
 
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
@@ -668,6 +672,7 @@ class PostListFragment : Fragment(),
                     nonNullActivity.findViewById(R.id.coordinator),
                     event.isError, event.post, null, site, dispatcher
             )
+            listManager?.refresh()
         }
     }
 
