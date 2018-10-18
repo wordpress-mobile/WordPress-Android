@@ -710,8 +710,7 @@ public class PostsListFragment extends Fragment
             if (!event.isError()) {
                 loadPosts(LoadMode.IF_CHANGED);
             }
-        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.FetchPosts
-                   || event.causeOfChange instanceof CauseOfOnPostChanged.FetchPages) {
+        } else if (event.causeOfChange instanceof CauseOfOnPostChanged.FetchPosts) {
             mIsFetchingPosts = false;
             if (!isAdded()) {
                 return;
