@@ -69,8 +69,8 @@ class DiffView : AppCompatTextView {
             }
 
             // if there is ADD or DEL diff before current ADD or DEL diff we add a little spacing between them
-            if (index > 0 && (diff.operation == ADD || diff.operation == DELETE)
-                    && (diffs[index - 1].operation == ADD || diffs[index - 1].operation == DELETE)) {
+            if (index > 0 && (diff.operation == ADD || diff.operation == DELETE) &&
+                    (diffs[index - 1].operation == ADD || diffs[index - 1].operation == DELETE)) {
                 append("\u200A")
             }
 
