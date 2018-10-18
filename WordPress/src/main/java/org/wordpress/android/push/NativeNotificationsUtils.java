@@ -2,10 +2,12 @@ package org.wordpress.android.push;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
@@ -55,5 +57,22 @@ public class NativeNotificationsUtils {
     public static void hideStatusBar(Context context) {
         Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         context.sendBroadcast(closeIntent);
+    }
+
+    public static boolean extrasContainValid2FaToken(@NonNull Intent intent) {
+        if (!intent.hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)
+            || !intent.hasExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES)) {
+            throw new IllegalStateException("get2FATokenFromIntentExtras called without a valid intent.");
+        }
+        long expires = intent.getExtras().getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
+
+        long now = System.currentTimeMillis() / 1000;
+        return expires == 0 || now <= expires;
+    }
+    public static String retrieve2FATokenFromIntentExtras(@NonNull Intent intent) {
+        if (!intent.hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
+            throw new IllegalStateException("get2FATokenFromIntentExtras called without a valid intent.");
+        }
+        return intent.getExtras().getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
     }
 }

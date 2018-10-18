@@ -972,18 +972,6 @@ public class GCMMessageService extends FirebaseMessagingService {
                 return;
             }
 
-            // Show authorization intent
-            Intent pushAuthIntent = new Intent(context, WPMainActivity.class);
-            pushAuthIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
-            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
-            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
-            pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-            pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            pushAuthIntent.setAction("android.intent.action.MAIN");
-            pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
-
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                     context.getString(R.string.notification_channel_important_id))
                     .setSmallIcon(R.drawable.ic_my_sites_24dp)
@@ -995,45 +983,19 @@ public class GCMMessageService extends FirebaseMessagingService {
                     .setOnlyAlertOnce(true)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
-                                              PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(pendingIntent);
-
-
-            // adding ignore / approve quick actions
-            Intent authApproveIntent = new Intent(context, WPMainActivity.class);
-            authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                       NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
-            authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
-
-            authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                                       | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            authApproveIntent.setAction("android.intent.action.MAIN");
-            authApproveIntent.addCategory("android.intent.category.LAUNCHER");
-
-            PendingIntent authApprovePendingIntent =
-                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
-                                              PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
-
+            // add notification body clicked intent
+            builder.setContentIntent(NotificationsProcessingService
+                    .getPendingIntentFor2FaAuthNotificationOpenDialog(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG,
+                            pushAuthToken, title, message, expirationTimestamp));
+            // add approve action intent
             builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
-                              authApprovePendingIntent);
-
-
-            Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
-            authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
-                                      NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-            PendingIntent authIgnorePendingIntent = PendingIntent.getService(context,
-                                                                             AUTH_PUSH_REQUEST_CODE_IGNORE,
-                                                                             authIgnoreIntent,
-                                                                             PendingIntent.FLAG_CANCEL_CURRENT);
+                    NotificationsProcessingService
+                            .getPendingIntentFor2FaAuthNotificationApprove(context, AUTH_PUSH_REQUEST_CODE_APPROVE,
+                                    pushAuthToken, title, message, expirationTimestamp));
+            // add ignore action intent
             builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
-                              authIgnorePendingIntent);
-
+                    NotificationsProcessingService
+                            .getPendingIntentFor2FaAuthNotificationIgnore(context, AUTH_PUSH_REQUEST_CODE_IGNORE));
 
             // Call processing service when notification is dismissed
             PendingIntent pendingDeleteIntent =

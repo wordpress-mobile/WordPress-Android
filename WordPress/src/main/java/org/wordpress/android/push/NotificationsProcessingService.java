@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -68,6 +69,8 @@ public class NotificationsProcessingService extends Service {
     public static final String ARG_ACTION_APPROVE = "action_approve";
     public static final String ARG_ACTION_AUTH_APPROVE = "action_auth_aprove";
     public static final String ARG_ACTION_AUTH_IGNORE = "action_auth_ignore";
+    public static final String ARG_ACTION_AUTH_OPEN_DIALOG = "action_auth_open";
+    public static final String ARG_ACTION_AUTH_TOKEN_EXPIRED = "action_auth_token_expired";
     public static final String ARG_ACTION_DRAFT_PENDING_DISMISS = "action_draft_pending_dismiss";
     public static final String ARG_ACTION_DRAFT_PENDING_IGNORE = "action_draft_pending_ignore";
     public static final String ARG_ACTION_REPLY_TEXT = "action_reply_text";
@@ -83,6 +86,7 @@ public class NotificationsProcessingService extends Service {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
+    @Inject NativeNotificationsUtilsWrapper mNotifUtilsWrapper;
 
     /*
     * Use this if you want the service to handle a background note Like.
@@ -120,6 +124,39 @@ public class NotificationsProcessingService extends Service {
         intent.putExtra(ARG_ACTION_TYPE, ARG_ACTION_NOTIFICATION_DISMISS);
         intent.putExtra(ARG_PUSH_ID, pushId);
         intent.addCategory(ARG_ACTION_NOTIFICATION_DISMISS);
+        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    public static PendingIntent getPendingIntentFor2FaAuthNotificationApprove(Context context, int pushId, String token,
+                                                                              String title, String message,
+                                                                              long expirationTimestamp) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, token);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    public static PendingIntent getPendingIntentFor2FaAuthNotificationOpenDialog(Context context, int pushId,
+                                                                                 String token, String title,
+                                                                                 String message,
+                                                                                 long expirationTimestamp) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                NotificationsProcessingService.ARG_ACTION_AUTH_OPEN_DIALOG);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, token);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
+        intent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
+        return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    public static PendingIntent getPendingIntentFor2FaAuthNotificationIgnore(Context context, int pushId) {
+        Intent intent = new Intent(context, NotificationsProcessingService.class);
+        intent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, ARG_ACTION_AUTH_IGNORE);
         return PendingIntent.getService(context, pushId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
@@ -201,6 +238,18 @@ public class NotificationsProcessingService extends Service {
                     return;
                 }
 
+                if (ARG_ACTION_AUTH_APPROVE.equals(mActionType)) {
+                    GCMMessageService.remove2FANotification(mContext);
+                    auth2FaApproveButtonClicked(mIntent);
+                    return;
+                }
+
+                if (ARG_ACTION_AUTH_OPEN_DIALOG.equals(mActionType)) {
+                    GCMMessageService.remove2FANotification(mContext);
+                    auth2FaNotifBodyClicked(mIntent);
+                    return;
+                }
+
                 // check notification dismissed pending intent
                 if (mActionType.equals(ARG_ACTION_NOTIFICATION_DISMISS)) {
                     int notificationId = mIntent.getIntExtra(ARG_PUSH_ID, 0);
@@ -276,6 +325,37 @@ public class NotificationsProcessingService extends Service {
             } else {
                 requestFailed(null);
             }
+        }
+
+        private void auth2FaApproveButtonClicked(Intent workIntent) {
+            if (mNotifUtilsWrapper.extrasContainValid2FaToken(workIntent)) {
+                String token = mNotifUtilsWrapper.retrieve2FATokenFromIntentExtras(workIntent);
+                NotificationsUtils.sendTwoFactorAuthToken(token);
+            } else {
+                NativeNotificationsUtils.hideStatusBar(mContext);
+                auth2FaTokenExpired(workIntent);
+            }
+        }
+
+        private void auth2FaNotifBodyClicked(Intent workIntent) {
+            if (mNotifUtilsWrapper.extrasContainValid2FaToken(workIntent)) {
+                // start activity and display a dialog
+                Bundle extras = workIntent.getExtras();
+                extras.putString(NotificationsProcessingService.ARG_ACTION_TYPE,
+                        NotificationsProcessingService.ARG_ACTION_AUTH_OPEN_DIALOG);
+                ActivityLauncher.startFrom2FaAuthPushNotification(mContext, extras);
+            } else {
+                auth2FaTokenExpired(workIntent);
+            }
+        }
+
+        private void auth2FaTokenExpired(Intent workIntent) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+            // start activity and show an error
+            Bundle extras = workIntent.getExtras();
+            extras.putString(NotificationsProcessingService.ARG_ACTION_TYPE,
+                    NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED);
+            ActivityLauncher.startFrom2FaAuthPushNotification(mContext, extras);
         }
 
         private void getNoteFromBundleIfExists() {

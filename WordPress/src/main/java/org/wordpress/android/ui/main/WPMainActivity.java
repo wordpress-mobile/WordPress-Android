@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
@@ -80,7 +81,6 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -94,6 +94,7 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -364,35 +365,22 @@ public class WPMainActivity extends AppCompatActivity implements
             return;
         }
 
+        // 2FA Push notification
         if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            GCMMessageService.remove2FANotification(this);
+            String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+            if (NotificationsProcessingService.ARG_ACTION_AUTH_OPEN_DIALOG.equals(actionType)) {
+                String token = getIntent().getStringExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN);
+                String title = getIntent().getStringExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE);
+                String message = getIntent().getStringExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE);
 
-            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
-                    getIntent(),
-                    new NotificationsUtils.TwoFactorAuthCallback() {
-                        @Override
-                        public void onTokenValid(String token, String title, String message) {
-                            // we do this here instead of using the service in the background so we make sure
-                            // the user opens the app by using an activity (and thus unlocks the screen if locked,
-                            // for security).
-                            String actionType =
-                                    getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                            if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
-                                // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                                NotificationsUtils.sendTwoFactorAuthToken(token);
-                            } else {
-                                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
-                            }
-                        }
-
-                        @Override
-                        public void onTokenInvalid() {
-                            // Show a toast if the user took too long to open the notification
-                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
-                                    ToastUtils.Duration.LONG);
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                        }
-                    });
+                NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+            } else if (NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED.equals(actionType)) {
+                // inform the user the token has expired
+                Snackbar.make(findViewById(R.id.fragment_container), R.string.push_auth_expired, Snackbar.LENGTH_LONG)
+                        .show();
+            } else {
+                throw new IllegalStateException("Unknown ARG_ACTION_TYPE in 2fa push notification.");
+            }
         }
 
         // Then hit the server

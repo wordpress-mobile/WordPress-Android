@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Typeface;
@@ -408,28 +407,6 @@ public class NotificationsUtils {
     public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
         return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
     }
-
-    public static boolean validate2FAuthorizationTokenFromIntentExtras(Intent intent, TwoFactorAuthCallback callback) {
-        // Check for push authorization request
-        if (intent != null && intent.hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            Bundle extras = intent.getExtras();
-            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
-            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
-            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
-            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
-
-            long now = System.currentTimeMillis() / 1000;
-            if (expires > 0 && now > expires) {
-                callback.onTokenInvalid();
-                return false;
-            } else {
-                callback.onTokenValid(token, title, message);
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public static void showPushAuthAlert(Context context, final String token, String title, String message) {
         if (context == null
