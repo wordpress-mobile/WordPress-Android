@@ -17,7 +17,7 @@ class InsightsAllTimeViewModel
         val error = response.error
         return when {
             model != null -> loadAllTimeInsightsItem(model)
-            error != null -> Failed(R.string.stats_insights_all_time, error.message ?: error.type.name)
+            error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
             else -> throw Exception("All times stats response should contain a model or an error")
         }
     }
@@ -25,31 +25,44 @@ class InsightsAllTimeViewModel
     private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
-        if (model.posts == 0 && model.views == 0 && model.visitors == 0 && model.viewsBestDayTotal == 0) {
+        val hasPosts = model.posts > 0
+        val hasViews = model.views > 0
+        val hasVisitors = model.visitors > 0
+        val hasViewsBestDayTotal = model.viewsBestDayTotal > 0
+        if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
             items.add(Empty)
         } else {
-            if (model.posts > 0) {
-                items.add(Item(R.drawable.ic_posts_grey_dark_24dp, R.string.posts, model.posts.toFormattedString()))
+            if (hasPosts) {
+                items.add(
+                        Item(
+                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.string.posts,
+                                model.posts.toFormattedString(),
+                                showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
+                        )
+                )
             }
-            if (model.views > 0) {
+            if (hasViews) {
                 items.add(
                         Item(
                                 R.drawable.ic_visible_on_grey_dark_24dp,
                                 R.string.stats_views,
-                                model.views.toFormattedString()
+                                model.views.toFormattedString(),
+                                showDivider = hasVisitors || hasViewsBestDayTotal
                         )
                 )
             }
-            if (model.visitors > 0) {
+            if (hasVisitors) {
                 items.add(
                         Item(
                                 R.drawable.ic_user_grey_dark_24dp,
                                 R.string.stats_visitors,
-                                model.visitors.toFormattedString()
+                                model.visitors.toFormattedString(),
+                                showDivider = hasViewsBestDayTotal
                         )
                 )
             }
-            if (model.viewsBestDayTotal > 0) {
+            if (hasViewsBestDayTotal) {
                 items.add(
                         Item(
                                 R.drawable.ic_trophy_grey_dark_24dp,
