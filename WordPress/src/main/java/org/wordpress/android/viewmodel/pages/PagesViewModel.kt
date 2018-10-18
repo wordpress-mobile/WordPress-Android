@@ -122,7 +122,7 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private var pageUpdateContinuation: Continuation<Unit>? = null
+    private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PageListType.PUBLISHED
 
     fun start(site: SiteModel) {
@@ -175,18 +175,20 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished() {
+    fun onPageEditFinished(remotePageId: Long) {
         uiScope.launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate()
+            waitForPageUpdate(remotePageId)
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate() {
+    private suspend fun waitForPageUpdate(remotePageId: Long) {
+        _arePageActionsEnabled = false
         suspendCoroutine<Unit> { cont ->
-            pageUpdateContinuation = cont
+            pageUpdateContinuations[remotePageId] = cont
         }
+        _arePageActionsEnabled = true
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -480,8 +482,13 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation?.let { cont ->
-            pageUpdateContinuation = null
+        var id = 0L
+        if (!pageUpdateContinuations.contains(id)) {
+            id = event.post.remotePostId
+        }
+
+        pageUpdateContinuations[id]?.let { cont ->
+            pageUpdateContinuations.remove(id)
             cont.resume(Unit)
         }
     }
