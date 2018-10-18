@@ -447,7 +447,7 @@ public class PostStore extends Store {
                 return Collections.emptyList();
             }
         }
-        String orderBy;
+        String orderBy = null;
         switch (postListDescriptor.getOrderBy()) {
             case DATE:
                 orderBy = PostModelTable.DATE_CREATED;
@@ -464,9 +464,6 @@ public class PostStore extends Store {
                 break;
             case ID:
                 orderBy = PostModelTable.ID;
-                break;
-            default:
-                orderBy = null;
                 break;
         }
         int order;
