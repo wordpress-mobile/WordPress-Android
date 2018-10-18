@@ -14,10 +14,8 @@ allprojects {
     apply plugin: 'checkstyle'
 
     repositories {
+        google()
         jcenter()
-        maven {
-            url "https://maven.google.com"
-        }
     }
 
     if (tasks.findByPath('checkstyle') == null) {

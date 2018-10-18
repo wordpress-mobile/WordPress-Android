@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/signup_terms_of_service_text"
-        style="@style/WordPress.Button.Secondary" >
+        style="@style/LoginTheme.Button.Secondary" >
     </android.support.v7.widget.AppCompatButton>
 
     <android.support.v7.widget.AppCompatButton
@@ -30,7 +30,7 @@
         android:layout_marginTop="@dimen/margin_extra_small"
         android:layout_width="match_parent"
         android:text="@string/signup_with_email_button"
-        android:theme="@style/WordPress.Button" >
+        android:theme="@style/LoginTheme.Button" >
     </android.support.v7.widget.AppCompatButton>
 
     <android.support.v7.widget.AppCompatButton
@@ -39,7 +39,7 @@
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_width="match_parent"
         android:text="@string/signup_with_google_button"
-        android:theme="@style/WordPress.Button" >
+        android:theme="@style/LoginTheme.Button" >
     </android.support.v7.widget.AppCompatButton>
 
 </LinearLayout>
