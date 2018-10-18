@@ -5,20 +5,19 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import javax.inject.Inject
-import org.wordpress.android.fluxc.action.PostAction
-import org.wordpress.android.fluxc.action.PostAction.DELETE_POST
-import org.wordpress.android.fluxc.action.PostAction.UPDATE_POST
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.IRRELEVANT
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
 @Inject constructor(private val dispatcher: Dispatcher) {
-    private var continuation: Continuation<Boolean>? = null
-    private lateinit var eventType: EventType
+    private var continuations: MutableMap<Long, Map<EventType, Continuation<Boolean>>> = mutableMapOf()
 
     companion object {
         private const val ACTION_TIMEOUT = 30L * 1000
@@ -34,11 +33,10 @@ class ActionPerformer
 
     suspend fun performAction(action: PageAction) {
         val success = suspendCoroutineWithTimeout<Boolean>(ACTION_TIMEOUT) { uploadCont ->
-            continuation = uploadCont
-            eventType = action.event
+            continuations[action.remoteId] = mapOf(action.event to uploadCont)
             action.perform()
         }
-        continuation = null
+        continuations.remove(action.remoteId)
 
         if (success == true) {
             action.onSuccess()
@@ -49,40 +47,27 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        if (continuation != null && eventType == UPLOAD) {
-            continuation!!.resume(!event.isError)
-        }
+        continuations[event.post.remotePostId]?.get(UPLOAD)?.resume(!event.isError)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        if (continuation != null) {
-            val postAction = postCauseOfChangeToPostAction(event.causeOfChange)
-            if (eventType.action == postAction) {
-                continuation!!.resume(!event.isError)
-            }
-        }
+        val (remoteId, eventType) = postCauseOfChangeToPostAction(event.causeOfChange)
+        continuations[remoteId]?.get(eventType)?.resume(!event.isError)
     }
 
-    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): PostAction =
+    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Pair<Long, EventType> =
             when (postCauseOfChange) {
-                is CauseOfOnPostChanged.DeletePost -> PostAction.DELETE_POST
-                CauseOfOnPostChanged.FetchPages -> PostAction.FETCH_PAGES
-                CauseOfOnPostChanged.FetchPosts -> PostAction.FETCH_POST
-                CauseOfOnPostChanged.RemoveAllPosts -> PostAction.REMOVE_ALL_POSTS
-                is CauseOfOnPostChanged.RemovePost -> PostAction.REMOVE_POST
-                is CauseOfOnPostChanged.UpdatePost -> PostAction.UPDATE_POST
+                is CauseOfOnPostChanged.DeletePost -> postCauseOfChange.remotePostId to DELETE
+                is CauseOfOnPostChanged.UpdatePost -> postCauseOfChange.remotePostId to UPDATE
+                else -> -1L to IRRELEVANT
             }
 
-    data class PageAction(val event: EventType, val perform: () -> Unit) {
+    data class PageAction(val remoteId: Long, val event: EventType, val perform: () -> Unit) {
         var onSuccess: () -> Unit = { }
         var onError: () -> Unit = { }
         var undo: () -> Unit = { }
 
-        enum class EventType(val action: PostAction?) {
-            UPLOAD(null),
-            UPDATE(UPDATE_POST),
-            REMOVE(DELETE_POST)
-        }
+        enum class EventType { UPLOAD, UPDATE, DELETE, IRRELEVANT }
     }
 }
