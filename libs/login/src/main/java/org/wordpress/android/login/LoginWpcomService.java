@@ -114,30 +114,30 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     private static class LoginNotification {
         static Notification progress(Context context, int progress) {
             return AutoForegroundNotification.progress(context,
-                    context.getString(R.string.notification_channel_normal_id),
+                    context.getString(R.string.login_notification_channel_id),
                     progress,
                     R.string.notification_login_title_in_progress,
                     R.string.notification_logging_in,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                    R.drawable.login_notification_icon,
+                    R.color.login_notification_accent_color);
         }
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
-                    context.getString(R.string.notification_channel_normal_id),
+                    context.getString(R.string.login_notification_channel_id),
                     R.string.notification_login_title_success,
                     R.string.notification_logged_in,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                    R.drawable.login_notification_icon,
+                    R.color.login_notification_accent_color);
         }
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
-                    context.getString(R.string.notification_channel_normal_id),
+                    context.getString(R.string.login_notification_channel_id),
                     R.string.notification_login_title_stopped,
                     content,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                    R.drawable.login_notification_icon,
+                    R.color.login_notification_accent_color);
         }
     }
 
