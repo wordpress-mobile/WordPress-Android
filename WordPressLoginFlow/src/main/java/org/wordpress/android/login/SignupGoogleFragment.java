@@ -3,6 +3,8 @@ package org.wordpress.android.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -29,8 +31,11 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 public class SignupGoogleFragment extends GoogleFragment {
+    private static final String OLD_SITES_IDS = "old_sites_ids";
+    private static final String SIGN_UP_REQUESTED = "sign_up_requested";
     private ArrayList<Integer> mOldSitesIds;
     private ProgressDialog mProgressDialog;
+    private boolean mSignupRequested;
 
     private static final int REQUEST_SIGNUP = 1002;
 
@@ -44,10 +49,36 @@ public class SignupGoogleFragment extends GoogleFragment {
         super.onAttach(context);
     }
 
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mOldSitesIds = savedInstanceState.getIntegerArrayList(OLD_SITES_IDS);
+            mSignupRequested = savedInstanceState.getBoolean(SIGN_UP_REQUESTED);
+        }
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList(OLD_SITES_IDS, mOldSitesIds);
+        outState.putBoolean(SIGN_UP_REQUESTED, mSignupRequested);
+    }
+
     @Override
     public void onDetach() {
         dismissProgressDialog();
         super.onDetach();
+    }
+
+    @Override
+    protected void startFlow() {
+        if (!mSignupRequested) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow");
+            mSignupRequested = true;
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, REQUEST_SIGNUP);
+        } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow called, but is already in progress");
+        }
     }
 
     @Override
@@ -56,10 +87,13 @@ public class SignupGoogleFragment extends GoogleFragment {
 
         switch (request) {
             case REQUEST_SIGNUP:
+                disconnectGoogleClient();
+                mSignupRequested = false;
                 if (result == RESULT_OK) {
                     GoogleSignInResult signInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
                     if (signInResult.isSuccess()) {
+                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - succcess");
                         try {
                             GoogleSignInAccount account = signInResult.getSignInAccount();
 
@@ -72,31 +106,33 @@ public class SignupGoogleFragment extends GoogleFragment {
                             }
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
+                            AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - dispatching SocialSignupAction");
                             mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
-                            disconnectGoogleClient();
+                            AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - NPE");
                             AppLog.e(T.NUX, "Cannot get ID token from Google signup account.", exception);
-                            showErrorDialog(getString(R.string.login_error_generic));
+                            showError(getString(R.string.login_error_generic));
                         }
                     } else {
+                        AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - error");
                         mAnalyticsListener.trackSignupSocialButtonFailure();
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
                                 AppLog.e(T.NUX, "Google Signup Failed: internal error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
                                 AppLog.e(T.NUX, "Google Signup Failed: invalid account name.");
-                                showErrorDialog(getString(R.string.login_error_generic)
-                                                + getString(R.string.login_error_suffix));
+                                showError(getString(R.string.login_error_generic)
+                                          + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
                                 AppLog.e(T.NUX, "Google Signup Failed: network error.");
-                                showErrorDialog(getString(R.string.error_generic_network));
+                                showError(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
@@ -105,34 +141,35 @@ public class SignupGoogleFragment extends GoogleFragment {
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
                                 AppLog.e(T.NUX, "Google Signup Failed: current account failed.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
                                 AppLog.e(T.NUX, "Google Signup Failed: user is not signed in.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                             // Timeout error.
                             case GoogleSignInStatusCodes.TIMEOUT:
                                 AppLog.e(T.NUX, "Google Signup Failed: timeout error.");
-                                showErrorDialog(getString(R.string.google_error_timeout));
+                                showError(getString(R.string.google_error_timeout));
                                 break;
                             // Unknown error.
                             default:
                                 AppLog.e(T.NUX, "Google Signup Failed: unknown error.");
-                                showErrorDialog(getString(R.string.login_error_generic));
+                                showError(getString(R.string.login_error_generic));
                                 break;
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - canceled");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
-                    dismissProgressDialog();
+                    finishFlow();
                 } else {
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - unknown");
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
-                    showErrorDialog(getString(R.string.login_error_generic));
-                    dismissProgressDialog();
+                    showError(getString(R.string.login_error_generic));
                 }
 
                 break;
@@ -143,12 +180,6 @@ public class SignupGoogleFragment extends GoogleFragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    @Override
-    protected void showAccountDialog() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, REQUEST_SIGNUP);
     }
 
     // Remove scale from photo URL path string. Current URL matches /s96-c, which returns a 96 x 96
@@ -164,17 +195,21 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(OnAuthenticationChanged event) {
         if (event.isError()) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onAuthenticationChanged - error");
             AppLog.e(T.API,
                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
-            // Continue with signup since account was created.
         } else if (event.createdAccount) {
-            mAnalyticsListener.trackCreatedAccount();
+            AppLog.d(T.MAIN,
+                    "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
+            mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
         } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onAuthenticationChanged - the email is already attached to an account");
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
         }
+        finishFlow();
     }
 
     @SuppressWarnings("unused")
@@ -186,34 +221,49 @@ public class SignupGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, and two-factor authentication is required.
                 case TWO_STEP_ENABLED:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - two step authentication");
                     mAnalyticsListener.trackSignupSocialToLogin();
                     mLoginListener.showSignupToLoginMessage();
                     // Dispatch social login action to retrieve data required for two-factor authentication.
                     PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
+                    AppLog.d(T.MAIN,
+                            "GOOGLE SIGNUP: onSocialChanged error - two step authentication - dispatching "
+                            + "pushSocialLoginAction");
                     mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
                     break;
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
-                    mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
-                    mAnalyticsListener.trackSignupSocialToLogin();
-                    mLoginListener.showSignupToLoginMessage();
-                    mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
-                    // Kill connections with FluxC and this fragment since the flow is changing to login.
-                    mDispatcher.unregister(this);
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - user already exists");
+                    loginViaSocialAccount();
+                    break;
+                // Too many attempts on sending SMS verification code. The user has to wait before they try again
+                case SMS_CODE_THROTTLED:
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - sms code throttled");
+                    showError(getString(R.string.login_error_sms_throttled));
                     break;
                 default:
-                    showErrorDialog(getString(R.string.login_error_generic));
+                    AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - error - unknown");
+                    showError(getString(R.string.login_error_generic));
                     break;
             }
-            // Response does not return error when two-factor authentication is required.
-        } else if (event.requiresTwoStepAuth) {
+        // Response does not return error when two-factor authentication is required.
+        } else if (event.requiresTwoStepAuth || Login2FaFragment.TWO_FACTOR_TYPE_SMS.equals(event.notificationSent)) {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - 2fa required");
             mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
-            // Kill connections with FluxC and this fragment since the flow is changing to login.
-            mDispatcher.unregister(this);
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            finishFlow();
+        } else {
+            AppLog.d(T.MAIN, "GOOGLE SIGNUP: onSocialChanged - google login success");
+           loginViaSocialAccount();
         }
+    }
+
+    private void loginViaSocialAccount() {
+        mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
+        mAnalyticsListener.trackSignupSocialToLogin();
+        mLoginListener.showSignupToLoginMessage();
+        mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
+        finishFlow();
     }
 }
