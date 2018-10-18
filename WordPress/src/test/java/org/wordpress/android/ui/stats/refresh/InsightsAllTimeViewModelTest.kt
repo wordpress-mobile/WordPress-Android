@@ -21,13 +21,13 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
 
 @RunWith(MockitoJUnitRunner::class)
-class InsightsAllTimeDomainTest {
+class InsightsAllTimeViewModelTest {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var insightsAllTimeDomain: InsightsAllTimeDomain
+    private lateinit var viewModel: InsightsAllTimeViewModel
     @Before
     fun setUp() {
-        insightsAllTimeDomain = InsightsAllTimeDomain(insightsStore)
+        viewModel = InsightsAllTimeViewModel(insightsStore)
     }
 
     @Test
@@ -41,7 +41,7 @@ class InsightsAllTimeDomainTest {
                 )
         ).thenReturn(OnInsightsFetched(StatsError(GENERIC_ERROR, message)))
 
-        val result = insightsAllTimeDomain.loadAllTimeInsights(site, forced)
+        val result = viewModel.loadAllTimeInsights(site, forced)
 
         assertTrue(result is Failed)
         assertEquals(result.type, Type.FAILED)
@@ -60,7 +60,7 @@ class InsightsAllTimeDomainTest {
                 )
         ).thenReturn(OnInsightsFetched(emptyModel))
 
-        val result = insightsAllTimeDomain.loadAllTimeInsights(site, forced)
+        val result = viewModel.loadAllTimeInsights(site, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)

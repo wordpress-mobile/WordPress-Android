@@ -21,15 +21,15 @@ import org.wordpress.android.modules.DEFAULT_SCOPE
 import javax.inject.Inject
 import javax.inject.Named
 
-class InsightsDomain
+class InsightsViewModel
 @Inject constructor(
     private val statsStore: StatsStore,
     @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
-    private val insightsAllTimeDomain: InsightsAllTimeDomain
+    private val insightsAllTimeViewModel: InsightsAllTimeViewModel
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
-            ALL_TIME_STATS -> insightsAllTimeDomain.loadAllTimeInsights(site, forced)
+            ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
             LATEST_POST_SUMMARY,
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,

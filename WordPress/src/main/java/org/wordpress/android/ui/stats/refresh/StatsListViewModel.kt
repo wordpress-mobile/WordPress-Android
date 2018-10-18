@@ -16,7 +16,7 @@ import javax.inject.Named
 
 class StatsListViewModel
 @Inject constructor(
-    private val insightsDomain: InsightsDomain,
+    private val insightsViewModel: InsightsViewModel,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
     enum class StatsListType(@StringRes val titleRes: Int) {
@@ -38,7 +38,7 @@ class StatsListViewModel
             mutableData.value = InsightsUiState(status = FETCHING)
         }
         uiScope.launch {
-            val loadedData = insightsDomain.loadInsightItems(site, false)
+            val loadedData = insightsViewModel.loadInsightItems(site, false)
             mutableData.value = InsightsUiState(loadedData, DONE)
         }
     }
