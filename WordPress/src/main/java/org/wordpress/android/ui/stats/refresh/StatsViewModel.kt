@@ -21,7 +21,7 @@ import javax.inject.Named
 
 class StatsViewModel
 @Inject constructor(
-    private val insightsDomain: InsightsDomain,
+    private val insightsViewModel: InsightsViewModel,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
@@ -58,7 +58,7 @@ class StatsViewModel
     private suspend fun reloadStats(state: StatsListState = FETCHING) {
         _listState.setOnUi(state)
 
-        val result = insightsDomain.loadInsightItems(_site!!)
+        val result = insightsViewModel.loadInsightItems(_site!!)
     }
 
     // TODO: To be implemented in the future

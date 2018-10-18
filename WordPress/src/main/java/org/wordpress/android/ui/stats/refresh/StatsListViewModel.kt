@@ -9,9 +9,6 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import javax.inject.Inject
@@ -19,7 +16,7 @@ import javax.inject.Named
 
 class StatsListViewModel
 @Inject constructor(
-    private val insightsDomain: InsightsDomain,
+    private val insightsViewModel: InsightsViewModel,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : ViewModel() {
     enum class StatsListType(@StringRes val titleRes: Int) {
@@ -41,17 +38,11 @@ class StatsListViewModel
             mutableData.value = InsightsUiState(status = FETCHING)
         }
         uiScope.launch {
-            val loadedData = insightsDomain.loadInsightItems(site, false)
+            val loadedData = insightsViewModel.loadInsightItems(site, false)
             mutableData.value = InsightsUiState(loadedData, DONE)
         }
     }
 }
-
-data class NotImplemented(val text: String) : InsightsItem(NOT_IMPLEMENTED)
-
-data class Failed(@StringRes val failedType: Int, val errorMessage: String) : InsightsItem(FAILED)
-
-data class Empty(val isButtonVisible: Boolean = true) : InsightsItem(EMPTY)
 
 data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {
     enum class StatsListState {
