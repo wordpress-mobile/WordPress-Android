@@ -44,12 +44,11 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/me_profile_photo">
 
-                            <org.wordpress.android.widgets.WPNetworkImageView
+                            <ImageView
                                 android:id="@+id/me_avatar"
                                 android:layout_width="@dimen/avatar_sz_inner_circle"
                                 android:layout_height="@dimen/avatar_sz_inner_circle"
-                                app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                                app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
+                                android:contentDescription="@string/reader_avatar_desc"/>
                         </FrameLayout>
 
                         <ProgressBar

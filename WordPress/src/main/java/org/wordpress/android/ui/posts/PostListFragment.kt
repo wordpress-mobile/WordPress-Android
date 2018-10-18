@@ -228,7 +228,7 @@ class PostListFragment : Fragment(),
         if (!isAdded) {
             return
         }
-        ActivityLauncher.addNewPostOrPageForResult(nonNullActivity, site, false, false)
+        ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
     }
 
     override fun onResume() {
@@ -314,7 +314,7 @@ class PostListFragment : Fragment(),
             it.button.setText(R.string.posts_empty_list_button)
             it.button.visibility = if (hasNoContent) View.VISIBLE else View.GONE
             it.button.setOnClickListener { _ ->
-                ActivityLauncher.addNewPostOrPageForResult(nonNullActivity, site, false, false)
+                ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
             }
             it.visibility = if (postListAdapter.itemCount == 0) View.VISIBLE else View.GONE
         }
@@ -457,8 +457,7 @@ class PostListFragment : Fragment(),
             PostListButton.BUTTON_STATS -> ActivityLauncher.viewStatsSinglePostDetails(
                     nonNullActivity,
                     site,
-                    post,
-                    false
+                    post
             )
             PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
                 if (!UploadService.isPostUploadingOrQueued(post)) {
@@ -606,8 +605,7 @@ class PostListFragment : Fragment(),
             if (!event.isError) {
                 loadPosts(LoadMode.IF_CHANGED)
             }
-        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts ||
-                event.causeOfChange is CauseOfOnPostChanged.FetchPages) {
+        } else if (event.causeOfChange is CauseOfOnPostChanged.FetchPosts) {
             isFetchingPosts = false
             if (!isAdded) {
                 return

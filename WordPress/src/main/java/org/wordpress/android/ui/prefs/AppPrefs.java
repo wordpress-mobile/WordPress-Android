@@ -112,7 +112,8 @@ public class AppPrefs {
         // Store a version of the last dismissed News Card
         NEWS_CARD_DISMISSED_VERSION,
         // Store a version of the last shown News Card
-        NEWS_CARD_SHOWN_VERSION
+        NEWS_CARD_SHOWN_VERSION,
+        AVATAR_VERSION
     }
 
     /**
@@ -791,5 +792,13 @@ public class AppPrefs {
 
     public static boolean isInstallationReferrerObtained() {
         return getBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, false);
+    }
+
+    public static int getAvatarVersion() {
+        return getInt(DeletablePrefKey.AVATAR_VERSION, 0);
+    }
+
+    public static void setAvatarVersion(int version) {
+        setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
 }
