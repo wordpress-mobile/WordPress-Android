@@ -376,7 +376,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
             } else if (NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED.equals(actionType)) {
                 // inform the user the token has expired
-                Snackbar.make(findViewById(R.id.fragment_container), R.string.push_auth_expired, Snackbar.LENGTH_LONG)
+                Snackbar.make(findViewById(R.id.coordinator), R.string.push_auth_expired, Snackbar.LENGTH_LONG)
                         .show();
             } else {
                 throw new IllegalStateException("Unknown ARG_ACTION_TYPE in 2fa push notification.");
