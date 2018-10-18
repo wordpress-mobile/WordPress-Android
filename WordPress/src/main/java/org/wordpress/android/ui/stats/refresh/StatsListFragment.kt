@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -43,6 +44,10 @@ class StatsListFragment : Fragment() {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
+        val intent = activity?.intent
+        if (intent != null && intent.hasExtra(WordPress.SITE)) {
+            outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -68,15 +73,21 @@ class StatsListFragment : Fragment() {
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity)
+        initializeViewModels(nonNullActivity, savedInstanceState)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val statsType = arguments?.getSerializable(typeKey) as StatsListType
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(statsType.name, StatsListViewModel::class.java)
 
-        viewModel.start(statsType)
+        val site = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(activity.intent)
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+        viewModel.start(site, statsType)
 
         setupObservers()
     }

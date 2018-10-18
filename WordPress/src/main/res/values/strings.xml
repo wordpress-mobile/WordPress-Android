@@ -778,6 +778,9 @@
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
+    <!-- Stats refresh -->
+    <string name="stats_no_data_yet">No data yet</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -964,6 +967,9 @@
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
+
+    <!-- Stats refreshed insights -->
+    <string name="stats_insights_all_time_stats">All Time Stats</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>

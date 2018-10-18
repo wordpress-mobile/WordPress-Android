@@ -96,4 +96,38 @@
         <item name="android:indeterminateTint">@color/blue_medium</item>
     </style>
 
+    <!-- Stats Refresh -->
+
+    <style name="StatsBlock">
+        <item name="android:layout_marginEnd">13dp</item>
+        <item name="android:layout_marginStart">13dp</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="StatsBlockLine">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+    </style>
+
+    <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockItem" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+
 </resources>
