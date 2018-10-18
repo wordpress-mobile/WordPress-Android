@@ -621,7 +621,7 @@ public class NotificationsProcessingService extends Service {
     private void trackQuickActionCompleted(QuickActionTrackPropertyValue type) {
         Map<String, String> properties = new HashMap<>(1);
         properties.put("quick_action", type.toString());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_QUICKACTION_COMPLETED, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_QUICKACTION_TOUCH, properties);
     }
 
     // OnChanged events
