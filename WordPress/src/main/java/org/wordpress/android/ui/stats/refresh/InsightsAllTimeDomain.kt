@@ -11,18 +11,18 @@ import javax.inject.Inject
 
 class InsightsAllTimeDomain
 @Inject constructor(private val insightsStore: InsightsStore) {
-    suspend fun allTimeInsights(site: SiteModel, forced: Boolean = false): InsightsItem {
+    suspend fun loadAllTimeInsights(site: SiteModel, forced: Boolean = false): InsightsItem {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
         return when {
-            model != null -> allTimeInsightsItem(model)
+            model != null -> loadAllTimeInsightsItem(model)
             error != null -> Failed(R.string.stats_insights_all_time, error.message ?: error.type.name)
             else -> throw Exception("All times stats response should contain a model or an error")
         }
     }
 
-    private fun allTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
+    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
         if (model.posts == 0 && model.views == 0 && model.visitors == 0 && model.viewsBestDayTotal == 0) {

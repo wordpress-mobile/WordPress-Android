@@ -29,7 +29,7 @@ class InsightsDomain
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
-            ALL_TIME_STATS -> insightsAllTimeDomain.allTimeInsights(site, forced)
+            ALL_TIME_STATS -> insightsAllTimeDomain.loadAllTimeInsights(site, forced)
             LATEST_POST_SUMMARY,
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,

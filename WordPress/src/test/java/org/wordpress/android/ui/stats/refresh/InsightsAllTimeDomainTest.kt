@@ -41,7 +41,7 @@ class InsightsAllTimeDomainTest {
                 )
         ).thenReturn(OnInsightsFetched(StatsError(GENERIC_ERROR, message)))
 
-        val result = insightsAllTimeDomain.allTimeInsights(site, forced)
+        val result = insightsAllTimeDomain.loadAllTimeInsights(site, forced)
 
         assertTrue(result is Failed)
         assertEquals(result.type, Type.FAILED)
@@ -60,7 +60,7 @@ class InsightsAllTimeDomainTest {
                 )
         ).thenReturn(OnInsightsFetched(emptyModel))
 
-        val result = insightsAllTimeDomain.allTimeInsights(site, forced)
+        val result = insightsAllTimeDomain.loadAllTimeInsights(site, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
