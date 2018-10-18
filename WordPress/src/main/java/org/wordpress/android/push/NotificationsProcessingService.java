@@ -582,7 +582,6 @@ public class NotificationsProcessingService extends Service {
                 // Bump analytics
                 AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
                 AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
-
             } else {
                 // cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);
