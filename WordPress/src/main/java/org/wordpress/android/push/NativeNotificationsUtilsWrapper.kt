@@ -13,7 +13,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class NativeNotificationsUtilsWrapper @Inject constructor(){
+class NativeNotificationsUtilsWrapper @Inject constructor() {
     fun extrasContainValid2FaToken(intent: Intent) = NativeNotificationsUtils.extrasContainValid2FaToken(intent)
 
     fun retrieve2FATokenFromIntentExtras(intent: Intent): String =
