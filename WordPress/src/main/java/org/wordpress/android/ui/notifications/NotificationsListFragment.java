@@ -475,7 +475,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
-            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+            ActivityLauncher.addNewPostForResult(getActivity(), getSelectedSite(), false);
         } else { // Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderPageActive();

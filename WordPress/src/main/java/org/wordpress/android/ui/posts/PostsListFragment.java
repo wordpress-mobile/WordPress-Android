@@ -286,7 +286,7 @@ public class PostsListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, false, false);
+        ActivityLauncher.addNewPostForResult(getActivity(), mSite, false);
     }
 
     public void onResume() {
@@ -406,7 +406,7 @@ public class PostsListFragment extends Fragment
         mActionableEmptyView.button.setVisibility(hasNoContent ? View.VISIBLE : View.GONE);
         mActionableEmptyView.button.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View view) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, false, false);
+                ActivityLauncher.addNewPostForResult(getActivity(), mSite, false);
             }
         });
         mActionableEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);

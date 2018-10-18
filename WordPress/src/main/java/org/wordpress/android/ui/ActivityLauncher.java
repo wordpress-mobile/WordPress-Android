@@ -373,14 +373,14 @@ public class ActivityLauncher {
         fragment.startActivity(intent);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
+    public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {
         if (site == null) {
             return;
         }
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
