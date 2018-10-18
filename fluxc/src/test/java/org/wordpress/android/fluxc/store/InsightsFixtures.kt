@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.store
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse.StatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
 import java.util.Date
@@ -33,4 +33,5 @@ const val URL = "URL"
 const val LIKE_COUNT = 5
 const val COMMENT_COUNT = 10
 val LATEST_POST = PostResponse(ID, TITLE, DATE, URL, LIKE_COUNT, Discussion(COMMENT_COUNT))
-val POST_VIEWS = PostViewsResponse(VIEWS)
+
+val POST_STATS_RESPONSE = PostStatsResponse(0, 0, 0, VIEWS, null, listOf(), listOf(), listOf(), mapOf(), mapOf())

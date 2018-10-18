@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
@@ -150,10 +150,12 @@ class InsightsStoreTest {
         )
         val forced = true
         whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
-        val viewsResponse = PostViewsResponse(VIEWS)
-        whenever(insightsRestClient.fetchPostViewsForInsights(site, ID, forced)).thenReturn(FetchInsightsPayload(
-                viewsResponse
-        ))
+        val viewsResponse = POST_STATS_RESPONSE
+        whenever(insightsRestClient.fetchPostStats(site, ID, forced)).thenReturn(
+                FetchInsightsPayload(
+                        viewsResponse
+                )
+        )
 
         val allTimeInsights = store.fetchLatestPostInsights(site, forced)
 
@@ -165,7 +167,7 @@ class InsightsStoreTest {
     @Test
     fun `returns latest post insights from db`() {
         whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
-        whenever(sqlUtils.selectLatestPostViews(site)).thenReturn(PostViewsResponse(VIEWS))
+        whenever(sqlUtils.selectLatestPostStats(site)).thenReturn(POST_STATS_RESPONSE)
 
         val result = store.getLatestPostInsights(site)
 
@@ -222,8 +224,8 @@ class InsightsStoreTest {
 
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<PostViewsResponse>(StatsError(type, message))
-        whenever(insightsRestClient.fetchPostViewsForInsights(site, id, forced)).thenReturn(errorPayload)
+        val errorPayload = FetchInsightsPayload<PostStatsResponse>(StatsError(type, message))
+        whenever(insightsRestClient.fetchPostStats(site, id, forced)).thenReturn(errorPayload)
 
         val allTimeInsights = store.fetchLatestPostInsights(site, forced)
 

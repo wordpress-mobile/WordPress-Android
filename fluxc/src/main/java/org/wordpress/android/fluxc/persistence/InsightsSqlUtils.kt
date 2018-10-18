@@ -3,11 +3,11 @@ package org.wordpress.android.fluxc.persistence
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_VIEWS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,8 +27,8 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, LATEST_POST_DETAIL_INSIGHTS, data)
     }
 
-    fun insert(site: SiteModel, data: PostViewsResponse) {
-        statsSqlUtils.insert(site, LATEST_POST_DETAIL_VIEWS_INSIGHTS, data)
+    fun insert(site: SiteModel, data: PostStatsResponse) {
+        statsSqlUtils.insert(site, LATEST_POST_STATS_INSIGHTS, data)
     }
 
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
@@ -43,7 +43,7 @@ class InsightsSqlUtils
         return statsSqlUtils.select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
     }
 
-    fun selectLatestPostViews(site: SiteModel): PostViewsResponse? {
-        return statsSqlUtils.select(site, LATEST_POST_DETAIL_VIEWS_INSIGHTS, PostViewsResponse::class.java)
+    fun selectLatestPostStats(site: SiteModel): PostStatsResponse? {
+        return statsSqlUtils.select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java)
     }
 }
