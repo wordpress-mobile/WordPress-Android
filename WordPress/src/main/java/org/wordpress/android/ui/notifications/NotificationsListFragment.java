@@ -25,6 +25,8 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -38,6 +40,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.util.AniUtils;
@@ -45,11 +48,15 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
@@ -528,19 +535,39 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             @Override
             public void run() {
                 // Filter the list according to the RadioGroup selection
-                int checkedId = mFilterRadioGroup.getCheckedRadioButtonId();
-                if (checkedId == R.id.notifications_filter_all) {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_ALL);
-                } else if (checkedId == R.id.notifications_filter_unread) {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_UNREAD);
-                } else if (checkedId == R.id.notifications_filter_comments) {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_COMMENT);
-                } else if (checkedId == R.id.notifications_filter_follows) {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_FOLLOW);
-                } else if (checkedId == R.id.notifications_filter_likes) {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_LIKE);
-                } else {
-                    mNotesAdapter.setFilter(NotesAdapter.FILTERS.FILTER_ALL);
+                Map<String, String> properties = new HashMap<>(1);
+
+                switch (mFilterRadioGroup.getCheckedRadioButtonId()) {
+                    case R.id.notifications_filter_all:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
+                        break;
+                    case R.id.notifications_filter_comments:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_COMMENT.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_COMMENT);
+                        break;
+                    case R.id.notifications_filter_follows:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_FOLLOW.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_FOLLOW);
+                        break;
+                    case R.id.notifications_filter_likes:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_LIKE.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_LIKE);
+                        break;
+                    case R.id.notifications_filter_unread:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_UNREAD.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_UNREAD);
+                        break;
+                    default:
+                        properties.put(NOTIFICATIONS_SELECTED_FILTER, FILTERS.FILTER_ALL.toString());
+                        AnalyticsTracker.track(Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties);
+                        mNotesAdapter.setFilter(FILTERS.FILTER_ALL);
+                        break;
                 }
 
                 restoreListScrollPosition();
