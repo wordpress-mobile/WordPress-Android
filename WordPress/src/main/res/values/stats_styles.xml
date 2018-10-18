@@ -85,7 +85,7 @@
 
     <style name="JetpackTermsAndConditionsButton">
         <item name="android:autoLink">all</item>
-        <item name="android:linksClickable">false</item>4f748e
+        <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
