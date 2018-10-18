@@ -13,7 +13,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
@@ -35,18 +35,15 @@ class LatestPostSummaryViewModel
 
         return when {
             error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
-            else -> latestPostSummaryItem(model, site)
+            else -> latestPostSummaryItem(model)
         }
     }
 
-    private fun latestPostSummaryItem(
-        model: InsightsLatestPostModel?,
-        site: SiteModel
-    ): ListInsightItem {
+    private fun latestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         if (model != null) {
-            val message = buildMessage(model, site)
+            val message = buildMessage(model)
             items.add(Text(message))
             if (model.postViewsCount > 0 || model.postCommentCount > 0 || model.postLikeCount > 0) {
                 val headers = listOf(R.string.stats_views, R.string.stats_likes, R.string.stats_comments)
@@ -68,10 +65,7 @@ class LatestPostSummaryViewModel
         return ListInsightItem(items)
     }
 
-    private fun buildMessage(
-        model: InsightsLatestPostModel,
-        site: SiteModel
-    ): Spannable {
+    private fun buildMessage(model: InsightsLatestPostModel): Spannable {
         val sinceLabel = StatsUtils.getSinceLabel(resourceProvider, model.postDate)
                 .toLowerCase(Locale.getDefault())
         val postTitle = StringEscapeUtils.unescapeHtml4(model.postTitle)
@@ -82,7 +76,13 @@ class LatestPostSummaryViewModel
                     postTitle
             )
             SpannableString(message).withClickableSpan(postTitle) {
-                ReaderActivityLauncher.showReaderPostDetail(it, site.siteId, model.postId)
+                StatsUtils.openPostInReaderOrInAppWebview(
+                        it,
+                        model.siteId,
+                        model.postId.toString(),
+                        StatsConstants.ITEM_TYPE_POST,
+                        model.postURL
+                )
             }
         } else {
             resourceProvider.getString(
