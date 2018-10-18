@@ -42,6 +42,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -525,7 +526,8 @@ public class NotificationsProcessingService extends Service {
             }
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
+            AnalyticsUtils.trackWithBlogPostDetails(
+                    AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
             trackQuickActionCompleted(QuickActionTrackPropertyValue.LIKE);
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
@@ -545,7 +547,8 @@ public class NotificationsProcessingService extends Service {
             }
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
+            AnalyticsUtils.trackWithBlogPostDetails(
+                    AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
             trackQuickActionCompleted(QuickActionTrackPropertyValue.APPROVE);
 
             // Update pseudo comment (built from the note)
