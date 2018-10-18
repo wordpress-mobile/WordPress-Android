@@ -31,6 +31,24 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 private const val INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
+private const val FORBIDDEN = "FORBIDDEN"
+private const val INSTALL_FAILURE = "INSTALL_FAILURE"
+private const val INSTALL_RESPONSE_ERROR = "INSTALL_RESPONSE_ERROR"
+private const val LOGIN_FAILURE = "LOGIN_FAILURE"
+private const val SITE_IS_JETPACK = "SITE_IS_JETPACK"
+private const val ACTIVATION_ON_INSTALL_FAILURE = "ACTIVATION_ON_INSTALL_FAILURE"
+private const val ACTIVATION_RESPONSE_ERROR = "ACTIVATION_RESPONSE_ERROR"
+private const val ACTIVATION_FAILURE = "ACTIVATION_FAILURE"
+private val BLOCKING_FAILURES = listOf(
+        FORBIDDEN,
+        INSTALL_FAILURE,
+        INSTALL_RESPONSE_ERROR,
+        LOGIN_FAILURE,
+        INVALID_CREDENTIALS,
+        ACTIVATION_ON_INSTALL_FAILURE,
+        ACTIVATION_RESPONSE_ERROR,
+        ACTIVATION_FAILURE
+)
 private const val CONTEXT = "JetpackRemoteInstall"
 private const val EMPTY_TYPE = "EMPTY_TYPE"
 private const val EMPTY_MESSAGE = "EMPTY_MESSAGE"
@@ -137,11 +155,16 @@ class JetpackRemoteInstallViewModel
                     event.error?.apiError ?: EMPTY_TYPE,
                     event.error?.message ?: EMPTY_MESSAGE
             )
-            if (event.error?.apiError == INVALID_CREDENTIALS) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW)
-                triggerResultAction(site.id, MANUAL_INSTALL)
-            } else {
-                mutableViewState.postValue(Error {
+            when {
+                event.error?.apiError == SITE_IS_JETPACK -> {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_COMPLETED)
+                    mutableViewState.postValue(Installed { connect(site.id) })
+                }
+                BLOCKING_FAILURES.contains(event.error?.apiError) -> {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW)
+                    triggerResultAction(site.id, MANUAL_INSTALL)
+                }
+                else -> mutableViewState.postValue(Error {
                     restart(site)
                 })
             }
