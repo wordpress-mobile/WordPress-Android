@@ -28,7 +28,7 @@ class InsightsAdapter : Adapter<InsightsViewHolder>() {
             NOT_IMPLEMENTED -> NotImplementedViewHolder(parent)
             LIST_INSIGHTS -> ListInsightsViewHolder(parent)
             FAILED -> FailedViewHolder(parent)
-            EMPTY -> EmptyViewHolder(parent)
+            EMPTY -> EmptyInsightsViewHolder(parent)
         }
     }
 
@@ -44,7 +44,7 @@ class InsightsAdapter : Adapter<InsightsViewHolder>() {
             is NotImplementedViewHolder -> holder.bind(item as NotImplemented)
             is ListInsightsViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)
-            is EmptyViewHolder -> holder.bind(item as Empty)
+            is EmptyInsightsViewHolder -> holder.bind(item as Empty)
         }
     }
 }
