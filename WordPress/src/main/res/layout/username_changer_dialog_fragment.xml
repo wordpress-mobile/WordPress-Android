@@ -32,7 +32,7 @@
             android:paddingBottom="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
             android:tint="@color/grey_lighten_10"
-            app:srcCompat="@drawable/ic_search_white_24dp" >
+            android:src="@drawable/ic_search_white_24dp" >
         </ImageView>
 
         <android.support.design.widget.TextInputEditText

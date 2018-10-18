@@ -50,7 +50,7 @@
             android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
             android:contentDescription="@string/theme_no_search_result_found"
-            app:srcCompat="@drawable/drake_empty_results_400dp"/>
+            android:src="@drawable/drake_empty_results_400dp"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty"

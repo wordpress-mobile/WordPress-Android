@@ -715,6 +715,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
+            case NOTIFICATION_QUICK_ACTIONS_QUICKACTION_TOUCHED:
+                return "quick_action_touched";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
             case NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST:
@@ -1009,6 +1011,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_app_notifications_disabled";
             case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
                 return "notification_settings_app_notifications_enabled";
+            case NOTIFICATION_TAPPED_SEGMENTED_CONTROL:
+                return "notification_tapped_segmented_control";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
