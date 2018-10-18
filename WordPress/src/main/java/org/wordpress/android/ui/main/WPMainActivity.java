@@ -588,7 +588,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false);
     }
 
     private void updateTitle() {
@@ -667,7 +667,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void jumpNewPost(Intent data) {
         if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
-            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, false, false);
+            ActivityLauncher.addNewPostForResult(this, mSelectedSite, false);
         }
     }
 
