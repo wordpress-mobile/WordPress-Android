@@ -120,19 +120,22 @@ class InsightsStore
     }
 
     private fun Pair<PostResponse, PostStatsResponse>.toDomainModel(site: SiteModel): InsightsLatestPostModel {
-        val firstField = second.fields[0]
-        val secondField = second.fields[1]
-        val daysViews = if (firstField == "period" && secondField == "views"){
+        val daysViews = if (second.fields.size > 1 && second.fields[0] == "period" && second.fields[1] == "views"){
             second.data.map { list -> list[0] to list[1].toInt() }
         } else {
             listOf()
         }
+        val viewsCount = second.views
+        val commentCount = first.discussion?.commentCount ?: 0
         return InsightsLatestPostModel(
                 site.siteId,
                 first.title,
                 first.url,
                 first.date,
                 first.id,
+                viewsCount,
+                commentCount,
+                first.likeCount,
                 daysViews
         )
     }

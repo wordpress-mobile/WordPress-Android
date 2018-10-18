@@ -201,6 +201,8 @@ class InsightsStoreTest {
             assertEquals(TITLE, model.postTitle)
             assertEquals(URL, model.postURL)
             assertEquals(siteId, model.siteId)
+            assertEquals(model.dayViews.size, 2)
+            assertEquals(model.dayViews, listOf(FIRST_DAY to FIRST_DAY_VIEWS, SECOND_DAY to SECOND_DAY_VIEWS))
         }
     }
 

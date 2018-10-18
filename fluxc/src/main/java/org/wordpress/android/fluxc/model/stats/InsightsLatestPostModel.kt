@@ -8,5 +8,8 @@ data class InsightsLatestPostModel(
     val postURL: String,
     val postDate: Date,
     val postId: Long,
+    val postViewsCount: Int = 0,
+    val postCommentCount: Int = 0,
+    val postLikeCount: Int,
     val dayViews: List<Pair<String, Int>>
 )
