@@ -1269,6 +1269,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_PAGE_PARENT:
                 return "page_parent_opened";
         }
+        return null;
     }
 }
 // CHECKSTYLE END IGNORE
