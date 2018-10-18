@@ -156,7 +156,7 @@ class PostListAdapter(
             view.layoutParams.height = endlistIndicatorHeight
             EndListViewHolder(view)
         } else if (viewType == VIEW_TYPE_LOADING) {
-            val view = layoutInflater.inflate(R.layout.post_loading_layout, parent, false)
+            val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
             LoadingViewHolder(view)
         } else {
             val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
