@@ -95,6 +95,7 @@ class PostListFragment : Fragment(),
     private var shouldCancelPendingDraftNotification = false
     private var postIdForPostToBeDeleted = 0
 
+    private val uploadedPostRemoteIds = ArrayList<Long>()
     private val trashedPosts = ArrayList<PostModel>()
 
     private lateinit var nonNullActivity: Activity
@@ -193,15 +194,15 @@ class PostListFragment : Fragment(),
                 override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
                     return postStore.getPostsByRemotePostIds(remoteItemIds, site)
                 }
-            })
+            }, remoteItemIdsToInclude = uploadedPostRemoteIds)
 
     private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult) {
         this.listManager = listManager
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
-        // val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager, diffResult)
-        // recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+        recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
         onPostsLoaded(listManager.size)
     }
 
@@ -649,6 +650,9 @@ class PostListFragment : Fragment(),
         if (!event.listDescriptors.contains(listDescriptor)) {
             return
         }
+        if (event.loadedFirstPage) {
+            uploadedPostRemoteIds.clear()
+        }
         refreshListManagerFromStore(listDescriptor, false)
     }
 
@@ -672,6 +676,8 @@ class PostListFragment : Fragment(),
                     nonNullActivity.findViewById(R.id.coordinator),
                     event.isError, event.post, null, site, dispatcher
             )
+            // TODO: Only add if it's in the local items
+            uploadedPostRemoteIds.add(event.post.remotePostId)
             listManager?.refresh()
         }
     }
