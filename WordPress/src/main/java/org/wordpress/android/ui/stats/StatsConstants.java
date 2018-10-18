@@ -16,6 +16,5 @@ public class StatsConstants {
     public static final long STATS_LABELS_SETUP_DELAY = 75L;
 
     public static final String ITEM_TYPE_POST = "post";
-    public static final String ITEM_TYPE_PAGE = "page";
     public static final String ITEM_TYPE_HOME_PAGE = "homepage";
 }

@@ -553,7 +553,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, false);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:

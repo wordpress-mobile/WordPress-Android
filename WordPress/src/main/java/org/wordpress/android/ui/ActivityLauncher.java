@@ -528,16 +528,13 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.SHOW_SIGNUP_EPILOGUE_AND_RETURN);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post) {
         if (post == null) {
             return;
         }
 
-        StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
-                String.valueOf(post.getRemotePostId()), post.getTitle(),
-                post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE
-                        : StatsConstants.ITEM_TYPE_POST);
+        StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(), String.valueOf(post.getRemotePostId()),
+                post.getTitle(), post.getLink(), StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 
