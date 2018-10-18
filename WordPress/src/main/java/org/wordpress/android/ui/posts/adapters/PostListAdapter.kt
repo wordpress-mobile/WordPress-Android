@@ -73,8 +73,6 @@ class PostListAdapter(
     private val isStatsSupported: Boolean
     private val showAllButtons: Boolean
 
-    private var isLoadingPosts: Boolean = false
-
     private val hiddenPosts = ArrayList<PostModel>()
 
     private var recyclerView: RecyclerView? = null
@@ -88,11 +86,6 @@ class PostListAdapter(
 
     interface OnPostButtonClickListener {
         fun onPostButtonClicked(buttonType: Int, postClicked: PostModel)
-    }
-
-    enum class LoadMode {
-        IF_CHANGED,
-        FORCED
     }
 
     init {
@@ -132,11 +125,11 @@ class PostListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) {
-            VIEW_TYPE_ENDLIST_INDICATOR
-        } else if (listManager?.getItem(position) != null) {
-            VIEW_TYPE_POST
-        } else VIEW_TYPE_LOADING
+        return when {
+            position == (itemCount - 1) -> VIEW_TYPE_ENDLIST_INDICATOR
+            listManager?.getItem(position) != null -> VIEW_TYPE_POST
+            else -> VIEW_TYPE_LOADING
+        }
     }
 
     override fun getItemCount(): Int {
@@ -151,16 +144,20 @@ class PostListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
-            val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
-            view.layoutParams.height = endlistIndicatorHeight
-            EndListViewHolder(view)
-        } else if (viewType == VIEW_TYPE_LOADING) {
-            val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
-            LoadingViewHolder(view)
-        } else {
-            val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
-            PostViewHolder(view)
+        return when (viewType) {
+            VIEW_TYPE_ENDLIST_INDICATOR -> {
+                val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
+                view.layoutParams.height = endlistIndicatorHeight
+                EndListViewHolder(view)
+            }
+            VIEW_TYPE_LOADING -> {
+                val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
+                LoadingViewHolder(view)
+            }
+            else -> {
+                val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
+                PostViewHolder(view)
+            }
         }
     }
 
