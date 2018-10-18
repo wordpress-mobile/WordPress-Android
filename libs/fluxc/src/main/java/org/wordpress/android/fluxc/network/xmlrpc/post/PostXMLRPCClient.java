@@ -120,7 +120,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         fields.add("post_id");
         fields.add("post_modified");
         List<Object> params =
-                getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
+                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
                         offset, listDescriptor.getPageSize(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
 
@@ -164,8 +164,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPosts(final SiteModel site, final boolean getPages, final int offset, final int number) {
         List<Object> params =
-                getFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), getPages,
-                        offset, number, null, null, null);
+                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
+                        getPages, offset, number, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
@@ -590,7 +590,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return contentStruct;
     }
 
-    private List<Object> getFetchPostListParameters(
+    private List<Object> createFetchPostListParameters(
             final Long selfHostedSiteId,
             final String username,
             final String password,
