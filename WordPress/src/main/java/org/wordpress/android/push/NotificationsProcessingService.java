@@ -48,6 +48,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -163,6 +164,24 @@ public class NotificationsProcessingService extends Service {
         }).start();
 
         return START_NOT_STICKY;
+    }
+
+    private enum QuickActionTrackPropertyValue {
+        LIKE {
+            public String toString() {
+                return "like";
+            }
+        },
+        APPROVE {
+            public String toString() {
+                return "approve";
+            }
+        },
+        REPLY_TO {
+            public String toString() {
+                return "reply-to";
+            }
+        }
     }
 
     private class QuickActionProcessor {
@@ -507,6 +526,7 @@ public class NotificationsProcessingService extends Service {
 
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
+            trackQuickActionCompleted(QuickActionTrackPropertyValue.LIKE);
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
@@ -526,6 +546,7 @@ public class NotificationsProcessingService extends Service {
 
             // Bump analytics
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
+            trackQuickActionCompleted(QuickActionTrackPropertyValue.APPROVE);
 
             // Update pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
@@ -570,6 +591,7 @@ public class NotificationsProcessingService extends Service {
 
                 // Bump analytics
                 AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
+                trackQuickActionCompleted(QuickActionTrackPropertyValue.REPLY_TO);
             } else {
                 // cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);
@@ -594,6 +616,12 @@ public class NotificationsProcessingService extends Service {
         private void resetOriginalNotification() {
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
         }
+    }
+
+    private void trackQuickActionCompleted(QuickActionTrackPropertyValue type) {
+        Map<String, String> properties = new HashMap<>(1);
+        properties.put("quick_action", type.toString());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_QUICKACTION_COMPLETED, properties);
     }
 
     // OnChanged events
