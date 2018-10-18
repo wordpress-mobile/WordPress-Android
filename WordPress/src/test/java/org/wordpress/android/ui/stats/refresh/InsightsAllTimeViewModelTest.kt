@@ -46,7 +46,7 @@ class InsightsAllTimeViewModelTest {
         assertTrue(result is Failed)
         assertEquals(result.type, Type.FAILED)
         assertEquals((result as Failed).errorMessage, message)
-        assertEquals(result.failedType, R.string.stats_insights_all_time)
+        assertEquals(result.failedType, R.string.stats_insights_all_time_stats)
     }
 
     @Test
