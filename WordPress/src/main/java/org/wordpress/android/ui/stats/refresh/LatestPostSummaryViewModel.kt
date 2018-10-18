@@ -1,13 +1,19 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.TextPaint
+import android.text.style.ClickableSpan
+import android.view.View
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
@@ -17,7 +23,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Locale
 import javax.inject.Inject
 
-class LatestPostSummaryDomain
+class LatestPostSummaryViewModel
 @Inject constructor(
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
@@ -29,15 +35,18 @@ class LatestPostSummaryDomain
 
         return when {
             error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
-            else -> latestPostSummaryItem(model)
+            else -> latestPostSummaryItem(model, site)
         }
     }
 
-    private fun latestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {
+    private fun latestPostSummaryItem(
+        model: InsightsLatestPostModel?,
+        site: SiteModel
+    ): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         if (model != null) {
-            val message = buildMessage(model)
+            val message = buildMessage(model, site)
             items.add(Text(message))
             if (model.postViewsCount > 0 || model.postCommentCount > 0 || model.postLikeCount > 0) {
                 val headers = listOf(R.string.stats_views, R.string.stats_likes, R.string.stats_comments)
@@ -59,16 +68,22 @@ class LatestPostSummaryDomain
         return ListInsightItem(items)
     }
 
-    private fun buildMessage(model: InsightsLatestPostModel): Spannable {
+    private fun buildMessage(
+        model: InsightsLatestPostModel,
+        site: SiteModel
+    ): Spannable {
         val sinceLabel = StatsUtils.getSinceLabel(resourceProvider, model.postDate)
                 .toLowerCase(Locale.getDefault())
         val postTitle = StringEscapeUtils.unescapeHtml4(model.postTitle)
         val message = if (model.postViewsCount == 0) {
-            resourceProvider.getString(
+            val message = resourceProvider.getString(
                     string.stats_insights_latest_post_with_no_engagement,
                     sinceLabel,
                     postTitle
             )
+            SpannableString(message).withClickableSpan(postTitle) {
+                ReaderActivityLauncher.showReaderPostDetail(it, site.siteId, model.postId)
+            }
         } else {
             resourceProvider.getString(
                     string.stats_insights_latest_post_message,
@@ -77,5 +92,23 @@ class LatestPostSummaryDomain
             )
         }
         return SpannableStringBuilder(message)
+    }
+
+    private fun SpannableString.withClickableSpan(clickablePart: String, onClickListener: (Context) -> Unit): SpannableString {
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View?) {
+                widget?.context?.let { onClickListener.invoke(it) }
+            }
+            override fun updateDrawState(ds: TextPaint?) {
+                ds?.color = resourceProvider.getColor(R.color.blue_wordpress)
+                ds?.isUnderlineText = false
+            }
+        }
+        val clickablePartStart = indexOf(clickablePart)
+        setSpan(clickableSpan,
+                clickablePartStart,
+                clickablePartStart + clickablePart.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return this
     }
 }

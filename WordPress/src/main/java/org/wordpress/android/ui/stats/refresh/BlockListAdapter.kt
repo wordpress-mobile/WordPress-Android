@@ -4,6 +4,7 @@ import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.VISIBLE
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -101,6 +102,8 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             private val text = itemView.findViewById<TextView>(R.id.text)
             fun bind(textItem: Text) {
                 text.text = textItem.text
+                text.linksClickable = true
+                text.movementMethod = LinkMovementMethod.getInstance()
             }
         }
 
