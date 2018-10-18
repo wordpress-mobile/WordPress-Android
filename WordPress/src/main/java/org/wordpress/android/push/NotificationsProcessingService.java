@@ -42,14 +42,13 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -165,24 +164,6 @@ public class NotificationsProcessingService extends Service {
         }).start();
 
         return START_NOT_STICKY;
-    }
-
-    private enum QuickActionTrackPropertyValue {
-        LIKE {
-            public String toString() {
-                return "like";
-            }
-        },
-        APPROVE {
-            public String toString() {
-                return "approve";
-            }
-        },
-        REPLY_TO {
-            public String toString() {
-                return "reply-to";
-            }
-        }
     }
 
     private class QuickActionProcessor {
@@ -528,7 +509,10 @@ public class NotificationsProcessingService extends Service {
             // Bump analytics
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
-            trackQuickActionCompleted(QuickActionTrackPropertyValue.LIKE);
+            AnalyticsUtils.trackQuickActionTouched(
+                    QuickActionTrackPropertyValue.LIKE,
+                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    mNote.buildComment());
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
@@ -549,7 +533,10 @@ public class NotificationsProcessingService extends Service {
             // Bump analytics
             AnalyticsUtils.trackWithBlogPostDetails(
                     AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
-            trackQuickActionCompleted(QuickActionTrackPropertyValue.APPROVE);
+            AnalyticsUtils.trackQuickActionTouched(
+                    QuickActionTrackPropertyValue.APPROVE,
+                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    mNote.buildComment());
 
             // Update pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
@@ -594,7 +581,8 @@ public class NotificationsProcessingService extends Service {
 
                 // Bump analytics
                 AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
-                trackQuickActionCompleted(QuickActionTrackPropertyValue.REPLY_TO);
+                AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
+
             } else {
                 // cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);
@@ -619,13 +607,6 @@ public class NotificationsProcessingService extends Service {
         private void resetOriginalNotification() {
             GCMMessageService.rebuildAndUpdateNotificationsOnSystemBarForThisNote(mContext, mNoteId);
         }
-    }
-
-    private void trackQuickActionCompleted(QuickActionTrackPropertyValue type) {
-        Map<String, String> properties = new HashMap<>(1);
-        properties.put("quick_action", type.toString());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_QUICKACTION_TOUCHED, properties);
-        AnalyticsTracker.flush();
     }
 
     // OnChanged events
