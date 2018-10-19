@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.style.ClickableSpan
 import android.view.View
+import com.github.mikephil.charting.data.BarEntry
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -15,11 +16,15 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsUtils
+import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.text.DateFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
 
@@ -53,6 +58,9 @@ class LatestPostSummaryViewModel
                         model.postCommentCount.toFormattedString()
                 )
                 items.add(Columns(headers = headers, values = values))
+                if (model.dayViews.isNotEmpty()) {
+                    items.add(buildBarChart(model.dayViews))
+                }
                 items.add(Link(text = R.string.stats_insights_view_more) {})
             } else {
                 items.add(Link(R.drawable.ic_share_blue_medium_24dp, R.string.stats_insights_share_post) {})
@@ -63,6 +71,52 @@ class LatestPostSummaryViewModel
             items.add(Link(R.drawable.ic_create_blue_medium_24dp, R.string.stats_insights_create_post) {})
         }
         return ListInsightItem(items)
+    }
+
+    private fun buildBarChart(dayViews: List<Pair<String, Int>>): BarChartItem {
+        val mock = listOf(
+                "2018-10-01" to 0,
+                "2018-10-02" to 500,
+                "2018-10-03" to 2000,
+                "2018-10-04" to 300,
+                "2018-10-05" to 7000,
+                "2018-10-06" to 2500,
+                "2018-10-07" to 1500,
+                "2018-10-08" to 0,
+                "2018-10-09" to 1000,
+                "2018-10-10" to 6000,
+                "2018-10-11" to 200,
+                "2018-10-12" to 2500,
+                "2018-10-13" to 1000,
+                "2018-10-14" to 0,
+                "2018-10-15" to 500,
+                "2018-10-16" to 2000,
+                "2018-10-17" to 300,
+                "2018-10-18" to 7000,
+                "2018-10-19" to 2500,
+                "2018-10-20" to 1500,
+                "2018-10-21" to 0,
+                "2018-10-22" to 1000,
+                "2018-10-23" to 6000,
+                "2018-10-24" to 200,
+                "2018-10-25" to 2500,
+                "2018-10-26" to 1000,
+                "2018-10-27" to 0
+        )
+        val parseFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//        val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault());
+        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+        val barEntries = mock
+                .mapIndexed { index, pair -> BarEntry(index.toFloat(), pair.second.toFloat(), parseDate(parseFormat, dateFormat, pair.first)) }
+        return BarChartItem(barEntries)
+    }
+
+    private fun parseDate(parseFormat: DateFormat, resultFormat: DateFormat, text: String): String {
+        try {
+            return resultFormat.format(parseFormat.parse(text))
+        } catch (e: ParseException) {
+            throw RuntimeException("Unexpected date format")
+        }
     }
 
     private fun buildMessage(model: InsightsLatestPostModel): Spannable {

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.annotation.LayoutRes
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.method.LinkMovementMethod
@@ -9,19 +10,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.LargeValueFormatter
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TextViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
@@ -29,6 +44,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.values
+import org.wordpress.android.util.DisplayUtils
 
 class BlockListAdapter : Adapter<BlockItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
@@ -45,6 +61,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             TEXT -> TextViewHolder(parent)
             COLUMNS -> ColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
+            BAR_CHART -> BarChartViewHolder(parent)
         }
     }
 
@@ -62,6 +79,7 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
             is TextViewHolder -> holder.bind(item as Text)
             is ColumnsViewHolder -> holder.bind(item as Columns)
             is LinkViewHolder -> holder.bind(item as Link)
+            is BarChartViewHolder -> holder.bind(item as BarChartItem)
         }
     }
 
@@ -134,6 +152,75 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
                 }
                 text.setText(item.text)
                 link.setOnClickListener { item.action() }
+            }
+        }
+
+        class BarChartViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_bar_chart_item) {
+            private val chart = itemView.findViewById<BarChart>(R.id.chart)
+            private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
+            private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
+
+            fun bind(item: BarChartItem) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    chart.apply {
+                        val graphWidth = DisplayUtils.pxToDp(itemView.context, itemView.width)
+                        val columnNumber = (graphWidth / 24) - 1
+                        val cut = cutEntries(columnNumber, item)
+                        val dataSet = getDataSet(cut)
+                        data = BarData(dataSet)
+                        val greyColor = ContextCompat.getColor(itemView.context, R.color.wp_grey)
+
+                        axisLeft.apply {
+                            valueFormatter = LargeValueFormatter()
+                            setDrawZeroLine(false)
+                            setDrawGridLines(true)
+                            axisMinimum = 0f
+                            textColor = greyColor
+                            textSize = 12f
+                        }
+                        axisRight.setDrawGridLines(false)
+                        axisRight.setDrawLabels(false)
+                        xAxis.apply {
+                            setDrawAxisLine(false)
+                            setDrawGridLines(false)
+                            setDrawLabels(false)
+                        }
+                        labelStart.text = cut.first().data.toString()
+                        labelEnd.text = cut.last().data.toString()
+                        setPinchZoom(false)
+                        setScaleEnabled(false)
+                        legend.isEnabled = false
+                        setDrawBorders(false)
+                        isHighlightFullBarEnabled = false
+                        isHighlightPerDragEnabled = false
+                        isHighlightPerTapEnabled = false
+                        val description = Description()
+                        description.text = ""
+                        this.description = description
+                        chart.invalidate()
+                        invalidate()
+                    }
+                }
+            }
+
+            private fun getDataSet(cut: List<BarEntry>): BarDataSet {
+                val dataSet = BarDataSet(cut, "Data")
+                dataSet.color = ContextCompat.getColor(itemView.context, color.blue_wordpress)
+                dataSet.formLineWidth = 0f
+                dataSet.setDrawValues(false)
+                return dataSet
+            }
+
+            private fun cutEntries(
+                count: Int,
+                item: BarChartItem
+            ): List<BarEntry> {
+                return if (count < item.entries.size) item.entries.subList(
+                        item.entries.size - count ,
+                        item.entries.size
+                ) else {
+                    item.entries
+                }
             }
         }
     }
