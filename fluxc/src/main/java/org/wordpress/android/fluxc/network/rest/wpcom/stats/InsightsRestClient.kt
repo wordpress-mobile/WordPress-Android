@@ -215,7 +215,6 @@ constructor(
         )
         data class Week(
             @SerializedName("average") val average: Int,
-            @SerializedName("change") val change: Int?,
             @SerializedName("total") val total: Int,
             @SerializedName("days") val days: List<Day>
         )
@@ -228,4 +227,8 @@ constructor(
             @SerializedName("overall") val overall: Int
         )
     }
+    /*
+    2018-10-19 16:44:41.587 16166-16166/org.wordpress.android.beta E/WordPress-API: Volley error on https://public-api.wordpress.com/rest/v1.1/sites/15154162/stats/post/22648/?locale=en_US
+    com.android.volley.ParseError: com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected an int but was BEGIN_OBJECT at line 1 column 1650 path $.weeks[5].change
+     */
 }
