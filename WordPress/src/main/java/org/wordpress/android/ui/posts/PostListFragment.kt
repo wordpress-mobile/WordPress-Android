@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -57,6 +58,7 @@ import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType
+import org.wordpress.android.ui.EmptyViewMessageType.GENERIC_ERROR
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.PostEvents
@@ -65,13 +67,14 @@ import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.helpers.SwipeToRefreshHelper.RefreshListener
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -162,10 +165,7 @@ class PostListFragment : Fragment(),
                     DiffUtil.calculateDiff(DiffCallback(this@PostListFragment.listManager, listManager))
                 }
                 if (isActive && this@PostListFragment.listDescriptor == listDescriptor) {
-                    updateListManager(listManager, diffResult)
-                    if (fetchAfter) {
-                        listManager.refresh()
-                    }
+                    updateListManager(listManager, diffResult, fetchAfter)
                 }
             }
         }
@@ -196,14 +196,42 @@ class PostListFragment : Fragment(),
                 }
             }, remoteItemIdsToInclude = uploadedPostRemoteIds)
 
-    private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult) {
+    private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult, fetchAfter: Boolean) {
         this.listManager = listManager
+        if (!isAdded) {
+            return
+        }
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
+        // TODO: this should only be done if the visible rows are updated...
         val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager, diffResult)
         recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
-        onPostsLoaded(listManager.size)
+        recyclerView?.let {
+            rvScrollPositionSaver.restoreScrollOffset(it)
+        }
+        showTargetPostIfNecessary()
+        if (fetchAfter) {
+            refreshPostList()
+        } else {
+            // If we update the empty view just before a fetch, it will show "No Content" message only to update it
+            // immediately after when we start a fetch. This makes it a smoother experience for empty post lists.
+            updateEmptyViewForListManagerChange(listManager)
+        }
+    }
+
+    private fun updateEmptyViewForListManagerChange(listManager: ListManager<PostModel>) {
+        if (!listManager.isFetchingFirstPage) {
+            if (listManager.size == 0) {
+                if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                    updateEmptyView(EmptyViewMessageType.NO_CONTENT)
+                }
+            } else if (listManager.size > 0) {
+                hideEmptyView()
+            }
+        } else {
+            updateEmptyView(EmptyViewMessageType.LOADING)
+        }
     }
 
     override fun onDestroy() {
@@ -267,19 +295,21 @@ class PostListFragment : Fragment(),
     }
 
     private fun initSwipeToRefreshHelper() {
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(
-                swipeRefreshLayout,
-                RefreshListener {
-                    if (!isAdded) {
-                        return@RefreshListener
-                    }
-                    if (!NetworkUtils.checkConnection(nonNullActivity)) {
-                        updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
-                        return@RefreshListener
-                    }
-                    listManager?.refresh()
-                }
-        )
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            refreshPostList()
+        }
+    }
+
+    private fun refreshPostList() {
+        if (!isAdded) {
+            return
+        }
+        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+            swipeRefreshLayout?.isRefreshing = false
+            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
+            return
+        }
+        listManager?.refresh()
     }
 
     private fun newPost() {
@@ -292,8 +322,6 @@ class PostListFragment : Fragment(),
     override fun onResume() {
         super.onResume()
 
-        // TODO: refresh from store
-
         // scale in the fab after a brief delay if it's not already showing
         if (fabView?.visibility != View.VISIBLE) {
             val delayMs = resources.getInteger(R.integer.fab_animation_delay).toLong()
@@ -304,18 +332,6 @@ class PostListFragment : Fragment(),
             }, delayMs)
         }
     }
-
-// TODO: Do this with ListManager
-//    private fun requestPosts(loadMore: Boolean) {
-//        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-//            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
-//            return
-//        }
-//
-//        if (postListAdapter.itemCount == 0) {
-//            updateEmptyView(EmptyViewMessageType.LOADING)
-//        }
-//    }
 
     /*
      * Upload started, reload so correct status on uploading post appears
@@ -336,6 +352,9 @@ class PostListFragment : Fragment(),
     }
 
     private fun updateEmptyView(emptyViewMessageType: EmptyViewMessageType) {
+        if (!isAdded) {
+            return
+        }
         val stringId: Int = when (emptyViewMessageType) {
             EmptyViewMessageType.LOADING -> R.string.posts_fetching
             EmptyViewMessageType.NO_CONTENT -> R.string.posts_empty_list
@@ -374,27 +393,10 @@ class PostListFragment : Fragment(),
         super.onDetach()
     }
 
-    /*
-     * called by the adapter after posts have been loaded
-     */
-    private fun onPostsLoaded(postCount: Int) {
+    private fun showTargetPostIfNecessary() {
         if (!isAdded) {
             return
         }
-
-        if (postCount == 0 && listManager?.isFetchingFirstPage != true) {
-            if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                updateEmptyView(EmptyViewMessageType.NO_CONTENT)
-            } else {
-                updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
-            }
-        } else if (postCount > 0) {
-            hideEmptyView()
-            recyclerView?.let {
-                rvScrollPositionSaver.restoreScrollOffset(it)
-            }
-        }
-
         // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
         targetPost?.let { targetPost ->
             postListAdapter.getPositionForPost(targetPost)?.let { position ->
@@ -448,7 +450,7 @@ class PostListFragment : Fragment(),
         // should refresh the list
         if (post == null) {
             // TODO: Can we safely remove this check?
-            listManager?.refresh()
+            refreshPostList()
             return
         }
 
@@ -558,63 +560,54 @@ class PostListFragment : Fragment(),
         postListAdapter.hidePost(post)
         trashedPosts.add(post)
 
-        // make sure empty view shows if user deleted the only post
-        if (postListAdapter.itemCount == 0) {
-            updateEmptyView(EmptyViewMessageType.NO_CONTENT)
-        }
-
         val undoListener = OnClickListener {
             // user undid the trash, so un-hide the post and remove it from the list of trashed posts
             trashedPosts.remove(post)
             postListAdapter.unhidePost(post)
-            hideEmptyView()
         }
 
         // different undo text if this is a local draft since it will be deleted rather than trashed
         val text = if (post.isLocalDraft) getString(R.string.post_deleted) else getString(R.string.post_trashed)
+        val snackbar = Snackbar.make(
+                nonNullActivity.findViewById(R.id.root_view),
+                text,
+                AccessibilityUtils.getSnackbarDuration(nonNullActivity)
+        ).setAction(R.string.undo, undoListener)
+        // wait for the undo snackbar to disappear before actually deleting the post
+        snackbar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                super.onDismissed(snackbar, event)
 
-        actionableEmptyView?.let { actionableEmptyView ->
-            val snackbar = Snackbar.make(
-                    actionableEmptyView,
-                    text,
-                    AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-            ).setAction(R.string.undo, undoListener)
-            // wait for the undo snackbar to disappear before actually deleting the post
-            snackbar.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                    super.onDismissed(snackbar, event)
-
-                    // if the post no longer exists in the list of trashed posts it's because the
-                    // user undid the trash, so don't perform the deletion
-                    if (!trashedPosts.contains(post)) {
-                        return
-                    }
-
-                    // remove from the list of trashed posts in case onDismissed is called multiple
-                    // times - this way the above check prevents us making the call to delete it twice
-                    // https://code.google.com/p/android/issues/detail?id=190529
-                    trashedPosts.remove(post)
-
-                    // here cancel all media uploads related to this Post
-                    UploadService.cancelQueuedPostUploadAndRelatedMedia(WordPress.getContext(), post)
-
-                    if (post.isLocalDraft) {
-                        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
-
-                        // delete the pending draft notification if available
-                        shouldCancelPendingDraftNotification = false
-                        val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
-                        NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext())
-                    } else {
-                        dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
-                    }
+                // if the post no longer exists in the list of trashed posts it's because the
+                // user undid the trash, so don't perform the deletion
+                if (!trashedPosts.contains(post)) {
+                    return
                 }
-            })
 
-            postIdForPostToBeDeleted = post.id
-            shouldCancelPendingDraftNotification = true
-            snackbar.show()
-        }
+                // remove from the list of trashed posts in case onDismissed is called multiple
+                // times - this way the above check prevents us making the call to delete it twice
+                // https://code.google.com/p/android/issues/detail?id=190529
+                trashedPosts.remove(post)
+
+                // here cancel all media uploads related to this Post
+                UploadService.cancelQueuedPostUploadAndRelatedMedia(WordPress.getContext(), post)
+
+                if (post.isLocalDraft) {
+                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+
+                    // delete the pending draft notification if available
+                    shouldCancelPendingDraftNotification = false
+                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
+                    NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext())
+                } else {
+                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
+                }
+            }
+        })
+
+        postIdForPostToBeDeleted = post.id
+        shouldCancelPendingDraftNotification = true
+        snackbar.show()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -627,21 +620,21 @@ class PostListFragment : Fragment(),
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChanged(event: OnPostChanged) {
-        // TODO: do we need this at all?
-        // TODO: We just need to handle the errors, I think...
-//                val error = event.error
-//                when (error.type) {
-//                    PostStore.PostErrorType.UNAUTHORIZED -> updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR)
-//                    else -> updateEmptyView(EmptyViewMessageType.GENERIC_ERROR)
-//                }
-//            }
-//        } else if (event.causeOfChange is CauseOfOnPostChanged.DeletePost) {
-//            if (event.isError) {
-//                val message = getString(R.string.error_deleting_post)
-//                ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
-//                loadPosts(LoadMode.IF_CHANGED)
-//            }
-//        }
+        when (event.causeOfChange) {
+            // Fetched post list event will be handled by OnListChanged
+            is CauseOfOnPostChanged.UpdatePost -> {
+                if (event.isError) {
+                    AppLog.e(T.POSTS, "Error updating the post with type: " + event.error.type +
+                            " and message: " + event.error.message)
+                }
+            }
+            is CauseOfOnPostChanged.DeletePost -> {
+                if (event.isError) {
+                    val message = getString(R.string.error_deleting_post)
+                    ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
+                }
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -650,10 +643,18 @@ class PostListFragment : Fragment(),
         if (!event.listDescriptors.contains(listDescriptor)) {
             return
         }
-        if (event.loadedFirstPage) {
-            uploadedPostRemoteIds.clear()
+        if (event.isError) {
+            // TODO: handle permission errors
+            // Update has to happen in the UI thread
+            GlobalScope.launch(Dispatchers.Main) {
+                updateEmptyView(GENERIC_ERROR)
+            }
+        } else {
+            if (event.loadedFirstPage) {
+                uploadedPostRemoteIds.clear()
+            }
+            refreshListManagerFromStore(listDescriptor, false)
         }
-        refreshListManagerFromStore(listDescriptor, false)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -678,7 +679,7 @@ class PostListFragment : Fragment(),
             )
             // TODO: Only add if it's in the local items
             uploadedPostRemoteIds.add(event.post.remotePostId)
-            listManager?.refresh()
+            refreshPostList()
         }
     }
 
