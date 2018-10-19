@@ -2,8 +2,14 @@ package org.wordpress.android.fluxc.model.list
 
 import org.wordpress.android.fluxc.model.SiteModel
 
-sealed class PostListDescriptor(val site: SiteModel, val orderBy: PostListOrderBy, val order: ListOrder) :
-        ListDescriptor {
+private const val PAGE_SIZE = 100
+
+sealed class PostListDescriptor(
+    val site: SiteModel,
+    val orderBy: PostListOrderBy,
+    val order: ListOrder,
+    val pageSize: Int
+) : ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
         when (this) {
@@ -49,8 +55,9 @@ sealed class PostListDescriptor(val site: SiteModel, val orderBy: PostListOrderB
         val status: PostStatusForRestSite = PostStatusForRestSite.PUBLISH,
         order: ListOrder = ListOrder.DESC,
         orderBy: PostListOrderBy = PostListOrderBy.DATE,
-        val searchQuery: String? = null
-    ) : PostListDescriptor(site, orderBy, order) {
+        val searchQuery: String? = null,
+        pageSize: Int = PAGE_SIZE
+    ) : PostListDescriptor(site, orderBy, order, pageSize) {
         enum class PostStatusForRestSite(val value: String) {
             ANY("any"),
             DRAFT("draft"),
@@ -71,8 +78,9 @@ sealed class PostListDescriptor(val site: SiteModel, val orderBy: PostListOrderB
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
         order: ListOrder = ListOrder.DESC,
-        orderBy: PostListOrderBy = PostListOrderBy.DATE
-    ) : PostListDescriptor(site, orderBy, order)
+        orderBy: PostListOrderBy = PostListOrderBy.DATE,
+        pageSize: Int = PAGE_SIZE
+    ) : PostListDescriptor(site, orderBy, order, pageSize)
 }
 
 enum class PostListOrderBy(val value: String) {

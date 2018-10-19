@@ -1,9 +1,14 @@
 package org.wordpress.android.fluxc.persistence;
 
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
 import com.wellsql.generated.LocalDiffModelTable;
 import com.wellsql.generated.LocalRevisionModelTable;
 import com.wellsql.generated.PostModelTable;
+import com.yarolegovich.wellsql.ConditionClauseBuilder;
 import com.yarolegovich.wellsql.SelectQuery;
+import com.yarolegovich.wellsql.SelectQuery.Order;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PostModel;
@@ -113,6 +118,16 @@ public class PostSqlUtils {
                 .orderBy(PostModelTable.IS_LOCAL_DRAFT, SelectQuery.ORDER_DESCENDING)
                 .orderBy(PostModelTable.DATE_CREATED, SelectQuery.ORDER_DESCENDING)
                 .getAsModel();
+    }
+
+    public static List<PostModel> getPostsByRemoteIds(@Nullable List<Long> remoteIds, int localSiteId) {
+        if (remoteIds != null && remoteIds.size() > 0) {
+            return WellSql.select(PostModel.class)
+                          .where().isIn(PostModelTable.REMOTE_POST_ID, remoteIds)
+                          .equals(PostModelTable.LOCAL_SITE_ID, localSiteId).endWhere()
+                          .getAsModel();
+        }
+        return Collections.emptyList();
     }
 
     public static PostModel insertPostForResult(PostModel post) {
@@ -254,5 +269,20 @@ public class PostSqlUtils {
                 .equals(LocalRevisionModelTable.POST_ID, post.getRemotePostId())
                 .equals(LocalRevisionModelTable.SITE_ID, post.getRemoteSiteId())
                 .endGroup().endWhere().execute();
+    }
+
+    public static List<PostModel> getLocalPostsForFilter(SiteModel site, boolean isPage, String searchQuery,
+                                                         String orderBy, @Order int order) {
+        ConditionClauseBuilder<SelectQuery<PostModel>> clauseBuilder =
+                WellSql.select(PostModel.class).where().beginGroup()
+                       .equals(PostModelTable.IS_LOCAL_DRAFT, true)
+                       .equals(PostModelTable.LOCAL_SITE_ID, site.getId())
+                       .equals(PostModelTable.IS_PAGE, isPage)
+                       .endGroup();
+        if (!TextUtils.isEmpty(searchQuery)) {
+            clauseBuilder = clauseBuilder.beginGroup().contains(PostModelTable.TITLE, searchQuery).or()
+                                         .contains(PostModelTable.CONTENT, searchQuery).endGroup();
+        }
+        return clauseBuilder.endWhere().orderBy(orderBy, order).getAsModel();
     }
 }
