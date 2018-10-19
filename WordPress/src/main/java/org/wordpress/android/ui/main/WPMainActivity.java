@@ -137,6 +137,10 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_READER = "show_reader";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
+    public static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
+    public static final String DEEP_LINK_HOST_POST = "post";
+    public static final String DEEP_LINK_HOST_STATS = "stats";
+    public static final String DEEP_LINK_HOST_READ = "read";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -308,16 +312,16 @@ public class WPMainActivity extends AppCompatActivity implements
         AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, host, uri);
         
         switch (host) {
-            case "notifications":
+            case DEEP_LINK_HOST_NOTIFICATIONS:
                 mBottomNav.setCurrentPosition(PAGE_NOTIFS);
                 break;
-            case "post":
+            case DEEP_LINK_HOST_POST:
                 onNewPostButtonClicked();
                 break;
-            case "stats":
+            case DEEP_LINK_HOST_STATS:
                 switchToStatsTab();
                 break;
-            case "read":
+            case DEEP_LINK_HOST_READ:
                 mBottomNav.setCurrentPosition(PAGE_READER);
                 break;
         }
