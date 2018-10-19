@@ -1,6 +1,6 @@
 grep -o '<string name=.*</string>' libs/login/WordPressLoginFlow/src/main/res/values/strings.xml > loginstrings.txt;
 
-declare -a exclusions=('default_web_client_id' 'notification_channel_normal_id' 'notification_channel_important_id')
+declare -a exclusions=('default_web_client_id' 'login_notification_channel_id')
 
 found_missing_string=false
 string_array=()
