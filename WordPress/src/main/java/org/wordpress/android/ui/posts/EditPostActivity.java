@@ -107,9 +107,11 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -184,6 +186,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment.KEY_REVISION;
+
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
@@ -199,7 +203,9 @@ public class EditPostActivity extends AppCompatActivity implements
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface {
+        HistoryListFragment.HistoryItemClickInterface,
+        FullScreenDialogFragment.OnConfirmListener,
+        FullScreenDialogFragment.OnDismissListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -274,6 +280,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
+    private FullScreenDialogFragment mFullScreenDialogFragment;
     private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -345,6 +352,13 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mFullScreenDialogFragment = (FullScreenDialogFragment)
+                    getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+
+            if (mFullScreenDialogFragment != null) {
+                mFullScreenDialogFragment.setOnConfirmListener(EditPostActivity.this);
+                mFullScreenDialogFragment.setOnDismissListener(EditPostActivity.this);
+            }
         }
 
         // Check whether to show the visual editor
@@ -1481,8 +1495,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-            case TAG_HISTORY_LOAD_DIALOG:
-                // the dialog is automatically dismissed
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -1500,11 +1512,6 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
-                break;
-            case TAG_HISTORY_LOAD_DIALOG:
-                // TODO: Add analytics tracking for load button.
-                mViewPager.setCurrentItem(PAGE_CONTENT);
-                loadRevision();
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1584,15 +1591,34 @@ public class EditPostActivity extends AppCompatActivity implements
         // TODO: Add analytics tracking for history list item.
         mRevision = revision;
 
-        BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
-                getString(R.string.history_load_dialog_title),
-                getString(R.string.history_load_dialog_message, mRevision.getFormattedDate(),
-                        mRevision.getFormattedTime()),
-                getString(R.string.history_load_dialog_button_positive),
-                getString(R.string.cancel),
-                null);
-        dialog.show(getSupportFragmentManager(), TAG_HISTORY_LOAD_DIALOG);
+        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(revision);
+
+        mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
+                .setTitle(R.string.history_detail_title)
+                .setSubtitle(revision.getTimeSpan())
+                .setAction(R.string.history_load_dialog_button_positive)
+                .setOnConfirmListener(EditPostActivity.this)
+                .setOnDismissListener(EditPostActivity.this)
+                .setContent(HistoryDetailFullScreenDialogFragment.class, bundle)
+                .setHideActivityBar(true)
+                .build();
+
+        mFullScreenDialogFragment.show(getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+    }
+
+    @Override
+    public void onConfirm(@Nullable Bundle result) {
+        // TODO: Add analytics tracking for revision detail confirmed.
+        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+        if (result != null && result.getParcelable(KEY_REVISION) != null) {
+            mRevision = result.getParcelable(KEY_REVISION);
+            loadRevision();
+        }
+    }
+
+    @Override
+    public void onDismiss() {
     }
 
     private void loadRevision() {
