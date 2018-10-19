@@ -307,9 +307,12 @@ class PostListFragment : Fragment(),
         if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
             swipeRefreshLayout?.isRefreshing = false
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
-            return
+            // If network is not available, we can refresh the items from the DB in case an update is not reflected
+            // It really shouldn't be necessary, but wouldn't hurt to have it here either
+            refreshListManagerFromStore(listDescriptor, fetchAfter = false)
+        } else {
+            listManager?.refresh()
         }
-        listManager?.refresh()
     }
 
     private fun newPost() {
@@ -822,10 +825,10 @@ class DiffCallback(
         if (oldItem == null || newItem == null) {
             return false
         }
-        if (oldItem.isLocallyChanged && newItem.isLocallyChanged) {
-            return oldItem == newItem
+        if (oldItem.isLocalDraft && newItem.isLocalDraft) {
+            return oldItem.dateLocallyChanged == newItem.dateLocallyChanged
         }
-        if (oldItem.isLocallyChanged || newItem.isLocallyChanged) {
+        if (oldItem.isLocalDraft || newItem.isLocalDraft) {
             return false
         }
         return oldItem.lastModified == newItem.lastModified

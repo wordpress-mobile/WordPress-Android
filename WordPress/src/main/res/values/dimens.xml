@@ -37,7 +37,6 @@
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
 
-    <dimen name="post_list_loading_layout_height">100dp</dimen>
     <!-- featured image in post list -->
     <dimen name="postlist_featured_image_height_normal">128dp</dimen>
     <dimen name="postlist_featured_image_height_tablet">220dp</dimen>
