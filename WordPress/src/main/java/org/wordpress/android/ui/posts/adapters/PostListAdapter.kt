@@ -46,7 +46,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.widgets.PostListButton
-import java.util.ArrayList
 import javax.inject.Inject
 
 private const val ROW_ANIM_DURATION: Long = 150
@@ -72,8 +71,6 @@ class PostListAdapter(
 
     private val isStatsSupported: Boolean
     private val showAllButtons: Boolean
-
-    private val hiddenPosts = ArrayList<PostModel>()
 
     private var recyclerView: RecyclerView? = null
     private val layoutInflater: LayoutInflater
@@ -531,34 +528,6 @@ class PostListAdapter(
                     updatePostUploadProgressBar(viewHolder.progressBar, post)
                 }
             }
-        }
-    }
-
-    /*
-     * hides the post - used when the post is trashed by the user but the network request
-     * to delete the post hasn't completed yet
-     */
-    fun hidePost(post: PostModel) {
-        hiddenPosts.add(post)
-
-        // TODO: fix this!
-//        val position = getPositionForPost(post)
-//        if (position > -1) {
-//            posts.removeAt(position)
-//            if (posts.size > 0) {
-//                notifyItemRemoved(position)
-//            } else {
-//                // we must call notifyDataSetChanged when the only post has been deleted - if we
-//                // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
-//                // because removing the last post also removes the end list indicator
-//                notifyDataSetChanged()
-//            }
-//        }
-    }
-
-    fun unhidePost(post: PostModel) {
-        if (hiddenPosts.remove(post)) {
-            // TODO: Handle this when the hide post is implemented
         }
     }
 

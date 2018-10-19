@@ -172,7 +172,11 @@ class PostListFragment : Fragment(),
     }
 
     private fun localItems(): List<PostModel>? {
-        return postStore.getLocalPostsForDescriptor(listDescriptor)
+        // TODO: publishing things change their order, not only for local drafts but in general. This is mostly due to publish date. The production version should have the same behavior.
+        // Confirmed that the above is in production as well ^^
+        // TODO: Order the local items with their IDs, or something else since it's currently switching orders after an edit of title
+        val trashedPostIds = trashedPosts.map { it.id }
+        return postStore.getLocalPostsForDescriptor(listDescriptor).filter { trashedPostIds.contains(it.id) }
     }
 
     private suspend fun getListDataFromStore(listDescriptor: ListDescriptor): ListManager<PostModel> =
@@ -194,7 +198,7 @@ class PostListFragment : Fragment(),
                 override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
                     return postStore.getPostsByRemotePostIds(remoteItemIds, site)
                 }
-            }, remoteItemIdsToInclude = uploadedPostRemoteIds)
+            }, remoteItemIdsToInclude = uploadedPostRemoteIds, remoteItemsToHide = trashedPosts.map { it.remotePostId })
 
     private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult, fetchAfter: Boolean) {
         this.listManager = listManager
@@ -560,13 +564,13 @@ class PostListFragment : Fragment(),
         }
 
         // remove post from the list and add it to the list of trashed posts
-        postListAdapter.hidePost(post)
         trashedPosts.add(post)
+        refreshListManagerFromStore(listDescriptor, fetchAfter = false)
 
         val undoListener = OnClickListener {
             // user undid the trash, so un-hide the post and remove it from the list of trashed posts
             trashedPosts.remove(post)
-            postListAdapter.unhidePost(post)
+            refreshListManagerFromStore(listDescriptor, fetchAfter = false)
         }
 
         // different undo text if this is a local draft since it will be deleted rather than trashed
@@ -617,6 +621,7 @@ class PostListFragment : Fragment(),
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         rvScrollPositionSaver.onSaveInstanceState(outState, recyclerView)
+        // TODO: save uploaded post ids and trashed posts?
     }
 
     // FluxC events
@@ -825,7 +830,9 @@ class DiffCallback(
         if (oldItem == null || newItem == null) {
             return false
         }
+        // TODO: This still doesn't work, because this time if the remote post is locally changed, it's not reflected
         if (oldItem.isLocalDraft && newItem.isLocalDraft) {
+            // TODO: this one was necessary to be able to handle local to local changes
             return oldItem.dateLocallyChanged == newItem.dateLocallyChanged
         }
         if (oldItem.isLocalDraft || newItem.isLocalDraft) {
