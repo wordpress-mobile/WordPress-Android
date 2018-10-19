@@ -13,7 +13,7 @@ import kotlin.coroutines.experimental.CoroutineContext
 abstract class ScopedViewModel : ViewModel(), CoroutineScope {
     protected var job: Job = Job()
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Default + job
+        get() = Dispatchers.Main + job
 
     override fun onCleared() {
         super.onCleared()
