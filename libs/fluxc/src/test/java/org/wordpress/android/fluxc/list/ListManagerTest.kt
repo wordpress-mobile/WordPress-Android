@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -56,13 +57,15 @@ class ListManagerTest {
      */
     @Test
     fun testRefreshTriggersFetch() {
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
                 canLoadMore = true,
                 indexToGet = 11, // doesn't matter
                 remoteItemId = 222L, // doesn't matter
-                remoteItem = PostModel()
+                remoteItem = PostModel(),
+                fetchList = fetchList
         )
         assertTrue(listManager.refresh())
         assertFalse(listManager.refresh())
@@ -71,6 +74,7 @@ class ListManagerTest {
             assertEquals(this.type, ListAction.FETCH_LIST)
             assertEquals(this.payload.listDescriptor, listDescriptor)
             assertEquals(this.payload.loadMore, false)
+            assertEquals(this.payload.fetchList, fetchList)
         }
     }
 
@@ -180,13 +184,15 @@ class ListManagerTest {
      */
     @Test
     fun testGetItemTriggersLoadMore() {
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = setupListManager(
                 isFetchingFirstPage = false,
                 isLoadingMore = false,
                 canLoadMore = true,
                 indexToGet = indexThatShouldLoadMore,
                 remoteItemId = 132L,
-                remoteItem = null
+                remoteItem = null,
+                fetchList = fetchList
         )
         listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
@@ -195,6 +201,7 @@ class ListManagerTest {
             assertEquals(this.type, ListAction.FETCH_LIST)
             assertEquals(this.payload.listDescriptor, listDescriptor)
             assertEquals(this.payload.loadMore, true)
+            assertEquals(this.payload.fetchList, fetchList)
         }
     }
 
@@ -259,6 +266,7 @@ class ListManagerTest {
     @Test
     fun testGetLocalItem() {
         val localItems = listOf("localItem1", "localItem2")
+        val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = ListManager(
                 dispatcher,
                 listDescriptor,
@@ -268,8 +276,10 @@ class ListManagerTest {
                 10,
                 false,
                 false,
-                false
-        ) {}
+                false,
+                fetchItem = {},
+                fetchList = fetchList
+        )
         localItems.forEachIndexed { index, item ->
             assertEquals(listManager.getItem(index), item)
         }
@@ -287,7 +297,8 @@ class ListManagerTest {
         indexToGet: Int,
         remoteItemId: Long,
         remoteItem: PostModel?,
-        fetchItem: ((Long) -> Unit)? = null
+        fetchItem: ((Long) -> Unit)? = null,
+        fetchList: ((ListDescriptor, Int) -> Unit)? = null
     ): ListManager<PostModel> {
         val listItems: List<ListItemModel> = mock()
         val listItemModel = ListItemModel()
@@ -295,9 +306,10 @@ class ListManagerTest {
         whenever(listItems.size).thenReturn(numberOfItems)
         whenever(listItems[indexToGet]).thenReturn(listItemModel)
         val listData = if (remoteItem != null) mapOf(Pair(remoteItemId, remoteItem)) else Collections.emptyMap()
-        val fetchFunction = fetchItem ?: {}
+        val fetchItemFunction = fetchItem ?: {}
+        val fetchListFunction = fetchList ?: { _: ListDescriptor, _: Int -> }
         val listManager = ListManager(dispatcher, listDescriptor, null, listItems, listData, loadMoreOffset,
-                isFetchingFirstPage, isLoadingMore, canLoadMore, fetchFunction)
+                isFetchingFirstPage, isLoadingMore, canLoadMore, fetchItemFunction, fetchListFunction)
         assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
         assertEquals(isLoadingMore, listManager.isLoadingMore)
         assertEquals(numberOfItems, listManager.size)
