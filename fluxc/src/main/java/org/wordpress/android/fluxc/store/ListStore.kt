@@ -75,11 +75,12 @@ class ListStore @Inject constructor(
         localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
         remoteItemIdsToInclude: List<Long>? = null,
+        remoteItemsToHide: List<Long>? = null,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
         val itemsFromDb = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id)
+            listItemSqlUtils.getListItems(listModel.id).filter { remoteItemsToHide?.contains(it.remoteItemId) != true }
         } else emptyList()
         val initialItems = remoteItemIdsToInclude?.let { remoteIdsToInclude ->
             val dbRemoteItemIds = itemsFromDb.map { it.remoteItemId }
