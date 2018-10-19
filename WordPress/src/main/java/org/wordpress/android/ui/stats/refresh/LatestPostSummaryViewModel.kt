@@ -74,40 +74,16 @@ class LatestPostSummaryViewModel
     }
 
     private fun buildBarChart(dayViews: List<Pair<String, Int>>): BarChartItem {
-        val mock = listOf(
-                "2018-10-01" to 0,
-                "2018-10-02" to 500,
-                "2018-10-03" to 2000,
-                "2018-10-04" to 300,
-                "2018-10-05" to 7000,
-                "2018-10-06" to 2500,
-                "2018-10-07" to 1500,
-                "2018-10-08" to 0,
-                "2018-10-09" to 1000,
-                "2018-10-10" to 6000,
-                "2018-10-11" to 200,
-                "2018-10-12" to 2500,
-                "2018-10-13" to 1000,
-                "2018-10-14" to 0,
-                "2018-10-15" to 500,
-                "2018-10-16" to 2000,
-                "2018-10-17" to 300,
-                "2018-10-18" to 7000,
-                "2018-10-19" to 2500,
-                "2018-10-20" to 1500,
-                "2018-10-21" to 0,
-                "2018-10-22" to 1000,
-                "2018-10-23" to 6000,
-                "2018-10-24" to 200,
-                "2018-10-25" to 2500,
-                "2018-10-26" to 1000,
-                "2018-10-27" to 0
-        )
         val parseFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//        val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault());
         val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
-        val barEntries = mock
-                .mapIndexed { index, pair -> BarEntry(index.toFloat(), pair.second.toFloat(), parseDate(parseFormat, dateFormat, pair.first)) }
+        val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
+                .mapIndexed { index, pair ->
+                    BarEntry(
+                            index.toFloat(),
+                            pair.second.toFloat(),
+                            parseDate(parseFormat, dateFormat, pair.first)
+                    )
+                }
         return BarChartItem(barEntries)
     }
 

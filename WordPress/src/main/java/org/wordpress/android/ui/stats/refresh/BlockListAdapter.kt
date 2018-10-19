@@ -1,35 +1,18 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.support.annotation.LayoutRes
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.Description
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.LargeValueFormatter
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.BarChartViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ColumnsViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.LinkViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TextViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TextViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
@@ -44,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.values
-import org.wordpress.android.util.DisplayUtils
 
 class BlockListAdapter : Adapter<BlockItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
