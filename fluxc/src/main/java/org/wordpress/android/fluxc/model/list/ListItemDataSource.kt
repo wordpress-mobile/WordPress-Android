@@ -10,6 +10,11 @@ interface ListItemDataSource<T> {
     fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long)
 
     /**
+     * Should fetch the list for the given [ListDescriptor] and an offset.
+     */
+    fun fetchList(listDescriptor: ListDescriptor, offset: Int)
+
+    /**
      * Should return the items available for the given [ListDescriptor] and [remoteItemIds].
      */
     fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, T>
