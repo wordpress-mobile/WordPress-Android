@@ -1200,8 +1200,6 @@
     <string name="history_footer_page">Page Created on %1$s at %2$s</string>
     <string name="history_footer_post">Post Created on %1$s at %2$s</string>
     <string name="history_load_dialog_button_positive">Load</string>
-    <string name="history_load_dialog_message">Do you want to load the revision from %1$s at %2$s?</string>
-    <string name="history_load_dialog_title">Load Revision</string>
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
