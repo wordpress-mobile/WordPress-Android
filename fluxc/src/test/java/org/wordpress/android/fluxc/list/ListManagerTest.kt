@@ -52,8 +52,6 @@ class ListManagerTest {
     /**
      * Calling refresh on the [ListManager] should dispatch an action to refresh the list if
      * `isFetchingFirstPage` is false and it's the first call of [ListManager.refresh].
-     *
-     * The second call of [ListManager.refresh] should be ignored.
      */
     @Test
     fun testRefreshTriggersFetch() {
@@ -68,7 +66,6 @@ class ListManagerTest {
                 fetchList = fetchList
         )
         assertTrue(listManager.refresh())
-        assertFalse(listManager.refresh())
         verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
         with(actionCaptor.firstValue) {
             assertEquals(this.type, ListAction.FETCH_LIST)
@@ -179,8 +176,6 @@ class ListManagerTest {
     /**
      * Tests [ListManager.getItem] triggering load more when the requested index is closer to the end of the list
      * than the offset.
-     *
-     * Calling [ListManager.getItem] a second time should not dispatch a second action.
      */
     @Test
     fun testGetItemTriggersLoadMore() {
@@ -194,7 +189,6 @@ class ListManagerTest {
                 remoteItem = null,
                 fetchList = fetchList
         )
-        listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         listManager.getItem(indexThatShouldLoadMore, shouldLoadMoreIfNecessary = true)
         verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
         with(actionCaptor.firstValue) {

@@ -93,8 +93,6 @@ class ListManager<T>(
      * its job to do so. However, since its instances will be used by adapters, it can dispatch a lot of unnecessary
      * actions.
      */
-    private var dispatchedRefreshAction = false
-    private var dispatchedLoadMoreAction = false
     private val fetchRemoteItemSet = HashSet<Long>()
 
     private fun remoteItemId(remoteItemIndex: Int): Long {
@@ -137,16 +135,14 @@ class ListManager<T>(
      * `OnListChanged` should be used to observe changes to lists and a new instance should be requested from
      * `ListStore`.
      *
-     * [isFetchingFirstPage] & [dispatchedRefreshAction] will be checked before dispatching the action to prevent
-     * duplicate requests.
+     * [isFetchingFirstPage] will be checked before dispatching the action.
      *
      * @return whether the refresh action is dispatched
      */
     fun refresh(): Boolean {
-        if (!isFetchingFirstPage && !dispatchedRefreshAction) {
+        if (!isFetchingFirstPage) {
             val fetchListPayload = FetchListPayload(listDescriptor, false, fetchList)
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(fetchListPayload))
-            dispatchedRefreshAction = true
             return true
         }
         return false
@@ -170,12 +166,11 @@ class ListManager<T>(
     /**
      * Dispatches an action to load the next page of a list. It's auto-managed by [ListManager].
      *
-     * [canLoadMore] & [dispatchedLoadMoreAction] will be checked before dispatching the action.
+     * [canLoadMore] will be checked before dispatching the action.
      */
     private fun loadMore() {
-        if (canLoadMore && !dispatchedLoadMoreAction) {
+        if (canLoadMore) {
             dispatcher.dispatch(ListActionBuilder.newFetchListAction(FetchListPayload(listDescriptor, true, fetchList)))
-            dispatchedLoadMoreAction = true
         }
     }
 
