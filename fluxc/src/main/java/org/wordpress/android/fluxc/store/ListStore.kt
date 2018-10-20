@@ -109,13 +109,24 @@ class ListStore @Inject constructor(
     /**
      * Handles the [ListAction.FETCH_LIST] action.
      *
-     * This acts as an intermediary action. It will update the state and emit the change. Afterwards,
-     * [FetchListPayload.fetchList] will be used to do the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action
-     * should be used to let the [ListStore] know the results of the fetch.
+     * This acts as an intermediary action. It will first check the current state and ignore unnecessary actions.
+     * It will then update the state and emit the change. Afterwards, [FetchListPayload.fetchList] will be used to do
+     * the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action should be used to let the [ListStore] know the
+     * results of the fetch.
      *
      * See [handleFetchedListItems] for what happens after items are fetched.
      */
     private fun handleFetchList(payload: FetchListPayload) {
+        listSqlUtils.getList(payload.listDescriptor)?.let { listModel ->
+            val currentState = getListState(listModel)
+            if (!payload.loadMore && currentState.isFetchingFirstPage()) {
+                // already fetching the first page
+                return
+            } else if (payload.loadMore && !currentState.canLoadMore()) {
+                // we can only load more if there is more data to be loaded
+                return
+            }
+        }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
         emitChange(OnListChanged(listOf(payload.listDescriptor), false, null))
