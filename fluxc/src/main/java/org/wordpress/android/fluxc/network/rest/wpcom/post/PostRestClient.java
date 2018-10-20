@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -98,8 +99,8 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final int offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
-        String fields = "ID,modified";
-        Map<String, String> params = getFetchPostListParameters(false, offset, listDescriptor.getPageSize(),
+        String fields = TextUtils.join(",", Arrays.asList("ID", "modified"));
+        Map<String, String> params = createFetchPostListParameters(false, offset, listDescriptor.getPageSize(),
                 listDescriptor.getStatusList(), fields, listDescriptor.getOrder().getValue(),
                 listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
@@ -139,7 +140,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
-                getFetchPostListParameters(getPages, offset, number, statusList, null, null, null, null);
+                createFetchPostListParameters(getPages, offset, number, statusList, null, null, null, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -471,14 +472,14 @@ public class PostRestClient extends BaseWPComRestClient {
         return new RevisionsModel(revisions);
     }
 
-    private Map<String, String> getFetchPostListParameters(final boolean getPages,
-                                                           final int offset,
-                                                           final int number,
-                                                           @Nullable final List<PostStatus> statusList,
-                                                           @Nullable final String fields,
-                                                           @Nullable final String order,
-                                                           @Nullable final String orderBy,
-                                                           @Nullable final String searchQuery) {
+    private Map<String, String> createFetchPostListParameters(final boolean getPages,
+                                                              final int offset,
+                                                              final int number,
+                                                              @Nullable final List<PostStatus> statusList,
+                                                              @Nullable final String fields,
+                                                              @Nullable final String order,
+                                                              @Nullable final String orderBy,
+                                                              @Nullable final String searchQuery) {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
