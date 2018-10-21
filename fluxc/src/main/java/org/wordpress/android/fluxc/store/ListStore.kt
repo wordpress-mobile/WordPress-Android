@@ -62,7 +62,6 @@ class ListStore @Inject constructor(
      * This is the function that'll be used to consume lists.
      *
      * @param listDescriptor List to be consumed
-     * @param localItems The list of ordered local items that should be shown at the top of the list
      * @param dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
      * for more details.
      * @param loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
@@ -72,23 +71,24 @@ class ListStore @Inject constructor(
      */
     suspend fun <T> getListManager(
         listDescriptor: ListDescriptor,
-        localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
-        remoteItemIdsToInclude: List<Long>? = null,
-        remoteItemsToHide: List<Long>? = null,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
         val itemsFromDb = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id).filter { remoteItemsToHide?.contains(it.remoteItemId) != true }
+            listItemSqlUtils.getListItems(listModel.id)
+                    .filter {
+                        dataSource.remoteItemsToHide(listDescriptor)?.contains(it.remoteItemId) != true
+                    }
         } else emptyList()
-        val initialItems = remoteItemIdsToInclude?.let { remoteIdsToInclude ->
+        val initialItems = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
             val dbRemoteItemIds = itemsFromDb.map { it.remoteItemId }
             remoteIdsToInclude.filter { !dbRemoteItemIds.contains(it) }
         }?.map { ListItemModel(remoteItemId = it, listId = 0) } ?: emptyList()
         val listItems = initialItems.plus(itemsFromDb)
         val listState = if (listModel != null) getListState(listModel) else null
         val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
+        val localItems = dataSource.localItems(listDescriptor)
         return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
