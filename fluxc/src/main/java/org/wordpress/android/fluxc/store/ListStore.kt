@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
+import org.wordpress.android.fluxc.model.list.ListManagerItem.LocalItem
+import org.wordpress.android.fluxc.model.list.ListManagerItem.RemoteItem
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -88,13 +90,13 @@ class ListStore @Inject constructor(
         val listItems = initialItems.plus(itemsFromDb)
         val listState = if (listModel != null) getListState(listModel) else null
         val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
-        val localItems = dataSource.localItems(listDescriptor)
+        val localItems = dataSource.localItems(listDescriptor) ?: emptyList()
+        val allItems = localItems.asSequence().map { LocalItem(it) }
+                .plus(listItems.map { RemoteItem(it.remoteItemId, listData[it.remoteItemId]) }).toList()
         return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
-                localItems = localItems,
-                items = listItems,
-                listData = listData,
+                items = allItems,
                 loadMoreOffset = loadMoreOffset,
                 isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
                 isLoadingMore = listState?.isLoadingMore() ?: false,
