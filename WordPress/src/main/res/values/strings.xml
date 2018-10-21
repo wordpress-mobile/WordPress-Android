@@ -48,7 +48,7 @@
     <string name="notif_detail_screen_title">Notification detail %s</string>
 
     <!-- default strings -->
-    <string name="wordpress_as_site_title_when_no_title">WordPress</string>
+    <string name="wordpress" translatable="false">WordPress</string>
 
     <!-- general strings -->
     <string name="posts">Posts</string>
