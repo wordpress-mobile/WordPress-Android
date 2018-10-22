@@ -20,6 +20,7 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         app:srcCompat="@drawable/login_site_address_help"
+        android:importantForAccessibility="no"
         android:contentDescription="@null"/>
 
 </LinearLayout>

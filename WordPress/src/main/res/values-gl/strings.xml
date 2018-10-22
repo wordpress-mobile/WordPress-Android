@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-04 14:11:47+0000
+Translation-Revision-Date: 2018-09-24 11:33:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="pages_search_suggestion">Buscar páxinas</string>
+    <string name="pages_move_to_trash">Mover ao lixo</string>
+    <string name="pages_publish_now">Publicar agora</string>
+    <string name="pages_view">Ver</string>
+    <string name="page_moved_to_scheduled">Programouse a páxina</string>
+    <string name="page_moved_to_published">Publicouse a páxina</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="sites">Sitios</string>
@@ -70,9 +76,9 @@ Language: gl_ES
     <string name="plans_manage">Xestiona o teu plan en\nWordPress.com/plans</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Á procura dos usuarios…</string>
-    <string name="title_email_follower">Seguidor por correo–e</string>
+    <string name="title_email_follower">Seguidor por correo-e</string>
     <string name="people_dropdown_item_viewers">Lectores</string>
-    <string name="people_dropdown_item_email_followers">Seguidores por correo–e</string>
+    <string name="people_dropdown_item_email_followers">Seguidores por correo-e</string>
     <string name="people_dropdown_item_followers">Seguidores</string>
     <string name="people_dropdown_item_team">Equipo</string>
     <string name="invite_message_usernames_limit">Invita ate 10 enderezos de correo electrónico e/ou nomes de usuario de WordPress.com. A\naqueles que necesiten un nome de usuario se lles enviarán instrucións de como crear un.</string>
@@ -186,7 +192,7 @@ Language: gl_ES
     <string name="comments_empty_list_filtered_trashed">Non hai comentarios no lixo</string>
     <string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
     <string name="comments_empty_list_filtered_approved">Non hai comentarios aprobados</string>
-    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML–RPC requiridos non están no servidor.</string>
+    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML-RPC requiridos non están no servidor.</string>
     <string name="post_format_status">Estado</string>
     <string name="post_format_video">Vídeo</string>
     <string name="alignment_center">Centro</string>
@@ -230,7 +236,7 @@ Language: gl_ES
     <string name="pending_email_change_snackbar">Preme no enlace de verificación na mensaxe enviada a %1$s para confirmar o teu novo enderezo</string>
     <string name="web_address">Enderezo web</string>
     <string name="editor_toast_uploading_please_wait">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
-    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento – mostrando comentarios antigos</string>
+    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
     <string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
     <string name="post_settings_featured_image">Imaxe destacada</string>
     <string name="visual_editor_enabled">Editor visual habilitado</string>
@@ -505,7 +511,7 @@ Language: gl_ES
     <string name="invalid_verification_code">Código de verificación non válido</string>
     <string name="auth_required">Inicia sesión de novo para continuar</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
-    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d – %2$d de %3$s seguidores de WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d - %2$d de %3$s seguidores de WordPress.com</string>
     <string name="stats_empty_search_terms">Non se rexistraron termos de busca</string>
     <string name="stats_entry_search_terms">Termo de busca</string>
     <string name="stats_view_authors">Autores</string>
@@ -516,7 +522,7 @@ Language: gl_ES
     <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="publisher">Editor:</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
-    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo–e</string>
+    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo-e</string>
     <string name="stats_empty_search_terms_desc">Aprende máis sobre o tráfico de buscas mirando os termos que levaron aos lectores ao teu sitio.</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
     <string name="post_uploading">Cargando</string>
@@ -568,8 +574,8 @@ Language: gl_ES
     <string name="stats_followers_hours">%1$d horas</string>
     <string name="stats_followers_a_day">Un día</string>
     <string name="stats_followers_days">%1$d días</string>
-    <string name="stats_followers_total_email">Total de seguidores por correo–e: %1$s</string>
-    <string name="stats_followers_email_selector">Correo–e</string>
+    <string name="stats_followers_total_email">Total de seguidores por correo-e: %1$s</string>
+    <string name="stats_followers_email_selector">Correo-e</string>
     <string name="stats_followers_total_wpcom">Total de seguidores en WordPress.com: %1$s</string>
     <string name="stats_comments_total_comments_followers">Total de artigos con seguidores dos comentarios: %1$s</string>
     <string name="stats_comments_by_authors">Por autores</string>

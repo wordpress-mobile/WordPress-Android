@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-20 08:54:07+0000
+Translation-Revision-Date: 2018-10-19 09:06:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">您现在可以离开编辑器，您的页面将在后台保存并预发布！试试看吧！</string>
+    <string name="async_promo_description_publish_post">您现在可以离开编辑器，您的文章将在后台保存并发布！试试看吧！</string>
+    <string name="async_promo_description_publish_page">您现在可以离开编辑器，您的页面将在后台保存并发布！试试看吧！</string>
+    <string name="image_size_full_class">完整尺寸</string>
+    <string name="image_size_large_class">大尺寸</string>
+    <string name="image_size_medium_class">中等尺寸</string>
+    <string name="image_size_thumbnail_class">缩略图尺寸</string>
+    <string name="image_size_full_label">完整尺寸</string>
+    <string name="image_size_large_label">大</string>
+    <string name="image_size_medium_label">中</string>
+    <string name="image_size_thumbnail_label">缩略图</string>
+    <string name="menu_history">历史记录</string>
+    <string name="async_promo_schedule_now">立即预发布</string>
+    <string name="async_promo_title_schedule">满怀信心预发布</string>
+    <string name="pages_pending">待审核</string>
+    <string name="pages_open_page_error">所选页面不可用</string>
     <string name="news_card_announcement_action_sample_announcement">[阅读更多]</string>
     <string name="news_card_announcement_content_sample_announcement">[现在无暇阅读？别担心：保存文章，有空时再去阅读。]</string>
     <string name="news_card_announcement_title_sample_announcement">[已推出新功能]</string>
@@ -25,7 +41,7 @@ Language: zh_CN
     <string name="pages_scheduled">预发布</string>
     <string name="pages_drafts">草稿</string>
     <string name="pages_published">已发布</string>
-    <string name="login_error_sms_throttled">尝试发送短信验证码的次数太多了 – 休息一下，在一分钟后再申请新的短信验证码。</string>
+    <string name="login_error_sms_throttled">尝试发送短信验证码的次数太多了 - 休息一下，在一分钟后再申请新的短信验证码。</string>
     <string name="login_error_email_not_found_v2">没有与此 Google 帐户匹配的 WordPress.com 帐户。</string>
     <string name="site_picker_remove_site_empty">没有与您的搜索匹配的站点</string>
     <string name="reader_empty_followed_blogs_search_title">没有与您的搜索匹配的站点</string>
@@ -56,7 +72,7 @@ Language: zh_CN
     <string name="quick_start_dialog_share_site_title">分享您的站点</string>
     <string name="quick_start_dialog_share_site_message_short_sharing">轻点%1$s“分享”%2$s并继续</string>
     <string name="quick_start_dialog_share_site_message_short_connections">轻点%1$s“连接”%2$s，添加您的社交媒体帐户</string>
-    <string name="quick_start_dialog_share_site_message">连接至您的社交媒体帐户 – 您的站点将自动共享新文章。</string>
+    <string name="quick_start_dialog_share_site_message">连接至您的社交媒体帐户 - 您的站点将自动共享新文章。</string>
     <string name="quick_start_dialog_publish_post_title">发布文章</string>
     <string name="quick_start_dialog_publish_post_message_short">轻点%1$s“创建文章”%2$s，撰写一篇新文章</string>
     <string name="quick_start_dialog_publish_post_message">是时候了！起草并发布您的第一篇文章。</string>
@@ -227,7 +243,7 @@ Language: zh_CN
     <string name="plugin_install_site_ineligible_no_business_plan">使用插件功能需要具有商务版套餐。</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">使用插件功能需要具有自定义域。</string>
     <string name="plugin_install_site_ineligible_default_error">插件功能不适用于此站点。</string>
-    <string name="plugin_install_first_plugin_almost_finished_dialog_message">我们正在进行最后设置 – 即将完成…</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">我们正在进行最后设置 - 即将完成…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">正在安装插件…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">安装</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">在站点上安装第一个插件最多需要 1 分钟。在此期间，您将无法更改自己的站点。</string>
@@ -583,10 +599,6 @@ Language: zh_CN
     <string name="error_generic_error">无法执行操作</string>
     <string name="error_media_recover_page">无法上传页面中的媒体</string>
     <string name="error_media_recover_post">无法上传文章中的媒体</string>
-    <string name="size_full">完整大小</string>
-    <string name="size_large">大</string>
-    <string name="size_medium">中</string>
-    <string name="size_thumbnail">缩略图</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
     <string name="uploading_subtitle_media_only">还剩 %1$d / %2$d 个文件</string>
@@ -690,8 +702,6 @@ Language: zh_CN
     <string name="error_upload_page_media_param">上传此页面中的媒体时出错: %s。</string>
     <string name="error_upload_page_param">上传此页面时出错: %s.</string>
     <string name="async_promo_link">工作原理</string>
-    <string name="async_promo_description">您现在可以离开编辑器，您的文章将在后台保存并发布！试试看吧！</string>
-    <string name="async_promo_title">放心发布</string>
     <string name="editor_uploading_post">您的文章正在上传</string>
     <string name="uploading_media">正在上传媒体…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">您确定吗？删除此文章将同时取消媒体上传。</string>
@@ -1091,7 +1101,7 @@ Language: zh_CN
     <string name="editor_remove_failed_uploads">删除上传失败的内容</string>
     <string name="editor_toast_failed_uploads">部分媒体上传失败。您无法保存或发布\n此状态下的文章。是否删除所有上传失败的媒体？</string>
     <string name="site_settings_advanced_header">高级</string>
-    <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML–RPC 方法。</string>
+    <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
     <string name="alignment_center">居中</string>
     <string name="post_format_video">视频</string>
     <string name="post_format_status">状态</string>
@@ -1405,9 +1415,9 @@ Language: zh_CN
     <string name="stats_entry_search_terms">搜索字词</string>
     <string name="stats_empty_search_terms">未记录任何搜索字词</string>
     <string name="stats_empty_search_terms_desc">要了解更多有关搜索流量的信息，请查看您的访客用于搜索您站点的字词。</string>
-    <string name="stats_followers_total_wpcom_paged">正在显示 %1$d – %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
+    <string name="stats_followers_total_wpcom_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
     <string name="stats_search_terms_unknown_search_terms">未知搜索字词</string>
-    <string name="stats_followers_total_email_paged">正在显示 %1$d – %2$d 位（共 %3$s 位）电子邮件关注者</string>
+    <string name="stats_followers_total_email_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）电子邮件关注者</string>
     <string name="error_notification_open">无法打开通知</string>
     <string name="publisher">发布者：</string>
     <string name="reader_empty_posts_request_failed">无法检索文章</string>
