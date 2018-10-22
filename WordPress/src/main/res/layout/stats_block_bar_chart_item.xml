@@ -3,35 +3,38 @@
               android:id="@+id/link_wrapper"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:layout_marginBottom="16dp"
               android:orientation="vertical"
-              android:paddingEnd="12dp"
-              android:paddingStart="12dp">
+              android:paddingEnd="8dp"
+              android:paddingStart="8dp">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="150dp"/>
+        android:layout_height="180dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
-        android:paddingStart="25dp"
-        android:paddingEnd="15dp">
+        android:paddingEnd="11dp"
+        android:paddingStart="24dp">
+
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/wp_grey"
-            android:textSize="12sp"
             android:id="@+id/label_start"
-            android:layout_weight="1"/>
-        <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/wp_grey"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/label_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="end"
             android:textColor="@color/wp_grey"
-            android:textSize="12sp"
-            android:id="@+id/label_end"
-            android:layout_weight="1"/>
+            android:textSize="12sp"/>
     </LinearLayout>
 </LinearLayout>
