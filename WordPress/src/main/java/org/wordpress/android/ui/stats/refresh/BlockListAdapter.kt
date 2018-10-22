@@ -2,12 +2,10 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.Adapter
-import android.support.v7.widget.RecyclerView.VISIBLE
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -125,16 +123,14 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
         }
 
         class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_link_item) {
-            private val icon = itemView.findViewById<ImageView>(R.id.icon)
             private val text = itemView.findViewById<TextView>(R.id.text)
             private val link = itemView.findViewById<View>(R.id.link_wrapper)
 
             fun bind(item: Link) {
                 if (item.icon != null) {
-                    icon.visibility = VISIBLE
-                    icon.setImageResource(item.icon)
+                    text.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0, 0, 0)
                 } else {
-                    icon.visibility = GONE
+                    text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
                 }
                 text.setText(item.text)
                 link.setOnClickListener { item.action() }

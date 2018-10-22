@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               style="@style/StatsBlockLine"
               android:layout_width="match_parent"
               android:id="@+id/link_wrapper"
               android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="32dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
-        android:importantForAccessibility="no"
-        tools:src="@drawable/ic_share_blue_medium_24dp"/>
-
     <TextView
         android:id="@+id/text"
         style="@style/StatsBlockLink"
-        android:layout_width="0dp"
+        tools:drawableLeft="@drawable/ic_share_blue_medium_24dp"
+        android:drawablePadding="32dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:gravity="center_vertical"
         android:text="@string/unknown"
         tools:text="@string/stats_insights_share_post"/>
 
-</LinearLayout>
+</FrameLayout>
