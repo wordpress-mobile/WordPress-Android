@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
+import org.wordpress.android.fluxc.model.list.ListManagerItem
 import org.wordpress.android.fluxc.model.list.ListManagerItem.LocalItem
 import org.wordpress.android.fluxc.model.list.ListManagerItem.RemoteItem
 import org.wordpress.android.fluxc.model.list.ListModel
@@ -64,6 +65,10 @@ class ListStore @Inject constructor(
     /**
      * This is the function that'll be used to consume lists.
      *
+     * It'll add the [ListItemDataSource.localItems], [ListItemDataSource.remoteItemIdsToInclude] and the list items
+     * from the DB one after another and then filter out [ListItemDataSource.remoteItemsToHide] and finally
+     * pass it to [ListManager].
+     *
      * @param listDescriptor List to be consumed
      * @param dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
      * for more details.
@@ -78,21 +83,25 @@ class ListStore @Inject constructor(
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
-        val itemsFromDb = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id).filter {
-                dataSource.remoteItemsToHide(listDescriptor)?.contains(it.remoteItemId) != true
-            }
+        // Get the remote ids of items for the list from the DB
+        val remoteIdsFromDb = if (listModel != null) {
+            listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
         } else emptyList()
-        val initialItems = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
-            val dbRemoteItemIds = itemsFromDb.map { it.remoteItemId }
-            remoteIdsToInclude.filter { !dbRemoteItemIds.contains(it) }
-        }?.map { ListItemModel(remoteItemId = it, listId = 0) } ?: emptyList()
-        val listItems = initialItems.plus(itemsFromDb)
+        // Get the remote ids that client asks for to be included if they are not already in the remote ids from DB
+        val remoteItemIdsToInclude = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
+            remoteIdsToInclude.filter { !remoteIdsFromDb.contains(it) }
+        } ?: emptyList()
+        // Add the remote ids together and filter out the ids the client asks to be hidden
+        val remoteIds = remoteItemIdsToInclude.asSequence().plus(remoteIdsFromDb).filter {
+            dataSource.remoteItemsToHide(listDescriptor)?.contains(it) != true
+        }.toList()
+
         val listState = if (listModel != null) getListState(listModel) else null
-        val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
+        val listData = dataSource.getItems(listDescriptor, remoteIds)
         val localItems = dataSource.localItems(listDescriptor) ?: emptyList()
-        val allItems = localItems.asSequence().map { LocalItem(it) }
-                .plus(listItems.map { RemoteItem(it.remoteItemId, listData[it.remoteItemId]) }).toList()
+        // Add the local items and remote items in one list of `ListManagerItem`s
+        val allItems: List<ListManagerItem<T>> = localItems.asSequence().map { LocalItem(it) }
+                .plus(remoteIds.map { RemoteItem(it, listData[it]) }).toList()
         return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
