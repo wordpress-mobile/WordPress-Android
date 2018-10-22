@@ -15,6 +15,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +62,58 @@ public class PeopleUtils {
         params.put("order", "ASC");
         String path = String.format(Locale.US, "sites/%d/users", site.getSiteId());
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+    }
+
+
+    public static void fetchRevisionAuthorsDetails(final SiteModel site, List<String> authors,
+                                                   final FetchUsersCallback callback) {
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    try {
+                        List<Person> people = new ArrayList<Person>();
+
+                        Iterator<String> keys = jsonObject.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            if (jsonObject.get(key) instanceof JSONObject) {
+                                JSONArray jsonArray = ((JSONObject) jsonObject.get(key)).getJSONArray("users");
+                                people.addAll(peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.USER));
+                            }
+                        }
+
+                        callback.onSuccess(people, true);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: "
+                                        + e);
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        Map<String, String> batchParams = new HashMap<>();
+        String batchPatch = "batch/";
+
+        for (String author : authors) {
+            batchParams.put("urls[]",
+                    String.format(Locale.US, "/sites/%d/users?search=%s&search_columns=ID&fields=avatar_URL",
+                            site.getSiteId(), author));
+        }
+
+
+        WordPress.getRestClientUtilsV1_1().get(batchPatch, batchParams, null, listener, errorListener);
     }
 
     public static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback) {
