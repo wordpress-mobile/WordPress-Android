@@ -68,6 +68,9 @@ class ListManager<T>(
         shouldFetchIfNull: Boolean = true,
         shouldLoadMoreIfNecessary: Boolean = true
     ): T? {
+        assert(position in 1..(size - 1)) {
+            "Position is out of bounds!"
+        }
         if (shouldLoadMoreIfNecessary && position > size - loadMoreOffset) {
             loadMore()
         }
