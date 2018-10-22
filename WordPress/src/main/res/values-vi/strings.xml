@@ -143,7 +143,7 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_trashed">Không có bình luận trong thùng rác</string>
     <string name="comments_empty_list_filtered_pending">Không có bình luận đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận được duyệt</string>
-    <string name="xmlrpc_missing_method_error">Không thể kết nối. Các phương thức XML–RPC cần thiết bị thiếu trên máy chủ</string>
+    <string name="xmlrpc_missing_method_error">Không thể kết nối. Các phương thức XML-RPC cần thiết bị thiếu trên máy chủ</string>
     <string name="alignment_center">Ở giữa</string>
     <string name="post_format_status">Trạng thái</string>
     <string name="post_format_video">Video</string>
@@ -187,7 +187,7 @@ Language: vi_VN
     <string name="web_address">Địa chỉ Web</string>
     <string name="pending_email_change_snackbar">Kích liên kết xác thực trong email đã gửi tới %1$s để xác nhận địa chỉ mới của bạn</string>
     <string name="editor_toast_uploading_please_wait">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
-    <string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này – hiện các bình luận cũ hơn</string>
+    <string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này - hiện các bình luận cũ hơn</string>
     <string name="visual_editor_enabled">Trình biên tập trực quan đã bật</string>
     <string name="editor_content_placeholder">Chia sẻ câu chuyện của bạn ở đây</string>
     <string name="editor_page_title_placeholder">Tiêu đề Trang</string>
@@ -236,8 +236,8 @@ Language: vi_VN
     <string name="site_settings_paging_dialog_description">Ngắt chuỗi bình luận thành nhiều trang.</string>
     <string name="site_settings_paging_dialog_header">Bình luận trên mỗi trang</string>
     <string name="site_settings_close_after_dialog_title">Đóng bình luận</string>
-    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e–mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e–mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
+    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
+    <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Nhập một từ hoặc cụm từ</string>
     <string name="site_settings_list_editor_no_items_text">Không có mục</string>
     <string name="site_settings_learn_more_caption">Bạn có thể ghi đè lên các thiết lập này cho các bài viết cá nhân.</string>
@@ -466,9 +466,9 @@ Language: vi_VN
     <string name="media_fetching">Đang tìm nạp media…</string>
     <string name="reader_empty_posts_request_failed">Không thể lấy các bài viết</string>
     <string name="publisher">Người xuất bản:</string>
-    <string name="stats_followers_total_email_paged">Đang hiển thị %1$d – %2$d của %3$s Email Người theo dõi</string>
+    <string name="stats_followers_total_email_paged">Đang hiển thị %1$d - %2$d của %3$s Email Người theo dõi</string>
     <string name="stats_search_terms_unknown_search_terms">Không biết Điều kiện tìm kiếm</string>
-    <string name="stats_followers_total_wpcom_paged">Đang hiển thị %1$d – %2$d của %3$s Người theo dõi WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Đang hiển thị %1$d - %2$d của %3$s Người theo dõi WordPress.com</string>
     <string name="stats_empty_search_terms_desc">Tìm hiểu thêm về lưu lượng tìm kiếm của bạn bằng cách nhìn vào các điều khoản khách truy cập của bạn tìm kiếm để tìm trang web của bạn.</string>
     <string name="stats_empty_search_terms">Không có điều kiện tìm kiếm được ghi nhận</string>
     <string name="stats_entry_search_terms">Điều kiện tìm kiếm</string>

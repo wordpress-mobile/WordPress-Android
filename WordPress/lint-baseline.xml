@@ -1955,17 +1955,6 @@
 
     <issue
         id="StaticFieldLeak"
-        message="This AsyncTask class should be static or leaks might occur (org.wordpress.android.widgets.WPNetworkImageView.ShapeBitmapTask)"
-        errorLine1="    private class ShapeBitmapTask extends AsyncTask&lt;Bitmap, Void, Bitmap> {"
-        errorLine2="                  ~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/widgets/WPNetworkImageView.java"
-            line="529"
-            column="19"/>
-    </issue>
-
-    <issue
-        id="StaticFieldLeak"
         message="Do not place Android context classes in static fields (static reference to `RestClientUtils` which has field `mContext` pointing to `Context`); this is a memory leak (and also breaks Instant Run)"
         errorLine1="    private static RestClientUtils sRestClientUtils;"
         errorLine2="            ~~~~~~">
