@@ -264,19 +264,42 @@ class ListManagerTest {
         val localItems = listOf(LocalItem("localItem1"), LocalItem("localItem2"))
         val fetchList = { _: ListDescriptor, _: Int -> }
         val listManager = ListManager(
-                dispatcher,
-                listDescriptor,
-                localItems,
-                10,
-                false,
-                false,
-                false,
+                dispatcher = dispatcher,
+                listDescriptor = listDescriptor,
+                items = localItems,
+                loadMoreOffset = 10,
+                isFetchingFirstPage = false,
+                isLoadingMore = false,
+                canLoadMore = false,
                 fetchItem = {},
                 fetchList = fetchList
         )
         localItems.forEachIndexed { index, item ->
             assertEquals(listManager.getItem(index), item.value)
         }
+    }
+
+    /**
+     * Simple test for the [ListManager.findIndexedNotNull].
+     */
+    @Test
+    fun testFindIndexedNotNull() {
+        val items = listOf(LocalItem("localItem"), RemoteItem(123L, "remoteItem"))
+        val fetchList = { _: ListDescriptor, _: Int -> }
+        val listManager = ListManager(
+                dispatcher = dispatcher,
+                listDescriptor = listDescriptor,
+                items = items,
+                loadMoreOffset = 10,
+                isFetchingFirstPage = false,
+                isLoadingMore = false,
+                canLoadMore = false,
+                fetchItem = {},
+                fetchList = fetchList
+        )
+        val result = listManager.findIndexedNotNull { it.contains("remote") }
+        assertEquals(1, result.size)
+        assertEquals(Pair(1, "remoteItem"), result[0])
     }
 
     /**

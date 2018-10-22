@@ -9,8 +9,8 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
  * A sealed class to make it easier to manage local and remote items together.
  */
 sealed class ListManagerItem<T>(val value: T?) {
-    class LocalItem<T>(value: T): ListManagerItem<T>(value)
-    class RemoteItem<T>(val remoteItemId: Long, value: T?): ListManagerItem<T>(value)
+    class LocalItem<T>(value: T) : ListManagerItem<T>(value)
+    class RemoteItem<T>(val remoteItemId: Long, value: T?) : ListManagerItem<T>(value)
 }
 
 /**
@@ -68,7 +68,7 @@ class ListManager<T>(
         shouldFetchIfNull: Boolean = true,
         shouldLoadMoreIfNecessary: Boolean = true
     ): T? {
-        assert(position in 1..(size - 1)) {
+        assert(position in 0..(size - 1)) {
             "Position is out of bounds!"
         }
         if (shouldLoadMoreIfNecessary && position > size - loadMoreOffset) {
