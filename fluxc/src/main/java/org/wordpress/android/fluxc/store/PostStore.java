@@ -450,7 +450,7 @@ public class PostStore extends Store {
             mPostRestClient.fetchPosts(payload.site, pages, payload.statusTypes, offset);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.fetchPosts(payload.site, pages, offset);
+            mPostXMLRPCClient.fetchPosts(payload.site, pages, payload.statusTypes, offset);
         }
     }
 
