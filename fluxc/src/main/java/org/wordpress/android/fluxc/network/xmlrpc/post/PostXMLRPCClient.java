@@ -110,7 +110,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusTypes,
+    public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusList,
                            final int offset) {
         Map<String, Object> contentStruct = new HashMap<>();
 
@@ -121,8 +121,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             contentStruct.put("post_type", "page");
         }
 
-        if (statusTypes.size() > 0) {
-            contentStruct.put("post_status", PostStatus.postStatusListToString(statusTypes));
+        if (statusList.size() > 0) {
+            contentStruct.put("post_status", PostStatus.postStatusListToString(statusList));
         }
 
         List<Object> params = new ArrayList<>(4);
