@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -78,10 +79,9 @@ class ListStore @Inject constructor(
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
         val itemsFromDb = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id)
-                    .filter {
-                        dataSource.remoteItemsToHide(listDescriptor)?.contains(it.remoteItemId) != true
-                    }
+            listItemSqlUtils.getListItems(listModel.id).filter {
+                dataSource.remoteItemsToHide(listDescriptor)?.contains(it.remoteItemId) != true
+            }
         } else emptyList()
         val initialItems = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
             val dbRemoteItemIds = itemsFromDb.map { it.remoteItemId }
@@ -131,7 +131,7 @@ class ListStore @Inject constructor(
         }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListChanged(listOf(payload.listDescriptor), false, null))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), CauseOfListChange.STATE_CHANGED, null))
 
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
@@ -170,13 +170,18 @@ class ListStore @Inject constructor(
         } else {
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
-        emitChange(OnListChanged(listOf(payload.listDescriptor), !payload.loadedMore, payload.error))
+        val causeOfChange = if (payload.isError) {
+            CauseOfListChange.ERROR
+        } else {
+            if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
+        }
+        emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
     }
 
     /**
      * Handles the [ListAction.LIST_ITEMS_CHANGED] action.
      *
-     * Whenever an item of a list is changed, we'll emit the [OnListChanged] event so the consumer of the lists can
+     * Whenever an item of a list is changed, we'll emit the [OnListItemsChanged] event so the consumer of the lists can
      * update themselves.
      */
     private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
@@ -187,7 +192,7 @@ class ListStore @Inject constructor(
      * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
      *
      * Items in [ListItemsRemovedPayload.remoteItemIds] will be removed from lists with
-     * [ListDescriptorTypeIdentifier] after which [OnListChanged] event will be emitted.
+     * [ListDescriptorTypeIdentifier] after which [OnListItemsChanged] event will be emitted.
      */
     private fun handleListItemsRemoved(payload: ListItemsRemovedPayload) {
         val lists = listSqlUtils.getListsWithTypeIdentifier(payload.type)
@@ -236,9 +241,12 @@ class ListStore @Inject constructor(
      */
     class OnListChanged(
         val listDescriptors: List<ListDescriptor>,
-        val loadedFirstPage: Boolean,
+        val causeOfChange: CauseOfListChange,
         error: ListError?
     ) : Store.OnChanged<ListError>() {
+        enum class CauseOfListChange {
+            ERROR, FIRST_PAGE_FETCHED, LOADED_MORE, STATE_CHANGED
+        }
         init {
             this.error = error
         }
