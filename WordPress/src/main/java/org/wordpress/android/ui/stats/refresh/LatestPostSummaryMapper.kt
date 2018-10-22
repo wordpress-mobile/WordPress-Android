@@ -4,8 +4,6 @@ import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
-import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
@@ -26,7 +24,7 @@ class LatestPostSummaryMapper
         }
         val sinceLabel = statsUtilsWrapper.getSinceLabelLowerCase(model.postDate)
         val postTitle = StringEscapeUtils.unescapeHtml4(model.postTitle)
-        val message = if (model.postViewsCount == 0) {
+        val message = if (model.postViewsCount == 0 && model.postLikeCount == 0) {
             resourceProvider.getString(
                     string.stats_insights_latest_post_with_no_engagement,
                     sinceLabel,
@@ -40,11 +38,10 @@ class LatestPostSummaryMapper
             )
         }
         return Text(message, listOf(Clickable(postTitle) {
-            StatsUtils.openPostInReaderOrInAppWebview(
+            statsUtilsWrapper.openPostInReaderOrInAppWebview(
                     it,
                     model.siteId,
                     model.postId.toString(),
-                    StatsConstants.ITEM_TYPE_POST,
                     model.postURL
             )
         }))

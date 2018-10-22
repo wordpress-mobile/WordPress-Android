@@ -28,13 +28,12 @@ import java.util.Date
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryViewModelTest {
     @Mock lateinit var insightsStore: InsightsStore
-    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
     private lateinit var viewModel: LatestPostSummaryViewModel
     @Before
     fun setUp() {
-        viewModel = LatestPostSummaryViewModel(insightsStore, resourceProvider, latestPostSummaryMapper)
+        viewModel = LatestPostSummaryViewModel(insightsStore, latestPostSummaryMapper)
     }
 
     @Test

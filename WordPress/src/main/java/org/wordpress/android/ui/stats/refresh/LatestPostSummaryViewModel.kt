@@ -7,13 +7,11 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class LatestPostSummaryViewModel
 @Inject constructor(
     private val insightsStore: InsightsStore,
-    private val resourceProvider: ResourceProvider,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
 ) {
     suspend fun loadLatestPostSummary(site: SiteModel, forced: Boolean = false): InsightsItem {
