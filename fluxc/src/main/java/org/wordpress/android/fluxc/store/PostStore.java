@@ -489,10 +489,10 @@ public class PostStore extends Store {
 
         switch ((PostAction) actionType) {
             case FETCH_POST_LIST:
-                fetchPostList((FetchPostListPayload) action.getPayload());
+                handleFetchPostList((FetchPostListPayload) action.getPayload());
                 break;
             case FETCHED_POST_LIST:
-                fetchedPostList((FetchPostListResponsePayload) action.getPayload());
+                handleFetchedPostList((FetchPostListResponsePayload) action.getPayload());
                 break;
             case FETCH_POSTS:
                 fetchPosts((FetchPostsPayload) action.getPayload(), false);
@@ -557,7 +557,7 @@ public class PostStore extends Store {
         }
     }
 
-    private void fetchPostList(FetchPostListPayload payload) {
+    private void handleFetchPostList(FetchPostListPayload payload) {
         if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
             mPostRestClient.fetchPostList(descriptor, payload.offset);
@@ -567,12 +567,13 @@ public class PostStore extends Store {
         }
     }
 
-    private void fetchedPostList(FetchPostListResponsePayload payload) {
+    private void handleFetchedPostList(FetchPostListResponsePayload payload) {
         ListError fetchedListItemsError = null;
         List<Long> postIds;
         if (payload.isError()) {
-            fetchedListItemsError =
-                    new ListError(ListErrorType.GENERIC_ERROR, payload.error.message);
+            ListErrorType errorType = payload.error.type == PostErrorType.UNAUTHORIZED ? ListErrorType.PERMISSION_ERROR
+                    : ListErrorType.GENERIC_ERROR;
+            fetchedListItemsError = new ListError(errorType, payload.error.message);
             postIds = Collections.emptyList();
         } else {
             postIds = new ArrayList<>(payload.postListItems.size());
