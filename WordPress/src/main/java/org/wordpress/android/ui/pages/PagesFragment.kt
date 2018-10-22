@@ -105,7 +105,7 @@ class PagesFragment : Fragment() {
     }
 
     private fun onPageEditFinished(pageId: Long) {
-        viewModel.onPageEditFinished()
+        viewModel.onPageEditFinished(pageId)
     }
 
     private fun onPageParentSet(pageId: Long, parentId: Long) {
