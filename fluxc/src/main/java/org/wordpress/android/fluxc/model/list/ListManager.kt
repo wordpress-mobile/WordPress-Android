@@ -102,7 +102,7 @@ class ListManager<T>(
     /**
      * Returns a list containing results of applying the given [predicate] function to each non-null element.
      */
-    fun findIndexedNotNull(predicate: (T) -> Boolean): List<Pair<Int, T>> {
+    fun findWithIndex(predicate: (T) -> Boolean): List<Pair<Int, T>> {
         return items.mapIndexedNotNull { index, item ->
             if (item.value != null && predicate(item.value)) Pair(index, item.value) else null
         }
