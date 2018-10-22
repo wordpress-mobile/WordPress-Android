@@ -376,7 +376,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         if (post.isPage()) {
-            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
+            post.setParentId(MapUtils.getMapLong(postMap, "post_parent"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
             post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
         } else {
@@ -402,7 +402,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 contentStruct.put("post_format", post.getPostFormat());
             }
         } else {
-            contentStruct.put("parent", post.getParentId());
+            contentStruct.put("post_parent", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
