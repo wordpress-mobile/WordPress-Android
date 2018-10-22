@@ -9,7 +9,6 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
-import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.IRRELEVANT
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPDATE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
@@ -52,15 +51,16 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        val (remoteId, eventType) = postCauseOfChangeToPostAction(event.causeOfChange)
-        continuations[remoteId]?.get(eventType)?.resume(!event.isError)
+        postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, eventType) ->
+            continuations[remoteId]?.get(eventType)?.resume(!event.isError)
+        }
     }
 
-    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Pair<Long, EventType> =
+    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Pair<Long, EventType>? =
             when (postCauseOfChange) {
                 is CauseOfOnPostChanged.DeletePost -> postCauseOfChange.remotePostId to DELETE
                 is CauseOfOnPostChanged.UpdatePost -> postCauseOfChange.remotePostId to UPDATE
-                else -> -1L to IRRELEVANT
+                else -> null
             }
 
     data class PageAction(val remoteId: Long, val event: EventType, val perform: () -> Unit) {
@@ -68,6 +68,6 @@ class ActionPerformer
         var onError: () -> Unit = { }
         var undo: () -> Unit = { }
 
-        enum class EventType { UPLOAD, UPDATE, DELETE, IRRELEVANT }
+        enum class EventType { UPLOAD, UPDATE, DELETE }
     }
 }
