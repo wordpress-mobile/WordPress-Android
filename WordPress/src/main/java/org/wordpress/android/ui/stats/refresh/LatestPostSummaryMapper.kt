@@ -9,15 +9,19 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text.Clickable
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Locale
 import javax.inject.Inject
 
 class LatestPostSummaryMapper
-@Inject constructor(private val statsUtilsWrapper: StatsUtilsWrapper, private val resourceProvider: ResourceProvider) {
+@Inject constructor(
+    private val statsUtilsWrapper: StatsUtilsWrapper,
+    private val resourceProvider: ResourceProvider,
+    private val localeManagerWrapper: LocaleManagerWrapper
+) {
     fun buildMessageItem(model: InsightsLatestPostModel?): Text {
         if (model == null) {
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
@@ -58,8 +62,8 @@ class LatestPostSummaryMapper
     }
 
     fun buildBarChartItem(dayViews: List<Pair<String, Int>>): BarChartItem {
-        val parseFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+        val parseFormat = SimpleDateFormat("yyyy-MM-dd", localeManagerWrapper.getLocale())
+        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, localeManagerWrapper.getLocale())
         val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
                 .map { pair -> parseDate(parseFormat, dateFormat, pair.first) to pair.second }
         return BarChartItem(barEntries)
