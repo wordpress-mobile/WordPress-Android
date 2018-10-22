@@ -92,16 +92,14 @@ sealed class BlockItemViewHolder(
     class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
             layout.stats_block_link_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(id.icon)
         private val text = itemView.findViewById<TextView>(id.text)
         private val link = itemView.findViewById<View>(id.link_wrapper)
 
         fun bind(item: Link) {
             if (item.icon != null) {
-                icon.visibility = View.VISIBLE
-                icon.setImageResource(item.icon)
+                text.setCompoundDrawablesWithIntrinsicBounds(item.icon, 0, 0, 0)
             } else {
-                icon.visibility = View.GONE
+                text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
             text.setText(item.text)
             link.setOnClickListener { item.action() }
