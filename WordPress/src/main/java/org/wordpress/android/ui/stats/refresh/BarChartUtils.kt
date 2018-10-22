@@ -20,7 +20,8 @@ import kotlin.math.round
 fun BarChart.draw(
     item: BarChartItem,
     labelStart: TextView,
-    labelEnd: TextView) {
+    labelEnd: TextView
+) {
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(columnNumber, item)
