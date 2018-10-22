@@ -28,18 +28,18 @@ class LatestPostSummaryViewModel
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
 ) {
-    suspend fun latestPostSummary(site: SiteModel, forced: Boolean = false): InsightsItem {
+    suspend fun loadLatestPostSummary(site: SiteModel, forced: Boolean = false): InsightsItem {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
             error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
-            else -> latestPostSummaryItem(model)
+            else -> loadLatestPostSummaryItem(model)
         }
     }
 
-    private fun latestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {
+    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         if (model != null) {

@@ -31,7 +31,7 @@ class InsightsViewModel
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
-            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.latestPostSummary(site, forced)
+            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
