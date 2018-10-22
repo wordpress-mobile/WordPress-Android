@@ -280,7 +280,7 @@ class ListManagerTest {
     }
 
     /**
-     * Simple test for the [ListManager.findIndexedNotNull].
+     * Simple test for [ListManager.findWithIndex].
      */
     @Test
     fun testFindIndexedNotNull() {
@@ -297,7 +297,7 @@ class ListManagerTest {
                 fetchItem = {},
                 fetchList = fetchList
         )
-        val result = listManager.findIndexedNotNull { it.contains("remote") }
+        val result = listManager.findWithIndex { it.contains("remote") }
         assertEquals(1, result.size)
         assertEquals(Pair(1, "remoteItem"), result[0])
     }
