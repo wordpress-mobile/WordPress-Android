@@ -38,8 +38,11 @@ sealed class HistoryListItem(val type: ViewType) {
         val postModifiedGmt: String?,
         val postAuthorId: String?,
         val titleDiffs: ArrayList<@RawValue Diff>,
-        val contentDiffs: ArrayList<@RawValue Diff>
+        val contentDiffs: ArrayList<@RawValue Diff>,
+        var authorName: String? = null,
+        var authorAvatarURL: String? = null
     ) : HistoryListItem(REVISION), Parcelable {
+
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
         @IgnoredOnParcel private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
         @IgnoredOnParcel val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
@@ -58,7 +61,8 @@ sealed class HistoryListItem(val type: ViewType) {
                 model.postModifiedGmt ?: "",
                 model.postAuthorId ?: "",
                 model.titleDiffs,
-                model.contentDiffs)
+                model.contentDiffs
+        )
 
         override fun longId(): Long = revisionId.hashCode().toLong()
     }
