@@ -1,8 +1,14 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
 import android.support.annotation.LayoutRes
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
 import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +19,7 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
@@ -26,7 +33,8 @@ sealed class BlockItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class TitleViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class TitleViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_title
     ) {
         private val text = itemView.findViewById<TextView>(id.text)
@@ -35,7 +43,8 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_item
     ) {
         private val icon = itemView.findViewById<ImageView>(id.icon)
@@ -55,22 +64,54 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_empty_item
     )
 
-    class TextViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class TextViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_text_item
     ) {
         private val text = itemView.findViewById<TextView>(id.text)
         fun bind(textItem: Text) {
-            text.text = textItem.text
+            val spannableString = SpannableString(textItem.text)
+            textItem.links?.forEach { link ->
+                spannableString.withClickableSpan(text.context, link.link) { link.action(text.context) }
+            }
+            text.text = spannableString
             text.linksClickable = true
             text.movementMethod = LinkMovementMethod.getInstance()
         }
+
+        private fun SpannableString.withClickableSpan(
+            context: Context,
+            clickablePart: String,
+            onClickListener: (Context) -> Unit
+        ): SpannableString {
+            val clickableSpan = object : ClickableSpan() {
+                override fun onClick(widget: View?) {
+                    widget?.context?.let { onClickListener.invoke(it) }
+                }
+
+                override fun updateDrawState(ds: TextPaint?) {
+                    ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
+                    ds?.isUnderlineText = false
+                }
+            }
+            val clickablePartStart = indexOf(clickablePart)
+            setSpan(
+                    clickableSpan,
+                    clickablePartStart,
+                    clickablePartStart + clickablePart.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return this
+        }
     }
 
-    class ColumnsViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class ColumnsViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_column_item
     ) {
         private val firstKey = itemView.findViewById<TextView>(id.first_key)
@@ -89,7 +130,8 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_link_item
     ) {
         private val text = itemView.findViewById<TextView>(id.text)
@@ -106,7 +148,8 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class BarChartViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent,
+    class BarChartViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
             layout.stats_block_bar_chart_item
     ) {
         private val chart = itemView.findViewById<BarChart>(id.chart)

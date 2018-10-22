@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.text.Spannable
-import com.github.mikephil.charting.data.BarEntry
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
@@ -22,10 +21,12 @@ sealed class BlockListItem(val type: Type) {
         val showDivider: Boolean = true
     ) : BlockListItem(ITEM)
 
-    data class Text(val text: Spannable? = null) : BlockListItem(TEXT)
+    data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
+        data class Clickable(val link: String, val action: (Context) -> Unit)
+    }
     data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
     data class Link(@DrawableRes val icon: Int? = null, @StringRes val text: Int, val action: () -> Unit) :
             BlockListItem(LINK)
-    data class BarChartItem(val entries: List<BarEntry>) : BlockListItem(BAR_CHART)
+    data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
     object Empty : BlockListItem(EMPTY)
 }
