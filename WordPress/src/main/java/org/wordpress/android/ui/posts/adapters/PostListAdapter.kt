@@ -510,9 +510,9 @@ class PostListAdapter(
     }
 
     fun getPositionForPost(post: PostModel): Int? =
-            listManager?.findIndices {
+            listManager?.findIndexedNotNull {
                 if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
-            }?.firstOrNull()
+            }?.asSequence()?.map { it.first }?.firstOrNull()
 
     fun updateRowForPost(post: PostModel) {
         getPositionForPost(post)?.let { position ->
@@ -572,9 +572,9 @@ class PostListAdapter(
             return
         }
         // Multiple posts could have the same featured image
-        listManager?.findIndices { post ->
+        listManager?.findIndexedNotNull { post ->
             post.featuredImageId == mediaModel.mediaId
-        }?.forEach { position ->
+        }?.forEach { (position, _) ->
             notifyItemChanged(position)
         }
     }

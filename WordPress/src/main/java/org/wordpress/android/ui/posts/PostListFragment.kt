@@ -45,6 +45,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
@@ -171,16 +172,8 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun localItems(): List<PostModel>? {
-        // TODO: publishing things change their order, not only for local drafts but in general. This is mostly due to publish date. The production version should have the same behavior.
-        // Confirmed that the above is in production as well ^^
-        // TODO: Order the local items with their IDs, or something else since it's currently switching orders after an edit of title
-        val trashedPostIds = trashedPosts.map { it.id }
-        return postStore.getLocalPostsForDescriptor(listDescriptor).filter { trashedPostIds.contains(it.id) }
-    }
-
     private suspend fun getListDataFromStore(listDescriptor: ListDescriptor): ListManager<PostModel> =
-            listStore.getListManager(listDescriptor, localItems(), object : ListItemDataSource<PostModel> {
+            listStore.getListManager(listDescriptor, object : ListItemDataSource<PostModel> {
                 override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
                     val postToFetch = PostModel()
                     postToFetch.remotePostId = remoteItemId
@@ -198,7 +191,27 @@ class PostListFragment : Fragment(),
                 override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
                     return postStore.getPostsByRemotePostIds(remoteItemIds, site)
                 }
-            }, remoteItemIdsToInclude = uploadedPostRemoteIds, remoteItemsToHide = trashedPosts.map { it.remotePostId })
+
+                override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
+                    // TODO: publishing things change their order, not only for local drafts but in general. This is mostly due to publish date. The production version should have the same behavior.
+                    // Confirmed that the above is in production as well ^^
+                    // TODO: Order the local items with their IDs, or something else since it's currently switching orders after an edit of title
+                    if (listDescriptor is PostListDescriptor) {
+                        val trashedPostIds = trashedPosts.map { it.id }
+                        return postStore.getLocalPostsForDescriptor(listDescriptor)
+                                .filter { !trashedPostIds.contains(it.id) }
+                    }
+                    return null
+                }
+
+                override fun remoteItemIdsToInclude(listDescriptor: ListDescriptor): List<Long>? {
+                    return uploadedPostRemoteIds
+                }
+
+                override fun remoteItemsToHide(listDescriptor: ListDescriptor): List<Long>? {
+                    return trashedPosts.map { it.remotePostId }
+                }
+            })
 
     private fun updateListManager(listManager: ListManager<PostModel>, diffResult: DiffResult, fetchAfter: Boolean) {
         this.listManager = listManager
@@ -658,7 +671,7 @@ class PostListFragment : Fragment(),
                 updateEmptyView(GENERIC_ERROR)
             }
         } else {
-            if (event.loadedFirstPage) {
+            if (event.causeOfChange == FIRST_PAGE_FETCHED) {
                 uploadedPostRemoteIds.clear()
             }
             refreshListManagerFromStore(listDescriptor, false)
@@ -674,6 +687,7 @@ class PostListFragment : Fragment(),
         refreshListManagerFromStore(listDescriptor, false)
     }
 
+    // TODO: Change all thread modes to Background
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (isAdded && event.post != null && event.post.localSiteId == site.id) {
@@ -685,8 +699,11 @@ class PostListFragment : Fragment(),
                     nonNullActivity.findViewById(R.id.coordinator),
                     event.isError, event.post, null, site, dispatcher
             )
-            // TODO: Only add if it's in the local items
-            uploadedPostRemoteIds.add(event.post.remotePostId)
+            // TODO: improve this comment and explain the workaround
+            // If the uploaded item is a local draft in the `listManager`, keep an id of it
+            if (listManager?.findIndexedNotNull { it.isLocalDraft && it.id == event.post.id }?.isEmpty() != true) {
+                uploadedPostRemoteIds.add(event.post.remotePostId)
+            }
             refreshPostList()
         }
     }
@@ -808,9 +825,15 @@ class DiffCallback(
         if (old == null) {
             return false
         }
-        return ListManager.areItemsTheSame(new, old, newItemPosition, oldItemPosition) { oldItem, newItem ->
-            oldItem.id == newItem.id
+        val oldItem = old.getItem(oldItemPosition, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+        val newItem = new.getItem(newItemPosition, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+        if (oldItem == null && newItem == null) {
+            return true
         }
+        if (oldItem == null || newItem == null) {
+            return false
+        }
+        return oldItem.id == newItem.id
     }
 
     override fun getOldListSize(): Int {
@@ -830,12 +853,16 @@ class DiffCallback(
         if (oldItem == null || newItem == null) {
             return false
         }
-        // TODO: This still doesn't work, because this time if the remote post is locally changed, it's not reflected
         if (oldItem.isLocalDraft && newItem.isLocalDraft) {
-            // TODO: this one was necessary to be able to handle local to local changes
             return oldItem.dateLocallyChanged == newItem.dateLocallyChanged
         }
         if (oldItem.isLocalDraft || newItem.isLocalDraft) {
+            return false
+        }
+        if (oldItem.isLocallyChanged && newItem.isLocallyChanged) {
+            return oldItem.dateLocallyChanged == newItem.dateLocallyChanged
+        }
+        if (oldItem.isLocallyChanged || newItem.isLocallyChanged) {
             return false
         }
         return oldItem.lastModified == newItem.lastModified
