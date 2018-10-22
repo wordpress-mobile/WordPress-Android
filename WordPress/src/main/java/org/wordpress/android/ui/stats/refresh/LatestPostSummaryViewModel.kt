@@ -94,21 +94,27 @@ class LatestPostSummaryViewModel
         return SpannableStringBuilder(message)
     }
 
-    private fun SpannableString.withClickableSpan(clickablePart: String, onClickListener: (Context) -> Unit): SpannableString {
+    private fun SpannableString.withClickableSpan(
+        clickablePart: String,
+        onClickListener: (Context) -> Unit
+    ): SpannableString {
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View?) {
                 widget?.context?.let { onClickListener.invoke(it) }
             }
+
             override fun updateDrawState(ds: TextPaint?) {
                 ds?.color = resourceProvider.getColor(R.color.blue_wordpress)
                 ds?.isUnderlineText = false
             }
         }
         val clickablePartStart = indexOf(clickablePart)
-        setSpan(clickableSpan,
+        setSpan(
+                clickableSpan,
                 clickablePartStart,
                 clickablePartStart + clickablePart.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
         return this
     }
 }
