@@ -324,6 +324,7 @@ class ListStore @Inject constructor(
     ) : Store.OnChangedError
 
     enum class ListErrorType {
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        PERMISSION_ERROR
     }
 }
