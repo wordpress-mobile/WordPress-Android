@@ -22,6 +22,11 @@ class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     private lateinit var mapper: LatestPostSummaryMapper
+    private val date = Date(10)
+    private val postTitle = "post title"
+    private val siteId = 1L
+    private val postId = 10L
+    private val postURL = "url"
     @Before
     fun setUp() {
         mapper = LatestPostSummaryMapper(statsUtilsWrapper, resourceProvider)
@@ -40,12 +45,7 @@ class LatestPostSummaryMapperTest {
 
     @Test
     fun `builds message with no engagement and link`() {
-        val date = Date(10)
         val viewCount = 0
-        val postTitle = "post title"
-        val siteId = 1L
-        val postId = 10L
-        val postURL = "url"
         val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
 
         val sinceTimeLabel = "10 mins"
@@ -77,12 +77,7 @@ class LatestPostSummaryMapperTest {
 
     @Test
     fun `builds message with engagement`() {
-        val date = Date(10)
         val viewCount = 10
-        val postTitle = "post title"
-        val siteId = 1L
-        val postId = 10L
-        val postURL = "url"
         val model = InsightsLatestPostModel(siteId, postTitle, postURL, date, postId, viewCount, 0, 0, listOf())
 
         val sinceTimeLabel = "10 mins"
@@ -110,5 +105,28 @@ class LatestPostSummaryMapperTest {
                 postId.toString(),
                 postURL
         )
+    }
+
+    @Test
+    fun `builds columns item with formatted items`() {
+        val postLikeCount = 20000
+        val postCommentCount = 15000000
+        val postViewsCount = 10
+
+        val columnItem = mapper.buildColumnItem(postViewsCount, postLikeCount, postCommentCount)
+
+        columnItem.headers.apply {
+            assertThat(this).hasSize(3)
+            assertThat(this[0]).isEqualTo(R.string.stats_views)
+            assertThat(this[1]).isEqualTo(R.string.stats_likes)
+            assertThat(this[2]).isEqualTo(R.string.stats_comments)
+        }
+
+        columnItem.values.apply {
+            assertThat(this).hasSize(3)
+            assertThat(this[0]).isEqualTo("10")
+            assertThat(this[1]).isEqualTo("20k")
+            assertThat(this[2]).isEqualTo("15M")
+        }
     }
 }
