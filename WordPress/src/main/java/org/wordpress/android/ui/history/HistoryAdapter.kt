@@ -1,20 +1,25 @@
 package org.wordpress.android.ui.history
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.history.HistoryListItem.Footer
 import org.wordpress.android.ui.history.HistoryListItem.Header
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.history.HistoryListItem.ViewType
+import org.wordpress.android.util.image.ImageManager
+import javax.inject.Inject
 
-class HistoryAdapter(
+class HistoryAdapter(val activity : Activity,
     private val itemClickListener: (HistoryListItem) -> Unit
 ) : Adapter<HistoryViewHolder>() {
     private val list = mutableListOf<HistoryListItem>()
-
+    @Inject lateinit var imageManager: ImageManager
     init {
+        (activity.applicationContext as WordPress).component().inject(this)
         setHasStableIds(true)
     }
 
@@ -38,7 +43,9 @@ class HistoryAdapter(
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         when (holder) {
             is FooterItemViewHolder -> holder.bind(list[position] as Footer)
-            is HeaderItemViewHolder -> holder.bind(list[position] as Header)
+            is HeaderItemViewHolder -> {
+                holder.bind(list[position] as Header)
+            }
             is RevisionItemViewHolder -> holder.bind(list[position] as Revision)
             else -> throw IllegalArgumentException("Unexpected view holder in History")
         }
@@ -47,9 +54,11 @@ class HistoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         return when (viewType) {
             ViewType.REVISION.id -> RevisionItemViewHolder(
-                    parent,
-                    itemClickListener
-            )
+                        parent,
+                        itemClickListener,
+                    imageManager
+                )
+
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in History")
@@ -57,8 +66,8 @@ class HistoryAdapter(
     }
 
     internal fun updateList(items: List<HistoryListItem>) {
+        DiffUtil.calculateDiff(HistoryDiffCallback(list.toList(), items)).dispatchUpdatesTo(this)
         list.clear()
         list.addAll(items)
-        DiffUtil.calculateDiff(HistoryDiffCallback(list.toList(), items)).dispatchUpdatesTo(this)
     }
 }
