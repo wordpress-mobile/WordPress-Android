@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
+import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -78,8 +79,14 @@ class StatsListFragment : Fragment() {
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val statsType = arguments?.getSerializable(typeKey) as StatsListType
+
+        val viewModelClass = when (statsType) {
+            INSIGHTS -> InsightsTabViewModel::class.java
+            else -> DaysTabViewModel::class.java
+        }
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(statsType.name, StatsListViewModel::class.java)
+                .get(statsType.name, viewModelClass)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -87,7 +94,7 @@ class StatsListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
-        viewModel.start(site, statsType)
+        viewModel.start(site)
 
         setupObservers()
     }
