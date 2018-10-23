@@ -107,7 +107,7 @@ public class PeopleUtils {
 
         for (int i = 0; i < authors.size(); i++) {
             batchParams.put(String.format(Locale.US, "urls[%d]", i),
-                    String.format(Locale.US, "/sites/%d/users?search=%s&search_columns=ID&fields=avatar_URL",
+                    String.format(Locale.US, "/sites/%d/users?search=%s&search_columns=ID",
                             site.getSiteId(), authors.get(i)));
         }
 
