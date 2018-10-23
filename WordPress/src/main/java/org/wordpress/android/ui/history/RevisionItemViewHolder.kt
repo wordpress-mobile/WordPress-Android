@@ -55,13 +55,12 @@ class RevisionItemViewHolder(
     }
 
     override fun updateChanges(bundle: Bundle) {
+        super.updateChanges(bundle)
         if (bundle.containsKey(HistoryDiffCallback.AVATAR_CHANGED_KEY)) {
             val avatarUrl = bundle.getString(HistoryDiffCallback.AVATAR_CHANGED_KEY)
             if (!TextUtils.isEmpty(avatarUrl)) {
                 imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl))
             }
         }
-
-        super.updateChanges(bundle)
     }
 }

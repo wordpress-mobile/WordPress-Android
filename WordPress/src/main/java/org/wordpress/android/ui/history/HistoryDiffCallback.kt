@@ -41,9 +41,9 @@ class HistoryDiffCallback(
 
         if (oldItem is Revision && newItem is Revision) {
             if (oldItem.authorAvatarURL != newItem.authorAvatarURL) {
-                val diffBundle = Bundle()
-                diffBundle.putString(AVATAR_CHANGED_KEY, newItem.authorAvatarURL)
-                return diffBundle
+                val changesBundle = Bundle()
+                changesBundle.putString(AVATAR_CHANGED_KEY, newItem.authorAvatarURL)
+                return changesBundle
             }
         }
         return super.getChangePayload(oldItemPosition, newItemPosition)

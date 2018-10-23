@@ -85,8 +85,8 @@ public class PeopleUtils {
 
                         callback.onSuccess(people, true);
                     } catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: "
-                                        + e);
+                        AppLog.e(T.API, "JSON exception occurred while parsing the revision author details"
+                                        + " from batch response for sites/%s/users: " + e);
                         callback.onError();
                     }
                 }
@@ -104,7 +104,6 @@ public class PeopleUtils {
         };
 
         Map<String, String> batchParams = new HashMap<>();
-        String batchPatch = "batch/";
 
         for (int i = 0; i < authors.size(); i++) {
             batchParams.put(String.format(Locale.US, "urls[%d]", i),
@@ -112,7 +111,7 @@ public class PeopleUtils {
                             site.getSiteId(), authors.get(i)));
         }
 
-        WordPress.getRestClientUtilsV1_1().get(batchPatch, batchParams, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get("batch/", batchParams, null, listener, errorListener);
     }
 
     public static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback) {

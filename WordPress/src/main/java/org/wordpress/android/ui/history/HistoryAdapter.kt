@@ -45,9 +45,7 @@ class HistoryAdapter(
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         when (holder) {
             is FooterItemViewHolder -> holder.bind(list[position] as Footer)
-            is HeaderItemViewHolder -> {
-                holder.bind(list[position] as Header)
-            }
+            is HeaderItemViewHolder -> holder.bind(list[position] as Header)
             is RevisionItemViewHolder -> holder.bind(list[position] as Revision)
             else -> throw IllegalArgumentException("Unexpected view holder in History")
         }

@@ -39,7 +39,7 @@ sealed class HistoryListItem(val type: ViewType) {
         val postAuthorId: String?,
         val titleDiffs: ArrayList<@RawValue Diff>,
         val contentDiffs: ArrayList<@RawValue Diff>,
-        var authorName: String? = null,
+        var authorDisplayName: String? = null,
         var authorAvatarURL: String? = null
     ) : HistoryListItem(REVISION), Parcelable {
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
@@ -60,8 +60,7 @@ sealed class HistoryListItem(val type: ViewType) {
                 model.postModifiedGmt ?: "",
                 model.postAuthorId ?: "",
                 model.titleDiffs,
-                model.contentDiffs
-        )
+                model.contentDiffs)
 
         override fun longId(): Long = revisionId.hashCode().toLong()
     }

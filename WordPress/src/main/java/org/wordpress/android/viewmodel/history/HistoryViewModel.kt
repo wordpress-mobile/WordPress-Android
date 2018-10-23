@@ -56,10 +56,6 @@ class HistoryViewModel @Inject constructor(
     val revisions: LiveData<List<HistoryListItem>>
         get() = _revisions
 
-    private val _users = MutableLiveData<List<Person>>()
-    val users: LiveData<List<Person>>
-        get() = _users
-
     private var isStarted = false
 
     lateinit var post: PostModel
@@ -80,6 +76,19 @@ class HistoryViewModel @Inject constructor(
         fetchRevisions()
 
         isStarted = true
+    }
+
+    private fun createRevisionsList(revisions: List<RevisionModel>) {
+        var revisionAuthorsId = ArrayList<String>()
+        revisions.forEach {
+            if (!TextUtils.isEmpty(it.postAuthorId)) {
+                revisionAuthorsId.add(it.postAuthorId!!)
+            }
+        }
+
+        revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
+        _revisions.value = revisionsToHistoryListItems(revisions)
+        fetchRevisionAuthorDetails(revisionAuthorsId)
     }
 
     private fun revisionsToHistoryListItems(revisions: List<RevisionModel>): List<HistoryListItem> {
@@ -109,26 +118,9 @@ class HistoryViewModel @Inject constructor(
         return items
     }
 
-    private fun createRevisionsList(revisions: List<RevisionModel>) {
-        var revisionAuthorsId = ArrayList<String>()
-        revisions.forEach {
-            if (!TextUtils.isEmpty(it.postAuthorId)) {
-                revisionAuthorsId.add(it.postAuthorId!!)
-            }
-        }
-
-        revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
-        fetchRevisionAuthorDetails(revisionAuthorsId)
-        _revisions.value = revisionsToHistoryListItems(revisions)
-    }
-
     private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
         PeopleUtils.fetchRevisionAuthorsDetails(site, authorsId, object : FetchUsersCallback {
-            override fun onSuccess(peopleList: MutableList<Person>?, isEndOfList: Boolean) {
-                if (peopleList == null) {
-                    return
-                }
-
+            override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
                 val existingRevisions = _revisions.value ?: return
                 val updatedRevisions = mutableListOf<HistoryListItem>()
 
@@ -137,14 +129,13 @@ class HistoryViewModel @Inject constructor(
 
                     if (mutableRevision is HistoryListItem.Revision) {
                         // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
-                        // and DiffUtil will not catch this
+                        // and DiffUtil will not catch this change
                         mutableRevision = mutableRevision.copy()
 
                         val person = peopleList.firstOrNull { it.personID.toString() == mutableRevision.postAuthorId }
-
                         if (person != null) {
                             mutableRevision.authorAvatarURL = person.avatarUrl
-                            mutableRevision.authorName = person.displayName
+                            mutableRevision.authorDisplayName = person.displayName
                         }
                     }
 
