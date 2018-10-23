@@ -66,8 +66,12 @@ class HistoryAdapter(
     }
 
     internal fun updateList(items: List<HistoryListItem>) {
-        DiffUtil.calculateDiff(HistoryDiffCallback(list.toList(), items)).dispatchUpdatesTo(this)
+        val diffCallback = HistoryDiffCallback(list.toList(), items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         list.clear()
         list.addAll(items)
+        diffResult.dispatchUpdatesTo(this)
+
     }
 }
