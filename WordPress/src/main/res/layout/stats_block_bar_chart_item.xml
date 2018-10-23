@@ -5,8 +5,8 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="16dp"
               android:orientation="vertical"
-              android:paddingEnd="8dp"
-              android:paddingStart="8dp">
+              android:paddingEnd="12dp"
+              android:paddingStart="12dp">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
-        android:paddingEnd="11dp"
-        android:paddingStart="24dp">
+        android:paddingEnd="15dp"
+        android:paddingStart="25dp">
 
         <TextView
             android:id="@+id/label_start"
