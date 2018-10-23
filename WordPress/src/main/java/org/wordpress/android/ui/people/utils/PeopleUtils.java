@@ -27,7 +27,7 @@ public class PeopleUtils {
     public static final int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -67,7 +67,7 @@ public class PeopleUtils {
 
     public static void fetchRevisionAuthorsDetails(final SiteModel site, List<String> authors,
                                                    final FetchUsersCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -125,7 +125,7 @@ public class PeopleUtils {
 
     private static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback,
                                        final boolean isEmailFollower) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -166,7 +166,7 @@ public class PeopleUtils {
     }
 
     public static void fetchViewers(final SiteModel site, final int offset, final FetchViewersCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -205,7 +205,7 @@ public class PeopleUtils {
 
     public static void updateRole(final SiteModel site, long personID, String newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -241,7 +241,7 @@ public class PeopleUtils {
     }
 
     public static void removeUser(final SiteModel site, final long personID, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -272,7 +272,7 @@ public class PeopleUtils {
 
     public static void removeFollower(final SiteModel site, final long personID,
                                       Person.PersonType personType, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -307,7 +307,7 @@ public class PeopleUtils {
     }
 
     public static void removeViewer(final SiteModel site, final long personID, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -388,7 +388,7 @@ public class PeopleUtils {
 
     public static void validateUsernames(final List<String> usernames, String role, long wpComBlogId, final
     ValidateUsernameCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -500,7 +500,7 @@ public class PeopleUtils {
 
     public static void sendInvitations(final List<String> usernames, String role, String message, long wpComBlogId,
                                        final InvitationsSendCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (callback == null) {
