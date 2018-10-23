@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.history
 
+import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,7 @@ class RevisionItemViewHolder(
         // TODO: Replace date and time with post status or username.
         subtitle.text = TextUtils.concat(revision.formattedDate + " at " + revision.formattedTime)
 
-        if(!TextUtils.isEmpty(revision.authorAvatarURL)){
+        if (!TextUtils.isEmpty(revision.authorAvatarURL)) {
             imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(revision.authorAvatarURL))
         }
 
@@ -50,5 +51,16 @@ class RevisionItemViewHolder(
                 diffDeletions.visibility = View.GONE
             }
         }
+    }
+
+    override fun updateChanges(bundle: Bundle) {
+        if (bundle.containsKey(HistoryDiffCallback.AVATAR_CHANGED_KEY)) {
+            val avatarUrl = bundle.getString(HistoryDiffCallback.AVATAR_CHANGED_KEY)
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl))
+            }
+        }
+
+        super.updateChanges(bundle)
     }
 }
