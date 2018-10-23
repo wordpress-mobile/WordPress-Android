@@ -284,7 +284,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
-        mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
+        mImageManager.loadIntoCircle(noteViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
         boolean isUnread = note.isUnread();
 
