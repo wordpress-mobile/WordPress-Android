@@ -64,7 +64,6 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
-
     public static void fetchRevisionAuthorsDetails(final SiteModel site, List<String> authors,
                                                    final FetchUsersCallback callback) {
         RestRequest.Listener listener = new RestRequest.Listener() {
