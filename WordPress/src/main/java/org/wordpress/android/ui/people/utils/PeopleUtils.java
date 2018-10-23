@@ -106,12 +106,11 @@ public class PeopleUtils {
         Map<String, String> batchParams = new HashMap<>();
         String batchPatch = "batch/";
 
-        for (String author : authors) {
-            batchParams.put("urls[]",
+        for (int i = 0; i < authors.size(); i++) {
+            batchParams.put(String.format(Locale.US, "urls[%d]", i),
                     String.format(Locale.US, "/sites/%d/users?search=%s&search_columns=ID&fields=avatar_URL",
-                            site.getSiteId(), author));
+                            site.getSiteId(), authors.get(i)));
         }
-
 
         WordPress.getRestClientUtilsV1_1().get(batchPatch, batchParams, null, listener, errorListener);
     }
