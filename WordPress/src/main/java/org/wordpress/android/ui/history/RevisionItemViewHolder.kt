@@ -30,7 +30,7 @@ class RevisionItemViewHolder(
         subtitle.text = TextUtils.concat(revision.formattedDate + " at " + revision.formattedTime)
 
         if(!TextUtils.isEmpty(revision.authorAvatarURL)){
-            imageManager.load(avatar, ImageType.AVATAR, StringUtils.notNullStr(revision.authorAvatarURL))
+            imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(revision.authorAvatarURL))
         }
 
         if (revision.totalAdditions == 0 && revision.totalDeletions == 0) {
