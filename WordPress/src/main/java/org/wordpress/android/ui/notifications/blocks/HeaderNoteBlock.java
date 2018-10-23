@@ -60,7 +60,7 @@ public class HeaderNoteBlock extends NoteBlock {
 
         Spannable spannable = mNotificationsUtilsWrapper.getSpannableContentForRanges(mHeadersList.get(0));
         noteBlockHolder.mNameTextView.setText(spannable);
-        if (mImageType == ImageType.AVATAR) {
+        if (mImageType == ImageType.AVATAR_WITH_BACKGROUND) {
             mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
         } else {
             mImageManager.load(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
