@@ -1,3 +1,3 @@
-* Spend more time communicating, and less time tapping: now you can navigate to comment, blog and post details directly from the Activity Log.
-* We've restyled a few more screens to keep improving consistency across the app.
-* Plus some bug fixes and general reliability improvements, as always.
+* Problems installing Jetpack? A new step-by step flow is ready to guide you.
+* We cleaned out some code cobwebs to make everything faster and more reliable.
+* Bug fixes.
