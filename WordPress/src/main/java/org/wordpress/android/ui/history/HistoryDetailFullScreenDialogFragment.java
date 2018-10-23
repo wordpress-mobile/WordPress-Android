@@ -52,8 +52,8 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
         super.onActivityCreated(savedInstanceState);
 
         if (getView() != null) {
-            ((DiffView) getView().findViewById(R.id.title)).showDiffs(mRevision.getTitleDiffs());
-            ((DiffView) getView().findViewById(R.id.content)).showDiffs(mRevision.getContentDiffs());
+            ((DiffView) getView().findViewById(R.id.title)).showDiffs(mRevision.getTitleDiffs(), true);
+            ((DiffView) getView().findViewById(R.id.content)).showDiffs(mRevision.getContentDiffs(), false);
 
             if (mRevision.getTotalAdditions() > 0) {
                 TextView totalAdditionsView = getView().findViewById(R.id.diff_additions);

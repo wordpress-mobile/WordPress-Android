@@ -18,10 +18,14 @@ class DiffView : AppCompatTextView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    fun showDiffs(diffs: List<Diff>) {
+    fun showDiffs(diffs: List<Diff>, trimNewline: Boolean = false) {
         text = null
 
         diffs.forEachIndexed { index, diff ->
+            if (trimNewline && index == diffs.size - 1 && diff.value.equals("\n")) {
+                return
+            }
+
             var diffValue = diff.value
 
             // add tiny spacing before and after DEL and ADD diffs (will be included in the span)
