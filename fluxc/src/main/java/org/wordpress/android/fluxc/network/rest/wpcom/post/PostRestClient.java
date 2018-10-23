@@ -101,7 +101,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         String fields = TextUtils.join(",", Arrays.asList("ID", "modified"));
         Map<String, String> params = createFetchPostListParameters(false, offset, listDescriptor.getPageSize(),
-                listDescriptor.getStatus().getValue(), fields, listDescriptor.getOrder().getValue(),
+                listDescriptor.getStatusList(), fields, listDescriptor.getOrder().getValue(),
                 listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
 
         final boolean loadedMore = offset > 0;
@@ -140,8 +140,7 @@ public class PostRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.sites.site(site.getSiteId()).posts.getUrlV1_1();
 
         Map<String, String> params =
-                createFetchPostListParameters(getPages, offset, number, PostStatus.postStatusListToString(statusList),
-                        null, null, null, null);
+                createFetchPostListParameters(getPages, offset, number, statusList, null, null, null, null);
 
         final WPComGsonRequest<PostsResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostsResponse.class,
@@ -476,7 +475,7 @@ public class PostRestClient extends BaseWPComRestClient {
     private Map<String, String> createFetchPostListParameters(final boolean getPages,
                                                               final int offset,
                                                               final int number,
-                                                              @Nullable final String status,
+                                                              @Nullable final List<PostStatus> statusList,
                                                               @Nullable final String fields,
                                                               @Nullable final String order,
                                                               @Nullable final String orderBy,
@@ -496,8 +495,8 @@ public class PostRestClient extends BaseWPComRestClient {
         if (!TextUtils.isEmpty(orderBy)) {
             params.put("order_by", orderBy);
         }
-        if (!TextUtils.isEmpty(status)) {
-            params.put("status", status);
+        if (statusList != null && statusList.size() > 0) {
+            params.put("status", PostStatus.postStatusListToString(statusList));
         }
         if (!TextUtils.isEmpty(searchQuery)) {
             params.put("search", searchQuery);

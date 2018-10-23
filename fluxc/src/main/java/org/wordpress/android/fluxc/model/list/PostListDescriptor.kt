@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.model.list
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.DEFAULT_POST_STATUS_LIST
 
 private const val PAGE_SIZE = 100
 
@@ -14,8 +16,9 @@ sealed class PostListDescriptor(
         // TODO: need a better hashing algorithm, preferably a perfect hash
         when (this) {
             is PostListDescriptorForRestSite -> {
+                val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-$site.id-st${status.value}-o${order.value}-ob${orderBy.value}" +
+                        ("rest-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
                 )
             }
@@ -52,28 +55,12 @@ sealed class PostListDescriptor(
 
     class PostListDescriptorForRestSite(
         site: SiteModel,
-        val status: PostStatusForRestSite = PostStatusForRestSite.PUBLISH,
+        val statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = ListOrder.DESC,
         orderBy: PostListOrderBy = PostListOrderBy.DATE,
         val searchQuery: String? = null,
         pageSize: Int = PAGE_SIZE
-    ) : PostListDescriptor(site, orderBy, order, pageSize) {
-        enum class PostStatusForRestSite(val value: String) {
-            ANY("any"),
-            DRAFT("draft"),
-            PUBLISH("publish"),
-            PRIVATE("private"),
-            PENDING("pending"),
-            FUTURE("future"),
-            TRASH("trash");
-
-            companion object {
-                fun fromValue(value: String): PostStatusForRestSite? {
-                    return values().firstOrNull { it.value.toLowerCase() == value.toLowerCase() }
-                }
-            }
-        }
-    }
+    ) : PostListDescriptor(site, orderBy, order, pageSize)
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,

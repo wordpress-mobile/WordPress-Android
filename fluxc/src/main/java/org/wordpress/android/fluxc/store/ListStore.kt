@@ -18,11 +18,15 @@ import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListManager
+import org.wordpress.android.fluxc.model.list.ListManagerItem
+import org.wordpress.android.fluxc.model.list.ListManagerItem.LocalItem
+import org.wordpress.android.fluxc.model.list.ListManagerItem.RemoteItem
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
@@ -61,8 +65,11 @@ class ListStore @Inject constructor(
     /**
      * This is the function that'll be used to consume lists.
      *
+     * It'll add the [ListItemDataSource.localItems], [ListItemDataSource.remoteItemIdsToInclude] and the list items
+     * from the DB one after another and then filter out [ListItemDataSource.remoteItemsToHide] and finally
+     * pass it to [ListManager].
+     *
      * @param listDescriptor List to be consumed
-     * @param localItems The list of ordered local items that should be shown at the top of the list
      * @param dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
      * for more details.
      * @param loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
@@ -72,22 +79,33 @@ class ListStore @Inject constructor(
      */
     suspend fun <T> getListManager(
         listDescriptor: ListDescriptor,
-        localItems: List<T>?,
         dataSource: ListItemDataSource<T>,
         loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
     ): ListManager<T> = withContext(Dispatchers.Default) {
         val listModel = listSqlUtils.getList(listDescriptor)
-        val listItems = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id)
+        // Get the remote ids of items for the list from the DB
+        val remoteIdsFromDb = if (listModel != null) {
+            listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
         } else emptyList()
+        // Get the remote ids that client asks for to be included if they are not already in the remote ids from DB
+        val remoteItemIdsToInclude = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
+            remoteIdsToInclude.filter { !remoteIdsFromDb.contains(it) }
+        } ?: emptyList()
+        // Add the remote ids together and filter out the ids the client asks to be hidden
+        val remoteIds = remoteItemIdsToInclude.asSequence().plus(remoteIdsFromDb).filter {
+            dataSource.remoteItemsToHide(listDescriptor)?.contains(it) != true
+        }.toList()
+
         val listState = if (listModel != null) getListState(listModel) else null
-        val listData = dataSource.getItems(listDescriptor, listItems.map { it.remoteItemId })
+        val listData = dataSource.getItems(listDescriptor, remoteIds)
+        val localItems = dataSource.localItems(listDescriptor) ?: emptyList()
+        // Add the local items and remote items in one list of `ListManagerItem`s
+        val allItems: List<ListManagerItem<T>> = localItems.asSequence().map { LocalItem(it) }
+                .plus(remoteIds.map { RemoteItem(it, listData[it]) }).toList()
         return@withContext ListManager(
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
-                localItems = localItems,
-                items = listItems,
-                listData = listData,
+                items = allItems,
                 loadMoreOffset = loadMoreOffset,
                 isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
                 isLoadingMore = listState?.isLoadingMore() ?: false,
@@ -102,16 +120,27 @@ class ListStore @Inject constructor(
     /**
      * Handles the [ListAction.FETCH_LIST] action.
      *
-     * This acts as an intermediary action. It will update the state and emit the change. Afterwards,
-     * [FetchListPayload.fetchList] will be used to do the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action
-     * should be used to let the [ListStore] know the results of the fetch.
+     * This acts as an intermediary action. It will first check the current state and ignore unnecessary actions.
+     * It will then update the state and emit the change. Afterwards, [FetchListPayload.fetchList] will be used to do
+     * the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action should be used to let the [ListStore] know the
+     * results of the fetch.
      *
      * See [handleFetchedListItems] for what happens after items are fetched.
      */
     private fun handleFetchList(payload: FetchListPayload) {
+        listSqlUtils.getList(payload.listDescriptor)?.let { listModel ->
+            val currentState = getListState(listModel)
+            if (!payload.loadMore && currentState.isFetchingFirstPage()) {
+                // already fetching the first page
+                return
+            } else if (payload.loadMore && !currentState.canLoadMore()) {
+                // we can only load more if there is more data to be loaded
+                return
+            }
+        }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListChanged(listOf(payload.listDescriptor), null))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), CauseOfListChange.STATE_CHANGED, null))
 
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
@@ -150,13 +179,18 @@ class ListStore @Inject constructor(
         } else {
             listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
-        emitChange(OnListChanged(listOf(payload.listDescriptor), payload.error))
+        val causeOfChange = if (payload.isError) {
+            CauseOfListChange.ERROR
+        } else {
+            if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
+        }
+        emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
     }
 
     /**
      * Handles the [ListAction.LIST_ITEMS_CHANGED] action.
      *
-     * Whenever an item of a list is changed, we'll emit the [OnListChanged] event so the consumer of the lists can
+     * Whenever an item of a list is changed, we'll emit the [OnListItemsChanged] event so the consumer of the lists can
      * update themselves.
      */
     private fun handleListItemsChanged(payload: ListItemsChangedPayload) {
@@ -167,7 +201,7 @@ class ListStore @Inject constructor(
      * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
      *
      * Items in [ListItemsRemovedPayload.remoteItemIds] will be removed from lists with
-     * [ListDescriptorTypeIdentifier] after which [OnListChanged] event will be emitted.
+     * [ListDescriptorTypeIdentifier] after which [OnListItemsChanged] event will be emitted.
      */
     private fun handleListItemsRemoved(payload: ListItemsRemovedPayload) {
         val lists = listSqlUtils.getListsWithTypeIdentifier(payload.type)
@@ -216,8 +250,12 @@ class ListStore @Inject constructor(
      */
     class OnListChanged(
         val listDescriptors: List<ListDescriptor>,
+        val causeOfChange: CauseOfListChange,
         error: ListError?
     ) : Store.OnChanged<ListError>() {
+        enum class CauseOfListChange {
+            ERROR, FIRST_PAGE_FETCHED, LOADED_MORE, STATE_CHANGED
+        }
         init {
             this.error = error
         }
@@ -295,6 +333,7 @@ class ListStore @Inject constructor(
     ) : Store.OnChangedError
 
     enum class ListErrorType {
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        PERMISSION_ERROR
     }
 }

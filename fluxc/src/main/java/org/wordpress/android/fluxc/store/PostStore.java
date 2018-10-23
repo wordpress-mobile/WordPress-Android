@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.list.ListOrder;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite;
-import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite.PostStatusForRestSite;
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.model.revisions.Diff;
@@ -441,9 +440,8 @@ public class PostStore extends Store {
         if (postListDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) postListDescriptor;
             searchQuery = descriptor.getSearchQuery();
-            if (!(descriptor.getStatus() == PostStatusForRestSite.ANY
-                  || descriptor.getStatus() == PostStatusForRestSite.DRAFT)) {
-                // Any other status shouldn't be in the local drafts results
+            if (!(descriptor.getStatusList().contains(PostStatus.DRAFT))) {
+                // Drafts should not be included
                 return Collections.emptyList();
             }
         }
@@ -491,10 +489,10 @@ public class PostStore extends Store {
 
         switch ((PostAction) actionType) {
             case FETCH_POST_LIST:
-                fetchPostList((FetchPostListPayload) action.getPayload());
+                handleFetchPostList((FetchPostListPayload) action.getPayload());
                 break;
             case FETCHED_POST_LIST:
-                fetchedPostList((FetchPostListResponsePayload) action.getPayload());
+                handleFetchedPostList((FetchPostListResponsePayload) action.getPayload());
                 break;
             case FETCH_POSTS:
                 fetchPosts((FetchPostsPayload) action.getPayload(), false);
@@ -559,7 +557,7 @@ public class PostStore extends Store {
         }
     }
 
-    private void fetchPostList(FetchPostListPayload payload) {
+    private void handleFetchPostList(FetchPostListPayload payload) {
         if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
             mPostRestClient.fetchPostList(descriptor, payload.offset);
@@ -569,12 +567,13 @@ public class PostStore extends Store {
         }
     }
 
-    private void fetchedPostList(FetchPostListResponsePayload payload) {
+    private void handleFetchedPostList(FetchPostListResponsePayload payload) {
         ListError fetchedListItemsError = null;
         List<Long> postIds;
         if (payload.isError()) {
-            fetchedListItemsError =
-                    new ListError(ListErrorType.GENERIC_ERROR, payload.error.message);
+            ListErrorType errorType = payload.error.type == PostErrorType.UNAUTHORIZED ? ListErrorType.PERMISSION_ERROR
+                    : ListErrorType.GENERIC_ERROR;
+            fetchedListItemsError = new ListError(errorType, payload.error.message);
             postIds = Collections.emptyList();
         } else {
             postIds = new ArrayList<>(payload.postListItems.size());
