@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView.ViewHolder
@@ -94,6 +95,7 @@ sealed class BlockItemViewHolder(
 
                 override fun updateDrawState(ds: TextPaint?) {
                     ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
+                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
                     ds?.isUnderlineText = false
                 }
             }
