@@ -72,6 +72,5 @@ class HistoryAdapter(
         list.clear()
         list.addAll(items)
         diffResult.dispatchUpdatesTo(this)
-
     }
 }
