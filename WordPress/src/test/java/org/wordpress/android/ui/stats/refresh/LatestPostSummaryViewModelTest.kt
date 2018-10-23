@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
@@ -22,10 +24,14 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMore
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryViewModelTest {
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
@@ -33,6 +39,7 @@ class LatestPostSummaryViewModelTest {
     @Before
     fun setUp() {
         viewModel = LatestPostSummaryViewModel(insightsStore, latestPostSummaryMapper)
+        viewModel.navigationTarget.observeForever {}
     }
 
     @Test
@@ -74,6 +81,8 @@ class LatestPostSummaryViewModelTest {
             val link = this[2] as Link
             assertThat(link.icon).isEqualTo(R.drawable.ic_create_blue_medium_24dp)
             assertThat(link.text).isEqualTo(R.string.stats_insights_create_post)
+
+            assertThat(link.toNavigationTarget()).isEqualTo(NavigationTarget.AddNewPost)
         }
     }
 
@@ -101,6 +110,12 @@ class LatestPostSummaryViewModelTest {
             val link = this[2] as Link
             assertThat(link.icon).isEqualTo(R.drawable.ic_share_blue_medium_24dp)
             assertThat(link.text).isEqualTo(R.string.stats_insights_share_post)
+
+            link.toNavigationTarget().apply {
+                assertThat(this).isInstanceOf(SharePost::class.java)
+                assertThat((this as SharePost).url).isEqualTo(model.postURL)
+                assertThat(this.title).isEqualTo(model.postTitle)
+            }
         }
     }
 
@@ -135,7 +150,22 @@ class LatestPostSummaryViewModelTest {
             val link = this[4] as Link
             assertThat(link.icon).isNull()
             assertThat(link.text).isEqualTo(R.string.stats_insights_view_more)
+
+            link.toNavigationTarget().apply {
+                assertThat(this).isInstanceOf(ViewMore::class.java)
+                assertThat((this as ViewMore).postUrl).isEqualTo(model.postURL)
+                assertThat(this.postTitle).isEqualTo(model.postTitle)
+                assertThat(this.postID).isEqualTo(model.postId.toString())
+                assertThat(this.siteID).isEqualTo(model.siteId)
+            }
         }
+    }
+
+    private fun Link.toNavigationTarget(): NavigationTarget? {
+        var navigationTarget: NavigationTarget? = null
+        viewModel.navigationTarget.observeForever { navigationTarget = it }
+        this.action()
+        return navigationTarget
     }
 
     private fun buildLatestPostModel(
