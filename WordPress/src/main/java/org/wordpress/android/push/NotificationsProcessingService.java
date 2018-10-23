@@ -43,10 +43,11 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.HashMap;
 
@@ -329,8 +330,13 @@ public class NotificationsProcessingService extends Service {
 
         private void auth2FaApproveButtonClicked(Intent workIntent) {
             if (mNotifUtilsWrapper.extrasContainValid2FaToken(workIntent)) {
-                String token = mNotifUtilsWrapper.retrieve2FATokenFromIntentExtras(workIntent);
-                NotificationsUtils.sendTwoFactorAuthToken(token);
+                // Make sure the user can't approve 2fa notification when the device is locked
+                if (DeviceUtils.getInstance().isDeviceLocked(getApplicationContext())) {
+                    startAppFrom2FaNotification(workIntent, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+                } else {
+                    String token = mNotifUtilsWrapper.retrieve2FATokenFromIntentExtras(workIntent);
+                    NotificationsUtils.sendTwoFactorAuthToken(token);
+                }
             } else {
                 NativeNotificationsUtils.hideStatusBar(mContext);
                 auth2FaTokenExpired(workIntent);
@@ -340,10 +346,7 @@ public class NotificationsProcessingService extends Service {
         private void auth2FaNotifBodyClicked(Intent workIntent) {
             if (mNotifUtilsWrapper.extrasContainValid2FaToken(workIntent)) {
                 // start activity and display a dialog
-                Bundle extras = workIntent.getExtras();
-                extras.putString(NotificationsProcessingService.ARG_ACTION_TYPE,
-                        NotificationsProcessingService.ARG_ACTION_AUTH_OPEN_DIALOG);
-                ActivityLauncher.startFrom2FaAuthPushNotification(mContext, extras);
+                startAppFrom2FaNotification(workIntent, NotificationsProcessingService.ARG_ACTION_AUTH_OPEN_DIALOG);
             } else {
                 auth2FaTokenExpired(workIntent);
             }
@@ -352,9 +355,12 @@ public class NotificationsProcessingService extends Service {
         private void auth2FaTokenExpired(Intent workIntent) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
             // start activity and show an error
+            startAppFrom2FaNotification(workIntent, NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED);
+        }
+
+        private void startAppFrom2FaNotification(Intent workIntent, String actionType) {
             Bundle extras = workIntent.getExtras();
-            extras.putString(NotificationsProcessingService.ARG_ACTION_TYPE,
-                    NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED);
+            extras.putString(NotificationsProcessingService.ARG_ACTION_TYPE, actionType);
             ActivityLauncher.startFrom2FaAuthPushNotification(mContext, extras);
         }
 

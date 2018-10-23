@@ -50,6 +50,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NativeNotificationsUtils;
+import org.wordpress.android.push.NativeNotificationsUtilsWrapper;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -155,6 +156,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject ShortcutUtils mShortcutUtils;
     @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
+    @Inject NativeNotificationsUtilsWrapper mNativeNotificationsUtilsWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -374,6 +376,9 @@ public class WPMainActivity extends AppCompatActivity implements
                 String message = getIntent().getStringExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE);
 
                 NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+            } else if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                String token = mNativeNotificationsUtilsWrapper.retrieve2FATokenFromIntentExtras(getIntent());
+                NotificationsUtils.sendTwoFactorAuthToken(token);
             } else if (NotificationsProcessingService.ARG_ACTION_AUTH_TOKEN_EXPIRED.equals(actionType)) {
                 // inform the user the token has expired
                 Snackbar.make(findViewById(R.id.coordinator), R.string.push_auth_expired, Snackbar.LENGTH_LONG)

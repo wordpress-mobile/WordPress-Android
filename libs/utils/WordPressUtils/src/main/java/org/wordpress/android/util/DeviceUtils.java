@@ -93,8 +93,14 @@ public class DeviceUtils {
     }
 
     public boolean isDeviceLocked(Context context) {
-        KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        return myKM.inKeyguardRestrictedInputMode();
+        KeyguardManager kgMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            boolean deviceProtectedWithScreenLock = kgMgr.isKeyguardSecure();
+            boolean deviceLocked = kgMgr.isKeyguardLocked();
+            return deviceProtectedWithScreenLock && deviceLocked;
+        } else {
+            return kgMgr.inKeyguardRestrictedInputMode();
+        }
     }
 
     /**
