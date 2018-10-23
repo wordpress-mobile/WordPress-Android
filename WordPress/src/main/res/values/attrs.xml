@@ -118,14 +118,6 @@
     </declare-styleable>
 
     <!--
-        WPNetworkImageView
-    -->
-    <declare-styleable name="wpNetworkImageView">
-        <attr name="wpDefaultImageDrawable" format="reference"/>
-        <attr name="wpErrorImageDrawable" format="reference"/>
-    </declare-styleable>
-
-    <!--
         FilteredRecyclerView
     -->
     <declare-styleable name="FilteredRecyclerView">

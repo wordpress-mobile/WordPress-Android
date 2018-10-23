@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-12 17:10:09+0000
+Translation-Revision-Date: 2018-10-15 08:19:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">¡Ahora puedes salir del editor y tu página se guardará y programará en segundo plano! ¡Pruébalo!</string>
+    <string name="async_promo_description_publish_post">¡Ahora puedes salir del editor y tu entrada se guardará y publicará en segundo plano! ¡Pruébalo!</string>
+    <string name="async_promo_description_publish_page">¡Ahora puedes salir del editor y tu página se guardará y publicará en segundo plano! ¡Pruébalo!</string>
+    <string name="image_size_full_class">size-full</string>
+    <string name="image_size_large_class">size-large</string>
+    <string name="image_size_medium_class">size-medium</string>
+    <string name="image_size_thumbnail_class">size-thumbnail</string>
+    <string name="image_size_full_label">Tamaño completo</string>
+    <string name="image_size_large_label">Grande</string>
+    <string name="image_size_medium_label">Mediano</string>
+    <string name="image_size_thumbnail_label">Miniatura</string>
+    <string name="menu_history">Historia</string>
+    <string name="async_promo_schedule_now">Programar</string>
+    <string name="async_promo_title_schedule">Programa con confianza</string>
+    <string name="pages_pending">Pendiente de revisión</string>
+    <string name="pages_open_page_error">La página seleccionada no está disponible</string>
     <string name="news_card_announcement_action_sample_announcement">[Leer más]</string>
     <string name="news_card_announcement_content_sample_announcement">[¿No tienes tiempo para leer ahora mismo?] No hay problema, guarda entradas para cuando puedas.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Nueva característica disponible]</string>
@@ -25,7 +41,7 @@ Language: es
     <string name="pages_scheduled">Programada</string>
     <string name="pages_drafts">Borradores</string>
     <string name="pages_published">Publicadas</string>
-    <string name="login_error_sms_throttled">Hemos hecho demasiados intentos para enviar un código de verificación por SMS – tómate un descanso y solicita uno nuevo dentro de un minuto.</string>
+    <string name="login_error_sms_throttled">Hemos hecho demasiados intentos para enviar un código de verificación por SMS - tómate un descanso y solicita uno nuevo dentro de un minuto.</string>
     <string name="login_error_email_not_found_v2">No hay ninguna cuenta de WordPress.com que coincida con esta cuenta de Google.</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide con tu búsqueda</string>
     <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide con tu búsqueda</string>
@@ -56,7 +72,7 @@ Language: es
     <string name="quick_start_dialog_share_site_title">Comparte tu sitio</string>
     <string name="quick_start_dialog_share_site_message_short_sharing">Toca en %1$s Compartir %2$s para continuar</string>
     <string name="quick_start_dialog_share_site_message_short_connections">Toca en %1$s Conexiones %2$s para añadir tus cuentas de medios sociales</string>
-    <string name="quick_start_dialog_share_site_message">Conecta a tus cuentas de medios sociales – tu sitio compartirá automáticamente las nuevas entradas.</string>
+    <string name="quick_start_dialog_share_site_message">Conecta a tus cuentas de medios sociales - tu sitio compartirá automáticamente las nuevas entradas.</string>
     <string name="quick_start_dialog_publish_post_title">Publica una entrada</string>
     <string name="quick_start_dialog_publish_post_message_short">Toca en %1$s Crear entrada %2$s para crear una nueva entrada</string>
     <string name="quick_start_dialog_publish_post_message">¡Es el momento! Guarda un borrador y publica tu primera entrada.</string>
@@ -603,10 +619,6 @@ Language: es
     <string name="error_generic_error">No se pudo llevar a cabo la operación</string>
     <string name="error_media_recover_page">No fue posible subir el medio a esta página</string>
     <string name="error_media_recover_post">No fue posible subir el medio a esta entrada</string>
-    <string name="size_full">Tamaño completo</string>
-    <string name="size_large">Grande</string>
-    <string name="size_medium">Medio</string>
-    <string name="size_thumbnail">Miniatura</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">Queda 1 archivo</string>
     <string name="uploading_subtitle_media_only">Quedan %1$d de %2$d archivos</string>
@@ -710,8 +722,8 @@ Language: es
     <string name="error_upload_page_media_param">Hubo un error al subir los medios a esta página: %s.</string>
     <string name="error_upload_page_param">Hubo un error al subir esta página: %s.</string>
     <string name="async_promo_link">¿Cómo funciona?</string>
-    <string name="async_promo_description">¡Ahora puedes salir del editor y tu entrada se guardará y publicará entre bambalinas! ¡Anímate a probarlo!</string>
-    <string name="async_promo_title">Publica con confianza</string>
+    <string name="async_promo_description_schedule_post">¡Ahora puedes salir del editor y tu entrada se guardará y programará entre bambalinas! ¡Anímate a probarlo!</string>
+    <string name="async_promo_title_publish">Publica con confianza</string>
     <string name="editor_uploading_post">Tu entrada se está subiendo</string>
     <string name="uploading_media">Subiendo medios…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al borrar esta entrada también cancelarás la subida de medios.</string>
@@ -752,10 +764,10 @@ Language: es
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
-    <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha – tienes WordPress en tu bolsillo.</string>
-    <string name="login_promo_text_notifications">Tus avisos viajan contigo – ve los comentarios y \"me gusta\" a medida que ocurran.</string>
+    <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha - tienes WordPress en tu bolsillo.</string>
+    <string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y \"me gusta\" a medida que ocurran.</string>
     <string name="login_promo_text_anytime">Revisa tus sitios favoritos y únete a la conversación en cualquier sitio, en cualquier momento.</string>
-    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio – en tiempo real. </string>
+    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real. </string>
     <string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
     <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
@@ -942,7 +954,7 @@ Language: es
     <string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="visual_editor_disabled">El editor visual se ha desactivado</string>
@@ -1118,7 +1130,7 @@ Language: es
     <string name="comments_empty_list_filtered_trashed">No hay comentarios en la papelera</string>
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
-    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML–RPC faltan en el servidor.</string>
+    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Estado</string>
@@ -1162,7 +1174,7 @@ Language: es
     <string name="primary_site">Sitio principal</string>
     <string name="pending_email_change_snackbar">Haz click en el enlace de verificación del correo electrónica enviado a %1$s para confirmar tu nueva dirección</string>
     <string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
-    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo – se muestran comentarios antiguos</string>
+    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
     <string name="post_settings_set_featured_image">Establece la imagen destacada</string>
     <string name="post_settings_featured_image">Imagen destacada</string>
     <string name="visual_editor_enabled">Editor visual activado</string>
@@ -1759,6 +1771,7 @@ Language: es
     <string name="today">Hoy</string>
     <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
     <string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
+    <string name="pages_private">Privado</string>
     <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Separa las etiquetas con comas</string>
     <string name="title">Título</string>

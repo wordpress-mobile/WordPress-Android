@@ -43,7 +43,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -79,9 +78,9 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -111,6 +110,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -130,6 +130,7 @@ import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -197,7 +198,8 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
+        HistoryListFragment.HistoryItemClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -209,6 +211,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
+    public static final String TAG_HISTORY_LOAD_DIALOG = "history_load_dialog_tag";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -217,6 +220,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
+    private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
@@ -224,6 +228,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PREVIEW = 2;
+    private static final int PAGE_HISTORY = 3;
 
     private static final String PHOTO_PICKER_TAG = "photo_picker";
     private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
@@ -265,9 +270,11 @@ public class EditPostActivity extends AppCompatActivity implements
     WPViewPager mViewPager;
 
     private PostModel mPost;
-    private PostModel mPostWithLocalChanges;
+    private PostModel mPostForUndo;
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
+
+    private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -407,6 +414,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+            mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
 
             showDialogProgress(mIsDialogProgressShown);
 
@@ -463,7 +471,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setPagingEnabled(false);
 
         // When swiping between different sections, select the corresponding
@@ -496,6 +504,9 @@ public class EditPostActivity extends AppCompatActivity implements
                             }
                         }
                     });
+                } else if (position == PAGE_HISTORY) {
+                    setTitle(R.string.history_title);
+                    hidePhotoPicker();
                 }
             }
         });
@@ -694,6 +705,7 @@ public class EditPostActivity extends AppCompatActivity implements
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
@@ -862,11 +874,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // hide soft keyboard
-        View view = getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        ActivityUtils.hideKeyboard(this);
 
         // slide in the photo picker
         if (!isAlreadyShowing) {
@@ -1013,7 +1021,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (historyMenuItem != null) {
-            boolean hasHistory = mSite.isWPCom() || mSite.isJetpackConnected();
+            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
             historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
         }
 
@@ -1054,6 +1062,7 @@ public class EditPostActivity extends AppCompatActivity implements
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             if (saveMenuItem != null) {
                 saveMenuItem.setTitle(getSaveButtonText());
+                saveMenuItem.setVisible(mViewPager != null && mViewPager.getCurrentItem() != PAGE_HISTORY);
             }
         }
 
@@ -1134,14 +1143,16 @@ public class EditPostActivity extends AppCompatActivity implements
                 return false;
             }
 
-            if (itemId == R.id.menu_preview_post) {
+            if (itemId == R.id.menu_history) {
+                ActivityUtils.hideKeyboard(this);
+                mViewPager.setCurrentItem(PAGE_HISTORY);
+            } else if (itemId == R.id.menu_preview_post) {
                 mViewPager.setCurrentItem(PAGE_PREVIEW);
             } else if (itemId == R.id.menu_post_settings) {
-                InputMethodManager imm = ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
-                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.refreshViews();
                 }
+                ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
@@ -1195,7 +1206,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_discard_changes) {
                 AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 showDialogProgress(true);
-                mPostWithLocalChanges = mPost.clone();
+                mPostForUndo = mPost.clone();
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
@@ -1221,7 +1232,9 @@ public class EditPostActivity extends AppCompatActivity implements
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setMessage(getString(R.string.local_changes_discarding));
+            mProgressDialog.setMessage(mIsDiscardingChanges
+                    ? getString(R.string.local_changes_discarding)
+                    : getString(R.string.history_loading_revision));
             mProgressDialog.show();
         } else if (mProgressDialog != null) {
             mProgressDialog.dismiss();
@@ -1466,6 +1479,7 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
+            case TAG_HISTORY_LOAD_DIALOG:
                 // the dialog is automatically dismissed
                 break;
             default:
@@ -1484,6 +1498,11 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
+                break;
+            case TAG_HISTORY_LOAD_DIALOG:
+                // TODO: Add analytics tracking for load button.
+                mViewPager.setCurrentItem(PAGE_CONTENT);
+                loadRevision();
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1556,6 +1575,48 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         handleBackPressed();
+    }
+
+    @Override
+    public void onHistoryItemClicked(@NonNull Revision revision) {
+        // TODO: Add analytics tracking for history list item.
+        mRevision = revision;
+
+        BasicFragmentDialog dialog = new BasicFragmentDialog();
+        dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
+                getString(R.string.history_load_dialog_title),
+                getString(R.string.history_load_dialog_message, mRevision.getFormattedDate(),
+                        mRevision.getFormattedTime()),
+                getString(R.string.history_load_dialog_button_positive),
+                getString(R.string.cancel),
+                null);
+        dialog.show(getSupportFragmentManager(), TAG_HISTORY_LOAD_DIALOG);
+    }
+
+    private void loadRevision() {
+        showDialogProgress(true);
+        mPostForUndo = mPost.clone();
+        mPost.setTitle(mRevision.getPostTitle());
+        mPost.setContent(mRevision.getPostContent());
+        mPost.setIsLocallyChanged(true);
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        refreshEditorContent();
+
+        Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                .setAction(getString(R.string.undo), new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO: Add analytics tracking for loaded revision undo.
+                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                        mPost = mPostForUndo.clone();
+                        refreshEditorContent();
+                    }
+                })
+                .show();
+
+        showDialogProgress(false);
     }
 
     private boolean isNewPost() {
@@ -1908,7 +1969,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES_EDITOR = 3;
+        private static final int NUM_PAGES_EDITOR = 4;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -1931,6 +1992,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                 case 1:
                     return EditPostSettingsFragment.newInstance();
+                case 3:
+                    return HistoryListFragment.Companion.newInstance(mPost, mSite);
                 default:
                     return EditPostPreviewFragment.newInstance(mPost);
             }
@@ -3431,9 +3494,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostWithLocalChanges.clone();
+                                        mPost = mPostForUndo.clone();
                                         refreshEditorContent();
                                     }
                                 })

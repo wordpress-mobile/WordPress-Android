@@ -19,4 +19,8 @@ class AppPrefsWrapper @Inject constructor() {
     var newsCardShownVersion: Int
         get() = AppPrefs.getNewsCardShownVersion()
         set(version) = AppPrefs.setNewsCardShownVersion(version)
+
+    var avatarVersion: Int
+        get() = AppPrefs.getAvatarVersion()
+        set(version) = AppPrefs.setAvatarVersion(version)
 }

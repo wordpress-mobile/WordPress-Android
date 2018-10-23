@@ -194,7 +194,7 @@ Language: hi_IN
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="me_btn_support">मदद और सहायता</string>
-    <string name="site_picker_add_self_hosted">सेल्फ–होस्टेड साइट डाले </string>
+    <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
     <string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
     <string name="my_site_btn_view_site">साईट पर जाये</string>
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
@@ -224,7 +224,7 @@ Language: hi_IN
     <string name="stats_followers_a_minute_ago">एक दिन पहले</string>
     <string name="stats_followers_a_month">एक महीना</string>
     <string name="stats_followers_a_year">एक साल</string>
-    <string name="stats_followers_email_selector">ई–मेल</string>
+    <string name="stats_followers_email_selector">ई-मेल</string>
     <string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
     <string name="stats_entry_top_commenter">लेखक</string>
     <string name="stats_entry_followers">प्रसंशक</string>
