@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
@@ -60,6 +61,7 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.EmptyViewMessageType
 import org.wordpress.android.ui.EmptyViewMessageType.GENERIC_ERROR
+import org.wordpress.android.ui.EmptyViewMessageType.PERMISSION_ERROR
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.PostEvents
@@ -193,9 +195,6 @@ class PostListFragment : Fragment(),
                 }
 
                 override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
-                    // TODO: publishing things change their order, not only for local drafts but in general. This is mostly due to publish date. The production version should have the same behavior.
-                    // Confirmed that the above is in production as well ^^
-                    // TODO: Order the local items with their IDs, or something else since it's currently switching orders after an edit of title
                     if (listDescriptor is PostListDescriptor) {
                         val trashedPostIds = trashedPosts.map { it.id }
                         return postStore.getLocalPostsForDescriptor(listDescriptor)
@@ -220,10 +219,12 @@ class PostListFragment : Fragment(),
         }
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
-        // TODO: this should only be done if the visible rows are updated...
+        // Save and restore the visible view. Without this, for example, if a new row is inserted, it does not show up.
         val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager, diffResult)
         recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+
+        // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
         recyclerView?.let {
             rvScrollPositionSaver.restoreScrollOffset(it)
         }
@@ -466,10 +467,9 @@ class PostListFragment : Fragment(),
 
         // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
         val post = postStore.getPostByLocalPostId(postClicked.id)
-        // This is mostly a sanity check and the list should never go out of sync, but if there is an edge case, we
-        // should refresh the list
         if (post == null) {
-            // TODO: Can we safely remove this check?
+            // This is mostly a sanity check and the list should never go out of sync, but if there is an edge case, we
+            // should refresh the list
             refreshPostList()
             return
         }
@@ -639,7 +639,7 @@ class PostListFragment : Fragment(),
 
     // FluxC events
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
             // Fetched post list event will be handled by OnListChanged
@@ -651,8 +651,10 @@ class PostListFragment : Fragment(),
             }
             is CauseOfOnPostChanged.DeletePost -> {
                 if (event.isError) {
-                    val message = getString(R.string.error_deleting_post)
-                    ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
+                    GlobalScope.launch {
+                        val message = getString(R.string.error_deleting_post)
+                        ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
+                    }
                 }
             }
         }
@@ -665,13 +667,17 @@ class PostListFragment : Fragment(),
             return
         }
         if (event.isError) {
-            // TODO: handle permission errors
-            // Update has to happen in the UI thread
-            GlobalScope.launch(Dispatchers.Main) {
-                updateEmptyView(GENERIC_ERROR)
+            GlobalScope.launch {
+                val emptyViewMessageType = if (event.error.type == ListErrorType.PERMISSION_ERROR) {
+                    PERMISSION_ERROR
+                } else GENERIC_ERROR
+                updateEmptyView(emptyViewMessageType)
             }
         } else {
             if (event.causeOfChange == FIRST_PAGE_FETCHED) {
+                // `uploadedPostRemoteIds` is kept as a workaround when the local drafts are uploaded and the list
+                // has not yet been updated yet. Since we just fetched the first page, we can safely clear it.
+                // Please check out `onPostUploaded` for more context.
                 uploadedPostRemoteIds.clear()
             }
             refreshListManagerFromStore(listDescriptor, false)
@@ -687,7 +693,6 @@ class PostListFragment : Fragment(),
         refreshListManagerFromStore(listDescriptor, false)
     }
 
-    // TODO: Change all thread modes to Background
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (isAdded && event.post != null && event.post.localSiteId == site.id) {
@@ -699,12 +704,14 @@ class PostListFragment : Fragment(),
                     nonNullActivity.findViewById(R.id.coordinator),
                     event.isError, event.post, null, site, dispatcher
             )
-            // TODO: improve this comment and explain the workaround
-            // If the uploaded item is a local draft in the `listManager`, keep an id of it
-            if (listManager?.findIndexedNotNull { it.isLocalDraft && it.id == event.post.id }?.isEmpty() != true) {
+            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
+            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
+            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
+            // next refresh and pass it to `ListStore` so it'll be included in the list.
+            if (listManager?.findWithIndex { it.isLocalDraft && it.id == event.post.id }?.isEmpty() != true) {
                 uploadedPostRemoteIds.add(event.post.remotePostId)
+                refreshPostList()
             }
-            refreshPostList()
         }
     }
 
@@ -845,8 +852,8 @@ class DiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val oldItem = old?.getItem(oldItemPosition, false, false)
-        val newItem = new.getItem(newItemPosition, false, false)
+        val oldItem = old?.getItem(oldItemPosition, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+        val newItem = new.getItem(newItemPosition, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
         if (oldItem == null && newItem == null) {
             return true
         }

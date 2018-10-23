@@ -510,7 +510,7 @@ class PostListAdapter(
     }
 
     fun getPositionForPost(post: PostModel): Int? =
-            listManager?.findIndexedNotNull {
+            listManager?.findWithIndex {
                 if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
             }?.asSequence()?.map { it.first }?.firstOrNull()
 
@@ -572,7 +572,7 @@ class PostListAdapter(
             return
         }
         // Multiple posts could have the same featured image
-        listManager?.findIndexedNotNull { post ->
+        listManager?.findWithIndex { post ->
             post.featuredImageId == mediaModel.mediaId
         }?.forEach { (position, _) ->
             notifyItemChanged(position)
