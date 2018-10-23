@@ -78,7 +78,6 @@
                     android:layout_width="match_parent"
                     android:lineSpacingExtra="@dimen/spacing_extra_title"
                     android:padding="@dimen/margin_extra_large"
-                    android:singleLine="true"
                     android:textColor="@color/grey_dark"
                     android:textColorHint="@color/hint_text"
                     android:textIsSelectable="true"
