@@ -125,7 +125,7 @@ class HistoryViewModel @Inject constructor(
     private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
         PeopleUtils.fetchRevisionAuthorsDetails(site, authorsId, object : FetchUsersCallback {
             override fun onSuccess(peopleList: MutableList<Person>?, isEndOfList: Boolean) {
-                if(peopleList == null){
+                if (peopleList == null) {
                     return
                 }
 

@@ -14,7 +14,8 @@ import org.wordpress.android.util.image.ImageType
 
 class RevisionItemViewHolder(
     parent: ViewGroup,
-    private val itemClickListener: (HistoryListItem) -> Unit, val imageManager: ImageManager
+    private val itemClickListener: (HistoryListItem) -> Unit,
+    val imageManager: ImageManager
 ) : HistoryViewHolder(parent, R.layout.history_list_item) {
     private val container: View = itemView.findViewById(R.id.item_layout)
     private val avatar: ImageView = itemView.findViewById(R.id.item_avatar)

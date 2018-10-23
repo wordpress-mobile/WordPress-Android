@@ -13,11 +13,13 @@ import org.wordpress.android.ui.history.HistoryListItem.ViewType
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class HistoryAdapter(val activity : Activity,
+class HistoryAdapter(
+    val activity: Activity,
     private val itemClickListener: (HistoryListItem) -> Unit
 ) : Adapter<HistoryViewHolder>() {
     private val list = mutableListOf<HistoryListItem>()
     @Inject lateinit var imageManager: ImageManager
+
     init {
         (activity.applicationContext as WordPress).component().inject(this)
         setHasStableIds(true)
@@ -54,10 +56,10 @@ class HistoryAdapter(val activity : Activity,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         return when (viewType) {
             ViewType.REVISION.id -> RevisionItemViewHolder(
-                        parent,
-                        itemClickListener,
+                    parent,
+                    itemClickListener,
                     imageManager
-                )
+            )
 
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
