@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.store
 
 import com.yarolegovich.wellsql.SelectQuery
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
