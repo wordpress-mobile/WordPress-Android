@@ -146,7 +146,7 @@ class HistoryViewModel @Inject constructor(
             }
 
             override fun onError() {
-                AppLog.e(AppLog.T.POSTS, "Can't fetch details of post revision authors ")
+                AppLog.e(T.API, "Can't fetch details of revision authors")
             }
         })
     }
