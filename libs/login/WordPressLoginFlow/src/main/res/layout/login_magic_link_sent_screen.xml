@@ -41,13 +41,13 @@
 
     <TextView
         android:id="@+id/login_enter_password"
-        style="@style/WordPress.Button.Secondary"
+        style="@style/LoginTheme.Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_open_email_client"
         android:layout_marginTop="@dimen/margin_extra_extra_extra_large"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/blue_wordpress"
+        android:textColor="@color/login_secondary_button_text_color"
         android:text="@string/enter_your_password_instead" />
 
 </RelativeLayout>

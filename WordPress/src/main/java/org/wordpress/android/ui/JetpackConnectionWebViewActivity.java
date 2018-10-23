@@ -36,15 +36,19 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     public static void startJetpackConnectionFlow(Context context, JetpackConnectionSource source, SiteModel site,
                                                   boolean authorized) {
         if (site.isJetpackInstalled()) {
-            String url = "https://wordpress.com/jetpack/connect?"
-                         + "url=" + site.getUrl()
-                         + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
-                         + "?source=" + source.toString();
-            startJetpackConnectionFlow(context, url, site, authorized, source);
+            startManualFlow(context, source, site, authorized);
         } else {
             JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
             ActivityLauncher.startJetpackInstall(context, source, site);
         }
+    }
+
+    static void startManualFlow(Context context, JetpackConnectionSource source, SiteModel site, boolean authorized) {
+        String url = "https://wordpress.com/jetpack/connect?"
+                     + "url=" + site.getUrl()
+                     + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
+                     + "?source=" + source.toString();
+        startJetpackConnectionFlow(context, url, site, authorized, source);
     }
 
     private static void startJetpackConnectionFlow(Context context,

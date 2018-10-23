@@ -4,7 +4,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.1.3'
     }
 }
 
@@ -38,13 +38,19 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
 
-    implementation 'com.google.android.gms:play-services-auth:15.0.1'
+    api 'com.google.android.gms:play-services-auth:15.0.1'
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
-        implementation "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
+            exclude group: "com.android.support"
+            exclude group: "org.wordpress", module: "utils"
+        }
     } else {
-        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:d4e583f21840111065f12e743cbf31de4307266b'
+        implementation("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:7c4fa0333cef380aa80b92adbb5e4803b90dd7e5") {
+            exclude group: "com.android.support"
+            exclude group: "org.wordpress", module: "utils"
+        }
     }
 
     implementation 'com.github.bumptech.glide:glide:4.6.1'

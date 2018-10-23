@@ -1,29 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
-    <!-- TODO Move to util library -->
-    <style name="WordPress.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/white</item>
-        <item name="android:textColor">@color/grey_dark</item>
-    </style>
-
-    <style name="WordPress.Button.Primary" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/blue_medium</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="WordPress.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/blue_wordpress</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
-    </style>
-
-    <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/grey_light</item>
-        <item name="android:textColor">@color/blue_wordpress</item>
-    </style>
-
     <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorAccent">@color/blue_medium</item>
+        <item name="colorAccent">@color/login_theme_accent_color</item>
 
         <item name="android:statusBarColor" tools:targetApi="21">@color/status_bar_tint</item>
         <item name="android:windowBackground">@color/login_background_color</item>
@@ -36,28 +15,38 @@
     </style>
 
     <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
+        <item name="colorButtonNormal">@color/login_base_button_normal_color</item>
+    </style>
+
+    <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
+        <item name="android:textColor">@color/login_primary_button_text_color</item>
+    </style>
+
+    <style name="LoginTheme.Button.Secondary" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/login_secondary_button_text_color</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
 
     <style name="LoginTheme.Button.Google" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textColor">@color/login_google_button_text_color</item>
     </style>
 
     <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/login_text_label_text_color</item>
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
     <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/login_input_label_static_text_color</item>
     </style>
 
     <style name="LoginTheme.EditText" parent="LoginTheme">
-        <item name="colorControlNormal">@color/grey_text_min</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textColorHint">@color/grey_text_min</item>
-        <item name="colorControlActivated">@color/blue_medium</item>
-        <item name="colorControlHighlight">@color/blue_medium</item>
+        <item name="colorControlNormal">@color/login_edit_text_color_control_normal</item>
+        <item name="android:textColor">@color/login_edit_text_text_color</item>
+        <item name="android:textColorHint">@color/login_edit_text_text_hint_color</item>
+        <item name="colorControlActivated">@color/login_edit_text_color_control_activated</item>
+        <item name="colorControlHighlight">@color/login_edit_text_color_control_highlight</item>
     </style>
 
     <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
@@ -66,19 +55,19 @@
     </style>
 
     <style name="LoginTheme.Heading" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/login_heading_text_color</item>
     </style>
 
     <style name="LoginTheme.Subhead" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/login_subhead_text_color</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="LoginTheme.Username" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:textColor">@color/login_username_text_color</item>
     </style>
 
     <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/login_footnote_text_color</item>
     </style>
 </resources>

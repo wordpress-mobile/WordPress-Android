@@ -66,7 +66,7 @@ Language: es_CL
     <string name="activity_log_rewind_finished_snackbar_message">Su sitio ha sido restaurado con éxito\nRebobinado a %1$s %2$s</string>
     <string name="activity_log_rewind_started_snackbar_message">Su sitio se está restaurando\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción del Registro de Actividad</string>
-    <string name="plugin_auto_managed">Auto–administrado</string>
+    <string name="plugin_auto_managed">Auto-administrado</string>
     <string name="reader_save_posts_locally_dialog_message">Guarda este post, y vuelve a leerlo cuando quieras. Sólo estará disponible en este dispositivo: los mensajes guardados no se sincronizan con otros dispositivos. (¡todavía estamos trabajando en ello!)</string>
     <string name="reader_save_posts_locally_dialog_title">Guardar Entrada para Más tarde</string>
     <string name="reader_empty_search_request_failed">No se pudo realizar la búsqueda</string>
@@ -411,7 +411,7 @@ Language: es_CL
     <string name="my_site_add_new_site">Añadir nuevo sitio</string>
     <string name="my_site_create_new_site">Crea un nuevo sitio para tu negocio, revista o blog personal; o conecta una instalación existente de WordPress.</string>
     <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio cargando sólo las imágenes que están visibles en la pantalla. Las nuevas imágenes se cargarán justo antes de desplazarse a la vista. Esto impide a los espectadores tener que descargar todas las imágenes de una página de una sola vez, incluso las que no pueden ver.</string>
-    <string name="site_settings_lazy_load_images">Imágenes “Lazy–load\"</string>
+    <string name="site_settings_lazy_load_images">Imágenes “Lazy-load\"</string>
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimizará tus imágenes y las servirá desde la ubicación del servidor más cercana a tus visitantes. Usará nuestra red global de despacho de contenido, aumentando así la velocidad de carga de tu sitio.</string>
     <string name="site_settings_serve_images_from_our_servers">Sirve las imágenes desde nuestros servidores</string>
     <string name="site_settings_speed_up_your_site">Acelera tu sitio</string>
@@ -502,10 +502,6 @@ Language: es_CL
     <string name="error_generic_error">No se pudo realizar la operación</string>
     <string name="error_media_recover_page">No pude cargar los medios de esta página</string>
     <string name="error_media_recover_post">No se puede subir los medios de este post</string>
-    <string name="size_full">Tamaño completo</string>
-    <string name="size_large">Largo</string>
-    <string name="size_medium">Mediano</string>
-    <string name="size_thumbnail">Imagen en miniatura</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">1 archivo restante</string>
     <string name="uploading_subtitle_media_only">Faltan %1$d de %2$d archivos</string>
@@ -593,8 +589,6 @@ Language: es_CL
     <string name="error_upload_page_media_param">Hubo un error al cargar el medio en esta página: %s.</string>
     <string name="error_upload_page_param">Hubo un error al cargar esta página: %s.</string>
     <string name="async_promo_link">¿Cómo funciona?</string>
-    <string name="async_promo_description">¡Ahora puedes dejar el editor, y tu entrada se guardará y publicará detrás de las escenas! ¡Pruébalo!</string>
-    <string name="async_promo_title">Publicar con Confianza</string>
     <string name="editor_uploading_post">Tu entrada se está cargando</string>
     <string name="uploading_media">Subiendo media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al eliminar esta entrada también se cancelará la carga de medios.</string>
@@ -824,7 +818,6 @@ Language: es_CL
     <string name="media_upload_error">Error al cargar medios</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error de 403 al intentar acceder al endpoint XMLRPC de\n        tu sitio. La aplicación lo necesita para comunicarse con tu sitio.\n        Ponte en contacto con tu hosting para resolver este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
     <string name="visual_editor_disabled">Editor Visual deshabilitado</string>
@@ -834,7 +827,7 @@ Language: es_CL
     <string name="pending_draft_one_generic">¡no lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_month">¡No lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' sigue siendo un borrador. ¡Recuerda publicarlo!</string>
-    <string name="pending_draft_one_week_1">Tu borrador \'%1$s\' te espera – ¡asegúrate de publicarlo!</string>
+    <string name="pending_draft_one_week_1">Tu borrador \'%1$s\' te espera - ¡asegúrate de publicarlo!</string>
     <string name="pending_draft_one_day_2">¿Sabías que \'%1$s\' sigue siendo un borrador? ¡Publícalo!</string>
     <string name="pending_draft_one_day_1">Redactaste \'%1$s’. ¡No olvides publicarlo!</string>
     <string name="reader_photo_by">Foto por %s</string>

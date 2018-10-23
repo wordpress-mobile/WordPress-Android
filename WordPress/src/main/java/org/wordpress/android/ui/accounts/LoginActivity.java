@@ -25,6 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
@@ -134,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
             switch (getLoginMode()) {
                 case FULL:
+                case WPCOM_LOGIN_ONLY:
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     break;
                 case SELFHOSTED_ONLY:
@@ -233,6 +235,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
+            case WPCOM_LOGIN_ONLY:
                 ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
                 setResult(Activity.RESULT_OK);
                 finish();
@@ -409,7 +412,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void gotWpcomEmail(String email) {
         if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT) {
             LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
-                    email, mIsJetpackConnect, mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
+                    email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
+                    mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
             slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
