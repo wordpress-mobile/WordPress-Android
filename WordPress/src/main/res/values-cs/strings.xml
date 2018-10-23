@@ -524,7 +524,7 @@ Language: cs_CZ
     <string name="jetpack_disconnect_confirm">Odpojit</string>
     <string name="jetpack_disconnect_confirmation_message">Opravdu chcete odpojit Jetpack od webové stránky?</string>
     <string name="jetpack_disconnect_pref_title">\"Odpojit z WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">Do whitelistu můžete přidat IP adresy nebo série IP adres a vyhnout se tak blokování IP adress ze strany Jetpack. Můžete zadat IPv4 a IPv6. Chcete–li určit rozsah, zadejte nízkou hodnotu a vysokou hodnotu oddělenou pomlčkou. Příklad: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">Do whitelistu můžete přidat IP adresy nebo série IP adres a vyhnout se tak blokování IP adress ze strany Jetpack. Můžete zadat IPv4 a IPv6. Chcete-li určit rozsah, zadejte nízkou hodnotu a vysokou hodnotu oddělenou pomlčkou. Příklad: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Vyžadovat dvoustupňové ověření</string>
     <string name="jetpack_match_wpcom_via_email_title">Spárovat účty pomocí emailu</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Povolit přihlášení pomocí WordPress.com</string>
