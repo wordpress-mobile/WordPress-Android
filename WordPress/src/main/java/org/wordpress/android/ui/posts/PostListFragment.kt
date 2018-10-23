@@ -85,6 +85,10 @@ import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
 
+private const val KEY_TRASHED_POST_LOCAL_IDS = "KEY_TRASHED_POST_LOCAL_IDS"
+private const val KEY_TRASHED_POST_REMOTE_IDS = "KEY_TRASHED_POST_REMOTE_IDS"
+private const val KEY_UPLOADED_REMOTE_POST_IDS = "KEY_UPLOADED_REMOTE_POST_IDS"
+
 class PostListFragment : Fragment(),
         PostListAdapter.OnPostSelectedListener,
         PostListAdapter.OnPostButtonClickListener {
@@ -102,7 +106,7 @@ class PostListFragment : Fragment(),
     private var postIdForPostToBeDeleted = 0
 
     private val uploadedPostRemoteIds = ArrayList<Long>()
-    private val trashedPosts = ArrayList<PostModel>()
+    private val trashedPostIds = ArrayList<Pair<Int, Long>>()
 
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
@@ -143,6 +147,14 @@ class PostListFragment : Fragment(),
         } else {
             rvScrollPositionSaver.onRestoreInstanceState(savedInstanceState)
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+            savedInstanceState.getLongArray(KEY_UPLOADED_REMOTE_POST_IDS)?.let {
+                uploadedPostRemoteIds.addAll(it.asList())
+            }
+            savedInstanceState.getIntArray(KEY_TRASHED_POST_LOCAL_IDS)?.let { trashedLocalIds ->
+                savedInstanceState.getLongArray(KEY_TRASHED_POST_REMOTE_IDS)?.let { trashedRemoteIds ->
+                    trashedPostIds.addAll(trashedLocalIds.toList().zip(trashedRemoteIds.toList()))
+                }
+            }
             targetPost = postStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID)
             )
@@ -196,9 +208,9 @@ class PostListFragment : Fragment(),
 
                 override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
                     if (listDescriptor is PostListDescriptor) {
-                        val trashedPostIds = trashedPosts.map { it.id }
+                        val trashedLocalPostIds = trashedPostIds.map { it.first }
                         return postStore.getLocalPostsForDescriptor(listDescriptor)
-                                .filter { !trashedPostIds.contains(it.id) }
+                                .filter { !trashedLocalPostIds.contains(it.id) }
                     }
                     return null
                 }
@@ -208,7 +220,7 @@ class PostListFragment : Fragment(),
                 }
 
                 override fun remoteItemsToHide(listDescriptor: ListDescriptor): List<Long>? {
-                    return trashedPosts.map { it.remotePostId }
+                    return trashedPostIds.map { it.second }
                 }
             })
 
@@ -577,12 +589,13 @@ class PostListFragment : Fragment(),
         }
 
         // remove post from the list and add it to the list of trashed posts
-        trashedPosts.add(post)
+        val postIdPair = Pair(post.id, post.remotePostId)
+        trashedPostIds.add(postIdPair)
         refreshListManagerFromStore(listDescriptor, fetchAfter = false)
 
         val undoListener = OnClickListener {
             // user undid the trash, so un-hide the post and remove it from the list of trashed posts
-            trashedPosts.remove(post)
+            trashedPostIds.remove(postIdPair)
             refreshListManagerFromStore(listDescriptor, fetchAfter = false)
         }
 
@@ -600,14 +613,14 @@ class PostListFragment : Fragment(),
 
                 // if the post no longer exists in the list of trashed posts it's because the
                 // user undid the trash, so don't perform the deletion
-                if (!trashedPosts.contains(post)) {
+                if (!trashedPostIds.contains(postIdPair)) {
                     return
                 }
 
                 // remove from the list of trashed posts in case onDismissed is called multiple
                 // times - this way the above check prevents us making the call to delete it twice
                 // https://code.google.com/p/android/issues/detail?id=190529
-                trashedPosts.remove(post)
+                trashedPostIds.remove(postIdPair)
 
                 // here cancel all media uploads related to this Post
                 UploadService.cancelQueuedPostUploadAndRelatedMedia(WordPress.getContext(), post)
@@ -634,7 +647,9 @@ class PostListFragment : Fragment(),
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         rvScrollPositionSaver.onSaveInstanceState(outState, recyclerView)
-        // TODO: save uploaded post ids and trashed posts?
+        outState.putIntArray(KEY_TRASHED_POST_LOCAL_IDS, trashedPostIds.map { it.first }.toIntArray())
+        outState.putLongArray(KEY_TRASHED_POST_REMOTE_IDS, trashedPostIds.map { it.second }.toLongArray())
+        outState.putLongArray(KEY_UPLOADED_REMOTE_POST_IDS, uploadedPostRemoteIds.toLongArray())
     }
 
     // FluxC events
