@@ -12,6 +12,8 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PHOTO -> R.color.grey_lighten_30
             ImageType.VIDEO -> R.color.grey_lighten_30
             ImageType.AVATAR -> R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
+            ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
             ImageType.BLAVATAR -> R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp
             ImageType.PLAN -> R.drawable.ic_reader_blue_wordpress_18dp
             ImageType.THEME -> R.color.grey_lighten_30
@@ -26,6 +28,8 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.PHOTO -> R.color.grey_light
             ImageType.VIDEO -> R.color.grey_light
             ImageType.AVATAR -> R.drawable.shape_oval_grey_light
+            ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_grey_user_32dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
             ImageType.BLAVATAR -> R.color.grey_light
             ImageType.PLAN -> R.drawable.ic_reader_blue_wordpress_18dp
             ImageType.THEME -> R.drawable.theme_loading

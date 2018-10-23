@@ -5,6 +5,8 @@ enum class ImageType {
     PHOTO,
     VIDEO,
     AVATAR,
+    AVATAR_WITH_BACKGROUND,
+    AVATAR_WITHOUT_BACKGROUND,
     BLAVATAR,
     PLAN,
     THEME,
