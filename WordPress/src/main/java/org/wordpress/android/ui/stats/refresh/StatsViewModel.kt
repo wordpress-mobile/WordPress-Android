@@ -13,6 +13,7 @@ import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -37,7 +38,6 @@ class StatsViewModel
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
 
-    private var currentStatsType = StatsListType.INSIGHTS
 
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
@@ -49,7 +49,7 @@ class StatsViewModel
     }
 
     private fun loadStats() = defaultScope.launch {
-        val loadState = FETCHING
+        val loadState = DONE
         reloadStats(loadState)
 
         isInitialized = true
@@ -58,7 +58,7 @@ class StatsViewModel
     private suspend fun reloadStats(state: StatsListState = FETCHING) {
         _listState.setOnUi(state)
 
-        val result = insightsViewModel.loadInsightItems(_site!!)
+        insightsViewModel.loadInsightItems(_site!!)
     }
 
     // TODO: To be implemented in the future

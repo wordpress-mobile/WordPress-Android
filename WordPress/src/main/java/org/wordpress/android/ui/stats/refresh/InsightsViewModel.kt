@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
@@ -17,16 +19,21 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVI
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
-import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.UI_SCOPE
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class InsightsViewModel
 @Inject constructor(
     private val statsStore: StatsStore,
-    @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
+    @Named(UI_SCOPE) private val scope: CoroutineScope,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel
 ) {
+    private val _data = MutableLiveData<List<InsightsItem>>()
+    val data: LiveData<List<InsightsItem>> = _data
+
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
@@ -43,16 +50,16 @@ class InsightsViewModel
         }
     }
 
-    suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false): List<InsightsItem> =
+    suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false) =
             withContext(scope.coroutineContext) {
                 val items = statsStore.getInsights()
                         .map { async { load(site, it, forced) } }
                         .map { it.await() }
 
-                if (items.isEmpty()) {
-                    return@withContext listOf(Empty())
+                _data.value = if (items.isEmpty()) {
+                    listOf(Empty())
                 } else {
-                    return@withContext items
+                    items
                 }
             }
 }
