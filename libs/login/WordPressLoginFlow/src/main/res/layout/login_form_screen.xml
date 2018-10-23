@@ -38,7 +38,7 @@
         android:clipToPadding="false">
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Secondary"
+            style="@style/LoginTheme.Button.Secondary"
             android:id="@+id/secondary_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
             tools:text="Secondary action"/>
 
         <android.support.v7.widget.AppCompatButton
-            style="@style/WordPress.Button.Primary"
+            style="@style/LoginTheme.Button.Primary"
             android:id="@+id/primary_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
