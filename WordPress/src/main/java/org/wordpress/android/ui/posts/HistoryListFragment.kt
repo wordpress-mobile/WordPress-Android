@@ -46,11 +46,6 @@ class HistoryListFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity?.application as WordPress).component()?.inject(this)
-    }
-
     interface HistoryItemClickInterface {
         fun onHistoryItemClicked(revision: Revision)
     }
@@ -84,6 +79,8 @@ class HistoryListFragment : Fragment() {
             }
         }
 
+        (nonNullActivity.application as WordPress).component()?.inject(this)
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
         viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
 
@@ -104,7 +101,7 @@ class HistoryListFragment : Fragment() {
         val adapter: HistoryAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(activity!!, this::onItemClicked)
+            adapter = HistoryAdapter(checkNotNull(activity), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as HistoryAdapter

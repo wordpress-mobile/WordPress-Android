@@ -110,46 +110,52 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
-
-        var users = ArrayList<String>()
+        var revisionAuthorsId = ArrayList<String>()
         revisions.forEach {
             if (!TextUtils.isEmpty(it.postAuthorId)) {
-                users.add(it.postAuthorId!!)
+                revisionAuthorsId.add(it.postAuthorId!!)
             }
         }
 
-        users = ArrayList(users.distinct())
+        revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
+        fetchRevisionAuthorDetails(revisionAuthorsId)
+        _revisions.value = revisionsToHistoryListItems(revisions)
+    }
 
-        val items = revisionsToHistoryListItems(revisions)
-
-        _revisions.value = items
-
-        PeopleUtils.fetchRevisionAuthorsDetails(site, users, object : FetchUsersCallback {
+    private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
+        PeopleUtils.fetchRevisionAuthorsDetails(site, authorsId, object : FetchUsersCallback {
             override fun onSuccess(peopleList: MutableList<Person>?, isEndOfList: Boolean) {
-                val newRevisions = mutableListOf<HistoryListItem>()
+                if(peopleList == null){
+                    return
+                }
 
-                _revisions.value!!.forEach { revision ->
-                    var modifiedRevision = revision
+                val existingRevisions = _revisions.value ?: return
+                val updatedRevisions = mutableListOf<HistoryListItem>()
 
-                    if (modifiedRevision is HistoryListItem.Revision) {
+                existingRevisions.forEach { it ->
+                    var mutableRevision = it
 
-                        modifiedRevision  = modifiedRevision.copy()
+                    if (mutableRevision is HistoryListItem.Revision) {
+                        // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
+                        // and DiffUtil will not catch this
+                        mutableRevision = mutableRevision.copy()
 
-                        val person = peopleList!!.firstOrNull { it.personID.toString() == modifiedRevision.postAuthorId }
+                        val person = peopleList.firstOrNull { it.personID.toString() == mutableRevision.postAuthorId }
 
                         if (person != null) {
-                            modifiedRevision.authorAvatarURL = person.avatarUrl
-                            modifiedRevision.authorName = person.displayName
+                            mutableRevision.authorAvatarURL = person.avatarUrl
+                            mutableRevision.authorName = person.displayName
                         }
                     }
 
-                    newRevisions.add(modifiedRevision)
+                    updatedRevisions.add(mutableRevision)
                 }
-                _revisions.postValue(newRevisions)
+
+                _revisions.postValue(updatedRevisions)
             }
 
             override fun onError() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                AppLog.e(AppLog.T.POSTS, "Can't fetch details of post revision authors ")
             }
         })
     }
