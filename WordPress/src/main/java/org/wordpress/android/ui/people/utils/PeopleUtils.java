@@ -72,7 +72,7 @@ public class PeopleUtils {
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
                     try {
-                        List<Person> people = new ArrayList<Person>();
+                        List<Person> people = new ArrayList<>();
 
                         Iterator<String> keys = jsonObject.keys();
                         while (keys.hasNext()) {
