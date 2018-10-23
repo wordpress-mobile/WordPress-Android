@@ -28,8 +28,7 @@ class RevisionItemViewHolder(
     fun bind(revision: HistoryListItem.Revision) {
         container.setOnClickListener { itemClickListener(revision) }
         title.text = revision.timeSpan
-        // TODO: Replace date and time with post status or username.
-        subtitle.text = TextUtils.concat(revision.formattedDate + " at " + revision.formattedTime)
+        subtitle.text = revision.authorDisplayName
 
         if (!TextUtils.isEmpty(revision.authorAvatarURL)) {
             imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(revision.authorAvatarURL))
@@ -61,6 +60,9 @@ class RevisionItemViewHolder(
             if (!TextUtils.isEmpty(avatarUrl)) {
                 imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl))
             }
+        }
+        if (bundle.containsKey(HistoryDiffCallback.DISPLAY_NAME_CHANGED_KEY)) {
+            subtitle.text = bundle.getString(HistoryDiffCallback.DISPLAY_NAME_CHANGED_KEY)
         }
     }
 }

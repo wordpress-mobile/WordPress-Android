@@ -10,6 +10,7 @@ class HistoryDiffCallback(
 ) : DiffUtil.Callback() {
     companion object {
         const val AVATAR_CHANGED_KEY = "avatar_changed"
+        const val DISPLAY_NAME_CHANGED_KEY = "display_name_changed"
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -34,15 +35,20 @@ class HistoryDiffCallback(
         return newList.size
     }
 
-    // currently only thing that can change in Revision is avatar and display name of author
+    // currently only things that can change in Revision are avatar and display name of author
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
 
         if (oldItem is Revision && newItem is Revision) {
+            val changesBundle = Bundle()
             if (oldItem.authorAvatarURL != newItem.authorAvatarURL) {
-                val changesBundle = Bundle()
                 changesBundle.putString(AVATAR_CHANGED_KEY, newItem.authorAvatarURL)
+            }
+            if (oldItem.authorDisplayName != newItem.authorDisplayName) {
+                changesBundle.putString(DISPLAY_NAME_CHANGED_KEY, newItem.authorDisplayName)
+            }
+            if (changesBundle.keySet().size > 0) {
                 return changesBundle
             }
         }
