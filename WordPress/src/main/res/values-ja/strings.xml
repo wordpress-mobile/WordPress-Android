@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-05 12:54:08+0000
+Translation-Revision-Date: 2018-10-18 10:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">エディターを閉じると、ページの保存と予約が自動で行われるようになりました。お試しください !</string>
+    <string name="async_promo_description_publish_post">エディターを閉じると、投稿の保存と公開が自動で行われるようになりました。お試しください !</string>
+    <string name="async_promo_description_publish_page">エディターを閉じると、ページの保存と公開が自動で行われるようになりました。お試しください !</string>
+    <string name="image_size_full_class">size–full</string>
+    <string name="image_size_large_class">size–large</string>
+    <string name="image_size_medium_class">size–medium</string>
+    <string name="image_size_thumbnail_class">size–thumbnail</string>
+    <string name="image_size_full_label">フルサイズ</string>
+    <string name="image_size_large_label">大</string>
+    <string name="image_size_medium_label">普通</string>
+    <string name="image_size_thumbnail_label">サムネイル</string>
+    <string name="menu_history">履歴</string>
+    <string name="async_promo_schedule_now">今すぐ予約する</string>
+    <string name="async_promo_title_schedule">自信を持って予約する</string>
+    <string name="pages_pending">レビュー待ち</string>
+    <string name="pages_open_page_error">選択したページは利用できません</string>
+    <string name="news_card_announcement_action_sample_announcement">[続きを読む]</string>
+    <string name="news_card_announcement_content_sample_announcement">[今すぐ読む時間がありませんか？ご心配ありません。後で読めるように投稿を保存できます。]</string>
+    <string name="news_card_announcement_title_sample_announcement">[新しい機能が利用できます]</string>
+    <string name="pages_empty_trashed">ゴミ箱に移動したページはありません</string>
+    <string name="pages_empty_scheduled">予約済みページはありません</string>
+    <string name="pages_empty_drafts">ページの下書きはありません</string>
+    <string name="pages_empty_published">ページをまだ公開していません</string>
+    <string name="pages_search_suggestion">ページを検索</string>
+    <string name="pages_empty_search_result">検索に一致するページはありません</string>
+    <string name="pages_delete_permanently">完全に削除する</string>
+    <string name="pages_move_to_trash">ゴミ箱へ移動</string>
+    <string name="pages_move_to_draft">ドラフトに移動</string>
+    <string name="pages_publish_now">今すぐ公開</string>
+    <string name="pages_set_parent">親の設定</string>
+    <string name="pages_view">表示</string>
+    <string name="pages_trashed">ゴミ箱に移動済み</string>
+    <string name="pages_scheduled">予約済み</string>
+    <string name="pages_drafts">下書き</string>
+    <string name="pages_published">公開済み</string>
+    <string name="login_error_sms_throttled">SMS 認証コードの送信試行回数が多すぎます。しばらくしてから、新しい認証コードをリクエストしてください。</string>
+    <string name="login_error_email_not_found_v2">この Google アカウントに一致する WordPress.com アカウントはありません。</string>
+    <string name="site_picker_remove_site_empty">検索に一致するサイトはありません</string>
+    <string name="reader_empty_followed_blogs_search_title">検索に一致するサイトはありません</string>
+    <string name="page_parent_changed">ページの親が変更されました。</string>
+    <string name="page_permanently_deleted">ページが完全に削除されました。</string>
+    <string name="page_moved_to_scheduled">ページが予約されました</string>
+    <string name="page_moved_to_published">ページが公開されました</string>
+    <string name="page_moved_to_trash">ページがゴミ箱に移動されました</string>
+    <string name="page_moved_to_draft">ページが下書きに移動されました</string>
+    <string name="top_level">トップレベル</string>
+    <string name="page_delete_dialog_message">ページ %s を削除してもよいですか ?</string>
+    <string name="page_parent_change_error">ページの親を変更中に問題が発生しました</string>
+    <string name="page_status_change_error">ページステータスを変更中に問題が発生しました</string>
+    <string name="page_delete_error">ページを削除中に問題が発生しました</string>
+    <string name="set_parent">親の設定</string>
+    <string name="dismiss">非表示</string>
     <string name="quick_start_focus_point_description">ここをタップ</string>
     <string name="quick_start_sites">クイックスタート</string>
     <string name="quick_start_list_create_site_title">サイトの作成</string>
@@ -248,6 +300,7 @@ Language: ja_JP
     <string name="stats_tab_tap_content_description">%sを表示中</string>
     <string name="stats_legend">統計グラフの凡例</string>
     <string name="fab_create_desc">作成</string>
+    <string name="fab_add_tag_desc">タグの作成</string>
     <string name="stats_bar_week_desc">週 (%s)</string>
     <string name="stats_bar_date_value_desc">%s、表示回数%d</string>
     <string name="stats_bar_date_value_type_desc">%s、%d%s</string>
@@ -334,6 +387,7 @@ Language: ja_JP
     <string name="sharing_disabled_description">Jetpack 共有モジュールが無効のため、共有設定にアクセスできません。</string>
     <string name="sharing_disabled">共有モジュールが無効</string>
     <string name="version_with_name_param">バージョン%s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">投稿者:%s</string>
     <string name="async_promo_publish_now">今すぐ公開</string>
     <string name="notification_sound_has_invalid_path">選択された通知音のパスが無効です。別の音を選択してください。</string>
@@ -376,6 +430,8 @@ Language: ja_JP
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1投稿、1ファイルが未アップロード</string>
     <string name="untitled_in_parentheses">(無題)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s、%2$s</string>
+    <string name="latitude_longitude">%1$f、%2$f</string>
     <string name="site_creation_epilogue_write">最初の投稿を書く</string>
     <string name="site_creation_epilogue_configure">設定</string>
     <string name="site_creation_epilogue_congrats">おめでとうございます !\nサイトの準備ができました。</string>
@@ -471,6 +527,7 @@ Language: ja_JP
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack が画像を最適化し、訪問者に最も近いところにあるサーバーから画像を提供します。WordPress.com のグローバルコンテンツ配信ネットワークを使用すると、サイトの読み込み速度が向上します。</string>
     <string name="site_settings_serve_images_from_our_servers">WordPress.com のサーバーから画像を提供</string>
     <string name="site_settings_speed_up_your_site">サイトをスピードアップ</string>
+    <string name="stats_jetpack_connection_setup">Jetpack をインストール</string>
     <string name="plugin_chevron_icon_content_description">テキストを切り替え</string>
     <string name="plugin_info_your_version">お使いの WordPress バージョン</string>
     <string name="plugin_info_requires_version">必須 WordPress バージョン</string>
@@ -500,6 +557,7 @@ Language: ja_JP
     <string name="site_settings_tags_hint">サイトのタグを管理</string>
     <string name="dlg_saving_tag">保存中</string>
     <string name="dlg_deleting_tag">削除中</string>
+    <string name="dlg_confirm_delete_tag">「%s」タグを永久に削除しますか ?</string>
     <string name="error_tag_exists">この名前のタグは既に存在します</string>
     <string name="add_new_tag">新規タグを追加</string>
     <string name="tag_description_hint">説明</string>
@@ -557,10 +615,6 @@ Language: ja_JP
     <string name="error_generic_error">操作を実行できませんでした</string>
     <string name="error_media_recover_page">このページのメディアをアップロードできませんでした</string>
     <string name="error_media_recover_post">この投稿のメディアをアップロードできませんでした</string>
-    <string name="size_full">フルサイズ</string>
-    <string name="size_large">大</string>
-    <string name="size_medium">普通</string>
-    <string name="size_thumbnail">サムネイル</string>
     <string name="image_size">サイズ</string>
     <string name="uploading_subtitle_media_only_one">残り1ファイルです</string>
     <string name="uploading_subtitle_media_only">残り%1$d/%2$dファイルです</string>
@@ -664,8 +718,6 @@ Language: ja_JP
     <string name="error_upload_page_media_param">このページ内のメディアをアップロードする際にエラーが発生しました: %s.</string>
     <string name="error_upload_page_param">このページをアップロードする際にエラーが発生しました: %s.</string>
     <string name="async_promo_link">機能の説明</string>
-    <string name="async_promo_description">エディターを閉じると、投稿の保存と公開がバックグラウンドで自動的に行われるようになりました。お試しください。</string>
-    <string name="async_promo_title">自信を持って公開</string>
     <string name="editor_uploading_post">投稿をアップロード中</string>
     <string name="uploading_media">メディアをアップロード中…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">本当に実行しますか ?この投稿を削除すると、メディアのアップロードもキャンセルされます。</string>
@@ -896,7 +948,6 @@ Language: ja_JP
     <string name="media_upload_error">メディアアップロードエラーが発生しました</string>
     <string name="retry">再試行</string>
     <string name="confirm">確認</string>
-    <string name="xmlrpc_endpoint_forbidden_error">接続できませんでした。サイトの XMLRPC エンドポイントにアクセスしようとした際に403エラーを受け取りました。サイトと通信するために、アプリはこのエンドポイントにアクセスする必要があります。この問題を解決するには、ホスティングサービスに連絡してください。</string>
     <string name="xmlrpc_post_blocked_error">接続できませんでした。ご使用のホストは POST リクエストをブロックしていますが、サイトと通信するためにアプリはこのリクエストを必要とします。ホストに連絡して、この問題を解決してください。</string>
     <string name="reader_hint_search_followed_sites">フォローしているサイトの検索</string>
     <string name="visual_editor_disabled">ビジュアルエディターが無効になっています</string>
@@ -1279,7 +1330,11 @@ Language: ja_JP
     <string name="reader_label_gap_marker">さらに投稿を読み込む</string>
     <string name="notifications_no_search_results">「%s」に一致するサイトはありません</string>
     <string name="search_sites">サイトを検索</string>
+    <string name="notifications_empty_view_reader">Reader へ移動</string>
+    <string name="notifications_empty_action_unread">会話をまた活発にするため、新しい記事を書いてみましょう</string>
     <string name="notifications_empty_action_all">フォローしているブログの投稿にコメントしてみましょう。</string>
+    <string name="notifications_empty_comments">コメントはまだありません</string>
+    <string name="notifications_empty_unread">すべて既読になっています。</string>
     <string name="stats_widget_error_jetpack_no_blogid">アプリ内で統計情報にアクセスし、後でウィジェットを追加してみてください</string>
     <string name="stats_widget_error_readd_widget">ウィジェットを削除し、もう一度追加してみてください</string>
     <string name="stats_widget_error_no_visible_blog">表示可能なブログを持っていない場合、統計情報にはアクセスできません</string>
@@ -1631,6 +1686,7 @@ Language: ja_JP
     <string name="reader_btn_follow">フォロー</string>
     <string name="reader_btn_share">共有</string>
     <string name="reader_untitled_post">(無題)</string>
+    <string name="comments_empty_list">コメントはまだありません</string>
     <string name="empty_list_default">リストが空です</string>
     <string name="stats_totals_plays">再生回数</string>
     <string name="stats_totals_clicks">クリック数</string>

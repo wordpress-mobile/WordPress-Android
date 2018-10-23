@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-19 10:54:06+0000
+Translation-Revision-Date: 2018-10-18 20:32:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e programmata dietro le quinte! Prova!</string>
+    <string name="async_promo_description_publish_post">Ora puoi abbandonare l’editor e il post verrà salvato e pubblicato dietro le quinte! Prova!</string>
+    <string name="async_promo_description_publish_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e pubblicata dietro le quinte! Prova!</string>
+    <string name="image_size_full_class">dimensione–reale</string>
+    <string name="image_size_large_class">dimensione–grande</string>
+    <string name="image_size_medium_class">dimensione–media</string>
+    <string name="image_size_thumbnail_class">dimensione–miniatura</string>
+    <string name="image_size_full_label">Dimensione reale</string>
+    <string name="image_size_large_label">Grande</string>
+    <string name="image_size_medium_label">Media</string>
+    <string name="image_size_thumbnail_label">Miniatura</string>
+    <string name="menu_history">Cronologia</string>
+    <string name="async_promo_schedule_now">Programma ora</string>
+    <string name="async_promo_title_schedule">Programma con Confidence</string>
+    <string name="pages_pending">In attesa di revisione</string>
+    <string name="pages_open_page_error">La pagina selezionata non è disponibile</string>
     <string name="news_card_announcement_action_sample_announcement">[Continua a leggere]</string>
     <string name="news_card_announcement_content_sample_announcement">[Non hai tempo per leggere ora? Nessun problema: salva gli articoli per quando potrai.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Nuova funzionalità disponibile]</string>
@@ -603,10 +619,6 @@ Language: it
     <string name="error_generic_error">Impossibile eseguire l\'operazione</string>
     <string name="error_media_recover_page">Impossibile caricare il contenuto multimediale di questa pagina</string>
     <string name="error_media_recover_post">Impossibile caricare il contenuto multimediale di questo articolo</string>
-    <string name="size_full">Dimensione reale</string>
-    <string name="size_large">Grande</string>
-    <string name="size_medium">Media</string>
-    <string name="size_thumbnail">Miniatura</string>
     <string name="image_size">Dimensione</string>
     <string name="uploading_subtitle_media_only_one">1 file rimanente</string>
     <string name="uploading_subtitle_media_only">%1$d di %2$d file rimanenti</string>
@@ -710,8 +722,8 @@ Language: it
     <string name="error_upload_page_media_param">Si è verificato un errore nel caricamento del media in questa pagina:  %s.</string>
     <string name="error_upload_page_param">Si è verificato un errore nel caricamento di questa pagina: %s. </string>
     <string name="async_promo_link">Come funziona?</string>
-    <string name="async_promo_description">Ora puoi lasciare che l\'editor e il tuo articolo salvino e pubblichino da soli! Provaci!</string>
-    <string name="async_promo_title">Pubblica con Confidence</string>
+    <string name="async_promo_description_schedule_post">Ora puoi uscire dall\'\'editor e il tuo articolo sarà salvato e programmato dietro le quinte! Provaci!</string>
+    <string name="async_promo_title_publish">Pubblica con Confidence</string>
     <string name="editor_uploading_post">Il tuo articolo è stato caricato</string>
     <string name="uploading_media">Caricamento del media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Sei sicuro? Cancellando questo articolo annullerai anche il caricamento del file multimediale.</string>
@@ -775,7 +787,7 @@ Language: it
     <string name="editor_content_hint">Condividi la tua storia qui…</string>
     <string name="post_status_trashed">Eliminati nel cestino</string>
     <string name="post_status_scheduled">Programmati</string>
-    <string name="post_status_post_private">Privati</string>
+    <string name="post_status_post_private">Privato</string>
     <string name="post_status_draft">Bozza</string>
     <string name="post_status_pending_review">In attesa di revisione</string>
     <string name="post_status_publish_post">Pubblica</string>
@@ -1759,6 +1771,7 @@ Language: it
     <string name="today">Oggi</string>
     <string name="quickpress_add_error">Il nome breve non può essere vuoto</string>
     <string name="quickpress_window_title">Selezionare il blog per la scelta rapida QuickPress</string>
+    <string name="pages_private">Privato</string>
     <string name="categories">Categorie</string>
     <string name="tags_separate_with_commas">Separa i tag con una virgola</string>
     <string name="title">Titolo</string>

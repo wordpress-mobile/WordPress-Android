@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-04 15:12:45+0000
+Translation-Revision-Date: 2018-09-26 10:31:32+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -577,6 +577,7 @@ Language: hr
     <string name="settings">Postavke</string>
     <string name="quickpress_window_title">Odaberi blog za QuickPress prečac</string>
     <string name="quickpress_add_error">Naziv prečaca ne može biti prazan</string>
+    <string name="pages_private">Privatno</string>
     <string name="title">Naslov</string>
     <string name="tags_separate_with_commas">Oznake (razdvoji oznake zarezima)</string>
     <string name="categories">Kategorije</string>

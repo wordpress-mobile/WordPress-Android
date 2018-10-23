@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-04-10 19:18:27+0000
+Translation-Revision-Date: 2018-10-19 09:05:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -59,10 +59,6 @@ Language: nb_NO
     <string name="notification_login_title_success">Innlogget!</string>
     <string name="login_empty_password">Vennligst skriv inn et passord</string>
     <string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
-    <string name="size_full">Full størrelse</string>
-    <string name="size_large">Stor</string>
-    <string name="size_medium">Middels</string>
-    <string name="size_thumbnail">Miniatyrbilde</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
@@ -76,7 +72,7 @@ Language: nb_NO
     <string name="jetpack_disconnect_confirm">Koble fra</string>
     <string name="jetpack_disconnect_confirmation_message">Er du sikker på at du vil frakoble Jetpack fra denne siden?</string>
     <string name="jetpack_disconnect_pref_title">«Koble ut fra WordPress.com»</string>
-    <string name="site_settings_jetpack_whitelist_description">Du kan hviteliste en IP-adresse eller serie av IP-adresser, for å hindre dem fra å noensinne bli blokkert av Jetpack. IPv6 og IPv4 er mulige. For å bestemme en rekkevidde, skriv inn minimumsverdien og maksverdien, adskilt av en strek. For eksempel: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">Du kan hviteliste en IP-adresse eller serie av IP–adresser, for å hindre dem fra å noensinne bli blokkert av Jetpack. IPv6 og IPv4 er mulige. For å bestemme en rekkevidde, skriv inn minimumsverdien og maksverdien, adskilt av en strek. For eksempel: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Krev to–trinnsautentisering</string>
     <string name="jetpack_match_wpcom_via_email_title">Samsvar kontoer gjennom E–post</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Tillat WordPress.com–innlogging</string>
@@ -148,8 +144,6 @@ Language: nb_NO
     <string name="error_upload_page_media_param">Det var en feil under opplastning av mediene i denne siden: %s.</string>
     <string name="error_upload_page_param">Det var en feil under opplastning av denne siden: %s.</string>
     <string name="async_promo_link">Hvordan fungerer det?</string>
-    <string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
-    <string name="async_promo_title">Publiser med sikkerhet</string>
     <string name="editor_uploading_post">Innlegget ditt lastes opp</string>
     <string name="uploading_media">Laster opp medie …</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>

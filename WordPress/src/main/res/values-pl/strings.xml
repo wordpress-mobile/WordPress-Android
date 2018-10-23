@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-01 08:48:26+0000
+Translation-Revision-Date: 2018-10-20 12:19:18+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Możesz teraz opuścić edytora a twoja strona zostanie zapisana i zaplanowana do opublikowania! Spróbuj! </string>
+    <string name="async_promo_description_publish_post">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i zaplanowany do opublikowania! Spróbuj!</string>
+    <string name="async_promo_description_publish_page">Możesz teraz opuścić edytora a twoja strona zostanie zapisana i zaplanowana do opublikowania! Spróbuj!</string>
+    <string name="image_size_full_class">rozmiar–pełny </string>
+    <string name="image_size_large_class">rozmiar–duży</string>
+    <string name="image_size_medium_class">rozmiar–średni</string>
+    <string name="image_size_thumbnail_class">rozmiar–miniatura</string>
+    <string name="image_size_full_label">Pełny rozmiar</string>
+    <string name="image_size_large_label">Duży</string>
+    <string name="image_size_medium_label">Średni</string>
+    <string name="image_size_thumbnail_label">Miniatura</string>
+    <string name="menu_history">Historia</string>
+    <string name="async_promo_schedule_now">Zaplanuj teraz</string>
+    <string name="async_promo_title_schedule">Zaplanuj z Confidence</string>
+    <string name="pages_pending">Oczekuje na przegląd</string>
+    <string name="pages_open_page_error">Wybrana strona nie jest dostępna</string>
+    <string name="news_card_announcement_action_sample_announcement">[Czytaj więcej] </string>
+    <string name="news_card_announcement_content_sample_announcement">[Nie masz czasu aby przeczytać teraz? Nie ma problemu: zapisz wpis do przeczytania kiedy indziej. ]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Dostępna nowa funkcjonalność] </string>
+    <string name="pages_empty_trashed">Nie masz żadnych stron w koszu</string>
+    <string name="pages_empty_scheduled">Nie masz żadnych zaplanowanych stron</string>
+    <string name="pages_empty_drafts">Nie masz żadnych szkiców stron</string>
+    <string name="pages_empty_published">Nie opublikowałeś jeszcze żadnych stron</string>
+    <string name="pages_search_suggestion">Przeszukaj strony</string>
+    <string name="pages_empty_search_result">Brak stron pasujących do twoich kryteriów wyszukiwania</string>
+    <string name="pages_delete_permanently">Usuń permanentnie</string>
+    <string name="pages_move_to_trash">Przesuń do kosza</string>
+    <string name="pages_move_to_draft">Przesuń do Szkiców</string>
+    <string name="pages_publish_now">Opublikuj teraz</string>
+    <string name="pages_set_parent">Ustaw jako nadrzędny</string>
+    <string name="pages_view">Podgląd</string>
+    <string name="pages_trashed">Przesunięto do kosza</string>
+    <string name="pages_scheduled">Zaplanowano</string>
+    <string name="pages_drafts">Szkice</string>
+    <string name="pages_published">Opublikowano</string>
+    <string name="login_error_sms_throttled">Wykonałeś zbyt dużo prób wysłania kodu weryfikacyjnego SMS – zrób sobie krótką przerwę i ponów zapytanie za minutę.</string>
+    <string name="login_error_email_not_found_v2">Nie ma konta WordPress skojarzonego z tym kontem Google.</string>
+    <string name="site_picker_remove_site_empty">Brak witryn spełniających kryteria twojego wyszukiwania</string>
+    <string name="reader_empty_followed_blogs_search_title">Brak witryn spełniających kryteria twojego wyszukiwania</string>
+    <string name="page_parent_changed">Strona nadrzędną została zmieniona</string>
+    <string name="page_permanently_deleted">Strona została trwale usunięta</string>
+    <string name="page_moved_to_scheduled">Strona została zaplanowana</string>
+    <string name="page_moved_to_published">Strona została opublikowana</string>
+    <string name="page_moved_to_trash">Strona przesunięta do kosza</string>
+    <string name="page_moved_to_draft">Strona została przesunięta do Szkiców</string>
+    <string name="top_level">Najwyższy poziom</string>
+    <string name="page_delete_dialog_message">Czy jesteś pewien że chcesz usunąć stronę %s?</string>
+    <string name="page_parent_change_error">Wystąpił problem podczas zmiany strony nadrzędnej</string>
+    <string name="page_status_change_error">Wystąpił błąd podczas zmiany statusu strony</string>
+    <string name="page_delete_error">Wystąpił błąd podczas usuwania strony</string>
+    <string name="set_parent">Ustaw jako nadrzędną</string>
+    <string name="dismiss">odrzuć</string>
     <string name="quick_start_focus_point_description">stuknij tutaj</string>
     <string name="quick_start_sites">Szybki start</string>
     <string name="quick_start_list_create_site_title">Utwórz swoją witrynę</string>
@@ -16,16 +68,32 @@ Language: pl
     <string name="quick_start_dialog_view_site_message_short">Stuknij na %1$s Zobacz Witrynę %2$s aby ją podejrzeć</string>
     <string name="quick_start_dialog_view_site_message">Podejrzej witrynę aby sprawdzić wygląd witryny, który zobaczą odwiedzający. </string>
     <string name="quick_start_dialog_skip_title">Pomiń Szybki Start</string>
+    <string name="quick_start_dialog_skip_message">Przewodnik Szybki Start poprowadzi cię przez proces budowania prostej witryny. Czy na pewno chcesz pominąć ten krok? </string>
     <string name="quick_start_dialog_share_site_title">Udostępnij swoją witrynę</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Stuknij %1$s Udostępnianie %2$s aby kontynuować</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Stuknij %1$s Połączenia %2$s aby dodać konta mediów społecznościowych</string>
+    <string name="quick_start_dialog_share_site_message">Połącz się ze swoimi kontami mediów społecznościowych – twoja witryna automatycznie udostępni nowe wpisy. </string>
     <string name="quick_start_dialog_publish_post_title">Opublikuj wpis</string>
+    <string name="quick_start_dialog_publish_post_message_short">Stuknij %1$s Utwórz wpis %2$s  aby utworzyć nowy wpis.</string>
+    <string name="quick_start_dialog_publish_post_message">Już czas napisać szkic pierwszego wpisu i opublikować go.</string>
     <string name="quick_start_dialog_need_help_title">Potrzebujesz pomocy?</string>
+    <string name="quick_start_dialog_need_help_message">Dzięki naszej liście kontrolnej w ramach Szybkiego Startu przejdziesz przez podstawowe ustawienia dla nowej witryny. </string>
     <string name="quick_start_dialog_need_help_button_positive">Tak</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny z podobnymi zainteresowaniami</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
+    <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które do ciebie przemawiają i obserwuj je aby otrzymywać aktualizacje kiedy one coś opublikują.</string>
     <string name="quick_start_dialog_customize_site_title">Spersonalizuj swoją witrynę</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Stuknij %1$s Motywy %2$s aby kontynuować</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Stuknij %1$s Personalizuj %2$s aby rozpocząć personalizację swojej witryny</string>
+    <string name="quick_start_dialog_customize_site_message">Zmieniaj kolory,  czcionki i zdjęcia aby dopasować wygląd witryny do swoich potrzeb. </string>
     <string name="quick_start_dialog_continue_setup_title">Kontynuuj konfigurację witryny</string>
+    <string name="quick_start_dialog_continue_setup_message">Czas na zakończenie konfiguracji witryny! Dzięki liście kontrolnej przejdziemy przez wszystkie kroki. </string>
     <string name="quick_start_dialog_choose_theme_title">Wybierz szablon</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Stuknij %1$s Motywy %2$s aby odkryć nowe motywy</string>
+    <string name="quick_start_dialog_choose_theme_message">Przeglądaj wszystkie motywy i znajdź najlepiej dopasowany do swoich potrzeb. </string>
     <string name="quick_start_button_skip_positive">Pomiń</string>
     <string name="quick_start_button_skip_negative">Anuluj</string>
     <string name="quick_start_button_skip">Pomiń wszystko</string>
@@ -43,7 +111,9 @@ Language: pl
     <string name="jetpack_installation_problem">Wystąpił problem</string>
     <string name="jetpack_installed_message">Jetpack jest zainstalowany na twojej witrynie. Gratulacje! </string>
     <string name="jetpack_installed">Jetpack zainstalowany</string>
+    <string name="installing_jetpack_message">Instalowanie Jetpacka. To może zająć do kilku minut</string>
     <string name="installing_jetpack">Instalowanie Jetpacka</string>
+    <string name="install_jetpack_message">Dane logowania do witryny nie będą przechowywane i są użyte jedynie do celów instalacji Jetpacka</string>
     <string name="install_jetpack">Zainstaluj Jetpacka</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -549,10 +619,6 @@ Language: pl
     <string name="error_generic_error">Nie można było przeprowadzić operacji</string>
     <string name="error_media_recover_page">Nie można przesłać mediów tego strony</string>
     <string name="error_media_recover_post">Nie można przesłać mediów tego wpisu</string>
-    <string name="size_full">Pełny rozmiar</string>
-    <string name="size_large">Duży</string>
-    <string name="size_medium">Średni</string>
-    <string name="size_thumbnail">Miniatura</string>
     <string name="image_size">Rozmiar</string>
     <string name="uploading_subtitle_media_only_one">Pozostał 1 plik</string>
     <string name="uploading_subtitle_media_only">Pozostało %1$d z %2$d plików</string>
@@ -656,8 +722,8 @@ Language: pl
     <string name="error_upload_page_media_param">Wystąpił błąd podczas przesyłania mediów na tej stronie %s.</string>
     <string name="error_upload_page_param">Wystąpił błąd podczas przesyłania tej strony: %s.</string>
     <string name="async_promo_link">Jak to działa?</string>
-    <string name="async_promo_description">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i opublikowany poza kulisami! Wypróbuj to!</string>
-    <string name="async_promo_title">Publikuj z pełnym zaufaniem</string>
+    <string name="async_promo_description_schedule_post">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i zaplanpwany do opublikowania poza kulisami! Wypróbuj to!</string>
+    <string name="async_promo_title_publish">Publikuj z Confidence</string>
     <string name="editor_uploading_post">Twój wpis jest przesyłany</string>
     <string name="uploading_media">Przesyłanie mediów…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Jesteś pewien? Usunięcie tego wpisu anuluje również przesyłanie mediów.</string>
@@ -888,7 +954,7 @@ Language: pl
     <string name="media_upload_error">Wystąpił błąd przesyłania mediów</string>
     <string name="retry">Spróbuj ponownie</string>
     <string name="confirm">Potwierdź</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do punktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu.</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Nie można się połączyć. Otrzymaliśmy błąd nr 403 podczas próby dostępu do \npunktu końcowego XMLRPC twojej witryny. Aplikacja wymaga tego połączenia w celu komunikacji z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania\n tego problemu.</string>
     <string name="xmlrpc_post_blocked_error">Nie można się połączyć. Twój host blokuje zapytania POST – aplikacja wymaga tego połączenia w celu skomunikowania się z twoją witryną. Skontaktuj się ze swoim hostingiem w celu rozwiązania tego problemu. </string>
     <string name="reader_hint_search_followed_sites">Przeszukaj obserwowane witryny</string>
     <string name="visual_editor_disabled">Edytor wizualny został wyłączony </string>
@@ -1705,6 +1771,7 @@ Language: pl
     <string name="today">Dzisiaj</string>
     <string name="quickpress_add_error">Nazwa skrótu nie może być pusta</string>
     <string name="quickpress_window_title">Wybierz blog dla skrótu QuickPress</string>
+    <string name="pages_private">Prywatny</string>
     <string name="categories">Kategorie</string>
     <string name="tags_separate_with_commas">Oddziel tagi przecinkami</string>
     <string name="title">Tytuł</string>

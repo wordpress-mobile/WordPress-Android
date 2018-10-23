@@ -18,10 +18,6 @@ Language: ms
     <string name="error_generic_error">Tidak dapat melaksanakan operasi</string>
     <string name="error_media_recover_page">Tidak dapat memuat naik media halaman ini</string>
     <string name="error_media_recover_post">Tidak dapat memuat naik media kiriman ini</string>
-    <string name="size_full">Saiz Penuh</string>
-    <string name="size_large">Besar</string>
-    <string name="size_medium">Medium</string>
-    <string name="size_thumbnail">Imej kecil</string>
     <string name="image_size">Saiz</string>
     <string name="uploading_subtitle_media_only_one">Tinggal 1 fail</string>
     <string name="uploading_subtitle_media_only">Tinggal %1$d daripada %2$d fail</string>
@@ -124,8 +120,6 @@ Language: ms
     <string name="error_upload_page_media_param">Terdapat ralat memuat naik media dalam halaman ini: %s.</string>
     <string name="error_upload_page_param">Terdapat ralat memuat naik halaman ini: %s.</string>
     <string name="async_promo_link">Bagaimana ianya berfungsi?</string>
-    <string name="async_promo_description">Anda kini boleh meninggalkan penyunting dan kiriman anda akan disimpan dan diterbitkan di belakang tirai! Cubalah ia!</string>
-    <string name="async_promo_title">Terbit dengan Keyakinan</string>
     <string name="editor_uploading_post">Kiriman anda sedang dimuat naik</string>
     <string name="uploading_media">Memuat naik media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Anda pasti? Menghapuskan kiriman ini juga akan membatalkan muat naik media.</string>

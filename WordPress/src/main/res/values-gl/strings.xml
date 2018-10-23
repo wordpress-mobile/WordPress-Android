@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-04 14:11:47+0000
+Translation-Revision-Date: 2018-09-24 11:33:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="pages_search_suggestion">Buscar páxinas</string>
+    <string name="pages_move_to_trash">Mover ao lixo</string>
+    <string name="pages_publish_now">Publicar agora</string>
+    <string name="pages_view">Ver</string>
+    <string name="page_moved_to_scheduled">Programouse a páxina</string>
+    <string name="page_moved_to_published">Publicouse a páxina</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="sites">Sitios</string>

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-15 15:43:39+0000
+Translation-Revision-Date: 2018-10-19 09:02:36+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Artık düzenleyiciden çıksanız da, sayfanız arka planda kaydetme ve zamanlama yapabilecek! Deneyin!</string>
+    <string name="async_promo_description_publish_post">Artık düzenleyiciden ayrılabilirsiniz. Gönderiniz kaydedilecek ve sahne arkasında yayımlanacaktır! Deneyin!</string>
+    <string name="async_promo_description_publish_page">Artık düzenleyiciden çıksanız da, sayfanız arka planda kaydetme ve yayınlama yapabilecek! Deneyin!</string>
+    <string name="image_size_full_class">tam–boyut</string>
+    <string name="image_size_large_class">büyük–boyut</string>
+    <string name="image_size_medium_class">orta–boyut</string>
+    <string name="image_size_thumbnail_class">küçükresim–boyutu</string>
+    <string name="image_size_full_label">Tam Boy</string>
+    <string name="image_size_large_label">Büyük</string>
+    <string name="image_size_medium_label">Orta</string>
+    <string name="image_size_thumbnail_label">Küçük resim</string>
+    <string name="menu_history">Geçmiş</string>
+    <string name="async_promo_schedule_now">Şimdi zamanlayın</string>
+    <string name="async_promo_title_schedule">Güvenle Zamanlayın</string>
+    <string name="pages_pending">İnceleme bekleyen</string>
+    <string name="pages_open_page_error">Seçilen sayfa mevcut değil</string>
+    <string name="news_card_announcement_action_sample_announcement">[Devamını okuyun]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Şimdi okumaya zamanınız yok mu? Hiç sorun değil: Zamanınız olduğunda okumak için gönderileri kaydedin.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Yeni özellik mevcut]</string>
+    <string name="pages_empty_trashed">Silinmiş sayfanız yok</string>
+    <string name="pages_empty_scheduled">Zamanlanmış sayfanız yok</string>
+    <string name="pages_empty_drafts">Taslak sayfanız yok</string>
+    <string name="pages_empty_published">Henüz hiç sayfa yayımlamadınız</string>
     <string name="pages_search_suggestion">Sayfaları ara</string>
     <string name="pages_empty_search_result">Aramanızla eşleşen sayfa yok</string>
     <string name="pages_delete_permanently">Kalıcı olarak sil</string>
@@ -18,7 +41,23 @@ Language: tr
     <string name="pages_scheduled">Zamanlandı</string>
     <string name="pages_drafts">Taslaklar</string>
     <string name="pages_published">Yayınlandı</string>
+    <string name="login_error_sms_throttled">Çok fazla SMS doğrulama kodu gönderimi yaptık. Biraz mola verin ve bir dakika sonra yenisini talep edin.</string>
+    <string name="login_error_email_not_found_v2">Bu Google hesabıyla eşleşen bir WordPress.com hesabı bulunmuyor.</string>
+    <string name="site_picker_remove_site_empty">Aramanızla eşleşen site bulunamadı</string>
+    <string name="reader_empty_followed_blogs_search_title">Aramanızla eşleşen site bulunamadı</string>
+    <string name="page_parent_changed">Üst sayfa değiştirildi</string>
+    <string name="page_permanently_deleted">Sayfa kalıcı olarak silindi</string>
+    <string name="page_moved_to_scheduled">Sayfa zamanlandı</string>
+    <string name="page_moved_to_published">Sayfa yayımlandı</string>
+    <string name="page_moved_to_trash">Sayfa silindi</string>
+    <string name="page_moved_to_draft">Sayfa Taslaklar\'a taşındı</string>
+    <string name="top_level">En üst seviye</string>
+    <string name="page_delete_dialog_message">%s sayfasını silmek istediğinizden emin misiniz?</string>
+    <string name="page_parent_change_error">Üst sayfa değiştirilirken sorun yaşandı</string>
+    <string name="page_status_change_error">Sayfa durumu değiştirilirken sorun yaşandı</string>
+    <string name="page_delete_error">Sayfa silinirken sorun yaşandı</string>
     <string name="set_parent">Ebeveyn belirle</string>
+    <string name="dismiss">atla</string>
     <string name="quick_start_focus_point_description">buraya dokunun</string>
     <string name="quick_start_sites">Hızlı Başlangıç</string>
     <string name="quick_start_list_create_site_title">Sitenizi oluşturun</string>
@@ -580,10 +619,6 @@ Language: tr
     <string name="error_generic_error">Işlem gerçekleştirilemedi</string>
     <string name="error_media_recover_page">Sayfa ortamı yüklenemedi</string>
     <string name="error_media_recover_post">Bu yazının ortam dosyası yüklenemedi</string>
-    <string name="size_full">Tam boyut</string>
-    <string name="size_large">Büyük</string>
-    <string name="size_medium">Orta</string>
-    <string name="size_thumbnail">Küçük</string>
     <string name="image_size">Boyut</string>
     <string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
     <string name="uploading_subtitle_media_only">%2$d dosyadan %1$d kaldı</string>
@@ -687,8 +722,6 @@ Language: tr
     <string name="error_upload_page_media_param">Bu sayfada ortam dosyasının kaşıya yüklenmesinde bir hata oluştu: %s.</string>
     <string name="error_upload_page_param">Bu sayfa karşıya yüklenirken bir hata oluştu: %s.</string>
     <string name="async_promo_link">Nasıl çalışır?</string>
-    <string name="async_promo_description">Artık düzenleyiciden ayrılabilirsiniz. Yazınız kaydedilecek ve sahne arkasında yayımlanacaktır! Bir deneyin!</string>
-    <string name="async_promo_title">Güvenle Yayımlayın</string>
     <string name="editor_uploading_post">Yazınız yükleniyor</string>
     <string name="uploading_media">Ortam dosyası yükleniyor…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Emin misiniz? Bu yazının silinmesi durumunda ortam dosyasının karşıya yüklenmesi de iptal edilir.</string>
@@ -919,7 +952,6 @@ Language: tr
     <string name="media_upload_error">Ortam yükleme hatası oluştu</string>
     <string name="retry">Tekrar dene</string>
     <string name="confirm">Onayla</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Bağlanılamıyor. Sitenizin XMLRPC uç noktasına bağlanırken bir 403\n     hatası aldık. Uygulamanın ssitenizle iletişim kurabilmesi için gereklidir. Problemi çözmek için\n     servis sağlayıcınızla iletişime geçin.</string>
     <string name="xmlrpc_post_blocked_error">Bağlanılamıyor. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna ihtiyaç duyuyor. Bu problemi gidermek için servis sağlayıcınızla iletişime geçin.</string>
     <string name="reader_hint_search_followed_sites">Takip edilen siteleri ara</string>
     <string name="visual_editor_disabled">Görsel editör etkisizleştirildi</string>
@@ -1736,6 +1768,7 @@ Language: tr
     <string name="today">Bugün</string>
     <string name="quickpress_add_error">Kısayol ismi boş olamaz</string>
     <string name="quickpress_window_title">QuickPress kısayolu için blog seçin</string>
+    <string name="pages_private">Gizli</string>
     <string name="categories">Kategoriler</string>
     <string name="tags_separate_with_commas">Etiketleri virgül ile ayırın</string>
     <string name="title">Başlık</string>

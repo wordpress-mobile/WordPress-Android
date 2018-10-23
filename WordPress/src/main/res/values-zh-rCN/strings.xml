@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-20 08:54:07+0000
+Translation-Revision-Date: 2018-10-19 09:06:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">您现在可以离开编辑器，您的页面将在后台保存并预发布！试试看吧！</string>
+    <string name="async_promo_description_publish_post">您现在可以离开编辑器，您的文章将在后台保存并发布！试试看吧！</string>
+    <string name="async_promo_description_publish_page">您现在可以离开编辑器，您的页面将在后台保存并发布！试试看吧！</string>
+    <string name="image_size_full_class">完整尺寸</string>
+    <string name="image_size_large_class">大尺寸</string>
+    <string name="image_size_medium_class">中等尺寸</string>
+    <string name="image_size_thumbnail_class">缩略图尺寸</string>
+    <string name="image_size_full_label">完整尺寸</string>
+    <string name="image_size_large_label">大</string>
+    <string name="image_size_medium_label">中</string>
+    <string name="image_size_thumbnail_label">缩略图</string>
+    <string name="menu_history">历史记录</string>
+    <string name="async_promo_schedule_now">立即预发布</string>
+    <string name="async_promo_title_schedule">满怀信心预发布</string>
+    <string name="pages_pending">待审核</string>
+    <string name="pages_open_page_error">所选页面不可用</string>
     <string name="news_card_announcement_action_sample_announcement">[阅读更多]</string>
     <string name="news_card_announcement_content_sample_announcement">[现在无暇阅读？别担心：保存文章，有空时再去阅读。]</string>
     <string name="news_card_announcement_title_sample_announcement">[已推出新功能]</string>
@@ -583,10 +599,6 @@ Language: zh_CN
     <string name="error_generic_error">无法执行操作</string>
     <string name="error_media_recover_page">无法上传页面中的媒体</string>
     <string name="error_media_recover_post">无法上传文章中的媒体</string>
-    <string name="size_full">完整大小</string>
-    <string name="size_large">大</string>
-    <string name="size_medium">中</string>
-    <string name="size_thumbnail">缩略图</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">还剩一个文件</string>
     <string name="uploading_subtitle_media_only">还剩 %1$d / %2$d 个文件</string>
@@ -690,8 +702,6 @@ Language: zh_CN
     <string name="error_upload_page_media_param">上传此页面中的媒体时出错: %s。</string>
     <string name="error_upload_page_param">上传此页面时出错: %s.</string>
     <string name="async_promo_link">工作原理</string>
-    <string name="async_promo_description">您现在可以离开编辑器，您的文章将在后台保存并发布！试试看吧！</string>
-    <string name="async_promo_title">放心发布</string>
     <string name="editor_uploading_post">您的文章正在上传</string>
     <string name="uploading_media">正在上传媒体…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">您确定吗？删除此文章将同时取消媒体上传。</string>

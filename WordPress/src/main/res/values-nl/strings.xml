@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-20 07:54:07+0000
+Translation-Revision-Date: 2018-10-19 09:04:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Je kunt de editor nu afsluiten; je pagina wordt automatisch opgeslagen en ingepland! Probeer het ook eens!</string>
+    <string name="async_promo_description_publish_post">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
+    <string name="async_promo_description_publish_page">Je kunt de editor nu afsluiten; je pagina wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
+    <string name="image_size_full_class">grootte–volledig</string>
+    <string name="image_size_large_class">grootte–groot</string>
+    <string name="image_size_medium_class">grootte–gemiddeld</string>
+    <string name="image_size_thumbnail_class">grootte–miniatuur</string>
+    <string name="image_size_full_label">Volledige grootte</string>
+    <string name="image_size_large_label">Groot</string>
+    <string name="image_size_medium_label">Gemiddeld</string>
+    <string name="image_size_thumbnail_label">Miniatuur</string>
+    <string name="menu_history">Geschiedenis</string>
+    <string name="async_promo_schedule_now">Nu inplannen</string>
+    <string name="async_promo_title_schedule">Vol vertrouwen inplannen</string>
+    <string name="pages_pending">Beoordeling in behandeling</string>
+    <string name="pages_open_page_error">De geselecteerde pagina is niet beschikbaar</string>
     <string name="news_card_announcement_action_sample_announcement">[Meer informatie]</string>
     <string name="news_card_announcement_content_sample_announcement">[Heb je geen tijd om te lezen op dit moment? Geen probleem: sla berichten op tot je er wel tijd voor hebt.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Nieuwe functie beschikbaar]</string>
@@ -534,10 +550,6 @@ Language: nl
     <string name="error_generic_error">We kunnen de handeling niet uitvoeren</string>
     <string name="error_media_recover_page">We kunnen de media van deze pagina niet uploaden</string>
     <string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden</string>
-    <string name="size_full">Volledige grootte</string>
-    <string name="size_large">Groot</string>
-    <string name="size_medium">Gemiddeld</string>
-    <string name="size_thumbnail">Thumbnail</string>
     <string name="image_size">Grootte</string>
     <string name="uploading_subtitle_media_only_one">1 bestand resterend</string>
     <string name="uploading_subtitle_media_only">%1$d van %2$d bestanden resterend</string>
@@ -569,7 +581,7 @@ Language: nl
     <string name="jetpack_disconnect_confirm">Loskoppelen</string>
     <string name="jetpack_disconnect_confirmation_message">Weet je zeker dat je Jetpack wilt loskoppelen van de site?</string>
     <string name="jetpack_disconnect_pref_title">\"Loskoppelen van WordPress.com\"</string>
-    <string name="site_settings_jetpack_whitelist_description">Door een IP-adres of een reeks IP-adressen op een whitelist te plaatsen, zodat ze nooit door Jetpack worden geblokkeerd. IPv4 en IPv6 zijn acceptabel. Stel een bereik in door de hoge en lage waarde in te voeren met een streepje ertussen. Voorbeeld: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">Door een IP-adres of een reeks IP–adressen op een whitelist te plaatsen, zodat ze nooit door Jetpack worden geblokkeerd. IPv4 en IPv6 zijn acceptabel. Stel een bereik in door de hoge en lage waarde in te voeren met een streepje ertussen. Voorbeeld: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Twee–staps verificatie vereisen</string>
     <string name="jetpack_match_wpcom_via_email_title">Accounts matchen via e–mail</string>
     <string name="jetpack_allow_wpcom_sign_in_title">WordPress.com–login toestaan</string>
@@ -641,8 +653,6 @@ Language: nl
     <string name="error_upload_page_media_param">Er is een fout opgetreden bij het uploaden van media in deze pagina: %s.</string>
     <string name="error_upload_page_param">Er is een fout opgetreden bij het uploaden van deze pagina: %s.</string>
     <string name="async_promo_link">Hoe werkt het?</string>
-    <string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
-    <string name="async_promo_title">Vol vertrouwen publiceren</string>
     <string name="editor_uploading_post">Je bericht wordt geüpload</string>
     <string name="uploading_media">Media uploaden…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media–upload ook geannuleerd.</string>
@@ -873,7 +883,6 @@ Language: nl
     <string name="media_upload_error">Er is een uploadfout opgetreden</string>
     <string name="retry">Opnieuw proberen</string>
     <string name="confirm">Bevestigen</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC–eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST–aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
     <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>

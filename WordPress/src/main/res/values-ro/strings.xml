@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-13 09:31:56+0000
+Translation-Revision-Date: 2018-10-19 09:01:11+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Acum poți părăsi editorul și pagina ta se va salva și programa în spatele scenei! Încearcă!</string>
+    <string name="async_promo_description_publish_post">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
+    <string name="async_promo_description_publish_page">Acum poți părăsi editorul și pagina ta se va salva și publica în spatele scenei! Încearcă!</string>
+    <string name="image_size_full_class">dimensiune completă</string>
+    <string name="image_size_large_class">dimensiune mare</string>
+    <string name="image_size_medium_class">dimensiune medie</string>
+    <string name="image_size_thumbnail_class">dimensiune miniatură</string>
+    <string name="image_size_full_label">Dimensiune completă</string>
+    <string name="image_size_large_label">Mare</string>
+    <string name="image_size_medium_label">Medie</string>
+    <string name="image_size_thumbnail_label">Miniatură</string>
+    <string name="menu_history">Istoric</string>
+    <string name="async_promo_schedule_now">Programează acum</string>
+    <string name="async_promo_title_schedule">Programează cu Confidence</string>
+    <string name="pages_pending">Revizie în așteptare</string>
+    <string name="pages_open_page_error">Pagina selectată nu este disponibilă</string>
     <string name="news_card_announcement_action_sample_announcement">[Citește mai mult]</string>
     <string name="news_card_announcement_content_sample_announcement">[Nu ai timp să citești acum? Nicio problemă: salvează articolele pentru mai târziu.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Este disponibilă o funcționalitate nouă]</string>
@@ -603,10 +619,6 @@ Language: ro
     <string name="error_generic_error">Nu am putut efectua operația</string>
     <string name="error_media_recover_page">Nu pot încărca această pagină din media</string>
     <string name="error_media_recover_post">Nu pot încărca acest articol din media</string>
-    <string name="size_full">Dimensiune completă</string>
-    <string name="size_large">Mare</string>
-    <string name="size_medium">Medie</string>
-    <string name="size_thumbnail">Miniatură</string>
     <string name="image_size">Dimensiune</string>
     <string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
     <string name="uploading_subtitle_media_only">%1$d din %2$d fișiere rămase</string>
@@ -638,7 +650,7 @@ Language: ro
     <string name="jetpack_disconnect_confirm">Deconectează</string>
     <string name="jetpack_disconnect_confirmation_message">Sigur vrei să deconectezi Jetpack de pe sit?</string>
     <string name="jetpack_disconnect_pref_title">„Deconectează din WordPress.com”</string>
-    <string name="site_settings_jetpack_whitelist_description">Poți trece în lista albă o adresă IP sau o serie de adrese împiedicându-le de a fi blocate vreodată de către Jetpack. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare separate printr-o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">Poți trece în lista albă o adresă IP sau o serie de adrese împiedicându-le de a fi blocate vreodată de către Jetpack. IPv4 și IPv6 sunt acceptate. Pentru a specifica un interval, introdu valoarea mică și valoarea mare separate printr–o liniuță. Exemplu: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Necesită autentificare în doi–pași</string>
     <string name="jetpack_match_wpcom_via_email_title">Leagă conturile folosind adrese de email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
@@ -710,8 +722,8 @@ Language: ro
     <string name="error_upload_page_media_param">A fost o eroare la încărcarea media în această pagină: %s.</string>
     <string name="error_upload_page_param">A fost o eroare la încărcarea acestei pagini: %s.</string>
     <string name="async_promo_link">Cum funcționează?</string>
-    <string name="async_promo_description">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
-    <string name="async_promo_title">Publică cu Confidence</string>
+    <string name="async_promo_description_schedule_post">Acum poți părăsi editorul și articolul tău se va salva și programa în spatele scenei! Încearcă!</string>
+    <string name="async_promo_title_publish">Publică cu Confidence</string>
     <string name="editor_uploading_post">Articolul tău se încarcă</string>
     <string name="uploading_media">Încarc media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
@@ -1759,6 +1771,7 @@ Language: ro
     <string name="today">Azi</string>
     <string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
     <string name="quickpress_window_title">Selecție blog pentru scurtătură QuickPress</string>
+    <string name="pages_private">Private</string>
     <string name="categories">Categorii</string>
     <string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>
     <string name="title">Titlu</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-02 10:32:15+0000
+Translation-Revision-Date: 2018-10-15 06:27:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
@@ -361,7 +361,10 @@ Language: el_GR
     <string name="start_over">Ξεκινήστε από την Αρχή</string>
     <string name="editor_remove_failed_uploads">Αφαίρεση αποτυχημένων μεταφορτώσεων</string>
     <string name="editor_toast_failed_uploads">Μερικές μεταφορτώσεις πολυμέσων έχουν αποτύχει. Δεν μπορείτε να αποθηκεύσετε ή να δημοσιεύσετε\nτο άρθρο σας σε αυτή την κατάσταση. Θα θέλατε να αφαιρέσετε όλα τα προβληματικά πολυμέσα;</string>
+    <string name="comments_empty_list_filtered_trashed">Δεν υπάρχουν Διαγραμμένα σχόλια</string>
     <string name="site_settings_advanced_header">Προχωρημένες</string>
+    <string name="comments_empty_list_filtered_pending">Δεν υπάρχουν Εκκρεμή σχόλια</string>
+    <string name="comments_empty_list_filtered_approved">Δεν υπάρχουν Εγκεκριμένα σχόλια</string>
     <string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML–RPC απουσιάζουν από το διακομιστή.</string>
     <string name="post_format_status">Κατάσταση</string>
     <string name="post_format_video">Βίντεο</string>
@@ -420,6 +423,7 @@ Language: el_GR
     <string name="mnu_comment_delete_permanently">Διαγραφή</string>
     <string name="comment_deleted_permanently">Το σχόλιο διαγράφηκε</string>
     <string name="mnu_comment_untrash">Αποκατάσταση</string>
+    <string name="comments_empty_list_filtered_spam">Δεν υπάρχουν ανεπιθύμητα σχόλια</string>
     <string name="could_not_load_page">Αδυναμία φόρτωσης σελίδας</string>
     <string name="comment_status_all">Όλα</string>
     <string name="interface_language">Γλώσσα περιβάλλοντος εργασίας</string>
@@ -572,7 +576,13 @@ Language: el_GR
     <string name="reader_label_gap_marker">Φόρτωμα περισσότερων άρθρων</string>
     <string name="notifications_no_search_results">Δεν βρέθηκαν ιστότοποι που να ταιριάζουν με την \'%s\'</string>
     <string name="search_sites">Αναζήτηση ιστότοπων</string>
+    <string name="notifications_empty_view_reader">Προβολή Αναγνώστη</string>
+    <string name="notifications_empty_action_followers_likes">Λάβετε ειδοποιήσεις: σχολιάστε δημοσιεύσεις που έχετε διαβάσει.</string>
+    <string name="notifications_empty_action_comments">Συμμετέχετε σε συζήτηση: σχολιάστε δημοσιεύσεις των ιστολογίων που ακολουθείτε.</string>
+    <string name="notifications_empty_action_unread">Αναθερμάνετε τη συζήτηση: γράψτε μια νέα απάντηση.</string>
     <string name="notifications_empty_action_all">Δραστηριοποιηθείτε! Σχολιάστε σε αναρτήσεις από blogs που ακολουθείτε.</string>
+    <string name="notifications_empty_comments">Δεν υπάρχουν νέα σχόλια…ακόμα.</string>
+    <string name="notifications_empty_unread">Δεν έχετε νέες ενημερώσεις!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Παρακαλούμε όπως προσπελάσετε τα Στατιστικά στην εφαρμογή και στη συνέχεια δοκιμάσετε να προσθέσετε την εφαρμογή–βοηθό</string>
     <string name="stats_widget_error_readd_widget">Παρακαλούμε αφαιρέστε και προσθέστε ξανά την εφαρμογή</string>
     <string name="stats_widget_error_no_visible_blog">Δεν μπορεί να γίνει προσπέλαση των στατιστικών χωρίς ένα φανερό ιστολόγιο</string>
@@ -908,6 +918,7 @@ Language: el_GR
     <string name="pick_video">Διάλεξε Βίντεο</string>
     <string name="reader_toast_err_get_post">Δεν είναι δυνατή η ανάκτηση αυτού του άρθρου.</string>
     <string name="reader_toast_err_share_intent">Δεν ήταν δυνατός ο διαμοιρασμός</string>
+    <string name="comments_empty_list">Κανένα σχόλιο.</string>
     <string name="reader_btn_share">Μοιράσου</string>
     <string name="reader_btn_follow">Ακολουθήστε</string>
     <string name="reader_btn_unfollow">Ακολουθούν</string>
@@ -993,6 +1004,7 @@ Language: el_GR
     <string name="today">Σήμερα</string>
     <string name="quickpress_window_title">Επιλέξτε ιστότοπο για τη συντόμευση του QuickPress</string>
     <string name="quickpress_add_error">Το όνομα της συντόμευσης δεν επιτρέπεται να είναι κενό</string>
+    <string name="pages_private">Ιδιωτικό</string>
     <string name="title">Τίτλος</string>
     <string name="categories">Κατηγορίες</string>
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-20 08:54:07+0000
+Translation-Revision-Date: 2018-10-18 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Anda sekarang dapat menutup penyunting dan halaman akan disimpan serta dijadwalkan di latar belakang! Cobalah!</string>
+    <string name="async_promo_description_publish_post">Anda sekarang dapat menutup penyunting dan pos akan disimpan serta dipublikasikan secara otomatis! Cobalah!</string>
+    <string name="async_promo_description_publish_page">Anda sekarang dapat menutup penyunting dan halaman akan disimpan serta dipublikasikan di latar belakang! Cobalah!</string>
+    <string name="image_size_full_class">ukuran–penuh</string>
+    <string name="image_size_large_class">ukuran–besar</string>
+    <string name="image_size_medium_class">ukuran–sedang</string>
+    <string name="image_size_thumbnail_class">ukuran-gambar–mini</string>
+    <string name="image_size_full_label">Ukuran Penuh</string>
+    <string name="image_size_large_label">Besar</string>
+    <string name="image_size_medium_label">Sedang</string>
+    <string name="image_size_thumbnail_label">Gambar Mini</string>
+    <string name="menu_history">Riwayat</string>
+    <string name="async_promo_schedule_now">Jadwalkan sekarang</string>
+    <string name="async_promo_title_schedule">Jadwalkan Tanpa Ragu</string>
+    <string name="pages_pending">Menunggu peninjauan</string>
+    <string name="pages_open_page_error">Halaman yang dipilih tidak tersedia</string>
     <string name="news_card_announcement_action_sample_announcement">[Baca selengkapnya]</string>
     <string name="news_card_announcement_content_sample_announcement">[Tidak ada waktu untuk membaca sekarang? Tidak masalah: simpan pos untuk dibaca nanti.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Tersedia fitur baru]</string>
@@ -564,10 +580,6 @@ Language: id
     <string name="error_generic_error">Tidak dapat melakukan operasi</string>
     <string name="error_media_recover_page">Tidak dapat mengunggah media halaman ini</string>
     <string name="error_media_recover_post">Tidak dapat mengunggah media pos ini</string>
-    <string name="size_full">Ukuran Penuh</string>
-    <string name="size_large">Besar</string>
-    <string name="size_medium">Sedang</string>
-    <string name="size_thumbnail">Miniatur</string>
     <string name="image_size">Ukuran</string>
     <string name="uploading_subtitle_media_only_one">1 file tersisa</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d file tersisa</string>
@@ -671,8 +683,6 @@ Language: id
     <string name="error_upload_page_media_param">Terjadi error saat mengunggah media dalam halaman ini: %s.</string>
     <string name="error_upload_page_param">Terjadi error saat mengunggah halaman ini: %s.</string>
     <string name="async_promo_link">Bagaimana cara kerjanya?</string>
-    <string name="async_promo_description">Anda sekarang dapat meninggalkan halaman penyunting dan pos Anda akan disimpan dan dipublikasi dari balik layar! Cobalah!</string>
-    <string name="async_promo_title">Publikasikan dengan Percaya Diri</string>
     <string name="editor_uploading_post">Pos Anda sedang diunggah</string>
     <string name="uploading_media">Mengunggah media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Apakah Anda yakin? Menghapus pos ini juga akan membatalkan unggahan media.</string>
@@ -891,7 +901,6 @@ Language: id
     <string name="media_upload_error">Terjadi error saat mengunggah media</string>
     <string name="retry">Coba lagi</string>
     <string name="confirm">Konfirmasi</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Tidak dapat terhubung. Kami menerima error 403 saat mencoba mengakses\n titik akhir XMLRPC situs Anda. Aplikasi ini memerlukannya agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi\n masalah ini.</string>
     <string name="xmlrpc_post_blocked_error">Tidak dapat terhubung. Host Anda memblokir permintaan POST yang dibutuhkan aplikasi\n agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi masalah ini.</string>
     <string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
     <string name="visual_editor_disabled">Editor Visual nonaktif</string>

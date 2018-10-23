@@ -502,10 +502,6 @@ Language: es_CL
     <string name="error_generic_error">No se pudo realizar la operación</string>
     <string name="error_media_recover_page">No pude cargar los medios de esta página</string>
     <string name="error_media_recover_post">No se puede subir los medios de este post</string>
-    <string name="size_full">Tamaño completo</string>
-    <string name="size_large">Largo</string>
-    <string name="size_medium">Mediano</string>
-    <string name="size_thumbnail">Imagen en miniatura</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">1 archivo restante</string>
     <string name="uploading_subtitle_media_only">Faltan %1$d de %2$d archivos</string>
@@ -593,8 +589,6 @@ Language: es_CL
     <string name="error_upload_page_media_param">Hubo un error al cargar el medio en esta página: %s.</string>
     <string name="error_upload_page_param">Hubo un error al cargar esta página: %s.</string>
     <string name="async_promo_link">¿Cómo funciona?</string>
-    <string name="async_promo_description">¡Ahora puedes dejar el editor, y tu entrada se guardará y publicará detrás de las escenas! ¡Pruébalo!</string>
-    <string name="async_promo_title">Publicar con Confianza</string>
     <string name="editor_uploading_post">Tu entrada se está cargando</string>
     <string name="uploading_media">Subiendo media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">¿Estás seguro? Al eliminar esta entrada también se cancelará la carga de medios.</string>
@@ -824,7 +818,6 @@ Language: es_CL
     <string name="media_upload_error">Error al cargar medios</string>
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
-    <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error de 403 al intentar acceder al endpoint XMLRPC de\n        tu sitio. La aplicación lo necesita para comunicarse con tu sitio.\n        Ponte en contacto con tu hosting para resolver este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
     <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
     <string name="visual_editor_disabled">Editor Visual deshabilitado</string>
