@@ -1,9 +1,11 @@
 package org.wordpress.android.fluxc.model.revisions
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
+@SuppressLint("ParcelCreator")
 class Diff(val operation: DiffOperations, val value: String?) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (this === other) {
