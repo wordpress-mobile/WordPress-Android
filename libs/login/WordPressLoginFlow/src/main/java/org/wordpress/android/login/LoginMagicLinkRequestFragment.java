@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadSource;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthEmailSent;
 import org.wordpress.android.util.AppLog;
@@ -51,6 +52,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_GRAVATAR_IN_PROGRESS = "KEY_GRAVATAR_IN_PROGRESS";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
+    private static final String ARG_MAGIC_LINK_SCHEME = "ARG_MAGIC_LINK_SCHEME";
     private static final String ARG_IS_JETPACK_CONNECT = "ARG_IS_JETPACK_CONNECT";
     private static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
 
@@ -59,6 +61,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     private LoginListener mLoginListener;
 
     private String mEmail;
+    private AuthEmailPayloadScheme mMagicLinkScheme;
     private String mJetpackConnectSource;
 
     private View mAvatarProgressBar;
@@ -71,12 +74,12 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     @Inject protected Dispatcher mDispatcher;
 
     @Inject protected LoginAnalyticsListener mAnalyticsListener;
-
-    public static LoginMagicLinkRequestFragment newInstance(String email, boolean isJetpackConnect,
-                                                            String jetpackConnectSource) {
+    public static LoginMagicLinkRequestFragment newInstance(String email, AuthEmailPayloadScheme scheme,
+                                                            boolean isJetpackConnect, String jetpackConnectSource) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, email);
+        args.putSerializable(ARG_MAGIC_LINK_SCHEME, scheme);
         args.putBoolean(ARG_IS_JETPACK_CONNECT, isJetpackConnect);
         args.putString(ARG_JETPACK_CONNECT_SOURCE, jetpackConnectSource);
         fragment.setArguments(args);
@@ -100,6 +103,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
         if (getArguments() != null) {
             mEmail = getArguments().getString(ARG_EMAIL_ADDRESS);
+            mMagicLinkScheme = (AuthEmailPayloadScheme) getArguments().getSerializable(ARG_MAGIC_LINK_SCHEME);
             mIsJetpackConnect = getArguments().getBoolean(ARG_IS_JETPACK_CONNECT);
             mJetpackConnectSource = getArguments().getString(ARG_JETPACK_CONNECT_SOURCE);
         }
@@ -119,7 +123,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                         showMagicLinkRequestProgressDialog();
                         AuthEmailPayloadSource source = getAuthEmailPayloadSource();
                         AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, false,
-                                mIsJetpackConnect ? AccountStore.AuthEmailPayloadFlow.JETPACK : null, source);
+                                mIsJetpackConnect ? AccountStore.AuthEmailPayloadFlow.JETPACK : null,
+                                source, mMagicLinkScheme);
                         mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
                     }
                 }

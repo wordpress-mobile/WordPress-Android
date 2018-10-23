@@ -2060,6 +2060,7 @@
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2117,6 +2118,9 @@
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
+
+    <!-- Required by the login library - overwrites the placeholder value with a real channel -->
+    <string name="login_notification_channel_id">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>

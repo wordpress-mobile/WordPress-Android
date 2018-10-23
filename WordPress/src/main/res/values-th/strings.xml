@@ -218,7 +218,7 @@ Language: th
     <string name="language">ภาษา</string>
     <string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
-    <string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d – %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
     <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ…</string>
     <string name="posts_fetching">กำลังรับข้อมูลเรื่อง…</string>
     <string name="pages_fetching">กำลังรับข้อมูลหน้า…</string>
@@ -227,7 +227,7 @@ Language: th
     <string name="stats_view_authors">ผู้เขียน</string>
     <string name="stats_entry_search_terms">เงื่อนไขการค้นหา</string>
     <string name="stats_empty_search_terms">ไม่มีบันทึกเงื่อนไขการค้นหา</string>
-    <string name="stats_followers_total_email_paged">กำลังแสดง %1$d – %2$d จาก %3$s ผู้ติดตามอีเมล์</string>
+    <string name="stats_followers_total_email_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตามอีเมล์</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
     <string name="publisher">ผู้เผยแพร่:</string>
