@@ -557,8 +557,6 @@ class PostListAdapter(
         val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
     }
 
-    // TODO: calculate the line heights and use those in the layout instead of guessing :sad:
-    // TODO: improve the loading layout
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
