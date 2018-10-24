@@ -233,8 +233,10 @@ class PostListFragment : Fragment(),
         fabView?.visibility = View.GONE
         fabView?.setOnClickListener { newPost() }
 
-        initSwipeToRefreshHelper()
-        refreshListManagerFromStore(listDescriptor, fetchAfter = (savedInstanceState == null))
+        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
+            refreshPostList()
+        }
+        refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = (savedInstanceState == null))
 
         return view
     }
@@ -265,12 +267,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun initSwipeToRefreshHelper() {
-        swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
-            refreshPostList()
-        }
-    }
-
     private fun refreshPostList() {
         if (!isAdded) {
             return
@@ -280,7 +276,7 @@ class PostListFragment : Fragment(),
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
             // If network is not available, we can refresh the items from the DB in case an update is not reflected
             // It really shouldn't be necessary, but wouldn't hurt to have it here either
-            refreshListManagerFromStore(listDescriptor, fetchAfter = false)
+            refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
         } else {
             listManager?.refresh()
         }
@@ -388,12 +384,12 @@ class PostListFragment : Fragment(),
         // remove post from the list and add it to the list of trashed posts
         val postIdPair = Pair(post.id, post.remotePostId)
         trashedPostIds.add(postIdPair)
-        refreshListManagerFromStore(listDescriptor, fetchAfter = false)
+        refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
 
         val undoListener = OnClickListener {
             // user undid the trash, so un-hide the post and remove it from the list of trashed posts
             trashedPostIds.remove(postIdPair)
-            refreshListManagerFromStore(listDescriptor, fetchAfter = false)
+            refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
         }
 
         // different undo text if this is a local draft since it will be deleted rather than trashed
@@ -441,6 +437,9 @@ class PostListFragment : Fragment(),
     }
 
     private fun showPublishConfirmationDialog(post: PostModel) {
+        if (!isAdded) {
+            return
+        }
         val builder = AlertDialog.Builder(
                 ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
         )
@@ -571,7 +570,7 @@ class PostListFragment : Fragment(),
             }
             is CauseOfOnPostChanged.DeletePost -> {
                 if (event.isError) {
-                    GlobalScope.launch {
+                    GlobalScope.launch(Dispatchers.Main) {
                         val message = getString(R.string.error_deleting_post)
                         ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
                     }
@@ -587,7 +586,7 @@ class PostListFragment : Fragment(),
             return
         }
         if (event.isError) {
-            GlobalScope.launch {
+            GlobalScope.launch(Dispatchers.Main) {
                 val emptyViewMessageType = if (event.error.type == ListErrorType.PERMISSION_ERROR) {
                     PERMISSION_ERROR
                 } else GENERIC_ERROR
@@ -639,16 +638,14 @@ class PostListFragment : Fragment(),
      */
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError) {
-            if (event.mediaList != null && event.mediaList.size > 0) {
-                val mediaModel = event.mediaList[0]
-                listManager?.findWithIndex { post ->
-                    post.featuredImageId == mediaModel.mediaId
-                }?.forEach { (position, _) ->
-                    GlobalScope.launch {
-                        if (isAdded) {
-                            postListAdapter.notifyItemChanged(position)
-                        }
+        if (!event.isError && event.mediaList != null && event.mediaList.size > 0) {
+            val mediaModel = event.mediaList[0]
+            listManager?.findWithIndex { post ->
+                post.featuredImageId == mediaModel.mediaId
+            }?.forEach { (position, _) ->
+                GlobalScope.launch(Dispatchers.Main) {
+                    if (isAdded) {
+                        postListAdapter.notifyItemChanged(position)
                     }
                 }
             }
@@ -679,7 +676,7 @@ class PostListFragment : Fragment(),
                 shouldRefresh = true
             }
             if (shouldRefresh) {
-                GlobalScope.launch {
+                GlobalScope.launch(Dispatchers.Main) {
                     if (isAdded) {
                         postListAdapter.updateProgressForPost(post)
                     }
@@ -759,21 +756,43 @@ class PostListFragment : Fragment(),
 
     // ListManager
 
-    private fun refreshListManagerFromStore(listDescriptor: ListDescriptor, fetchAfter: Boolean) {
+    /**
+     * A helper function to load the current [ListManager] from [ListStore].
+     *
+     * @param listDescriptor The descriptor for which the [ListManager] to be loaded for
+     * @param shouldRefreshFirstPageAfterLoading Whether the first page of the list should be fetched after its loaded
+     *
+     * A background [Job] will be used to refresh the list. If this function is triggered again before the job is
+     * complete, it'll be canceled and a new one will be started. This is important to do, because we always want to
+     * last version of [ListManager] to be used and we don't want block the UI thread unnecessarily.
+     */
+    private fun refreshListManagerFromStore(
+        listDescriptor: ListDescriptor,
+        shouldRefreshFirstPageAfterLoading: Boolean
+    ) {
         refreshListDataJob?.cancel()
         refreshListDataJob = GlobalScope.launch(Dispatchers.Default) {
             val listManager = getListDataFromStore(listDescriptor)
             if (isActive && this@PostListFragment.listDescriptor == listDescriptor) {
                 val diffResult = calculateDiff(this@PostListFragment.listManager, listManager)
                 if (isActive && this@PostListFragment.listDescriptor == listDescriptor) {
-                    updateListManager(listManager, diffResult, fetchAfter)
+                    updateListManager(listManager, diffResult, shouldRefreshFirstPageAfterLoading)
                 }
             }
         }
     }
 
+    /**
+     * A helper function to load the [ListManager] for the given [ListDescriptor] from [ListStore].
+     *
+     * [ListStore] requires an instance of [ListItemDataSource] which is a way for us to tell [ListStore] and
+     * [ListManager] how to take certain actions or how to access certain data.
+     */
     private suspend fun getListDataFromStore(listDescriptor: ListDescriptor): ListManager<PostModel> =
             listStore.getListManager(listDescriptor, object : ListItemDataSource<PostModel> {
+                /**
+                 * Tells [ListStore] how to fetch a post from remote for the given list descriptor and remote post id
+                 */
                 override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
                     val postToFetch = PostModel()
                     postToFetch.remotePostId = remoteItemId
@@ -781,6 +800,9 @@ class PostListFragment : Fragment(),
                     dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
                 }
 
+                /**
+                 * Tells [ListStore] how to fetch a list from remote for the given list descriptor and offset
+                 */
                 override fun fetchList(listDescriptor: ListDescriptor, offset: Int) {
                     if (listDescriptor is PostListDescriptor) {
                         val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
@@ -788,12 +810,20 @@ class PostListFragment : Fragment(),
                     }
                 }
 
+                /**
+                 * Tells [ListStore] how to get posts from [PostStore] for the given list descriptor and remote post ids
+                 */
                 override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
                     return postStore.getPostsByRemotePostIds(remoteItemIds, site)
                 }
 
+                /**
+                 * Tells [ListStore] which local drafts should be included in the list. Since [ListStore] deals with
+                 * remote items, it needs our help to show local data.
+                 */
                 override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
                     if (listDescriptor is PostListDescriptor) {
+                        // We should filter out the trashed posts from local drafts since they should be hidden
                         val trashedLocalPostIds = trashedPostIds.map { it.first }
                         return postStore.getLocalPostsForDescriptor(listDescriptor)
                                 .filter { !trashedLocalPostIds.contains(it.id) }
@@ -801,19 +831,44 @@ class PostListFragment : Fragment(),
                     return null
                 }
 
+                /**
+                 * Tells [ListStore] which remote post ids must be included in the list. This is to workaround a case
+                 * where the local draft is uploaded to remote but the list has not been refreshed yet. If we don't
+                 * tell about this to [ListStore] that post will disappear until the next refresh.
+                 *
+                 * Please check out [OnPostUploaded] and [OnListChanged] for where [uploadedPostRemoteIds] is managed.
+                 */
                 override fun remoteItemIdsToInclude(listDescriptor: ListDescriptor): List<Long>? {
                     return uploadedPostRemoteIds
                 }
 
+                /**
+                 * Tells [ListStore] which remote post ids must be hidden from the list. In order to show an undo
+                 * snackbar when a post is trashed, we don't immediately delete/trash a post which means [ListStore]
+                 * doesn't know about this action and needs our help to determine which posts should be hidden until
+                 * delete/trash action is completed.
+                 *
+                 * Please check out [trashPost] for more details.
+                 */
                 override fun remoteItemsToHide(listDescriptor: ListDescriptor): List<Long>? {
                     return trashedPostIds.map { it.second }
                 }
             })
 
+    /**
+     * A helper function to update the current [ListManager] with the given [listManager].
+     *
+     * @param listManager [ListManager] to be used to change with the current one
+     * @param diffResult Pre-calculated [DiffResult] to be applied in the [PostListAdapter]
+     * @param shouldRefreshFirstPageAfterUpdate Whether the first page of the list should be fetched after the update
+     *
+     * This function deals with all the UI actions that needs to be taken after a [ListManager] change, including but
+     * not limited to, updating the swipe to refresh layout, loading progress bar and updating the empty views.
+     */
     private suspend fun updateListManager(
         listManager: ListManager<PostModel>,
         diffResult: DiffResult,
-        fetchAfter: Boolean
+        shouldRefreshFirstPageAfterUpdate: Boolean
     ) = withContext(Dispatchers.Main) {
         if (!isAdded) {
             return@withContext
@@ -824,14 +879,16 @@ class PostListFragment : Fragment(),
         // Save and restore the visible view. Without this, for example, if a new row is inserted, it does not show up.
         val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager, diffResult)
-        recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+        recyclerViewState?.let {
+            recyclerView?.layoutManager?.onRestoreInstanceState(it)
+        }
 
         // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
         recyclerView?.let {
             rvScrollPositionSaver.restoreScrollOffset(it)
         }
         showTargetPostIfNecessary()
-        if (fetchAfter) {
+        if (shouldRefreshFirstPageAfterUpdate) {
             refreshPostList()
         } else {
             // If we update the empty view just before a fetch, it will show "No Content" message only to update it
@@ -840,6 +897,10 @@ class PostListFragment : Fragment(),
         }
     }
 
+    /**
+     * A helper function that calculates the [DiffResult] to be applied in [PostListAdapter] for the given
+     * two [ListManager]s.
+     */
     private suspend fun calculateDiff(
         oldListManager: ListManager<PostModel>?,
         newListManager: ListManager<PostModel>
@@ -848,18 +909,26 @@ class PostListFragment : Fragment(),
                 oldListManager = oldListManager,
                 newListManager = newListManager,
                 areItemsTheSame = { oldPost, newPost ->
-                    oldPost.id == newPost.id || oldPost.remotePostId == newPost.remotePostId
+                    // If the local ids of two posts are the same, they are referring to the same post
+                    oldPost.id == newPost.id
                 },
                 areContentsTheSame = { oldPost, newPost ->
                     if (oldPost.isLocalDraft && newPost.isLocalDraft) {
+                        // If both posts are local drafts, checking their locally changed date will be enough
                         oldPost.dateLocallyChanged == newPost.dateLocallyChanged
                     } else if (oldPost.isLocalDraft || newPost.isLocalDraft) {
+                        // If a post is a local draft and the other is not, the contents are considered to be changed
                         false
                     } else if (oldPost.isLocallyChanged && newPost.isLocallyChanged) {
+                        // Neither post is a local draft due to previous checks. For remote posts, if both of them are
+                        // locally changed, we can rely on their locally changed date
                         oldPost.dateLocallyChanged == newPost.dateLocallyChanged
                     } else if (oldPost.isLocallyChanged || newPost.isLocallyChanged) {
+                        // If a post is locally changed and the other is not, the contents are considered to be changed
                         false
                     } else {
+                        // Both posts are remote posts due to previous checks. In this case we can simply rely on their
+                        // last modified date on remote
                         oldPost.lastModified == newPost.lastModified
                     }
                 })
