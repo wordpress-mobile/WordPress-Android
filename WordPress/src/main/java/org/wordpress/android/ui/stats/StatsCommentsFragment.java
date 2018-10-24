@@ -233,7 +233,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                             currentRowData.getViews()));
 
             // avatar
-            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR_WITH_BACKGROUND,
                     GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 

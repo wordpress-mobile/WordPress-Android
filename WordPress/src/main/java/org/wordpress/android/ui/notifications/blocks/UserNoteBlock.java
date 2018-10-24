@@ -111,7 +111,7 @@ public class UserNoteBlock extends NoteBlock {
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
-        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
         return view;
     }

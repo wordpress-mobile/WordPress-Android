@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.history
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.text.TextUtils
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
@@ -15,9 +16,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnRevisionsFetched
+import org.wordpress.android.models.Person
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.ui.people.utils.PeopleUtils
+import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -77,6 +81,19 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
+        var revisionAuthorsId = ArrayList<String>()
+        revisions.forEach {
+            if (!TextUtils.isEmpty(it.postAuthorId)) {
+                revisionAuthorsId.add(it.postAuthorId!!)
+            }
+        }
+
+        revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
+        _revisions.value = revisionsToHistoryListItems(revisions)
+        fetchRevisionAuthorDetails(revisionAuthorsId)
+    }
+
+    private fun revisionsToHistoryListItems(revisions: List<RevisionModel>): List<HistoryListItem> {
         val items = mutableListOf<HistoryListItem>()
 
         revisions.forEach {
@@ -101,7 +118,40 @@ class HistoryViewModel @Inject constructor(
             items.add(HistoryListItem.Footer(footer))
         }
 
-        _revisions.value = items
+        return items
+    }
+
+    private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
+        PeopleUtils.fetchRevisionAuthorsDetails(site, authorsId, object : FetchUsersCallback {
+            override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
+                val existingRevisions = _revisions.value ?: return
+                val updatedRevisions = mutableListOf<HistoryListItem>()
+
+                existingRevisions.forEach { it ->
+                    var mutableRevision = it
+
+                    if (mutableRevision is HistoryListItem.Revision) {
+                        // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
+                        // and DiffUtil will not catch this change
+                        mutableRevision = mutableRevision.copy()
+
+                        val person = peopleList.firstOrNull { it.personID.toString() == mutableRevision.postAuthorId }
+                        if (person != null) {
+                            mutableRevision.authorAvatarURL = person.avatarUrl
+                            mutableRevision.authorDisplayName = person.displayName
+                        }
+                    }
+
+                    updatedRevisions.add(mutableRevision)
+                }
+
+                _revisions.postValue(updatedRevisions)
+            }
+
+            override fun onError() {
+                AppLog.e(T.API, "Can't fetch details of revision authors")
+            }
+        })
     }
 
     private fun fetchRevisions() {
