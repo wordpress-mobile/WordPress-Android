@@ -119,7 +119,7 @@ class HistoryListFragment : Fragment() {
             updateRefreshing(listStatus)
         })
 
-        viewModel.showLoadDialog.observe(this, Observer {
+        viewModel.showDialog.observe(this, Observer {
             if (it is HistoryListItem.Revision && activity is HistoryItemClickInterface) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
             }

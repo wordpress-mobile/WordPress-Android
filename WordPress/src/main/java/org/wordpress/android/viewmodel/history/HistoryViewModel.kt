@@ -40,9 +40,9 @@ class HistoryViewModel @Inject constructor(
     val eventListStatus: LiveData<HistoryListStatus>
         get() = _listStatus
 
-    private val _showLoadDialog = SingleLiveEvent<HistoryListItem>()
-    val showLoadDialog: LiveData<HistoryListItem>
-        get() = _showLoadDialog
+    private val _showDialog = SingleLiveEvent<HistoryListItem>()
+    val showDialog: LiveData<HistoryListItem>
+        get() = _showDialog
 
     private val _showSnackbarMessage = SingleLiveEvent<String>()
     val showSnackbarMessage: LiveData<String>
@@ -119,7 +119,7 @@ class HistoryViewModel @Inject constructor(
 
     fun onItemClicked(item: HistoryListItem) {
         if (item is HistoryListItem.Revision) {
-            _showLoadDialog.value = item
+            _showDialog.value = item
         }
     }
 
