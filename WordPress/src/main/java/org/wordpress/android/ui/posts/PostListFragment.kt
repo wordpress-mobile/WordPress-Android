@@ -615,7 +615,6 @@ class PostListFragment : Fragment(),
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (isAdded && event.post != null && event.post.localSiteId == site.id) {
-            postListAdapter.refreshRowForPost(event.post)
             UploadUtils.onPostUploadedSnackbarHandler(
                     nonNullActivity,
                     nonNullActivity.findViewById(R.id.coordinator),
@@ -625,10 +624,10 @@ class PostListFragment : Fragment(),
             // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
             // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
             // next refresh and pass it to `ListStore` so it'll be included in the list.
-            if (listManager?.findWithIndex { it.isLocalDraft && it.id == event.post.id }?.isEmpty() != true) {
-                uploadedPostRemoteIds.add(event.post.remotePostId)
-                refreshPostList()
-            }
+            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
+            // as the current `ListManager` might not have been updated yet since it's a bg action.
+            uploadedPostRemoteIds.add(event.post.remotePostId)
+            refreshPostList()
         }
     }
 
