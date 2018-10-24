@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
@@ -121,9 +122,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         fields.add("post_modified");
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, listDescriptor.getPageSize(), fields,
+                        offset, listDescriptor.getPageSize(), Collections.<PostStatus>emptyList(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
-
         final boolean loadedMore = offset > 0;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
@@ -151,7 +151,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                             default:
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
-
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, Collections.<PostListItem>emptyList(),
                                         loadedMore, false, postError);
@@ -162,17 +161,18 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void fetchPosts(final SiteModel site, final boolean getPages, final int offset, final int number) {
+    public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusList,
+                           final int offset) {
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
-                        getPages, offset, number, null, null, null);
+                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
                     @Override
                     public void onResponse(Object[] response) {
                         boolean canLoadMore = false;
-                        if (response != null && response.length == number) {
+                        if (response != null && response.length == PostStore.NUM_POSTS_PER_FETCH) {
                             canLoadMore = true;
                         }
 
@@ -435,7 +435,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
 
         if (post.isPage()) {
-            post.setParentId(MapUtils.getMapLong(postMap, "wp_page_parent_id"));
+            post.setParentId(MapUtils.getMapLong(postMap, "post_parent"));
             post.setParentTitle(MapUtils.getMapStr(postMap, "wp_page_parent"));
             post.setSlug(MapUtils.getMapStr(postMap, "wp_slug"));
         } else {
@@ -461,7 +461,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 contentStruct.put("post_format", post.getPostFormat());
             }
         } else {
-            contentStruct.put("parent", post.getParentId());
+            contentStruct.put("post_parent", post.getParentId());
         }
 
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
@@ -597,9 +597,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final boolean getPages,
             final int offset,
             final int number,
-            @Nullable List<String> fields,
-            @Nullable String orderBy,
-            @Nullable String order) {
+            @Nullable final List<PostStatus> statusList,
+            @Nullable final List<String> fields,
+            @Nullable final String orderBy,
+            @Nullable final String order) {
         Map<String, Object> contentStruct = new HashMap<>();
         contentStruct.put("number", number);
         contentStruct.put("offset", offset);
@@ -608,6 +609,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
         if (!TextUtils.isEmpty(order)) {
             contentStruct.put("order", order);
+        }
+        if (statusList != null && statusList.size() > 0) {
+            contentStruct.put("post_status", PostStatus.postStatusListToString(statusList));
         }
 
         if (getPages) {

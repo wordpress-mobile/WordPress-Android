@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 43;
+        return 44;
     }
 
     @Override
@@ -356,6 +356,12 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "POST_TITLE TEXT,POST_DATE_GMT TEXT,POST_MODIFIED_GMT TEXT,POST_AUTHOR_ID TEXT)");
                 oldVersion++;
             case 42:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL(
+                        "CREATE TABLE StatsBlock (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,TYPE "
+                        + "TEXT NOT NULL,JSON TEXT NOT NULL)");
+                oldVersion++;
+            case 43:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ListModel (LAST_MODIFIED TEXT,DESCRIPTOR_UNIQUE_IDENTIFIER_DB_VALUE INTEGER,"
                            + "DESCRIPTOR_TYPE_IDENTIFIER_DB_VALUE INTEGER,STATE_DB_VALUE INTEGER,"

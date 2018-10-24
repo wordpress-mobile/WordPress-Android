@@ -25,9 +25,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -158,13 +159,12 @@ class InsightsRestClientTest {
 
     @Test
     fun `returns posts view success response`() = test {
-        val response = mock<PostViewsResponse>()
-        initPostsViewResponse(response)
+        initPostsViewResponse(POST_STATS_RESPONSE)
 
-        val allTimeInsights = insightsRestClient.fetchPostViewsForInsights(site, postId, false)
+        val allTimeInsights = insightsRestClient.fetchPostStats(site, postId, false)
 
         assertNotNull(allTimeInsights.response)
-        assertEquals(response, allTimeInsights.response)
+        assertEquals(POST_STATS_RESPONSE, allTimeInsights.response)
         assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/post/1/", urlCaptor.lastValue)
     }
 
@@ -181,7 +181,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val allTimeInsights = insightsRestClient.fetchPostViewsForInsights(site, postId, false)
+        val allTimeInsights = insightsRestClient.fetchPostStats(site, postId, false)
 
         assertNotNull(allTimeInsights.error)
         assertEquals(API_ERROR, allTimeInsights.error.type)
@@ -210,10 +210,10 @@ class InsightsRestClientTest {
     }
 
     private suspend fun initPostsViewResponse(
-        data: PostViewsResponse? = null,
+        data: PostStatsResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<PostViewsResponse> {
-        return initResponse(PostViewsResponse::class.java, data ?: mock(), error)
+    ): Response<PostStatsResponse> {
+        return initResponse(PostStatsResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(
