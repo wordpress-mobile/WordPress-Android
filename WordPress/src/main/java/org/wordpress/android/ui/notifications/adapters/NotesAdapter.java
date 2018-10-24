@@ -47,8 +47,28 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @Inject protected NotificationsUtilsWrapper mNotificationsUtilsWrapper;
 
     public enum FILTERS {
-        FILTER_ALL, FILTER_LIKE, FILTER_COMMENT, FILTER_UNREAD,
-        FILTER_FOLLOW
+        FILTER_ALL,
+        FILTER_COMMENT,
+        FILTER_FOLLOW,
+        FILTER_LIKE,
+        FILTER_UNREAD;
+
+        public String toString() {
+            switch (this) {
+                case FILTER_ALL:
+                    return "all";
+                case FILTER_COMMENT:
+                    return "comment";
+                case FILTER_FOLLOW:
+                    return "follow";
+                case FILTER_LIKE:
+                    return "like";
+                case FILTER_UNREAD:
+                    return "unread";
+                default:
+                    return "all";
+            }
+        }
     }
 
     private FILTERS mCurrentFilter = FILTERS.FILTER_ALL;

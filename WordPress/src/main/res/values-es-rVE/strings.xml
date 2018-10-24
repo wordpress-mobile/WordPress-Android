@@ -156,7 +156,7 @@ Language: es_VE
     <string name="editor_remove_failed_uploads">Eliminar subidas fallidas</string>
     <string name="editor_toast_failed_uploads">La subida de algunos archivos multimedia han fallado. No se puede guardar o publicar\n tu entrada tiene este estado. ¿Quieres eliminar todos los archivos multimedia fallidos?</string>
     <string name="site_settings_advanced_header">Avanzado</string>
-    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML–RPC faltan en el servidor.</string>
+    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Estado</string>
     <string name="alignment_center">Centrado</string>
@@ -200,7 +200,7 @@ Language: es_VE
     <string name="pending_email_change_snackbar">Haz click en el enlace de verificación del correo electrónica enviado a %1$s para confirmar tu nueva dirección</string>
     <string name="web_address">Dirección web</string>
     <string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
-    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo – se muestran comentarios antiguos</string>
+    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
     <string name="visual_editor_enabled">Editor visual activado</string>
     <string name="editor_content_placeholder">Comparte tu historia aquí…</string>
     <string name="editor_page_title_placeholder">Título página</string>

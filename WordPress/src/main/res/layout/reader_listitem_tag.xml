@@ -4,9 +4,9 @@
     list item which shows a followed tag - see ReaderTagAdapter
  -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
@@ -36,5 +36,5 @@
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
         android:contentDescription="@string/remove"
-        app:srcCompat="@drawable/ic_cross_grey_600_24dp" />
+        android:src="@drawable/ic_cross_grey_600_24dp" />
 </LinearLayout>

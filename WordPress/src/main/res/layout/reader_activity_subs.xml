@@ -69,7 +69,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_small"
             android:contentDescription="@string/add"
-            app:srcCompat="@drawable/ic_reader_follow_blue_medium_24dp" />
+            android:src="@drawable/ic_reader_follow_blue_medium_24dp" />
 
     </LinearLayout>
 

@@ -33,7 +33,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
-import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.REMOVE
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.UPLOAD
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -122,7 +122,7 @@ class PagesViewModel
         get() = _lastSearchQuery
 
     private var searchJob: Job? = null
-    private var pageUpdateContinuation: Continuation<Unit>? = null
+    private var pageUpdateContinuations: MutableMap<Long, Continuation<Unit>> = mutableMapOf()
     private var currentPageType = PageListType.PUBLISHED
 
     fun start(site: SiteModel) {
@@ -175,18 +175,20 @@ class PagesViewModel
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
     }
 
-    fun onPageEditFinished() {
+    fun onPageEditFinished(remotePageId: Long) {
         uiScope.launch {
             refreshPages() // show local changes immediately
-            waitForPageUpdate()
+            waitForPageUpdate(remotePageId)
             reloadPages()
         }
     }
 
-    private suspend fun waitForPageUpdate() {
+    private suspend fun waitForPageUpdate(remotePageId: Long) {
+        _arePageActionsEnabled = false
         suspendCoroutine<Unit> { cont ->
-            pageUpdateContinuation = cont
+            pageUpdateContinuations[remotePageId] = cont
         }
+        _arePageActionsEnabled = true
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -321,7 +323,7 @@ class PagesViewModel
     private fun setParent(page: PageModel, parentId: Long) {
         val oldParent = page.parent?.remoteId ?: 0
 
-        val action = PageAction(UPLOAD) {
+        val action = PageAction(page.remoteId, UPLOAD) {
             defaultScope.launch {
                 if (page.parent?.remoteId != parentId) {
                     val updatedPage = updateParent(page, parentId)
@@ -373,7 +375,7 @@ class PagesViewModel
     }
 
     private fun deletePage(page: PageModel) {
-        val action = PageAction(REMOVE) {
+        val action = PageAction(page.remoteId, DELETE) {
             defaultScope.launch {
                 pageMap = pageMap.filter { it.key != page.remoteId }
 
@@ -406,7 +408,7 @@ class PagesViewModel
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
         pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
-            val action = PageAction(UPLOAD) {
+            val action = PageAction(remoteId, UPLOAD) {
                 val updatedPage = updatePageStatus(page, status)
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
@@ -480,8 +482,13 @@ class PagesViewModel
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        pageUpdateContinuation?.let { cont ->
-            pageUpdateContinuation = null
+        var id = 0L
+        if (!pageUpdateContinuations.contains(id)) {
+            id = event.post.remotePostId
+        }
+
+        pageUpdateContinuations[id]?.let { cont ->
+            pageUpdateContinuations.remove(id)
             cont.resume(Unit)
         }
     }

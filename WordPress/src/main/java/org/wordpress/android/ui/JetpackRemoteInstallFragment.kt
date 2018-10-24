@@ -15,6 +15,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.LoginMode
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.CONNECT
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.LOGIN
+import org.wordpress.android.ui.JetpackRemoteInstallViewModel.JetpackResultActionData.Action.MANUAL_INSTALL
 import org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.util.AppLog
@@ -57,21 +60,33 @@ class JetpackRemoteInstallFragment : Fragment() {
                     jetpack_install_progress.visibility = if (viewState.progressBarVisible) View.VISIBLE else View.GONE
                 }
             })
-            viewModel.liveJetpackConnectionFlow.observe(this, Observer { result ->
+            viewModel.liveActionOnResult.observe(this, Observer { result ->
                 if (result != null) {
-                    if (!result.loggedIn) {
-                        val loginIntent = Intent(activity, LoginActivity::class.java)
-                        LoginMode.JETPACK_STATS.putInto(loginIntent)
-                        loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
-                        startActivityForResult(loginIntent, JETPACK_LOGIN)
-                    } else {
-                        JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
-                                activity,
-                                source,
-                                result.site,
-                                result.loggedIn
-                        )
-                        activity.finish()
+                    when (result.action) {
+                        MANUAL_INSTALL -> {
+                            JetpackConnectionWebViewActivity.startManualFlow(
+                                    activity,
+                                    source,
+                                    result.site,
+                                    result.loggedIn
+                            )
+                            activity.finish()
+                        }
+                        LOGIN -> {
+                            val loginIntent = Intent(activity, LoginActivity::class.java)
+                            LoginMode.JETPACK_STATS.putInto(loginIntent)
+                            loginIntent.putExtra(LoginActivity.ARG_JETPACK_CONNECT_SOURCE, source)
+                            startActivityForResult(loginIntent, JETPACK_LOGIN)
+                        }
+                        CONNECT -> {
+                            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(
+                                    activity,
+                                    source,
+                                    result.site,
+                                    result.loggedIn
+                            )
+                            activity.finish()
+                        }
                     }
                 }
             })

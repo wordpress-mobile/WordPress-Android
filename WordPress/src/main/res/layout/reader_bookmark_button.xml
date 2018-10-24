@@ -2,7 +2,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/selectableItemBackground"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
@@ -17,7 +16,7 @@
         android:layout_gravity="center_vertical"
         android:layout_height="@dimen/reader_count_icon"
         android:layout_width="@dimen/reader_count_icon"
-        app:srcCompat="@drawable/ic_bookmark_selector_18dp" >
+        android:src="@drawable/ic_bookmark_selector_18dp" >
     </ImageView>
 
     <org.wordpress.android.widgets.WPTextView
