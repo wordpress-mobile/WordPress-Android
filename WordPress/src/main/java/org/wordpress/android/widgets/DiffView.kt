@@ -22,11 +22,11 @@ class DiffView : AppCompatTextView {
         text = null
 
         diffs.forEachIndexed { index, diff ->
-            if (trimNewline && index == diffs.size - 1 && diff.value.equals("\n")) {
-                return
+            var diffValue = if (trimNewline && index == diffs.size - 1) {
+                diff.value?.trimEnd('\n')
+            } else {
+                diff.value
             }
-
-            var diffValue = diff.value
 
             // add tiny spacing before and after DEL and ADD diffs (will be included in the span)
             if (diff.operation == ADD || diff.operation == DELETE) {
