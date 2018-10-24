@@ -324,7 +324,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment {
         if (bitmap != null) {
             mImageManager.load(mAvatarImageView, bitmap);
         } else {
-            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {
