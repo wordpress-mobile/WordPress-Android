@@ -86,6 +86,23 @@ class ListSqlUtils @Inject constructor() {
     }
 
     /**
+     * This function deletes [ListModel] records that hasn't been updated for the given [expirationDuration].
+     */
+    fun deleteExpiredLists(expirationDuration: Long) {
+        val allLists = WellSql.select(ListModel::class.java).asModel
+        val cutOffDate = Date(System.currentTimeMillis() - expirationDuration)
+        // Find the ids of lists that are expired
+        val listIdsToDelete = allLists.asSequence().filter {
+            DateTimeUtils.dateFromIso8601(it.lastModified).before(cutOffDate)
+        }.map { it.id }.toList()
+        if (listIdsToDelete.isNotEmpty()) {
+            WellSql.delete(ListModel::class.java)
+                    .where().isIn(ListModelTable.ID, listIdsToDelete).endWhere()
+                    .execute()
+        }
+    }
+
+    /**
      * This function deletes all [ListModel] records from the DB.
      */
     fun deleteAllLists() {

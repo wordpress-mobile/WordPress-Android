@@ -81,6 +81,29 @@ class ListSqlUtilsTest {
         listDescriptors.forEach { assertNull(listSqlUtils.getList(it)) }
     }
 
+    @Test
+    fun testDeleteExpiredLists() {
+        val listDescriptors1 = (1..5).map { PostListDescriptorForRestSite(testSite(it)) }
+        val listDescriptors2 = (6..10).map { PostListDescriptorForXmlRpcSite(testSite(it)) }
+        val sleepDuration = 1000L
+        val expirationDuration = sleepDuration - 300L // 300 ms seems to be enough for this test
+
+        /**
+         * 1. Insert 5 lists, wait for 600 ms, so the [ListModel.lastModified] is different, then insert another 5 lists
+         * 2. Delete the lists that hasn't been updated in the last 400 ms
+         * 3. Verify that the first 5 lists were removed and the next 5 lists are not
+         */
+
+        listDescriptors1.forEach { insertOrUpdateAndThenAssertList(it) }
+        Thread.sleep(sleepDuration)
+        listDescriptors2.forEach { insertOrUpdateAndThenAssertList(it) }
+
+        listSqlUtils.deleteExpiredLists(expirationDuration)
+
+        listDescriptors1.forEach { assertNull(listSqlUtils.getList(it)) }
+        listDescriptors2.forEach { assertNotNull(listSqlUtils.getList(it)) }
+    }
+
     /**
      * Inserts or updates the list for the listDescriptor and asserts that it's inserted correctly
      */
