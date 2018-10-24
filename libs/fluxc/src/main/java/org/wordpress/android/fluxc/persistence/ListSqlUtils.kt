@@ -62,6 +62,9 @@ class ListSqlUtils @Inject constructor() {
                 .firstOrNull()
     }
 
+    /**
+     * This function returns all [ListModel] records that matches the given [ListDescriptorTypeIdentifier].
+     */
     fun getListsWithTypeIdentifier(descriptorTypeIdentifier: ListDescriptorTypeIdentifier): List<ListModel> {
         return WellSql.select(ListModel::class.java)
                 .where()
@@ -80,5 +83,12 @@ class ListSqlUtils @Inject constructor() {
         existing?.let {
             WellSql.delete(ListModel::class.java).whereId(it.id)
         }
+    }
+
+    /**
+     * This function deletes all [ListModel] records from the DB.
+     */
+    fun deleteAllLists() {
+        WellSql.delete(ListModel::class.java).execute()
     }
 }
