@@ -171,6 +171,44 @@ public class AnalyticsUtils {
         }
     }
 
+    public enum QuickActionTrackPropertyValue {
+        LIKE {
+            public String toString() {
+                return "like";
+            }
+        },
+        APPROVE {
+            public String toString() {
+                return "approve";
+            }
+        },
+        REPLY_TO {
+            public String toString() {
+                return "reply-to";
+            }
+        }
+    }
+
+    public static void trackQuickActionTouched(QuickActionTrackPropertyValue type,
+                                               SiteModel site,
+                                               CommentModel comment) {
+        Map<String, Object> properties = new HashMap<>(1);
+        properties.put("quick_action", type.toString());
+
+        // add available information
+        if (site != null) {
+            properties.put(BLOG_ID_KEY, site.getSiteId());
+            properties.put(IS_JETPACK_KEY, site.isJetpackConnected());
+        }
+
+        if (comment != null) {
+            properties.put(POST_ID_KEY, comment.getRemotePostId());
+            properties.put(COMMENT_ID_KEY, comment.getRemoteCommentId());
+        }
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_QUICKACTION_TOUCHED, properties);
+        AnalyticsTracker.flush();
+    }
 
     /**
      * Bump Analytics for comment reply, and add blog and comment details into properties.

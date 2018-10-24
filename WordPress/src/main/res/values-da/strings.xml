@@ -40,7 +40,7 @@ Language: da_DK
     <string name="signout">Log ud</string>
     <string name="sign_in_wpcom">Log ind i WordPress.com</string>
     <string name="reader_label_local_related_posts">Se mere i %s</string>
-    <string name="invite_invalid_email">%s: ugyldig e–mail</string>
+    <string name="invite_invalid_email">%s: ugyldig e-mail</string>
     <string name="error_post_my_profile_no_connection">Der er ingen forbindelse, din profil kunne ikke gemmes</string>
     <string name="alignment_left">Venstre</string>
     <string name="error_fetch_users_list">Kunne ikke hente sidens brugere</string>
@@ -52,7 +52,7 @@ Language: da_DK
     <string name="exporting_content_progress">Eksporterer indhold…</string>
     <string name="show_purchases">Vis køb</string>
     <string name="delete_site_progress">Sletter websted…</string>
-    <string name="export_site_hint">Eksporter dit websted til en XML–fil</string>
+    <string name="export_site_hint">Eksporter dit websted til en XML-fil</string>
     <string name="primary_domain">Primært domæne</string>
     <string name="site_settings_export_content_title">Eksporter indhold</string>
     <string name="contact_support">Kontakt support</string>
@@ -120,9 +120,9 @@ Language: da_DK
     <string name="stats_view_authors">Forfattere</string>
     <string name="stats_entry_search_terms">Søgeord</string>
     <string name="stats_empty_search_terms">Ingen søgeforespørgsler registreret</string>
-    <string name="stats_followers_total_wpcom_paged">Viser %1$d – %2$d af %3$s følgere på WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Viser %1$d - %2$d af %3$s følgere på WordPress.com</string>
     <string name="stats_search_terms_unknown_search_terms">Ukendte søgeord</string>
-    <string name="stats_followers_total_email_paged">Viser %1$d - %2$d af %3$s følgere på e–mail</string>
+    <string name="stats_followers_total_email_paged">Viser %1$d - %2$d af %3$s følgere på e-mail</string>
     <string name="error_notification_open">Kunne ikke åbne notifikation</string>
     <string name="publisher">Udgiver:</string>
     <string name="reader_empty_posts_request_failed">Kunne ikke hente indlæg</string>
@@ -132,7 +132,7 @@ Language: da_DK
     <string name="stats_recent_weeks">Seneste uger</string>
     <string name="stats_average_per_day">Dagligt gennemsnit</string>
     <string name="reader_label_new_posts">Nye indlæg</string>
-    <string name="logs_copied_to_clipboard">Log–filerne er kopieret til udklipsholderen</string>
+    <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="stats_period">Periode</string>
     <string name="stats_overall">I alt</string>
     <string name="stats_total">Total</string>
@@ -175,7 +175,7 @@ Language: da_DK
     <string name="stats_comments_by_authors">Af forfattere</string>
     <string name="stats_comments_total_comments_followers">Total antal indlæg med kommentarfølgere: %1$s</string>
     <string name="stats_followers_total_wpcom">Totale antal følgere på WordPress.com: %1$s</string>
-    <string name="stats_followers_email_selector">E–mail</string>
+    <string name="stats_followers_email_selector">E-mail</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_total_email">Total antal følgere på email: %1$s</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
@@ -233,8 +233,8 @@ Language: da_DK
     <string name="forgot_password">Mistet din adgangskode?</string>
     <string name="help">Hjælp</string>
     <string name="username_or_password_incorrect">Brugernavnet eller adgangskoden, du indtastede, er forkert</string>
-    <string name="email_invalid">Indtast en gyldig e–mailadresse</string>
-    <string name="invalid_email_message">Din e–mailadresse er ikke gyldig</string>
+    <string name="email_invalid">Indtast en gyldig e-mailadresse</string>
+    <string name="invalid_email_message">Din e-mailadresse er ikke gyldig</string>
     <string name="error_downloading_image">Kunne ikke downloade billede</string>
     <string name="error_load_comment">Kunne ikke loade kommentaren</string>
     <string name="error_edit_comment">Kunne ikke redigere kommentaren</string>
@@ -248,7 +248,7 @@ Language: da_DK
     <string name="invalid_url_message">Undersøg om den indtastede URL er gyldig</string>
     <string name="stats_bar_graph_empty">Ingen statistik er tilgængelig</string>
     <string name="stats_empty_comments">Ingen kommentarer endnu</string>
-    <string name="sdcard_message">Et SD–kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>
+    <string name="sdcard_message">Et SD-kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>
     <string name="adding_cat_success">Kategori tilføjet</string>
     <string name="adding_cat_failed">Kategorien kunne ikke tilføjes</string>
     <string name="mnu_comment_unspam">Ikke spam</string>
@@ -259,14 +259,14 @@ Language: da_DK
     <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette tag</string>
     <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette tag</string>
     <string name="reader_title_applog">Applikationslog</string>
-    <string name="wordpress_blog">WordPress–blog</string>
+    <string name="wordpress_blog">WordPress-blog</string>
     <string name="image_settings">Billedeindstillinger</string>
     <string name="local_changes">Lokale ændringer</string>
     <string name="privacy_policy">Privatlivspolitik</string>
     <string name="new_media">Nyt medie</string>
     <string name="new_post">Nyt indlæg</string>
     <string name="http_authorization_required">Godkendelse påkrævet</string>
-    <string name="open_source_licenses">Open source–licenser</string>
+    <string name="open_source_licenses">Open source-licenser</string>
     <string name="category_name">Kategorinavn</string>
     <string name="add_new_category">Tilføj ny kategori</string>
     <string name="view_in_browser">Vis i browser</string>
@@ -370,8 +370,8 @@ Language: da_DK
     <string name="note_reply_successful">Svar sendt</string>
     <string name="sign_in">Log ind</string>
     <string name="loading">Indlæser…</string>
-    <string name="httppassword">HTTP–adgangskode</string>
-    <string name="httpuser">HTTP–brugernavn</string>
+    <string name="httppassword">HTTP-adgangskode</string>
+    <string name="httpuser">HTTP-brugernavn</string>
     <string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
     <string name="publish_date">Udgiv</string>
     <string name="post_content">Indhold (tap for at tilføje tekst og medier)</string>
@@ -394,7 +394,7 @@ Language: da_DK
     <string name="version">Version</string>
     <string name="image_alignment">Justering</string>
     <string name="refresh">Genindlæs</string>
-    <string name="untitled">Ikke–navngivet</string>
+    <string name="untitled">Ikke-navngivet</string>
     <string name="edit">Rediger</string>
     <string name="immediately">Øjeblikkeligt</string>
     <string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
@@ -406,7 +406,7 @@ Language: da_DK
     <string name="tags_separate_with_commas">Tags (adskil tags med komma)</string>
     <string name="title">Titel</string>
     <string name="dlg_deleting_comments">Sletter kommentarer</string>
-    <string name="sdcard_title">SD–kort påkrævet</string>
+    <string name="sdcard_title">SD-kort påkrævet</string>
     <string name="media">Medier</string>
     <string name="approve">Godkend</string>
     <string name="delete">Slet</string>

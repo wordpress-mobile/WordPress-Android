@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PluginCardView"
@@ -47,7 +47,7 @@
                 android:layout_gravity="center_vertical"
                 android:tint="@color/blue_medium"
                 android:contentDescription="@string/open_external_link_desc"
-                app:srcCompat="@drawable/ic_external_black_24dp" />
+                android:src="@drawable/ic_external_black_24dp" />
         </LinearLayout>
 
         <LinearLayout

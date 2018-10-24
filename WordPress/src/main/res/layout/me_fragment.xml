@@ -44,12 +44,11 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="@string/me_profile_photo">
 
-                            <org.wordpress.android.widgets.WPNetworkImageView
+                            <ImageView
                                 android:id="@+id/me_avatar"
                                 android:layout_width="@dimen/avatar_sz_inner_circle"
                                 android:layout_height="@dimen/avatar_sz_inner_circle"
-                                app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                                app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
+                                android:contentDescription="@string/reader_avatar_desc"/>
                         </FrameLayout>
 
                         <ProgressBar
@@ -121,7 +120,7 @@
                 <ImageView
                     android:id="@+id/me_my_profile_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_user_grey_24dp"
+                    android:src="@drawable/ic_user_grey_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -140,7 +139,7 @@
                 <ImageView
                     android:id="@+id/me_account_settings_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_cog_grey_24dp"
+                    android:src="@drawable/ic_cog_grey_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -159,7 +158,7 @@
                 <ImageView
                     android:id="@+id/me_app_settings_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_phone_grey_darken_24dp"
+                    android:src="@drawable/ic_phone_grey_darken_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -178,7 +177,7 @@
                 <ImageView
                     android:id="@+id/me_notifications_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_bell_grey_darken_24dp"
+                    android:src="@drawable/ic_bell_grey_darken_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -198,7 +197,7 @@
                 <ImageView
                     android:id="@+id/me_support_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_help_grey_24dp"
+                    android:src="@drawable/ic_help_grey_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
@@ -217,7 +216,7 @@
                 <ImageView
                     android:id="@+id/me_login_logout_icon"
                     style="@style/MeListRowIcon"
-                    app:srcCompat="@drawable/ic_sign_out_grey_24dp"
+                    android:src="@drawable/ic_sign_out_grey_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
