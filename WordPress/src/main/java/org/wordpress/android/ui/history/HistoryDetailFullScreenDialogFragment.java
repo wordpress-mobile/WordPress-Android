@@ -110,6 +110,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
 
     @Override
     public boolean onConfirmClicked(FullScreenDialogController controller) {
+        // TODO: Add analytics tracking for confirm button.
         Bundle result = new Bundle();
         result.putParcelable(KEY_REVISION, mRevisions.get(mPosition));
         controller.confirm(result);

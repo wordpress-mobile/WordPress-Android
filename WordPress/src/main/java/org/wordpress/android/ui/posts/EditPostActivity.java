@@ -1609,7 +1609,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onConfirm(@Nullable Bundle result) {
-        // TODO: Add analytics tracking for revision detail confirmed.
         mViewPager.setCurrentItem(PAGE_CONTENT);
 
         if (result != null && result.getParcelable(KEY_REVISION) != null) {
