@@ -17,5 +17,7 @@ enum class ListAction : IAction {
     @Action(payloadType = ListItemsChangedPayload::class)
     LIST_ITEMS_CHANGED,
     @Action(payloadType = ListItemsRemovedPayload::class)
-    LIST_ITEMS_REMOVED
+    LIST_ITEMS_REMOVED,
+    @Action
+    REMOVE_ALL_LISTS
 }
