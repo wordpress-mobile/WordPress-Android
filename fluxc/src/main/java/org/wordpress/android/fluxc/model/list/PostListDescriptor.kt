@@ -25,7 +25,7 @@ sealed class PostListDescriptor(
             }
             is PostListDescriptorForXmlRpcSite -> {
                 ListDescriptorUniqueIdentifier(
-                        "xml-rpc-site-post-list-${site.id}-o${order.value}-ob${orderBy.value}".hashCode()
+                        "xml-rpc-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}".hashCode()
                 )
             }
         }
