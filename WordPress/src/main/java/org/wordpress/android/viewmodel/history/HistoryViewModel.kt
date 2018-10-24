@@ -37,7 +37,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     private val _listStatus = MutableLiveData<HistoryListStatus>()
-    val eventListStatus: LiveData<HistoryListStatus>
+    val listStatus: LiveData<HistoryListStatus>
         get() = _listStatus
 
     private val _showDialog = SingleLiveEvent<HistoryListItem>()

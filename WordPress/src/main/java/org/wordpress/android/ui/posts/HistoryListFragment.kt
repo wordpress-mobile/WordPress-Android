@@ -115,8 +115,10 @@ class HistoryListFragment : Fragment() {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(this, Observer { listStatus ->
-            updateRefreshing(listStatus)
+        viewModel.listStatus.observe(this, Observer { listStatus ->
+            if (isAdded && view != null) {
+                swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
+            }
         })
 
         viewModel.showDialog.observe(this, Observer {
