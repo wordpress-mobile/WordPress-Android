@@ -509,12 +509,7 @@ class PostListAdapter(
         animOut.start()
     }
 
-    fun getPositionForPost(post: PostModel): Int? =
-            listManager?.findWithIndex {
-                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
-            }?.asSequence()?.map { it.first }?.firstOrNull()
-
-    fun updateRowForPost(post: PostModel) {
+    fun refreshRowForPost(post: PostModel) {
         getPositionForPost(post)?.let { position ->
             notifyItemChanged(position)
         }
@@ -530,6 +525,11 @@ class PostListAdapter(
             }
         }
     }
+
+    fun getPositionForPost(post: PostModel): Int? =
+            listManager?.findWithIndex {
+                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
+            }?.asSequence()?.map { it.first }?.firstOrNull()
 
     interface OnPostSelectedListener {
         fun onPostSelected(post: PostModel)
@@ -559,21 +559,4 @@ class PostListAdapter(
 
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    /*
-     * called after the media (featured image) for a post has been downloaded - locate the post
-     * and set its featured image url to the passed url
-     */
-    fun mediaChanged(mediaModel: MediaModel) {
-        if (mediaModel.id == 0) {
-            // nothing to do
-            return
-        }
-        // Multiple posts could have the same featured image
-        listManager?.findWithIndex { post ->
-            post.featuredImageId == mediaModel.mediaId
-        }?.forEach { (position, _) ->
-            notifyItemChanged(position)
-        }
-    }
 }
