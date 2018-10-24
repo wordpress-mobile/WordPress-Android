@@ -113,19 +113,18 @@ constructor(
         }
     }
 
-    suspend fun fetchPostViewsForInsights(
+    suspend fun fetchPostStats(
         site: SiteModel,
         postId: Long,
         forced: Boolean
-    ): FetchInsightsPayload<PostViewsResponse> {
+    ): FetchInsightsPayload<PostStatsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.post.item(postId).urlV1_1
 
-        val params = mapOf("fields" to "views")
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                params,
-                PostViewsResponse::class.java,
+                mapOf(),
+                PostStatsResponse::class.java,
                 enableCaching = true,
                 forced = forced
         )
@@ -197,5 +196,36 @@ constructor(
         }
     }
 
-    data class PostViewsResponse(@SerializedName("views") val views: Int)
+    data class PostStatsResponse(
+        @SerializedName("highest_month") val highestMonth: Int = 0,
+        @SerializedName("highest_day_average") val highestDayAverage: Int = 0,
+        @SerializedName("highest_week_average") val highestWeekAverage: Int = 0,
+        @SerializedName("views") val views: Int,
+        @SerializedName("date") val date: String? = null,
+        @SerializedName("data") val data: List<List<String>>,
+        @SerializedName("fields") val fields: List<String>,
+        @SerializedName("weeks") val weeks: List<Week>,
+        @SerializedName("years") val years: Map<Int, Year>,
+        @SerializedName("averages") val averages: Map<Int, Average>
+
+    ) {
+        data class Year(
+            @SerializedName("months") val months: Map<Int, Int>,
+            @SerializedName("total") val total: Int
+        )
+        data class Week(
+            @SerializedName("average") val average: Int,
+            @SerializedName("change") val change: Int?,
+            @SerializedName("total") val total: Int,
+            @SerializedName("days") val days: List<Day>
+        )
+        data class Day(
+            @SerializedName("day") val day: String,
+            @SerializedName("count") val count: Int
+        )
+        data class Average(
+            @SerializedName("months") val months: Map<Int, Int>,
+            @SerializedName("overall") val overall: Int
+        )
+    }
 }
