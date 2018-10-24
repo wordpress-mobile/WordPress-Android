@@ -8,9 +8,9 @@ import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
-import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 
 @ActionEnum
