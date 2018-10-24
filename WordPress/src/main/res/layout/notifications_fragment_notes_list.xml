@@ -191,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
+                            android:src="@drawable/img_illustration_notifications_152dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             style="@style/JetpackConnectionText"

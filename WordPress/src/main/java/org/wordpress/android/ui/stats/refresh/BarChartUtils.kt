@@ -20,7 +20,8 @@ import kotlin.math.round
 fun BarChart.draw(
     item: BarChartItem,
     labelStart: TextView,
-    labelEnd: TextView) {
+    labelEnd: TextView
+) {
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(columnNumber, item)
@@ -30,6 +31,10 @@ fun BarChart.draw(
     val greyColor = ContextCompat.getColor(
             context,
             color.wp_grey
+    )
+    val lightGreyColor = ContextCompat.getColor(
+            context,
+            color.wp_grey_lighten_30
     )
 
     axisLeft.apply {
@@ -47,18 +52,25 @@ fun BarChart.draw(
                 return super.getFormattedValue(round(value), entry, dataSetIndex, viewPortHandler)
             }
         }
-        setDrawZeroLine(false)
         setDrawGridLines(true)
+        setDrawZeroLine(false)
+        setDrawAxisLine(false)
         granularity = 1f
         axisMinimum = 0f
         if (maxXValue < 5f) {
             axisMaximum = 5f
         }
         textColor = greyColor
+        gridColor = lightGreyColor
         textSize = 12f
+        gridLineWidth = 1f
     }
-    axisRight.setDrawGridLines(false)
-    axisRight.setDrawLabels(false)
+    axisRight.apply {
+        setDrawGridLines(false)
+        setDrawZeroLine(false)
+        setDrawLabels(false)
+        setDrawAxisLine(false)
+    }
     xAxis.apply {
         granularity = 1f
         setDrawAxisLine(false)

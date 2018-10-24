@@ -99,14 +99,14 @@
     <!-- Stats Refresh -->
 
     <style name="StatsBlock">
-        <item name="android:layout_marginEnd">13dp</item>
-        <item name="android:layout_marginStart">13dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
         <item name="android:background">@color/white</item>
     </style>
 
     <style name="StatsBlockLine">
         <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">

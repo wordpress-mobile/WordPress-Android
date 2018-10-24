@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
 
@@ -50,7 +51,7 @@ class InsightsAllTimeViewModelTest {
     }
 
     @Test
-    fun `item contains only empty item when response is empty`() = test {
+    fun `result contains only empty item when response is empty`() = test {
         val forced = false
         val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", 0)
         whenever(
@@ -69,5 +70,136 @@ class InsightsAllTimeViewModelTest {
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is Empty)
+    }
+
+    @Test
+    fun `result contains post item when posts gt 0`() = test {
+        val forced = false
+        val posts = 10
+        val model = InsightsAllTimeModel(1L, null, 0, 0, posts, "MONDAY", 0)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnInsightsFetched(model))
+
+        val result = viewModel.loadAllTimeInsights(site, forced)
+
+        assertTrue(result is ListInsightItem)
+        assertEquals(result.type, Type.LIST_INSIGHTS)
+        val items = (result as ListInsightItem).items
+        assertEquals(items.size, 2)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertTrue(items[1] is Item)
+        val item = items[1] as Item
+        assertEquals(item.icon, R.drawable.ic_posts_grey_dark_24dp)
+        assertEquals(item.text, R.string.posts)
+        assertEquals(item.value, posts.toString())
+    }
+
+    @Test
+    fun `result contains view item when views gt 0`() = test {
+        val forced = false
+        val views = 15
+        val model = InsightsAllTimeModel(1L, null, 0, views, 0, "MONDAY", 0)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnInsightsFetched(model))
+
+        val result = viewModel.loadAllTimeInsights(site, forced)
+
+        assertTrue(result is ListInsightItem)
+        assertEquals(result.type, Type.LIST_INSIGHTS)
+        val items = (result as ListInsightItem).items
+        assertEquals(items.size, 2)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertTrue(items[1] is Item)
+        val item = items[1] as Item
+        assertEquals(item.icon, R.drawable.ic_visible_on_grey_dark_24dp)
+        assertEquals(item.text, R.string.stats_views)
+        assertEquals(item.value, views.toString())
+    }
+
+    @Test
+    fun `result contains visitors item when views gt 0`() = test {
+        val forced = false
+        val visitors = 20
+        val model = InsightsAllTimeModel(1L, null, visitors, 0, 0, "MONDAY", 0)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnInsightsFetched(model))
+
+        val result = viewModel.loadAllTimeInsights(site, forced)
+
+        assertTrue(result is ListInsightItem)
+        assertEquals(result.type, Type.LIST_INSIGHTS)
+        val items = (result as ListInsightItem).items
+        assertEquals(items.size, 2)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertTrue(items[1] is Item)
+        val item = items[1] as Item
+        assertEquals(item.icon, R.drawable.ic_user_grey_dark_24dp)
+        assertEquals(item.text, R.string.stats_visitors)
+        assertEquals(item.value, visitors.toString())
+    }
+
+    @Test
+    fun `result contains best day total item when it is gt 0`() = test {
+        val forced = false
+        val bestDayTotal = 20
+        val model = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", bestDayTotal)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnInsightsFetched(model))
+
+        val result = viewModel.loadAllTimeInsights(site, forced)
+
+        assertTrue(result is ListInsightItem)
+        assertEquals(result.type, Type.LIST_INSIGHTS)
+        val items = (result as ListInsightItem).items
+        assertEquals(items.size, 2)
+        assertTrue(items[0] is Title)
+        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertTrue(items[1] is Item)
+        val item = items[1] as Item
+        assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
+        assertEquals(item.text, R.string.stats_insights_best_ever)
+        assertEquals(item.value, bestDayTotal.toString())
+    }
+
+    @Test
+    fun `shows divider between items`() = test {
+        val forced = false
+        val model = InsightsAllTimeModel(1L, null, 10, 15, 0, "MONDAY", 0)
+        whenever(
+                insightsStore.fetchAllTimeInsights(
+                        site,
+                        forced
+                )
+        ).thenReturn(OnInsightsFetched(model))
+
+        val result = viewModel.loadAllTimeInsights(site, forced)
+
+        assertTrue(result is ListInsightItem)
+        assertEquals(result.type, Type.LIST_INSIGHTS)
+        val items = (result as ListInsightItem).items
+        assertEquals(items.size, 3)
+        assertTrue(items[1] is Item)
+        assertTrue(items[2] is Item)
+        assertEquals((items[1] as Item).showDivider, true)
+        assertEquals((items[2] as Item).showDivider, false)
     }
 }

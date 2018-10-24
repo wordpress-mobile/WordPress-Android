@@ -19,7 +19,7 @@ Language: az
     <string name="reader_short_comment_count_multi">%s Şərh</string>
     <string name="reader_short_comment_count_one">1 Şərh</string>
     <string name="reader_short_like_count_multi">%s Bəyənmə</string>
-    <string name="email">E–poçt</string>
+    <string name="email">E-poçt</string>
     <string name="days_ago">%d gün öncə</string>
     <string name="connectionbar_no_connection">Qoşulma yoxdur</string>
     <string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -73,9 +73,9 @@ Language: az
     <string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>
     <string name="publisher">Naşir:</string>
     <string name="error_notification_open">Bildiriş açılmadı</string>
-    <string name="stats_followers_total_email_paged">%1$d - %2$d / %3$s E–Poçt İzləyicisi göstərilir</string>
+    <string name="stats_followers_total_email_paged">%1$d - %2$d / %3$s E-Poçt İzləyicisi göstərilir</string>
     <string name="stats_search_terms_unknown_search_terms">Bilinməyən Axtarış Kriteriyaları</string>
-    <string name="stats_followers_total_wpcom_paged">%1$d – %2$d / %3$s WordPress.com İzləyicisi gösterilir</string>
+    <string name="stats_followers_total_wpcom_paged">%1$d - %2$d / %3$s WordPress.com İzləyicisi gösterilir</string>
     <string name="stats_empty_search_terms_desc">Ziyarətçilərin saytınızı tapması üçün axtardığı kriteriyaları analiz edərək axtarış trafikiniz haqqında daha çox məlumat sahibi olun.</string>
     <string name="stats_empty_search_terms">Qeyd edilmiş heç bir axtarış kriteriyası yoxdur</string>
     <string name="stats_entry_search_terms">Axtarış Kriteriyası</string>
@@ -110,9 +110,9 @@ Language: az
     <string name="stats_followers_days">%1$d gün</string>
     <string name="stats_followers_a_minute_ago">dəqiqə öncə</string>
     <string name="stats_followers_seconds_ago">saniyə öncə</string>
-    <string name="stats_followers_total_email">Cəmi E–poçt İzləyiciləri: %1$s</string>
+    <string name="stats_followers_total_email">Cəmi E-poçt İzləyiciləri: %1$s</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
-    <string name="stats_followers_email_selector">E–poçt</string>
+    <string name="stats_followers_email_selector">E-poçt</string>
     <string name="stats_followers_total_wpcom">Cəmi WordPress.com İzləyicisi: %1$s</string>
     <string name="stats_comments_total_comments_followers">Şərh izləyicili cəmi yazı miqdarı: %1$s</string>
     <string name="stats_comments_by_authors">Müəlliflərə Görə</string>
@@ -122,7 +122,7 @@ Language: az
     <string name="stats_empty_publicize_desc">Bəyan xüsusiyyətindən istifadə edərək müxtəlif sosial şəbəkə xidmətlərindən izləyicilərinizi izləyin.</string>
     <string name="stats_empty_publicize">Qeyd edilmiş heç bir bəyan izləyicisi yoxdur</string>
     <string name="stats_empty_video">İfa edilmiş video yoxdur</string>
-    <string name="stats_empty_video_desc">VideoPress–dən istifadə edərək video yükləmisinizsə, videolarınızın neçə dəfə izləndiyini öyrənin.</string>
+    <string name="stats_empty_video_desc">VideoPress-dən istifadə edərək video yükləmisinizsə, videolarınızın neçə dəfə izləndiyini öyrənin.</string>
     <string name="stats_empty_comments_desc">Saytınızda şərhlərə izin verirsinizsə, ən son 1000 şərh əsas alındığında yazılarınıza ən çox şərh edənləri izləyin və hansı içəriklərin ən canlı müzakirələrə yol açdığını kəşf edin.</string>
     <string name="stats_empty_tags_and_categories_desc">Keçən həftə ən çox oxunan yazılarınızda görüldüyü üzrə saytınızdakı ən populyar bəhslərdən xəbərdar olun.</string>
     <string name="stats_empty_top_authors_desc">Əmək sərf edənlərin yazılarının nə qədər baxıldığını izləyin və hər yazının ən popolyar içəriyini kəşf etmək üçün ətraflı olaraq analiz edin.</string>
@@ -132,7 +132,7 @@ Language: az
     <string name="stats_empty_clicks_title">Qeyd edilmiş heç bir tıklama yoxdur</string>
     <string name="stats_empty_referrers_title">Qeyd edilmiş heç bir yönləndirmə yoxdur</string>
     <string name="stats_empty_top_posts_title">Baxılmış heç bir səhifə və ya yazı yoxdur</string>
-    <string name="stats_empty_top_posts_desc">Ən çox baxılan içəriyinizin hansı olduğunu kəşf edin və tək–tək yazılarla səhifələrin zaman ərzindəki müvəffəqiyyətini analiz edin.</string>
+    <string name="stats_empty_top_posts_desc">Ən çox baxılan içəriyinizin hansı olduğunu kəşf edin və tək-tək yazılarla səhifələrin zaman ərzindəki müvəffəqiyyətini analiz edin.</string>
     <string name="stats_totals_followers">Bu tarixdən başlayaraq:</string>
     <string name="stats_empty_geoviews">Qeyd edilmiş heç bir ölkə yoxdur</string>
     <string name="stats_empty_geoviews_desc">Saytınıza ən çox hansı ölkə və bölgələrdən trafik olduğunu görmək üçün siyahını analiz edin.</string>
@@ -208,8 +208,8 @@ Language: az
     <string name="error_load_comment">Şərh yüklənmədi</string>
     <string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
     <string name="error_edit_comment">Şərh redaktəsi sırasında xəta baş verdi</string>
-    <string name="invalid_email_message">Keçərsiz e–poçt ünvanı</string>
-    <string name="email_invalid">Etibarlı e–poçt ünvanı daxil edin</string>
+    <string name="invalid_email_message">Keçərsiz e-poçt ünvanı</string>
+    <string name="email_invalid">Etibarlı e-poçt ünvanı daxil edin</string>
     <string name="username_or_password_incorrect">Yanlış istifadəçi adı və ya parol daxil etdiniz</string>
     <string name="select_categories">Kateqoriyaları seç</string>
     <string name="connection_error">Qoşulma xətası</string>
