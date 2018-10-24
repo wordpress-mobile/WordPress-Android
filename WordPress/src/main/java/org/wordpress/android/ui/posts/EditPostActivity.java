@@ -1109,6 +1109,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
+        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
+            mFullScreenDialogFragment.dismiss();
+            return false;
+        }
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
@@ -1116,12 +1121,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
                 imFragment.dismissFragment();
             }
+
             return false;
         }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
+
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else if (isPhotoPickerShowing()) {
@@ -1129,6 +1137,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             savePostAndOptionallyFinish(true);
         }
+
         return true;
     }
 
