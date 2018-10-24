@@ -1193,6 +1193,8 @@
 
     <!-- History -->
     <string name="description_user">User avatar</string>
+    <string name="history_detail_button_next">Next</string>
+    <string name="history_detail_button_previous">Previous</string>
     <string name="history_detail_title">Revision</string>
     <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
     <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
