@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
 import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
+import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -55,6 +56,7 @@ class ListStore @Inject constructor(
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
+            REMOVE_ALL_LISTS -> handleRemoveAllLists()
         }
     }
 
@@ -207,6 +209,15 @@ class ListStore @Inject constructor(
         val lists = listSqlUtils.getListsWithTypeIdentifier(payload.type)
         listItemSqlUtils.deleteItemsFromLists(lists.map { it.id }, payload.remoteItemIds)
         emitChange(OnListItemsChanged(payload.type, error = null))
+    }
+
+    /**
+     * Handles the [ListAction.REMOVE_ALL_LISTS] action.
+     *
+     * It simply deletes every [ListModel] in the DB.
+     */
+    private fun handleRemoveAllLists() {
+        listSqlUtils.deleteAllLists()
     }
 
     /**
