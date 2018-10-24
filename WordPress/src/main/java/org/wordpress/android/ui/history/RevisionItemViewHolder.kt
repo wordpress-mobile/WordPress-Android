@@ -27,7 +27,7 @@ class RevisionItemViewHolder(
 
     fun bind(revision: HistoryListItem.Revision) {
         container.setOnClickListener { itemClickListener(revision) }
-        title.text = revision.timeSpan
+        title.text = revision.formattedTime
         subtitle.text = revision.authorDisplayName
 
         if (!TextUtils.isEmpty(revision.authorAvatarURL)) {
