@@ -59,14 +59,14 @@
                 android:id="@+id/icon_create_site"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_plus_white_24dp">
+                android:src="@drawable/ic_plus_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_create_site"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp"
+                android:src="@drawable/ic_checkmark_white_24dp"
                 tools:visibility="visible">
             </ImageView>
 
@@ -105,14 +105,14 @@
                 android:id="@+id/icon_view_site"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_external_white_24dp">
+                android:src="@drawable/ic_external_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_view_site"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
@@ -149,14 +149,14 @@
                 android:id="@+id/icon_browse_themes"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_themes_white_24dp">
+                android:src="@drawable/ic_themes_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_browse_themes"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
@@ -193,14 +193,14 @@
                 android:id="@+id/icon_customize_site"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_customize_white_24dp">
+                android:src="@drawable/ic_customize_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_customize_site"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
@@ -237,14 +237,14 @@
                 android:id="@+id/icon_share_site"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_share_white_24dp">
+                android:src="@drawable/ic_share_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_share_site"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
@@ -281,14 +281,14 @@
                 android:id="@+id/icon_publish_post"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_create_white_24dp">
+                android:src="@drawable/ic_create_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_publish_post"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
@@ -325,14 +325,14 @@
                 android:id="@+id/icon_follow_site"
                 style="@style/QuickStartIcon"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_reader_follow_white_24dp">
+                android:src="@drawable/ic_reader_follow_white_24dp">
             </ImageView>
 
             <ImageView
                 android:id="@+id/done_follow_site"
                 style="@style/QuickStartDone"
                 android:contentDescription="@string/content_description_done"
-                app:srcCompat="@drawable/ic_checkmark_white_24dp">
+                android:src="@drawable/ic_checkmark_white_24dp">
             </ImageView>
 
             <TextView
