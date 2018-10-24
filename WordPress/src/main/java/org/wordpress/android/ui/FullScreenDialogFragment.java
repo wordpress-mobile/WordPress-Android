@@ -44,6 +44,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     private String mAction;
     private String mSubtitle;
     private String mTitle;
+    private Toolbar mToolbar;
     private boolean mHideActivityBar;
     private int mToolbarColor;
 
@@ -250,20 +251,20 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param view {@link View}
      */
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
-        toolbar.setTitle(mTitle);
-        toolbar.setSubtitle(mSubtitle);
-        toolbar.setSubtitleTextAppearance(view.getContext(), R.style.Toolbar_Subtitle);
-        toolbar.setBackgroundColor(getResources().getColor(mToolbarColor != 0 ? mToolbarColor : R.color.color_primary));
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
+        mToolbar.setTitle(mTitle);
+        mToolbar.setSubtitle(mSubtitle);
+        mToolbar.setSubtitleTextAppearance(view.getContext(), R.style.Toolbar_Subtitle);
+        mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
+        mToolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onDismissClicked();
             }
         });
 
-        Menu menu = toolbar.getMenu();
+        Menu menu = mToolbar.getMenu();
         MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
         action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         action.setOnMenuItemClickListener(
@@ -337,6 +338,28 @@ public class FullScreenDialogFragment extends DialogFragment {
      */
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
         this.mOnDismissListener = listener;
+    }
+
+    /**
+     * Set {@link FullScreenDialogFragment} subtitle text.
+     *
+     * @param text {@link String} to set as subtitle text
+     */
+    public void setSubtitle(@NonNull String text) {
+        mSubtitle = text;
+        mToolbar.setSubtitle(mSubtitle);
+    }
+
+    /**
+     * Set {@link FullScreenDialogFragment} subtitle text.
+     *
+     * @param textId resource ID to set as subtitle text
+     */
+    public void setSubtitle(@StringRes int textId) {
+        if (getContext() != null) {
+            mSubtitle = getContext().getString(textId);
+            mToolbar.setSubtitle(mSubtitle);
+        }
     }
 
     /**
