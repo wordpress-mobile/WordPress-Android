@@ -381,11 +381,11 @@ public class FullScreenDialogFragment extends DialogFragment {
         Context mContext;
         OnConfirmListener mOnConfirmListener;
         OnDismissListener mOnDismissListener;
-        String mAction;
-        String mSubtitle;
-        String mTitle;
-        boolean mHideActivityBar;
-        int mToolbarColor;
+        String mAction = "";
+        String mSubtitle = "";
+        String mTitle = "";
+        boolean mHideActivityBar = false;
+        int mToolbarColor = R.color.color_primary;
 
         /**
          * Builder to construct {@link FullScreenDialogFragment}.
