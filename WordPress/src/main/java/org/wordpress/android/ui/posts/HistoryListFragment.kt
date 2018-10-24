@@ -127,7 +127,7 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { message ->
+        viewModel.showSnackbar.observe(this, Observer { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
                 val snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG)

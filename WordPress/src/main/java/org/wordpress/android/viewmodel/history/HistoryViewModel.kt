@@ -44,9 +44,9 @@ class HistoryViewModel @Inject constructor(
     val showDialog: LiveData<HistoryListItem>
         get() = _showDialog
 
-    private val _showSnackbarMessage = SingleLiveEvent<String>()
-    val showSnackbarMessage: LiveData<String>
-        get() = _showSnackbarMessage
+    private val _showSnackbar = SingleLiveEvent<String>()
+    val showSnackbar: LiveData<String>
+        get() = _showSnackbar
 
     private val _revisions = MutableLiveData<List<HistoryListItem>>()
     val revisions: LiveData<List<HistoryListItem>>
