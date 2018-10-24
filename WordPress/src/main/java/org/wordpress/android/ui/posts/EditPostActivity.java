@@ -1596,6 +1596,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
                 .setTitle(R.string.history_detail_title)
                 .setSubtitle(revision.getTimeSpan())
+                .setToolbarColor(R.color.status_bar_tint)
                 .setAction(R.string.history_load_dialog_button_positive)
                 .setOnConfirmListener(EditPostActivity.this)
                 .setOnDismissListener(EditPostActivity.this)
