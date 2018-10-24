@@ -54,6 +54,7 @@ class HistoryViewModel @Inject constructor(
 
     private var isStarted = false
 
+    lateinit var revisionsList: ArrayList<Revision>
     lateinit var post: PostModel
     lateinit var site: SiteModel
 
@@ -66,6 +67,7 @@ class HistoryViewModel @Inject constructor(
             return
         }
 
+        this.revisionsList = ArrayList()
         this.post = post
         this.site = site
 
@@ -86,6 +88,7 @@ class HistoryViewModel @Inject constructor(
             }
 
             items.add(item)
+            revisionsList.add(item)
         }
 
         if (revisions.isNotEmpty()) {

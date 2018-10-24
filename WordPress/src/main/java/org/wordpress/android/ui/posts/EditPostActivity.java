@@ -1587,11 +1587,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onHistoryItemClicked(@NonNull Revision revision) {
+    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
         // TODO: Add analytics tracking for history list item.
         mRevision = revision;
 
-        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(revision);
+        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
 
         mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
                 .setTitle(R.string.history_detail_title)

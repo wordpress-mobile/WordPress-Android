@@ -47,7 +47,7 @@ class HistoryListFragment : Fragment() {
     }
 
     interface HistoryItemClickInterface {
-        fun onHistoryItemClicked(revision: Revision)
+        fun onHistoryItemClicked(revision: Revision, revisions: ArrayList<Revision>)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -120,8 +120,8 @@ class HistoryListFragment : Fragment() {
         })
 
         viewModel.showLoadDialog.observe(this, Observer {
-            if (it is HistoryListItem.Revision) {
-                showLoadDialog(it)
+            if (it is HistoryListItem.Revision && activity is HistoryItemClickInterface) {
+                (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
             }
         })
 
@@ -134,19 +134,5 @@ class HistoryListFragment : Fragment() {
                 snackbar.show()
             }
         })
-    }
-
-    private fun showLoadDialog(revision: Revision) {
-        if (activity is HistoryItemClickInterface) {
-            (activity as HistoryItemClickInterface).onHistoryItemClicked(revision)
-        }
-    }
-
-    private fun updateRefreshing(listStatus: HistoryViewModel.HistoryListStatus?) {
-        if (!isAdded || view == null) {
-            return
-        }
-
-        swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
     }
 }
