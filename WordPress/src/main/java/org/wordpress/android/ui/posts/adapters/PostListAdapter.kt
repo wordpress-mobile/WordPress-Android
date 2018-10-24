@@ -151,9 +151,13 @@ class PostListAdapter(
                 val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
                 LoadingViewHolder(view)
             }
-            else -> {
+            VIEW_TYPE_POST -> {
                 val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
                 PostViewHolder(view)
+            }
+            else -> {
+                // Fail fast if a new view type is added so the we can handle it
+                throw IllegalStateException("The view type '$viewType' needs to be handled")
             }
         }
     }
@@ -170,67 +174,67 @@ class PostListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // nothing to do if this is the static endlist indicator
-        val viewType = getItemViewType(position)
-        if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
+        if (holder is EndListViewHolder) {
             return
         }
-        if (viewType == VIEW_TYPE_LOADING) {
+        if (holder is LoadingViewHolder) {
             return
+        }
+        if (holder !is PostViewHolder) {
+            // Fail fast if a new view type is added so the we can handle it
+            throw IllegalStateException("Only remaining ViewHolder type should be PostViewHolder")
         }
 
         listManager?.getItem(position)?.let { post ->
             val context = holder.itemView.context
 
-            if (holder is PostViewHolder) {
-                if (StringUtils.isNotEmpty(post.title)) {
-                    // Unescape HTML
-                    val cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.title)
-                    holder.title.text = cleanPostTitle
-                } else {
-                    holder.title.text = context.resources.getText(R.string.untitled_in_parentheses)
-                }
-
-                var cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post)
-
-                if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
-                    holder.excerpt.visibility = View.VISIBLE
-                    // Unescape HTML
-                    cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt)
-                    // Collapse short-codes: [gallery ids="1206,1205,1191"] -> [gallery]
-                    cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt)
-                    holder.excerpt.text = cleanPostExcerpt
-                } else {
-                    holder.excerpt.visibility = View.GONE
-                }
-
-                showFeaturedImage(post, holder.featuredImage)
-
-                // local drafts say "delete" instead of "trash"
-                if (post.isLocalDraft) {
-                    holder.date.visibility = View.GONE
-                    holder.trashButton.buttonType = PostListButton.BUTTON_DELETE
-                } else {
-                    holder.date.text = PostUtils.getFormattedDate(post)
-                    holder.date.visibility = View.VISIBLE
-                    holder.trashButton.buttonType = PostListButton.BUTTON_TRASH
-                }
-
-                if (UploadService.isPostUploading(post)) {
-                    holder.disabledOverlay.visibility = View.VISIBLE
-                    holder.progressBar.isIndeterminate = true
-                } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
-                    // Editing posts with uploading media is only supported in Aztec
-                    holder.disabledOverlay.visibility = View.VISIBLE
-                } else {
-                    holder.progressBar.isIndeterminate = false
-                    holder.disabledOverlay.visibility = View.GONE
-                }
-
-                updateStatusTextAndImage(holder.status, holder.statusImage, post)
-                updatePostUploadProgressBar(holder.progressBar, post)
-                configurePostButtons(holder, post)
+            if (StringUtils.isNotEmpty(post.title)) {
+                // Unescape HTML
+                val cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.title)
+                holder.title.text = cleanPostTitle
+            } else {
+                holder.title.text = context.resources.getText(R.string.untitled_in_parentheses)
             }
 
+            var cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post)
+
+            if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
+                holder.excerpt.visibility = View.VISIBLE
+                // Unescape HTML
+                cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt)
+                // Collapse short-codes: [gallery ids="1206,1205,1191"] -> [gallery]
+                cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt)
+                holder.excerpt.text = cleanPostExcerpt
+            } else {
+                holder.excerpt.visibility = View.GONE
+            }
+
+            showFeaturedImage(post, holder.featuredImage)
+
+            // local drafts say "delete" instead of "trash"
+            if (post.isLocalDraft) {
+                holder.date.visibility = View.GONE
+                holder.trashButton.buttonType = PostListButton.BUTTON_DELETE
+            } else {
+                holder.date.text = PostUtils.getFormattedDate(post)
+                holder.date.visibility = View.VISIBLE
+                holder.trashButton.buttonType = PostListButton.BUTTON_TRASH
+            }
+
+            if (UploadService.isPostUploading(post)) {
+                holder.disabledOverlay.visibility = View.VISIBLE
+                holder.progressBar.isIndeterminate = true
+            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+                // Editing posts with uploading media is only supported in Aztec
+                holder.disabledOverlay.visibility = View.VISIBLE
+            } else {
+                holder.progressBar.isIndeterminate = false
+                holder.disabledOverlay.visibility = View.GONE
+            }
+
+            updateStatusTextAndImage(holder.status, holder.statusImage, post)
+            updatePostUploadProgressBar(holder.progressBar, post)
+            configurePostButtons(holder, post)
             holder.itemView.setOnClickListener {
                 onPostSelectedListener?.onPostSelected(post)
             }
