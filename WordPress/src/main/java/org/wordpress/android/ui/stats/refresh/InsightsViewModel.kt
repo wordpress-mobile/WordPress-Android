@@ -25,12 +25,13 @@ class InsightsViewModel
 @Inject constructor(
     private val statsStore: StatsStore,
     @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
-    private val insightsAllTimeViewModel: InsightsAllTimeViewModel
+    private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
+    private val latestPostSummaryViewModel: LatestPostSummaryViewModel
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
-            LATEST_POST_SUMMARY,
+            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
