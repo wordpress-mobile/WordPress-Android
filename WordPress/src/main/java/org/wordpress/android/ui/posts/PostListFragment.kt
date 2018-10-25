@@ -273,7 +273,6 @@ class PostListFragment : Fragment(),
         }
         if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
             swipeRefreshLayout?.isRefreshing = false
-            updateEmptyView(EmptyViewMessageType.NETWORK_ERROR)
             // If network is not available, we can refresh the items from the DB in case an update is not reflected
             // It really shouldn't be necessary, but wouldn't hurt to have it here either
             refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
@@ -292,10 +291,13 @@ class PostListFragment : Fragment(),
     private fun updateEmptyViewForListManagerChange(listManager: ListManager<PostModel>) {
         if (!listManager.isFetchingFirstPage) {
             if (listManager.size == 0) {
-                if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                    updateEmptyView(EmptyViewMessageType.NO_CONTENT)
+                val messageType = if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                    EmptyViewMessageType.NO_CONTENT
+                } else {
+                    EmptyViewMessageType.NETWORK_ERROR
                 }
-            } else if (listManager.size > 0) {
+                updateEmptyView(messageType)
+            } else {
                 hideEmptyView()
             }
         } else {
