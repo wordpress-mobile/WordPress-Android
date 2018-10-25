@@ -254,7 +254,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 prepareUploadAnalytics(mPost.getContent());
             }
 
-            EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalSiteId()));
+            EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));

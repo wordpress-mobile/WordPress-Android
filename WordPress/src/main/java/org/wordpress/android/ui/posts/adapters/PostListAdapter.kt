@@ -4,12 +4,10 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.AsyncTask
 import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.util.SparseArrayCompat
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -30,26 +28,24 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.posts.PostListFragment
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.widgets.PostListButton
-import java.util.ArrayList
 import javax.inject.Inject
 
 private const val ROW_ANIM_DURATION: Long = 150
@@ -57,6 +53,7 @@ private const val MAX_DISPLAYED_UPLOAD_PROGRESS = 90
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
+private const val VIEW_TYPE_LOADING = 2
 
 /**
  * Adapter for Posts/Pages list
@@ -65,8 +62,7 @@ class PostListAdapter(
     context: Context,
     private val site: SiteModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var onLoadMoreListener: OnLoadMoreListener? = null
-    private var onPostsLoadedListener: OnPostsLoadedListener? = null
+    private var listManager: ListManager<PostModel>? = null
     private var onPostSelectedListener: OnPostSelectedListener? = null
     private var onPostButtonClickListener: OnPostButtonClickListener? = null
     private val photonWidth: Int
@@ -75,12 +71,6 @@ class PostListAdapter(
 
     private val isStatsSupported: Boolean
     private val showAllButtons: Boolean
-
-    private var isLoadingPosts: Boolean = false
-
-    private val posts = ArrayList<PostModel>()
-    private val hiddenPosts = ArrayList<PostModel>()
-    private val featuredImageUrls = SparseArrayCompat<String>()
 
     private var recyclerView: RecyclerView? = null
     private val layoutInflater: LayoutInflater
@@ -93,11 +83,6 @@ class PostListAdapter(
 
     interface OnPostButtonClickListener {
         fun onPostButtonClicked(buttonType: Int, postClicked: PostModel)
-    }
-
-    enum class LoadMode {
-        IF_CHANGED,
-        FORCED
     }
 
     init {
@@ -118,12 +103,9 @@ class PostListAdapter(
         showAllButtons = displayWidth >= 1080
     }
 
-    fun setOnLoadMoreListener(listener: OnLoadMoreListener) {
-        onLoadMoreListener = listener
-    }
-
-    fun setOnPostsLoadedListener(listener: OnPostsLoadedListener) {
-        onPostsLoadedListener = listener
+    fun setListManager(listManager: ListManager<PostModel>, diffResult: DiffUtil.DiffResult) {
+        this.listManager = listManager
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun setOnPostSelectedListener(listener: OnPostSelectedListener) {
@@ -134,43 +116,49 @@ class PostListAdapter(
         onPostButtonClickListener = listener
     }
 
-    private fun getItem(position: Int): PostModel? {
-        return if (isValidPostPosition(position)) {
-            posts[position]
-        } else null
-    }
-
-    private fun isValidPostPosition(position: Int): Boolean {
-        return position >= 0 && position < posts.size
-    }
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == posts.size) {
-            VIEW_TYPE_ENDLIST_INDICATOR
-        } else VIEW_TYPE_POST
-    }
-
-    override fun getItemCount(): Int {
-        return if (posts.size == 0) {
-            0
-        } else {
-            posts.size + 1 // +1 for the endlist indicator
+        return when {
+            position == (itemCount - 1) -> VIEW_TYPE_ENDLIST_INDICATOR
+            listManager?.getItem(position) != null -> VIEW_TYPE_POST
+            else -> VIEW_TYPE_LOADING
         }
     }
 
+    override fun getItemCount(): Int {
+        listManager?.let {
+            return if (it.size == 0) {
+                0
+            } else {
+                it.size + 1 // +1 for the endlist indicator
+            }
+        }
+        return 0
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
-            val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
-            view.layoutParams.height = endlistIndicatorHeight
-            EndListViewHolder(view)
-        } else {
-            val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
-            PostViewHolder(view)
+        return when (viewType) {
+            VIEW_TYPE_ENDLIST_INDICATOR -> {
+                val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
+                view.layoutParams.height = endlistIndicatorHeight
+                EndListViewHolder(view)
+            }
+            VIEW_TYPE_LOADING -> {
+                val view = layoutInflater.inflate(R.layout.post_cardview_skeleton, parent, false)
+                LoadingViewHolder(view)
+            }
+            VIEW_TYPE_POST -> {
+                val view = layoutInflater.inflate(R.layout.post_cardview, parent, false)
+                PostViewHolder(view)
+            }
+            else -> {
+                // Fail fast if a new view type is added so the we can handle it
+                throw IllegalStateException("The view type '$viewType' needs to be handled")
+            }
         }
     }
 
@@ -186,14 +174,20 @@ class PostListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // nothing to do if this is the static endlist indicator
-        if (getItemViewType(position) == VIEW_TYPE_ENDLIST_INDICATOR) {
+        if (holder is EndListViewHolder) {
             return
         }
+        if (holder is LoadingViewHolder) {
+            return
+        }
+        if (holder !is PostViewHolder) {
+            // Fail fast if a new view type is added so the we can handle it
+            throw IllegalStateException("Only remaining ViewHolder type should be PostViewHolder")
+        }
 
-        val post = posts[position]
-        val context = holder.itemView.context
+        listManager?.getItem(position)?.let { post ->
+            val context = holder.itemView.context
 
-        if (holder is PostViewHolder) {
             if (StringUtils.isNotEmpty(post.title)) {
                 // Unescape HTML
                 val cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.title)
@@ -215,7 +209,7 @@ class PostListAdapter(
                 holder.excerpt.visibility = View.GONE
             }
 
-            showFeaturedImage(post.id, holder.featuredImage)
+            showFeaturedImage(post, holder.featuredImage)
 
             // local drafts say "delete" instead of "trash"
             if (post.isLocalDraft) {
@@ -241,20 +235,28 @@ class PostListAdapter(
             updateStatusTextAndImage(holder.status, holder.statusImage, post)
             updatePostUploadProgressBar(holder.progressBar, post)
             configurePostButtons(holder, post)
-        }
-
-        // load more posts when we near the end
-        if (position >= posts.size - 1 && position >= PostListFragment.POSTS_REQUEST_COUNT - 1) {
-            onLoadMoreListener?.onLoadMore()
-        }
-
-        holder.itemView.setOnClickListener {
-            onPostSelectedListener?.onPostSelected(post)
+            holder.itemView.setOnClickListener {
+                onPostSelectedListener?.onPostSelected(post)
+            }
         }
     }
 
-    private fun showFeaturedImage(postId: Int, imgFeatured: ImageView) {
-        val imageUrl = featuredImageUrls.get(postId)
+    private fun showFeaturedImage(post: PostModel, imgFeatured: ImageView) {
+        var imageUrl: String? = null
+        if (post.featuredImageId != 0L) {
+            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
+            if (media != null) {
+                imageUrl = media.url
+            } else {
+                val mediaToDownload = MediaModel()
+                mediaToDownload.mediaId = post.featuredImageId
+                mediaToDownload.localSiteId = site.id
+                val payload = MediaPayload(site, mediaToDownload)
+                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+            }
+        } else {
+            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
+        }
         if (imageUrl == null) {
             imgFeatured.visibility = View.GONE
             imageManager.cancelRequestAndClearImageView(imgFeatured)
@@ -511,23 +513,16 @@ class PostListAdapter(
         animOut.start()
     }
 
-    fun getPositionForPost(post: PostModel): Int {
-        return PostUtils.indexOfPostInList(post, posts)
-    }
-
-    fun loadPosts(mode: LoadMode) {
-        if (isLoadingPosts) {
-            AppLog.d(AppLog.T.POSTS, "post adapter > already loading posts")
-        } else {
-            LoadPostsTask(mode).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    fun refreshRowForPost(post: PostModel) {
+        getPositionForPost(post)?.let { position ->
+            notifyItemChanged(position)
         }
     }
 
     fun updateProgressForPost(post: PostModel) {
-        recyclerView?.let {
-            val position = getPositionForPost(post)
-            if (position > -1) {
-                val viewHolder = it.findViewHolderForAdapterPosition(position)
+        recyclerView?.let { recycler ->
+            getPositionForPost(post)?.let { position ->
+                val viewHolder = recycler.findViewHolderForAdapterPosition(position)
                 if (viewHolder is PostViewHolder) {
                     updatePostUploadProgressBar(viewHolder.progressBar, post)
                 }
@@ -535,43 +530,13 @@ class PostListAdapter(
         }
     }
 
-    /*
-     * hides the post - used when the post is trashed by the user but the network request
-     * to delete the post hasn't completed yet
-     */
-    fun hidePost(post: PostModel) {
-        hiddenPosts.add(post)
-
-        val position = getPositionForPost(post)
-        if (position > -1) {
-            posts.removeAt(position)
-            if (posts.size > 0) {
-                notifyItemRemoved(position)
-            } else {
-                // we must call notifyDataSetChanged when the only post has been deleted - if we
-                // call notifyItemRemoved the recycler will throw an IndexOutOfBoundsException
-                // because removing the last post also removes the end list indicator
-                notifyDataSetChanged()
-            }
-        }
-    }
-
-    fun unhidePost(post: PostModel) {
-        if (hiddenPosts.remove(post)) {
-            loadPosts(LoadMode.IF_CHANGED)
-        }
-    }
-
-    interface OnLoadMoreListener {
-        fun onLoadMore()
-    }
+    fun getPositionForPost(post: PostModel): Int? =
+            listManager?.findWithIndex {
+                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
+            }?.asSequence()?.map { it.first }?.firstOrNull()
 
     interface OnPostSelectedListener {
         fun onPostSelected(post: PostModel)
-    }
-
-    interface OnPostsLoadedListener {
-        fun onPostsLoaded(postCount: Int)
     }
 
     private class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -596,116 +561,6 @@ class PostListAdapter(
         val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
     }
 
+    private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-    /*
-     * called after the media (featured image) for a post has been downloaded - locate the post
-     * and set its featured image url to the passed url
-     */
-    fun mediaChanged(mediaModel: MediaModel) {
-        // Multiple posts could have the same featured image
-        val indexList = PostUtils.indexesOfFeaturedMediaIdInList(mediaModel.mediaId, posts)
-        for (position in indexList) {
-            val post = getItem(position)
-            if (post != null) {
-                val imageUrl = mediaModel.url
-                if (imageUrl != null) {
-                    featuredImageUrls.put(post.id, imageUrl)
-                } else {
-                    featuredImageUrls.remove(post.id)
-                }
-                notifyItemChanged(position)
-            }
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private inner class LoadPostsTask internal constructor(private val mLoadMode: LoadMode)
-        : AsyncTask<Void, Void, Boolean>() {
-        private var mTmpPosts: MutableList<PostModel>? = null
-        private val mMediaIdsToUpdate = ArrayList<Long>()
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            isLoadingPosts = true
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-            isLoadingPosts = false
-        }
-
-        override fun doInBackground(vararg nada: Void): Boolean? {
-            mTmpPosts = postStore.getPostsForSite(site)
-
-            // Make sure we don't return any hidden posts
-            if (hiddenPosts.size > 0) {
-                mTmpPosts!!.removeAll(hiddenPosts)
-            }
-
-            // Go no further if existing post list is the same
-            if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(posts, mTmpPosts)) {
-                // Always update the list if there are uploading posts
-                var postsAreUploading = false
-                for (post in mTmpPosts!!) {
-                    if (UploadService.isPostUploadingOrQueued(post)) {
-                        postsAreUploading = true
-                        break
-                    }
-                }
-
-                if (!postsAreUploading) {
-                    return false
-                }
-            }
-
-            // Generate the featured image url for each post
-            featuredImageUrls.clear()
-            val isPrivate = !SiteUtils.isPhotonCapable(site)
-            for (post in mTmpPosts!!) {
-                var imageUrl: String? = null
-                if (post.featuredImageId != 0L) {
-                    val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
-                    if (media != null) {
-                        imageUrl = media.url
-                    } else {
-                        // If the media isn't found it means the featured image info hasn't been added to
-                        // the local media library yet, so add to the list of media IDs to request info for
-                        mMediaIdsToUpdate.add(post.featuredImageId)
-                    }
-                } else {
-                    imageUrl = ReaderImageScanner(post.content, isPrivate).largestImage
-                }
-                if (!TextUtils.isEmpty(imageUrl)) {
-                    featuredImageUrls.put(post.id, imageUrl)
-                }
-            }
-
-            return true
-        }
-
-        override fun onPostExecute(result: Boolean?) {
-            if (result!!) {
-                posts.clear()
-                mTmpPosts?.let { posts.addAll(it) }
-                notifyDataSetChanged()
-
-                if (mMediaIdsToUpdate.size > 0) {
-                    for (mediaId in mMediaIdsToUpdate) {
-                        val mediaToDownload = MediaModel()
-                        mediaToDownload.mediaId = mediaId
-                        mediaToDownload.localSiteId = site.id
-                        val payload = MediaPayload(site, mediaToDownload)
-                        dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-                    }
-                }
-            }
-
-            isLoadingPosts = false
-
-            if (onPostsLoadedListener != null) {
-                onPostsLoadedListener?.onPostsLoaded(posts.size)
-            }
-        }
-    }
 }
