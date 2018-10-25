@@ -8,15 +8,16 @@ private const val PAGE_SIZE = 100
 
 sealed class PostListDescriptor(
     val site: SiteModel,
-    val orderBy: PostListOrderBy,
+    val statusList: List<PostStatus>,
     val order: ListOrder,
+    val orderBy: PostListOrderBy,
     val pageSize: Int
 ) : ListDescriptor {
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
+        val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
         when (this) {
             is PostListDescriptorForRestSite -> {
-                val statusStr = statusList.asSequence().map { it.name }.joinToString(separator = ",")
                 ListDescriptorUniqueIdentifier(
                         ("rest-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}" +
                                 "-sq$searchQuery").hashCode()
@@ -24,7 +25,7 @@ sealed class PostListDescriptor(
             }
             is PostListDescriptorForXmlRpcSite -> {
                 ListDescriptorUniqueIdentifier(
-                        "xml-rpc-site-post-list-${site.id}-o${order.value}-ob${orderBy.value}".hashCode()
+                        "xml-rpc-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}".hashCode()
                 )
             }
         }
@@ -55,19 +56,20 @@ sealed class PostListDescriptor(
 
     class PostListDescriptorForRestSite(
         site: SiteModel,
-        val statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
+        statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = ListOrder.DESC,
         orderBy: PostListOrderBy = PostListOrderBy.DATE,
-        val searchQuery: String? = null,
-        pageSize: Int = PAGE_SIZE
-    ) : PostListDescriptor(site, orderBy, order, pageSize)
+        pageSize: Int = PAGE_SIZE,
+        val searchQuery: String? = null
+    ) : PostListDescriptor(site, statusList, order, orderBy, pageSize)
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
+        statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = ListOrder.DESC,
         orderBy: PostListOrderBy = PostListOrderBy.DATE,
         pageSize: Int = PAGE_SIZE
-    ) : PostListDescriptor(site, orderBy, order, pageSize)
+    ) : PostListDescriptor(site, statusList, order, orderBy, pageSize)
 }
 
 enum class PostListOrderBy(val value: String) {
