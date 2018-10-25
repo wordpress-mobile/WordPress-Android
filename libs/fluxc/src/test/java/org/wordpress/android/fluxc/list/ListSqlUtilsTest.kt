@@ -85,8 +85,8 @@ class ListSqlUtilsTest {
     fun testDeleteExpiredLists() {
         val listDescriptors1 = (1..5).map { PostListDescriptorForRestSite(testSite(it)) }
         val listDescriptors2 = (6..10).map { PostListDescriptorForXmlRpcSite(testSite(it)) }
-        val sleepDuration = 1000L
-        val expirationDuration = sleepDuration - 300L // 300 ms seems to be enough for this test
+        val sleepDuration = 2000L
+        val expirationDuration = sleepDuration - 500L // 500 ms seems to be enough for this test
 
         /**
          * 1. Insert 5 lists, wait for 600 ms, so the [ListModel.lastModified] is different, then insert another 5 lists
