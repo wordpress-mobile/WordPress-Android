@@ -122,7 +122,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         fields.add("post_modified");
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, listDescriptor.getPageSize(), Collections.<PostStatus>emptyList(), fields,
+                        offset, listDescriptor.getPageSize(), listDescriptor.getStatusList(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
         final boolean loadedMore = offset > 0;
 
