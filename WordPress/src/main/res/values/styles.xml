@@ -748,4 +748,13 @@
         <item name="colorAccent">@color/blue_wordpress</item>
     </style>
 
+    <!--Post List Skeleton-->
+    <style name="PostListRowSkeletonButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:enabled">false</item>
+    </style>
+
 </resources>
