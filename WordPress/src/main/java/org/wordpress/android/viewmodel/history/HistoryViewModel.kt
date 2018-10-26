@@ -138,6 +138,7 @@ class HistoryViewModel @Inject constructor(
                             mutableRevision.authorDisplayName = person.displayName
                         }
                     }
+
                     updatedRevisions.add(mutableRevision)
                 }
 
