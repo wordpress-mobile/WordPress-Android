@@ -138,6 +138,11 @@
         <item name="contentInsetStart">@dimen/toolbar_content_offset</item>
     </style>
 
+    <style name="Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="Toolbar.Theme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:listDivider">@null</item>
     </style>

@@ -20,7 +20,7 @@ import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandl
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
@@ -127,7 +127,7 @@ class ActivityLogDetailFragment : Fragment() {
     private fun setActorIcon(actorIcon: String?, showJetpackIcon: Boolean?) {
         when {
             actorIcon != null && actorIcon != "" -> {
-                imageManager.loadIntoCircle(activityActorIcon, AVATAR, actorIcon)
+                imageManager.loadIntoCircle(activityActorIcon, AVATAR_WITH_BACKGROUND, actorIcon)
                 activityActorIcon.visibility = View.VISIBLE
                 activityJetpackActorIcon.visibility = View.GONE
             }

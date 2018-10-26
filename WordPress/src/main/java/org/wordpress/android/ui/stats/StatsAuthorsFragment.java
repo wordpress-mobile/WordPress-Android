@@ -254,7 +254,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             // icon
             // holder.showNetworkImage(icon);
-            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR_WITH_BACKGROUND,
                     GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx));
 
             holder.networkImageView.setVisibility(View.VISIBLE);

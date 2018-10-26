@@ -79,7 +79,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
         if (suggestion != null) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
-            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR, avatarUrl);
+            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
             holder.mTxtUserLogin
                     .setText(convertView.getResources().getString(R.string.at_username, suggestion.getUserLogin()));
             holder.mTxtDisplayName.setText(suggestion.getDisplayName());

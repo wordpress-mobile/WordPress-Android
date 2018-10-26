@@ -101,7 +101,7 @@ class HistoryListFragment : Fragment() {
         val adapter: HistoryAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(this::onItemClicked)
+            adapter = HistoryAdapter(checkNotNull(activity), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as HistoryAdapter
