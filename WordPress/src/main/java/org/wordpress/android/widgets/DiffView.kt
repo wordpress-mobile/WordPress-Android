@@ -28,11 +28,6 @@ class DiffView : AppCompatTextView {
                 diff.value
             }
 
-            // add tiny spacing before and after DEL and ADD diffs (will be included in the span)
-            if (diff.operation == ADD || diff.operation == DELETE) {
-                diffValue = "\u200A" + diffValue + "\u200A"
-            }
-
             val diffContent = SpannableString(diffValue)
 
             if (diff.operation == ADD) {
