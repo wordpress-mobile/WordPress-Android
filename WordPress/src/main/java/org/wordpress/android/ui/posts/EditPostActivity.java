@@ -1622,7 +1622,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (result != null && result.getParcelable(KEY_REVISION) != null) {
             mRevision = result.getParcelable(KEY_REVISION);
-            loadRevision();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override public void run() {
+                    loadRevision();
+                }
+            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
         }
     }
 
