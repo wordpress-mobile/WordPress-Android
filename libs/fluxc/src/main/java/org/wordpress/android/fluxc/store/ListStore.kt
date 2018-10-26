@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
 import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
+import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
+import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -33,7 +35,10 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-const val DEFAULT_LOAD_MORE_OFFSET = 10 // When we should load more data for a list
+// How long a list should stay in DB if it hasn't been updated
+const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
+// When we should load more data for a list
+const val DEFAULT_LOAD_MORE_OFFSET = 10
 
 /**
  * This Store is responsible for managing lists and their metadata. One of the designs goals for this Store is expose
@@ -55,6 +60,8 @@ class ListStore @Inject constructor(
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
+            REMOVE_EXPIRED_LISTS -> handleRemoveExpiredLists(action.payload as RemoveExpiredListsPayload)
+            REMOVE_ALL_LISTS -> handleRemoveAllLists()
         }
     }
 
@@ -210,6 +217,24 @@ class ListStore @Inject constructor(
     }
 
     /**
+     * Handles the [ListAction.REMOVE_EXPIRED_LISTS] action.
+     *
+     * It deletes [ListModel]s that hasn't been updated for the given [RemoveExpiredListsPayload.expirationDuration].
+     */
+    private fun handleRemoveExpiredLists(payload: RemoveExpiredListsPayload) {
+        listSqlUtils.deleteExpiredLists(payload.expirationDuration)
+    }
+
+    /**
+     * Handles the [ListAction.REMOVE_ALL_LISTS] action.
+     *
+     * It simply deletes every [ListModel] in the DB.
+     */
+    private fun handleRemoveAllLists() {
+        listSqlUtils.deleteAllLists()
+    }
+
+    /**
      * Deletes all the items for the given [ListDescriptor].
      */
     private fun deleteListItems(listDescriptor: ListDescriptor) {
@@ -326,6 +351,13 @@ class ListStore @Inject constructor(
             this.error = error
         }
     }
+
+    /**
+     * This is the payload for [ListAction.REMOVE_EXPIRED_LISTS].
+     *
+     * @property expirationDuration Tells how long a list should be kept in the DB if it hasn't been updated
+     */
+    class RemoveExpiredListsPayload(val expirationDuration: Long = DEFAULT_EXPIRATION_DURATION)
 
     class ListError(
         val type: ListErrorType,
