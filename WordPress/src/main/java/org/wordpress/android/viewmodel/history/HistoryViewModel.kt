@@ -122,6 +122,7 @@ class HistoryViewModel @Inject constructor(
             override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
                 val existingRevisions = _revisions.value ?: return
                 val updatedRevisions = mutableListOf<HistoryListItem>()
+                revisionsList.clear()
 
                 existingRevisions.forEach { it ->
                     var mutableRevision = it
@@ -136,6 +137,8 @@ class HistoryViewModel @Inject constructor(
                             mutableRevision.authorAvatarURL = person.avatarUrl
                             mutableRevision.authorDisplayName = person.displayName
                         }
+
+                        revisionsList.add(mutableRevision)
                     }
 
                     updatedRevisions.add(mutableRevision)
