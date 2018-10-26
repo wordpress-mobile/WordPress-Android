@@ -82,6 +82,13 @@ class ListManager<T>(
     }
 
     /**
+     * Returns the remote item id for the given position if it's a remote item and `null` otherwise.
+     */
+    fun getRemoteItemId(position: Int): Long? {
+        return (items[position] as? RemoteItem)?.remoteItemId
+    }
+
+    /**
      * Dispatches an action to fetch the first page of the list. Since this class is immutable, it'll not update itself.
      * `OnListChanged` should be used to observe changes to lists and a new instance should be requested from
      * `ListStore`.
