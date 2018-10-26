@@ -29,20 +29,33 @@ class ListManagerDiffCallback<T>(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        if (oldListManager == null) {
+        val oldRemoteItemId = oldListManager?.getRemoteItemId(oldItemPosition)
+        val newRemoteItemId = newListManager.getRemoteItemId(newItemPosition)
+        if (oldRemoteItemId != null && newRemoteItemId != null) {
+            // both remote items
+            return oldRemoteItemId == newRemoteItemId
+        }
+        // We shouldn't fetch items or load more pages prematurely when we are just trying to compare them
+        val oldItem = oldListManager?.getItem(
+                position = oldItemPosition,
+                shouldFetchIfNull = false,
+                shouldLoadMoreIfNecessary = false
+        )
+        val newItem = newListManager.getItem(
+                position = newItemPosition,
+                shouldFetchIfNull = false,
+                shouldLoadMoreIfNecessary = false
+        )
+        if (oldItem == null || newItem == null) {
+            // One remote and one local item. The remote item is not fetched yet, it can't be the same items.
             return false
         }
-        return compareItems(oldItemPosition, newItemPosition, areItemsTheSame)
+        // Either one remote item and one local item or both local items. In either case, we'll let the caller
+        // decide how to compare the two. In most cases, a local id comparison should be enough.
+        return areItemsTheSame(oldItem, newItem)
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return compareItems(oldItemPosition, newItemPosition, areContentsTheSame)
-    }
-
-    /**
-     * A helper function to compare two items in the given positions given a compare function.
-     */
-    private fun compareItems(oldItemPosition: Int, newItemPosition: Int, compare: (T, T) -> Boolean): Boolean {
         // We shouldn't fetch items or load more pages prematurely when we are just trying to compare them
         val oldItem = oldListManager?.getItem(
                 position = oldItemPosition,
@@ -62,6 +75,6 @@ class ListManagerDiffCallback<T>(
         if (oldItem == null || newItem == null) {
             return false
         }
-        return compare(oldItem, newItem)
+        return areContentsTheSame(oldItem, newItem)
     }
 }
