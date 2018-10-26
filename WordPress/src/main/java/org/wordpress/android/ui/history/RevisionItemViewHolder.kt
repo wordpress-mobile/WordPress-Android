@@ -24,28 +24,31 @@ class RevisionItemViewHolder(
     private val diffLayout: LinearLayout = itemView.findViewById(R.id.diff_layout)
     private val diffAdditions: TextView = itemView.findViewById(R.id.diff_additions)
     private val diffDeletions: TextView = itemView.findViewById(R.id.diff_deletions)
+    private lateinit var boundRevision: HistoryListItem.Revision
 
     fun bind(revision: HistoryListItem.Revision) {
-        container.setOnClickListener { itemClickListener(revision) }
-        title.text = revision.formattedTime
-        subtitle.text = revision.authorDisplayName
+        boundRevision = revision
 
-        if (!TextUtils.isEmpty(revision.authorAvatarURL)) {
-            imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(revision.authorAvatarURL))
+        container.setOnClickListener { itemClickListener(boundRevision) }
+        title.text = boundRevision.formattedTime
+        subtitle.text = boundRevision.authorDisplayName
+
+        if (!TextUtils.isEmpty(this.boundRevision.authorAvatarURL)) {
+            imageManager.loadIntoCircle(avatar, ImageType.AVATAR_WITH_BACKGROUND, StringUtils.notNullStr(boundRevision.authorAvatarURL))
         }
 
-        if (revision.totalAdditions == 0 && revision.totalDeletions == 0) {
+        if (boundRevision.totalAdditions == 0 && boundRevision.totalDeletions == 0) {
             diffLayout.visibility = View.GONE
         } else {
-            if (revision.totalAdditions > 0) {
-                diffAdditions.text = revision.totalAdditions.toString()
+            if (boundRevision.totalAdditions > 0) {
+                diffAdditions.text = boundRevision.totalAdditions.toString()
                 diffAdditions.visibility = View.VISIBLE
             } else {
                 diffAdditions.visibility = View.GONE
             }
 
-            if (revision.totalDeletions > 0) {
-                diffDeletions.text = revision.totalDeletions.toString()
+            if (boundRevision.totalDeletions > 0) {
+                diffDeletions.text = boundRevision.totalDeletions.toString()
                 diffDeletions.visibility = View.VISIBLE
             } else {
                 diffDeletions.visibility = View.GONE
@@ -57,12 +60,15 @@ class RevisionItemViewHolder(
         super.updateChanges(bundle)
         if (bundle.containsKey(HistoryDiffCallback.AVATAR_CHANGED_KEY)) {
             val avatarUrl = bundle.getString(HistoryDiffCallback.AVATAR_CHANGED_KEY)
+            boundRevision.authorAvatarURL = avatarUrl
             if (!TextUtils.isEmpty(avatarUrl)) {
                 imageManager.loadIntoCircle(avatar, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl))
             }
         }
         if (bundle.containsKey(HistoryDiffCallback.DISPLAY_NAME_CHANGED_KEY)) {
-            subtitle.text = bundle.getString(HistoryDiffCallback.DISPLAY_NAME_CHANGED_KEY)
+            val authorDisplayName = bundle.getString(HistoryDiffCallback.DISPLAY_NAME_CHANGED_KEY)
+            boundRevision.authorDisplayName = authorDisplayName
+            subtitle.text = authorDisplayName
         }
     }
 }
