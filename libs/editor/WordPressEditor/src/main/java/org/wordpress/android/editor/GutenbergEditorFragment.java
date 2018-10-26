@@ -111,6 +111,7 @@ import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -192,6 +193,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ReactContext mReactContext;
     private RNReactNativeGutenbergBridgePackage mRnReactNativeGutenbergBridgePackage;
 
+    private String mContentHtml = "";
+    private CountDownLatch mGetContentCountDownLatch;
+
     final String propNameInitialData = "initialData";
 
     final String initialHtml =
@@ -260,7 +264,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     protected List<ReactPackage> getPackages() {
-        mRnReactNativeGutenbergBridgePackage = new RNReactNativeGutenbergBridgePackage();
+        mRnReactNativeGutenbergBridgePackage = new RNReactNativeGutenbergBridgePackage(new GutenbergBridgeJS2Parent() {
+            @Override
+            public void responseHtml(String html) {
+                mContentHtml = html;
+                mGetContentCountDownLatch.countDown();
+            }
+        });
         return Arrays.asList(
                 new MainReactPackage(),
                 new SvgPackage(),
@@ -1021,8 +1031,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public CharSequence getContent(CharSequence originalContent) {
         if (mReactContext != null) {
-            String html = mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().getHtmlFromJS();
-            return StringUtils.notNullStr(html);
+            mGetContentCountDownLatch = new CountDownLatch(1);
+
+            mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().getHtmlFromJS();
+
+            try {
+                mGetContentCountDownLatch.await(10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                AppLog.e(T.EDITOR, e);
+                Thread.currentThread().interrupt();
+            }
+
+            return StringUtils.notNullStr(mContentHtml);
         } else {
             Log.d("QWER", "context is null");
         }
