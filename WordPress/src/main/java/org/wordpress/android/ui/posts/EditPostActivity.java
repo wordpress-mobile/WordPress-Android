@@ -1645,7 +1645,7 @@ public class EditPostActivity extends AppCompatActivity implements
         refreshEditorContent();
 
         Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
-                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {
