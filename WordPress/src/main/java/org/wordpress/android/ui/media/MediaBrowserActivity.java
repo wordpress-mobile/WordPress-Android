@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -110,6 +111,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
     private TabLayout mTabLayout;
+    private RelativeLayout mQuotaBar;
     private TextView mQuotaText;
 
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
@@ -200,11 +202,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             setFilter(filter);
         }
 
+        mQuotaBar = findViewById(R.id.quota_bar);
         mQuotaText = findViewById(R.id.quota_text);
 
-        if (mSite != null && mSite.hasDiskSpaceQuotaInformation()) {
-            formatQuotaDiskSpace();
-        }
+        showQuota(true);
     }
 
     private void formatQuotaDiskSpace() {
@@ -230,6 +231,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         mQuotaText.setText(getString(R.string.media_space_used, quota));
         mQuotaText.setTextColor(getColor(mSite.getSpacePercentUsed() > 90 ? R.color.alert_red : R.color.grey_text_min));
+    }
+
+    private void showQuota(boolean show) {
+        if (!mBrowserType.canFilter()) {
+            mQuotaBar.setVisibility(View.GONE);
+        } else if (show && mSite != null && mSite.hasDiskSpaceQuotaInformation()) {
+            mQuotaBar.setVisibility(View.VISIBLE);
+            formatQuotaDiskSpace();
+        } else if (!show) {
+            mQuotaBar.setVisibility(View.GONE);
+        }
     }
 
     public MediaDeleteService getMediaDeleteService() {
@@ -552,6 +564,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaGridFragment.showActionableEmptyViewButton(false);
 
         enableTabs(false);
+        showQuota(false);
 
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
@@ -568,6 +581,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         invalidateOptionsMenu();
 
         enableTabs(true);
+        showQuota(true);
 
         return true;
     }
@@ -712,12 +726,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
         enableTabs(false);
+        showQuota(false);
     }
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
         enableTabs(true);
+        showQuota(true);
     }
 
     // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
