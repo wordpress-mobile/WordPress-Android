@@ -34,6 +34,7 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -52,6 +53,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.common.LifecycleState;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
@@ -108,6 +110,7 @@ import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -117,6 +120,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
@@ -184,6 +189,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private ReactRootView mReactRootView;
     private ReactInstanceManager mReactInstanceManager;
+    private ReactContext mReactContext;
+    private RNReactNativeGutenbergBridgePackage mRnReactNativeGutenbergBridgePackage;
 
     final String propNameInitialData = "initialData";
 
@@ -253,11 +260,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     protected List<ReactPackage> getPackages() {
+        mRnReactNativeGutenbergBridgePackage = new RNReactNativeGutenbergBridgePackage();
         return Arrays.asList(
                 new MainReactPackage(),
                 new SvgPackage(),
                 new ReactAztecPackage(),
-                new RNRecyclerviewListPackage());
+                new RNRecyclerviewListPackage(),
+                mRnReactNativeGutenbergBridgePackage);
     }
 
     @Override
@@ -276,7 +285,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                     .setUseDeveloperSupport(BuildConfig.DEBUG)
                                                     .setInitialLifecycleState(LifecycleState.RESUMED)
                                                     .build();
-
+        mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
+            @Override
+            public void onReactContextInitialized(ReactContext context) {
+                mReactContext = context;
+            }
+        });
         Bundle initialProps = mReactRootView.getAppProperties();
         if (initialProps == null) {
             initialProps = new Bundle();
@@ -1006,8 +1020,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public CharSequence getContent(CharSequence originalContent) {
+        if (mReactContext != null) {
+            String html = mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().getHtmlFromJS();
+            return StringUtils.notNullStr(html);
+        } else {
+            Log.d("QWER", "context is null");
+        }
+
+        return originalContent;
+
 //        if (!isAdded()) {
-            return "";
+//            return "";
 //        }
 
 //        if (mContent.getVisibility() == View.VISIBLE) {

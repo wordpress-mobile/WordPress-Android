@@ -68,6 +68,7 @@ dependencies {
     implementation project(':react-native-svg')
     implementation project(':react-native-aztec')
     implementation project(':react-native-recyclerview-list')
+    implementation project(':react-native-gutenberg-bridge')
 
     // React Native
     implementation "com.facebook.react:react-native:+" // From node_modules.
