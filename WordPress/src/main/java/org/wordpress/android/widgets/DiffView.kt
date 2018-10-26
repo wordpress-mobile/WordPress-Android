@@ -22,7 +22,7 @@ class DiffView : AppCompatTextView {
         text = null
 
         diffs.forEachIndexed { index, diff ->
-            var diffValue = if (trimNewline && index == diffs.size - 1) {
+            val diffValue = if (trimNewline && index == diffs.size - 1) {
                 diff.value?.trimEnd('\n')
             } else {
                 diff.value
