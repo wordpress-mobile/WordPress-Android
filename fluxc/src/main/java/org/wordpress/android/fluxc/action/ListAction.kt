@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload
 import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload
+import org.wordpress.android.fluxc.store.ListStore.RemoveExpiredListsPayload
 
 @ActionEnum
 enum class ListAction : IAction {
@@ -17,5 +18,9 @@ enum class ListAction : IAction {
     @Action(payloadType = ListItemsChangedPayload::class)
     LIST_ITEMS_CHANGED,
     @Action(payloadType = ListItemsRemovedPayload::class)
-    LIST_ITEMS_REMOVED
+    LIST_ITEMS_REMOVED,
+    @Action(payloadType = RemoveExpiredListsPayload::class)
+    REMOVE_EXPIRED_LISTS,
+    @Action
+    REMOVE_ALL_LISTS
 }
