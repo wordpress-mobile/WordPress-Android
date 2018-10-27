@@ -1109,6 +1109,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
+        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
+            mFullScreenDialogFragment.dismiss();
+            return false;
+        }
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
@@ -1116,12 +1121,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
                 imFragment.dismissFragment();
             }
+
             return false;
         }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
+
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else if (isPhotoPickerShowing()) {
@@ -1129,6 +1137,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             savePostAndOptionallyFinish(true);
         }
+
         return true;
     }
 
@@ -1587,11 +1596,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onHistoryItemClicked(@NonNull Revision revision) {
+    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
         // TODO: Add analytics tracking for history list item.
         mRevision = revision;
 
-        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(revision);
+        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
 
         mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
                 .setTitle(R.string.history_detail_title)
@@ -1609,12 +1618,16 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onConfirm(@Nullable Bundle result) {
-        // TODO: Add analytics tracking for revision detail confirmed.
         mViewPager.setCurrentItem(PAGE_CONTENT);
 
         if (result != null && result.getParcelable(KEY_REVISION) != null) {
             mRevision = result.getParcelable(KEY_REVISION);
-            loadRevision();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override public void run() {
+                    loadRevision();
+                }
+            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
         }
     }
 
@@ -1632,7 +1645,7 @@ public class EditPostActivity extends AppCompatActivity implements
         refreshEditorContent();
 
         Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
-                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {

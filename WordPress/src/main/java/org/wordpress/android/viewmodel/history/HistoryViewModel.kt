@@ -41,23 +41,20 @@ class HistoryViewModel @Inject constructor(
     }
 
     private val _listStatus = MutableLiveData<HistoryListStatus>()
-    val eventListStatus: LiveData<HistoryListStatus>
+    val listStatus: LiveData<HistoryListStatus>
         get() = _listStatus
-
-    private val _showLoadDialog = SingleLiveEvent<HistoryListItem>()
-    val showLoadDialog: LiveData<HistoryListItem>
-        get() = _showLoadDialog
-
-    private val _showSnackbarMessage = SingleLiveEvent<String>()
-    val showSnackbarMessage: LiveData<String>
-        get() = _showSnackbarMessage
 
     private val _revisions = MutableLiveData<List<HistoryListItem>>()
     val revisions: LiveData<List<HistoryListItem>>
         get() = _revisions
 
+    private val _showDialog = SingleLiveEvent<HistoryListItem>()
+    val showDialog: LiveData<HistoryListItem>
+        get() = _showDialog
+
     private var isStarted = false
 
+    lateinit var revisionsList: ArrayList<Revision>
     lateinit var post: PostModel
     lateinit var site: SiteModel
 
@@ -70,6 +67,7 @@ class HistoryViewModel @Inject constructor(
             return
         }
 
+        this.revisionsList = ArrayList()
         this.post = post
         this.site = site
 
@@ -87,35 +85,8 @@ class HistoryViewModel @Inject constructor(
         }
 
         revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
-        _revisions.value = revisionsToHistoryListItems(revisions)
+        _revisions.value = getHistoryListItemsFromRevisionModels(revisions)
         fetchRevisionAuthorDetails(revisionAuthorsId)
-    }
-
-    private fun revisionsToHistoryListItems(revisions: List<RevisionModel>): List<HistoryListItem> {
-        val items = mutableListOf<HistoryListItem>()
-
-        revisions.forEach {
-            val item = HistoryListItem.Revision(it)
-            val last = items.lastOrNull() as? Revision
-
-            if (item.formattedDate != last?.formattedDate) {
-                items.add(HistoryListItem.Header(item.formattedDate))
-            }
-
-            items.add(item)
-        }
-
-        if (revisions.isNotEmpty()) {
-            val last = items.last() as Revision
-            val footer = if (post.isPage) {
-                resourceProvider.getString(R.string.history_footer_page, last.formattedDate, last.formattedTime)
-            } else {
-                resourceProvider.getString(R.string.history_footer_post, last.formattedDate, last.formattedTime)
-            }
-            items.add(HistoryListItem.Footer(footer))
-        }
-
-        return items
     }
 
     private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
@@ -123,6 +94,7 @@ class HistoryViewModel @Inject constructor(
             override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
                 val existingRevisions = _revisions.value ?: return
                 val updatedRevisions = mutableListOf<HistoryListItem>()
+                revisionsList.clear()
 
                 existingRevisions.forEach { it ->
                     var mutableRevision = it
@@ -137,6 +109,8 @@ class HistoryViewModel @Inject constructor(
                             mutableRevision.authorAvatarURL = person.avatarUrl
                             mutableRevision.authorDisplayName = person.displayName
                         }
+
+                        revisionsList.add(mutableRevision)
                     }
 
                     updatedRevisions.add(mutableRevision)
@@ -159,6 +133,34 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
+    private fun getHistoryListItemsFromRevisionModels(revisions: List<RevisionModel>): List<HistoryListItem> {
+        val items = mutableListOf<HistoryListItem>()
+
+        revisions.forEach {
+            val item = HistoryListItem.Revision(it)
+            val last = items.lastOrNull() as? Revision
+
+            if (item.formattedDate != last?.formattedDate) {
+                items.add(HistoryListItem.Header(item.formattedDate))
+            }
+
+            items.add(item)
+            revisionsList.add(item)
+        }
+
+        if (revisions.isNotEmpty()) {
+            val last = items.last() as Revision
+            val footer = if (post.isPage) {
+                resourceProvider.getString(R.string.history_footer_page, last.formattedDate, last.formattedTime)
+            } else {
+                resourceProvider.getString(R.string.history_footer_post, last.formattedDate, last.formattedTime)
+            }
+            items.add(HistoryListItem.Footer(footer))
+        }
+
+        return items
+    }
+
     override fun onCleared() {
         dispatcher.unregister(this)
         super.onCleared()
@@ -166,7 +168,7 @@ class HistoryViewModel @Inject constructor(
 
     fun onItemClicked(item: HistoryListItem) {
         if (item is HistoryListItem.Revision) {
-            _showLoadDialog.value = item
+            _showDialog.value = item
         }
     }
 
