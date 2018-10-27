@@ -530,7 +530,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_aztec, menu);
+        inflater.inflate(R.menu.menu_gutenberg, menu);
     }
 
     @Override
@@ -593,6 +593,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 //            }
 //            return true;
 //        }
+
+        if (item.getItemId() == R.id.debugmenu) {
+            mReactInstanceManager.showDevOptionsDialog();
+            return true;
+        }
 
         return false;
     }
