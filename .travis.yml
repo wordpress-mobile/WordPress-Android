@@ -24,6 +24,7 @@ android:
     - android-23
     - android-26
     - android-27
+    - android-28
 
 env:
   global:
