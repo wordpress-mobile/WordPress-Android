@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
@@ -14,6 +15,7 @@ allprojects {
     apply plugin: 'checkstyle'
 
     repositories {
+        google()
         jcenter()
         maven {
             url "https://maven.google.com"
