@@ -256,6 +256,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 mContentHtml = html;
                 mGetContentCountDownLatch.countDown();
             }
+
+            @Override
+            public void onMediaLibraryPress() {
+                onToolbarMediaButtonClicked();
+            }
         });
         return Arrays.asList(
                 new MainReactPackage(),
@@ -1058,14 +1063,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-//        if (getActivity() == null) {
-//            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
-//            // Activity may have already be gone.
-//            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
-//            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
-//            return;
-//        }
-//
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
+            return;
+        }
+
+        mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().setImageSource(mediaUrl);
+
 //        if (URLUtil.isNetworkUrl(mediaUrl)) {
 //            final AztecAttributes attributes = new AztecAttributes();
 //            attributes.setValue(ATTR_SRC, mediaUrl);
@@ -1675,23 +1682,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     };
 
-//    @Override
-//    public boolean onToolbarMediaButtonClicked() {
-//        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-//
-//        if (isActionInProgress()) {
-//            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-//        }
-//
-//        if (mSource.isFocused()) {
-//            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-//        } else {
-//            mEditorFragmentListener.onAddMediaClicked();
-//        }
-//
-//        return true;
-//    }
-//
+    public boolean onToolbarMediaButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+
+        if (isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+        }
+
+        if (mSource.isFocused()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mEditorFragmentListener.onAddMediaClicked();
+                }
+            });
+        }
+
+        return true;
+    }
+
 //    @Override
 //    public void onImageTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
 //        onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
