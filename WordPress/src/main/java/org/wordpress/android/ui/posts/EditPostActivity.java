@@ -370,7 +370,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
-        mShowGutenbergEditor = true;//AppPrefs.isGutenbergEditorEnabled();
+        mShowGutenbergEditor = true; // AppPrefs.isGutenbergEditorEnabled();
 //        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
 //        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 

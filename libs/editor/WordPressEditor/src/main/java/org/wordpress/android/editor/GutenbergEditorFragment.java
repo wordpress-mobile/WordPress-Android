@@ -10,9 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,7 +31,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
@@ -49,6 +46,7 @@ import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.Toast;
 
+
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactPackage;
@@ -59,9 +57,8 @@ import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.github.godness84.RNRecyclerViewList.RNRecyclerviewListPackage;
-import com.horcrux.svg.SvgPackage;
-
 import com.google.gson.Gson;
+import com.horcrux.svg.SvgPackage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,26 +66,18 @@ import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
-import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
-import org.wordpress.aztec.AztecText.EditorHasChanges;
-import org.wordpress.aztec.AztecTextFormat;
 import org.wordpress.aztec.Html;
-import org.wordpress.aztec.Html.ImageGetter.Callbacks;
 import org.wordpress.aztec.IHistoryListener;
-import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.extensions.MediaLinkExtensionsKt;
 import org.wordpress.aztec.plugins.IAztecPlugin;
 import org.wordpress.aztec.plugins.IMediaToolbarButton;
@@ -97,21 +86,15 @@ import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
-import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
-import org.wordpress.aztec.plugins.wpcomments.HiddenGutenbergPlugin;
-import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
-import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
 import org.wordpress.aztec.source.Format;
 import org.wordpress.aztec.source.SourceViewEditText;
-import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
-import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
 import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -123,8 +106,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -196,9 +177,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private String mContentHtml = "";
     private CountDownLatch mGetContentCountDownLatch;
 
-    final String propNameInitialData = "initialData";
+    private static final String PROP_NAME_INITIAL_DATA = "initialData";
 
-    final String initialHtml =
+    private static final String INITIAL_HTML =
             "<!-- wp:image -->\n"
             + "<figure class=\"wp-block-image\"><img alt=\"\"/></figure>\n"
             + "<!-- /wp:image -->\n"
@@ -219,9 +200,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             + "<p><b>Hello</b> World!</p>\n"
             + "<!-- /wp:paragraph -->\n"
             + "\n"
-            + "<!-- wp:paragraph {\"dropCap\":true,\"backgroundColor\":\"vivid-red\",\"fontSize\":\"large\",\"className\":\"custom-class-1 custom-class-2\"} -->\n"
-            + "<p class=\"has-background has-drop-cap has-large-font-size has-vivid-red-background-color custom-class-1 custom-class-2\">\n"
-            + "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor tincidunt sapien, quis dictum orci sollicitudin quis. Proin sed elit id est pulvinar feugiat vitae eget dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>\n"
+            + "<!-- wp:paragraph {\"dropCap\":true,\"backgroundColor\":\"vivid-red\",\"fontSize\":\"large\","
+                + "\"className\":\"custom-class-1 custom-class-2\"} -->\n"
+            + "<p class=\"has-background has-drop-cap has-large-font-size has-vivid-red-background-color custom-class-1"
+                + "custom-class-2\">\n"
+            + "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor tincidunt sapien, quis "
+                + "dictum orci sollicitudin quis. Proin sed elit id est pulvinar feugiat vitae eget dolor. Lorem ipsum"
+                + "dolor sit amet, consectetur adipiscing elit.</p>\n"
             + "<!-- /wp:paragraph -->\n"
             + "\n"
             + "<!-- wp:code -->\n"
@@ -236,7 +221,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             + "<!-- /wp:more -->\n"
             + "\n"
             + "<!-- wp:p4ragraph -->\n"
-            + "    Лорем ипсум долор сит амет, адиписци трацтатос еа еум. Меа аудиам малуиссет те, хас меис либрис елеифенд ин. Нец ех тота деленит сусципит. Яуас порро инструцтиор но нец.\n"
+            + "    Лорем ипсум долор сит амет, адиписци трацтатос еа еум. Меа аудиам малуиссет те, хас меис либрис"
+                + "елеифенд ин. Нец ех тота деленит сусципит. Яуас порро инструцтиор но нец.\n"
             + "<!-- /wp:p4ragraph -->";
 
     public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded) {
@@ -305,7 +291,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (initialProps == null) {
             initialProps = new Bundle();
         }
-        initialProps.putString(propNameInitialData, initialHtml);
+        initialProps.putString(PROP_NAME_INITIAL_DATA, INITIAL_HTML);
 
 
         // The string here (e.g. "MyReactNativeApp") has to match
@@ -564,7 +550,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public boolean hasHistory() {
-        return false;//(mContent.history.getHistoryEnabled() && !mContent.history.getHistoryList().isEmpty());
+        return false; // (mContent.history.getHistoryEnabled() && !mContent.history.getHistoryList().isEmpty());
     }
 
     public boolean canUndo() {
@@ -572,7 +558,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public boolean isHistoryEnabled() {
-        return false;//mContent.history.getHistoryEnabled();
+        return false; // mContent.history.getHistoryEnabled();
     }
 
     @Override
@@ -684,7 +670,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (appProps == null) {
             appProps = new Bundle();
         }
-        appProps.putString(propNameInitialData, postContent);
+        appProps.putString(PROP_NAME_INITIAL_DATA, postContent);
         mReactRootView.setAppProperties(appProps);
 
         updateFailedAndUploadingMedia();
