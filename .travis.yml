@@ -37,11 +37,11 @@ install:
 
 script:
   - ./tools/validate-login-strings.sh
-  - ./gradlew --staktrace -PdisablePreDex checkstyle
-  - ./gradlew --staktrace -PdisablePreDex ktlint
-  - ./gradlew --staktrace -PdisablePreDex assembleVanillaRelease
-  - ./gradlew --staktrace -PdisablePreDex lintVanillaRelease
-  - ./gradlew --staktrace -PdisablePreDex testVanillaRelease
+  - ./gradlew --stacktrace -PdisablePreDex checkstyle
+  - ./gradlew --stacktrace -PdisablePreDex ktlint
+  - ./gradlew --stacktrace -PdisablePreDex assembleVanillaRelease
+  - ./gradlew --stacktrace -PdisablePreDex lintVanillaRelease
+  - ./gradlew --stacktrace -PdisablePreDex testVanillaRelease
 #  - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" --exclude-dir="wpandroidlink" WordPress libs; exit 1)
   - bundle install
   - bundle exec danger --fail-on-errors=true  
