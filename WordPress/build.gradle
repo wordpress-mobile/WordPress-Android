@@ -28,7 +28,8 @@ apply plugin: 'io.fabric'
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 project.ext.react = [
-        entryFile: "index.js"
+        entryFile: "index.js",
+        inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
 ]
 
 apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
