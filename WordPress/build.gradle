@@ -29,6 +29,7 @@ android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompi
 
 project.ext.react = [
         entryFile: "index.js",
+        root: "../libs/gutenberg-mobile/",
         inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
 ]
 
