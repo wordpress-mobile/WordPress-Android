@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
@@ -42,6 +44,8 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
     private TextView mTotalDeletions;
     private WPViewPager mViewPager;
     private int mPosition;
+    private boolean mIsChevronClicked = false;
+    private boolean mIsFragmentRecreated = false;
 
     public static final String EXTRA_REVISION = "EXTRA_REVISION";
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
@@ -63,6 +67,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
             mRevisions = getArguments().getParcelableArrayList(EXTRA_REVISIONS);
         }
 
+        mIsFragmentRecreated = savedInstanceState != null;
         return rootView;
     }
 
@@ -92,6 +97,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
             mNextButton = getView().findViewById(R.id.next);
             mNextButton.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View view) {
+                    mIsChevronClicked = true;
                     mViewPager.setCurrentItem(mPosition + 1, true);
                 }
             });
@@ -99,6 +105,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
             mPreviousButton = getView().findViewById(R.id.previous);
             mPreviousButton.setOnClickListener(new OnClickListener() {
                 @Override public void onClick(View view) {
+                    mIsChevronClicked = true;
                     mViewPager.setCurrentItem(mPosition - 1, true);
                 }
             });
@@ -119,6 +126,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
 
     @Override
     public boolean onDismissClicked(FullScreenDialogController controller) {
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
         controller.dismiss();
         return true;
     }
@@ -161,6 +169,17 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
 
                 @Override
                 public void onPageSelected(int position) {
+                    if (mIsChevronClicked) {
+                        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_CHEVRON);
+                        mIsChevronClicked = false;
+                    } else {
+                        if (!mIsFragmentRecreated) {
+                            AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_SWIPE);
+                        } else {
+                            mIsFragmentRecreated = false;
+                        }
+                    }
+
                     mPosition = position;
                     mRevision = mAdapter.getRevisionAtPosition(mPosition);
                     refreshRevisionDetails();
@@ -177,7 +196,7 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
         @SuppressWarnings("unchecked")
         HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
-             mRevisions = (ArrayList<Revision>) revisions.clone();
+            mRevisions = (ArrayList<Revision>) revisions.clone();
         }
 
         @Override
