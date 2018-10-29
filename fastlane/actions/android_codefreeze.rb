@@ -26,9 +26,9 @@ module Fastlane
         end
 
         # Check the release branch
-        current_release_version = ""
+        current_release_version = Fastlane::Helpers::AndroidVersionHelper.calc_prev_release_version(params[:codefreeze_version])
         current_release_version_code = current_build_version_code
-        current_release_version = check_release_branch(params) unless !params[:update_release_branch_version] 
+        Fastlane::Helpers::AndroidGitHelper.git_checkout_and_pull("release/#{current_release_version}") unless !params[:update_release_branch_version] 
         current_release_version_code = current_release_version_code + 1 unless !params[:update_release_branch_version] 
 
         # Create new versions
@@ -55,15 +55,16 @@ module Fastlane
         # Check local repo status
         other_action.ensure_git_status_clean()
 
-        # Return the current version
-        current_version
-      end
+        # Creates the new branch
+        Fastlane::Helpers::AndroidGitHelper.get_create_codefreeze_branch("release/#{params[:codefreeze_version]}")
 
-      def self.check_release_branch(params)
-        current_release_version = Fastlane::Helpers::AndroidVersionHelper.calc_prev_release_version(params[:codefreeze_version])
+        # Updates the version codes
+        if (params[:update_release_branch_version])
+          Action.sh("./tools/update-release-names.sh #{current_release_version_code} #{current_release_version} #{new_beta_version} #{new_alpha_version}")
+        else
+          Action.sh("./tools/update-name-alpha-beta.sh #{current_release_version_code} #{new_beta_version} #{new_alpha_version}")
+        end 
 
-        # Checkout release branch and update
-        Fastlane::Helpers::AndroidGitHelper.git_checkout_and_pull("release/#{current_release_version}")
         current_release_version
       end
 

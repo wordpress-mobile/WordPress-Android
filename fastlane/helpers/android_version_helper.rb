@@ -18,7 +18,7 @@ module Fastlane
       end
 
       def self.calc_next_alpha_version_name(version)
-        alpha_number = version.slice(ALPHA_PREFIX)
+        alpha_number = version.sub(ALPHA_PREFIX, '')
         "#{ALPHA_PREFIX}#{alpha_number.to_i() + 1}"
       end
 
