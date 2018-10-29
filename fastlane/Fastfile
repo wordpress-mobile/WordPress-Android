@@ -11,6 +11,29 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
 ########################################################################
 # Release Lanes
 ########################################################################
+#####################################################################################
+  # code_freeze
+  # -----------------------------------------------------------------------------------
+  # This lane executes the steps planned on code freeze
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane code_freeze codefreeze_version:<version> [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane code_freeze
+  # bundle exec fastlane code_freeze skip_confirm:true
+  #####################################################################################
+  desc "Creates a new release branch from the current develop"
+  lane :code_freeze do | options |
+    old_version = android_codefreeze(options)
+    
+    #setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
+    #setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
+
+    #ios_localize_project()
+    #ios_tag_build()
+    #get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpios_prs_list_#{old_version}_#{new_version}.txt")
+  end
 
 #####################################################################################
 # update_ps_strings 
