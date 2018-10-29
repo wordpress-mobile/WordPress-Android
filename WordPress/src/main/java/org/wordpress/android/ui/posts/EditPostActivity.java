@@ -1111,7 +1111,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean handleBackPressed() {
         if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
             Fragment contentFragment = mFullScreenDialogFragment.getContent();
-            if (contentFragment != null && contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
+            if (contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
                 AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
             }
             mFullScreenDialogFragment.dismiss();
@@ -1641,7 +1641,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void loadRevision() {
-        AnalyticsTracker.track(Stat.REVISIONS_REVISION_LOADED);
         showDialogProgress(true);
         mPostForUndo = mPost.clone();
         mPost.setTitle(mRevision.getPostTitle());
