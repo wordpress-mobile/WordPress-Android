@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import de.greenrobot.event.EventBus
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
+import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
@@ -35,23 +37,30 @@ class PostListViewModel @Inject constructor(
     private var listDescriptor: PostListDescriptor? = null
     private var site: SiteModel? = null
 
+    val listManagerLiveData: LiveData<ListManager<PostModel>>
+        get() = listManagerMutableLiveData
+
     init {
-        EventBus.getDefault().register(this)
+//        EventBus.getDefault().register(this)
         dispatcher.register(this)
     }
 
     override fun onCleared() {
-        EventBus.getDefault().unregister(this)
+//        EventBus.getDefault().unregister(this)
         dispatcher.unregister(this)
         super.onCleared()
     }
 
-    fun start(site: SiteModel, listDescriptor: PostListDescriptor) {
+    fun start(site: SiteModel) {
         if (isStarted) {
             return
         }
         this.site = site
-        this.listDescriptor = listDescriptor
+         this.listDescriptor = if (site.isUsingWpComRestApi) {
+                PostListDescriptorForRestSite(site)
+            } else {
+                PostListDescriptorForXmlRpcSite(site)
+            }
         refreshListManagerFromStore(refreshFirstPageAfter = true)
         isStarted = true
     }
@@ -76,6 +85,16 @@ class PostListViewModel @Inject constructor(
         refreshListManagerFromStore()
     }
 
+    /**
+     * A helper function to load the current [ListManager] from [ListStore].
+     *
+     * @param listDescriptor The descriptor for which the [ListManager] to be loaded for
+     * @param shouldRefreshFirstPageAfterLoading Whether the first page of the list should be fetched after its loaded
+     *
+     * A background [Job] will be used to refresh the list. If this function is triggered again before the job is
+     * complete, it'll be canceled and a new one will be started. This is important to do, because we always want to
+     * last version of [ListManager] to be used and we don't want block the UI thread unnecessarily.
+     */
     private fun refreshListManagerFromStore(refreshFirstPageAfter: Boolean = false) {
         listDescriptor?.let {
             GlobalScope.launch(Dispatchers.Default) {
@@ -88,6 +107,12 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    /**
+     * A helper function to load the [ListManager] for the given [ListDescriptor] from [ListStore].
+     *
+     * [ListStore] requires an instance of [ListItemDataSource] which is a way for us to tell [ListStore] and
+     * [ListManager] how to take certain actions or how to access certain data.
+     */
     private suspend fun getListManagerFromStore(listDescriptor: PostListDescriptor) = withContext(Dispatchers.Default) {
         listStore.getListManager(listDescriptor, object : ListItemDataSource<PostModel> {
             /**

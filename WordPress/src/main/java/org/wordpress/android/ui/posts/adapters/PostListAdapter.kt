@@ -8,6 +8,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.util.DiffUtil
+import android.support.v7.util.DiffUtil.DiffResult
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -19,6 +20,13 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.isActive
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
@@ -34,6 +42,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.ui.ListManagerDiffCallback
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
@@ -81,6 +90,8 @@ class PostListAdapter(
     @Inject internal lateinit var uploadStore: UploadStore
     @Inject internal lateinit var imageManager: ImageManager
 
+    private var refreshListJob: Job? = null
+
     interface OnPostButtonClickListener {
         fun onPostButtonClicked(buttonType: Int, postClicked: PostModel)
     }
@@ -103,9 +114,17 @@ class PostListAdapter(
         showAllButtons = displayWidth >= 1080
     }
 
-    fun setListManager(listManager: ListManager<PostModel>, diffResult: DiffUtil.DiffResult) {
-        this.listManager = listManager
-        diffResult.dispatchUpdatesTo(this)
+    fun setListManager(listManager: ListManager<PostModel>) {
+        refreshListJob?.cancel()
+        refreshListJob = GlobalScope.launch(Dispatchers.Default) {
+            val diffResult = calculateDiff(this@PostListAdapter.listManager, listManager)
+            if (isActive) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    this@PostListAdapter.listManager = listManager
+                    diffResult.dispatchUpdatesTo(this@PostListAdapter)
+                }
+            }
+        }
     }
 
     fun setOnPostSelectedListener(listener: OnPostSelectedListener) {
@@ -563,4 +582,42 @@ class PostListAdapter(
 
     private class LoadingViewHolder(view: View) : RecyclerView.ViewHolder(view)
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
+}
+
+/**
+ * A helper function that calculates the [DiffResult] to be applied in [PostListAdapter] for the given
+ * two [ListManager]s.
+ */
+private suspend fun calculateDiff(
+    oldListManager: ListManager<PostModel>?,
+    newListManager: ListManager<PostModel>
+): DiffResult = withContext(Dispatchers.Default) {
+    val callback = ListManagerDiffCallback(
+            oldListManager = oldListManager,
+            newListManager = newListManager,
+            areItemsTheSame = { oldPost, newPost ->
+                // If the local ids of two posts are the same, they are referring to the same post
+                oldPost.id == newPost.id
+            },
+            areContentsTheSame = { oldPost, newPost ->
+                if (oldPost.isLocalDraft && newPost.isLocalDraft) {
+                    // If both posts are local drafts, checking their locally changed date will be enough
+                    oldPost.dateLocallyChanged == newPost.dateLocallyChanged
+                } else if (oldPost.isLocalDraft || newPost.isLocalDraft) {
+                    // If a post is a local draft and the other is not, the contents are considered to be changed
+                    false
+                } else if (oldPost.isLocallyChanged && newPost.isLocallyChanged) {
+                    // Neither post is a local draft due to previous checks. For remote posts, if both of them are
+                    // locally changed, we can rely on their locally changed date
+                    oldPost.dateLocallyChanged == newPost.dateLocallyChanged
+                } else if (oldPost.isLocallyChanged || newPost.isLocallyChanged) {
+                    // If a post is locally changed and the other is not, the contents are considered to be changed
+                    false
+                } else {
+                    // Both posts are remote posts due to previous checks. In this case we can simply rely on their
+                    // last modified date on remote
+                    oldPost.lastModified == newPost.lastModified
+                }
+            })
+    DiffUtil.calculateDiff(callback)
 }
