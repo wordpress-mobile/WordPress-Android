@@ -42,7 +42,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.EmptyViewMessageType
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.PostEvents
@@ -59,16 +58,17 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_ERROR
+import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
-import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
-
-private const val KEY_TRASHED_POST_LOCAL_IDS = "KEY_TRASHED_POST_LOCAL_IDS"
-private const val KEY_TRASHED_POST_REMOTE_IDS = "KEY_TRASHED_POST_REMOTE_IDS"
-private const val KEY_UPLOADED_REMOTE_POST_IDS = "KEY_UPLOADED_REMOTE_POST_IDS"
 
 class PostListFragment : Fragment(),
         PostListAdapter.OnPostSelectedListener,
@@ -88,9 +88,6 @@ class PostListFragment : Fragment(),
     private var targetPost: PostModel? = null
     private var shouldCancelPendingDraftNotification = false
     private var postIdForPostToBeDeleted = 0
-
-    private val uploadedPostRemoteIds = ArrayList<Long>()
-    private val trashedPostIds = ArrayList<Pair<Int, Long>>()
 
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
@@ -121,14 +118,6 @@ class PostListFragment : Fragment(),
         } else {
             rvScrollPositionSaver.onRestoreInstanceState(savedInstanceState)
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-            savedInstanceState.getLongArray(KEY_UPLOADED_REMOTE_POST_IDS)?.let {
-                uploadedPostRemoteIds.addAll(it.asList())
-            }
-            savedInstanceState.getIntArray(KEY_TRASHED_POST_LOCAL_IDS)?.let { trashedLocalIds ->
-                savedInstanceState.getLongArray(KEY_TRASHED_POST_REMOTE_IDS)?.let { trashedRemoteIds ->
-                    trashedPostIds.addAll(trashedLocalIds.toList().zip(trashedRemoteIds.toList()))
-                }
-            }
             targetPost = postStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID)
             )
@@ -152,6 +141,9 @@ class PostListFragment : Fragment(),
             viewModel.listManagerLiveData.observe(this, Observer { listManager ->
                 listManager?.let { updateListManager(it) }
             })
+            viewModel.emptyViewStateLiveData.observe(this, Observer { emptyViewState ->
+                emptyViewState?.let { updateEmptyViewForState(it) }
+            })
         }
     }
 
@@ -159,9 +151,6 @@ class PostListFragment : Fragment(),
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         rvScrollPositionSaver.onSaveInstanceState(outState, recyclerView)
-        outState.putIntArray(KEY_TRASHED_POST_LOCAL_IDS, trashedPostIds.map { it.first }.toIntArray())
-        outState.putLongArray(KEY_TRASHED_POST_REMOTE_IDS, trashedPostIds.map { it.second }.toLongArray())
-        outState.putLongArray(KEY_UPLOADED_REMOTE_POST_IDS, uploadedPostRemoteIds.toLongArray())
     }
 
     override fun onDestroy() {
@@ -217,10 +206,8 @@ class PostListFragment : Fragment(),
         fabView?.setOnClickListener { newPost() }
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
-            // TODO: Move to view model
-//            refreshPostList()
+            refreshPostList()
         }
-
         return view
     }
 
@@ -250,20 +237,16 @@ class PostListFragment : Fragment(),
         }
     }
 
-    // TODO: Move this logic to ViewModel
-//    private fun refreshPostList() {
-//        if (!isAdded) {
-//            return
-//        }
-//        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-//            swipeRefreshLayout?.isRefreshing = false
-//            // If network is not available, we can refresh the items from the DB in case an update is not reflected
-//            // It really shouldn't be necessary, but wouldn't hurt to have it here either
-//            refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
-//        } else {
-//            listManager?.refresh()
-//        }
-//    }
+    private fun refreshPostList() {
+        if (!isAdded) {
+            return
+        }
+        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+            swipeRefreshLayout?.isRefreshing = false
+        } else {
+            viewModel.refreshList()
+        }
+    }
 
     private fun newPost() {
         if (!isAdded) {
@@ -272,36 +255,27 @@ class PostListFragment : Fragment(),
         ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
     }
 
-    private fun updateEmptyViewForListManagerChange(listManager: ListManager<PostModel>) {
-        if (!listManager.isFetchingFirstPage) {
-            if (listManager.size == 0) {
-                val messageType = if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                    EmptyViewMessageType.NO_CONTENT
-                } else {
-                    EmptyViewMessageType.NETWORK_ERROR
-                }
-                updateEmptyView(messageType)
-            } else {
-                hideEmptyView()
-            }
-        } else {
-            updateEmptyView(EmptyViewMessageType.LOADING)
-        }
-    }
-
-    private fun updateEmptyView(emptyViewMessageType: EmptyViewMessageType) {
+    private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
         if (!isAdded) {
             return
         }
-        val stringId: Int = when (emptyViewMessageType) {
-            EmptyViewMessageType.LOADING -> R.string.posts_fetching
-            EmptyViewMessageType.NO_CONTENT -> R.string.posts_empty_list
-            EmptyViewMessageType.NETWORK_ERROR -> R.string.no_network_message
-            EmptyViewMessageType.PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
-            EmptyViewMessageType.GENERIC_ERROR -> R.string.error_refresh_posts
+        if (emptyViewState == HIDDEN_LIST) {
+            actionableEmptyView?.visibility = View.GONE
+            return
         }
-
-        val hasNoContent = emptyViewMessageType == EmptyViewMessageType.NO_CONTENT
+        var hasNoContent = false
+        val stringId = when (emptyViewState) {
+            EMPTY_LIST -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                hasNoContent = true
+                R.string.posts_empty_list
+            } else {
+                R.string.no_network_message
+            }
+            LOADING -> R.string.posts_fetching
+            REFRESH_ERROR -> R.string.error_refresh_posts
+            PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
+            HIDDEN_LIST -> throw IllegalArgumentException("Hidden state should already be handled")
+        }
         actionableEmptyView?.let {
             it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
             it.image.visibility = if (hasNoContent) View.VISIBLE else View.GONE
@@ -311,13 +285,7 @@ class PostListFragment : Fragment(),
             it.button.setOnClickListener { _ ->
                 ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
             }
-            it.visibility = if (postListAdapter.itemCount == 0) View.VISIBLE else View.GONE
-        }
-    }
-
-    private fun hideEmptyView() {
-        if (isAdded) {
-            actionableEmptyView?.visibility = View.GONE
+            it.visibility = View.VISIBLE
         }
     }
 
@@ -469,8 +437,7 @@ class PostListFragment : Fragment(),
         if (post == null) {
             // This is mostly a sanity check and the list should never go out of sync, but if there is an edge case, we
             // should refresh the list
-            // TODO Move to view model
-//            refreshPostList()
+            refreshPostList()
             return
         }
 
@@ -569,40 +536,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    // TODO: Move this logic to view model
-//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-//    @Suppress("unused")
-//    fun onListChanged(event: OnListChanged) {
-//        if (!event.listDescriptors.contains(listDescriptor)) {
-//            return
-//        }
-//        if (event.isError) {
-//            GlobalScope.launch(Dispatchers.Main) {
-//                val emptyViewMessageType = if (event.error.type == ListErrorType.PERMISSION_ERROR) {
-//                    PERMISSION_ERROR
-//                } else GENERIC_ERROR
-//                updateEmptyView(emptyViewMessageType)
-//            }
-//        } else {
-//            if (event.causeOfChange == FIRST_PAGE_FETCHED) {
-//                // `uploadedPostRemoteIds` is kept as a workaround when the local drafts are uploaded and the list
-//                // has not yet been updated yet. Since we just fetched the first page, we can safely clear it.
-//                // Please check out `onPostUploaded` for more context.
-//                uploadedPostRemoteIds.clear()
-//            }
-//            refreshListManagerFromStore(listDescriptor, false)
-//        }
-//    }
-//
-//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-//    @Suppress("unused")
-//    fun onListItemsChanged(event: OnListItemsChanged) {
-//        if (listDescriptor.typeIdentifier != event.type) {
-//            return
-//        }
-//        refreshListManagerFromStore(listDescriptor, false)
-//    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (isAdded && event.post != null && event.post.localSiteId == site.id) {
@@ -617,7 +550,7 @@ class PostListFragment : Fragment(),
             // next refresh and pass it to `ListStore` so it'll be included in the list.
             // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
             // as the current `ListManager` might not have been updated yet since it's a bg action.
-            uploadedPostRemoteIds.add(event.post.remotePostId)
+            viewModel.addUploadedPostRemoteId(event.post.remotePostId)
             // TODO: Move to view model
 //            refreshPostList()
         }
@@ -778,9 +711,6 @@ class PostListFragment : Fragment(),
         }
         // TODO: This too
         showTargetPostIfNecessary()
-        // If we update the empty view just before a fetch, it will show "No Content" message only to update it
-        // immediately after when we start a fetch. This makes it a smoother experience for empty post lists.
-        updateEmptyViewForListManagerChange(listManager)
     }
 
 
