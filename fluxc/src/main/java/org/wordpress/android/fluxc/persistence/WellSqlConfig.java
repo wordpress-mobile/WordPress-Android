@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 44;
+        return 45;
     }
 
     @Override
@@ -370,6 +370,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "_id INTEGER PRIMARY KEY AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) "
                            + "ON DELETE CASCADE,UNIQUE(LIST_ID, REMOTE_ITEM_ID))");
                 db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT");
+                oldVersion++;
+            case 44:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("DROP TABLE IF EXISTS ListItemModel");
+                db.execSQL("CREATE TABLE ListItemModel (LIST_ID INTEGER,REMOTE_ITEM_ID INTEGER,_id INTEGER PRIMARY KEY "
+                           + "AUTOINCREMENT,FOREIGN KEY(LIST_ID) REFERENCES ListModel(_id) ON DELETE CASCADE,"
+                           + "UNIQUE(LIST_ID, REMOTE_ITEM_ID) ON CONFLICT IGNORE)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
