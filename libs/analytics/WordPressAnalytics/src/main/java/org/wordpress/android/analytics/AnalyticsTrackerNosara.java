@@ -154,6 +154,15 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
+            case REVISIONS_DETAIL_VIEWED_FROM_LIST:
+                predefinedEventProperties.put("source", "list");
+                break;
+            case REVISIONS_DETAIL_VIEWED_FROM_SWIPE:
+                predefinedEventProperties.put("source", "swipe");
+                break;
+            case REVISIONS_DETAIL_VIEWED_FROM_CHEVRON:
+                predefinedEventProperties.put("source", "chevron");
+                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -658,6 +667,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case REVISIONS_LIST_VIEWED:
+                return "revisions_list_viewed";
+            case REVISIONS_DETAIL_VIEWED_FROM_LIST:
+            case REVISIONS_DETAIL_VIEWED_FROM_SWIPE:
+            case REVISIONS_DETAIL_VIEWED_FROM_CHEVRON:
+                return "revisions_detail_viewed";
+            case REVISIONS_DETAIL_CANCELLED:
+                return "revisions_detail_cancelled";
+            case REVISIONS_REVISION_LOADED:
+                return "revisions_revision_loaded";
+            case REVISIONS_LOAD_UNDONE:
+                return "revisions_load_undone";
             case FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED:
                 return "followed_blog_notifications_reader_enabled";
             case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF:
