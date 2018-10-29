@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts
 
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -80,6 +82,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import java.util.ArrayList
@@ -93,6 +96,9 @@ private const val KEY_UPLOADED_REMOTE_POST_IDS = "KEY_UPLOADED_REMOTE_POST_IDS"
 class PostListFragment : Fragment(),
         PostListAdapter.OnPostSelectedListener,
         PostListAdapter.OnPostButtonClickListener {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: PostListViewModel
+
     private val rvScrollPositionSaver = RecyclerViewScrollPositionManager()
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var fabView: View? = null
@@ -170,6 +176,13 @@ class PostListFragment : Fragment(),
 
         EventBus.getDefault().register(this)
         dispatcher.register(this)
+
+        // TODO: can we move to onActivityCreated?
+        activity?.let {
+            viewModel = ViewModelProviders.of(it, viewModelFactory)
+                    .get<PostListViewModel>(PostListViewModel::class.java)
+            viewModel.start(this.site, listDescriptor)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
