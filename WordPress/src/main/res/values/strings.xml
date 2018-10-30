@@ -1266,10 +1266,10 @@
     <string name="image_size_large_label">Large</string>
     <string name="image_size_full_label">Full Size</string>
 
-    <string name="image_size_thumbnail_class" translatable="false">size-thumbnail</string>
-    <string name="image_size_medium_class" translatable="false">size-medium</string>
-    <string name="image_size_large_class" translatable="false">size-large</string>
-    <string name="image_size_full_class" translatable="false">size-full</string>
+    <string name="image_size_thumbnail_css_class" translatable="false">size-thumbnail</string>
+    <string name="image_size_medium_css_class" translatable="false">size-medium</string>
+    <string name="image_size_large_css_class" translatable="false">size-large</string>
+    <string name="image_size_full_css_class" translatable="false">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
