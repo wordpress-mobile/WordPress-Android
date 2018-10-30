@@ -124,6 +124,16 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryFragment;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainAdapter;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainFragment;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainLoaderFragment;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationService;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationSiteDetailsFragment;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeAdapter;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeFragment;
+import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -175,6 +185,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SiteCreationService object);
 
+    void inject(NewSiteCreationService object);
+
     void inject(UploadService object);
 
     void inject(MediaUploadHandler object);
@@ -210,6 +222,24 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SiteCreationDomainLoaderFragment object);
 
     void inject(SiteCreationDomainAdapter object);
+
+    void inject(NewSiteCreationActivity object);
+
+    void inject(NewSiteCreationCategoryFragment object);
+
+    void inject(NewSiteCreationThemeFragment object);
+
+    void inject(NewSiteCreationThemeLoaderFragment object);
+
+    void inject(NewSiteCreationThemeAdapter object);
+
+    void inject(NewSiteCreationSiteDetailsFragment object);
+
+    void inject(NewSiteCreationDomainFragment object);
+
+    void inject(NewSiteCreationDomainLoaderFragment object);
+
+    void inject(NewSiteCreationDomainAdapter object);
 
     void inject(StatsWidgetConfigureActivity object);
 
