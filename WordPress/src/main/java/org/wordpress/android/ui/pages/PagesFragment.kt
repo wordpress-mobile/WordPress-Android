@@ -317,8 +317,11 @@ class PagesFragment : Fragment() {
         if (post != null) {
             // track event
             val trackValue =
-                    if (checked) { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED }
-                    else { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED }
+                    if (checked) {
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
+                    } else {
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED
+                    }
             PostUtils.trackGutenbergDialogEvent(
                     trackValue,
                     post, viewModel.site
