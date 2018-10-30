@@ -52,16 +52,12 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        passDeleteConfirmation(instanceTag.toLong())
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is PagesFragment) {
+            fragment.onPageDeleteConfirmed(instanceTag.toLong())
+        }
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-    }
-
-    private fun passDeleteConfirmation(remoteId: Long) {
-        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-        if (fragment is PagesFragment) {
-            fragment.onPageDeleteConfirmed(remoteId)
-        }
     }
 }

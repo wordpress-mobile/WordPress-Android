@@ -28,11 +28,14 @@ import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -52,6 +55,8 @@ class PagesFragment : Fragment() {
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+    @Inject lateinit var mSiteStore: SiteStore
+    @Inject lateinit var mPostStore: PostStore
 
     private var restorePreviousSearch = false
 
@@ -226,7 +231,15 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.editPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(this, page) }
+            page?.let {
+                val post = mPostStore.getPostByLocalPostId(page.pageId)
+                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content);
+                if (isGutenbergContent) {
+                    PostUtils.showGutenbergCompatibilityWarningDialog(getActivity(), fragmentManager, post);
+                } else {
+                    ActivityLauncher.editPageForResult(this, page)
+                }
+            }
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
