@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -81,7 +82,8 @@ public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener {
+        PostsListAdapter.OnPostButtonClickListener,
+        BasicFragmentDialog.BasicDialogPositiveClickInterface {
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
@@ -690,30 +692,31 @@ public class PostsListFragment extends Fragment
         snackbar.show();
     }
 
-    private void showGutenbergCompatibilityWarningDialog(final PostModel post) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-        builder.setTitle(post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_title_page)
-                : getString(R.string.dialog_gutenberg_compatibility_title_post))
-               .setMessage(getString(R.string.dialog_gutenberg_compatibility_message))
-               .setPositiveButton(post.isPage() ?
-                               R.string.dialog_gutenberg_compatibility_yes_edit_page :
-                               R.string.dialog_gutenberg_compatibility_yes_edit_post,
-                       new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialogInterface, int i) {
-                               if (UploadService.isPostUploadingOrQueued(post)) {
-                                   // If the post is uploading media, allow the media to continue uploading, but don't upload the
-                                   // post itself when they finish (since we're about to edit it again)
-                                   UploadService.cancelQueuedPostUpload(post);
-                               }
+    private void showGutenbergCompatibilityWarningDialog(PostModel post) {
+        BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
+        String tag = post.getId() + "";
+        gutenbergCompatibilityDialog.initialize(
+                tag, // passing the Post's id as the Dialog's tag as it's needed in the callback
+                post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_title_page)
+                        : getString(R.string.dialog_gutenberg_compatibility_title_post),
+                getString(R.string.dialog_gutenberg_compatibility_message),
+                post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
+                        : getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
+                getString(R.string.dialog_gutenberg_compatibility_no_go_back),
+                null);
+        gutenbergCompatibilityDialog.show(getFragmentManager(), tag);
+    }
 
-                               ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
-                           }
-                   })
-               .setNegativeButton(R.string.dialog_gutenberg_compatibility_no_go_back, null)
-               .setCancelable(true);
-        builder.create().show();
+    @Override
+    public void onPositiveClicked(@NotNull String gutenbergPostId) {
+        PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            // If the post is uploading media, allow the media to continue uploading, but don't upload the
+            // post itself when they finish (since we're about to edit it again)
+            UploadService.cancelQueuedPostUpload(post);
+        }
+
+        ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
     }
 
     @Override
