@@ -44,8 +44,19 @@
             android:clickable="true"
             android:focusable="true"
             tools:text="Link"
-            style="@style/PromoDialogLink" >
+            style="@style/PromoDialogLink"
+            android:layout_marginBottom="@dimen/margin_large">
         </org.wordpress.android.widgets.WPTextView>
+
+        <CheckBox
+            android:id="@+id/gutenberg_warning_dialog_dont_show_anymore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:text="@string/dialog_gutenberg_compatibility_dont_show_again"
+            android:textColor="@color/grey_dark"
+            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
+            android:visibility="visible"/>
 
     </LinearLayout>
 
