@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -383,4 +386,22 @@ public class PostUtils {
     public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
+
+    public static void showGutenbergCompatibilityWarningDialog(Context ctx,
+                                                               FragmentManager fragmentManager,
+                                                               PostModel post) {
+        BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
+        String tag = post.getId() + "";
+        gutenbergCompatibilityDialog.initialize(
+                tag, // passing the Post's id as the Dialog's tag as it's needed in the callback
+                post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_title_page)
+                        : ctx.getString(R.string.dialog_gutenberg_compatibility_title_post),
+                ctx.getString(R.string.dialog_gutenberg_compatibility_message),
+                post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
+                        : ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
+                ctx.getString(R.string.dialog_gutenberg_compatibility_no_go_back),
+                null);
+        gutenbergCompatibilityDialog.show(fragmentManager, tag);
+    }
+
 }

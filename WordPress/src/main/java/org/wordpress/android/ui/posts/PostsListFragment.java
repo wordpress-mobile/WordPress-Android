@@ -530,7 +530,7 @@ public class PostsListFragment extends Fragment
                         properties);
 
                 if (isGutenbergContent) {
-                    showGutenbergCompatibilityWarningDialog(post);
+                    PostUtils.showGutenbergCompatibilityWarningDialog(getActivity(), getFragmentManager(), post);
                 } else {
                     if (UploadService.isPostUploadingOrQueued(post)) {
                         // If the post is uploading media, allow the media to continue uploading, but don't upload the
@@ -690,21 +690,6 @@ public class PostsListFragment extends Fragment
         mPostIdForPostToBeDeleted = post.getId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
-    }
-
-    private void showGutenbergCompatibilityWarningDialog(PostModel post) {
-        BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
-        String tag = post.getId() + "";
-        gutenbergCompatibilityDialog.initialize(
-                tag, // passing the Post's id as the Dialog's tag as it's needed in the callback
-                post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_title_page)
-                        : getString(R.string.dialog_gutenberg_compatibility_title_post),
-                getString(R.string.dialog_gutenberg_compatibility_message),
-                post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
-                        : getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
-                getString(R.string.dialog_gutenberg_compatibility_no_go_back),
-                null);
-        gutenbergCompatibilityDialog.show(getFragmentManager(), tag);
     }
 
     @Override
