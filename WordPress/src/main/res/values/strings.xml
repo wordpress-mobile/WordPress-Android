@@ -319,12 +319,15 @@
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- gutenberg compatibility dialog -->
-    <string name="dialog_gutenberg_compatibility_title_post">Gutenberg Post</string>
-    <string name="dialog_gutenberg_compatibility_title_page">Gutenberg Page</string>
-    <string name="dialog_gutenberg_compatibility_message">We are working hard to bring the new WordPress editor to the apps. You can still use the app editor to edit this post, but we recommend you preview the results before publishing and let us know if something doesn\'t look right.</string>
+    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
+    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
     <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
     <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
     <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url" translatable="false">https://en.support.wordpress.com/wordpress-editor/</string>
+
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>

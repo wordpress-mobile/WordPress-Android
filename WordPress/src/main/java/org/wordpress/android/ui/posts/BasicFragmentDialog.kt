@@ -11,14 +11,15 @@ import org.wordpress.android.R
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
  */
-class BasicFragmentDialog : AppCompatDialogFragment() {
-    private lateinit var mTag: String
-    private lateinit var mTitle: String
-    private lateinit var mMessage: String
-    private lateinit var mPositiveButtonLabel: String
-    private var mNegativeButtonLabel: String? = null
-    private var mCancelButtonLabel: String? = null
-    private var mExtras: String? = null
+open class BasicFragmentDialog : AppCompatDialogFragment() {
+    protected lateinit var mTag: String
+    protected lateinit var mTitle: String
+    protected lateinit var mMessage: String
+    protected lateinit var mPositiveButtonLabel: String
+    protected var mNegativeButtonLabel: String? = null
+    protected var mCancelButtonLabel: String? = null
+    protected var mExtras: String? = null
+    protected var willUseCustomLayout: Boolean = false
 
     interface BasicDialogPositiveClickInterface {
         fun onPositiveClicked(instanceTag: String, extras: kotlin.Any? = null)
@@ -86,6 +87,8 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        if (willUseCustomLayout) return super.onCreateDialog(savedInstanceState)
+
         val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
         builder.setTitle(mTitle)
                 .setMessage(mMessage)

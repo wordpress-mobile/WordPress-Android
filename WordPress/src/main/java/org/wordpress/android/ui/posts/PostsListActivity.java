@@ -17,15 +17,18 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogLearnMoreLinkClickInterface;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity
-        implements BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface {
+        implements BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface,
+        GutenbergWarningDialogLearnMoreLinkClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostsListFragment mPostList;
@@ -157,11 +160,18 @@ public class PostsListActivity extends AppCompatActivity
         }
     }
 
-    @Override public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergPostId) {
+    @Override
+    public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergPostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
             if (mPostList != null) {
                 mPostList.onNegativeClicked(instanceTag, gutenbergPostId);
             }
         }
+    }
+
+    @Override
+    public void onLearnMoreLinkClicked(@NotNull String instanceTag) {
+        // here launch the web the Gutenberg Learn more
+        WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
     }
 }

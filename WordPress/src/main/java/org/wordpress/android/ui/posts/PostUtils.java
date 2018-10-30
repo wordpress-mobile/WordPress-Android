@@ -393,11 +393,10 @@ public class PostUtils {
                                                                FragmentManager fragmentManager,
                                                                PostModel post,
                                                                SiteModel site) {
-        BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
+        GutenbergWarningFragmentDialog gutenbergCompatibilityDialog = new GutenbergWarningFragmentDialog();
         gutenbergCompatibilityDialog.initializeWithExtras(
                 TAG_GUTENBERG_CONFIRM_DIALOG,
-                post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_title_page)
-                        : ctx.getString(R.string.dialog_gutenberg_compatibility_title_post),
+                ctx.getString(R.string.dialog_gutenberg_compatibility_title),
                 ctx.getString(R.string.dialog_gutenberg_compatibility_message),
                 post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
                         : ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
