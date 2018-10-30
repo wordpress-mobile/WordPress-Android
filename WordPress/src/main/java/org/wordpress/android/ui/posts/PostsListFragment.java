@@ -516,24 +516,28 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                boolean isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post.getContent());
                 // track event
                 Map<String, Object> properties = new HashMap<>();
                 properties.put("button", "edit");
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
                 }
-                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
-                        PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, isGutenbergContent);
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
                         properties);
 
-                if (UploadService.isPostUploadingOrQueued(post)) {
-                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
-                    // post itself when they finish (since we're about to edit it again)
-                    UploadService.cancelQueuedPostUpload(post);
-                }
-                ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                if (isGutenbergContent) {
+                    showGutenbergCompatibilityWarningDialog(post);
+                } else {
+                    if (UploadService.isPostUploadingOrQueued(post)) {
+                        // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                        // post itself when they finish (since we're about to edit it again)
+                        UploadService.cancelQueuedPostUpload(post);
+                    }
 
+                    ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                }
                 break;
             case PostListButton.BUTTON_RETRY:
                 // restart the UploadService with retry parameters
@@ -684,6 +688,32 @@ public class PostsListFragment extends Fragment
         mPostIdForPostToBeDeleted = post.getId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
+    }
+
+    private void showGutenbergCompatibilityWarningDialog(final PostModel post) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        builder.setTitle(post.isPage() ? getString(R.string.dialog_gutenberg_compatibility_title_page)
+                : getString(R.string.dialog_gutenberg_compatibility_title_post))
+               .setMessage(getString(R.string.dialog_gutenberg_compatibility_message))
+               .setPositiveButton(post.isPage() ?
+                               R.string.dialog_gutenberg_compatibility_yes_edit_page :
+                               R.string.dialog_gutenberg_compatibility_yes_edit_post,
+                       new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialogInterface, int i) {
+                               if (UploadService.isPostUploadingOrQueued(post)) {
+                                   // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                                   // post itself when they finish (since we're about to edit it again)
+                                   UploadService.cancelQueuedPostUpload(post);
+                               }
+
+                               ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                           }
+                   })
+               .setNegativeButton(R.string.dialog_gutenberg_compatibility_no_go_back, null)
+               .setCancelable(true);
+        builder.create().show();
     }
 
     @Override

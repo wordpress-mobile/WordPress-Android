@@ -318,6 +318,14 @@
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
+    <!-- gutenberg compatibility dialog -->
+    <string name="dialog_gutenberg_compatibility_title_post">Gutenberg Post</string>
+    <string name="dialog_gutenberg_compatibility_title_page">Gutenberg Page</string>
+    <string name="dialog_gutenberg_compatibility_message">We\'re currently working on adding support for content created with Gutenberg in the mobile apps. In the meantime, editing this Post/Page on the mobile apps may cause formatting issues.</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
