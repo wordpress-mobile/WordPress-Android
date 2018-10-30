@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Dialog;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.app.Dialog
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 
-import org.wordpress.android.R;
+import org.wordpress.android.R
 import org.wordpress.android.widgets.WPTextView
 
 class GutenbergWarningFragmentDialog : BasicFragmentDialog() {
