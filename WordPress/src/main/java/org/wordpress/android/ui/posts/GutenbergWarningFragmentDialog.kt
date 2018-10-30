@@ -13,7 +13,7 @@ import org.wordpress.android.widgets.WPTextView
 
 class GutenbergWarningFragmentDialog : BasicFragmentDialog() {
     interface GutenbergWarningDialogLearnMoreLinkClickInterface {
-        fun onLearnMoreLinkClicked(instanceTag: String)
+        fun onLearnMoreLinkClicked(instanceTag: String, gutenbergPostId: String?)
     }
 
     interface GutenbergWarningDialogDontShowCheckboxInterface {
@@ -45,7 +45,7 @@ class GutenbergWarningFragmentDialog : BasicFragmentDialog() {
             val link = view.findViewById<WPTextView>(R.id.gutenberg_warning_dialog_link)
             link.text = getString(R.string.dialog_gutenberg_compatibility_learn_more)
             link.setOnClickListener({
-                (activity as GutenbergWarningDialogLearnMoreLinkClickInterface).onLearnMoreLinkClicked(mTag) })
+                (activity as GutenbergWarningDialogLearnMoreLinkClickInterface).onLearnMoreLinkClicked(mTag, mExtras) })
         }
 
         val buttonPositive = view.findViewById<Button>(R.id.gutenberg_warning_dialog_button_positive)

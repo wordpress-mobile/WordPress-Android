@@ -172,9 +172,12 @@ public class PostsListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLearnMoreLinkClicked(@NotNull String instanceTag) {
-        // here launch the web the Gutenberg Learn more
-        WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
+    public void onLearnMoreLinkClicked(@NotNull String instanceTag, String postId) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onLearnMoreLinkClicked(instanceTag, postId);
+            }
+        }
     }
 
     @Override

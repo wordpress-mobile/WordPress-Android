@@ -80,9 +80,18 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         }
     }
 
-    override fun onLearnMoreLinkClicked(instanceTag: String) {
+    override fun onLearnMoreLinkClicked(instanceTag: String, gutenbergPostId: String?) {
         // here launch the web the Gutenberg Learn more
         WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url))
+
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is PagesFragment) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                if (gutenbergPostId != null) {
+                    fragment.onGutenbergWarningLearnMoreTapped(gutenbergPostId.toInt())
+                }
+            }
+        }
     }
 
     override fun onDontShowCheckboxClicked(instanceTag: String, gutenbergPostId: String?, checked: Boolean) {

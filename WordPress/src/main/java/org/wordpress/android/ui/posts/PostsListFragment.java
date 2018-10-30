@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -47,8 +48,10 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogDontShowCheckboxInterface;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogLearnMoreLinkClickInterface;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -87,7 +90,8 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnPostButtonClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        GutenbergWarningDialogDontShowCheckboxInterface {
+        GutenbergWarningDialogDontShowCheckboxInterface,
+        GutenbergWarningDialogLearnMoreLinkClickInterface {
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
@@ -734,6 +738,19 @@ public class PostsListFragment extends Fragment
             PostUtils.trackGutenbergDialogEvent(
                     checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED :
                     AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED, post, mSite);
+        }
+    }
+
+    @Override
+    public void onLearnMoreLinkClicked(@NotNull String instanceTag,
+                                                 @org.jetbrains.annotations.Nullable String gutenbergPostId) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            // here launch the web the Gutenberg Learn more
+            WPWebViewActivity.openURL(getActivity(), getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
+            // track event
+            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+            PostUtils.trackGutenbergDialogEvent(
+                    Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
         }
     }
 

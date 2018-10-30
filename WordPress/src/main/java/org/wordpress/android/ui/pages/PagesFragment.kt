@@ -307,6 +307,8 @@ class PagesFragment : Fragment() {
     }
 
     fun onGutenbergWarningDontShowAnymoreChecked(pageId: Int, checked: Boolean) {
+        AppPrefs.setGutenbergWarningDialogDisabled(checked)
+
         val post = postStore.getPostByLocalPostId(pageId)
         // track event
         val trackValue =
@@ -314,6 +316,15 @@ class PagesFragment : Fragment() {
                 else { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED }
         PostUtils.trackGutenbergDialogEvent(
                 trackValue,
+                post, viewModel.site
+        )
+    }
+
+    fun onGutenbergWarningLearnMoreTapped(pageId: Int) {
+        val post = postStore.getPostByLocalPostId(pageId)
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED,
                 post, viewModel.site
         )
     }
