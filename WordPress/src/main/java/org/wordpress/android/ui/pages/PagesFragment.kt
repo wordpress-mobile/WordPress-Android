@@ -300,33 +300,42 @@ class PagesFragment : Fragment() {
 
     fun onGutenbergWarningDismiss(pageId: Int) {
         val post = postStore.getPostByLocalPostId(pageId)
-        // track event
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, viewModel.site
-        )
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, viewModel.site
+            )
+        }
     }
 
     fun onGutenbergWarningDontShowAnymoreChecked(pageId: Int, checked: Boolean) {
         AppPrefs.setGutenbergWarningDialogDisabled(checked)
 
         val post = postStore.getPostByLocalPostId(pageId)
-        // track event
-        val trackValue =
-                if (checked) { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED }
-                else { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED }
-        PostUtils.trackGutenbergDialogEvent(
-                trackValue,
-                post, viewModel.site
-        )
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            // track event
+            val trackValue =
+                    if (checked) { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED }
+                    else { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED }
+            PostUtils.trackGutenbergDialogEvent(
+                    trackValue,
+                    post, viewModel.site
+            )
+        }
     }
 
     fun onGutenbergWarningLearnMoreTapped(pageId: Int) {
         val post = postStore.getPostByLocalPostId(pageId)
-        // track event
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED,
-                post, viewModel.site
-        )
+        // guarding against null post as we only want to track here
+        if (post != null) {
+]            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED,
+                    post, viewModel.site
+            )
+        }
     }
 
     private fun refreshProgressBars(listState: PageListState?) {

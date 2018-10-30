@@ -723,9 +723,12 @@ public class PostsListFragment extends Fragment
     public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergPostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
             PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
-            // track event
-            PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+            // guarding against null post as we only want to track here
+            if (post != null) {
+                // track event
+                PostUtils.trackGutenbergDialogEvent(
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+            }
         }
     }
 
@@ -735,9 +738,12 @@ public class PostsListFragment extends Fragment
             AppPrefs.setGutenbergWarningDialogDisabled(checked);
             // track event
             PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
-            PostUtils.trackGutenbergDialogEvent(
-                    checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED :
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED, post, mSite);
+            // guarding against null post as we only want to track here
+            if (post != null) {
+                PostUtils.trackGutenbergDialogEvent(
+                        checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED :
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED, post, mSite);
+            }
         }
     }
 
@@ -749,8 +755,11 @@ public class PostsListFragment extends Fragment
             WPWebViewActivity.openURL(getActivity(), getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
             // track event
             PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
-            PostUtils.trackGutenbergDialogEvent(
-                    Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
+            // guarding against null post as we only want to track here
+            if (post != null) {
+                PostUtils.trackGutenbergDialogEvent(
+                        Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
+            }
         }
     }
 
