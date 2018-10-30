@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeCli
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogDontShowCheckboxInterface;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogLearnMoreLinkClickInterface;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
