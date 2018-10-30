@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -20,7 +21,9 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogDontShowCheckboxInterface;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogLearnMoreLinkClickInterface;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
@@ -28,7 +31,8 @@ import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity
         implements BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface,
-        GutenbergWarningDialogLearnMoreLinkClickInterface {
+        GutenbergWarningDialogLearnMoreLinkClickInterface,
+        GutenbergWarningDialogDontShowCheckboxInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostsListFragment mPostList;
@@ -173,5 +177,14 @@ public class PostsListActivity extends AppCompatActivity
     public void onLearnMoreLinkClicked(@NotNull String instanceTag) {
         // here launch the web the Gutenberg Learn more
         WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
+    }
+
+    @Override
+    public void onDontShowCheckboxClicked(@NotNull String instanceTag, String postId, boolean checked) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onDontShowCheckboxClicked(instanceTag, postId, checked);
+            }
+        }
     }
 }

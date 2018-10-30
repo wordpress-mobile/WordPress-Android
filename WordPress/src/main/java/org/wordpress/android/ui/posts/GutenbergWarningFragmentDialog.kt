@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button
+import android.widget.CheckBox
 
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView
@@ -13,6 +14,10 @@ import org.wordpress.android.widgets.WPTextView
 class GutenbergWarningFragmentDialog : BasicFragmentDialog() {
     interface GutenbergWarningDialogLearnMoreLinkClickInterface {
         fun onLearnMoreLinkClicked(instanceTag: String)
+    }
+
+    interface GutenbergWarningDialogDontShowCheckboxInterface {
+        fun onDontShowCheckboxClicked(instanceTag: String, gutenbergPostId: String?, checked: Boolean)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,6 +65,14 @@ class GutenbergWarningFragmentDialog : BasicFragmentDialog() {
                 (activity as BasicDialogNegativeClickInterface).onNegativeClicked(mTag, mExtras)
             }
             this.dismiss()
+        })
+
+        val dontShowAnymore = view.findViewById<CheckBox>(R.id.gutenberg_warning_dialog_dont_show_anymore)
+        dontShowAnymore.setOnClickListener({
+            if (activity is GutenbergWarningDialogDontShowCheckboxInterface) {
+                (activity as GutenbergWarningDialogDontShowCheckboxInterface).onDontShowCheckboxClicked(mTag,
+                        mExtras, dontShowAnymore.isChecked)
+            }
         })
     }
 }

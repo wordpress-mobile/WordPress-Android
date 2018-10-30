@@ -36,6 +36,7 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -233,7 +234,7 @@ class PagesFragment : Fragment() {
             page?.let {
                 val post = postStore.getPostByLocalPostId(page.pageId)
                 val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
-                if (isGutenbergContent) {
+                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
                     PostUtils.showGutenbergCompatibilityWarningDialog(
                             getActivity(), fragmentManager, post, viewModel.site)
                 } else {
@@ -302,6 +303,18 @@ class PagesFragment : Fragment() {
         // track event
         PostUtils.trackGutenbergDialogEvent(
                 AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, viewModel.site
+        )
+    }
+
+    fun onGutenbergWarningDontShowAnymoreChecked(pageId: Int, checked: Boolean) {
+        val post = postStore.getPostByLocalPostId(pageId)
+        // track event
+        val trackValue =
+                if (checked) { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED }
+                else { AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED }
+        PostUtils.trackGutenbergDialogEvent(
+                trackValue,
+                post, viewModel.site
         )
     }
 

@@ -10,6 +10,7 @@ import org.wordpress.android.R.id
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogDontShowCheckboxInterface
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogLearnMoreLinkClickInterface
 import org.wordpress.android.ui.posts.PostUtils
 
@@ -17,7 +18,7 @@ const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
 class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface,
-        GutenbergWarningDialogLearnMoreLinkClickInterface {
+        GutenbergWarningDialogLearnMoreLinkClickInterface, GutenbergWarningDialogDontShowCheckboxInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,5 +83,16 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
     override fun onLearnMoreLinkClicked(instanceTag: String) {
         // here launch the web the Gutenberg Learn more
         WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url))
+    }
+
+    override fun onDontShowCheckboxClicked(instanceTag: String, gutenbergPostId: String?, checked: Boolean) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is PagesFragment) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                if (gutenbergPostId != null) {
+                    fragment.onGutenbergWarningDontShowAnymoreChecked(gutenbergPostId.toInt(), checked)
+                }
+            }
+        }
     }
 }

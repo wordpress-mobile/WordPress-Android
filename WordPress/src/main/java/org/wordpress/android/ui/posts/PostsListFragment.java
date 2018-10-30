@@ -48,8 +48,10 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogDontShowCheckboxInterface;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -84,7 +86,8 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnPostSelectedListener,
         PostsListAdapter.OnPostButtonClickListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface {
+        BasicFragmentDialog.BasicDialogNegativeClickInterface,
+        GutenbergWarningDialogDontShowCheckboxInterface {
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
@@ -530,7 +533,7 @@ public class PostsListFragment extends Fragment
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
                         properties);
 
-                if (isGutenbergContent) {
+                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
                     PostUtils.showGutenbergCompatibilityWarningDialog(getActivity(), getFragmentManager(), post, mSite);
                 } else {
                     if (UploadService.isPostUploadingOrQueued(post)) {
@@ -719,6 +722,18 @@ public class PostsListFragment extends Fragment
             // track event
             PostUtils.trackGutenbergDialogEvent(
                     AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+        }
+    }
+
+    @Override
+    public void onDontShowCheckboxClicked(@NotNull String instanceTag, String gutenbergPostId, boolean checked) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            AppPrefs.setGutenbergWarningDialogDisabled(checked);
+            // track event
+            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+            PostUtils.trackGutenbergDialogEvent(
+                    checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED :
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED, post, mSite);
         }
     }
 

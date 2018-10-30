@@ -180,7 +180,10 @@ public class AppPrefs {
         IS_QUICK_START_DISABLED,
 
         // used to indicate that we already obtained and tracked the installation referrer
-        IS_INSTALLATION_REFERRER_OBTAINED
+        IS_INSTALLATION_REFERRER_OBTAINED,
+
+        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -800,5 +803,13 @@ public class AppPrefs {
 
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
+    }
+
+    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
+    }
+
+    public static boolean isGutenbergWarningDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
     }
 }
