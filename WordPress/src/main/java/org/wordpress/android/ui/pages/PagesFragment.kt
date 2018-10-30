@@ -38,7 +38,6 @@ import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -49,7 +48,6 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import java.lang.ref.WeakReference
-import java.util.HashMap
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -234,10 +232,10 @@ class PagesFragment : Fragment() {
         viewModel.editPage.observe(this, Observer { page ->
             page?.let {
                 val post = postStore.getPostByLocalPostId(page.pageId)
-                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content);
+                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
                 if (isGutenbergContent) {
                     PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site);
+                            getActivity(), fragmentManager, post, viewModel.site)
                 } else {
                     ActivityLauncher.editPageForResult(this, page)
                 }
