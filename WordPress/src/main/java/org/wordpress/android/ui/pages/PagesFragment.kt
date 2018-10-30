@@ -330,7 +330,7 @@ class PagesFragment : Fragment() {
         val post = postStore.getPostByLocalPostId(pageId)
         // guarding against null post as we only want to track here
         if (post != null) {
-]            // track event
+            // track event
             PostUtils.trackGutenbergDialogEvent(
                     AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED,
                     post, viewModel.site
