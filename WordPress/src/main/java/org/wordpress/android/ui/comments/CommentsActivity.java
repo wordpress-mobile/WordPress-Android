@@ -314,10 +314,10 @@ public class CommentsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object extras) {
         Fragment fragmentById = getSupportFragmentManager().findFragmentById(R.id.layout_fragment_container);
         if (fragmentById instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
-            ((BasicDialogPositiveClickInterface) fragmentById).onPositiveClicked(instanceTag);
+            ((BasicDialogPositiveClickInterface) fragmentById).onPositiveClicked(instanceTag, extras);
         }
     }
 }

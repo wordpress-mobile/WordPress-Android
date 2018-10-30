@@ -18,13 +18,27 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     private lateinit var mPositiveButtonLabel: String
     private var mNegativeButtonLabel: String? = null
     private var mCancelButtonLabel: String? = null
+    private var mExtras: String? = null
 
     interface BasicDialogPositiveClickInterface {
-        fun onPositiveClicked(instanceTag: String)
+        fun onPositiveClicked(instanceTag: String, extras: kotlin.Any? = null)
     }
 
     interface BasicDialogNegativeClickInterface {
-        fun onNegativeClicked(instanceTag: String)
+        fun onNegativeClicked(instanceTag: String, extras: kotlin.Any? = null)
+    }
+
+    fun initializeWithExtras(
+        tag: String,
+        title: String,
+        message: String,
+        positiveButtonLabel: String,
+        negativeButtonLabel: String? = null,
+        cancelButtonLabel: String? = null,
+        extras: String? = null
+    ) {
+        initialize(tag, title, message, positiveButtonLabel, negativeButtonLabel, cancelButtonLabel)
+        mExtras = extras
     }
 
     fun initialize(
@@ -56,6 +70,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
             mPositiveButtonLabel = savedInstanceState.getString(STATE_KEY_POSITIVE_BUTTON_LABEL)
             mNegativeButtonLabel = savedInstanceState.getString(STATE_KEY_NEGATIVE_BUTTON_LABEL)
             mCancelButtonLabel = savedInstanceState.getString(STATE_KEY_CANCEL_BUTTON_LABEL)
+            mExtras = savedInstanceState.getString(STATE_KEY_EXTRAS)
         }
     }
 
@@ -66,6 +81,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         outState.putString(STATE_KEY_POSITIVE_BUTTON_LABEL, mPositiveButtonLabel)
         outState.putString(STATE_KEY_NEGATIVE_BUTTON_LABEL, mNegativeButtonLabel)
         outState.putString(STATE_KEY_CANCEL_BUTTON_LABEL, mCancelButtonLabel)
+        outState.putString(STATE_KEY_EXTRAS, mExtras)
         super.onSaveInstanceState(outState)
     }
 
@@ -76,7 +92,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     val activity = activity
                     if (activity != null) {
-                        (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag)
+                        (activity as BasicDialogPositiveClickInterface).onPositiveClicked(mTag, mExtras)
                     }
                 }.setCancelable(true)
 
@@ -84,7 +100,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
             builder.setNegativeButton(mNegativeButtonLabel) { _, _ ->
                 val activity = activity
                 if (activity != null) {
-                    (activity as BasicDialogNegativeClickInterface).onNegativeClicked(mTag)
+                    (activity as BasicDialogNegativeClickInterface).onNegativeClicked(mTag, mExtras)
                 }
             }
         }
@@ -114,5 +130,6 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
         private const val STATE_KEY_POSITIVE_BUTTON_LABEL = "state_key_positive_button_label"
         private const val STATE_KEY_NEGATIVE_BUTTON_LABEL = "state_key_negative_button_label"
         private const val STATE_KEY_CANCEL_BUTTON_LABEL = "state_key_cancel_button_label"
+        private const val STATE_KEY_EXTRAS = "state_key_extras"
     }
 }

@@ -693,8 +693,8 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String gutenbergPostId) {
-        PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+    public void onPositiveClicked(@NotNull String instanceTag, Object gutenbergPostId) {
+        PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)

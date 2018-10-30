@@ -287,6 +287,11 @@ class PagesFragment : Fragment() {
         viewModel.onDeleteConfirmed(remoteId)
     }
 
+    fun onGutenbergEditOk(pageId: Int) {
+        val post = mPostStore.getPostByLocalPostId(pageId)
+        ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
+    }
+
     private fun refreshProgressBars(listState: PageListState?) {
         if (!isAdded || view == null) {
             return

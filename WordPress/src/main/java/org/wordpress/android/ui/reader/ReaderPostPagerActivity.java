@@ -969,10 +969,10 @@ public class ReaderPostPagerActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object extras) {
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null) {
-            fragment.onPositiveClicked(instanceTag);
+            fragment.onPositiveClicked(instanceTag, extras);
         }
     }
 }

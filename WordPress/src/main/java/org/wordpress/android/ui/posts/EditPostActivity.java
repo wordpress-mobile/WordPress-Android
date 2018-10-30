@@ -1473,7 +1473,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
+    public void onNegativeClicked(@NonNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
@@ -1488,13 +1488,12 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-
     @Override
     public void onNeutralClicked(@NonNull String instanceTag) {
     }
 
     @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
@@ -1583,7 +1582,7 @@ public class EditPostActivity extends AppCompatActivity implements
         mRevision = revision;
 
         BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
+            dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
                 getString(R.string.history_load_dialog_title),
                 getString(R.string.history_load_dialog_message, mRevision.getFormattedDate(),
                         mRevision.getFormattedTime()),

@@ -1060,18 +1060,18 @@ public class WPMainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag, Object extras) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
-            fragment.onPositiveClicked(instanceTag);
+            fragment.onPositiveClicked(instanceTag, extras);
         }
     }
 
     @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
+    public void onNegativeClicked(@NonNull String instanceTag, Object extras) {
         MySiteFragment fragment = getMySiteFragment();
         if (fragment != null) {
-            fragment.onNegativeClicked(instanceTag);
+            fragment.onNegativeClicked(instanceTag, extras);
         }
     }
 

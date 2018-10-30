@@ -352,7 +352,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onNegativeClicked(@NotNull String tag) {
+    public void onNegativeClicked(@NotNull String tag, Object extras) {
         switch (tag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 // noop
@@ -364,7 +364,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String tag) {
+    public void onPositiveClicked(@NotNull String tag, Object extras) {
         switch (tag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);

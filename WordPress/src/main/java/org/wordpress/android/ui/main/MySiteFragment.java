@@ -898,7 +898,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
+    public void onPositiveClicked(@NonNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case TAG_ADD_SITE_ICON_DIALOG:
             case TAG_CHANGE_SITE_ICON_DIALOG:
@@ -927,7 +927,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
+    public void onNegativeClicked(@NonNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case TAG_ADD_SITE_ICON_DIALOG:
                 break;

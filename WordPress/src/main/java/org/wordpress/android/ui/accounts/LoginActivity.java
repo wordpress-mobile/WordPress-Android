@@ -775,7 +775,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case GOOGLE_ERROR_DIALOG_TAG:
                 // just dismiss the dialog

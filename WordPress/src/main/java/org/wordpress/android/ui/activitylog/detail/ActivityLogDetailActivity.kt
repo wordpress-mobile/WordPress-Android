@@ -30,13 +30,13 @@ class ActivityLogDetailActivity : AppCompatActivity(), BasicDialogPositiveClickI
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPositiveClicked(instanceTag: String) {
+    override fun onPositiveClicked(instanceTag: String, extras: Any?) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogDetailFragment) {
             fragment.onRewindConfirmed(instanceTag)
         }
     }
 
-    override fun onNegativeClicked(instanceTag: String) {
+    override fun onNegativeClicked(instanceTag: String, extras: Any?) {
     }
 }

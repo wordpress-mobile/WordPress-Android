@@ -40,6 +40,8 @@ public class PostUtils {
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
+    private static final String TAG_GUTENBERG_CONFIRM_DIALOG = "tag_gutenberg_confirm_dialog";
+
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
      * shortcode name and the closing brace
@@ -391,17 +393,17 @@ public class PostUtils {
                                                                FragmentManager fragmentManager,
                                                                PostModel post) {
         BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
-        String tag = post.getId() + "";
-        gutenbergCompatibilityDialog.initialize(
-                tag, // passing the Post's id as the Dialog's tag as it's needed in the callback
+        gutenbergCompatibilityDialog.initializeWithExtras(
+                TAG_GUTENBERG_CONFIRM_DIALOG,
                 post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_title_page)
                         : ctx.getString(R.string.dialog_gutenberg_compatibility_title_post),
                 ctx.getString(R.string.dialog_gutenberg_compatibility_message),
                 post.isPage() ? ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
                         : ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
                 ctx.getString(R.string.dialog_gutenberg_compatibility_no_go_back),
-                null);
-        gutenbergCompatibilityDialog.show(fragmentManager, tag);
+                null,
+                post.getId() + ""); // passing the postId as extra
+        gutenbergCompatibilityDialog.show(fragmentManager, TAG_GUTENBERG_CONFIRM_DIALOG);
     }
 
 }

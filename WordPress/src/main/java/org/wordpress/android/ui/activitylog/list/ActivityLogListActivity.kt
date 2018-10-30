@@ -41,11 +41,11 @@ class ActivityLogListActivity : AppCompatActivity(), BasicFragmentDialog.BasicDi
         }
     }
 
-    override fun onPositiveClicked(instanceTag: String) {
+    override fun onPositiveClicked(instanceTag: String, extras: Any?) {
         passRewindConfirmation(instanceTag)
     }
 
-    override fun onNegativeClicked(instanceTag: String) {
+    override fun onNegativeClicked(instanceTag: String, extras: Any?) {
     }
 
     private fun passRewindConfirmation(rewindId: String) {

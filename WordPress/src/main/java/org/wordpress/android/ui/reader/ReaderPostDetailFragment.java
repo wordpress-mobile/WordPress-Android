@@ -553,7 +553,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object extras) {
         switch (instanceTag) {
             case BOOKMARKS_SAVED_LOCALLY_DIALOG:
             showBookmarkSnackbar();

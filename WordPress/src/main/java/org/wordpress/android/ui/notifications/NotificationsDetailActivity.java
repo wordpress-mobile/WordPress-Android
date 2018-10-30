@@ -466,10 +466,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object extras) {
         Fragment fragment = mAdapter.getItem(mViewPager.getCurrentItem());
         if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
-            ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
+            ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag, extras);
         }
     }
 

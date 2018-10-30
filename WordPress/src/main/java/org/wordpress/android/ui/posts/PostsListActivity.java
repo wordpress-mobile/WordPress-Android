@@ -149,13 +149,13 @@ public class PostsListActivity extends AppCompatActivity
 
     // used for Gutenberg compatibility dialog
     @Override
-    public void onPositiveClicked(@NotNull String gutenbergPostId) {
+    public void onPositiveClicked(@NotNull String gutenbergPostId, Object extras) {
         if (mPostList != null) {
-            mPostList.onPositiveClicked(gutenbergPostId);
+            mPostList.onPositiveClicked(gutenbergPostId, extras);
         }
     }
 
-    @Override public void onNegativeClicked(@NotNull String instanceTag) {
+    @Override public void onNegativeClicked(@NotNull String instanceTag, Object extras) {
         // no op, but it's mandatory that this listener is implemented
     }
 }

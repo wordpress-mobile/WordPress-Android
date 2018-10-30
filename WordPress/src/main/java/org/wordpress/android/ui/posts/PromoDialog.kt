@@ -41,9 +41,9 @@ class PromoDialog : AppCompatDialogFragment() {
 
     interface PromoDialogClickInterface {
         fun onLinkClicked(instanceTag: String)
-        fun onNegativeClicked(instanceTag: String)
+        fun onNegativeClicked(instanceTag: String, extras: Any? = null)
         fun onNeutralClicked(instanceTag: String)
-        fun onPositiveClicked(instanceTag: String)
+        fun onPositiveClicked(instanceTag: String, extras: Any? = null)
     }
 
     override fun setupDialog(dialog: Dialog, style: Int) {

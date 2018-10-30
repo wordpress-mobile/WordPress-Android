@@ -51,13 +51,17 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPositiveClicked(instanceTag: String) {
+    override fun onPositiveClicked(instanceTag: String, extras: Any?) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is PagesFragment) {
-            fragment.onPageDeleteConfirmed(instanceTag.toLong())
+            if (extras != null && extras is String) {
+                fragment.onGutenbergEditOk(extras.toInt())
+            } else {
+                fragment.onPageDeleteConfirmed(instanceTag.toLong())
+            }
         }
     }
 
-    override fun onNegativeClicked(instanceTag: String) {
+    override fun onNegativeClicked(instanceTag: String, extras: Any?) {
     }
 }
