@@ -63,7 +63,7 @@ Language: is
     <string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
-    <string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín – vertu viss um að birta þau!</string>
+    <string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín - vertu viss um að birta þau!</string>
     <string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
     <string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
     <string name="reader_photo_by">Mynd eftir %s</string>
@@ -218,7 +218,7 @@ Language: is
     <string name="editor_remove_failed_uploads">Fjarlægja misheppnuð upphöl</string>
     <string name="editor_toast_failed_uploads">Einhver skráarupphöl misheppnuðust. Þú getur ekki vistað eða birt\n        færsluna þína eins og staðan er. Viltu fjarlægja allar skrár sem mistókust?</string>
     <string name="site_settings_advanced_header">Ítarlegra</string>
-    <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML–RPC virkni vantar á netþjóninn.</string>
+    <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
     <string name="alignment_center">Miðja</string>
     <string name="post_format_status">Staða</string>
     <string name="post_format_video">Myndband</string>
@@ -262,7 +262,7 @@ Language: is
     <string name="primary_site">Aðalvefur</string>
     <string name="pending_email_change_snackbar">Smelltu á staðfestingartengil í tölvupósti sem sendur var á %1$s til þess að staðfesta nýja netfangið þitt</string>
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
-    <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn – birti eldri athugasemdir</string>
+    <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn - birti eldri athugasemdir</string>
     <string name="visual_editor_enabled">Sjónrænn ritill virkjaður</string>
     <string name="editor_content_placeholder">Deildu sögunni þinni hér…</string>
     <string name="editor_page_title_placeholder">Titill síðu</string>
@@ -452,7 +452,7 @@ Language: is
     <string name="local_changes_explainer">Þessi færsla hefur staðværar breytingar sem hafa ekki verið birtar</string>
     <string name="notifications_push_summary">Stillingar fyrir tilkynningar sem birtast á tækinu þínu.</string>
     <string name="notifications_email_summary">Stillingar fyrir tilkynningar sem eru sendar á netfang tengt aðganginum þínum.</string>
-    <string name="notifications_tab_summary">Stillingar fyrir tilkynningar sem birtast í tilkynninga–flipa.</string>
+    <string name="notifications_tab_summary">Stillingar fyrir tilkynningar sem birtast í tilkynninga-flipa.</string>
     <string name="notifications_disabled">Tilkynningar frá forritinu hafa verið gerðar óvirkar. Ýttu hér til þess að virkja þær aftur í Settings.</string>
     <string name="notification_types">Tegundir tilkynninga</string>
     <string name="error_loading_notifications">Gat ekki hlaðið stillingar fyrir tilkynningar</string>
@@ -496,7 +496,7 @@ Language: is
     <string name="account_settings">Stillingar notandareiknings</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" var ekki falið þar sem það er núverandi vefur</string>
     <string name="me_btn_support">Hjálp og aðstoð</string>
-    <string name="site_picker_add_self_hosted">Bæta við sjálf–hýstum vef</string>
+    <string name="site_picker_add_self_hosted">Bæta við sjálf-hýstum vef</string>
     <string name="site_picker_edit_visibility">Birta/fela vefi</string>
     <string name="my_site_btn_view_site">Skoða vef</string>
     <string name="my_site_btn_switch_site">Skipta um vef</string>
@@ -526,13 +526,13 @@ Language: is
     <string name="comments_fetching">Sæki athugasemdir…</string>
     <string name="stats_entry_search_terms">Leitarorð</string>
     <string name="stats_search_terms_unknown_search_terms">Leitarorð óþekkt</string>
-    <string name="stats_followers_total_wpcom_paged">Birti %1$d – %2$d af %3$s WordPress.com fylgjendum</string>
+    <string name="stats_followers_total_wpcom_paged">Birti %1$d - %2$d af %3$s WordPress.com fylgjendum</string>
     <string name="media_fetching">Sæki skrá…</string>
     <string name="pages_fetching">Sæki síður…</string>
     <string name="posts_fetching">Sæki færslur…</string>
     <string name="publisher">Útgefandi:</string>
     <string name="reader_empty_posts_request_failed">Gat ekki sótt færslur</string>
-    <string name="stats_followers_total_email_paged">Birti %1$d – %2$d af %3$s fylgjendum í tölvupósti</string>
+    <string name="stats_followers_total_email_paged">Birti %1$d - %2$d af %3$s fylgjendum í tölvupósti</string>
     <string name="stats_empty_search_terms_desc">Lærðu meira um umferðina frá leitarvélum með því að skoða leitarorðin sem gestir notuðu til þess að finna vefinn þinn.</string>
     <string name="stats_overall">Heildar</string>
     <string name="stats_period">Tímabil</string>
@@ -586,7 +586,7 @@ Language: is
     <string name="stats_followers_total_email">Heildarfjöldi fylgjenda í tölvupósti: %1$s</string>
     <string name="stats_followers_total_wpcom">Heildarfjöldi WordPress.com fylgjenda: %1$s</string>
     <string name="stats_other_recent_stats_label">Önnur nýleg tölfræði</string>
-    <string name="stats_empty_top_posts_desc">Uppgötvaðu hvað er mest–skoðaða efnið þitt er og skoðaðu hvernig einstaka færslum og síðum hefur vegnað í gegnum tíðina.</string>
+    <string name="stats_empty_top_posts_desc">Uppgötvaðu hvað er mest-skoðaða efnið þitt er og skoðaðu hvernig einstaka færslum og síðum hefur vegnað í gegnum tíðina.</string>
     <string name="stats_empty_tags_and_categories_desc">Fáðu yfirsýn yfir vinsælustu umræðuefnin á vefnum þínum byggt á vinsælustu færslunum þínum síðastliðna vikuna.</string>
     <string name="stats_comments_total_comments_followers">Samtals færslur með fylgjendum athugasemda: %1$s</string>
     <string name="stats_empty_tags_and_categories">Engar merktar færslur eða síður skoðaðar</string>

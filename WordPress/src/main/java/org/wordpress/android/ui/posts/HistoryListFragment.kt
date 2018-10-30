@@ -5,13 +5,11 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.NonNull
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import kotlinx.android.synthetic.main.history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -19,6 +17,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.history.HistoryAdapter
 import org.wordpress.android.ui.history.HistoryListItem
+import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -43,6 +42,10 @@ class HistoryListFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    interface HistoryItemClickInterface {
+        fun onHistoryItemClicked(revision: Revision, revisions: ArrayList<Revision>)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -96,7 +99,7 @@ class HistoryListFragment : Fragment() {
         val adapter: HistoryAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(this::onItemClicked)
+            adapter = HistoryAdapter(checkNotNull(activity), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as HistoryAdapter
@@ -110,36 +113,16 @@ class HistoryListFragment : Fragment() {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(this, Observer { listStatus ->
-            updateRefreshing(listStatus)
-        })
-
-        viewModel.showLoadDialog.observe(this, Observer {
-            if (it is HistoryListItem.Revision) {
-                showLoadDialog(it)
+        viewModel.listStatus.observe(this, Observer { listStatus ->
+            if (isAdded && view != null) {
+                swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { message ->
-            val parent: View? = activity?.findViewById(android.R.id.content)
-            if (message != null && parent != null) {
-                val snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG)
-                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
-                snackbarText.maxLines = 2
-                snackbar.show()
+        viewModel.showDialog.observe(this, Observer {
+            if (it is HistoryListItem.Revision && activity is HistoryItemClickInterface) {
+                (activity as HistoryItemClickInterface).onHistoryItemClicked(it, viewModel.revisionsList)
             }
         })
-    }
-
-    private fun showLoadDialog(revision: HistoryListItem.Revision) {
-        // TODO: Show load confirmation dialog.
-    }
-
-    private fun updateRefreshing(listStatus: HistoryViewModel.HistoryListStatus?) {
-        if (!isAdded || view == null) {
-            return
-        }
-
-        swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
     }
 }

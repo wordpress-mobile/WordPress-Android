@@ -17,7 +17,7 @@ Language: mk
     <string name="stats_total">Вкупно</string>
     <string name="stats_empty_top_authors_desc">Пратете ги гледањата на написите на секој соработник и откријте ја најпопуларната содржина на секој автор.</string>
     <string name="stats_empty_comments_desc">Доколку дозволите коментари на вашата страница, пратете ги вашите најдобри коментатори и откријте што ја распламтува конверзацијата врз база на последните 1000 коментари.</string>
-    <string name="stats_followers_total_email">Вкупно Е–Пошта Следбеници: %1$s</string>
+    <string name="stats_followers_total_email">Вкупно Е-Пошта Следбеници: %1$s</string>
     <string name="stats_timeframe_years">Години</string>
     <string name="stats_followers_days">%1$d денови</string>
     <string name="stats_followers_a_day">Ден</string>
@@ -56,7 +56,7 @@ Language: mk
     <string name="stats_empty_top_posts_title">Нема гледано написи или страници</string>
     <string name="stats_view_countries">Земји</string>
     <string name="stats_view_followers">Следбеници</string>
-    <string name="stats_followers_email_selector">Е–пошта</string>
+    <string name="stats_followers_email_selector">Е-пошта</string>
     <string name="stats_followers_seconds_ago">пред секунди</string>
     <string name="stats_totals_publicize">Следбеници</string>
     <string name="stats_entry_video_plays">Видео</string>
@@ -112,10 +112,10 @@ Language: mk
     <string name="error_generic">Се појави грешка</string>
     <string name="no_network_message">Нема досптана мрежа</string>
     <string name="theme_fetch_failed">Неможе да ги прикаже темите</string>
-    <string name="invalid_email_message">Вашата е–пошта е невалидна</string>
+    <string name="invalid_email_message">Вашата е-пошта е невалидна</string>
     <string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
     <string name="cat_name_required">Полето со името на категоријата е задолжително</string>
-    <string name="email_invalid">Воведи валидна е–поштта</string>
+    <string name="email_invalid">Воведи валидна е-поштта</string>
     <string name="username_or_password_incorrect">Корисничкото име или лозинката се неточни</string>
     <string name="error_downloading_image">Грешно превземање на слика</string>
     <string name="stats_bar_graph_empty">Нема статистика</string>
@@ -171,7 +171,7 @@ Language: mk
     <string name="privacy_policy">Полиса за приватност</string>
     <string name="media_error_no_permission">Немате достап за да ја видете медиа библиотеката</string>
     <string name="cannot_delete_multi_media_items">Некои медиа арихи неможат да бидат избришани во моментот. Обидете се покасно.</string>
-    <string name="media_gallery_type_thumbnail_grid">Мини–мрежа</string>
+    <string name="media_gallery_type_thumbnail_grid">Мини-мрежа</string>
     <string name="add_new_category">Додади нова категорија</string>
     <string name="category_name">Име на категорија</string>
     <string name="new_media">Нова медиа</string>

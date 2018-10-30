@@ -327,7 +327,7 @@ public class PostPreviewActivity extends AppCompatActivity implements
 
     @SuppressWarnings("unused")
     public void onEventMainThread(PostEvents.PostUploadStarted event) {
-        if (event.mLocalBlogId == mSite.getId()) {
+        if (event.post.getLocalSiteId() == mSite.getId()) {
             showProgress();
         }
     }

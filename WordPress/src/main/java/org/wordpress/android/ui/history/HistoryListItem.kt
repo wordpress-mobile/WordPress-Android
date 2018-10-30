@@ -1,5 +1,10 @@
 package org.wordpress.android.ui.history
 
+import android.annotation.SuppressLint
+import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.revisions.Diff
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
@@ -19,6 +24,8 @@ sealed class HistoryListItem(val type: ViewType) {
 
     data class Header(val text: String) : HistoryListItem(HEADER)
 
+    @Parcelize
+    @SuppressLint("ParcelCreator")
     data class Revision(
         val revisionId: Long,
         val diffFromVersion: Long,
@@ -30,14 +37,16 @@ sealed class HistoryListItem(val type: ViewType) {
         val postDateGmt: String?,
         val postModifiedGmt: String?,
         val postAuthorId: String?,
-        val titleDiffs: ArrayList<Diff>,
-        val contentDiffs: ArrayList<Diff>
-    ) : HistoryListItem(REVISION) {
+        val titleDiffs: ArrayList<@RawValue Diff>,
+        val contentDiffs: ArrayList<@RawValue Diff>,
+        var authorDisplayName: String? = null,
+        var authorAvatarURL: String? = null
+    ) : HistoryListItem(REVISION), Parcelable {
         // Replace space with T since API returns yyyy-MM-dd hh:mm:ssZ and ISO 8601 format is yyyy-MM-ddThh:mm:ssZ.
-        private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
-        val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
-        val formattedDate: String = postDate.toFormattedDateString()
-        val formattedTime: String = postDate.toFormattedTimeString()
+        @IgnoredOnParcel private val postDate: Date = DateTimeUtils.dateUTCFromIso8601(postDateGmt?.replace(" ", "T"))
+        @IgnoredOnParcel val timeSpan: String = DateTimeUtils.javaDateToTimeSpan(postDate, WordPress.getContext())
+        @IgnoredOnParcel val formattedDate: String = postDate.toFormattedDateString()
+        @IgnoredOnParcel val formattedTime: String = postDate.toFormattedTimeString()
 
         constructor(model: RevisionModel) : this(
                 model.revisionId,

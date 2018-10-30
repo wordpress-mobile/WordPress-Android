@@ -154,6 +154,15 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
+            case REVISIONS_DETAIL_VIEWED_FROM_LIST:
+                predefinedEventProperties.put("source", "list");
+                break;
+            case REVISIONS_DETAIL_VIEWED_FROM_SWIPE:
+                predefinedEventProperties.put("source", "swipe");
+                break;
+            case REVISIONS_DETAIL_VIEWED_FROM_CHEVRON:
+                predefinedEventProperties.put("source", "chevron");
+                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -658,6 +667,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_button_tapped";
             case EDITOR_TAPPED_LIST_UNORDERED:
                 return "editor_button_tapped";
+            case REVISIONS_LIST_VIEWED:
+                return "revisions_list_viewed";
+            case REVISIONS_DETAIL_VIEWED_FROM_LIST:
+            case REVISIONS_DETAIL_VIEWED_FROM_SWIPE:
+            case REVISIONS_DETAIL_VIEWED_FROM_CHEVRON:
+                return "revisions_detail_viewed";
+            case REVISIONS_DETAIL_CANCELLED:
+                return "revisions_detail_cancelled";
+            case REVISIONS_REVISION_LOADED:
+                return "revisions_revision_loaded";
+            case REVISIONS_LOAD_UNDONE:
+                return "revisions_load_undone";
             case FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED:
                 return "followed_blog_notifications_reader_enabled";
             case FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF:
@@ -715,6 +736,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case NOTIFICATION_LIKED:
             case NOTIFICATION_QUICK_ACTIONS_LIKED:
                 return "notifications_comment_liked";
+            case NOTIFICATION_QUICK_ACTIONS_QUICKACTION_TOUCHED:
+                return "quick_action_touched";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
             case NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST:
@@ -787,10 +810,22 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "install_jetpack_canceled";
             case INSTALL_JETPACK_COMPLETED:
                 return "install_jetpack_completed";
+            case INSTALL_JETPACK_REMOTE_START:
+                return "install_jetpack_remote_start";
             case INSTALL_JETPACK_REMOTE_COMPLETED:
                 return "install_jetpack_remote_completed";
             case INSTALL_JETPACK_REMOTE_FAILED:
                 return "install_jetpack_remote_failed";
+            case INSTALL_JETPACK_REMOTE_CONNECT:
+                return "install_jetpack_remote_connect";
+            case INSTALL_JETPACK_REMOTE_LOGIN:
+                return "install_jetpack_remote_login";
+            case INSTALL_JETPACK_REMOTE_RESTART:
+                return "install_jetpack_remote_restart";
+            case INSTALL_JETPACK_REMOTE_START_MANUAL_FLOW:
+                return "install_jetpack_remote_start_manual_flow";
+            case INSTALL_JETPACK_REMOTE_ALREADY_INSTALLED:
+                return "install_jetpack_remote_already_installed";
             case CONNECT_JETPACK_SELECTED:
                 return "connect_jetpack_selected";
             case CONNECT_JETPACK_FAILED:
@@ -1009,6 +1044,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_settings_app_notifications_disabled";
             case NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED:
                 return "notification_settings_app_notifications_enabled";
+            case NOTIFICATION_TAPPED_SEGMENTED_CONTROL:
+                return "notification_tapped_segmented_control";
             case ME_ACCESSED:
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
@@ -1256,9 +1293,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "installation_referrer_failed";
             case OPENED_PAGE_PARENT:
                 return "page_parent_opened";
-            default:
-                return null;
         }
+        return null;
     }
 }
 // CHECKSTYLE END IGNORE

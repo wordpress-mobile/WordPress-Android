@@ -107,9 +107,12 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment;
+import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaSettingsActivity;
@@ -183,6 +186,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment.KEY_REVISION;
+
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
@@ -197,7 +202,10 @@ public class EditPostActivity extends AppCompatActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
-        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
+        HistoryListFragment.HistoryItemClickInterface,
+        FullScreenDialogFragment.OnConfirmListener,
+        FullScreenDialogFragment.OnDismissListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -213,10 +221,12 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
+    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateKeyIsDialogProgressShown";
+    private static final String STATE_KEY_IS_DISCARDING_CHANGES = "stateKeyIsDiscardingChanges";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
+    private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
@@ -266,9 +276,12 @@ public class EditPostActivity extends AppCompatActivity implements
     WPViewPager mViewPager;
 
     private PostModel mPost;
-    private PostModel mPostWithLocalChanges;
+    private PostModel mPostForUndo;
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
+
+    private FullScreenDialogFragment mFullScreenDialogFragment;
+    private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
@@ -339,6 +352,13 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mFullScreenDialogFragment = (FullScreenDialogFragment)
+                    getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+
+            if (mFullScreenDialogFragment != null) {
+                mFullScreenDialogFragment.setOnConfirmListener(EditPostActivity.this);
+                mFullScreenDialogFragment.setOnDismissListener(EditPostActivity.this);
+            }
         }
 
         // Check whether to show the visual editor
@@ -408,6 +428,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+            mIsDiscardingChanges = savedInstanceState.getBoolean(STATE_KEY_IS_DISCARDING_CHANGES, false);
+            mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
 
             showDialogProgress(mIsDialogProgressShown);
 
@@ -693,11 +715,13 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
+        outState.putBoolean(STATE_KEY_IS_DISCARDING_CHANGES, mIsDiscardingChanges);
         outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putBoolean(STATE_KEY_HTML_MODE_ON, mHtmlModeMenuStateOn);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putParcelable(STATE_KEY_REVISION, mRevision);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
@@ -1085,6 +1109,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
+        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
+            Fragment contentFragment = mFullScreenDialogFragment.getContent();
+            if (contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
+                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
+            }
+            mFullScreenDialogFragment.dismiss();
+            return false;
+        }
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
@@ -1092,12 +1125,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
                 imFragment.dismissFragment();
             }
+
             return false;
         }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
+
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else if (isPhotoPickerShowing()) {
@@ -1105,6 +1141,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             savePostAndOptionallyFinish(true);
         }
+
         return true;
     }
 
@@ -1136,6 +1173,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (itemId == R.id.menu_history) {
+                AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED);
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
@@ -1198,7 +1236,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_discard_changes) {
                 AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
                 showDialogProgress(true);
-                mPostWithLocalChanges = mPost.clone();
+                mPostForUndo = mPost.clone();
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
@@ -1224,7 +1262,9 @@ public class EditPostActivity extends AppCompatActivity implements
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setCancelable(false);
             mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setMessage(getString(R.string.local_changes_discarding));
+            mProgressDialog.setMessage(mIsDiscardingChanges
+                    ? getString(R.string.local_changes_discarding)
+                    : getString(R.string.history_loading_revision));
             mProgressDialog.show();
         } else if (mProgressDialog != null) {
             mProgressDialog.dismiss();
@@ -1469,7 +1509,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-                // the dialog is automatically dismissed
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -1559,6 +1598,72 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         handleBackPressed();
+    }
+
+    @Override
+    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
+        mRevision = revision;
+
+        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
+
+        mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
+                .setTitle(R.string.history_detail_title)
+                .setSubtitle(revision.getTimeSpan())
+                .setToolbarColor(R.color.status_bar_tint)
+                .setAction(R.string.history_load_dialog_button_positive)
+                .setOnConfirmListener(EditPostActivity.this)
+                .setOnDismissListener(EditPostActivity.this)
+                .setContent(HistoryDetailFullScreenDialogFragment.class, bundle)
+                .setHideActivityBar(true)
+                .build();
+
+        mFullScreenDialogFragment.show(getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+    }
+
+    @Override
+    public void onConfirm(@Nullable Bundle result) {
+        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+        if (result != null && result.getParcelable(KEY_REVISION) != null) {
+            mRevision = result.getParcelable(KEY_REVISION);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override public void run() {
+                    loadRevision();
+                }
+            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+        }
+    }
+
+    @Override
+    public void onDismiss() {
+    }
+
+    private void loadRevision() {
+        showDialogProgress(true);
+        mPostForUndo = mPost.clone();
+        mPost.setTitle(mRevision.getPostTitle());
+        mPost.setContent(mRevision.getPostContent());
+        mPost.setIsLocallyChanged(true);
+        mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+        refreshEditorContent();
+
+        Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
+                .setAction(getString(R.string.undo), new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
+                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                        mPost = mPostForUndo.clone();
+                        refreshEditorContent();
+                    }
+                })
+                .show();
+
+        showDialogProgress(false);
     }
 
     private boolean isNewPost() {
@@ -3436,9 +3541,9 @@ public class EditPostActivity extends AppCompatActivity implements
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);
-                                        RemotePostPayload payload = new RemotePostPayload(mPostWithLocalChanges, mSite);
+                                        RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-                                        mPost = mPostWithLocalChanges.clone();
+                                        mPost = mPostForUndo.clone();
                                         refreshEditorContent();
                                     }
                                 })

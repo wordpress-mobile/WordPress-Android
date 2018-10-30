@@ -99,7 +99,8 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         holder.mTxtUser.setText(connection.getExternalDisplayName());
         holder.mDivider.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
-        mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR, connection.getExternalProfilePictureUrl());
+        mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
+                connection.getExternalProfilePictureUrl());
 
         holder.mBtnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
         holder.mBtnConnect.setOnClickListener(new View.OnClickListener() {
