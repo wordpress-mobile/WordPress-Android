@@ -695,27 +695,31 @@ public class PostsListFragment extends Fragment
 
     @Override
     public void onPositiveClicked(@NotNull String instanceTag, Object gutenbergPostId) {
-        PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
 
-        // track event
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, mSite);
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, mSite);
 
-        if (UploadService.isPostUploadingOrQueued(post)) {
-            // If the post is uploading media, allow the media to continue uploading, but don't upload the
-            // post itself when they finish (since we're about to edit it again)
-            UploadService.cancelQueuedPostUpload(post);
+            if (UploadService.isPostUploadingOrQueued(post)) {
+                // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                // post itself when they finish (since we're about to edit it again)
+                UploadService.cancelQueuedPostUpload(post);
+            }
+
+            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
         }
-
-        ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
     }
 
     @Override
     public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergPostId) {
-        PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
-        // track event
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+        }
     }
 
     @Override
