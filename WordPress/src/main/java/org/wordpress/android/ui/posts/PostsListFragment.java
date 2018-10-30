@@ -741,8 +741,10 @@ public class PostsListFragment extends Fragment
             // guarding against null post as we only want to track here
             if (post != null) {
                 PostUtils.trackGutenbergDialogEvent(
-                        checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED :
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED, post, mSite);
+                        checked
+                        ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
+                        : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED,
+                        post, mSite);
             }
         }
     }
