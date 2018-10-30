@@ -326,7 +326,7 @@
     <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
     <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
     <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
-    <string name="dialog_gutenberg_compatibility_learn_more_url" translatable="false">https://en.support.wordpress.com/wordpress-editor/</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url" translatable="false">https://apps.wordpress.com/gutenberg</string>
 
 
     <!-- reload drop down -->
