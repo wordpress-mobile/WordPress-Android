@@ -26,10 +26,10 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -38,6 +38,7 @@ import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -48,6 +49,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHE
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
 import java.lang.ref.WeakReference
+import java.util.HashMap
 import javax.inject.Inject
 
 class PagesFragment : Fragment() {
@@ -55,8 +57,7 @@ class PagesFragment : Fragment() {
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
-    @Inject lateinit var mSiteStore: SiteStore
-    @Inject lateinit var mPostStore: PostStore
+    @Inject lateinit var postStore: PostStore
 
     private var restorePreviousSearch = false
 
@@ -232,10 +233,11 @@ class PagesFragment : Fragment() {
 
         viewModel.editPage.observe(this, Observer { page ->
             page?.let {
-                val post = mPostStore.getPostByLocalPostId(page.pageId)
+                val post = postStore.getPostByLocalPostId(page.pageId)
                 val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content);
                 if (isGutenbergContent) {
-                    PostUtils.showGutenbergCompatibilityWarningDialog(getActivity(), fragmentManager, post);
+                    PostUtils.showGutenbergCompatibilityWarningDialog(
+                            getActivity(), fragmentManager, post, viewModel.site);
                 } else {
                     ActivityLauncher.editPageForResult(this, page)
                 }
@@ -288,8 +290,21 @@ class PagesFragment : Fragment() {
     }
 
     fun onGutenbergEditOk(pageId: Int) {
-        val post = mPostStore.getPostByLocalPostId(pageId)
+        val post = postStore.getPostByLocalPostId(pageId)
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, viewModel.site
+        )
+
         ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
+    }
+
+    fun onGutenbergWarningDismiss(pageId: Int) {
+        val post = postStore.getPostByLocalPostId(pageId)
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, viewModel.site
+        )
     }
 
     private fun refreshProgressBars(listState: PageListState?) {

@@ -40,7 +40,7 @@ public class PostUtils {
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
-    private static final String TAG_GUTENBERG_CONFIRM_DIALOG = "tag_gutenberg_confirm_dialog";
+    public static final String TAG_GUTENBERG_CONFIRM_DIALOG = "tag_gutenberg_confirm_dialog";
 
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
@@ -391,7 +391,8 @@ public class PostUtils {
 
     public static void showGutenbergCompatibilityWarningDialog(Context ctx,
                                                                FragmentManager fragmentManager,
-                                                               PostModel post) {
+                                                               PostModel post,
+                                                               SiteModel site) {
         BasicFragmentDialog gutenbergCompatibilityDialog = new BasicFragmentDialog();
         gutenbergCompatibilityDialog.initializeWithExtras(
                 TAG_GUTENBERG_CONFIRM_DIALOG,
@@ -404,6 +405,26 @@ public class PostUtils {
                 null,
                 post.getId() + ""); // passing the postId as extra
         gutenbergCompatibilityDialog.show(fragmentManager, TAG_GUTENBERG_CONFIRM_DIALOG);
+
+        // track event
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put("is_page", post.isPage());
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN, site,
+                properties);
     }
 
+    public static void trackGutenbergDialogEvent(AnalyticsTracker.Stat stat, PostModel post, SiteModel site) {
+        // track event
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
+        properties.put("is_page", post.isPage());
+        AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
+    }
 }

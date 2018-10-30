@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.PostUtils
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
@@ -54,8 +55,10 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
     override fun onPositiveClicked(instanceTag: String, extras: Any?) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is PagesFragment) {
-            if (extras != null && extras is String) {
-                fragment.onGutenbergEditOk(extras.toInt())
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                    if (extras != null && extras is String) {
+                        fragment.onGutenbergEditOk(extras.toInt())
+                    }
             } else {
                 fragment.onPageDeleteConfirmed(instanceTag.toLong())
             }
@@ -63,5 +66,13 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
     }
 
     override fun onNegativeClicked(instanceTag: String, extras: Any?) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is PagesFragment) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                if (extras != null && extras is String) {
+                    fragment.onGutenbergWarningDismiss(extras.toInt())
+                }
+            }
+        }
     }
 }
