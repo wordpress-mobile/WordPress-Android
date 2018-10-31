@@ -109,7 +109,7 @@ class StatsListFragment : Fragment() {
 
         viewModel.navigationTarget.observe(this, Observer {
             when (it) {
-                is AddNewPost -> ActivityLauncher.addNewPostOrPageForResult(activity, site, false, false)
+                is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
                 is SharePost -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
