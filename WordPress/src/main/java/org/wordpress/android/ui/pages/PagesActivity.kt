@@ -7,6 +7,8 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.id
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
@@ -82,7 +84,15 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
 
     override fun onLearnMoreLinkClicked(instanceTag: String, gutenbergPostId: String?) {
         // here launch the web the Gutenberg Learn more
-        WPWebViewActivity.openURL(this, getString(R.string.dialog_gutenberg_compatibility_learn_more_url))
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        val urlToUse =
+                if (site.isWPCom || site.isJetpackConnected) {
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
+                } else {
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
+                }
+
+        WPWebViewActivity.openURL(this, urlToUse)
 
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is PagesFragment) {

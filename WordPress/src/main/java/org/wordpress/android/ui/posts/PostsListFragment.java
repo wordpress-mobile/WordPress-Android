@@ -754,7 +754,12 @@ public class PostsListFragment extends Fragment
                                                  @org.jetbrains.annotations.Nullable String gutenbergRemotePostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
             // here launch the web the Gutenberg Learn more
-            WPWebViewActivity.openURL(getActivity(), getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
+            String urlToUse = (mSite.isWPCom() || mSite.isJetpackConnected()) ?
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom) :
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg);
+
+            WPWebViewActivity.openURL(getActivity(), urlToUse);
+
             // track event
             PostModel post = mPostStore.getPostByRemotePostId(Integer.valueOf(gutenbergRemotePostId), mSite);
             // guarding against null post as we only want to track here
