@@ -47,7 +47,7 @@ public class NewSiteCreationActivity extends AppCompatActivity implements NewSit
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
 
             earlyLoadThemeLoaderFragment();
-            showFragment(new NewSiteCreationCategoryFragment(), NewSiteCreationCategoryFragment.TAG);
+            showFragment(new NewSiteCreationCategoryFragment(), NewSiteCreationCategoryFragment.Companion.getTAG());
         } else {
             mCategory = savedInstanceState.getString(KEY_CATERGORY);
             mThemeId = savedInstanceState.getString(KEY_THEME_ID);
