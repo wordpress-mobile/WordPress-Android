@@ -5,6 +5,6 @@ import java.util.Locale
 import javax.inject.Inject
 
 class LocaleManagerWrapper
-@Inject constructor(private val context: Context){
+@Inject constructor(private val context: Context) {
     fun getLocale(): Locale = LocaleManager.getSafeLocale(context)
 }

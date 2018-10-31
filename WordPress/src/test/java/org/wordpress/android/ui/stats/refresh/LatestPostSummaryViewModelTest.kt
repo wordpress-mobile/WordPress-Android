@@ -22,7 +22,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
