@@ -14,6 +14,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -27,7 +29,10 @@ import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERRO
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.posts.EditPostActivity
@@ -38,7 +43,11 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.uploads.VideoOptimizer
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -98,14 +107,20 @@ class PostListViewModel @Inject constructor(
     private val _displayTrashConfirmationDialog = SingleLiveEvent<PostModel>()
     val displayTrashConfirmationDialog: LiveData<PostModel> = _displayTrashConfirmationDialog
 
-    private val _displayPublishConfirmationDialog = SingleLiveEvent<Pair<SiteModel, PostModel>>()
-    val displayPublishConfirmationDialog: LiveData<Pair<SiteModel, PostModel>> = _displayPublishConfirmationDialog
+    private val _displayPublishConfirmationDialog = SingleLiveEvent<PostModel>()
+    val displayPublishConfirmationDialog: LiveData<PostModel> = _displayPublishConfirmationDialog
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
+
+    private val _postDetailsUpdated = SingleLiveEvent<PostModel>()
+    val postDetailsUpdated: LiveData<PostModel> = _postDetailsUpdated
+
+    private val _mediaChanged = SingleLiveEvent<List<MediaModel>>()
+    val mediaChanged: LiveData<List<MediaModel>> = _mediaChanged
 
     init {
         EventBus.getDefault().register(this)
@@ -141,7 +156,7 @@ class PostListViewModel @Inject constructor(
             PostListButton.BUTTON_EDIT -> editPost(site, post)
             PostListButton.BUTTON_RETRY -> _retryPost.postValue(post)
             PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
-                _displayPublishConfirmationDialog.postValue(Pair(site, post))
+                _displayPublishConfirmationDialog.postValue(post)
             }
             PostListButton.BUTTON_VIEW -> _viewPost.postValue(Pair(site, post))
             PostListButton.BUTTON_PREVIEW -> _previewPost.postValue(Pair(site, post))
@@ -152,7 +167,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun publishPost(post: PostModel) {
+    fun publishPost(post: PostModel) {
         _postUploadAction.postValue(PublishPost(dispatcher, site, post))
     }
 
@@ -263,6 +278,86 @@ class PostListViewModel @Inject constructor(
             return
         }
         refreshListManagerFromStore()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMediaUploaded(event: OnMediaUploaded) {
+        if (event.isError || event.canceled) {
+            return
+        }
+        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
+            // Not interested in media not attached to posts or not belonging to the current site
+            return
+        }
+        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
+            _postDetailsUpdated.postValue(post)
+        }
+    }
+
+    /**
+     * Upload started, reload so correct status on uploading post appears
+     */
+    fun onEventMainThread(event: PostEvents.PostUploadStarted) {
+        if (site.id == event.post.localSiteId) {
+            _postDetailsUpdated.postValue(event.post)
+        }
+    }
+
+    /**
+     * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
+     */
+    fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
+        if (site.id == event.post.localSiteId) {
+            _postDetailsUpdated.postValue(event.post)
+        }
+    }
+
+    fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
+        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
+            _postDetailsUpdated.postValue(post)
+        }
+    }
+
+    fun onEventMainThread(event: UploadService.UploadMediaRetryEvent) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            // if there' a Post to which the retried media belongs, clear their status
+            val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
+            // now that we know which Posts to refresh, let's do it
+            for (post in postsToRefresh) {
+                _postDetailsUpdated.postValue(post)
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onPostChanged(event: OnPostChanged) {
+        when (event.causeOfChange) {
+            // Fetched post list event will be handled by OnListChanged
+            is CauseOfOnPostChanged.UpdatePost -> {
+                if (event.isError) {
+                    AppLog.e(
+                            T.POSTS,
+                            "Error updating the post with type: ${event.error.type} and message: ${event.error.message}"
+                    )
+                }
+            }
+            is CauseOfOnPostChanged.DeletePost -> {
+                if (event.isError) {
+                    _toastMessage.postValue(ToastMessageHolder(R.string.error_deleting_post, Duration.SHORT))
+                }
+            }
+        }
+    }
+
+    /**
+     * Media info for a post's featured image has been downloaded, tell
+     * the adapter so it can show the featured image now that we have its URL
+     */
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMediaChanged(event: OnMediaChanged) {
+        if (!event.isError && event.mediaList != null) {
+            _mediaChanged.postValue(event.mediaList)
+        }
     }
 
     /**

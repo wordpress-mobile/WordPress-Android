@@ -127,6 +127,16 @@ class PostListAdapter(
         }
     }
 
+    fun mediaChanged(mediaList: List<MediaModel>) {
+        mediaList.forEach { mediaModel ->
+            listManager?.findWithIndex { post ->
+                post.featuredImageId == mediaModel.mediaId
+            }?.forEach { (position, _) ->
+                notifyItemChanged(position)
+            }
+        }
+    }
+
     fun setOnPostSelectedListener(listener: OnPostSelectedListener) {
         onPostSelectedListener = listener
     }

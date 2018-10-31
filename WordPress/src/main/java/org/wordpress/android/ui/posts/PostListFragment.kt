@@ -18,38 +18,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import de.greenrobot.event.EventBus
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListManager
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
-import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
-import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
-import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
@@ -91,7 +74,6 @@ class PostListFragment : Fragment(),
 
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var postStore: PostStore
-    @Inject internal lateinit var dispatcher: Dispatcher
 
     private val postListAdapter: PostListAdapter by lazy {
         val postListAdapter = PostListAdapter(nonNullActivity, site)
@@ -126,9 +108,6 @@ class PostListFragment : Fragment(),
         } else {
             this.site = site
         }
-
-        EventBus.getDefault().register(this)
-        dispatcher.register(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -164,8 +143,8 @@ class PostListFragment : Fragment(),
                 it?.let { post -> displayTrashPostDialog(post) }
             })
             viewModel.displayPublishConfirmationDialog.observe(this, Observer {
-                it?.let { (site, post) ->
-                    showPublishConfirmationDialog(site, post)
+                it?.let { post ->
+                    showPublishConfirmationDialog(post)
                 }
             })
             viewModel.viewStats.observe(this, Observer {
@@ -193,6 +172,12 @@ class PostListFragment : Fragment(),
                 it?.let { toast ->
                     ToastUtils.showToast(nonNullActivity, toast.messageRes, toast.duration)
                 }
+            })
+            viewModel.postDetailsUpdated.observe(this, Observer {
+                it?.let { post -> postListAdapter.updateProgressForPost(post) }
+            })
+            viewModel.mediaChanged.observe(this, Observer {
+                it?.let { mediaList -> postListAdapter.mediaChanged(mediaList) }
             })
         }
     }
@@ -261,24 +246,10 @@ class PostListFragment : Fragment(),
         builder.create().show()
     }
 
-    /*
-     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
-     */
-    override fun onPostButtonClicked(buttonType: Int, postClicked: PostModel) {
-        viewModel.handlePostButton(buttonType, postClicked)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         rvScrollPositionSaver.onSaveInstanceState(outState, recyclerView)
-    }
-
-    override fun onDestroy() {
-        EventBus.getDefault().unregister(this)
-        dispatcher.unregister(this)
-
-        super.onDestroy()
     }
 
     override fun onResume() {
@@ -487,7 +458,8 @@ class PostListFragment : Fragment(),
 //        snackbar.show()
 //    }
 
-    private fun showPublishConfirmationDialog(site: SiteModel, post: PostModel) {
+    // TODO: Move this
+    private fun showPublishConfirmationDialog(post: PostModel) {
         if (!isAdded) {
             return
         }
@@ -497,7 +469,7 @@ class PostListFragment : Fragment(),
         builder.setTitle(resources.getText(R.string.dialog_confirm_publish_title))
                 .setMessage(getString(R.string.dialog_confirm_publish_message_post))
                 .setPositiveButton(R.string.dialog_confirm_publish_yes) { _, _ ->
-                    handleUploadAction(PublishPost(dispatcher, site, post))
+                    viewModel.publishPost(post)
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
@@ -506,134 +478,19 @@ class PostListFragment : Fragment(),
 
     // PostListAdapter listeners
 
-    /*
+    /**
+     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
+     */
+    override fun onPostButtonClicked(buttonType: Int, postClicked: PostModel) {
+        viewModel.handlePostButton(buttonType, postClicked)
+    }
+
+    /**
      * called by the adapter when the user clicks a post
      */
     override fun onPostSelected(post: PostModel) {
         onPostButtonClicked(PostListButton.BUTTON_EDIT, post)
     }
-
-    // FluxC events
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onPostChanged(event: OnPostChanged) {
-        when (event.causeOfChange) {
-            // Fetched post list event will be handled by OnListChanged
-            is CauseOfOnPostChanged.UpdatePost -> {
-                if (event.isError) {
-                    AppLog.e(
-                            T.POSTS, "Error updating the post with type: " + event.error.type +
-                            " and message: " + event.error.message
-                    )
-                }
-            }
-            is CauseOfOnPostChanged.DeletePost -> {
-                if (event.isError) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val message = getString(R.string.error_deleting_post)
-                        ToastUtils.showToast(nonNullActivity, message, ToastUtils.Duration.SHORT)
-                    }
-                }
-            }
-        }
-    }
-
-    /*
-     * Media info for a post's featured image has been downloaded, tell
-     * the adapter so it can show the featured image now that we have its URL
-     */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMediaChanged(event: OnMediaChanged) {
-        if (!event.isError && event.mediaList != null && event.mediaList.size > 0) {
-            val mediaModel = event.mediaList[0]
-            // TODO: Move to view model
-//            listManager?.findWithIndex { post ->
-//                post.featuredImageId == mediaModel.mediaId
-//            }?.forEach { (position, _) ->
-//                GlobalScope.launch(Dispatchers.Main) {
-//                    if (isAdded) {
-//                        postListAdapter.notifyItemChanged(position)
-//                    }
-//                }
-//            }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMediaUploaded(event: OnMediaUploaded) {
-        if (event.isError || event.canceled) {
-            return
-        }
-
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
-        }
-
-        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            var shouldRefresh = false
-            if (event.media.isError || event.canceled) {
-                // if a media is cancelled or ends in error, and the post is not uploading nor queued,
-                // (meaning there is no other pending media to be uploaded for this post)
-                // then we should refresh it to show its new state
-                if (!UploadService.isPostUploadingOrQueued(post)) {
-                    shouldRefresh = true
-                }
-            } else {
-                shouldRefresh = true
-            }
-            if (shouldRefresh) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    if (isAdded) {
-                        postListAdapter.updateProgressForPost(post)
-                    }
-                }
-            }
-        }
-    }
-
-    /*
-     * Upload started, reload so correct status on uploading post appears
-     */
-    fun onEventMainThread(event: PostEvents.PostUploadStarted) {
-        if (isAdded && site.id == event.post.localSiteId) {
-            postListAdapter.refreshRowForPost(event.post)
-        }
-    }
-
-    /*
-     * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
-     */
-    fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
-        if (isAdded && site.id == event.post.localSiteId) {
-            postListAdapter.refreshRowForPost(event.post)
-        }
-    }
-
-    fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
-        if (isAdded) {
-            postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-                postListAdapter.updateProgressForPost(post)
-            }
-        }
-    }
-
-    fun onEventMainThread(event: UploadService.UploadMediaRetryEvent) {
-        if (!isAdded) {
-            return
-        }
-
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            // if there' a Post to which the retried media belongs, clear their status
-            val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
-            // now that we know which Posts to refresh, let's do it
-            for (post in postsToRefresh) {
-                postListAdapter.refreshRowForPost(post)
-            }
-        }
-    }
-
-    // ListManager
 
     /**
      * A helper function to update the current [ListManager] with the given [listManager].
