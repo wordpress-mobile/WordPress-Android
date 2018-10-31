@@ -107,10 +107,17 @@ private fun cutEntries(
     count: Int,
     item: BarChartItem
 ): List<BarEntry> {
-    return if (count < item.entries.size) item.entries.subList(
+    val sublist = if (count < item.entries.size) item.entries.subList(
             item.entries.size - count,
             item.entries.size
     ) else {
         item.entries
+    }
+    return sublist.mapIndexed { index, pair ->
+        BarEntry(
+                index.toFloat(),
+                pair.second.toFloat(),
+                pair.first
+        )
     }
 }
