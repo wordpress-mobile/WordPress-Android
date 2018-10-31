@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.annotation.LayoutRes
-import android.view.View
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.store.ThemeStore
+import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.widgets.RecyclerItemDecoration
 
 class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+    private var linearLayoutManager: LinearLayoutManager? = null
+    private val keyListState = "list_state"
+
     @LayoutRes
     override fun getContentLayout(): Int {
         return R.layout.site_creation_category_screen
@@ -19,23 +23,15 @@ class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // important for accessibility - talkback
         activity!!.setTitle(R.string.site_creation_category_title)
-        rootView.findViewById<View>(R.id.site_creation_card_blog).setOnClickListener {
-            if (mSiteCreationListener != null) {
-                mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG)
-            }
-        }
+        initRecyclerView(rootView)
+    }
 
-        rootView.findViewById<View>(R.id.site_creation_card_website).setOnClickListener {
-            if (mSiteCreationListener != null) {
-                mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_WEBSITE)
-            }
-        }
-
-        rootView.findViewById<View>(R.id.site_creation_card_portfolio).setOnClickListener {
-            if (mSiteCreationListener != null) {
-                mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_PORTFOLIO)
-            }
-        }
+    private fun initRecyclerView(rootView: ViewGroup) {
+        val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
+        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        linearLayoutManager = layoutManager
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
     }
 
     override fun onHelp() {
@@ -49,17 +45,18 @@ class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteC
         (activity!!.application as WordPress).component().inject(this)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CATEGORY_VIEWED)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        linearLayoutManager?.let {
+            outState.putParcelable(keyListState, it.onSaveInstanceState())
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        mSiteCreationListener = null
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.getParcelable<Parcelable>(keyListState)?.let {
+            linearLayoutManager?.onRestoreInstanceState(it)
+        }
     }
 
     companion object {

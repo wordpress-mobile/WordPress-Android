@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import javax.inject.Inject
 
@@ -13,6 +14,7 @@ class NewSiteCreationCategoryViewModel
     fun start() {
         if(isInitialized)return
         isInitialized = true
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CATEGORY_VIEWED)
     }
 
     init {
