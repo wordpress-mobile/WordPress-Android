@@ -20,8 +20,6 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.id
-import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
@@ -35,9 +33,9 @@ sealed class BlockItemViewHolder(
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     class TitleViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_title
+            R.layout.stats_block_title
     ) {
-        private val text = itemView.findViewById<TextView>(id.text)
+        private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Title) {
             text.setText(item.text)
         }
@@ -45,12 +43,12 @@ sealed class BlockItemViewHolder(
 
     class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_item
+            R.layout.stats_block_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(id.icon)
-        private val text = itemView.findViewById<TextView>(id.text)
-        private val value = itemView.findViewById<TextView>(id.value)
-        private val divider = itemView.findViewById<View>(id.divider)
+        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
             icon.setImageResource(item.icon)
@@ -66,14 +64,14 @@ sealed class BlockItemViewHolder(
 
     class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_empty_item
+            R.layout.stats_block_empty_item
     )
 
     class TextViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_text_item
+            R.layout.stats_block_text_item
     ) {
-        private val text = itemView.findViewById<TextView>(id.text)
+        private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(textItem: Text) {
             val spannableString = SpannableString(textItem.text)
             textItem.links?.forEach { link ->
@@ -112,14 +110,14 @@ sealed class BlockItemViewHolder(
 
     class ColumnsViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_column_item
+            R.layout.stats_block_column_item
     ) {
-        private val firstKey = itemView.findViewById<TextView>(id.first_key)
-        private val secondKey = itemView.findViewById<TextView>(id.second_key)
-        private val thirdKey = itemView.findViewById<TextView>(id.third_key)
-        private val firstValue = itemView.findViewById<TextView>(id.first_value)
-        private val secondValue = itemView.findViewById<TextView>(id.second_value)
-        private val thirdValue = itemView.findViewById<TextView>(id.third_value)
+        private val firstKey = itemView.findViewById<TextView>(R.id.first_key)
+        private val secondKey = itemView.findViewById<TextView>(R.id.second_key)
+        private val thirdKey = itemView.findViewById<TextView>(R.id.third_key)
+        private val firstValue = itemView.findViewById<TextView>(R.id.first_value)
+        private val secondValue = itemView.findViewById<TextView>(R.id.second_value)
+        private val thirdValue = itemView.findViewById<TextView>(R.id.third_value)
         fun bind(columns: Columns) {
             firstKey.setText(columns.headers[0])
             secondKey.setText(columns.headers[1])
@@ -132,10 +130,10 @@ sealed class BlockItemViewHolder(
 
     class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_link_item
+            R.layout.stats_block_link_item
     ) {
-        private val text = itemView.findViewById<TextView>(id.text)
-        private val link = itemView.findViewById<View>(id.link_wrapper)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val link = itemView.findViewById<View>(R.id.link_wrapper)
 
         fun bind(item: Link) {
             if (item.icon != null) {
@@ -150,11 +148,11 @@ sealed class BlockItemViewHolder(
 
     class BarChartViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
-            layout.stats_block_bar_chart_item
+            R.layout.stats_block_bar_chart_item
     ) {
-        private val chart = itemView.findViewById<BarChart>(id.chart)
-        private val labelStart = itemView.findViewById<TextView>(id.label_start)
-        private val labelEnd = itemView.findViewById<TextView>(id.label_end)
+        private val chart = itemView.findViewById<BarChart>(R.id.chart)
+        private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
+        private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
 
         fun bind(item: BarChartItem) {
             GlobalScope.launch(Dispatchers.Main) {

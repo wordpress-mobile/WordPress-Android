@@ -25,7 +25,7 @@ fun BarChart.draw(
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(columnNumber, item)
-    val maxXValue = cut.maxBy { it.y }!!.y
+    val maxYValue = cut.maxBy { it.y }!!.y
     val dataSet = getDataSet(context, cut)
     data = BarData(dataSet)
     val greyColor = ContextCompat.getColor(
@@ -57,7 +57,7 @@ fun BarChart.draw(
         setDrawAxisLine(false)
         granularity = 1f
         axisMinimum = 0f
-        if (maxXValue < 5f) {
+        if (maxYValue < 5f) {
             axisMaximum = 5f
         }
         textColor = greyColor
