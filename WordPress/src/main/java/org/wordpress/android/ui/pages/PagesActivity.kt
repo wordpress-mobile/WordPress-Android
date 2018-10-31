@@ -61,7 +61,7 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         if (fragment is PagesFragment) {
             if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
                     if (extras != null && extras is String) {
-                        fragment.onGutenbergEditOk(extras.toInt())
+                        fragment.onGutenbergEditOk(extras.toLong())
                     }
             } else {
                 fragment.onPageDeleteConfirmed(instanceTag.toLong())
@@ -74,7 +74,7 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         if (fragment is PagesFragment) {
             if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
                 if (extras != null && extras is String) {
-                    fragment.onGutenbergWarningDismiss(extras.toInt())
+                    fragment.onGutenbergWarningDismiss(extras.toLong())
                 }
             }
         }
@@ -88,7 +88,7 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         if (fragment is PagesFragment) {
             if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
                 if (gutenbergPostId != null) {
-                    fragment.onGutenbergWarningLearnMoreTapped(gutenbergPostId.toInt())
+                    fragment.onGutenbergWarningLearnMoreTapped(gutenbergPostId.toLong())
                 }
             }
         }
@@ -99,7 +99,7 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
         if (fragment is PagesFragment) {
             if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
                 if (gutenbergPostId != null) {
-                    fragment.onGutenbergWarningDontShowAnymoreChecked(gutenbergPostId.toInt(), checked)
+                    fragment.onGutenbergWarningDontShowAnymoreChecked(gutenbergPostId.toLong(), checked)
                 }
             }
         }

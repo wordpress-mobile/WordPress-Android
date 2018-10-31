@@ -288,8 +288,8 @@ class PagesFragment : Fragment() {
         viewModel.onDeleteConfirmed(remoteId)
     }
 
-    fun onGutenbergEditOk(pageId: Int) {
-        val post = postStore.getPostByLocalPostId(pageId)
+    fun onGutenbergEditOk(gutenbergRemotePageId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // track event
         PostUtils.trackGutenbergDialogEvent(
                 AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, viewModel.site
@@ -298,8 +298,8 @@ class PagesFragment : Fragment() {
         ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
     }
 
-    fun onGutenbergWarningDismiss(pageId: Int) {
-        val post = postStore.getPostByLocalPostId(pageId)
+    fun onGutenbergWarningDismiss(gutenbergRemotePageId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // guarding against null post as we only want to track here
         if (post != null) {
             // track event
@@ -309,10 +309,10 @@ class PagesFragment : Fragment() {
         }
     }
 
-    fun onGutenbergWarningDontShowAnymoreChecked(pageId: Int, checked: Boolean) {
+    fun onGutenbergWarningDontShowAnymoreChecked(gutenbergRemotePageId: Long, checked: Boolean) {
         AppPrefs.setGutenbergWarningDialogDisabled(checked)
 
-        val post = postStore.getPostByLocalPostId(pageId)
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // guarding against null post as we only want to track here
         if (post != null) {
             // track event
@@ -329,8 +329,8 @@ class PagesFragment : Fragment() {
         }
     }
 
-    fun onGutenbergWarningLearnMoreTapped(pageId: Int) {
-        val post = postStore.getPostByLocalPostId(pageId)
+    fun onGutenbergWarningLearnMoreTapped(gutenbergRemotePageId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // guarding against null post as we only want to track here
         if (post != null) {
             // track event

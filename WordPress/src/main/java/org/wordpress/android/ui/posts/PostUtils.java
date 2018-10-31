@@ -402,7 +402,7 @@ public class PostUtils {
                         : ctx.getString(R.string.dialog_gutenberg_compatibility_yes_edit_post),
                 ctx.getString(R.string.dialog_gutenberg_compatibility_no_go_back),
                 null,
-                post.getId() + ""); // passing the postId as extra
+                post.getRemotePostId() + ""); // passing the postId as extra
         gutenbergCompatibilityDialog.show(fragmentManager, TAG_GUTENBERG_CONFIRM_DIALOG);
 
         // track event

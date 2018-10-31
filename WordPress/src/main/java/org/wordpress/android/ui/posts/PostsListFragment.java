@@ -701,9 +701,9 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onPositiveClicked(@NotNull String instanceTag, Object gutenbergPostId) {
+    public void onPositiveClicked(@NotNull String instanceTag, Object gutenbergRemotePostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
+            PostModel post = mPostStore.getPostByRemotePostId(Integer.valueOf((String) gutenbergRemotePostId), mSite);
 
             // track event
             PostUtils.trackGutenbergDialogEvent(
@@ -720,9 +720,9 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergPostId) {
+    public void onNegativeClicked(@NotNull String instanceTag, Object gutenbergRemotePostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf((String) gutenbergPostId));
+            PostModel post = mPostStore.getPostByRemotePostId(Integer.valueOf((String) gutenbergRemotePostId), mSite);
             // guarding against null post as we only want to track here
             if (post != null) {
                 // track event
@@ -733,11 +733,11 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onDontShowCheckboxClicked(@NotNull String instanceTag, String gutenbergPostId, boolean checked) {
+    public void onDontShowCheckboxClicked(@NotNull String instanceTag, String gutenbergRemotePostId, boolean checked) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
             AppPrefs.setGutenbergWarningDialogDisabled(checked);
             // track event
-            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+            PostModel post = mPostStore.getPostByRemotePostId(Integer.valueOf(gutenbergRemotePostId), mSite);
             // guarding against null post as we only want to track here
             if (post != null) {
                 PostUtils.trackGutenbergDialogEvent(
@@ -751,12 +751,12 @@ public class PostsListFragment extends Fragment
 
     @Override
     public void onLearnMoreLinkClicked(@NotNull String instanceTag,
-                                                 @org.jetbrains.annotations.Nullable String gutenbergPostId) {
+                                                 @org.jetbrains.annotations.Nullable String gutenbergRemotePostId) {
         if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
             // here launch the web the Gutenberg Learn more
             WPWebViewActivity.openURL(getActivity(), getString(R.string.dialog_gutenberg_compatibility_learn_more_url));
             // track event
-            PostModel post = mPostStore.getPostByLocalPostId(Integer.valueOf(gutenbergPostId));
+            PostModel post = mPostStore.getPostByRemotePostId(Integer.valueOf(gutenbergRemotePostId), mSite);
             // guarding against null post as we only want to track here
             if (post != null) {
                 PostUtils.trackGutenbergDialogEvent(
