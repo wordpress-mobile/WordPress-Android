@@ -1,8 +1,8 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -13,13 +13,13 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
 public class AuthenticationDialogUtils {
-    public static void showAuthErrorView(Activity activity, SiteStore siteStore, SiteModel site) {
+    public static void showAuthErrorView(AppCompatActivity activity, SiteStore siteStore, SiteModel site) {
         showAuthErrorView(activity, siteStore, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID,
                           AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, site);
     }
 
-    public static void showAuthErrorView(Activity activity, SiteStore siteStore, int titleResId, int messageResId,
-                                         SiteModel site) {
+    public static void showAuthErrorView(AppCompatActivity activity, SiteStore siteStore, int titleResId,
+                                         int messageResId, SiteModel site) {
         final String alertTag = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
@@ -49,7 +49,7 @@ public class AuthenticationDialogUtils {
             return;
         }
 
-        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert = new AuthErrorDialogFragment();
         authAlert.setArgs(titleResId, messageResId, site);
         ft.add(authAlert, alertTag);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/frame_follow_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -13,14 +13,13 @@
         android:layout_height="@dimen/reader_follow_icon"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/ic_reader_follow_blue_medium_24dp" />
+        android:src="@drawable/ic_reader_follow_blue_medium_24dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginLeft="@dimen/margin_small"
         android:text="@string/reader_btn_follow"
         android:textColor="@color/reader_follow_button_text"
         android:textSize="@dimen/text_sz_medium"

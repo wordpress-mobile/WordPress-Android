@@ -46,7 +46,8 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         if (isAfterLogin) {
             mLoggedInAsHeading.setVisibility(View.VISIBLE);
             mUserDetailsCard.setVisibility(View.VISIBLE);
-            imageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR, StringUtils.notNullStr(avatarUrl));
+            imageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
+                    StringUtils.notNullStr(avatarUrl));
             mUsernameTextView.setText(context.getString(R.string.login_username_at, username));
 
             if (!TextUtils.isEmpty(displayName)) {

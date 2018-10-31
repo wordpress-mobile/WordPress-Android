@@ -12,20 +12,16 @@
     android:minHeight="?attr/listPreferredItemHeightSmall"
     android:orientation="horizontal"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_large"
     tools:ignore="RtlHardcoded" >
 
     <RadioButton
         android:id="@+id/radio"
         android:buttonTint="@color/dialog_compound_button_thumb"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
         android:layout_width="wrap_content"
         tools:ignore="UnusedAttribute">
     </RadioButton>
@@ -37,9 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_toEndOf="@id/radio"
-        android:layout_toRightOf="@id/radio"
         android:maxLines="1"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"

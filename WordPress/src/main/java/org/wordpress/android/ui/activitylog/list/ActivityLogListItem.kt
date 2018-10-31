@@ -7,10 +7,11 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTOR
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
-import java.text.DateFormat
+import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.toFormattedTimeString
 import java.util.Date
-import java.util.Locale
 
 sealed class ActivityLogListItem(val type: ViewType) {
     interface IActionableItem {
@@ -32,15 +33,15 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val buttonIcon: Icon = HISTORY,
         val isProgressBarVisible: Boolean = false
     ) : ActivityLogListItem(EVENT), IActionableItem {
-        val formattedDate: String = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(date)
-        val formattedTime: String = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+        val formattedDate: String = date.toFormattedDateString()
+        val formattedTime: String = date.toFormattedTimeString()
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
 
         constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
                 model.activityID,
                 model.summary,
-                model.text,
+                model.content?.text ?: "",
                 model.gridicon,
                 model.status,
                 model.rewindable ?: false,
@@ -60,11 +61,14 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
     object Footer : ActivityLogListItem(FOOTER)
 
+    object Loading : ActivityLogListItem(LOADING)
+
     enum class ViewType(val id: Int) {
         EVENT(0),
         PROGRESS(1),
         HEADER(2),
-        FOOTER(3)
+        FOOTER(3),
+        LOADING(4)
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {

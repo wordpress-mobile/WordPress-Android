@@ -7,38 +7,32 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/white"
-    android:paddingLeft="@dimen/dlp_padding_start"
     android:paddingStart="@dimen/dlp_padding_start"
-    android:paddingRight="@dimen/dlp_padding_end"
     android:paddingEnd="@dimen/dlp_padding_end"
     android:paddingTop="@dimen/dlp_padding_top"
     android:paddingBottom="@dimen/dlp_padding_bottom"
     android:labelFor="@id/radio"
     android:clickable="true"
-    android:focusable="true"
-    >
+    android:focusable="true" >
 
     <RadioButton
         android:buttonTint="@color/dialog_compound_button_thumb"
         android:id="@+id/radio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:focusable="false"
         android:clickable="false"
         android:focusableInTouchMode="false"
-        tools:targetApi="LOLLIPOP"/>
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content" >
+    </RadioButton>
 
     <LinearLayout
         android:id="@+id/text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/dlp_text_margin_start"
         android:layout_marginStart="@dimen/dlp_text_margin_start"
-        android:layout_marginRight="@dimen/dlp_text_margin_end"
         android:layout_marginEnd="@dimen/dlp_text_margin_end"
         android:layout_centerInParent="true"
-        android:layout_toRightOf="@id/radio"
         android:layout_toEndOf="@id/radio">
 
         <TextView

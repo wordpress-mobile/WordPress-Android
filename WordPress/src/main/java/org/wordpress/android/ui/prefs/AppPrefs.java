@@ -107,7 +107,13 @@ public class AppPrefs {
 
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
-        SUPPORT_NAME
+        SUPPORT_NAME,
+
+        // Store a version of the last dismissed News Card
+        NEWS_CARD_DISMISSED_VERSION,
+        // Store a version of the last shown News Card
+        NEWS_CARD_SHOWN_VERSION,
+        AVATAR_VERSION
     }
 
     /**
@@ -171,7 +177,10 @@ public class AppPrefs {
         LAST_USED_USER_ID,
 
         // used to indicate that user opted out of quick start
-        IS_QUICK_START_DISABLED
+        IS_QUICK_START_DISABLED,
+
+        // used to indicate that we already obtained and tracked the installation referrer
+        IS_INSTALLATION_REFERRER_OBTAINED
     }
 
     private static SharedPreferences prefs() {
@@ -736,6 +745,22 @@ public class AppPrefs {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
     }
 
+    public static void setNewsCardDismissedVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, version);
+    }
+
+    public static int getNewsCardDismissedVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
+    }
+
+    public static void setNewsCardShownVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, version);
+    }
+
+    public static int getNewsCardShownVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, -1);
+    }
+
     public static void setQuickStartDisabled(Boolean isDisabled) {
         setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
     }
@@ -759,5 +784,21 @@ public class AppPrefs {
 
     public static void setPromptedQuickStartTask(@Nullable String task) {
         setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
+    }
+
+    public static void setInstallationReferrerObtained(Boolean isObtained) {
+        setBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, isObtained);
+    }
+
+    public static boolean isInstallationReferrerObtained() {
+        return getBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, false);
+    }
+
+    public static int getAvatarVersion() {
+        return getInt(DeletablePrefKey.AVATAR_VERSION, 0);
+    }
+
+    public static void setAvatarVersion(int version) {
+        setInt(DeletablePrefKey.AVATAR_VERSION, version);
     }
 }

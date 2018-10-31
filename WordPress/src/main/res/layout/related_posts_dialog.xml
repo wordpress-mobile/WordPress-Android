@@ -2,7 +2,6 @@
 
 <org.wordpress.android.widgets.WPScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/site_settings_divider_height"
@@ -13,10 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/related_posts_dialog_padding_left"
         android:paddingStart="@dimen/related_posts_dialog_padding_left"
         android:paddingTop="@dimen/related_posts_dialog_padding_top"
-        android:paddingRight="@dimen/related_posts_dialog_padding_right"
         android:paddingEnd="@dimen/related_posts_dialog_padding_right"
         android:paddingBottom="@dimen/related_posts_dialog_padding_bottom"
         android:orientation="vertical"
@@ -104,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="4dp"
-                app:srcCompat="@drawable/rppreview1" />
+                android:src="@drawable/rppreview1" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title1"
@@ -132,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/rppreview2" />
+                android:src="@drawable/rppreview2" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title2"
@@ -160,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:layout_marginTop="8dp"
-                app:srcCompat="@drawable/rppreview3" />
+                android:src="@drawable/rppreview3" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/related_post_title3"

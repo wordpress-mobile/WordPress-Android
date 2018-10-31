@@ -552,7 +552,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         // Initialize both editors (visual, source) with the same content. Need to do that so the starting point used in
         //  their content diffing algorithm is the same. That's assumed by the Toolbar's mode-switching logic too.
         mSource.displayStyledAndFormattedHtml(postContent);
-        mContent.fromHtml(postContent);
+        mContent.fromHtml(postContent, true);
 
         updateFailedAndUploadingMedia();
 
@@ -1794,8 +1794,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         attributes.removeAttribute(ATTR_ALT);
                     }
 
-                    attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
-                    attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                    if (!TextUtils.isEmpty(metaData.getWidth())) {
+                        attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                    } else {
+                        attributes.removeAttribute(ATTR_DIMEN_WIDTH);
+                    }
+
+                    if (!TextUtils.isEmpty(metaData.getHeight())) {
+                        attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                    } else {
+                        attributes.removeAttribute(ATTR_DIMEN_HEIGHT);
+                    }
 
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
                         AztecAttributes linkAttributes =
@@ -1847,7 +1856,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                                             captionAttributes);
 
                         // setting caption causes rendering issue in some cases, reset content to avoid them
-                        mContent.fromHtml(mContent.toHtml(false));
+                        mContent.fromHtml(mContent.toHtml(false), false);
                     } else {
                         // if no caption present apply align attribute directly to image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {

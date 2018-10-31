@@ -19,7 +19,7 @@ Language: az
     <string name="reader_short_comment_count_multi">%s Şərh</string>
     <string name="reader_short_comment_count_one">1 Şərh</string>
     <string name="reader_short_like_count_multi">%s Bəyənmə</string>
-    <string name="email">E–poçt</string>
+    <string name="email">E-poçt</string>
     <string name="days_ago">%d gün öncə</string>
     <string name="connectionbar_no_connection">Qoşulma yoxdur</string>
     <string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -35,7 +35,6 @@ Language: az
     <string name="button_publish">Dərc et</string>
     <string name="stats_no_activity_this_period">Bu dövrə aid aktivlik yoxdur</string>
     <string name="undo">Geri al</string>
-    <string name="passcodelock_prompt_message">PIN kodunuzu daxil edin</string>
     <string name="stats_insights_best_ever">Bü Günə Qədərki Ən Yaxşı Baxış</string>
     <string name="ignore">Yox say</string>
     <string name="stats_insights_most_popular_percent_views">Baxışlarda %1$d%% </string>
@@ -74,9 +73,9 @@ Language: az
     <string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>
     <string name="publisher">Naşir:</string>
     <string name="error_notification_open">Bildiriş açılmadı</string>
-    <string name="stats_followers_total_email_paged">%1$d - %2$d / %3$s E–Poçt İzləyicisi göstərilir</string>
+    <string name="stats_followers_total_email_paged">%1$d - %2$d / %3$s E-Poçt İzləyicisi göstərilir</string>
     <string name="stats_search_terms_unknown_search_terms">Bilinməyən Axtarış Kriteriyaları</string>
-    <string name="stats_followers_total_wpcom_paged">%1$d – %2$d / %3$s WordPress.com İzləyicisi gösterilir</string>
+    <string name="stats_followers_total_wpcom_paged">%1$d - %2$d / %3$s WordPress.com İzləyicisi gösterilir</string>
     <string name="stats_empty_search_terms_desc">Ziyarətçilərin saytınızı tapması üçün axtardığı kriteriyaları analiz edərək axtarış trafikiniz haqqında daha çox məlumat sahibi olun.</string>
     <string name="stats_empty_search_terms">Qeyd edilmiş heç bir axtarış kriteriyası yoxdur</string>
     <string name="stats_entry_search_terms">Axtarış Kriteriyası</string>
@@ -111,9 +110,9 @@ Language: az
     <string name="stats_followers_days">%1$d gün</string>
     <string name="stats_followers_a_minute_ago">dəqiqə öncə</string>
     <string name="stats_followers_seconds_ago">saniyə öncə</string>
-    <string name="stats_followers_total_email">Cəmi E–poçt İzləyiciləri: %1$s</string>
+    <string name="stats_followers_total_email">Cəmi E-poçt İzləyiciləri: %1$s</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
-    <string name="stats_followers_email_selector">E–poçt</string>
+    <string name="stats_followers_email_selector">E-poçt</string>
     <string name="stats_followers_total_wpcom">Cəmi WordPress.com İzləyicisi: %1$s</string>
     <string name="stats_comments_total_comments_followers">Şərh izləyicili cəmi yazı miqdarı: %1$s</string>
     <string name="stats_comments_by_authors">Müəlliflərə Görə</string>
@@ -123,7 +122,7 @@ Language: az
     <string name="stats_empty_publicize_desc">Bəyan xüsusiyyətindən istifadə edərək müxtəlif sosial şəbəkə xidmətlərindən izləyicilərinizi izləyin.</string>
     <string name="stats_empty_publicize">Qeyd edilmiş heç bir bəyan izləyicisi yoxdur</string>
     <string name="stats_empty_video">İfa edilmiş video yoxdur</string>
-    <string name="stats_empty_video_desc">VideoPress–dən istifadə edərək video yükləmisinizsə, videolarınızın neçə dəfə izləndiyini öyrənin.</string>
+    <string name="stats_empty_video_desc">VideoPress-dən istifadə edərək video yükləmisinizsə, videolarınızın neçə dəfə izləndiyini öyrənin.</string>
     <string name="stats_empty_comments_desc">Saytınızda şərhlərə izin verirsinizsə, ən son 1000 şərh əsas alındığında yazılarınıza ən çox şərh edənləri izləyin və hansı içəriklərin ən canlı müzakirələrə yol açdığını kəşf edin.</string>
     <string name="stats_empty_tags_and_categories_desc">Keçən həftə ən çox oxunan yazılarınızda görüldüyü üzrə saytınızdakı ən populyar bəhslərdən xəbərdar olun.</string>
     <string name="stats_empty_top_authors_desc">Əmək sərf edənlərin yazılarının nə qədər baxıldığını izləyin və hər yazının ən popolyar içəriyini kəşf etmək üçün ətraflı olaraq analiz edin.</string>
@@ -133,7 +132,7 @@ Language: az
     <string name="stats_empty_clicks_title">Qeyd edilmiş heç bir tıklama yoxdur</string>
     <string name="stats_empty_referrers_title">Qeyd edilmiş heç bir yönləndirmə yoxdur</string>
     <string name="stats_empty_top_posts_title">Baxılmış heç bir səhifə və ya yazı yoxdur</string>
-    <string name="stats_empty_top_posts_desc">Ən çox baxılan içəriyinizin hansı olduğunu kəşf edin və tək–tək yazılarla səhifələrin zaman ərzindəki müvəffəqiyyətini analiz edin.</string>
+    <string name="stats_empty_top_posts_desc">Ən çox baxılan içəriyinizin hansı olduğunu kəşf edin və tək-tək yazılarla səhifələrin zaman ərzindəki müvəffəqiyyətini analiz edin.</string>
     <string name="stats_totals_followers">Bu tarixdən başlayaraq:</string>
     <string name="stats_empty_geoviews">Qeyd edilmiş heç bir ölkə yoxdur</string>
     <string name="stats_empty_geoviews_desc">Saytınıza ən çox hansı ölkə və bölgələrdən trafik olduğunu görmək üçün siyahını analiz edin.</string>
@@ -155,7 +154,6 @@ Language: az
     <string name="stats_visitors">Ziyarətçi</string>
     <string name="ssl_certificate_details">Detallar</string>
     <string name="cab_selected">%d seçildi</string>
-    <string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
     <string name="reader_empty_comments">Şərh yoxdur</string>
     <string name="reader_label_view_original">Orijinal məqaləyə bax</string>
     <string name="reader_label_like">Bəyən</string>
@@ -209,10 +207,9 @@ Language: az
     <string name="error_moderate_comment">Moderasiya sırasında xəta baş verdi</string>
     <string name="error_load_comment">Şərh yüklənmədi</string>
     <string name="error_downloading_image">Təsvir endirilərkən xəta baş verdi</string>
-    <string name="passcode_wrong_passcode">Yanlış PIN</string>
     <string name="error_edit_comment">Şərh redaktəsi sırasında xəta baş verdi</string>
-    <string name="invalid_email_message">Keçərsiz e–poçt ünvanı</string>
-    <string name="email_invalid">Etibarlı e–poçt ünvanı daxil edin</string>
+    <string name="invalid_email_message">Keçərsiz e-poçt ünvanı</string>
+    <string name="email_invalid">Etibarlı e-poçt ünvanı daxil edin</string>
     <string name="username_or_password_incorrect">Yanlış istifadəçi adı və ya parol daxil etdiniz</string>
     <string name="select_categories">Kateqoriyaları seç</string>
     <string name="connection_error">Qoşulma xətası</string>
@@ -222,11 +219,9 @@ Language: az
     <string name="reader_title_applog">Proqram jurnalı</string>
     <string name="reader_toast_err_add_tag">Bu etiket əlavə edilə bilmir</string>
     <string name="reader_toast_err_remove_tag">Bu etiket silinə bilmir</string>
-    <string name="required_field">Gərəkli sahə</string>
     <string name="privacy_policy">Gizlilik siyasəti</string>
     <string name="local_changes">Yerli dəyişikliklər</string>
     <string name="image_settings">Təsvir parametrləri</string>
-    <string name="add_account_blog_url">Bloq ünvanı</string>
     <string name="wordpress_blog">WordPress bloqu</string>
     <string name="error_blog_hidden">Bu bloq gizlidir və yüklənmədi. Parametrlərdən yenidən aktivləşdirin və təkrar yoxlayın.</string>
     <string name="fatal_db_error">Proqram üçün verilənlər bazası yaradılarkən bir xəta baş verdi. Proqramı təkrar qurmağa cəhd edin.</string>
@@ -274,7 +269,6 @@ Language: az
     <string name="remove_account">Saytı sil</string>
     <string name="notifications_empty_all">Bildiriş yoxdur…</string>
     <string name="share_link">Bağlantını paylaş</string>
-    <string name="creating_your_site">Yeni saytınız yaradılır</string>
     <string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir…</string>
     <string name="reader_label_reply">Cavab</string>
     <string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
@@ -291,7 +285,6 @@ Language: az
     <string name="reader_untitled_post">(adsız)</string>
     <string name="reader_label_added_tag"> %s əlavə edildi</string>
     <string name="reader_label_removed_tag">%s silindi</string>
-    <string name="reader_empty_followed_tags">Siz hər hansı bir etiketi izləyə bilməyəcəksiniz</string>
     <string name="reader_btn_follow">İzlə</string>
     <string name="reader_btn_unfollow">İzlənən</string>
     <string name="reader_likes_one">Bir nəfər bunu bəyənir</string>
@@ -317,11 +310,6 @@ Language: az
     <string name="stats">Statistikalar</string>
     <string name="stats_view_visitors_and_views">Qonaqlar və Baxışlar</string>
     <string name="stats_view_clicks">Tıklamalar</string>
-    <string name="passcode_change_passcode">PIN kodun idarə edilməsi</string>
-    <string name="passcode_set">PIN kod quruludur</string>
-    <string name="passcode_preference_title">PIN bağlıdır</string>
-    <string name="passcode_turn_off">PIN bloku ləğv et</string>
-    <string name="passcode_turn_on">PIN bloku qoş</string>
     <string name="media_gallery_type_squares">Kvadratlar</string>
     <string name="media_gallery_type_tiled">Döşənmiş</string>
     <string name="media_gallery_type_circles">Çəmbərlər</string>
@@ -337,9 +325,6 @@ Language: az
     <string name="stats_totals_clicks">Tıklamalar</string>
     <string name="stats_totals_plays">İfalar</string>
     <string name="media_edit_title_text">Başlıq</string>
-    <string name="passcode_re_enter_passcode">PIN kodunu təkrar daxil et</string>
-    <string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
-    <string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
     <string name="manage">İdarəetmə</string>
     <string name="discard">Ləğv et</string>
     <string name="note_reply_successful">Cavab dərc edildi</string>
@@ -359,6 +344,7 @@ Language: az
     <string name="anonymous">Anonim</string>
     <string name="posts">Yazılar</string>
     <string name="no_network_title">Şəbəkə əlçatan deyil</string>
+    <string name="pages">Səhifələr</string>
     <string name="caption">Başlıq(istəyə bağlı)</string>
     <string name="width">genişlik</string>
     <string name="featured_in_post">Təsviri yazı mətninə əlavə et</string>

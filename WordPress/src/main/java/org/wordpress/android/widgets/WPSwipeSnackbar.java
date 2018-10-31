@@ -1,7 +1,6 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
@@ -74,9 +73,7 @@ public class WPSwipeSnackbar {
     private static void centerSnackbarText(@NonNull Snackbar snackbar) {
         TextView textView = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
         if (textView != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            }
+            textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             textView.setGravity(Gravity.CENTER_HORIZONTAL);
         }
     }

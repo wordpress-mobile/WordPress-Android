@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
@@ -12,13 +11,12 @@
     app:contentInsetStart="@dimen/toolbar_content_offset"
     app:contentInsetRight="@dimen/toolbar_content_offset_end"
     app:contentInsetEnd="@dimen/toolbar_content_offset_end"
-    app:theme="@style/LoginTheme.Toolbar"
-    tools:targetApi="LOLLIPOP">
+    app:theme="@style/LoginTheme.Toolbar">
 
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/ic_my_sites_white_32dp"/>
+        android:src="@drawable/ic_my_sites_white_32dp"/>
 </android.support.v7.widget.Toolbar>

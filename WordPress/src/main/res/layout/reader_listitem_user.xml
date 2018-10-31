@@ -24,8 +24,6 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginStart="@dimen/margin_medium">

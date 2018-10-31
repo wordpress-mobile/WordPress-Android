@@ -1,5 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="?android:selectableItemBackground"
@@ -9,13 +9,11 @@
         android:id="@+id/blavatar"
         android:layout_width="42dip"
         android:layout_height="42dip"
-        android:layout_marginLeft="8dip"
         android:layout_marginTop="12dip"
         android:gravity="center|center"
         android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/app_icon"
+        android:src="@mipmap/app_icon"
         android:layout_marginStart="8dip"
-        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"/>
 
     <LinearLayout
@@ -23,7 +21,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="10dip"
-        android:layout_toRightOf="@id/blavatar"
         android:layout_toEndOf="@id/blavatar"
         android:paddingTop="10dip">
 
@@ -35,7 +32,6 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:gravity="start"
-            android:paddingRight="8dip"
             android:shadowColor="#FFFFFF"
             android:shadowDx="0"
             android:shadowDy="1"

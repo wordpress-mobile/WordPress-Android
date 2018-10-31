@@ -22,7 +22,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private String mTagSlug; // tag for API calls
     private String mTagDisplayName; // tag for display, usually the same as the slug
     private String mTagTitle; // title, used for default tags
-    private String mEndpoint; // mEndpoint for updating posts with this tag
+    private String mEndpoint; // endpoint for updating posts with this tag
 
     public final ReaderTagType tagType;
 
@@ -121,14 +121,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * extracts the tag slug from a valid read/tags/[mTagSlug]/posts mEndpoint
+     * extracts the tag slug from a valid read/tags/[mTagSlug]/posts endpoint
      */
     private static String getTagSlugFromEndpoint(final String endpoint) {
         if (TextUtils.isEmpty(endpoint)) {
             return "";
         }
 
-        // make sure passed mEndpoint is valid
+        // make sure passed endpoint is valid
         if (!endpoint.endsWith("/posts")) {
             return "";
         }

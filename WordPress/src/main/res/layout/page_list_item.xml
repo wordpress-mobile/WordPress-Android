@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/page_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageButton
+            android:id="@+id/page_more"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/show_more_desc"
+            android:paddingEnd="@dimen/page_item_horizontal_padding"
+            android:paddingStart="@dimen/page_item_horizontal_padding"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_ellipsis_grey_darken_10_24dp"/>
+
+        <View
+            android:id="@+id/large_stretcher"
+            android:layout_width="1dp"
+            android:layout_height="@dimen/two_line_list_item_height"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/small_stretcher"
+            android:layout_width="1dp"
+            android:layout_height="@dimen/one_line_list_item_height"
+            android:visibility="gone" />
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@id/page_more"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/page_item_horizontal_padding"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/page_title"
+                style="@style/PageListItemTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="First pag ds ds sddsdsds ds ds dsdse adsd"/>
+
+            <include
+                layout="@layout/page_list_tag"
+                android:id="@+id/first_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                app:layout_constraintStart_toStartOf="@id/page_title"
+                app:layout_constraintTop_toBottomOf="@+id/page_title" />
+
+            <include
+                android:id="@+id/second_label"
+                layout="@layout/page_list_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="6dp"
+                app:layout_constraintStart_toEndOf="@+id/first_label"
+                app:layout_constraintTop_toBottomOf="@+id/page_title"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>

@@ -4,7 +4,6 @@
     android:id="@+id/toolbar_switch"
     android:layout_height="match_parent"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
     android:layout_width="wrap_content"
     android:theme="@style/SwitchBlueLight"
     tools:ignore="RtlSymmetry" >

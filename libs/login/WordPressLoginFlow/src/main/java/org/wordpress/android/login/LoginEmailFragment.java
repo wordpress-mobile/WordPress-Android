@@ -98,6 +98,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 label.setText(R.string.login_log_in_for_share_intent);
                 break;
             case FULL:
+            case WPCOM_LOGIN_ONLY:
                 label.setText(R.string.enter_email_wordpress_com);
                 break;
             case JETPACK_STATS:
@@ -149,7 +150,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     if (isAdded()) {
                         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         mIsSocialLogin = true;
-                        mLoginListener.addGoogleLoginFragment(LoginEmailFragment.this);
+                        mLoginListener.addGoogleLoginFragment();
                     } else {
                         AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
                         showErrorDialog(getString(R.string.login_error_generic_start));
@@ -177,6 +178,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
         switch (mLoginListener.getLoginMode()) {
             case FULL:
+            case WPCOM_LOGIN_ONLY:
             case SHARE_INTENT:
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);

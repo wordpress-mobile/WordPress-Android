@@ -37,7 +37,6 @@
                         android:id="@+id/text_installed"
                         style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_installed"
-                        android:layout_toLeftOf="@+id/text_manage"
                         android:layout_toStartOf="@+id/text_manage" />
 
                     <TextView
@@ -70,7 +69,6 @@
                         android:id="@+id/text_featured"
                         style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_featured"
-                        android:layout_toLeftOf="@+id/text_all_featured"
                         android:layout_toStartOf="@+id/text_all_featured"/>
 
                     <TextView
@@ -103,7 +101,6 @@
                         android:id="@+id/text_popular"
                         style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_popular"
-                        android:layout_toLeftOf="@+id/text_all_popular"
                         android:layout_toStartOf="@+id/text_all_popular"/>
 
                     <TextView
@@ -137,7 +134,6 @@
                         android:id="@+id/text_new"
                         style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_new"
-                        android:layout_toLeftOf="@+id/text_all_new"
                         android:layout_toStartOf="@+id/text_all_new" />
 
                     <TextView

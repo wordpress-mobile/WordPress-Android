@@ -41,14 +41,16 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-126"
-        versionCode 610
-        minSdkVersion 16
+        versionName "alpha-133"
+        versionCode 631
+        minSdkVersion 21
         targetSdkVersion 26
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -67,6 +69,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "REVISIONS_ENABLED", "true"
         }
     }
 
@@ -102,6 +105,8 @@ android {
 androidExtensions {
     experimental = true
 }
+// enable kotlin coroutines
+kotlin { experimental { coroutines "enable" } }
 
 dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
@@ -126,6 +131,8 @@ dependencies {
     implementation 'com.android.support:percent:27.1.1'
     implementation 'com.android.support:preference-v7:27.1.1'
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$arch_components_version"
 
@@ -138,6 +145,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'com.automattic:rest:1.0.7'
@@ -147,6 +155,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.facebook.shimmer:shimmer:0.3.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
@@ -161,6 +170,7 @@ dependencies {
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
     testImplementation 'org.mockito:mockito-core:2.20.1'
     testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
+    testImplementation 'org.assertj:assertj-core:2.9.1'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
@@ -213,6 +223,9 @@ dependencies {
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
 }
 
 configurations.all {

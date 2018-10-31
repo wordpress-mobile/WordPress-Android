@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-04 14:11:47+0000
+Translation-Revision-Date: 2018-09-24 11:33:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="pages_search_suggestion">Buscar páxinas</string>
+    <string name="pages_move_to_trash">Mover ao lixo</string>
+    <string name="pages_publish_now">Publicar agora</string>
+    <string name="pages_view">Ver</string>
+    <string name="page_moved_to_scheduled">Programouse a páxina</string>
+    <string name="page_moved_to_published">Publicouse a páxina</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="sites">Sitios</string>
@@ -70,9 +76,9 @@ Language: gl_ES
     <string name="plans_manage">Xestiona o teu plan en\nWordPress.com/plans</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Á procura dos usuarios…</string>
-    <string name="title_email_follower">Seguidor por correo–e</string>
+    <string name="title_email_follower">Seguidor por correo-e</string>
     <string name="people_dropdown_item_viewers">Lectores</string>
-    <string name="people_dropdown_item_email_followers">Seguidores por correo–e</string>
+    <string name="people_dropdown_item_email_followers">Seguidores por correo-e</string>
     <string name="people_dropdown_item_followers">Seguidores</string>
     <string name="people_dropdown_item_team">Equipo</string>
     <string name="invite_message_usernames_limit">Invita ate 10 enderezos de correo electrónico e/ou nomes de usuario de WordPress.com. A\naqueles que necesiten un nome de usuario se lles enviarán instrucións de como crear un.</string>
@@ -186,7 +192,7 @@ Language: gl_ES
     <string name="comments_empty_list_filtered_trashed">Non hai comentarios no lixo</string>
     <string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
     <string name="comments_empty_list_filtered_approved">Non hai comentarios aprobados</string>
-    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML–RPC requiridos non están no servidor.</string>
+    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML-RPC requiridos non están no servidor.</string>
     <string name="post_format_status">Estado</string>
     <string name="post_format_video">Vídeo</string>
     <string name="alignment_center">Centro</string>
@@ -230,7 +236,7 @@ Language: gl_ES
     <string name="pending_email_change_snackbar">Preme no enlace de verificación na mensaxe enviada a %1$s para confirmar o teu novo enderezo</string>
     <string name="web_address">Enderezo web</string>
     <string name="editor_toast_uploading_please_wait">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
-    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento – mostrando comentarios antigos</string>
+    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
     <string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
     <string name="post_settings_featured_image">Imaxe destacada</string>
     <string name="visual_editor_enabled">Editor visual habilitado</string>
@@ -461,7 +467,6 @@ Language: gl_ES
     <string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
     <string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
     <string name="undo">Desfacer</string>
-    <string name="passcodelock_prompt_message">Introduce o PIN</string>
     <string name="push_auth_expired">A solicitude expirou. Inicia sesión en WordPress.com para tentalo de novo.</string>
     <string name="ignore">Ignorar</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de visitas</string>
@@ -506,7 +511,7 @@ Language: gl_ES
     <string name="invalid_verification_code">Código de verificación non válido</string>
     <string name="auth_required">Inicia sesión de novo para continuar</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
-    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d – %2$d de %3$s seguidores de WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d - %2$d de %3$s seguidores de WordPress.com</string>
     <string name="stats_empty_search_terms">Non se rexistraron termos de busca</string>
     <string name="stats_entry_search_terms">Termo de busca</string>
     <string name="stats_view_authors">Autores</string>
@@ -517,7 +522,7 @@ Language: gl_ES
     <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="publisher">Editor:</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
-    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo–e</string>
+    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo-e</string>
     <string name="stats_empty_search_terms_desc">Aprende máis sobre o tráfico de buscas mirando os termos que levaron aos lectores ao teu sitio.</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
     <string name="post_uploading">Cargando</string>
@@ -569,8 +574,8 @@ Language: gl_ES
     <string name="stats_followers_hours">%1$d horas</string>
     <string name="stats_followers_a_day">Un día</string>
     <string name="stats_followers_days">%1$d días</string>
-    <string name="stats_followers_total_email">Total de seguidores por correo–e: %1$s</string>
-    <string name="stats_followers_email_selector">Correo–e</string>
+    <string name="stats_followers_total_email">Total de seguidores por correo-e: %1$s</string>
+    <string name="stats_followers_email_selector">Correo-e</string>
     <string name="stats_followers_total_wpcom">Total de seguidores en WordPress.com: %1$s</string>
     <string name="stats_comments_total_comments_followers">Total de artigos con seguidores dos comentarios: %1$s</string>
     <string name="stats_comments_by_authors">Por autores</string>
@@ -592,7 +597,6 @@ Language: gl_ES
     <string name="stats_empty_geoviews_desc">Nesta lista verás que países e rexións xeran máis tráfico no teu sitio</string>
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
-    <string name="create_new_blog_wpcom">Crear un blogue en WordPress.com</string>
     <string name="reader_empty_comments">Sen comentarios aínda</string>
     <string name="reader_empty_posts_in_tag">Non hai artigos con esta etiqueta</string>
     <string name="reader_label_view_original">Ver o artigo orixinal</string>
@@ -650,7 +654,6 @@ Language: gl_ES
     <string name="invalid_url_message">Comproba se a URL introducida é válida</string>
     <string name="notifications_empty_list">Sen notificacións</string>
     <string name="error_generic">Houbo un erro</string>
-    <string name="passcode_wrong_passcode">PIN incorrecto</string>
     <string name="email_invalid">Introduce un enderezo de correo electrónico válido</string>
     <string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
     <string name="gallery_error">Non foi posible obter o elemento multimedia</string>
@@ -667,14 +670,12 @@ Language: gl_ES
     <string name="adding_cat_failed">Fallou a adición da categoría</string>
     <string name="sdcard_message">Para cargar ficheiros fai é necesario ter unha tarxeta SD montada</string>
     <string name="error_deleting_post">Houbo un erro mentres se eliminaba a entrada</string>
-    <string name="required_field">Campo obrigatorio</string>
     <string name="notifications_empty_all">Sen notificacións … de momento.</string>
     <string name="new_post">Artigo novo</string>
     <string name="new_media">Ficheiro novo</string>
     <string name="privacy_policy">Política de privacidade</string>
     <string name="local_changes">Cambios locais</string>
     <string name="image_settings">Configuración da imaxe</string>
-    <string name="add_account_blog_url">Enderezo do blogue</string>
     <string name="wordpress_blog">Blogue feito con WordPress</string>
     <string name="reader_toast_err_add_tag">Non foi posible engadir esta etiqueta</string>
     <string name="add_new_category">Engadir categoría nova</string>
@@ -731,7 +732,6 @@ Language: gl_ES
     <string name="learn_more">Saber máis</string>
     <string name="file_not_found">Non foi posible atopar o ficheiro para cargar. Terá sido eliminado ou movido?</string>
     <string name="share_link">Enlace para compartir</string>
-    <string name="creating_your_site">Creando o teu sitio</string>
     <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="reader_label_reply">Responder</string>
     <string name="video">Vídeo</string>
@@ -745,7 +745,6 @@ Language: gl_ES
     <string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>
     <string name="reader_toast_err_tag_exists">Xa segues esta etiqueta</string>
     <string name="reader_toast_err_tag_invalid">Non é unha etiqueta válida</string>
-    <string name="reader_empty_followed_tags">Non segues etiqueta ningunha</string>
     <string name="reader_untitled_post">(Sen título)</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_btn_follow">Seguir</string>
@@ -761,14 +760,6 @@ Language: gl_ES
     <string name="reader_toast_err_view_image">Non foi posible mostrar a imaxe</string>
     <string name="reader_toast_err_url_intent">No foi posible abrir %s</string>
     <string name="stats_totals_plays">Reproducións</string>
-    <string name="passcode_manage">Administrar o bloqueo con PIN</string>
-    <string name="passcode_enter_old_passcode">Introduce o PIN anterior</string>
-    <string name="passcode_re_enter_passcode">Volve introducir o PIN</string>
-    <string name="passcode_change_passcode">Cambiar o PIN</string>
-    <string name="passcode_set">PIN establecido</string>
-    <string name="passcode_preference_title">Bloqueo con PIN</string>
-    <string name="passcode_turn_off">Desactivar o bloqueo con PIN</string>
-    <string name="passcode_turn_on">Activar o bloqueo con PIN</string>
     <string name="stats_view_tags_and_categories">Etiquetas e categorías</string>
     <string name="stats_view_referrers">Referencias</string>
     <string name="stats_timeframe_today">Hoxe</string>
@@ -813,6 +804,7 @@ Language: gl_ES
     <string name="password">Contrasinal</string>
     <string name="username">Nome de usuario</string>
     <string name="reader">Guía de Lectura</string>
+    <string name="pages">Páxinas</string>
     <string name="caption">Lenda (opcional)</string>
     <string name="width">Largo</string>
     <string name="posts">Artigos</string>

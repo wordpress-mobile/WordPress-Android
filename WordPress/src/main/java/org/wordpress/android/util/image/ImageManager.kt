@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
+import com.bumptech.glide.signature.ObjectKey
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
@@ -54,13 +55,22 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
      * Loads an image from the "imgUrl" into the ImageView and applies circle transformation. Adds placeholder and
      * error placeholder depending on the ImageType.
      */
-    fun loadIntoCircle(imageView: ImageView, imageType: ImageType, imgUrl: String) {
+    @JvmOverloads
+    fun loadIntoCircle(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        requestListener: RequestListener<Drawable>? = null,
+        version: Int? = null
+    ) {
         val context = imageView.context
         GlideApp.with(context)
                 .load(imgUrl)
                 .addFallback(context, imageType)
                 .addPlaceholder(context, imageType)
                 .circleCrop()
+                .attachRequestListener(requestListener)
+                .addSignature(version)
                 .into(imageView)
                 .clearOnDetach()
     }
@@ -215,6 +225,17 @@ class ImageManager @Inject constructor(val placeholderManager: ImagePlaceholderM
             this
         } else {
             this.error(loadDrawable(context, errorImageRes))
+        }
+    }
+
+    /**
+     * Changing the signature invalidates cache.
+     */
+    private fun <T : Any> GlideRequest<T>.addSignature(signature: Int?): GlideRequest<T> {
+        return if (signature == null) {
+            this
+        } else {
+            this.signature(ObjectKey(signature))
         }
     }
 

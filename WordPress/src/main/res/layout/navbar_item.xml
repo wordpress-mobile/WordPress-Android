@@ -18,8 +18,8 @@
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:contentDescription="@string/tabbar_accessibility_label_my_site"
-            android:tint="@color/grey_lighten_10"
-            tools:srcCompat="@drawable/ic_create_white_24dp"/>
+            android:tint="@drawable/nav_bar_button_selector"
+            tools:src="@drawable/ic_create_white_24dp"/>
 
         <View
             android:id="@+id/badge"

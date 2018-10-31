@@ -65,7 +65,6 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -77,6 +76,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -661,7 +661,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         } else if (mComment.getAuthorEmail() != null) {
             avatarUrl = GravatarUtils.gravatarFromEmail(mComment.getAuthorEmail(), avatarSz);
         }
-        mImageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR, avatarUrl);
+        mImageManager.loadIntoCircle(imgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
         updateStatusViews();
 

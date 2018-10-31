@@ -195,4 +195,14 @@
 
     <color name="switch_tint">@color/blue_medium</color>
     <color name="jetpack_green">#00be28</color>
+
+    <!-- Pages -->
+    <color name="page_item_tag_background">#fbf4e7</color>
+
+    <!-- Revisions -->
+    <color name="revision_diff_del_action_underline">@color/alert_red</color>
+    <color name="revision_diff_del_action_background">#1Ad94f4f</color>
+    <color name="revision_diff_add_action_underline">@color/blue_wordpress</color>
+    <color name="revision_diff_add_action_background">#1A0087BE</color>
+
 </resources>

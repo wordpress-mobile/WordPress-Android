@@ -65,7 +65,7 @@ import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.LocaleManager;

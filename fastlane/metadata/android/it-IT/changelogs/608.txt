@@ -1,0 +1,5 @@
+10.7:
+Tutti amano una GIF. Le GIF animate sono supportate nell'app e abbiamo velocizzato i loro tempi di caricamento in modo che tu non debba mai aspettare per vedere quel gatto cadere dal tavolo.
+A nessuno piacciono le schermate vuote senza istruzioni. Se navighi in qualsiasi pagina priva di contenuto, ad esempio se vai nel Reader ma non segui nessun blog, ti suggeriremo passaggi successivi.
+Risoluzione di bug.
+

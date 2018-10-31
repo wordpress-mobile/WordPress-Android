@@ -40,7 +40,6 @@ Language: is
     <string name="keep_editing">Halda áfram að breyta</string>
     <string name="error_all_media_upload_canceled">Hætt hefur verið við allar upphleðslur á skrám vegna óþekktrar villu. Vinsamlegast reyndu aftur að hlaða upp.</string>
     <string name="error_unknown_post_type">Óþekkt færslusnið</string>
-    <string name="error_fetch_site_after_creation">Vefur hefur verið stofnaður, þú gætir þurft að endurfríska vefina þína í vefvali.</string>
     <string name="submit_for_review">Áfram</string>
     <string name="duplicate_site_detected">Fleiri en eitt eintak af vef fannst.</string>
     <string name="cannot_add_duplicate_site">Þessi vefur er nú þegar til í forritinu, þú getur ekki bætt honum við.</string>
@@ -56,7 +55,6 @@ Language: is
     <string name="retry">Reyna aftur</string>
     <string name="confirm">Staðfesta</string>
     <string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
-    <string name="reader_empty_followed_blogs_search_title">Engir vefir fundust</string>
     <string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
     <string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
     <string name="preference_editor_visual">Ritþór</string>
@@ -65,7 +63,7 @@ Language: is
     <string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
-    <string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín – vertu viss um að birta þau!</string>
+    <string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín - vertu viss um að birta þau!</string>
     <string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
     <string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
     <string name="reader_photo_by">Mynd eftir %s</string>
@@ -220,7 +218,7 @@ Language: is
     <string name="editor_remove_failed_uploads">Fjarlægja misheppnuð upphöl</string>
     <string name="editor_toast_failed_uploads">Einhver skráarupphöl misheppnuðust. Þú getur ekki vistað eða birt\n        færsluna þína eins og staðan er. Viltu fjarlægja allar skrár sem mistókust?</string>
     <string name="site_settings_advanced_header">Ítarlegra</string>
-    <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML–RPC virkni vantar á netþjóninn.</string>
+    <string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
     <string name="alignment_center">Miðja</string>
     <string name="post_format_status">Staða</string>
     <string name="post_format_video">Myndband</string>
@@ -264,7 +262,7 @@ Language: is
     <string name="primary_site">Aðalvefur</string>
     <string name="pending_email_change_snackbar">Smelltu á staðfestingartengil í tölvupósti sem sendur var á %1$s til þess að staðfesta nýja netfangið þitt</string>
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
-    <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn – birti eldri athugasemdir</string>
+    <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn - birti eldri athugasemdir</string>
     <string name="visual_editor_enabled">Sjónrænn ritill virkjaður</string>
     <string name="editor_content_placeholder">Deildu sögunni þinni hér…</string>
     <string name="editor_page_title_placeholder">Titill síðu</string>
@@ -454,7 +452,7 @@ Language: is
     <string name="local_changes_explainer">Þessi færsla hefur staðværar breytingar sem hafa ekki verið birtar</string>
     <string name="notifications_push_summary">Stillingar fyrir tilkynningar sem birtast á tækinu þínu.</string>
     <string name="notifications_email_summary">Stillingar fyrir tilkynningar sem eru sendar á netfang tengt aðganginum þínum.</string>
-    <string name="notifications_tab_summary">Stillingar fyrir tilkynningar sem birtast í tilkynninga–flipa.</string>
+    <string name="notifications_tab_summary">Stillingar fyrir tilkynningar sem birtast í tilkynninga-flipa.</string>
     <string name="notifications_disabled">Tilkynningar frá forritinu hafa verið gerðar óvirkar. Ýttu hér til þess að virkja þær aftur í Settings.</string>
     <string name="notification_types">Tegundir tilkynninga</string>
     <string name="error_loading_notifications">Gat ekki hlaðið stillingar fyrir tilkynningar</string>
@@ -480,7 +478,6 @@ Language: is
     <string name="page_deleted">Síðu eytt</string>
     <string name="page_trashed">Síðu hent í rurslatunnu</string>
     <string name="undo">Afturkalla</string>
-    <string name="passcodelock_prompt_message">Sláðu inn PIN númer</string>
     <string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>
     <string name="ignore">Hunsa</string>
     <string name="stats_insights_best_ever">Flestar flettingar frá upphafi</string>
@@ -499,7 +496,7 @@ Language: is
     <string name="account_settings">Stillingar notandareiknings</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" var ekki falið þar sem það er núverandi vefur</string>
     <string name="me_btn_support">Hjálp og aðstoð</string>
-    <string name="site_picker_add_self_hosted">Bæta við sjálf–hýstum vef</string>
+    <string name="site_picker_add_self_hosted">Bæta við sjálf-hýstum vef</string>
     <string name="site_picker_edit_visibility">Birta/fela vefi</string>
     <string name="my_site_btn_view_site">Skoða vef</string>
     <string name="my_site_btn_switch_site">Skipta um vef</string>
@@ -529,13 +526,13 @@ Language: is
     <string name="comments_fetching">Sæki athugasemdir…</string>
     <string name="stats_entry_search_terms">Leitarorð</string>
     <string name="stats_search_terms_unknown_search_terms">Leitarorð óþekkt</string>
-    <string name="stats_followers_total_wpcom_paged">Birti %1$d – %2$d af %3$s WordPress.com fylgjendum</string>
+    <string name="stats_followers_total_wpcom_paged">Birti %1$d - %2$d af %3$s WordPress.com fylgjendum</string>
     <string name="media_fetching">Sæki skrá…</string>
     <string name="pages_fetching">Sæki síður…</string>
     <string name="posts_fetching">Sæki færslur…</string>
     <string name="publisher">Útgefandi:</string>
     <string name="reader_empty_posts_request_failed">Gat ekki sótt færslur</string>
-    <string name="stats_followers_total_email_paged">Birti %1$d – %2$d af %3$s fylgjendum í tölvupósti</string>
+    <string name="stats_followers_total_email_paged">Birti %1$d - %2$d af %3$s fylgjendum í tölvupósti</string>
     <string name="stats_empty_search_terms_desc">Lærðu meira um umferðina frá leitarvélum með því að skoða leitarorðin sem gestir notuðu til þess að finna vefinn þinn.</string>
     <string name="stats_overall">Heildar</string>
     <string name="stats_period">Tímabil</string>
@@ -589,7 +586,7 @@ Language: is
     <string name="stats_followers_total_email">Heildarfjöldi fylgjenda í tölvupósti: %1$s</string>
     <string name="stats_followers_total_wpcom">Heildarfjöldi WordPress.com fylgjenda: %1$s</string>
     <string name="stats_other_recent_stats_label">Önnur nýleg tölfræði</string>
-    <string name="stats_empty_top_posts_desc">Uppgötvaðu hvað er mest–skoðaða efnið þitt er og skoðaðu hvernig einstaka færslum og síðum hefur vegnað í gegnum tíðina.</string>
+    <string name="stats_empty_top_posts_desc">Uppgötvaðu hvað er mest-skoðaða efnið þitt er og skoðaðu hvernig einstaka færslum og síðum hefur vegnað í gegnum tíðina.</string>
     <string name="stats_empty_tags_and_categories_desc">Fáðu yfirsýn yfir vinsælustu umræðuefnin á vefnum þínum byggt á vinsælustu færslunum þínum síðastliðna vikuna.</string>
     <string name="stats_comments_total_comments_followers">Samtals færslur með fylgjendum athugasemda: %1$s</string>
     <string name="stats_empty_tags_and_categories">Engar merktar færslur eða síður skoðaðar</string>
@@ -612,7 +609,6 @@ Language: is
     <string name="comment_trashed">Athugasemd fleygt í ruslið</string>
     <string name="comment">Athugasemd</string>
     <string name="reader_label_comments_closed">Lokað er fyrir athugasemdir</string>
-    <string name="create_new_blog_wpcom">Stofna WordPress.com blogg</string>
     <string name="reader_title_photo_viewer">%1$d af %2$d</string>
     <string name="error_publish_empty_post">Get ekki birt tóma færslu</string>
     <string name="browse_our_faq_button">Skoðaðu algengar spurningar</string>
@@ -665,7 +661,6 @@ Language: is
     <string name="invalid_email_message">Netfangið þitt er ekki gilt</string>
     <string name="mnu_comment_unspam">Ekki amapóstur</string>
     <string name="no_network_message">Ekkert net er til staðar</string>
-    <string name="passcode_wrong_passcode">Rangt PIN</string>
     <string name="stats_bar_graph_empty">Engin tölfræði fáanleg</string>
     <string name="stats_empty_comments">Engar athugasemdir enn</string>
     <string name="theme_fetch_failed">Tókst ekki að sækja þemu</string>
@@ -687,7 +682,6 @@ Language: is
     <string name="create_a_link">Búa til tengil</string>
     <string name="connection_error">Tengingarvilla</string>
     <string name="http_authorization_required">Leyfisveitingar krafist</string>
-    <string name="add_account_blog_url">Blogg vefslóð</string>
     <string name="fatal_db_error">Villa kom upp við að stofna gagnagrunn smáforrits. Reyndu að setja smáforritið aftur upp.</string>
     <string name="reader_title_applog">Atburðarskrá forrits</string>
     <string name="category_name">Heiti flokks</string>
@@ -714,7 +708,6 @@ Language: is
     <string name="privacy_policy">Persónuverndarstefna</string>
     <string name="reader_toast_err_remove_tag">Gat ekki fjarlægt þetta merki</string>
     <string name="remove_account">Fjarlægja vef</string>
-    <string name="required_field">Nauðsynlegir reitir</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
     <string name="notifications_empty_all">Engar tilkynningar…enn.</string>
@@ -731,7 +724,6 @@ Language: is
     <string name="media_gallery_type_thumbnail_grid">Þumlur á grind</string>
     <string name="invalid_site_url_message">Athugaðu að innslegið veffang sé gilt</string>
     <string name="share_link">Deila tengli</string>
-    <string name="creating_your_site">Bý til vefinn þinn</string>
     <string name="reader_empty_posts_in_tag_updating">Sæki færslur…</string>
     <string name="video">Myndband</string>
     <string name="reader_label_reply">Svara</string>
@@ -758,7 +750,6 @@ Language: is
     <string name="reader_toast_err_url_intent">Gat ekki opnað %s</string>
     <string name="reader_toast_err_view_image">Gat ekki skoðað mynd</string>
     <string name="reader_label_removed_tag">Fjarlægja %s</string>
-    <string name="reader_empty_followed_tags">Þú fylgir engum merkjum</string>
     <string name="reader_toast_err_comment_failed">Gat ekki birt athugasemdina þína</string>
     <string name="stats_view_referrers">Referrers</string>
     <string name="stats_timeframe_months">Mánuðir</string>
@@ -782,19 +773,11 @@ Language: is
     <string name="stats_totals_clicks">Smellir</string>
     <string name="stats_view_clicks">Smellir</string>
     <string name="media_gallery_type_circles">Hringir</string>
-    <string name="passcode_change_passcode">Breyta PIN</string>
     <string name="stats_entry_authors">Höfundur</string>
     <string name="media_edit_caption_text">Myndatexti</string>
     <string name="theme_activate_button">Virkja</string>
     <string name="media_gallery_type_squares">Kassar</string>
     <string name="media_edit_failure">Uppfærsla mistókst</string>
-    <string name="passcode_enter_old_passcode">Sláðu inn gamla PIN númerið þitt</string>
-    <string name="passcode_manage">Sýsla með PIN læsingu</string>
-    <string name="passcode_preference_title">PIN númer</string>
-    <string name="passcode_re_enter_passcode">Sláðu aftur inn PIN</string>
-    <string name="passcode_set">PIN skilgreint</string>
-    <string name="passcode_turn_off">Slökkva á PIN læsingu</string>
-    <string name="passcode_turn_on">Kveikja á PIN læsingu</string>
     <string name="stats_view_visitors_and_views">Gestir og flettingar</string>
     <string name="stats_view_tags_and_categories">Merki og flokkar</string>
     <string name="manage">Stjórnun</string>
@@ -814,6 +797,7 @@ Language: is
     <string name="password">Lykilorð</string>
     <string name="username">Notandanafn</string>
     <string name="reader">Lesari</string>
+    <string name="pages">Síður</string>
     <string name="width">Breidd</string>
     <string name="posts">Færslur</string>
     <string name="anonymous">Nafnlaust</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-02 10:32:15+0000
+Translation-Revision-Date: 2018-10-15 06:27:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: el_GR
@@ -174,7 +174,6 @@ Language: el_GR
     <string name="image_quality">Ποιότητα εικόνας</string>
     <string name="error_all_media_upload_canceled">Όλες οι μεταφορτώσεις πολυμέσων έχουν ακυρωθεί εξαιτίας άγνωστου σφάλματος. Παρακαλούμε δοκιμάστε ξανά να τα μεταφορτώσετε</string>
     <string name="error_unknown_post_type">Άγνωστη μορφή άρθρου</string>
-    <string name="error_fetch_site_after_creation">Ο ιστότοπος έχει δημιουργηθεί, μπορεί να χρειάζεται ανανέωση των ιστοτόπων σας στον επιλογέα ιστοτόπων.</string>
     <string name="submit_for_review">Υποβολή</string>
     <string name="duplicate_site_detected">Ανιχνεύθηκε πανομοιότυπος ιστότοπος.</string>
     <string name="cannot_add_duplicate_site">Ο ιστότοπος υπάρχιε ήδη στην εφαρμογή, δεν μπορείτε να τον προσθέσετε.</string>
@@ -192,7 +191,6 @@ Language: el_GR
     <string name="confirm">Επιβεβαίωση</string>
     <string name="xmlrpc_endpoint_forbidden_error">Αδυναμία σύνδεσης. Λάβαμε ένα σφάλμα 403 προσπαθώντας να προσπελάσουμε\nτο σημείο επαφής XMLRPC του ιστοτόπου σας. Η εφαρμογή το χρειάζεται ώστε επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε\nαυτό το πρόβλημα.</string>
     <string name="xmlrpc_post_blocked_error">Αδυναμία σύνδεσης. Ο πάροχος φιλοξενίας σας μπλοκάρει τα αιτήματα POST και η εφαρμογή τα χρειάζεται\nώστε να επικοινωνήσει με τον ιστότοπό σας. Επικοινωνήστε με τον πάροχο φιλοξενίας σας για να λύσετε αυτό το πρόβλημα.</string>
-    <string name="reader_empty_followed_blogs_search_title">Δεν βρέθηκαν ιστότοποι να ταιριάζουν</string>
     <string name="reader_hint_search_followed_sites">Αναζήτηση σε παρακολουθούμενους ιστότοπους.</string>
     <string name="visual_editor_disabled">Ο Επεξεργαστής είναι απενεργοποημένος</string>
     <string name="preference_editor_visual">Όπως Εμφανίζεται</string>
@@ -201,7 +199,7 @@ Language: el_GR
     <string name="pending_draft_one_generic">Μην το αφήνετε να εκκρεμεί! Το \'%1$s\' περιμένει να δημοσιευτεί.</string>
     <string name="pending_draft_one_month">Μην το αφήνετε να εκκρεμεί! Το \'%1$s\' περιμένει να δημοσιευτεί.</string>
     <string name="pending_draft_one_week_2">Το \'%1$s\' παραμένει προσχέδιο. Θυμηθείτε να το δημοσιεύσετε!</string>
-    <string name="pending_draft_one_week_1">Το προσχέδιό σας \'%1$s\' σας περιμένει – μη ξεχάσετε να το δημοσιεύσετε!</string>
+    <string name="pending_draft_one_week_1">Το προσχέδιό σας \'%1$s\' σας περιμένει - μη ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="pending_draft_one_day_2">Το ξέρατε ότι το \'%1$s\' είναι ακόμα προσχέδιο; Δημοσιεύστε το!</string>
     <string name="pending_draft_one_day_1">Κάνατε το προσχέδιο του \'%1$s\' χθες. Μην ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="reader_photo_by">Φωτογραφία από %s</string>
@@ -251,8 +249,8 @@ Language: el_GR
     <string name="plans_manage">Διαχειριστείτε το πακέτο σας στο\nWordPress.com/plans</string>
     <string name="people_fetching">Λήψη χρηστών…</string>
     <string name="title_follower">Ακόλουθος</string>
-    <string name="title_email_follower">Ακόλουθος μέσω e–mail</string>
-    <string name="people_dropdown_item_email_followers">Ακόλουθοι μέσω e–mail</string>
+    <string name="title_email_follower">Ακόλουθος μέσω e-mail</string>
+    <string name="people_dropdown_item_email_followers">Ακόλουθοι μέσω e-mail</string>
     <string name="people_dropdown_item_viewers">Αναγνώστες</string>
     <string name="people_dropdown_item_followers">Ακόλουθοι</string>
     <string name="people_dropdown_item_team">Ομάδα</string>
@@ -262,7 +260,7 @@ Language: el_GR
     <string name="follower_subscribed_since">Από %1$s</string>
     <string name="error_remove_follower">Αδυναμία αφαίρεσης ακόλουθου</string>
     <string name="error_remove_viewer">Αδυναμία αφαίρεσης αναγνώστη</string>
-    <string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e–mail</string>
+    <string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e-mail</string>
     <string name="error_fetch_followers_list">Αδυναμία ανάκτησης ακολούθων ιστοτόπου</string>
     <string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
     <string name="format_bar_description_html">Λειτουργία HTML</string>
@@ -326,7 +324,7 @@ Language: el_GR
     <string name="error_locating_image">Σφάλμα εντοπισμού της περικομμένης εικόνας</string>
     <string name="error_refreshing_gravatar">Σφάλμα κατά την επαναφόρτωση του Gravatar σας</string>
     <string name="error_cropping_image">Σφάλμα κατά την περικοπή της εικόνας</string>
-    <string name="checking_email">Έλεγχος e–mail</string>
+    <string name="checking_email">Έλεγχος e-mail</string>
     <string name="magic_link_unavailable_error_message">Μη διαθέσιμο αυτή τη στιγμή. Παρακαλούμε εισάγετε το συνθηματικό σας</string>
     <string name="logging_in">Γίνεται σύνδεση</string>
     <string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
@@ -340,7 +338,7 @@ Language: el_GR
     <string name="plans_loading_error">Αδυναμία φόρτωσης προγραμμάτων</string>
     <string name="export_your_content">Εξαγωγή του περιεχομένου σας</string>
     <string name="exporting_content_progress">Εξαγωγή περιεχομένου…</string>
-    <string name="export_email_sent">E–mail εξαγωγής στάλθηκε!</string>
+    <string name="export_email_sent">E-mail εξαγωγής στάλθηκε!</string>
     <string name="premium_upgrades_message">Έχετε ενεργές premium αναβαθμίσεις στον ιστότοπό σας. Παρακαλούμε ακυρώστε τις αναβαθμίσεις σας πριν διαγράψετε τον ιστότοπό σας</string>
     <string name="show_purchases">Εμφάνιση αγορών</string>
     <string name="checking_purchases">Έλεγχος αγορών</string>
@@ -363,8 +361,11 @@ Language: el_GR
     <string name="start_over">Ξεκινήστε από την Αρχή</string>
     <string name="editor_remove_failed_uploads">Αφαίρεση αποτυχημένων μεταφορτώσεων</string>
     <string name="editor_toast_failed_uploads">Μερικές μεταφορτώσεις πολυμέσων έχουν αποτύχει. Δεν μπορείτε να αποθηκεύσετε ή να δημοσιεύσετε\nτο άρθρο σας σε αυτή την κατάσταση. Θα θέλατε να αφαιρέσετε όλα τα προβληματικά πολυμέσα;</string>
+    <string name="comments_empty_list_filtered_trashed">Δεν υπάρχουν Διαγραμμένα σχόλια</string>
     <string name="site_settings_advanced_header">Προχωρημένες</string>
-    <string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML–RPC απουσιάζουν από το διακομιστή.</string>
+    <string name="comments_empty_list_filtered_pending">Δεν υπάρχουν Εκκρεμή σχόλια</string>
+    <string name="comments_empty_list_filtered_approved">Δεν υπάρχουν Εγκεκριμένα σχόλια</string>
+    <string name="xmlrpc_missing_method_error">Αδυναμία σύνδεσης. Οι απαιτούμενες μέθοδοι XML-RPC απουσιάζουν από το διακομιστή.</string>
     <string name="post_format_status">Κατάσταση</string>
     <string name="post_format_video">Βίντεο</string>
     <string name="alignment_center">Κέντρο</string>
@@ -404,11 +405,11 @@ Language: el_GR
     <string name="detail_approve_manual">Απαιτείται χειροκίνητη έγκριση για όλα τα σχόλια.</string>
     <string name="days_quantity_one">1 ημέρα</string>
     <string name="days_quantity_other">%d ημέρες</string>
-    <string name="pending_email_change_snackbar">Κάντε κλικ στο σύνδεσμο επιβεβαίωσης στο μήνυμα e–mail που στάλθηκε στο %1$s για να επιβεβαιώσετε τη νέα σας διεύθυνση.</string>
+    <string name="pending_email_change_snackbar">Κάντε κλικ στο σύνδεσμο επιβεβαίωσης στο μήνυμα e-mail που στάλθηκε στο %1$s για να επιβεβαιώσετε τη νέα σας διεύθυνση.</string>
     <string name="primary_site">Κύριος ιστότοπος</string>
     <string name="web_address">Διεύθυνση Ιστότοπου</string>
     <string name="editor_toast_uploading_please_wait">Αυτή τη στιγμή μεταφορτώνετε πολυμέσα. Παρακαλώ περιμένετε μέχρι να ολοκληρωθεί.</string>
-    <string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή – εμφάνιση παλαιότερων σχολίων</string>
+    <string name="error_refresh_comments_showing_older">Δεν ήταν δυνατή η ανανέωση των σχολίων αυτή τη στιγμή - εμφάνιση παλαιότερων σχολίων</string>
     <string name="post_settings_set_featured_image">Ορισμός προβαλλόμενης εικόνας</string>
     <string name="post_settings_featured_image">Προβαλλόμενη Εικόνα</string>
     <string name="visual_editor_enabled">Ο οπτικοποιημένος επεξεργαστής ενεργοποιήθηκε</string>
@@ -422,6 +423,7 @@ Language: el_GR
     <string name="mnu_comment_delete_permanently">Διαγραφή</string>
     <string name="comment_deleted_permanently">Το σχόλιο διαγράφηκε</string>
     <string name="mnu_comment_untrash">Αποκατάσταση</string>
+    <string name="comments_empty_list_filtered_spam">Δεν υπάρχουν ανεπιθύμητα σχόλια</string>
     <string name="could_not_load_page">Αδυναμία φόρτωσης σελίδας</string>
     <string name="comment_status_all">Όλα</string>
     <string name="interface_language">Γλώσσα περιβάλλοντος εργασίας</string>
@@ -459,8 +461,8 @@ Language: el_GR
     <string name="site_settings_paging_dialog_description">Σπάσιμο των συζητήσεων με σχόλια σε πολλαπλές σελίδες.</string>
     <string name="site_settings_paging_dialog_header">Σχόλια ανά σελίδα</string>
     <string name="site_settings_close_after_dialog_title">Κλείσιμο σχολιασμού</string>
-    <string name="site_settings_blacklist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e–mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e–mail ή IP, θα παραμένει στην αναμονή προς έγκριση. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\" </string>
+    <string name="site_settings_blacklist_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα σημειώνεται ως ανεπιθύμητο. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\"</string>
+    <string name="site_settings_hold_for_moderation_description">Όταν ένα σχόλιο περιέχει οποιαδήποτε από αυτές τις λέξεις σε περιεχόμενο, όνομα, URL, e-mail ή IP, θα παραμένει στην αναμονή προς έγκριση. Μπορείτε να εισάγετε μέρη λέξεων, έτσι το \"press\" θα πιάσει και το \"WordPress.\" </string>
     <string name="site_settings_list_editor_input_hint">Εισάγετε μια λέξη ή φράση</string>
     <string name="site_settings_list_editor_no_items_text">Δεν υπάρχουν αντικείμενα</string>
     <string name="site_settings_learn_more_caption">Μπορείτε να παρακάμψετε αυτές τις ρυθμίσεις για μεμονωμένα άρθρα.</string>
@@ -479,7 +481,7 @@ Language: el_GR
     <string name="site_settings_multiple_links_hint">Αγνόηση του ορίου συνδέσμου για γνωστούς χρήστες</string>
     <string name="site_settings_whitelist_hint">Ο συντάκτης του σχολίου πρέπει να έχει προηγουμένως εγκεκριμένο σχόλιο</string>
     <string name="site_settings_user_account_required_hint">Οι χρήστες πρέπει να είναι εγγεγραμμένοι και συνδεδεμένοι για να σχολιάσουν</string>
-    <string name="site_settings_identity_required_hint">Ο συντάκτης του σχολίου θα πρέπει να συμπληρώσει όνομα και e–mail</string>
+    <string name="site_settings_identity_required_hint">Ο συντάκτης του σχολίου θα πρέπει να συμπληρώσει όνομα και e-mail</string>
     <string name="site_settings_paging_hint">Εμφάνιση σχολίων σε ομάδες καθορισμένου μεγέθους</string>
     <string name="site_settings_threading_hint">Να επιτρέπεται η κατάταξη των σχολίων μέχρι συγκεκριμένου βάθους</string>
     <string name="site_settings_sort_by_hint">Καθορίζει τη σειρά εμφάνισης των σχολίων</string>
@@ -515,7 +517,7 @@ Language: el_GR
     <string name="site_settings_threading_title">Νήματα</string>
     <string name="site_settings_sort_by_title">Ταξινόμηση κατά</string>
     <string name="site_settings_account_required_title">Οι χρήστες πρέπει να είναι συνεδεμένοι</string>
-    <string name="site_settings_identity_required_title">Πρέπει να περιλαμβάνεται όνομα και e–mail</string>
+    <string name="site_settings_identity_required_title">Πρέπει να περιλαμβάνεται όνομα και e-mail</string>
     <string name="site_settings_receive_pingbacks_title">Λήψη Παραθέσεων</string>
     <string name="site_settings_send_pingbacks_title">Αποστολή Παραθέσεων</string>
     <string name="site_settings_allow_comments_title">Να επιτρέπονται τα Σχόλια</string>
@@ -574,8 +576,14 @@ Language: el_GR
     <string name="reader_label_gap_marker">Φόρτωμα περισσότερων άρθρων</string>
     <string name="notifications_no_search_results">Δεν βρέθηκαν ιστότοποι που να ταιριάζουν με την \'%s\'</string>
     <string name="search_sites">Αναζήτηση ιστότοπων</string>
+    <string name="notifications_empty_view_reader">Προβολή Αναγνώστη</string>
+    <string name="notifications_empty_action_followers_likes">Λάβετε ειδοποιήσεις: σχολιάστε δημοσιεύσεις που έχετε διαβάσει.</string>
+    <string name="notifications_empty_action_comments">Συμμετέχετε σε συζήτηση: σχολιάστε δημοσιεύσεις των ιστολογίων που ακολουθείτε.</string>
+    <string name="notifications_empty_action_unread">Αναθερμάνετε τη συζήτηση: γράψτε μια νέα απάντηση.</string>
     <string name="notifications_empty_action_all">Δραστηριοποιηθείτε! Σχολιάστε σε αναρτήσεις από blogs που ακολουθείτε.</string>
-    <string name="stats_widget_error_jetpack_no_blogid">Παρακαλούμε όπως προσπελάσετε τα Στατιστικά στην εφαρμογή και στη συνέχεια δοκιμάσετε να προσθέσετε την εφαρμογή–βοηθό</string>
+    <string name="notifications_empty_comments">Δεν υπάρχουν νέα σχόλια…ακόμα.</string>
+    <string name="notifications_empty_unread">Δεν έχετε νέες ενημερώσεις!</string>
+    <string name="stats_widget_error_jetpack_no_blogid">Παρακαλούμε όπως προσπελάσετε τα Στατιστικά στην εφαρμογή και στη συνέχεια δοκιμάσετε να προσθέσετε την εφαρμογή-βοηθό</string>
     <string name="stats_widget_error_readd_widget">Παρακαλούμε αφαιρέστε και προσθέστε ξανά την εφαρμογή</string>
     <string name="stats_widget_error_no_visible_blog">Δεν μπορεί να γίνει προσπέλαση των στατιστικών χωρίς ένα φανερό ιστολόγιο</string>
     <string name="stats_widget_error_no_permissions">Ο λογαριασμός σας WordPress.com δεν έχει πρόσβαση στα Στατιστικά σε αυτό το blog</string>
@@ -632,7 +640,6 @@ Language: el_GR
     <string name="reader_toast_err_follow_blog_not_authorized">Δεν έχετε εξουσιοδότηση για να συνδεθείτε σε αυτό τον ιστότοπο</string>
     <string name="reader_toast_err_follow_blog_not_found">Αδυναμία εύρεσης αυτού του ιστότοπου</string>
     <string name="undo">Αναίρεση</string>
-    <string name="passcodelock_prompt_message">Εισάγετε το PIN σας</string>
     <string name="push_auth_expired">Το αίτημα έληξε. Συνδεθείτε στο WordPress.com για να προσπαθήσετε ξανά.</string>
     <string name="ignore">Αγνοήστε</string>
     <string name="stats_insights_best_ever">Περισσότερες προβολές ποτέ</string>
@@ -654,7 +661,7 @@ Language: el_GR
     <string name="site_picker_create_wpcom">Δημιουργία WordPress.com ιστότοπου</string>
     <string name="site_picker_add_site">Προσθήκη ιστότοπου</string>
     <string name="site_picker_edit_visibility">Εμφάνιση/απόκρυψη ιστότοπων</string>
-    <string name="site_picker_add_self_hosted">Προσθήκη αυτο–φιλοξενούμενου ιστότοπου</string>
+    <string name="site_picker_add_self_hosted">Προσθήκη αυτο-φιλοξενούμενου ιστότοπου</string>
     <string name="my_site_btn_view_site">Προβολή ιστότοπου</string>
     <string name="my_site_btn_switch_site">Αλλαγή Ιστότοπου</string>
     <string name="my_site_btn_view_admin">Προβολή Διαχείρισης</string>
@@ -689,8 +696,8 @@ Language: el_GR
     <string name="publisher">Εκδότης:</string>
     <string name="posts_fetching">Λήψη άρθρων…</string>
     <string name="media_fetching">Λήψη πολυμέσων…</string>
-    <string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d – %2$d από %3$s Ακόλουθοι WordPress.com</string>
-    <string name="stats_followers_total_email_paged">Κατάδειξη %1$d – %2$d από %3$s Ακόλουθοι Email</string>
+    <string name="stats_followers_total_wpcom_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι WordPress.com</string>
+    <string name="stats_followers_total_email_paged">Κατάδειξη %1$d - %2$d από %3$s Ακόλουθοι Email</string>
     <string name="stats_months_and_years">Μήνες και Χρόνια</string>
     <string name="reader_page_recommended_blogs">Ιστολόγια που μπορεί να σας αρέσουν</string>
     <string name="stats_total">Σύνολα</string>
@@ -777,7 +784,6 @@ Language: el_GR
     <string name="error_publish_empty_post">Δεν μπορείτε να δημοσιεύσετε ένα κενό άρθρο</string>
     <string name="older_month">Παλαιότερο από ένα μήνα</string>
     <string name="browse_our_faq_button">Περιηγηθείτε στις Συχνές Ερωτήσεις</string>
-    <string name="create_new_blog_wpcom">Δημιουργίας ιστολογίου στο WordPress.com</string>
     <string name="reader_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
     <string name="reader_empty_posts_in_tag">Δεν υπάρχουν άρθρα με αυτή την ετικέτα</string>
     <string name="reader_label_view_original">Προβολή αρχικού άρθρου</string>
@@ -812,7 +818,6 @@ Language: el_GR
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="no_network_message">Δεν υπάρχει διαθέσιμο δίκτυο</string>
     <string name="stats_empty_comments">Δεν υπάρχουν σχόλια ακόμη</string>
-    <string name="passcode_wrong_passcode">Λάθος PIN</string>
     <string name="invalid_email_message">Η διεύθυνση email σας δεν είναι έγκυρη</string>
     <string name="error_downloading_image">Σφάλμα κατά την ανάκτηση της εικόνας</string>
     <string name="email_invalid">Εισάγετε μια έγκυρη διεύθυνση email</string>
@@ -853,8 +858,6 @@ Language: el_GR
     <string name="post_settings">Ρυθμίσεις άρθρου</string>
     <string name="dlg_confirm_trash_comments">Αποστολή στα σκουπίδια;</string>
     <string name="wordpress_blog">Ιστολόγιο WordPress</string>
-    <string name="required_field">Υποχρεωτικό πεδίο</string>
-    <string name="add_account_blog_url">Διεύθυνση ιστολογίου</string>
     <string name="mnu_comment_trash">Σκουπίδια</string>
     <string name="preview_post">Προεπισκόπηση άρθρου</string>
     <string name="remove_account">Αφαίρεση ιστότοπου</string>
@@ -903,7 +906,6 @@ Language: el_GR
     <string name="delete_page">Διαγραφή σελίδας;</string>
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
     <string name="share_link">Κοινοποίηση συνδέσμου</string>
-    <string name="creating_your_site">Δημιουργώντας τον ιστότοπο</string>
     <string name="reader_empty_posts_in_tag_updating">Γίνεται λήψη άρθρων…</string>
     <string name="reader_label_reply">Απάντηση</string>
     <string name="video">Βίντεο</string>
@@ -916,6 +918,7 @@ Language: el_GR
     <string name="pick_video">Διάλεξε Βίντεο</string>
     <string name="reader_toast_err_get_post">Δεν είναι δυνατή η ανάκτηση αυτού του άρθρου.</string>
     <string name="reader_toast_err_share_intent">Δεν ήταν δυνατός ο διαμοιρασμός</string>
+    <string name="comments_empty_list">Κανένα σχόλιο.</string>
     <string name="reader_btn_share">Μοιράσου</string>
     <string name="reader_btn_follow">Ακολουθήστε</string>
     <string name="reader_btn_unfollow">Ακολουθούν</string>
@@ -929,7 +932,6 @@ Language: el_GR
     <string name="reader_toast_err_tag_invalid">Αυτή η ετικέτα δεν είναι έγκυρη</string>
     <string name="reader_toast_err_url_intent">Δε στάθηκε δυνατό να ανοιχθεί το %s</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
-    <string name="reader_empty_followed_tags">Δεν ακολουθείτε καμία ετικέτα</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>
     <string name="reader_label_removed_tag">Αφαιρέθηκε το %s</string>
     <string name="stats">Στατιστικά</string>
@@ -961,14 +963,6 @@ Language: el_GR
     <string name="stats_totals_views">Εμφανίσεις</string>
     <string name="stats_totals_clicks">Κλικ</string>
     <string name="stats_totals_plays">Αναπαραγωγές</string>
-    <string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
-    <string name="passcode_enter_old_passcode">Πληκτρολογήστε το παλιό σας PIN</string>
-    <string name="passcode_re_enter_passcode">Πληκτρολογήστε το PIN σας ξανά</string>
-    <string name="passcode_change_passcode">Αλλάγή PIN</string>
-    <string name="passcode_set">Το PIN ορίστηκε</string>
-    <string name="passcode_preference_title">Κλείδωμα PIN</string>
-    <string name="passcode_turn_off">Απενεργοποιήστε το κλείδωμα PIN</string>
-    <string name="passcode_turn_on">Ενεργοποιήστε το κλείδωμα PIN</string>
     <string name="manage">Διαχείριση</string>
     <string name="discard">Απόρριψη</string>
     <string name="sign_in">Συνδεθείτε</string>
@@ -989,6 +983,7 @@ Language: el_GR
     <string name="reader">Αναγνώστης</string>
     <string name="featured_in_post">Συμπεριλάβετε την εικόνα στο περιεχόμενο του άρθρου</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
+    <string name="pages">Σελίδες</string>
     <string name="caption">Λεζάντα (προαιρετική)</string>
     <string name="width">Πλάτος</string>
     <string name="posts">Άρθρα</string>
@@ -1009,6 +1004,7 @@ Language: el_GR
     <string name="today">Σήμερα</string>
     <string name="quickpress_window_title">Επιλέξτε ιστότοπο για τη συντόμευση του QuickPress</string>
     <string name="quickpress_add_error">Το όνομα της συντόμευσης δεν επιτρέπεται να είναι κενό</string>
+    <string name="pages_private">Ιδιωτικό</string>
     <string name="title">Τίτλος</string>
     <string name="categories">Κατηγορίες</string>
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>

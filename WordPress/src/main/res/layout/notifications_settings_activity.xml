@@ -55,8 +55,6 @@
             android:layout_marginTop="@dimen/margin_extra_medium_large"
             android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingLeft="@dimen/toolbar_content_offset"
-            android:paddingRight="@dimen/margin_extra_large"
             android:paddingStart="@dimen/toolbar_content_offset"
             android:text="@string/notification_settings_master_off_title"
             style="@style/TextAppearance.AppCompat.Subhead" >
@@ -68,8 +66,6 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_width="match_parent"
             android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingLeft="@dimen/toolbar_content_offset"
-            android:paddingRight="@dimen/margin_extra_large"
             android:paddingStart="@dimen/toolbar_content_offset"
             android:text="@string/notification_settings_master_off_message"
             style="@style/TextAppearance.AppCompat.Body1" >

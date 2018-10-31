@@ -17,7 +17,7 @@ Language: mk
     <string name="stats_total">Вкупно</string>
     <string name="stats_empty_top_authors_desc">Пратете ги гледањата на написите на секој соработник и откријте ја најпопуларната содржина на секој автор.</string>
     <string name="stats_empty_comments_desc">Доколку дозволите коментари на вашата страница, пратете ги вашите најдобри коментатори и откријте што ја распламтува конверзацијата врз база на последните 1000 коментари.</string>
-    <string name="stats_followers_total_email">Вкупно Е–Пошта Следбеници: %1$s</string>
+    <string name="stats_followers_total_email">Вкупно Е-Пошта Следбеници: %1$s</string>
     <string name="stats_timeframe_years">Години</string>
     <string name="stats_followers_days">%1$d денови</string>
     <string name="stats_followers_a_day">Ден</string>
@@ -56,7 +56,7 @@ Language: mk
     <string name="stats_empty_top_posts_title">Нема гледано написи или страници</string>
     <string name="stats_view_countries">Земји</string>
     <string name="stats_view_followers">Следбеници</string>
-    <string name="stats_followers_email_selector">Е–пошта</string>
+    <string name="stats_followers_email_selector">Е-пошта</string>
     <string name="stats_followers_seconds_ago">пред секунди</string>
     <string name="stats_totals_publicize">Следбеници</string>
     <string name="stats_entry_video_plays">Видео</string>
@@ -75,7 +75,6 @@ Language: mk
     <string name="ssl_certificate_details">Детали</string>
     <string name="cab_selected">%d слекетирано</string>
     <string name="browse_our_faq_button">Разгледи наши ЧПП</string>
-    <string name="create_new_blog_wpcom">Создади WordPress.com блог</string>
     <string name="reader_empty_comments">Нема коментари сеуште</string>
     <string name="reader_label_view_original">Види ја оригиналната статија</string>
     <string name="reader_empty_posts_in_tag">Нема постови со оваа ознака</string>
@@ -111,13 +110,12 @@ Language: mk
     <string name="stats_empty_comments">Сеуште нема коментари</string>
     <string name="notifications_empty_list">Нема известувања</string>
     <string name="error_generic">Се појави грешка</string>
-    <string name="passcode_wrong_passcode">Погрешен PIN</string>
     <string name="no_network_message">Нема досптана мрежа</string>
     <string name="theme_fetch_failed">Неможе да ги прикаже темите</string>
-    <string name="invalid_email_message">Вашата е–пошта е невалидна</string>
+    <string name="invalid_email_message">Вашата е-пошта е невалидна</string>
     <string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
     <string name="cat_name_required">Полето со името на категоријата е задолжително</string>
-    <string name="email_invalid">Воведи валидна е–поштта</string>
+    <string name="email_invalid">Воведи валидна е-поштта</string>
     <string name="username_or_password_incorrect">Корисничкото име или лозинката се неточни</string>
     <string name="error_downloading_image">Грешно превземање на слика</string>
     <string name="stats_bar_graph_empty">Нема статистика</string>
@@ -152,7 +150,6 @@ Language: mk
     <string name="preview_page">Прегледај страница</string>
     <string name="preview_post">Прегледај напис</string>
     <string name="image_settings">Подесувања на сликата</string>
-    <string name="add_account_blog_url">Адреса на блогот</string>
     <string name="wordpress_blog">WordPress блог</string>
     <string name="select_categories">Избери категории</string>
     <string name="error_blog_hidden">Овој блог е скриен и неможе да се вчита. Овозможи го повторно во подесувањата и обиди се повторно.</string>
@@ -160,7 +157,6 @@ Language: mk
     <string name="reader_title_applog">Дневник на апликацијата</string>
     <string name="reader_toast_err_add_tag">Неможе да се додаде оваа обележување</string>
     <string name="reader_toast_err_remove_tag">Неможе да се отстрани оваа обележување</string>
-    <string name="required_field">Задолжително поле</string>
     <string name="edit_comment">Измени коментар</string>
     <string name="mnu_comment_approve">Одобри</string>
     <string name="mnu_comment_trash">Отпадок</string>
@@ -175,7 +171,7 @@ Language: mk
     <string name="privacy_policy">Полиса за приватност</string>
     <string name="media_error_no_permission">Немате достап за да ја видете медиа библиотеката</string>
     <string name="cannot_delete_multi_media_items">Некои медиа арихи неможат да бидат избришани во моментот. Обидете се покасно.</string>
-    <string name="media_gallery_type_thumbnail_grid">Мини–мрежа</string>
+    <string name="media_gallery_type_thumbnail_grid">Мини-мрежа</string>
     <string name="add_new_category">Додади нова категорија</string>
     <string name="category_name">Име на категорија</string>
     <string name="new_media">Нова медиа</string>
@@ -189,7 +185,6 @@ Language: mk
     <string name="file_error_create">Неможе да се созададе темп архива за медиа испраќање. Ве волиме да обезбедите доволоно простор на вашиот уред</string>
     <string name="new_post">Нов напис</string>
     <string name="share_link">Сподели врска</string>
-    <string name="creating_your_site">Креирање на вашата страница</string>
     <string name="reader_empty_posts_in_tag_updating">Преземање написи…</string>
     <string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
     <string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
@@ -212,7 +207,6 @@ Language: mk
     <string name="reader_toast_err_share_intent">Неможе да се сподели</string>
     <string name="reader_toast_err_view_image">Неможе да се види сликата</string>
     <string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
-    <string name="reader_empty_followed_tags">Вие не следите ниту едно обележување</string>
     <string name="reader_btn_unfollow">Следење</string>
     <string name="reader_label_added_tag">Додадено %s</string>
     <string name="reader_likes_one">На едно лице му се допаѓа ова</string>
@@ -222,7 +216,6 @@ Language: mk
     <string name="stats_entry_posts_and_pages">Наслов</string>
     <string name="themes">Теми</string>
     <string name="stats_timeframe_days">Денови</string>
-    <string name="passcode_change_passcode">Промени ПИН</string>
     <string name="media_gallery_type_squares">Квадрати</string>
     <string name="media_gallery_type_tiled">Плочки</string>
     <string name="media_gallery_type_circles">Кругови</string>
@@ -230,14 +223,7 @@ Language: mk
     <string name="media_edit_title_text">Наслов</string>
     <string name="media_edit_caption_text">Наслов</string>
     <string name="media_edit_description_text">Опис</string>
-    <string name="passcode_enter_old_passcode">Воведи го твојот стар ПИН</string>
     <string name="stats_timeframe_weeks">Седмици</string>
-    <string name="passcode_manage">Управување со PIN заклучување</string>
-    <string name="passcode_re_enter_passcode">Внесете го повторно вашиот PIN</string>
-    <string name="passcode_set">PIN–от е подесен</string>
-    <string name="passcode_preference_title">PIN заклучување</string>
-    <string name="passcode_turn_off">Исклучете го PIN заклучувањето</string>
-    <string name="passcode_turn_on">Вклучете го PIN заклучувањето</string>
     <string name="stats_totals_views">Прегледи</string>
     <string name="stats_totals_clicks">Кликнувања</string>
     <string name="share_action">Сподели</string>
@@ -271,6 +257,7 @@ Language: mk
     <string name="anonymous">Анонимно</string>
     <string name="posts">Написи</string>
     <string name="caption">Наслов (изборно)</string>
+    <string name="pages">Страници</string>
     <string name="no_network_title">Не е достапна мрежа</string>
     <string name="featured_in_post">Вклучете ги сликите во содржината на написот</string>
     <string name="blogusername">блогкорисник</string>

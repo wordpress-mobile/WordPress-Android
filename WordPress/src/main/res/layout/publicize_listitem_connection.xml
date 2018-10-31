@@ -11,7 +11,6 @@
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_large"
         tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
         android:layout_marginEnd="@dimen/margin_large"
         android:contentDescription="@null"/>
@@ -20,7 +19,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_toRightOf="@+id/image_avatar"
         android:background="@color/divider_grey"
         android:layout_toEndOf="@+id/image_avatar"/>
 
@@ -30,10 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20dp"
-        android:layout_marginRight="@dimen/margin_large"
         android:layout_marginTop="20dp"
-        android:layout_toLeftOf="@+id/button_connect"
-        android:layout_toRightOf="@+id/image_avatar"
         android:ellipsize="end"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
@@ -48,9 +43,7 @@
         android:id="@+id/button_connect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_extra_large"/>
 </RelativeLayout>

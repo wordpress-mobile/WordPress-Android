@@ -8,7 +8,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
@@ -105,17 +105,13 @@
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
+    <string name="dismiss">dismiss</string>
 
     <string name="button_not_now">Not now</string>
 
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
-
-    <!-- timestamps for posts / pages -->
-    <string name="today">Today</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="days_ago">%d days ago</string>
 
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
@@ -154,6 +150,7 @@
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
+    <string name="media_space_used">%1$s used</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
@@ -225,9 +222,21 @@
 
     <!-- page view -->
     <string name="title">Title</string>
-    <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="pages_empty_list_button">Create a page</string>
     <string name="page_settings">Page settings</string>
+    <string name="pages">Pages</string>
+    <string name="set_parent">Set Parent</string>
+    <string name="page_delete_error">There was a problem deleting the page</string>
+    <string name="page_status_change_error">There was a problem changing the page status</string>
+    <string name="page_parent_change_error">There was a problem changing the page parent</string>
+    <string name="page_delete_dialog_message">Are you sure you want to delete page %s?</string>
+    <string name="top_level">Top level</string>
+    <string name="page_moved_to_draft">Page has been moved to Drafts</string>
+    <string name="page_moved_to_trash">Page has been trashed</string>
+    <string name="page_moved_to_published">Page has been published</string>
+    <string name="page_moved_to_scheduled">Page has been scheduled</string>
+    <string name="page_permanently_deleted">Page has been permanently deleted</string>
+    <string name="page_parent_changed">Page parent has been changed</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
@@ -304,13 +313,11 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
     <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
-    <string name="dialog_confirm_delete_page">This page will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
-    <string name="dialog_confirm_delete_permanently_page">Are you sure you\'d like to permanently delete this page?</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -401,8 +408,6 @@
 
     <!-- page actions -->
     <string name="preview_page">Preview page</string>
-    <string name="page_deleted">Page deleted</string>
-    <string name="page_trashed">Page sent to trash</string>
 
     <!-- post actions -->
     <string name="preview_post">Preview post</string>
@@ -1106,10 +1111,15 @@
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 
-    <string name="async_promo_title">Publish with Confidence</string>
-    <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_title_publish">Publish with Confidence</string>
+    <string name="async_promo_title_schedule">Schedule with Confidence</string>
+    <string name="async_promo_description_publish_page">You can now leave the editor and your page will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_publish_post">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_page">You can now leave the editor and your page will save and schedule behind the scenes! Give it a try!</string>
+    <string name="async_promo_description_schedule_post">You can now leave the editor and your post will save and schedule behind the scenes! Give it a try!</string>
     <string name="async_promo_link">How does it work?</string>
     <string name="async_promo_publish_now">Publish now</string>
+    <string name="async_promo_schedule_now">Schedule now</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1167,6 +1177,7 @@
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
+    <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_visual_mode">Visual Mode</string>
@@ -1180,6 +1191,21 @@
     <string name="post_title">Title</string>
 
     <string name="upload_finished_toast">Can\'t stop the upload because it\'s already finished</string>
+
+    <!-- History -->
+    <string name="description_user">User avatar</string>
+    <string name="history_detail_button_next">Next</string>
+    <string name="history_detail_button_previous">Previous</string>
+    <string name="history_detail_title">Revision</string>
+    <string name="history_empty_subtitle_page">When you make changes to your page you\'ll be able to see the history here</string>
+    <string name="history_empty_subtitle_post">When you make changes to your post you\'ll be able to see the history here</string>
+    <string name="history_empty_title">No history yet</string>
+    <string name="history_footer_page">Page Created on %1$s at %2$s</string>
+    <string name="history_footer_post">Post Created on %1$s at %2$s</string>
+    <string name="history_load_dialog_button_positive">Load</string>
+    <string name="history_loaded_revision">Revision loaded</string>
+    <string name="history_loading_revision">Loading revision</string>
+    <string name="history_title" translatable="false">@string/menu_history</string>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
@@ -1235,24 +1261,15 @@
     <!-- Image Size -->
     <string name="image_size">Size</string>
 
-    <string name="size_thumbnail">Thumbnail</string>
-    <string name="size_medium">Medium</string>
-    <string name="size_large">Large</string>
-    <string name="size_full">Full Size</string>
+    <string name="image_size_thumbnail_label">Thumbnail</string>
+    <string name="image_size_medium_label">Medium</string>
+    <string name="image_size_large_label">Large</string>
+    <string name="image_size_full_label">Full Size</string>
 
-    <string-array name="image_size_key_array" translatable="false">
-        <item>size-thumbnail</item>
-        <item>size-medium</item>
-        <item>size-large</item>
-        <item>size-full</item>
-    </string-array>
-
-    <string-array name="image_size_label_array" translatable="false">
-        <item>@string/size_thumbnail</item>
-        <item>@string/size_medium</item>
-        <item>@string/size_large</item>
-        <item>@string/size_full</item>
-    </string-array>
+    <string name="image_size_thumbnail_class" translatable="false">size-thumbnail</string>
+    <string name="image_size_medium_class" translatable="false">size-medium</string>
+    <string name="image_size_large_class" translatable="false">size-large</string>
+    <string name="image_size_full_class" translatable="false">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
@@ -1282,10 +1299,8 @@
     <string name="preview_screen_links_disabled">Links are disabled on the preview screen</string>
 
     <string name="image_settings">Image settings</string>
-    <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
-    <string name="dot_wordpress_dot_com_url" translatable="false">.wordpress.com</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
@@ -1297,7 +1312,6 @@
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
-    <string name="error_deleting_page">An error occurred while deleting the page</string>
 
     <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
@@ -1328,9 +1342,7 @@
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_recover_post">Unable to upload this post\'s media</string>
-    <string name="error_media_recover_page">Unable to upload this page\'s media</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
-    <string name="error_page_does_not_exist">This page no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
@@ -1347,7 +1359,6 @@
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
-    <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
 
     <!-- Post Error -->
@@ -1539,9 +1550,6 @@
     <string name="connectionbar_no_connection">No connection</string>
 
     <!-- NUX strings -->
-    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
-    <string name="creating_your_site">Creating your site</string>
-    <string name="required_field">Required field</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
@@ -2050,10 +2058,12 @@
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <!-- Screen titles -->
     <string name="email_address_login_title">Email address login</string>
     <string name="site_address_login_title">Site address login</string>
@@ -2111,6 +2121,9 @@
     <string name="notification_channel_normal_id" translatable="false">wpandroid_notification_normal_channel_id</string>
     <string name="notification_channel_important_id" translatable="false">wpandroid_notification_important_channel_id</string>
     <string name="notification_channel_transient_id" translatable="false">wpandroid_notification_transient_channel_id</string>
+
+    <!-- Required by the login library - overwrites the placeholder value with a real channel -->
+    <string name="login_notification_channel_id">@string/notification_channel_normal_id</string>
 
     <!-- Site Creation notifications -->
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -2272,26 +2285,61 @@
     <string name="quick_start_dialog_view_site_message">Preview your new site to see what your visitors will see.</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
-    <string name="quick_start_list_choose_theme_subtitle">@string/quick_start_dialog_choose_theme_message</string>
-    <string name="quick_start_list_choose_theme_title">@string/quick_start_dialog_choose_theme_title</string>
+    <string name="quick_start_list_choose_theme_subtitle" translatable="false">@string/quick_start_dialog_choose_theme_message</string>
+    <string name="quick_start_list_choose_theme_title" translatable="false">@string/quick_start_dialog_choose_theme_title</string>
     <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
     <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
-    <string name="quick_start_list_customize_site_subtitle">@string/quick_start_dialog_customize_site_message</string>
-    <string name="quick_start_list_customize_site_title">@string/quick_start_dialog_customize_site_title</string>
-    <string name="quick_start_list_follow_site_subtitle">@string/quick_start_dialog_follow_sites_message</string>
-    <string name="quick_start_list_follow_site_title">@string/quick_start_dialog_follow_sites_title</string>
-    <string name="quick_start_list_publish_post_subtitle">@string/quick_start_dialog_publish_post_message</string>
-    <string name="quick_start_list_publish_post_title">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_share_site_subtitle">@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_share_site_title">@string/quick_start_dialog_share_site_title</string>
-    <string name="quick_start_list_view_site_subtitle">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
+    <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
+    <string name="quick_start_list_follow_site_subtitle" translatable="false">@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
+    <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
+    <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
+    <string name="quick_start_list_share_site_subtitle" translatable="false">@string/quick_start_dialog_share_site_message</string>
+    <string name="quick_start_list_share_site_title" translatable="false">@string/quick_start_dialog_share_site_title</string>
+    <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
+    <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
+    <!-- Pages -->
+    <string name="pages_published" tools:ignore="UnusedResources">Published</string>
+    <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>
+    <string name="pages_scheduled" tools:ignore="UnusedResources">Scheduled</string>
+    <string name="pages_trashed" tools:ignore="UnusedResources">Trashed</string>
+    <string name="pages_pending">Pending review</string>
+    <string name="pages_private">Private</string>
+    <string name="pages_view">View</string>
+    <string name="pages_set_parent">Set parent</string>
+    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_move_to_draft">Move to Draft</string>
+    <string name="pages_move_to_trash">Move to Trash</string>
+    <string name="pages_delete_permanently">Delete Permanently</string>
+    <string name="pages_empty_search_result">No pages matching your search</string>
+    <string name="pages_search_suggestion">Search pages</string>
+    <string name="pages_empty_published">You haven\'t published any pages yet</string>
+    <string name="pages_empty_drafts">You don\'t have any draft pages</string>
+    <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
+    <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
+    <string name="pages_open_page_error">The selected page is not available</string>
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_content_sample_announcement">[No time to read right now? No problem: save posts for when you do.]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
 </resources>

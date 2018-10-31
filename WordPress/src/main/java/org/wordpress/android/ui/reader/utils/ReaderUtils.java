@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
@@ -179,9 +177,8 @@ public class ReaderUtils {
      * set the background of the passed view to the round ripple drawable - only works on
      * Lollipop or later, does nothing on earlier Android versions
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void setBackgroundToRoundRipple(View view) {
-        if (view != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (view != null) {
             view.setBackgroundResource(R.drawable.ripple_oval);
         }
     }

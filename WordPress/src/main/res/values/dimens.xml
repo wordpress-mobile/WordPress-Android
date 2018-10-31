@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <dimen name="min_touch_target_sz">48dp</dimen>
 
     <dimen name="category_row_height">48dp</dimen>
@@ -67,6 +69,7 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
+    <dimen name="negative_margin_medium">-8dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -105,6 +108,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_triple_extra_large">26sp</dimen>
+    <dimen name="text_sz_post_content">18sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -146,7 +150,6 @@
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>
-    <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>
 
     <dimen name="nux_width">600dp</dimen>
@@ -330,5 +333,21 @@
     <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
     <dimen name="jetpack_text_width">290dp</dimen>
     <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
+
+    <!-- pages -->
+    <dimen name="page_item_horizontal_padding">16dp</dimen>
+    <dimen name="page_parent_radio_button_offset">11dp</dimen>
+    <dimen name="one_line_list_item_height">48dp</dimen>
+    <dimen name="two_line_list_item_height">72dp</dimen>
+    <dimen name="page_list_divider_height">40dp</dimen>
+
+    <dimen name="quota_bar_text_minimum_height">36dp</dimen>
+
+    <!--post skeleton-->
+    <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
+    <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
+    <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
+    <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
+    <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
 
 </resources>

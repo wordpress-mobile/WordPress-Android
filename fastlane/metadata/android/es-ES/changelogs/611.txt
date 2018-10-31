@@ -1,0 +1,5 @@
+10.8.
+Esta actualización va sobre como obtener más rápido tus objetivos.
+Hay una nueva sección de inicio rápido con una lista de los pasos sugeridos para ayudarte a crear un fantástico sitio.
+Hemos facilitado la instalación de Jetpack para que tenga menos pasos. ¡'Menos configurar, más usarlo!
+(Oh, y también hemos machacado algunos fallos.)

@@ -10,18 +10,19 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.util.List;
+
 // Note header, displayed at top of detail view
 public class HeaderNoteBlock extends NoteBlock {
-    private final JSONArray mHeaderArray;
+    private final List<FormattableContent> mHeadersList;
 
     private final UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
     private Boolean mIsComment;
@@ -29,13 +30,12 @@ public class HeaderNoteBlock extends NoteBlock {
 
     private ImageType mImageType;
 
-    public HeaderNoteBlock(Context context, JSONArray headerArray, ImageType imageType,
+    public HeaderNoteBlock(Context context, List<FormattableContent> headerArray, ImageType imageType,
                            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                            UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener,
-                           ImageManager imageManager) {
-        super(new JSONObject(), imageManager, onNoteBlockTextClickListener);
-
-        mHeaderArray = headerArray;
+                           ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(new FormattableContent(), imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
+        mHeadersList = headerArray;
         mImageType = imageType;
         mGravatarClickedListener = onGravatarClickedListener;
 
@@ -58,16 +58,16 @@ public class HeaderNoteBlock extends NoteBlock {
     public View configureView(View view) {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
-        Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
+        Spannable spannable = mNotificationsUtilsWrapper.getSpannableContentForRanges(mHeadersList.get(0));
         noteBlockHolder.mNameTextView.setText(spannable);
-        if (mImageType == ImageType.AVATAR) {
+        if (mImageType == ImageType.AVATAR_WITH_BACKGROUND) {
             mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
         } else {
             mImageManager.load(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
         }
 
-        final long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-        final long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+        final long siteId = FormattableContentUtilsKt.getRangeSiteIdOrZero(getHeader(0), 0);
+        final long userId = FormattableContentUtilsKt.getRangeIdOrZero(getHeader(0), 0);
 
         if (!TextUtils.isEmpty(getUserUrl()) && siteId > 0 && userId > 0) {
             noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
@@ -118,20 +118,16 @@ public class HeaderNoteBlock extends NoteBlock {
         }
     };
 
-    private String getUserName() {
-        return JSONUtils.queryJSON(mHeaderArray, "[0].text", "");
-    }
-
     private String getAvatarUrl() {
-        return GravatarUtils.fixGravatarUrl(JSONUtils.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
+        return GravatarUtils.fixGravatarUrl(FormattableContentUtilsKt.getMediaUrlOrEmpty(getHeader(0), 0), mAvatarSize);
     }
 
     private String getUserUrl() {
-        return JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].url", "");
+        return FormattableContentUtilsKt.getRangeUrlOrEmpty(getHeader(0), 0);
     }
 
     private String getSnippet() {
-        return JSONUtils.queryJSON(mHeaderArray, "[1].text", "");
+        return FormattableContentUtilsKt.getTextOrEmpty(getHeader(1));
     }
 
     @Override
@@ -164,19 +160,19 @@ public class HeaderNoteBlock extends NoteBlock {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                        .scaleX(0.9f)
-                        .scaleY(0.9f)
-                        .alpha(0.5f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(0.9f)
+                 .scaleY(0.9f)
+                 .alpha(0.5f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP
-                    || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .alpha(1.0f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(1.0f)
+                 .scaleY(1.0f)
+                 .alpha(1.0f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
@@ -188,4 +184,11 @@ public class HeaderNoteBlock extends NoteBlock {
             return true;
         }
     };
+
+    private FormattableContent getHeader(int headerIndex) {
+        if (mHeadersList != null && headerIndex < mHeadersList.size()) {
+            return mHeadersList.get(headerIndex);
+        }
+        return null;
+    }
 }

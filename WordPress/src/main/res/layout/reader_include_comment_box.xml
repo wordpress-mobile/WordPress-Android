@@ -4,9 +4,9 @@
     comment box at bottom of comment detail and reader comment list
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -29,9 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/content_margin"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/ic_reply_grey_min_24dp"
+            android:src="@drawable/ic_reply_grey_min_24dp"
             android:layout_marginStart="@dimen/content_margin"/>
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
@@ -50,7 +49,6 @@
             android:maxLines="4"
             android:minLines="2"
             android:paddingBottom="@dimen/margin_extra_small"
-            android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_extra_small"
             android:textColorHint="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
@@ -61,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/content_margin"
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:text="@string/reader_label_submit_comment"
@@ -74,9 +71,7 @@
         android:id="@+id/progress_submit_comment"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_medium"
         android:visibility="gone"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_alignParentEnd="true"/>

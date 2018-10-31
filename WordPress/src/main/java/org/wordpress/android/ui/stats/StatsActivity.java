@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +36,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -376,7 +376,7 @@ public class StatsActivity extends AppCompatActivity
         findViewById(R.id.stats_other_recent_stats_label_timeline).setVisibility(View.INVISIBLE);
         findViewById(R.id.stats_other_recent_stats_moved).setVisibility(View.INVISIBLE);
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbstractFragment fragment;
@@ -511,7 +511,7 @@ public class StatsActivity extends AppCompatActivity
         if (isFinishing()) {
             return;
         }
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
 
         if (mCurrentTimeframe != StatsTimeframe.INSIGHTS) {
             mCallsToWaitFor = TOTAL_FRAGMENT_QUANTITY;

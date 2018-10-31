@@ -1,0 +1,129 @@
+package org.wordpress.android.viewmodel.pages
+
+import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.lifecycle.MutableLiveData
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R.string
+import org.wordpress.android.TEST_SCOPE
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
+import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
+import org.wordpress.android.ui.pages.PageItem.Divider
+import org.wordpress.android.ui.pages.PageItem.DraftPage
+import org.wordpress.android.ui.pages.PageItem.Empty
+import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import java.util.Date
+import java.util.SortedMap
+
+@RunWith(MockitoJUnitRunner::class)
+class SearchListViewModelTest {
+    @Rule
+    @JvmField val rule = InstantTaskExecutorRule()
+
+    @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var site: SiteModel
+    @Mock lateinit var pagesViewModel: PagesViewModel
+
+    private lateinit var searchPages: MutableLiveData<SortedMap<PageListType, List<PageModel>>>
+    private lateinit var viewModel: SearchListViewModel
+
+    private lateinit var page: PageModel
+
+    @Before
+    fun setUp() {
+        page = PageModel(site, 1, "title", PUBLISHED, Date(), false, 11L, null)
+        viewModel = SearchListViewModel(resourceProvider, TEST_SCOPE)
+        searchPages = MutableLiveData()
+        whenever(pagesViewModel.searchPages).thenReturn(searchPages)
+        viewModel.start(pagesViewModel)
+    }
+
+    @Test
+    fun `show empty item on start`() {
+        searchPages.value = null
+
+        assertThat(viewModel.searchResult.value).containsOnly(Empty(string.pages_search_suggestion, true))
+    }
+
+    @Test
+    fun `adds divider to published group`() {
+        val expectedTitle = "title"
+        for (status in PageListType.values()) {
+            whenever(resourceProvider.getString(status.title)).thenReturn(expectedTitle)
+
+            searchPages.value = sortedMapOf(status to listOf())
+
+            assertThat(viewModel.searchResult.value).containsOnly(Divider(expectedTitle))
+        }
+    }
+
+    @Test
+    fun `builds list with dividers from grouped result`() {
+        val expectedTitle = "title"
+        whenever(resourceProvider.getString(any())).thenReturn(expectedTitle)
+
+        val publishedPageId = 1
+        val publishedPageRemoteId = 11L
+        val publishedPage = page.copy(pageId = publishedPageId, remoteId = publishedPageRemoteId, status = PUBLISHED)
+        val publishedList = PageListType.PUBLISHED to listOf(publishedPage)
+        val draftPageId = 2
+        val draftPageRemoteId = 22L
+        val draftPage = page.copy(pageId = draftPageId, remoteId = draftPageRemoteId, status = DRAFT)
+        val draftList = PageListType.DRAFTS to listOf(draftPage)
+
+        searchPages.value = sortedMapOf(publishedList, draftList)
+
+        val searchResult = viewModel.searchResult.value
+        assertThat(searchResult).isNotNull
+        assertThat(searchResult).hasSize(4)
+        assertThat(searchResult!![0]).isInstanceOf(Divider::class.java)
+        (searchResult[0] as Divider).apply {
+            assertThat(this.title).isEqualTo(expectedTitle)
+        }
+        assertThat(searchResult[1]).isInstanceOf(PublishedPage::class.java)
+        (searchResult[1] as PublishedPage).apply {
+            assertThat(this.id).isEqualTo(publishedPageRemoteId)
+        }
+        assertThat(searchResult[2]).isInstanceOf(Divider::class.java)
+        (searchResult[2] as Divider).apply {
+            assertThat(this.title).isEqualTo(expectedTitle)
+        }
+        assertThat(searchResult[3]).isInstanceOf(DraftPage::class.java)
+        (searchResult[3] as DraftPage).apply {
+            assertThat(this.id).isEqualTo(draftPageRemoteId)
+        }
+    }
+
+    @Test
+    fun `passes action to page view model on menu action`() {
+        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+        val action = VIEW_PAGE
+
+        viewModel.onMenuAction(action, clickedPage)
+
+        verify(pagesViewModel).onMenuAction(action, clickedPage)
+    }
+
+    @Test
+    fun `passes page to page view model on item tapped`() {
+        val clickedPage = PageItem.PublishedPage(1, "title", listOf(), 0, false)
+
+        viewModel.onItemTapped(clickedPage)
+
+        verify(pagesViewModel).onItemTapped(clickedPage)
+    }
+}

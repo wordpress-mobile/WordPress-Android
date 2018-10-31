@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
@@ -14,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
@@ -65,7 +63,6 @@ import org.wordpress.android.fluxc.store.SiteStore.OnAutomatedTransferStatusChec
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -79,6 +76,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -321,10 +319,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
         mImageBanner = findViewById(R.id.image_banner);
         mImageIcon = findViewById(R.id.image_icon);
-
-        // vector drawable has to be assigned at runtime for backwards compatibility
-        Drawable rightDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_info_outline_grey_dark_18dp);
-        mVersionTopTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null);
 
         mWPOrgPluginDetailsContainer = findViewById(R.id.plugin_wp_org_details_container);
         mRatingsSectionContainer = findViewById(R.id.plugin_ratings_section_container);

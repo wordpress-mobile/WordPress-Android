@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -192,8 +192,8 @@ public class Note {
         return null;
     }
 
-    public Spannable getFormattedSubject() {
-        return NotificationsUtils.getSpannableContentForRanges(getSubject());
+    public Spannable getFormattedSubject(NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        return notificationsUtilsWrapper.getSpannableContentForRanges(getSubject());
     }
 
     public String getTitle() {

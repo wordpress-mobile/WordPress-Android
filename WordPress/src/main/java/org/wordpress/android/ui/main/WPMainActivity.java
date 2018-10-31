@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -59,6 +60,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
+import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -78,7 +80,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -92,6 +94,7 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.List;
@@ -149,6 +152,7 @@ public class WPMainActivity extends AppCompatActivity implements
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ShortcutsNavigator mShortcutsNavigator;
     @Inject ShortcutUtils mShortcutUtils;
+    @Inject NewsManager mNewsManager;
     @Inject QuickStartStore mQuickStartStore;
 
     /*
@@ -181,7 +185,7 @@ public class WPMainActivity extends AppCompatActivity implements
         setContentView(R.layout.main_activity);
 
         mBottomNav = findViewById(R.id.bottom_navigation);
-        mBottomNav.init(getFragmentManager(), this);
+        mBottomNav.init(getSupportFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
@@ -204,8 +208,13 @@ public class WPMainActivity extends AppCompatActivity implements
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
+        registeNewsItemObserver();
 
         if (savedInstanceState == null) {
+            if (!AppPrefs.isInstallationReferrerObtained()) {
+                InstallationReferrerServiceStarter.startService(this, null);
+            }
+
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
                 // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
@@ -319,6 +328,16 @@ public class WPMainActivity extends AppCompatActivity implements
         } else {
             AppLog.e(T.MAIN, "WPMainActivity.handleOpenIntent called with an invalid argument.");
         }
+    }
+
+    private void registeNewsItemObserver() {
+        mNewsManager.notificationBadgeVisibility().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean showBadge) {
+                mBottomNav.showReaderBadge(showBadge != null ? showBadge : false);
+            }
+        });
+        mNewsManager.pull(false);
     }
 
     private void launchZendeskMyTickets() {
@@ -556,6 +575,12 @@ public class WPMainActivity extends AppCompatActivity implements
     // user tapped the new post button in the bottom navbar
     @Override
     public void onNewPostButtonClicked() {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentPosition(PAGE_MY_SITE);
+            return;
+        }
+
         if (getSelectedSite() != null && getMySiteFragment() != null) {
             if (getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
@@ -563,7 +588,7 @@ public class WPMainActivity extends AppCompatActivity implements
             }
         }
 
-        ActivityLauncher.addNewPostOrPageForResult(this, getSelectedSite(), false, false);
+        ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false);
     }
 
     private void updateTitle() {
@@ -642,7 +667,7 @@ public class WPMainActivity extends AppCompatActivity implements
 
     private void jumpNewPost(Intent data) {
         if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
-            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, false, false);
+            ActivityLauncher.addNewPostForResult(this, mSelectedSite, false);
         }
     }
 

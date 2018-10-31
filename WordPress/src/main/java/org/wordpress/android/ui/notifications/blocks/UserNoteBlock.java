@@ -9,10 +9,11 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.GravatarUtils;
-import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -31,11 +32,12 @@ public class UserNoteBlock extends NoteBlock {
 
     public UserNoteBlock(
             Context context,
-            JSONObject noteObject,
+            FormattableContent noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener,
-            ImageManager imageManager) {
-        super(noteObject, imageManager, onNoteBlockTextClickListener);
+            ImageManager imageManager,
+            NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener);
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.notifications_avatar_sz));
@@ -91,7 +93,7 @@ public class UserNoteBlock extends NoteBlock {
 
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             if (!TextUtils.isEmpty(getUserUrl())) {
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
@@ -109,7 +111,7 @@ public class UserNoteBlock extends NoteBlock {
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
-        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
         return view;
     }
@@ -143,15 +145,15 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     String getUserUrl() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.links.home", "");
+        return FormattableContentUtilsKt.getMetaLinksHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTitle() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.titles.home", "");
+        return FormattableContentUtilsKt.getMetaTitlesHomeOrEmpty(getNoteData());
     }
 
     private String getUserBlogTagline() {
-        return JSONUtils.queryJSON(getNoteData(), "meta.titles.tagline", "");
+        return FormattableContentUtilsKt.getMetaTitlesTaglineOrEmpty(getNoteData());
     }
 
     private boolean hasUserUrl() {
@@ -199,11 +201,11 @@ public class UserNoteBlock extends NoteBlock {
     };
 
     protected void showBlogPreview() {
-        long siteId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.site", 0));
-        long userId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.user", 0));
         String siteUrl = getUserUrl();
         if (mGravatarClickedListener != null) {
-            mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
+            mGravatarClickedListener
+                    .onGravatarClicked(FormattableContentUtilsKt.getMetaIdsSiteIdOrZero(getNoteData()),
+                            FormattableContentUtilsKt.getMetaIdsUserIdOrZero(getNoteData()), siteUrl);
         }
     }
 }

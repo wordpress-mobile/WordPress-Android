@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This script builds the apks for the current release and the beta and alpha versions.
+
 OUTDIR="WordPress/build/outputs/apk/"
 BUILDFILE="WordPress/build.gradle"
 BUILDDIR="build"
@@ -18,43 +20,9 @@ release_branch=$1
 beta_branch=$2
 alpha_branch=$3
 
-function gradle_version_name {
-  grep -E 'versionName' $BUILDFILE | sed s/versionName// | grep -Eo "[a-zA-Z0-9.-]+"
-}
-
-function gradle_version_code {
-  grep -E 'versionCode' $BUILDFILE | sed s/versionCode// | grep -Eo "[a-zA-Z0-9.-]+"
-}
-
 BUILD_APK_RET_VALUE=0
 
-function build_apk {
-  branch=$1
-  flavor=$2
-  git checkout $branch >> $LOGFILE 2>&1
-  version_code=`gradle_version_code`
-  version_name=`gradle_version_name`
-  name="wpandroid-$version_name.apk"
-  apk="WordPress-$flavor-release.apk"
-
-  echo "Cleaning in branch: $branch" | tee -a $LOGFILE
-  ./gradlew clean >> $LOGFILE 2>&1
-  echo "Running lint in branch: $branch" | tee -a $LOGFILE
-  ./gradlew lint >> $LOGFILE 2>&1
-  echo "Building $version_name / $version_code - $apk..." | tee -a $LOGFILE
-  ./gradlew assemble"$flavor"Release >> $LOGFILE 2>&1
-  cp -v $OUTDIR/$flavor/release/$apk $BUILDDIR/$name | tee -a $LOGFILE
-  echo "APK ready: $name" | tee -a $LOGFILE
-  BUILD_APK_RET_VALUE=$version_code
-}
-
-function check_clean_working_dir {
-  if [ "`git status --porcelain`"x \!= x ]; then
-    git status
-    echo "Your working directory must be clean before you run this script"
-    exit 1
-  fi
-}
+source ./tools/build-apk-core.sh
 
 check_clean_working_dir
 date > $LOGFILE
