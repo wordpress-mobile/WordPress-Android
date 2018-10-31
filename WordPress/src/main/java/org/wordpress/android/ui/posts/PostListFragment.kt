@@ -36,12 +36,12 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
+import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -186,6 +186,59 @@ class PostListFragment : Fragment(),
             viewModel.newPost.observe(this, Observer {
                 it?.let { site -> ActivityLauncher.addNewPostForResult(nonNullActivity, site, false) }
             })
+            viewModel.postUploadAction.observe(this, Observer {
+                it?.let { uploadAction -> handleUploadAction(uploadAction) }
+            })
+            viewModel.toastMessage.observe(this, Observer {
+                it?.let { toast ->
+                    ToastUtils.showToast(nonNullActivity, toast.messageRes, toast.duration)
+                }
+            })
+        }
+    }
+
+    private fun handleUploadAction(action: PostUploadAction) {
+        when (action) {
+            is PostUploadAction.EditPostResult -> {
+                UploadUtils.handleEditPostResultSnackbars(
+                        nonNullActivity,
+                        nonNullActivity.findViewById(R.id.coordinator),
+                        action.data,
+                        action.post,
+                        action.site
+                ) {
+                    action.publishAction()
+                }
+            }
+            is PostUploadAction.PublishPost -> {
+                UploadUtils.publishPost(
+                        nonNullActivity,
+                        action.post,
+                        action.site,
+                        action.dispatcher
+                )
+            }
+            is PostUploadAction.PostUploadedSnackbar -> {
+                UploadUtils.onPostUploadedSnackbarHandler(
+                        nonNullActivity,
+                        nonNullActivity.findViewById(R.id.coordinator),
+                        action.isError,
+                        action.post,
+                        action.errorMessage,
+                        action.site,
+                        action.dispatcher
+                )
+            }
+            is PostUploadAction.MediaUploadedSnackbar -> {
+                UploadUtils.onMediaUploadedSnackbarHandler(
+                        nonNullActivity,
+                        nonNullActivity.findViewById(R.id.coordinator),
+                        action.isError,
+                        action.mediaList,
+                        action.site,
+                        action.message
+                )
+            }
         }
     }
 
@@ -280,28 +333,8 @@ class PostListFragment : Fragment(),
     }
 
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
-        if (resultCode != Activity.RESULT_OK || data == null || !isAdded) {
-            return
-        }
-
-        val localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
-        val post = postStore.getPostByLocalPostId(localId)
-
-        if (post == null) {
-            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
-                ToastUtils.showToast(nonNullActivity, R.string.post_not_found, ToastUtils.Duration.LONG)
-            }
-            return
-        }
-
-        UploadUtils.handleEditPostResultSnackbars(
-                nonNullActivity,
-                nonNullActivity.findViewById(R.id.coordinator),
-                data,
-                post,
-                site
-        ) {
-            UploadUtils.publishPost(nonNullActivity, post, site, dispatcher)
+        if (resultCode == Activity.RESULT_OK) {
+            viewModel.handleEditPostResult(data)
         }
     }
 
@@ -344,7 +377,7 @@ class PostListFragment : Fragment(),
             it.button.setText(R.string.posts_empty_list_button)
             it.button.visibility = if (isHidden) View.VISIBLE else View.GONE
             it.button.setOnClickListener { _ ->
-                ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
+                viewModel.newPost()
             }
             it.visibility = View.VISIBLE
         }
@@ -464,12 +497,7 @@ class PostListFragment : Fragment(),
         builder.setTitle(resources.getText(R.string.dialog_confirm_publish_title))
                 .setMessage(getString(R.string.dialog_confirm_publish_message_post))
                 .setPositiveButton(R.string.dialog_confirm_publish_yes) { _, _ ->
-                    UploadUtils.publishPost(
-                            nonNullActivity,
-                            post,
-                            site,
-                            dispatcher
-                    )
+                    handleUploadAction(PublishPost(dispatcher, site, post))
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
@@ -493,8 +521,10 @@ class PostListFragment : Fragment(),
             // Fetched post list event will be handled by OnListChanged
             is CauseOfOnPostChanged.UpdatePost -> {
                 if (event.isError) {
-                    AppLog.e(T.POSTS, "Error updating the post with type: " + event.error.type +
-                            " and message: " + event.error.message)
+                    AppLog.e(
+                            T.POSTS, "Error updating the post with type: " + event.error.type +
+                            " and message: " + event.error.message
+                    )
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
@@ -505,26 +535,6 @@ class PostListFragment : Fragment(),
                     }
                 }
             }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        if (isAdded && event.post != null && event.post.localSiteId == site.id) {
-            UploadUtils.onPostUploadedSnackbarHandler(
-                    nonNullActivity,
-                    nonNullActivity.findViewById(R.id.coordinator),
-                    event.isError, event.post, null, site, dispatcher
-            )
-            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
-            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
-            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
-            // next refresh and pass it to `ListStore` so it'll be included in the list.
-            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
-            // as the current `ListManager` might not have been updated yet since it's a bg action.
-            viewModel.addUploadedPostRemoteId(event.post.remotePostId)
-            // TODO: Move to view model
-//            refreshPostList()
         }
     }
 
@@ -608,34 +618,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    fun onEventMainThread(event: UploadService.UploadErrorEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.post != null) {
-            UploadUtils.onPostUploadedSnackbarHandler(
-                    nonNullActivity,
-                    nonNullActivity.findViewById(R.id.coordinator), true, event.post,
-                    event.errorMessage, site, dispatcher
-            )
-        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(
-                    nonNullActivity,
-                    nonNullActivity.findViewById(R.id.coordinator), true,
-                    event.mediaModelList, site, event.errorMessage
-            )
-        }
-    }
-
-    fun onEventMainThread(event: UploadService.UploadMediaSuccessEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            UploadUtils.onMediaUploadedSnackbarHandler(
-                    nonNullActivity,
-                    nonNullActivity.findViewById(R.id.coordinator), false,
-                    event.mediaModelList, site, event.successMessage
-            )
-        }
-    }
-
     fun onEventMainThread(event: UploadService.UploadMediaRetryEvent) {
         if (!isAdded) {
             return
@@ -669,6 +651,7 @@ class PostListFragment : Fragment(),
         }
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
+        // TODO: We most likely need to move this to adapter since setListManager is now async
         // Save and restore the visible view. Without this, for example, if a new row is inserted, it does not show up.
         val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager)

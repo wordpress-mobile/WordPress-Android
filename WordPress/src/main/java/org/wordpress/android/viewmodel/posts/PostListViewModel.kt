@@ -3,12 +3,15 @@ package org.wordpress.android.viewmodel.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Intent
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
@@ -25,13 +28,21 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListDataSource
+import org.wordpress.android.ui.posts.PostUploadAction
+import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
+import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
+import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
+import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
@@ -51,12 +62,11 @@ class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
     private val postStore: PostStore,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
-    private var site: SiteModel? = null
+    private lateinit var site: SiteModel
 
     private val uploadedPostRemoteIds = ArrayList<Long>()
     private val trashedPostIds = ArrayList<Pair<Int, Long>>()
@@ -91,13 +101,19 @@ class PostListViewModel @Inject constructor(
     private val _displayPublishConfirmationDialog = SingleLiveEvent<Pair<SiteModel, PostModel>>()
     val displayPublishConfirmationDialog: LiveData<Pair<SiteModel, PostModel>> = _displayPublishConfirmationDialog
 
+    private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
+    val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
+
+    private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
+    val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
+
     init {
-//        EventBus.getDefault().register(this)
+        EventBus.getDefault().register(this)
         dispatcher.register(this)
     }
 
     override fun onCleared() {
-//        EventBus.getDefault().unregister(this)
+        EventBus.getDefault().unregister(this)
         dispatcher.unregister(this)
         super.onCleared()
     }
@@ -121,28 +137,46 @@ class PostListViewModel @Inject constructor(
     }
 
     fun handlePostButton(buttonType: Int, post: PostModel) {
-        // Site shouldn't be null at this point, but this simplifies our approach
-        site?.let { site ->
-            when (buttonType) {
-                PostListButton.BUTTON_EDIT -> editPost(site, post)
-                PostListButton.BUTTON_RETRY -> _retryPost.postValue(post)
-                PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
-                    _displayPublishConfirmationDialog.postValue(Pair(site, post))
-                }
-                PostListButton.BUTTON_VIEW -> _viewPost.postValue(Pair(site, post))
-                PostListButton.BUTTON_PREVIEW -> _previewPost.postValue(Pair(site, post))
-                PostListButton.BUTTON_STATS -> _viewStats.postValue(Pair(site, post))
-                PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
-                    _displayTrashConfirmationDialog.postValue(post)
-                }
+        when (buttonType) {
+            PostListButton.BUTTON_EDIT -> editPost(site, post)
+            PostListButton.BUTTON_RETRY -> _retryPost.postValue(post)
+            PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
+                _displayPublishConfirmationDialog.postValue(Pair(site, post))
+            }
+            PostListButton.BUTTON_VIEW -> _viewPost.postValue(Pair(site, post))
+            PostListButton.BUTTON_PREVIEW -> _previewPost.postValue(Pair(site, post))
+            PostListButton.BUTTON_STATS -> _viewStats.postValue(Pair(site, post))
+            PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
+                _displayTrashConfirmationDialog.postValue(post)
             }
         }
     }
 
-    fun newPost() {
-        site?.let {
-            _newPost.postValue(it)
+    private fun publishPost(post: PostModel) {
+        _postUploadAction.postValue(PublishPost(dispatcher, site, post))
+    }
+
+    fun handleEditPostResult(data: Intent?) {
+        if (data == null) {
+            return
         }
+        val localPostId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        if (localPostId == 0) {
+            return
+        }
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post == null) {
+            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
+                // TODO: This really shouldn't happen, but shouldn't we refresh the post ourselves when it does?
+                _toastMessage.postValue(ToastMessageHolder(R.string.post_not_found, Duration.LONG))
+            }
+        } else {
+            _postUploadAction.postValue(EditPostResult(site, post, data) { publishPost(post) })
+        }
+    }
+
+    fun newPost() {
+        _newPost.postValue(site)
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
@@ -163,8 +197,24 @@ class PostListViewModel @Inject constructor(
         _editPost.postValue(Pair(site, post))
     }
 
-    fun addUploadedPostRemoteId(remotePostId: Long) {
+    private fun addUploadedPostRemoteId(remotePostId: Long) {
         uploadedPostRemoteIds.add(remotePostId)
+    }
+
+    fun onEventMainThread(event: UploadService.UploadErrorEvent) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (event.post != null) {
+            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, true, event.errorMessage))
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
+        }
+    }
+
+    fun onEventMainThread(event: UploadService.UploadMediaSuccessEvent) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage))
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -187,6 +237,22 @@ class PostListViewModel @Inject constructor(
             }
             // We want to refresh the posts even if there is an error so we can get the state change
             refreshListManagerFromStore()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (event.post != null && event.post.localSiteId == site.id) {
+            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
+            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
+            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
+            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
+            // next refresh and pass it to `ListStore` so it'll be included in the list.
+            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
+            // as the current `ListManager` might not have been updated yet since it's a bg action.
+            addUploadedPostRemoteId(event.post.remotePostId)
+            // TODO: might not be the best way to start a refresh
+            refreshList()
         }
     }
 
