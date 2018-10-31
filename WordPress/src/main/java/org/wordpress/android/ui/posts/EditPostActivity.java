@@ -1038,7 +1038,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (historyMenuItem != null) {
             boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
-            historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
+            historyMenuItem.setVisible(showMenuItems && hasHistory);
         }
 
         if (previewMenuItem != null) {

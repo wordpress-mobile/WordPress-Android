@@ -69,7 +69,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "REVISIONS_ENABLED", "true"
         }
     }
 

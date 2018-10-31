@@ -22,15 +22,11 @@
                 android:background="@null"
                 android:clickable="false"
                 android:fontFamily="serif"
-                android:hint="@string/post_title"
-                android:imeOptions="flagNoExtractUi"
-                android:inputType="none"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
-                android:textColorHint="@color/hint_text"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/aztec_title_size"
                 android:textStyle="bold" >
@@ -55,9 +51,6 @@
                 android:clickable="false"
                 android:fontFamily="serif"
                 android:gravity="top|start"
-                android:hint="@string/editor_content_hint"
-                android:imeOptions="flagNoExtractUi"
-                android:inputType="none"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:paddingEnd="@dimen/margin_extra_large"
@@ -65,7 +58,6 @@
                 android:paddingTop="@dimen/margin_extra_large"
                 android:scrollbars="vertical"
                 android:textColor="@color/grey_dark"
-                android:textColorHint="@color/hint_text"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/text_sz_post_content" >
             </org.wordpress.android.widgets.DiffView>
