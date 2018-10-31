@@ -31,7 +31,12 @@ class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteC
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
-        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
+        recyclerView.addItemDecoration(
+                RecyclerItemDecoration(
+                        DisplayUtils.dpToPx(activity, 72),
+                        DisplayUtils.dpToPx(activity, 1)
+                )
+        )
     }
 
     override fun onHelp() {
