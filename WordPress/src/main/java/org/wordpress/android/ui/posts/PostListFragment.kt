@@ -132,16 +132,19 @@ class PostListFragment : Fragment(),
 
         EventBus.getDefault().register(this)
         dispatcher.register(this)
+    }
 
-        // TODO: can we move to onActivityCreated?
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         activity?.let { postListActivity ->
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
-            viewModel.start(this.site)
+            viewModel.start(site)
             viewModel.listManagerLiveData.observe(this, Observer { listManager ->
                 listManager?.let { updateListManager(it) }
             })
-            viewModel.emptyViewStateLiveData.observe(this, Observer { emptyViewState ->
+            viewModel.emptyViewState.observe(this, Observer { emptyViewState ->
                 emptyViewState?.let { updateEmptyViewForState(it) }
             })
         }

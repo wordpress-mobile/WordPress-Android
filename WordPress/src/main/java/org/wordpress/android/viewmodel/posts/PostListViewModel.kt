@@ -10,7 +10,6 @@ import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
@@ -25,8 +24,7 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
-import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
@@ -46,18 +44,17 @@ class PostListViewModel @Inject constructor(
     private val postStore: PostStore
 ) : ViewModel() {
     private var isStarted: Boolean = false
-    private val listManagerMutableLiveData = MutableLiveData<ListManager<PostModel>>()
-    private val emptyViewStateMutableLiveData = MutableLiveData<PostListEmptyViewState>()
     private var listDescriptor: PostListDescriptor? = null
     private var site: SiteModel? = null
 
     private val uploadedPostRemoteIds = ArrayList<Long>()
     private val trashedPostIds = ArrayList<Pair<Int, Long>>()
 
-    val listManagerLiveData: LiveData<ListManager<PostModel>>
-        get() = listManagerMutableLiveData
-    val emptyViewStateLiveData: LiveData<PostListEmptyViewState>
-        get() = emptyViewStateMutableLiveData
+    private val _listManager = MutableLiveData<ListManager<PostModel>>()
+    val listManagerLiveData: LiveData<ListManager<PostModel>> = _listManager
+
+    private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
+    val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
 
     init {
 //        EventBus.getDefault().register(this)
@@ -75,11 +72,11 @@ class PostListViewModel @Inject constructor(
             return
         }
         this.site = site
-         this.listDescriptor = if (site.isUsingWpComRestApi) {
-                PostListDescriptorForRestSite(site)
-            } else {
-                PostListDescriptorForXmlRpcSite(site)
-            }
+        this.listDescriptor = if (site.isUsingWpComRestApi) {
+            PostListDescriptorForRestSite(site)
+        } else {
+            PostListDescriptorForXmlRpcSite(site)
+        }
         refreshListManagerFromStore(refreshFirstPageAfter = true)
         isStarted = true
     }
@@ -103,7 +100,7 @@ class PostListViewModel @Inject constructor(
                 val emptyViewState = if (event.error.type == PERMISSION_ERROR) {
                     PostListEmptyViewState.PERMISSION_ERROR
                 } else PostListEmptyViewState.REFRESH_ERROR
-                emptyViewStateMutableLiveData.postValue(emptyViewState)
+                _emptyViewState.postValue(emptyViewState)
             } else if (event.causeOfChange == FIRST_PAGE_FETCHED) {
                 // `uploadedPostRemoteIds` is kept as a workaround when the local drafts are uploaded and the list
                 // has not yet been updated yet. Since we just fetched the first page, we can safely clear it.
@@ -133,8 +130,8 @@ class PostListViewModel @Inject constructor(
         listDescriptor?.let {
             GlobalScope.launch(Dispatchers.Default) {
                 val listManager = getListManagerFromStore(it)
-                listManagerMutableLiveData.postValue(listManager)
-                updateEmptyViewMessageType(listManager)
+                _listManager.postValue(listManager)
+                updateEmptyViewState(listManager)
                 if (refreshFirstPageAfter) {
                     listManager.refresh()
                 }
@@ -142,16 +139,13 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun updateEmptyViewMessageType(listManager: ListManager<PostModel>) {
-        if (!listManager.isFetchingFirstPage) {
-            if (listManager.size == 0) {
-                emptyViewStateMutableLiveData.postValue(EMPTY_LIST)
-            } else {
-                emptyViewStateMutableLiveData.postValue(HIDDEN_LIST)
-            }
+    private fun updateEmptyViewState(listManager: ListManager<PostModel>) {
+        val state = if (listManager.size == 0) {
+            if (listManager.isFetchingFirstPage) LOADING else EMPTY_LIST
         } else {
-            emptyViewStateMutableLiveData.postValue(LOADING)
+            HIDDEN_LIST
         }
+        _emptyViewState.postValue(state)
     }
 
     /**
@@ -161,75 +155,9 @@ class PostListViewModel @Inject constructor(
      * [ListManager] how to take certain actions or how to access certain data.
      */
     private suspend fun getListManagerFromStore(listDescriptor: PostListDescriptor) = withContext(Dispatchers.Default) {
-        listStore.getListManager(listDescriptor, object : ListItemDataSource<PostModel> {
-            /**
-             * Tells [ListStore] how to fetch a post from remote for the given list descriptor and remote post id
-             */
-            override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
-                site?.let {
-                    val postToFetch = PostModel()
-                    postToFetch.remotePostId = remoteItemId
-                    val payload = RemotePostPayload(postToFetch, it)
-                    dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
-                }
-            }
-
-            /**
-             * Tells [ListStore] how to fetch a list from remote for the given list descriptor and offset
-             */
-            override fun fetchList(listDescriptor: ListDescriptor, offset: Int) {
-                if (listDescriptor is PostListDescriptor) {
-                    val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
-                    dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
-                }
-            }
-
-            /**
-             * Tells [ListStore] how to get posts from [PostStore] for the given list descriptor and remote post ids
-             */
-            override fun getItems(listDescriptor: ListDescriptor, remoteItemIds: List<Long>): Map<Long, PostModel> {
-                site?.let {
-                    return postStore.getPostsByRemotePostIds(remoteItemIds, it)
-                }
-                return emptyMap()
-            }
-
-            /**
-             * Tells [ListStore] which local drafts should be included in the list. Since [ListStore] deals with
-             * remote items, it needs our help to show local data.
-             */
-            override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
-                if (listDescriptor is PostListDescriptor) {
-                    // We should filter out the trashed posts from local drafts since they should be hidden
-                    val trashedLocalPostIds = trashedPostIds.map { it.first }
-                    return postStore.getLocalPostsForDescriptor(listDescriptor)
-                            .filter { !trashedLocalPostIds.contains(it.id) }
-                }
-                return null
-            }
-
-            /**
-             * Tells [ListStore] which remote post ids must be included in the list. This is to workaround a case
-             * where the local draft is uploaded to remote but the list has not been refreshed yet. If we don't
-             * tell about this to [ListStore] that post will disappear until the next refresh.
-             *
-             * Please check out [OnPostUploaded] and [OnListChanged] for where [uploadedPostRemoteIds] is managed.
-             */
-            override fun remoteItemIdsToInclude(listDescriptor: ListDescriptor): List<Long>? {
-                return uploadedPostRemoteIds
-            }
-
-            /**
-             * Tells [ListStore] which remote post ids must be hidden from the list. In order to show an undo
-             * snackbar when a post is trashed, we don't immediately delete/trash a post which means [ListStore]
-             * doesn't know about this action and needs our help to determine which posts should be hidden until
-             * delete/trash action is completed.
-             *
-             * Please check out [trashPost] for more details.
-             */
-            override fun remoteItemsToHide(listDescriptor: ListDescriptor): List<Long>? {
-                return trashedPostIds.map { it.second }
-            }
-        })
+        listStore.getListManager(
+                listDescriptor,
+                PostListDataSource(dispatcher, postStore, site, trashedPostIds, uploadedPostRemoteIds)
+        )
     }
 }
