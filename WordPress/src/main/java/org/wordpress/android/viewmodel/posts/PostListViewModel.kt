@@ -3,12 +3,13 @@ package org.wordpress.android.viewmodel.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,11 +25,19 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.posts.PostListDataSource
+import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
+import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
+import javax.inject.Named
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -41,7 +50,9 @@ enum class PostListEmptyViewState {
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
-    private val postStore: PostStore
+    private val postStore: PostStore,
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
+    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
@@ -55,6 +66,30 @@ class PostListViewModel @Inject constructor(
 
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
+
+    private val _editPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
+    val editPost: LiveData<Pair<SiteModel, PostModel>> = _editPost
+
+    private val _retryPost = SingleLiveEvent<PostModel>()
+    val retryPost: LiveData<PostModel> = _retryPost
+
+    private val _viewStats = SingleLiveEvent<Pair<SiteModel, PostModel>>()
+    val viewStats: LiveData<Pair<SiteModel, PostModel>> = _viewStats
+
+    private val _previewPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
+    val previewPost: LiveData<Pair<SiteModel, PostModel>> = _previewPost
+
+    private val _viewPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
+    val viewPost: LiveData<Pair<SiteModel, PostModel>> = _viewPost
+
+    private val _newPost = SingleLiveEvent<SiteModel>()
+    val newPost: LiveData<SiteModel> = _newPost
+
+    private val _displayTrashConfirmationDialog = SingleLiveEvent<PostModel>()
+    val displayTrashConfirmationDialog: LiveData<PostModel> = _displayTrashConfirmationDialog
+
+    private val _displayPublishConfirmationDialog = SingleLiveEvent<Pair<SiteModel, PostModel>>()
+    val displayPublishConfirmationDialog: LiveData<Pair<SiteModel, PostModel>> = _displayPublishConfirmationDialog
 
     init {
 //        EventBus.getDefault().register(this)
@@ -83,6 +118,49 @@ class PostListViewModel @Inject constructor(
 
     fun refreshList() {
         listManagerLiveData.value?.refresh()
+    }
+
+    fun handlePostButton(buttonType: Int, post: PostModel) {
+        // Site shouldn't be null at this point, but this simplifies our approach
+        site?.let { site ->
+            when (buttonType) {
+                PostListButton.BUTTON_EDIT -> editPost(site, post)
+                PostListButton.BUTTON_RETRY -> _retryPost.postValue(post)
+                PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
+                    _displayPublishConfirmationDialog.postValue(Pair(site, post))
+                }
+                PostListButton.BUTTON_VIEW -> _viewPost.postValue(Pair(site, post))
+                PostListButton.BUTTON_PREVIEW -> _previewPost.postValue(Pair(site, post))
+                PostListButton.BUTTON_STATS -> _viewStats.postValue(Pair(site, post))
+                PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
+                    _displayTrashConfirmationDialog.postValue(post)
+                }
+            }
+        }
+    }
+
+    fun newPost() {
+        site?.let {
+            _newPost.postValue(it)
+        }
+    }
+
+    private fun editPost(site: SiteModel, post: PostModel) {
+        // track event
+        val properties = HashMap<String, Any>()
+        properties["button"] = "edit"
+        if (!post.isLocalDraft) {
+            properties["post_id"] = post.remotePostId
+        }
+        properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
+
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            // If the post is uploading media, allow the media to continue uploading, but don't upload the
+            // post itself when they finish (since we're about to edit it again)
+            UploadService.cancelQueuedPostUpload(post)
+        }
+        _editPost.postValue(Pair(site, post))
     }
 
     fun addUploadedPostRemoteId(remotePostId: Long) {
@@ -128,7 +206,7 @@ class PostListViewModel @Inject constructor(
      */
     private fun refreshListManagerFromStore(refreshFirstPageAfter: Boolean = false) {
         listDescriptor?.let {
-            GlobalScope.launch(Dispatchers.Default) {
+            defaultScope.launch {
                 val listManager = getListManagerFromStore(it)
                 _listManager.postValue(listManager)
                 updateEmptyViewState(listManager)

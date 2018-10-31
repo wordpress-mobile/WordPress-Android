@@ -27,7 +27,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
@@ -54,7 +53,6 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
@@ -67,7 +65,6 @@ import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERRO
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
-import java.util.HashMap
 import javax.inject.Inject
 
 class PostListFragment : Fragment(),
@@ -141,13 +138,81 @@ class PostListFragment : Fragment(),
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
             viewModel.start(site)
-            viewModel.listManagerLiveData.observe(this, Observer { listManager ->
-                listManager?.let { updateListManager(it) }
+            viewModel.listManagerLiveData.observe(this, Observer {
+                it?.let { listManager -> updateListManager(listManager) }
             })
-            viewModel.emptyViewState.observe(this, Observer { emptyViewState ->
-                emptyViewState?.let { updateEmptyViewForState(it) }
+            viewModel.emptyViewState.observe(this, Observer {
+                it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
+            })
+            viewModel.editPost.observe(this, Observer {
+                it?.let { (site, post) -> ActivityLauncher.editPostOrPageForResult(nonNullActivity, site, post) }
+            })
+            viewModel.retryPost.observe(this, Observer {
+                it?.let { post ->
+                    // restart the UploadService with retry parameters
+                    val intent = UploadService.getUploadPostServiceIntent(
+                            nonNullActivity,
+                            post,
+                            PostUtils.isFirstTimePublish(post),
+                            false,
+                            true
+                    )
+                    nonNullActivity.startService(intent)
+                }
+            })
+            viewModel.displayTrashConfirmationDialog.observe(this, Observer {
+                it?.let { post -> displayTrashPostDialog(post) }
+            })
+            viewModel.displayPublishConfirmationDialog.observe(this, Observer {
+                it?.let { (site, post) ->
+                    showPublishConfirmationDialog(site, post)
+                }
+            })
+            viewModel.viewStats.observe(this, Observer {
+                it?.let { (site, post) ->
+                    ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, site, post)
+                }
+            })
+            viewModel.previewPost.observe(this, Observer {
+                it?.let { (site, post) ->
+                    ActivityLauncher.viewPostPreviewForResult(nonNullActivity, site, post)
+                }
+            })
+            viewModel.viewPost.observe(this, Observer {
+                it?.let { (site, post) ->
+                    ActivityLauncher.browsePostOrPage(nonNullActivity, site, post)
+                }
+            })
+            viewModel.newPost.observe(this, Observer {
+                it?.let { site -> ActivityLauncher.addNewPostForResult(nonNullActivity, site, false) }
             })
         }
+    }
+
+    private fun displayTrashPostDialog(post: PostModel) {
+        val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
+            if (post.isLocalDraft) {
+                R.string.dialog_confirm_delete_permanently_post
+            } else R.string.dialog_confirm_delete_post
+        } else {
+            R.string.dialog_confirm_cancel_post_media_uploading
+        }
+        val builder = AlertDialog.Builder(
+                ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
+        )
+        builder.setTitle(getString(R.string.delete_post))
+                .setMessage(messageRes)
+                .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
+                .setNegativeButton(R.string.cancel, null)
+                .setCancelable(true)
+        builder.create().show()
+    }
+
+    /*
+     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
+     */
+    override fun onPostButtonClicked(buttonType: Int, postClicked: PostModel) {
+        viewModel.handlePostButton(buttonType, postClicked)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -206,7 +271,7 @@ class PostListFragment : Fragment(),
 
         // hide the fab so we can animate it
         fabView?.visibility = View.GONE
-        fabView?.setOnClickListener { newPost() }
+        fabView?.setOnClickListener { viewModel.newPost() }
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
             refreshPostList()
@@ -251,13 +316,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun newPost() {
-        if (!isAdded) {
-            return
-        }
-        ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
-    }
-
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
         if (!isAdded) {
             return
@@ -266,10 +324,10 @@ class PostListFragment : Fragment(),
             actionableEmptyView?.visibility = View.GONE
             return
         }
-        var hasNoContent = false
+        var isHidden = false
         val stringId = when (emptyViewState) {
             EMPTY_LIST -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                hasNoContent = true
+                isHidden = true
                 R.string.posts_empty_list
             } else {
                 R.string.no_network_message
@@ -281,10 +339,10 @@ class PostListFragment : Fragment(),
         }
         actionableEmptyView?.let {
             it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
-            it.image.visibility = if (hasNoContent) View.VISIBLE else View.GONE
+            it.image.visibility = if (isHidden) View.VISIBLE else View.GONE
             it.title.setText(stringId)
             it.button.setText(R.string.posts_empty_list_button)
-            it.button.visibility = if (hasNoContent) View.VISIBLE else View.GONE
+            it.button.visibility = if (isHidden) View.VISIBLE else View.GONE
             it.button.setOnClickListener { _ ->
                 ActivityLauncher.addNewPostForResult(nonNullActivity, site, false)
             }
@@ -396,7 +454,7 @@ class PostListFragment : Fragment(),
 //        snackbar.show()
 //    }
 
-    private fun showPublishConfirmationDialog(post: PostModel) {
+    private fun showPublishConfirmationDialog(site: SiteModel, post: PostModel) {
         if (!isAdded) {
             return
         }
@@ -425,95 +483,6 @@ class PostListFragment : Fragment(),
      */
     override fun onPostSelected(post: PostModel) {
         onPostButtonClicked(PostListButton.BUTTON_EDIT, post)
-    }
-
-    /*
-     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
-     */
-    override fun onPostButtonClicked(buttonType: Int, postClicked: PostModel) {
-        if (!isAdded) {
-            return
-        }
-
-        // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
-        val post = postStore.getPostByLocalPostId(postClicked.id)
-        if (post == null) {
-            // This is mostly a sanity check and the list should never go out of sync, but if there is an edge case, we
-            // should refresh the list
-            refreshPostList()
-            return
-        }
-
-        when (buttonType) {
-            PostListButton.BUTTON_EDIT -> {
-                // track event
-                val properties = HashMap<String, Any>()
-                properties["button"] = "edit"
-                if (!post.isLocalDraft) {
-                    properties["post_id"] = post.remotePostId
-                }
-                properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] =
-                        PostUtils.contentContainsGutenbergBlocks(post.content)
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
-
-                if (UploadService.isPostUploadingOrQueued(post)) {
-                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
-                    // post itself when they finish (since we're about to edit it again)
-                    UploadService.cancelQueuedPostUpload(post)
-                }
-                ActivityLauncher.editPostOrPageForResult(nonNullActivity, site, post)
-            }
-            PostListButton.BUTTON_RETRY -> {
-                // restart the UploadService with retry parameters
-                val intent = UploadService.getUploadPostServiceIntent(
-                        nonNullActivity,
-                        post,
-                        PostUtils.isFirstTimePublish(post),
-                        false,
-                        true
-                )
-                nonNullActivity.startService(intent)
-            }
-            PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
-                showPublishConfirmationDialog(post)
-            }
-            PostListButton.BUTTON_VIEW -> ActivityLauncher.browsePostOrPage(nonNullActivity, site, post)
-            PostListButton.BUTTON_PREVIEW -> ActivityLauncher.viewPostPreviewForResult(nonNullActivity, site, post)
-            PostListButton.BUTTON_STATS -> ActivityLauncher.viewStatsSinglePostDetails(
-                    nonNullActivity,
-                    site,
-                    post
-            )
-            PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
-                if (!UploadService.isPostUploadingOrQueued(post)) {
-                    var message = getString(R.string.dialog_confirm_delete_post)
-
-                    if (post.isLocalDraft) {
-                        message = getString(R.string.dialog_confirm_delete_permanently_post)
-                    }
-
-                    val builder = AlertDialog.Builder(
-                            ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-                    )
-                    builder.setTitle(getString(R.string.delete_post))
-                            .setMessage(message)
-                            .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
-                            .setNegativeButton(R.string.cancel, null)
-                            .setCancelable(true)
-                    builder.create().show()
-                } else {
-                    val builder = AlertDialog.Builder(
-                            ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-                    )
-                    builder.setTitle(getText(R.string.delete_post))
-                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
-                            .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
-                            .setNegativeButton(R.string.cancel, null)
-                            .setCancelable(true)
-                    builder.create().show()
-                }
-            }
-        }
     }
 
     // FluxC events
@@ -715,7 +684,6 @@ class PostListFragment : Fragment(),
         // TODO: This too
         showTargetPostIfNecessary()
     }
-
 
     companion object {
         const val TAG = "post_list_fragment_tag"
