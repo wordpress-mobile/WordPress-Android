@@ -95,7 +95,7 @@ sealed class BlockItemViewHolder(
 
                 override fun updateDrawState(ds: TextPaint?) {
                     ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
-                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
                     ds?.isUnderlineText = false
                 }
             }
