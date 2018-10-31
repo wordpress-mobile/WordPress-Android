@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.yarolegovich.wellsql.WellSql
-import org.wordpress.android.fluxc.model.vertical.VerticalModel
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +13,8 @@ class VerticalSqlUtils @Inject constructor() {
     }
 
     // TODO: Add documentation
-    fun insertVerticals(verticalList: List<VerticalModel>) {
-        WellSql.insert(verticalList).asSingleTransaction(true).execute()
+    // TODO: Do we need to order them in any way?
+    fun getSegments(): List<VerticalSegmentModel> {
+        return WellSql.select(VerticalSegmentModel::class.java).asModel
     }
 }

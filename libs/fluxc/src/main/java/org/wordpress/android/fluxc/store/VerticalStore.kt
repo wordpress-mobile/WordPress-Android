@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -42,30 +43,31 @@ class VerticalStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    // TODO: Do we have pagination and if so, how complicated is it? Do we need all the data at once or can we
+    suspend fun getSegments() = withContext(coroutineContext) {
+        verticalSqlUtils.getSegments()
+    }
+
+    // TODO: Do we have pagination and if so, how complicated is it? Do we need all the data at once or should we
     // TODO: use the ListStore to paginate?
     private suspend fun fetchSegments(): OnSegmentsFetched {
         val fetchedSegmentsPayload = verticalRestClient.fetchSegments()
         val onSegmentsFetched = OnSegmentsFetched(fetchedSegmentsPayload.error)
         if (!fetchedSegmentsPayload.isError) {
-            // TODO: If there is pagination and everything is kept in this Store, we need to delete the current
-            // TODO: verticals before we insert the new list
+            // TODO: If there is pagination, we need to delete the current segments before we insert the new list
             verticalSqlUtils.insertSegments(fetchedSegmentsPayload.segmentList)
         }
         return onSegmentsFetched
     }
 
-    // TODO: Do we have pagination and if so, how complicated is it? Do we need all the data at once or can we
-    // TODO: use the ListStore to paginate?
     private suspend fun fetchVerticals(payload: FetchVerticalsPayload): OnVerticalsFetched {
         val fetchedVerticalsPayload = verticalRestClient.fetchVerticals(payload.searchQuery)
-        val onVerticalsFetched = OnVerticalsFetched(payload.searchQuery, fetchedVerticalsPayload.error)
-        if (!fetchedVerticalsPayload.isError) {
-            // TODO: If there is pagination and everything is kept in this Store, we need to delete the current
-            // TODO: verticals before we insert the new list
-            verticalSqlUtils.insertVerticals(fetchedVerticalsPayload.verticalList)
-        }
-        return onVerticalsFetched
+        // TODO: Don't use the OnChanged event to return the data, save it in the DB. However this depends on a few
+        // TODO: decisions we have yet to made, especially on the API side, so temporarily we use the event.
+        return OnVerticalsFetched(
+                payload.searchQuery,
+                fetchedVerticalsPayload.verticalList,
+                fetchedVerticalsPayload.error
+        )
     }
 
     class OnSegmentsFetched(error: FetchSegmentsError? = null) : Store.OnChanged<FetchSegmentsError>() {
@@ -76,6 +78,7 @@ class VerticalStore @Inject constructor(
 
     class OnVerticalsFetched(
         val searchQuery: String,
+        val verticalList: List<VerticalModel>,
         error: FetchVerticalsError
     ) : Store.OnChanged<FetchVerticalsError>() {
         init {
