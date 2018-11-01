@@ -4,11 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Intent
+import de.greenrobot.event.EventBus
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -250,7 +250,7 @@ class PostListViewModel @Inject constructor(
         _userAction.postValue(EditPost(site, post))
     }
 
-    fun trashPost(post: PostModel) {
+    private fun trashPost(post: PostModel) {
         // TODO: Undo action
         // TODO: Remove the pending draft notification
         _postUploadAction.postValue(CancelPostAndMediaUpload(post))
@@ -264,10 +264,6 @@ class PostListViewModel @Inject constructor(
         val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
         val snackbarHolder = SnackbarMessageHolder(messageRes)
         _snackbarAction.postValue(snackbarHolder)
-    }
-
-    private fun addUploadedPostRemoteId(remotePostId: Long) {
-        uploadedPostRemoteIds.add(remotePostId)
     }
 
     fun onEventMainThread(event: UploadService.UploadErrorEvent) {
@@ -319,7 +315,7 @@ class PostListViewModel @Inject constructor(
             // next refresh and pass it to `ListStore` so it'll be included in the list.
             // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
             // as the current `ListManager` might not have been updated yet since it's a bg action.
-            addUploadedPostRemoteId(event.post.remotePostId)
+            uploadedPostRemoteIds.add(event.post.remotePostId)
             // TODO: might not be the best way to start a refresh
             refreshList()
         }
