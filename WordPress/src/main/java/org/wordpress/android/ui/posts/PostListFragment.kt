@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -40,12 +39,14 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_ERROR
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
+import org.wordpress.android.viewmodel.posts.PostListUserAction
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -71,7 +72,6 @@ class PostListFragment : Fragment(),
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
 
-    @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var postStore: PostStore
 
     private val postListAdapter: PostListAdapter by lazy {
@@ -122,47 +122,8 @@ class PostListFragment : Fragment(),
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
             })
-            viewModel.editPost.observe(this, Observer {
-                it?.let { (site, post) -> ActivityLauncher.editPostOrPageForResult(nonNullActivity, site, post) }
-            })
-            viewModel.retryPost.observe(this, Observer {
-                it?.let { post ->
-                    // restart the UploadService with retry parameters
-                    val intent = UploadService.getUploadPostServiceIntent(
-                            nonNullActivity,
-                            post,
-                            PostUtils.isFirstTimePublish(post),
-                            false,
-                            true
-                    )
-                    nonNullActivity.startService(intent)
-                }
-            })
-            viewModel.displayTrashConfirmationDialog.observe(this, Observer {
-                it?.let { post -> displayTrashPostDialog(post) }
-            })
-            viewModel.displayPublishConfirmationDialog.observe(this, Observer {
-                it?.let { post ->
-                    showPublishConfirmationDialog(post)
-                }
-            })
-            viewModel.viewStats.observe(this, Observer {
-                it?.let { (site, post) ->
-                    ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, site, post)
-                }
-            })
-            viewModel.previewPost.observe(this, Observer {
-                it?.let { (site, post) ->
-                    ActivityLauncher.viewPostPreviewForResult(nonNullActivity, site, post)
-                }
-            })
-            viewModel.viewPost.observe(this, Observer {
-                it?.let { (site, post) ->
-                    ActivityLauncher.browsePostOrPage(nonNullActivity, site, post)
-                }
-            })
-            viewModel.newPost.observe(this, Observer {
-                it?.let { site -> ActivityLauncher.addNewPostForResult(nonNullActivity, site, false) }
+            viewModel.userAction.observe(this, Observer {
+                it?.let { userAction -> handleUserAction(userAction) }
             })
             viewModel.postUploadAction.observe(this, Observer {
                 it?.let { uploadAction -> handleUploadAction(uploadAction) }
@@ -173,7 +134,7 @@ class PostListFragment : Fragment(),
                 }
             })
             viewModel.postDetailsUpdated.observe(this, Observer {
-                it?.let { post -> postListAdapter.updateProgressForPost(post) }
+                it?.let { post -> postListAdapter.refreshRowForPost(post) }
             })
             viewModel.mediaChanged.observe(this, Observer {
                 it?.let { mediaList -> postListAdapter.mediaChanged(mediaList) }
@@ -181,6 +142,40 @@ class PostListFragment : Fragment(),
             viewModel.snackbarAction.observe(this, Observer {
                 it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
             })
+            viewModel.dialogAction.observe(this, Observer {
+                it?.let { dialogHolder -> showDialog(dialogHolder) }
+            })
+        }
+    }
+
+    private fun handleUserAction(action: PostListUserAction) {
+        when (action) {
+            is PostListUserAction.EditPost -> {
+                ActivityLauncher.editPostOrPageForResult(nonNullActivity, action.site, action.post)
+            }
+            is PostListUserAction.NewPost -> {
+                ActivityLauncher.addNewPostForResult(nonNullActivity, action.site, action.isPromo)
+            }
+            is PostListUserAction.PreviewPost -> {
+                ActivityLauncher.viewPostPreviewForResult(nonNullActivity, action.site, action.post)
+            }
+            is PostListUserAction.RetryUpload -> {
+                // restart the UploadService with retry parameters
+                val intent = UploadService.getUploadPostServiceIntent(
+                        nonNullActivity,
+                        action.post,
+                        action.trackAnalytics,
+                        action.publish,
+                        action.retry
+                )
+                nonNullActivity.startService(intent)
+            }
+            is PostListUserAction.ViewStats -> {
+                ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, action.site, action.post)
+            }
+            is PostListUserAction.ViewPost -> {
+                ActivityLauncher.browsePostOrPage(nonNullActivity, action.site, action.post)
+            }
         }
     }
 
@@ -246,24 +241,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun displayTrashPostDialog(post: PostModel) {
-        val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
-            if (post.isLocalDraft) {
-                R.string.dialog_confirm_delete_permanently_post
-            } else R.string.dialog_confirm_delete_post
-        } else {
-            R.string.dialog_confirm_cancel_post_media_uploading
-        }
-        val builder = AlertDialog.Builder(
-                ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-        )
-        builder.setTitle(getString(R.string.delete_post))
-                .setMessage(messageRes)
-                .setPositiveButton(R.string.delete) { _, _ -> trashPost(post) }
-                .setNegativeButton(R.string.cancel, null)
-                .setCancelable(true)
-        builder.create().show()
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -392,31 +369,15 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun trashPost(post: PostModel) {
-        // only check if network is available in case this is not a local draft - local drafts have not yet
-        // been posted to the server so they can be trashed w/o further care
-        if (!post.isLocalDraft && !NetworkUtils.checkConnection(nonNullActivity)) {
-            return
-        }
-        viewModel.trashPost(post)
-    }
-
-    // TODO: Move this
-    private fun showPublishConfirmationDialog(post: PostModel) {
-        if (!isAdded) {
-            return
-        }
-        val builder = AlertDialog.Builder(
-                ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert)
-        )
-        builder.setTitle(resources.getText(R.string.dialog_confirm_publish_title))
-                .setMessage(getString(R.string.dialog_confirm_publish_message_post))
-                .setPositiveButton(R.string.dialog_confirm_publish_yes) { _, _ ->
-                    viewModel.publishPost(post)
-                }
-                .setNegativeButton(R.string.cancel, null)
-                .setCancelable(true)
-        builder.create().show()
+    private fun showDialog(dialogHolder: DialogHolder) {
+        val builder = AlertDialog.Builder(ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert))
+        builder.setTitle(dialogHolder.titleRes)
+                .setMessage(dialogHolder.messageRes)
+                .setPositiveButton(dialogHolder.positiveButtonTextRes) { _, _ -> dialogHolder.positiveButtonAction() }
+                .setNegativeButton(dialogHolder.negativeButtonTextRes, null)
+                .setCancelable(dialogHolder.cancelable)
+                .create()
+                .show()
     }
 
     // PostListAdapter listeners

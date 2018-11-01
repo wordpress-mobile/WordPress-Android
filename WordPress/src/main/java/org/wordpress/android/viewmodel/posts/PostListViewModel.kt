@@ -55,13 +55,34 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
+import org.wordpress.android.viewmodel.posts.PostListUserAction.EditPost
+import org.wordpress.android.viewmodel.posts.PostListUserAction.NewPost
+import org.wordpress.android.viewmodel.posts.PostListUserAction.PreviewPost
+import org.wordpress.android.viewmodel.posts.PostListUserAction.RetryUpload
+import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewPost
+import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewStats
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 import javax.inject.Named
+
+sealed class PostListUserAction {
+    class EditPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
+    class NewPost(val site: SiteModel, val isPromo: Boolean = false) : PostListUserAction()
+    class PreviewPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
+    class RetryUpload(
+        val post: PostModel,
+        val trackAnalytics: Boolean = PostUtils.isFirstTimePublish(post),
+        val publish: Boolean = false,
+        val retry: Boolean = true
+    ) : PostListUserAction()
+    class ViewStats(val site: SiteModel, val post: PostModel) : PostListUserAction()
+    class ViewPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
+}
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -82,7 +103,6 @@ class PostListViewModel @Inject constructor(
     private lateinit var site: SiteModel
 
     private val uploadedPostRemoteIds = ArrayList<Long>()
-    private val trashedPostIds = ArrayList<Pair<Int, Long>>()
 
     private val _listManager = MutableLiveData<ListManager<PostModel>>()
     val listManagerLiveData: LiveData<ListManager<PostModel>> = _listManager
@@ -90,35 +110,17 @@ class PostListViewModel @Inject constructor(
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
 
-    private val _editPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
-    val editPost: LiveData<Pair<SiteModel, PostModel>> = _editPost
-
-    private val _retryPost = SingleLiveEvent<PostModel>()
-    val retryPost: LiveData<PostModel> = _retryPost
-
-    private val _viewStats = SingleLiveEvent<Pair<SiteModel, PostModel>>()
-    val viewStats: LiveData<Pair<SiteModel, PostModel>> = _viewStats
-
-    private val _previewPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
-    val previewPost: LiveData<Pair<SiteModel, PostModel>> = _previewPost
-
-    private val _viewPost = SingleLiveEvent<Pair<SiteModel, PostModel>>()
-    val viewPost: LiveData<Pair<SiteModel, PostModel>> = _viewPost
-
-    private val _newPost = SingleLiveEvent<SiteModel>()
-    val newPost: LiveData<SiteModel> = _newPost
-
-    private val _displayTrashConfirmationDialog = SingleLiveEvent<PostModel>()
-    val displayTrashConfirmationDialog: LiveData<PostModel> = _displayTrashConfirmationDialog
-
-    private val _displayPublishConfirmationDialog = SingleLiveEvent<PostModel>()
-    val displayPublishConfirmationDialog: LiveData<PostModel> = _displayPublishConfirmationDialog
+    private val _userAction = SingleLiveEvent<PostListUserAction>()
+    val userAction: LiveData<PostListUserAction> = _userAction
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
+
+    private val _dialogAction = SingleLiveEvent<DialogHolder>()
+    val dialogAction: LiveData<DialogHolder> = _dialogAction
 
     private val _postDetailsUpdated = SingleLiveEvent<PostModel>()
     val postDetailsUpdated: LiveData<PostModel> = _postDetailsUpdated
@@ -161,20 +163,49 @@ class PostListViewModel @Inject constructor(
     fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPost(site, post)
-            PostListButton.BUTTON_RETRY -> _retryPost.postValue(post)
+            PostListButton.BUTTON_RETRY -> _userAction.postValue(RetryUpload(post))
             PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
-                _displayPublishConfirmationDialog.postValue(post)
+                showPublishConfirmationDialog(post)
             }
-            PostListButton.BUTTON_VIEW -> _viewPost.postValue(Pair(site, post))
-            PostListButton.BUTTON_PREVIEW -> _previewPost.postValue(Pair(site, post))
-            PostListButton.BUTTON_STATS -> _viewStats.postValue(Pair(site, post))
+            PostListButton.BUTTON_VIEW -> _userAction.postValue(ViewPost(site, post))
+            PostListButton.BUTTON_PREVIEW -> _userAction.postValue(PreviewPost(site, post))
+            PostListButton.BUTTON_STATS -> _userAction.postValue(ViewStats(site, post))
             PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
-                _displayTrashConfirmationDialog.postValue(post)
+                showTrashConfirmationDialog(post)
             }
         }
     }
 
-    fun publishPost(post: PostModel) {
+    private fun showTrashConfirmationDialog(post: PostModel) {
+        val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
+            if (post.isLocalDraft) {
+                R.string.dialog_confirm_delete_permanently_post
+            } else R.string.dialog_confirm_delete_post
+        } else {
+            R.string.dialog_confirm_cancel_post_media_uploading
+        }
+        val dialogHolder = DialogHolder(
+                titleRes = R.string.delete_post,
+                messageRes = messageRes,
+                positiveButtonTextRes = R.string.delete,
+                negativeButtonTextRes = R.string.cancel,
+                positiveButtonAction = { trashPost(post) }
+        )
+        _dialogAction.postValue(dialogHolder)
+    }
+
+    private fun showPublishConfirmationDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                titleRes = R.string.dialog_confirm_publish_title,
+                messageRes = R.string.dialog_confirm_publish_message_post,
+                positiveButtonTextRes = R.string.dialog_confirm_publish_yes,
+                negativeButtonTextRes = R.string.cancel,
+                positiveButtonAction = { publishPost(post) }
+        )
+        _dialogAction.postValue(dialogHolder)
+    }
+
+    private fun publishPost(post: PostModel) {
         _postUploadAction.postValue(PublishPost(dispatcher, site, post))
     }
 
@@ -198,7 +229,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun newPost() {
-        _newPost.postValue(site)
+        _userAction.postValue(NewPost(site))
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
@@ -216,7 +247,7 @@ class PostListViewModel @Inject constructor(
             // post itself when they finish (since we're about to edit it again)
             UploadService.cancelQueuedPostUpload(post)
         }
-        _editPost.postValue(Pair(site, post))
+        _userAction.postValue(EditPost(site, post))
     }
 
     fun trashPost(post: PostModel) {
@@ -419,7 +450,7 @@ class PostListViewModel @Inject constructor(
     private suspend fun getListManagerFromStore(listDescriptor: PostListDescriptor) = withContext(Dispatchers.Default) {
         listStore.getListManager(
                 listDescriptor,
-                PostListDataSource(dispatcher, postStore, site, trashedPostIds, uploadedPostRemoteIds)
+                PostListDataSource(dispatcher, postStore, site, null, uploadedPostRemoteIds)
         )
     }
 }
