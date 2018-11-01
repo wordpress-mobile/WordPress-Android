@@ -63,43 +63,31 @@ class PagesActivity : AppCompatActivity(),
     override fun onNegativeClicked(instanceTag: String) {
     }
 
-    override fun onGutenbergWarningDialogEditPostClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is GutenbergWarningDialogClickInterface) {
-            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-                fragment.onGutenbergWarningDialogEditPostClicked(instanceTag, gutenbergRemotePostId)
-            }
+            fragment.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
         }
     }
 
-    override fun onGutenbergWarningDialogCancelClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is GutenbergWarningDialogClickInterface) {
-            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-                fragment.onGutenbergWarningDialogCancelClicked(instanceTag, gutenbergRemotePostId)
-            }
+            fragment.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
         }
     }
 
-    override fun onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is GutenbergWarningDialogClickInterface) {
-            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-                fragment.onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag, gutenbergRemotePostId)
-            }
+            fragment.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
         }
     }
 
-    override fun onGutenbergWarningDialogDontShowAgainClicked(
-        instanceTag: String,
-        gutenbergRemotePostId: Long,
-        checked: Boolean
-    ) {
+    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
         if (fragment is GutenbergWarningDialogClickInterface) {
-            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-                fragment.onGutenbergWarningDialogDontShowAgainClicked(instanceTag, gutenbergRemotePostId, checked)
-            }
+            fragment.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
         }
     }
 

@@ -147,39 +147,31 @@ public class PostsListActivity extends AppCompatActivity implements GutenbergWar
 
     // used for Gutenberg compatibility dialog
     @Override
-    public void onGutenbergWarningDialogEditPostClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            if (mPostList != null) {
-                mPostList.onGutenbergWarningDialogEditPostClicked(instanceTag, gutenbergRemotePostId);
-            }
+    public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
         }
     }
 
     @Override
-    public void onGutenbergWarningDialogCancelClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            if (mPostList != null) {
-                mPostList.onGutenbergWarningDialogCancelClicked(instanceTag, gutenbergRemotePostId);
-            }
+    public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
         }
     }
 
     @Override
-    public void onGutenbergWarningDialogLearnMoreLinkClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            if (mPostList != null) {
-                mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag, gutenbergRemotePostId);
-            }
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
         }
     }
 
     @Override
-    public void onGutenbergWarningDialogDontShowAgainClicked(@NotNull String instanceTag, long gutenbergRemotePostId,
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId,
                                                              boolean checked) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            if (mPostList != null) {
-                mPostList.onGutenbergWarningDialogDontShowAgainClicked(instanceTag, gutenbergRemotePostId, checked);
-            }
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
         }
     }
 }

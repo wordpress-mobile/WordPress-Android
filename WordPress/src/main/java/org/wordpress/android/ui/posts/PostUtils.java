@@ -39,8 +39,6 @@ public class PostUtils {
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
-    public static final String TAG_GUTENBERG_CONFIRM_DIALOG = "tag_gutenberg_confirm_dialog";
-
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
      * shortcode name and the closing brace
@@ -393,8 +391,8 @@ public class PostUtils {
                                                                PostModel post,
                                                                SiteModel site) {
         GutenbergWarningFragmentDialog gutenbergCompatibilityDialog = new GutenbergWarningFragmentDialog();
-        gutenbergCompatibilityDialog.initialize(TAG_GUTENBERG_CONFIRM_DIALOG, post.isPage(), post.getRemotePostId());
-        gutenbergCompatibilityDialog.show(fragmentManager, TAG_GUTENBERG_CONFIRM_DIALOG);
+        gutenbergCompatibilityDialog.initialize(post.getRemotePostId(), post.isPage());
+        gutenbergCompatibilityDialog.show(fragmentManager, "tag_gutenberg_confirm_dialog");
 
         // track event
         Map<String, Object> properties = new HashMap<>();

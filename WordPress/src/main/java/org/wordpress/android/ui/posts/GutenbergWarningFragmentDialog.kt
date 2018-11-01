@@ -16,29 +16,22 @@ import org.wordpress.android.widgets.WPTextView
  * Basic dialog fragment with support for 1,2 or 3 buttons.
  */
 class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
-    private lateinit var mTag: String
     private var mGutenbergRemotePostId: Long = 0
     private var mIsPage: Boolean = false
 
     interface GutenbergWarningDialogClickInterface {
-        fun onGutenbergWarningDialogEditPostClicked(instanceTag: String, gutenbergRemotePostId: Long)
-        fun onGutenbergWarningDialogCancelClicked(instanceTag: String, gutenbergRemotePostId: Long)
-        fun onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag: String, gutenbergRemotePostId: Long)
-        fun onGutenbergWarningDialogDontShowAgainClicked(
-            instanceTag: String,
-            gutenbergRemotePostId: Long,
-            checked: Boolean
-        )
+        fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long)
+        fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long)
+        fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long)
+        fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean)
     }
 
     fun initialize(
-        tag: String,
-        isPage: Boolean,
-        gutenbergRemotePostId: Long
+        gutenbergRemotePostId: Long,
+        isPage: Boolean
     ) {
-        mTag = tag
-        mIsPage = isPage
         mGutenbergRemotePostId = gutenbergRemotePostId
+        mIsPage = isPage
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,14 +41,12 @@ class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
         setStyle(AppCompatDialogFragment.STYLE_NORMAL, theme)
 
         if (savedInstanceState != null) {
-            mTag = savedInstanceState.getString(STATE_KEY_TAG)
             mIsPage = savedInstanceState.getBoolean(STATE_KEY_IS_PAGE)
             mGutenbergRemotePostId = savedInstanceState.getLong(STATE_KEY_GUTENBERG_REMOTE_POST_ID)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putString(STATE_KEY_TAG, mTag)
         outState.putBoolean(STATE_KEY_IS_PAGE, mIsPage)
         outState.putLong(STATE_KEY_GUTENBERG_REMOTE_POST_ID, mGutenbergRemotePostId)
         super.onSaveInstanceState(outState)
@@ -89,7 +80,7 @@ class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
         link.text = getString(R.string.dialog_gutenberg_compatibility_learn_more)
         link.setOnClickListener({
             (activity as GutenbergWarningDialogClickInterface)
-                    .onGutenbergWarningDialogLearnMoreLinkClicked(mTag, mGutenbergRemotePostId) })
+                    .onGutenbergWarningDialogLearnMoreLinkClicked(mGutenbergRemotePostId) })
 
         val positiveButtonLabel = if (mIsPage)
             getString(R.string.dialog_gutenberg_compatibility_yes_edit_page)
@@ -99,7 +90,7 @@ class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
         buttonPositive.text = positiveButtonLabel
         buttonPositive.setOnClickListener({
                 (activity as GutenbergWarningDialogClickInterface)
-                        .onGutenbergWarningDialogEditPostClicked(mTag, mGutenbergRemotePostId)
+                        .onGutenbergWarningDialogEditPostClicked(mGutenbergRemotePostId)
             this.dismiss()
         })
 
@@ -108,15 +99,14 @@ class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
         buttonNegative.text = getString(R.string.dialog_gutenberg_compatibility_no_go_back)
         buttonNegative.setOnClickListener({
                 (activity as GutenbergWarningDialogClickInterface)
-                        .onGutenbergWarningDialogCancelClicked(mTag, mGutenbergRemotePostId)
+                        .onGutenbergWarningDialogCancelClicked(mGutenbergRemotePostId)
             this.dismiss()
         })
 
         val dontShowAnymore = view.findViewById<CheckBox>(R.id.gutenberg_warning_dialog_dont_show_anymore)
         dontShowAnymore.setOnClickListener({
                 (activity as GutenbergWarningDialogClickInterface)
-                        .onGutenbergWarningDialogDontShowAgainClicked(
-                                mTag, mGutenbergRemotePostId, dontShowAnymore.isChecked)
+                        .onGutenbergWarningDialogDontShowAgainClicked(mGutenbergRemotePostId, dontShowAnymore.isChecked)
         })
     }
 
@@ -128,7 +118,6 @@ class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        private const val STATE_KEY_TAG = "state_key_tag"
         private const val STATE_KEY_IS_PAGE = "state_key_is_page"
         private const val STATE_KEY_GUTENBERG_REMOTE_POST_ID = "state_key_gb_remote_post_id"
     }

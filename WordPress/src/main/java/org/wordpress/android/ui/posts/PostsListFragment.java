@@ -695,67 +695,59 @@ public class PostsListFragment extends Fragment
     }
 
     @Override
-    public void onGutenbergWarningDialogEditPostClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+    public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, mSite);
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            // If the post is uploading media, allow the media to continue uploading, but don't upload the
+            // post itself when they finish (since we're about to edit it again)
+            UploadService.cancelQueuedPostUpload(post);
+        }
+        ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+    }
+
+    @Override
+    public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
             // track event
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, mSite);
-            if (UploadService.isPostUploadingOrQueued(post)) {
-                // If the post is uploading media, allow the media to continue uploading, but don't upload the
-                // post itself when they finish (since we're about to edit it again)
-                UploadService.cancelQueuedPostUpload(post);
-            }
-            ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
         }
     }
 
     @Override
-    public void onGutenbergWarningDialogCancelClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
-            // guarding against null post as we only want to track here
-            if (post != null) {
-                // track event
-                PostUtils.trackGutenbergDialogEvent(
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
-            }
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
+        // here launch the web the Gutenberg Learn more
+        String urlToUse = (mSite.isWPCom() || mSite.isJetpackConnected())
+                ? getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
+                : getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg);
+        WPWebViewActivity.openURL(getActivity(), urlToUse);
+
+        // track event
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
         }
     }
 
     @Override
-    public void onGutenbergWarningDialogLearnMoreLinkClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            // here launch the web the Gutenberg Learn more
-            String urlToUse = (mSite.isWPCom() || mSite.isJetpackConnected())
-                    ? getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
-                    : getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg);
-            WPWebViewActivity.openURL(getActivity(), urlToUse);
-
-            // track event
-            PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
-            // guarding against null post as we only want to track here
-            if (post != null) {
-                PostUtils.trackGutenbergDialogEvent(
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
-            }
-        }
-    }
-
-    @Override
-    public void onGutenbergWarningDialogDontShowAgainClicked(@NotNull String instanceTag, long gutenbergRemotePostId,
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId,
                                                              boolean checked) {
-        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
-            AppPrefs.setGutenbergWarningDialogDisabled(checked);
-            // track event
-            PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
-            // guarding against null post as we only want to track here
-            if (post != null) {
-                PostUtils.trackGutenbergDialogEvent(
-                    checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
-                            : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED,
-                    post, mSite);
-            }
+        AppPrefs.setGutenbergWarningDialogDisabled(checked);
+        // track event
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
+                        : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED,
+                post, mSite);
         }
     }
 

@@ -290,7 +290,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         viewModel.onDeleteConfirmed(remoteId)
     }
 
-    override fun onGutenbergWarningDialogEditPostClicked(instanceTag: String, gutenbergRemotePageId: Long) {
+    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePageId: Long) {
         val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // track event
         PostUtils.trackGutenbergDialogEvent(
@@ -299,7 +299,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
     }
 
-    override fun onGutenbergWarningDialogCancelClicked(instanceTag: String, gutenbergRemotePageId: Long) {
+    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePageId: Long) {
         val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // guarding against null post as we only want to track here
         if (post != null) {
@@ -310,7 +310,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         }
     }
 
-    override fun onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag: String, gutenbergRemotePageId: Long) {
+    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePageId: Long) {
         // here launch the web the Gutenberg Learn more
         val site = viewModel.site
         val urlToUse =
@@ -332,11 +332,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         }
     }
 
-    override fun onGutenbergWarningDialogDontShowAgainClicked(
-        instanceTag: String,
-        gutenbergRemotePageId: Long,
-        checked: Boolean
-    ) {
+    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
         AppPrefs.setGutenbergWarningDialogDisabled(checked)
         val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // guarding against null post as we only want to track here
