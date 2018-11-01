@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!-- Allows changing locales -->
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <!-- Allows changing locales for screenshot automation -->
+    <uses-permission
+        tools:ignore="ProtectedPermissions"
+        android:name="android.permission.CHANGE_CONFIGURATION"
+        />
 </manifest>
