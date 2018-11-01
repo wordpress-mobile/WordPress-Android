@@ -37,6 +37,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.posts.PostListData
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
@@ -113,8 +114,8 @@ class PostListFragment : Fragment(),
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
             viewModel.start(site)
-            viewModel.listManagerLiveData.observe(this, Observer {
-                it?.let { listManager -> updateListManager(listManager) }
+            viewModel.postListData.observe(this, Observer {
+                it?.let { postListData -> update(postListData) }
             })
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
@@ -387,13 +388,14 @@ class PostListFragment : Fragment(),
      * This function deals with all the UI actions that needs to be taken after a [ListManager] change, including but
      * not limited to, updating the swipe to refresh layout, loading progress bar and updating the empty views.
      */
-    private fun updateListManager(listManager: ListManager<PostModel>) {
+    // TODO: Update name and comment
+    private fun update(postListData: PostListData) {
         if (!isAdded) {
             return
         }
-        swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
-        progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
-        postListAdapter.setListManager(listManager)
+        swipeRefreshLayout?.isRefreshing = postListData.isFetchingFirstPage
+        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
+        postListAdapter.setPostListData(postListData)
 
         // TODO: This might be an issue now that we moved the diff calculation to adapter
         // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.

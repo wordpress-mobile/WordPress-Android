@@ -8,7 +8,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.util.DiffUtil
-import android.support.v7.util.DiffUtil.DiffResult
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -27,33 +26,18 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.isActive
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import org.apache.commons.lang3.StringUtils
-import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.ListManagerDiffCallback
-import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.ui.uploads.UploadService
-import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.viewmodel.posts.PostListData
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItem
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 
@@ -67,27 +51,19 @@ private const val VIEW_TYPE_LOADING = 2
 /**
  * Adapter for Posts/Pages list
  */
-class PostListAdapter(
-    context: Context,
-    private val site: SiteModel
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var listManager: ListManager<PostModel>? = null
+class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var onPostSelectedListener: OnPostSelectedListener? = null
     private var onPostButtonClickListener: OnPostButtonClickListener? = null
     private val photonWidth: Int
     private val photonHeight: Int
     private val endlistIndicatorHeight: Int
 
-    private val isStatsSupported: Boolean
     private val showAllButtons: Boolean
 
     private var recyclerView: RecyclerView? = null
     private val layoutInflater: LayoutInflater
 
-    @Inject internal lateinit var dispatcher: Dispatcher
-    @Inject internal lateinit var postStore: PostStore
-    @Inject internal lateinit var mediaStore: MediaStore
-    @Inject internal lateinit var uploadStore: UploadStore
+    private var postListData: PostListData? = null
     @Inject internal lateinit var imageManager: ImageManager
 
     private var refreshListJob: Job? = null
@@ -100,7 +76,6 @@ class PostListAdapter(
         (context.applicationContext as WordPress).component().inject(this)
 
         layoutInflater = LayoutInflater.from(context)
-        isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
 
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = context.resources.getDimensionPixelSize(R.dimen.content_margin)
@@ -114,15 +89,15 @@ class PostListAdapter(
         showAllButtons = displayWidth >= 1080
     }
 
-    fun setListManager(listManager: ListManager<PostModel>) {
+    fun setPostListData(listData: PostListData) {
         refreshListJob?.cancel()
         refreshListJob = GlobalScope.launch(Dispatchers.Default) {
-            val diffResult = calculateDiff(this@PostListAdapter.listManager, listManager)
+            val diffResult = calculateDiff(postListData, listData)
             if (isActive) {
                 GlobalScope.launch(Dispatchers.Main) {
                     // Save and restore the visible view. Without this the scroll position might be lost during inserts
                     val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-                    this@PostListAdapter.listManager = listManager
+                    postListData = listData
                     diffResult.dispatchUpdatesTo(this@PostListAdapter)
                     recyclerViewState?.let {
                         recyclerView?.layoutManager?.onRestoreInstanceState(it)
@@ -133,13 +108,13 @@ class PostListAdapter(
     }
 
     fun mediaChanged(mediaList: List<MediaModel>) {
-        mediaList.forEach { mediaModel ->
-            listManager?.findWithIndex { post ->
-                post.featuredImageId == mediaModel.mediaId
-            }?.forEach { (position, _) ->
-                notifyItemChanged(position)
-            }
-        }
+//        mediaList.forEach { mediaModel ->
+//            listManager?.findWithIndex { post ->
+//                post.featuredImageId == mediaModel.mediaId
+//            }?.forEach { (position, _) ->
+//                notifyItemChanged(position)
+//            }
+//        }
     }
 
     fun setOnPostSelectedListener(listener: OnPostSelectedListener) {
@@ -158,13 +133,17 @@ class PostListAdapter(
     override fun getItemViewType(position: Int): Int {
         return when {
             position == (itemCount - 1) -> VIEW_TYPE_ENDLIST_INDICATOR
-            listManager?.getItem(position) != null -> VIEW_TYPE_POST
+            postListData?.getItem(
+                    position,
+                    shouldFetchIfNull = true,
+                    shouldLoadMoreIfNecessary = false
+            ) != null -> VIEW_TYPE_POST
             else -> VIEW_TYPE_LOADING
         }
     }
 
     override fun getItemCount(): Int {
-        listManager?.let {
+        postListData?.let {
             return if (it.size == 0) {
                 0
             } else {
@@ -196,16 +175,6 @@ class PostListAdapter(
         }
     }
 
-    private fun canShowStatsForPost(post: PostModel): Boolean {
-        return (isStatsSupported && PostStatus.fromPost(post) == PostStatus.PUBLISHED &&
-                !post.isLocalDraft && !post.isLocallyChanged)
-    }
-
-    private fun canPublishPost(post: PostModel?): Boolean {
-        return (post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                (post.isLocallyChanged || post.isLocalDraft || PostStatus.fromPost(post) == PostStatus.DRAFT))
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         // nothing to do if this is the static endlist indicator
         if (holder is EndListViewHolder) {
@@ -219,46 +188,38 @@ class PostListAdapter(
             throw IllegalStateException("Only remaining ViewHolder type should be PostViewHolder")
         }
 
-        listManager?.getItem(position)?.let { post ->
+        postListData?.getItem(position, true, true)?.let { postAdapterItem ->
             val context = holder.itemView.context
 
-            if (StringUtils.isNotEmpty(post.title)) {
-                // Unescape HTML
-                val cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.title)
-                holder.title.text = cleanPostTitle
-            } else {
-                holder.title.text = context.resources.getText(R.string.untitled_in_parentheses)
-            }
+            holder.title.text = if (!postAdapterItem.title.isNullOrBlank()) {
+                postAdapterItem.title
+            } else context.getString(R.string.untitled_in_parentheses)
 
-            var cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post)
-
-            if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
+            if (!postAdapterItem.excerpt.isNullOrBlank()) {
+                holder.excerpt.text = postAdapterItem.excerpt
                 holder.excerpt.visibility = View.VISIBLE
-                // Unescape HTML
-                cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt)
-                // Collapse short-codes: [gallery ids="1206,1205,1191"] -> [gallery]
-                cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt)
-                holder.excerpt.text = cleanPostExcerpt
             } else {
                 holder.excerpt.visibility = View.GONE
             }
 
-            showFeaturedImage(post, holder.featuredImage)
+            showFeaturedImage(postAdapterItem.featuredImageUrl, holder.featuredImage)
 
             // local drafts say "delete" instead of "trash"
-            if (post.isLocalDraft) {
+            if (postAdapterItem.isLocalDraft) {
                 holder.date.visibility = View.GONE
                 holder.trashButton.buttonType = PostListButton.BUTTON_DELETE
             } else {
-                holder.date.text = PostUtils.getFormattedDate(post)
+                holder.date.text = postAdapterItem.date
                 holder.date.visibility = View.VISIBLE
                 holder.trashButton.buttonType = PostListButton.BUTTON_TRASH
             }
 
-            if (UploadService.isPostUploading(post)) {
+            // Move the overlay calculation to PostAdapterItem
+            if (postAdapterItem.isUploading) {
                 holder.disabledOverlay.visibility = View.VISIBLE
                 holder.progressBar.isIndeterminate = true
-            } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
+            } else if (postListData?.isAztecEditorEnabled == false && postAdapterItem.isUploadingOrQueued) {
+                // TODO: Is this logic correct? Do we need to check for is uploading still?
                 // Editing posts with uploading media is only supported in Aztec
                 holder.disabledOverlay.visibility = View.VISIBLE
             } else {
@@ -266,37 +227,23 @@ class PostListAdapter(
                 holder.disabledOverlay.visibility = View.GONE
             }
 
-            updateStatusTextAndImage(holder.status, holder.statusImage, post)
-            updatePostUploadProgressBar(holder.progressBar, post)
-            configurePostButtons(holder, post)
+            updateStatusTextAndImage(holder.status, holder.statusImage, postAdapterItem)
+            updatePostUploadProgressBar(postAdapterItem, holder.progressBar)
+            configurePostButtons(holder, postAdapterItem)
             holder.itemView.setOnClickListener {
-                onPostSelectedListener?.onPostSelected(post)
+                // TODO: move to adapter
+//                onPostSelectedListener?.onPostSelected(post)
             }
         }
     }
 
-    private fun showFeaturedImage(post: PostModel, imgFeatured: ImageView) {
-        var imageUrl: String? = null
-        if (post.featuredImageId != 0L) {
-            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
-            if (media != null) {
-                imageUrl = media.url
-            } else {
-                val mediaToDownload = MediaModel()
-                mediaToDownload.mediaId = post.featuredImageId
-                mediaToDownload.localSiteId = site.id
-                val payload = MediaPayload(site, mediaToDownload)
-                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-            }
-        } else {
-            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
-        }
+    private fun showFeaturedImage(imageUrl: String?, imgFeatured: ImageView) {
         if (imageUrl == null) {
             imgFeatured.visibility = View.GONE
             imageManager.cancelRequestAndClearImageView(imgFeatured)
         } else if (imageUrl.startsWith("http")) {
             val photonUrl = ReaderUtils.getResizedImageUrl(
-                    imageUrl, photonWidth, photonHeight, !SiteUtils.isPhotonCapable(site)
+                    imageUrl, photonWidth, photonHeight, postListData?.isPhotonCapable == false
             )
             imgFeatured.visibility = View.VISIBLE
             imageManager.load(imgFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
@@ -314,23 +261,23 @@ class PostListAdapter(
         }
     }
 
-    private fun updatePostUploadProgressBar(view: ProgressBar, post: PostModel) {
-        if (!uploadStore.isFailedPost(post) && (UploadService.isPostUploadingOrQueued(post) ||
-                        UploadService.hasInProgressMediaUploadsForPost(post))) {
+    private fun updatePostUploadProgressBar(postAdapterItem: PostAdapterItem, view: ProgressBar) {
+        if (!postAdapterItem.isUploadFailed &&
+                (postAdapterItem.isUploadingOrQueued || postAdapterItem.hasInProgressMediaUpload)) {
             view.visibility = View.VISIBLE
-            val overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100)
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
             // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
-            view.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, overallProgress)
+            view.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, postAdapterItem.mediaUploadProgress)
         } else {
             view.visibility = View.GONE
         }
     }
 
-    private fun updateStatusTextAndImage(txtStatus: TextView, imgStatus: ImageView, post: PostModel) {
+    private fun updateStatusTextAndImage(txtStatus: TextView, imgStatus: ImageView, postAdapterItem: PostAdapterItem) {
         val context = txtStatus.context
 
-        if (PostStatus.fromPost(post) == PostStatus.PUBLISHED && !post.isLocalDraft && !post.isLocallyChanged) {
+        if (postAdapterItem.postStatus == PostStatus.PUBLISHED && !postAdapterItem.isLocalDraft &&
+                !postAdapterItem.isLocallyChanged) {
             txtStatus.visibility = View.GONE
             imgStatus.visibility = View.GONE
             imageManager.cancelRequestAndClearImageView(imgStatus)
@@ -340,35 +287,35 @@ class PostListAdapter(
             var statusColorResId = R.color.grey_darken_10
             var errorMessage: String? = null
 
-            val reason = uploadStore.getUploadErrorForPost(post)
-            if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
-                if (reason.mediaError != null) {
+            if (postAdapterItem.uploadError != null && !postAdapterItem.hasInProgressMediaUpload) {
+                if (postAdapterItem.uploadError.mediaError != null) {
                     errorMessage = context.getString(R.string.error_media_recover_post)
-                } else if (reason.postError != null) {
-                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError)
+                } else if (postAdapterItem.uploadError.postError != null) {
+                    // TODO: figure out!!
+//                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError)
                 }
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
                 statusColorResId = R.color.alert_red
-            } else if (UploadService.isPostUploading(post)) {
+            } else if (postAdapterItem.isUploading) {
                 statusTextResId = R.string.post_uploading
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
-            } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
+            } else if (postAdapterItem.hasInProgressMediaUpload) {
                 statusTextResId = R.string.uploading_media
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
-            } else if (UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+            } else if (postAdapterItem.isQueued || postAdapterItem.hasPendingMediaUpload) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
-            } else if (post.isLocalDraft) {
+            } else if (postAdapterItem.isLocalDraft) {
                 statusTextResId = R.string.local_draft
                 statusIconResId = R.drawable.ic_gridicons_page
                 statusColorResId = R.color.alert_yellow_dark
-            } else if (post.isLocallyChanged) {
+            } else if (postAdapterItem.isLocallyChanged) {
                 statusTextResId = R.string.local_changes
                 statusIconResId = R.drawable.ic_gridicons_page
                 statusColorResId = R.color.alert_yellow_dark
             } else {
-                when (PostStatus.fromPost(post)) {
+                when (postAdapterItem.postStatus) {
                     PostStatus.DRAFT -> {
                         statusTextResId = R.string.post_status_draft
                         statusIconResId = R.drawable.ic_gridicons_page
@@ -424,21 +371,19 @@ class PostListAdapter(
 
     private fun configurePostButtons(
         holder: PostViewHolder,
-        post: PostModel
+        postAdapterItem: PostAdapterItem
     ) {
-        val canRetry = uploadStore.getUploadErrorForPost(post) != null &&
-                !UploadService.hasInProgressMediaUploadsForPost(post)
+        val canRetry = postAdapterItem.uploadError != null && !postAdapterItem.hasInProgressMediaUpload
         val canShowViewButton = !canRetry
-        val canShowStatsButton = canShowStatsForPost(post)
-        val canShowPublishButton = canRetry || canPublishPost(post)
+        val canShowPublishButton = canRetry || postAdapterItem.canPublishPost
 
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
-            if (!site.hasCapabilityPublishPosts) {
+            if (postListData?.hasCapabilityPublishPosts == false) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SUBMIT
             } else if (canRetry) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_RETRY
-            } else if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged) {
+            } else if (postAdapterItem.postStatus == PostStatus.SCHEDULED && postAdapterItem.isLocallyChanged) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SYNC
             } else {
                 holder.publishButton.buttonType = PostListButton.BUTTON_PUBLISH
@@ -447,7 +392,7 @@ class PostListAdapter(
 
         // posts with local changes have preview rather than view button
         if (canShowViewButton) {
-            if (post.isLocalDraft || post.isLocallyChanged) {
+            if (postAdapterItem.isLocalDraft || postAdapterItem.isLocallyChanged) {
                 holder.viewButton.buttonType = PostListButton.BUTTON_PREVIEW
             } else {
                 holder.viewButton.buttonType = PostListButton.BUTTON_VIEW
@@ -465,7 +410,7 @@ class PostListAdapter(
         if (canShowPublishButton) {
             numVisibleButtons++
         }
-        if (canShowStatsButton) {
+        if (postAdapterItem.canShowStats) {
             numVisibleButtons++
         }
 
@@ -475,7 +420,7 @@ class PostListAdapter(
             holder.moreButton.visibility = View.GONE
             holder.backButton.visibility = View.GONE
             holder.trashButton.visibility = View.VISIBLE
-            holder.statsButton.visibility = if (canShowStatsButton) View.VISIBLE else View.GONE
+            holder.statsButton.visibility = if (postAdapterItem.canShowStats) View.VISIBLE else View.GONE
             holder.publishButton.visibility = if (canShowPublishButton) View.VISIBLE else View.GONE
         } else {
             holder.moreButton.visibility = View.VISIBLE
@@ -489,10 +434,11 @@ class PostListAdapter(
             // handle back/more here, pass other actions to activity/fragment
             val buttonType = (view as PostListButton).buttonType
             when (buttonType) {
-                PostListButton.BUTTON_MORE -> animateButtonRows(holder, post, false)
-                PostListButton.BUTTON_BACK -> animateButtonRows(holder, post, true)
+                PostListButton.BUTTON_MORE -> animateButtonRows(holder, postAdapterItem, false)
+                PostListButton.BUTTON_BACK -> animateButtonRows(holder, postAdapterItem, true)
                 else -> if (onPostButtonClickListener != null) {
-                    onPostButtonClickListener?.onPostButtonClicked(buttonType, post)
+                    // TODO: Move to adapter item
+//                    onPostButtonClickListener?.onPostButtonClicked(buttonType, post)
                 }
             }
         }
@@ -512,7 +458,7 @@ class PostListAdapter(
      */
     private fun animateButtonRows(
         holder: PostViewHolder,
-        post: PostModel,
+        postAdapterItem: PostAdapterItem,
         showRow1: Boolean
     ) {
         // first animate out the button row, then show/hide the appropriate buttons,
@@ -530,8 +476,12 @@ class PostListAdapter(
                 holder.viewButton.visibility = if (showRow1) View.VISIBLE else View.GONE
                 holder.moreButton.visibility = if (showRow1) View.VISIBLE else View.GONE
                 // row 2
-                holder.statsButton.visibility = if (!showRow1 && canShowStatsForPost(post)) View.VISIBLE else View.GONE
-                holder.publishButton.visibility = if (!showRow1 && canPublishPost(post)) View.VISIBLE else View.GONE
+                holder.statsButton.visibility = if (!showRow1 && postAdapterItem.canShowStats) {
+                    View.VISIBLE
+                } else View.GONE
+                holder.publishButton.visibility = if (!showRow1 && postAdapterItem.canPublishPost) {
+                    View.VISIBLE
+                } else View.GONE
                 holder.trashButton.visibility = if (!showRow1) View.VISIBLE else View.GONE
                 holder.backButton.visibility = if (!showRow1) View.VISIBLE else View.GONE
 
@@ -548,26 +498,26 @@ class PostListAdapter(
     }
 
     fun refreshRowForPost(post: PostModel) {
-        getPositionForPost(post)?.let { position ->
-            notifyItemChanged(position)
-        }
+//        getPositionForPost(post)?.let { position ->
+//            notifyItemChanged(position)
+//        }
     }
 
-    fun updateProgressForPost(post: PostModel) {
-        recyclerView?.let { recycler ->
-            getPositionForPost(post)?.let { position ->
-                val viewHolder = recycler.findViewHolderForAdapterPosition(position)
-                if (viewHolder is PostViewHolder) {
-                    updatePostUploadProgressBar(viewHolder.progressBar, post)
-                }
-            }
-        }
-    }
+//    fun updateProgressForPost(post: PostModel) {
+//        recyclerView?.let { recycler ->
+//            getPositionForPost(post)?.let { position ->
+//                val viewHolder = recycler.findViewHolderForAdapterPosition(position)
+//                if (viewHolder is PostViewHolder) {
+//                    updatePostUploadProgressBar(viewHolder.progressBar, post)
+//                }
+//            }
+//        }
+//    }
 
-    fun getPositionForPost(post: PostModel): Int? =
-            listManager?.findWithIndex {
-                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
-            }?.asSequence()?.map { it.first }?.firstOrNull()
+    fun getPositionForPost(post: PostModel): Int? = null
+//            listManager?.findWithIndex {
+//                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
+//            }?.asSequence()?.map { it.first }?.firstOrNull()
 
     interface OnPostSelectedListener {
         fun onPostSelected(post: PostModel)
@@ -599,40 +549,49 @@ class PostListAdapter(
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-/**
- * A helper function that calculates the [DiffResult] to be applied in [PostListAdapter] for the given
- * two [ListManager]s.
- */
 private suspend fun calculateDiff(
-    oldListManager: ListManager<PostModel>?,
-    newListManager: ListManager<PostModel>
-): DiffResult = withContext(Dispatchers.Default) {
-    val callback = ListManagerDiffCallback(
-            oldListManager = oldListManager,
-            newListManager = newListManager,
-            areItemsTheSame = { oldPost, newPost ->
-                // If the local ids of two posts are the same, they are referring to the same post
-                oldPost.id == newPost.id
-            },
-            areContentsTheSame = { oldPost, newPost ->
-                if (oldPost.isLocalDraft && newPost.isLocalDraft) {
-                    // If both posts are local drafts, checking their locally changed date will be enough
-                    oldPost.dateLocallyChanged == newPost.dateLocallyChanged
-                } else if (oldPost.isLocalDraft || newPost.isLocalDraft) {
-                    // If a post is a local draft and the other is not, the contents are considered to be changed
-                    false
-                } else if (oldPost.isLocallyChanged && newPost.isLocallyChanged) {
-                    // Neither post is a local draft due to previous checks. For remote posts, if both of them are
-                    // locally changed, we can rely on their locally changed date
-                    oldPost.dateLocallyChanged == newPost.dateLocallyChanged
-                } else if (oldPost.isLocallyChanged || newPost.isLocallyChanged) {
-                    // If a post is locally changed and the other is not, the contents are considered to be changed
-                    false
-                } else {
-                    // Both posts are remote posts due to previous checks. In this case we can simply rely on their
-                    // last modified date on remote
-                    oldPost.lastModified == newPost.lastModified
-                }
-            })
+    oldListData: PostListData?,
+    newListData: PostListData
+) = withContext(Dispatchers.Default) {
+    val callback = object : DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldListData?.size ?: 0
+        }
+
+        override fun getNewListSize(): Int {
+            return newListData.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldRemoteItemId = oldListData?.listManager?.getRemoteItemId(oldItemPosition)
+            val newRemoteItemId = newListData.listManager.getRemoteItemId(newItemPosition)
+            if (oldRemoteItemId != null && newRemoteItemId != null) {
+                // both remote items
+                return oldRemoteItemId == newRemoteItemId
+            }
+            // We shouldn't fetch items or load more pages prematurely when we are just trying to compare them
+            val oldItem = oldListData?.listManager?.getItem(
+                    position = oldItemPosition,
+                    shouldFetchIfNull = false,
+                    shouldLoadMoreIfNecessary = false
+            )
+            val newItem = newListData.listManager.getItem(
+                    position = newItemPosition,
+                    shouldFetchIfNull = false,
+                    shouldLoadMoreIfNecessary = false
+            )
+            if (oldItem == null || newItem == null) {
+                // One remote and one local item. The remote item is not fetched yet, it can't be the same items.
+                return false
+            }
+            // Either one remote item and one local item or both local items. In either case, we'll let the caller
+            // decide how to compare the two. In most cases, a local id comparison should be enough.
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldListData?.getItem(oldItemPosition) == newListData.getItem(newItemPosition)
+        }
+    }
     DiffUtil.calculateDiff(callback)
 }

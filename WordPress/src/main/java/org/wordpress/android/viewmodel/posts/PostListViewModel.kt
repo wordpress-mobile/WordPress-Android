@@ -9,11 +9,13 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
+import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
@@ -25,17 +27,22 @@ import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.MediaStore
+import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
@@ -47,11 +54,14 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.VideoOptimizer
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -80,8 +90,119 @@ sealed class PostListUserAction {
         val publish: Boolean = false,
         val retry: Boolean = true
     ) : PostListUserAction()
+
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListUserAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
+}
+
+class PostListData(
+    val listManager: ListManager<PostModel>,
+    uploadStore: UploadStore,
+    private val site: SiteModel,
+    private val mediaStore: MediaStore,
+    private val dispatcher: Dispatcher
+) {
+    val isPhotonCapable: Boolean = SiteUtils.isPhotonCapable(site)
+    val isAztecEditorEnabled: Boolean = AppPrefs.isAztecEditorEnabled()
+    val hasCapabilityPublishPosts: Boolean = site.hasCapabilityPublishPosts
+    private val isStatsSupported: Boolean = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
+    private val items: List<PostAdapterItem?>
+    val isFetchingFirstPage: Boolean = listManager.isFetchingFirstPage
+    val isLoadingMore: Boolean = listManager.isLoadingMore
+
+    data class PostAdapterItem(
+        val title: String?,
+        val excerpt: String?,
+        val isLocalDraft: Boolean,
+        val date: String,
+        val postStatus: PostStatus,
+        val isLocallyChanged: Boolean,
+        val canShowStats: Boolean,
+        val canPublishPost: Boolean,
+        val featuredImageUrl: String?,
+
+            // Upload stuff
+        val isUploading: Boolean,
+        val isUploadingOrQueued: Boolean,
+        val isUploadFailed: Boolean,
+        val uploadError: UploadError?,
+        val isQueued: Boolean,
+        val hasInProgressMediaUpload: Boolean,
+        val mediaUploadProgress: Int,
+        val hasPendingMediaUpload: Boolean
+    )
+
+    init {
+        items = (0..(listManager.size - 1)).map { index ->
+            val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+                    ?: return@map null
+            val title = if (post.title.isNotBlank()) {
+                StringEscapeUtils.unescapeHtml4(post.title)
+            } else null
+            val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
+                    ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
+            val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
+            val postStatus = PostStatus.fromPost(post)
+            val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
+                    !post.isLocallyChanged
+            val canPublishPost = isUploadingOrQueued &&
+                    (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
+            PostAdapterItem(
+                    title = title,
+                    excerpt = excerpt,
+                    isLocalDraft = post.isLocalDraft,
+                    date = PostUtils.getFormattedDate(post),
+                    postStatus = postStatus,
+                    isLocallyChanged = post.isLocallyChanged,
+                    canShowStats = canShowStats,
+                    canPublishPost = canPublishPost,
+                    featuredImageUrl = getFeaturedImageUrl(post),
+                    // Upload stuff
+                    uploadError = uploadStore.getUploadErrorForPost(post),
+                    mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
+                    isUploading = UploadService.isPostUploading(post),
+                    isUploadingOrQueued = isUploadingOrQueued,
+                    isQueued = UploadService.isPostQueued(post),
+                    isUploadFailed = uploadStore.isFailedPost(post),
+                    hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post),
+                    hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
+            )
+        }
+    }
+
+    val size: Int = listManager.size
+
+    fun getItem(
+        index: Int,
+        shouldFetchIfNull: Boolean = false,
+        shouldLoadMoreIfNecessary: Boolean = false
+    ): PostAdapterItem? {
+        val item = items[index]
+        // TODO: Rework fetch item in ListManager
+        if (item == null) {
+            listManager.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
+        }
+        return item
+    }
+
+    private fun getFeaturedImageUrl(post: PostModel): String? {
+        var imageUrl: String? = null
+        if (post.featuredImageId != 0L) {
+            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
+            if (media != null) {
+                imageUrl = media.url
+            } else {
+                val mediaToDownload = MediaModel()
+                mediaToDownload.mediaId = post.featuredImageId
+                mediaToDownload.localSiteId = site.id
+                val payload = MediaPayload(site, mediaToDownload)
+                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+            }
+        } else {
+            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
+        }
+        return imageUrl
+    }
 }
 
 enum class PostListEmptyViewState {
@@ -95,6 +216,8 @@ enum class PostListEmptyViewState {
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
+    private val uploadStore: UploadStore,
+    private val mediaStore: MediaStore,
     private val postStore: PostStore,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
@@ -104,8 +227,8 @@ class PostListViewModel @Inject constructor(
 
     private val uploadedPostRemoteIds = ArrayList<Long>()
 
-    private val _listManager = MutableLiveData<ListManager<PostModel>>()
-    val listManagerLiveData: LiveData<ListManager<PostModel>> = _listManager
+    private val _postListData = MutableLiveData<PostListData>()
+    val postListData: LiveData<PostListData> = _postListData
 
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
@@ -157,7 +280,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun refreshList() {
-        listManagerLiveData.value?.refresh()
+        postListData.value?.listManager?.refresh()
     }
 
     fun handlePostButton(buttonType: Int, post: PostModel) {
@@ -419,7 +542,8 @@ class PostListViewModel @Inject constructor(
         listDescriptor?.let {
             defaultScope.launch {
                 val listManager = getListManagerFromStore(it)
-                _listManager.postValue(listManager)
+                val postListData = PostListData(listManager, uploadStore, site, mediaStore, dispatcher)
+                _postListData.postValue(postListData)
                 updateEmptyViewState(listManager)
                 if (refreshFirstPageAfter) {
                     listManager.refresh()
