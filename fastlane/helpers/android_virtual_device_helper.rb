@@ -37,6 +37,10 @@ module Fastlane
         Pathname.new(android_home).join("emulator/emulator").to_s
       end
 
+      def self.adb_path
+        Pathname.new(android_home).join("platform-tools/adb").to_s
+      end
+
       def self.project_root_path
         Pathname.new(File.dirname(__FILE__)).parent().parent()
       end
@@ -44,11 +48,14 @@ module Fastlane
 
     module AndroidVirtualDevicesAdbHelper
       def self.adb(command: nil, serial: "")
-        Fastlane::Actions::AdbAction.run(command: command, serial: serial)
+        Fastlane::Actions::AdbAction.run(
+          adb_path: AndroidVirtualDevicePathHelper.adb_path,
+          command: command,
+          serial: serial)
       end
 
       def self.adb_devices
-        Fastlane::Actions::AdbDevicesAction.run({})
+        Fastlane::Actions::AdbDevicesAction.run(adb_path: AndroidVirtualDevicePathHelper.adb_path)
       end
 
       def self.boot_completed?
