@@ -12,8 +12,10 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -34,10 +36,15 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.push.NativeNotificationsUtils
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostUploadAction
+import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
 import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
@@ -121,6 +128,13 @@ class PostListViewModel @Inject constructor(
 
     private val _mediaChanged = SingleLiveEvent<List<MediaModel>>()
     val mediaChanged: LiveData<List<MediaModel>> = _mediaChanged
+
+    private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
+    val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
+
+    // TODO: Rework this!!!
+    var shouldCancelPendingDraftNotification = false
+    var postIdForPostToBeDeleted: Int = 0
 
     init {
         EventBus.getDefault().register(this)
@@ -210,6 +224,58 @@ class PostListViewModel @Inject constructor(
             UploadService.cancelQueuedPostUpload(post)
         }
         _editPost.postValue(Pair(site, post))
+    }
+
+    fun trashPost(post: PostModel) {
+        // remove post from the list and add it to the list of trashed posts
+        val postIdPair = Pair(post.id, post.remotePostId)
+        trashedPostIds.add(postIdPair)
+        postIdForPostToBeDeleted = post.id
+        refreshList()
+        // TODO: refresh view instead
+
+        val undoListener = {
+            // user undid the trash, so un-hide the post and remove it from the list of trashed posts
+            trashedPostIds.remove(postIdPair)
+            refreshList()
+            // TODO: refresh view instead
+        }
+
+
+        // TODO: Add to the snackbar
+        // wait for the undo snackbar to disappear before actually deleting the post
+        val onDismissed = {
+            // if the post no longer exists in the list of trashed posts it's because the
+            // user undid the trash, so don't perform the deletion
+            if (trashedPostIds.contains(postIdPair)) {
+                // remove from the list of trashed posts in case onDismissed is called multiple
+                // times - this way the above check prevents us making the call to delete it twice
+                // https://code.google.com/p/android/issues/detail?id=190529
+                trashedPostIds.remove(postIdPair)
+
+                // here cancel all media uploads related to this Post
+                _postUploadAction.postValue(CancelPostAndMediaUpload(post))
+
+                if (post.isLocalDraft) {
+                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+
+                    // delete the pending draft notification if available
+                    // TODO: Rework the draft notifications, don't use context
+                    shouldCancelPendingDraftNotification = false
+                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
+                    NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext())
+                } else {
+                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
+                }
+            }
+        }
+
+        // different undo text if this is a local draft since it will be deleted rather than trashed
+        val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
+        val snackbarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoListener, onDismissed)
+        _snackbarAction.postValue(snackbarHolder)
+
+        shouldCancelPendingDraftNotification = true
     }
 
     private fun addUploadedPostRemoteId(remotePostId: Long) {

@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -29,9 +30,11 @@ import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
+import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
@@ -66,8 +69,6 @@ class PostListFragment : Fragment(),
     private var progressLoadMore: ProgressBar? = null
 
     private var targetPost: PostModel? = null
-    private var shouldCancelPendingDraftNotification = false
-    private var postIdForPostToBeDeleted = 0
 
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
@@ -179,6 +180,28 @@ class PostListFragment : Fragment(),
             viewModel.mediaChanged.observe(this, Observer {
                 it?.let { mediaList -> postListAdapter.mediaChanged(mediaList) }
             })
+            viewModel.snackbarAction.observe(this, Observer {
+                it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
+            })
+        }
+    }
+
+    private fun showSnackbar(holder: SnackbarMessageHolder) {
+        nonNullActivity.findViewById<View>(R.id.root_view)?.let { parent ->
+            val message = getString(holder.messageRes)
+            val duration = AccessibilityUtils.getSnackbarDuration(nonNullActivity)
+            val snackbar = Snackbar.make(parent, message, duration)
+            if (holder.buttonTitleRes != null) {
+                snackbar.setAction(getString(holder.buttonTitleRes)) {
+                    holder.buttonAction()
+                }
+            }
+            snackbar.addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(snackbar: Snackbar?, event: Int) {
+                    holder.onDismissed()
+                }
+            })
+            snackbar.show()
         }
     }
 
@@ -224,6 +247,9 @@ class PostListFragment : Fragment(),
                         action.message
                 )
             }
+            is PostUploadAction.CancelPostAndMediaUpload -> {
+                UploadService.cancelQueuedPostUploadAndRelatedMedia(nonNullActivity, action.post)
+            }
         }
     }
 
@@ -267,11 +293,13 @@ class PostListFragment : Fragment(),
     }
 
     override fun onDetach() {
-        if (shouldCancelPendingDraftNotification) {
+        if (viewModel.shouldCancelPendingDraftNotification) {
             // delete the pending draft notification if available
-            val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postIdForPostToBeDeleted)
+            // TODO: Remove postIdToBeDeleted!
+            val pushId = PendingDraftsNotificationsUtils
+                    .makePendingDraftNotificationId(viewModel.postIdForPostToBeDeleted)
             NativeNotificationsUtils.dismissNotification(pushId, nonNullActivity)
-            shouldCancelPendingDraftNotification = false
+            viewModel.shouldCancelPendingDraftNotification = false
         }
         super.onDetach()
     }
@@ -390,73 +418,14 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun trashPost(post: PostModel) {}
-
-    // TODO: Move trashing post to ViewModel
-//    /*
-//     * send the passed post to the trash with undo
-//     */
-//    private fun trashPost(post: PostModel) {
-//        // only check if network is available in case this is not a local draft - local drafts have not yet
-//        // been posted to the server so they can be trashed w/o further care
-//        if (!isAdded || !post.isLocalDraft && !NetworkUtils.checkConnection(nonNullActivity)) {
-//            return
-//        }
-//
-//        // remove post from the list and add it to the list of trashed posts
-//        val postIdPair = Pair(post.id, post.remotePostId)
-//        trashedPostIds.add(postIdPair)
-//        refreshListManagerFromStore(listDescriptor)
-//
-//        val undoListener = OnClickListener {
-//            // user undid the trash, so un-hide the post and remove it from the list of trashed posts
-//            trashedPostIds.remove(postIdPair)
-//            refreshListManagerFromStore(listDescriptor, shouldRefreshFirstPageAfterLoading = false)
-//        }
-//
-//        // different undo text if this is a local draft since it will be deleted rather than trashed
-//        val text = if (post.isLocalDraft) getString(R.string.post_deleted) else getString(R.string.post_trashed)
-//        val snackbar = Snackbar.make(
-//                nonNullActivity.findViewById(R.id.root_view),
-//                text,
-//                AccessibilityUtils.getSnackbarDuration(nonNullActivity)
-//        ).setAction(R.string.undo, undoListener)
-//        // wait for the undo snackbar to disappear before actually deleting the post
-//        snackbar.addCallback(object : Snackbar.Callback() {
-//            override fun onDismissed(snackbar: Snackbar?, event: Int) {
-//                super.onDismissed(snackbar, event)
-//
-//                // if the post no longer exists in the list of trashed posts it's because the
-//                // user undid the trash, so don't perform the deletion
-//                if (!trashedPostIds.contains(postIdPair)) {
-//                    return
-//                }
-//
-//                // remove from the list of trashed posts in case onDismissed is called multiple
-//                // times - this way the above check prevents us making the call to delete it twice
-//                // https://code.google.com/p/android/issues/detail?id=190529
-//                trashedPostIds.remove(postIdPair)
-//
-//                // here cancel all media uploads related to this Post
-//                UploadService.cancelQueuedPostUploadAndRelatedMedia(WordPress.getContext(), post)
-//
-//                if (post.isLocalDraft) {
-//                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
-//
-//                    // delete the pending draft notification if available
-//                    shouldCancelPendingDraftNotification = false
-//                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
-//                    NativeNotificationsUtils.dismissNotification(pushId, WordPress.getContext())
-//                } else {
-//                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
-//                }
-//            }
-//        })
-//
-//        postIdForPostToBeDeleted = post.id
-//        shouldCancelPendingDraftNotification = true
-//        snackbar.show()
-//    }
+    private fun trashPost(post: PostModel) {
+        // only check if network is available in case this is not a local draft - local drafts have not yet
+        // been posted to the server so they can be trashed w/o further care
+        if (!post.isLocalDraft && !NetworkUtils.checkConnection(nonNullActivity)) {
+            return
+        }
+        viewModel.trashPost(post)
+    }
 
     // TODO: Move this
     private fun showPublishConfirmationDialog(post: PostModel) {

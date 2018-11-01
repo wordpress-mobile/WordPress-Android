@@ -30,4 +30,9 @@ sealed class PostUploadAction {
         val isError: Boolean,
         val message: String?
     ) : PostUploadAction()
+
+    /**
+     * Cancel all post and media uploads related to this post
+     */
+    class CancelPostAndMediaUpload(val post: PostModel): PostUploadAction()
 }
