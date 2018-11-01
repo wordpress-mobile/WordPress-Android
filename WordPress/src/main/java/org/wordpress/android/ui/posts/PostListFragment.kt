@@ -26,10 +26,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.uploads.UploadService
@@ -196,11 +194,6 @@ class PostListFragment : Fragment(),
                     holder.buttonAction()
                 }
             }
-            snackbar.addCallback(object : Snackbar.Callback() {
-                override fun onDismissed(snackbar: Snackbar?, event: Int) {
-                    holder.onDismissed()
-                }
-            })
             snackbar.show()
         }
     }
@@ -292,18 +285,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-    override fun onDetach() {
-        if (viewModel.shouldCancelPendingDraftNotification) {
-            // delete the pending draft notification if available
-            // TODO: Remove postIdToBeDeleted!
-            val pushId = PendingDraftsNotificationsUtils
-                    .makePendingDraftNotificationId(viewModel.postIdForPostToBeDeleted)
-            NativeNotificationsUtils.dismissNotification(pushId, nonNullActivity)
-            viewModel.shouldCancelPendingDraftNotification = false
-        }
-        super.onDetach()
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.post_list_fragment, container, false)
 
@@ -326,7 +307,11 @@ class PostListFragment : Fragment(),
         fabView?.setOnClickListener { viewModel.newPost() }
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipeRefreshLayout) {
-            refreshPostList()
+            if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                swipeRefreshLayout?.isRefreshing = false
+            } else {
+                viewModel.refreshList()
+            }
         }
         return view
     }
@@ -334,17 +319,6 @@ class PostListFragment : Fragment(),
     fun handleEditPostResult(resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             viewModel.handleEditPostResult(data)
-        }
-    }
-
-    private fun refreshPostList() {
-        if (!isAdded) {
-            return
-        }
-        if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-            swipeRefreshLayout?.isRefreshing = false
-        } else {
-            viewModel.refreshList()
         }
     }
 

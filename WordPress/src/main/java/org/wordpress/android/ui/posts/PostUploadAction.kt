@@ -34,5 +34,5 @@ sealed class PostUploadAction {
     /**
      * Cancel all post and media uploads related to this post
      */
-    class CancelPostAndMediaUpload(val post: PostModel): PostUploadAction()
+    class CancelPostAndMediaUpload(val post: PostModel) : PostUploadAction()
 }
