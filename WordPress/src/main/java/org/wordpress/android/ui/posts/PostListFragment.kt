@@ -9,12 +9,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +37,6 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
@@ -128,22 +125,20 @@ class PostListFragment : Fragment(),
             viewModel.postUploadAction.observe(this, Observer {
                 it?.let { uploadAction -> handleUploadAction(uploadAction) }
             })
-            viewModel.toastMessage.observe(this, Observer {
-                it?.let { toast ->
-                    ToastUtils.showToast(nonNullActivity, toast.messageRes, toast.duration)
-                }
-            })
             viewModel.postDetailsUpdated.observe(this, Observer {
                 it?.let { post -> postListAdapter.refreshRowForPost(post) }
             })
             viewModel.mediaChanged.observe(this, Observer {
                 it?.let { mediaList -> postListAdapter.mediaChanged(mediaList) }
             })
+            viewModel.toastMessage.observe(this, Observer {
+                it?.let { toast -> toast.show(nonNullActivity) }
+            })
             viewModel.snackbarAction.observe(this, Observer {
                 it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
             })
             viewModel.dialogAction.observe(this, Observer {
-                it?.let { dialogHolder -> showDialog(dialogHolder) }
+                it?.let { dialogHolder -> dialogHolder.show(nonNullActivity) }
             })
         }
     }
@@ -240,7 +235,6 @@ class PostListFragment : Fragment(),
             }
         }
     }
-
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -367,17 +361,6 @@ class PostListFragment : Fragment(),
             }
             this.targetPost = null
         }
-    }
-
-    private fun showDialog(dialogHolder: DialogHolder) {
-        val builder = AlertDialog.Builder(ContextThemeWrapper(nonNullActivity, R.style.Calypso_Dialog_Alert))
-        builder.setTitle(dialogHolder.titleRes)
-                .setMessage(dialogHolder.messageRes)
-                .setPositiveButton(dialogHolder.positiveButtonTextRes) { _, _ -> dialogHolder.positiveButtonAction() }
-                .setNegativeButton(dialogHolder.negativeButtonTextRes, null)
-                .setCancelable(dialogHolder.cancelable)
-                .create()
-                .show()
     }
 
     // PostListAdapter listeners
