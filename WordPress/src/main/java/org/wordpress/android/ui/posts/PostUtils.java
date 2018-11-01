@@ -395,14 +395,8 @@ public class PostUtils {
         gutenbergCompatibilityDialog.show(fragmentManager, "tag_gutenberg_confirm_dialog");
 
         // track event
-        Map<String, Object> properties = new HashMap<>();
-        if (!post.isLocalDraft()) {
-            properties.put("post_id", post.getRemotePostId());
-        }
-        properties.put("is_page", post.isPage());
-        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN, site,
-                properties);
+        trackGutenbergDialogEvent(AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN,
+                post, site);
     }
 
     public static void trackGutenbergDialogEvent(AnalyticsTracker.Stat stat, PostModel post, SiteModel site) {
