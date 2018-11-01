@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -36,6 +39,8 @@ public class PostUtils {
     private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
+
+    public static final String TAG_GUTENBERG_CONFIRM_DIALOG = "tag_gutenberg_confirm_dialog";
 
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
@@ -382,5 +387,35 @@ public class PostUtils {
     */
     public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
+    }
+
+    public static void showGutenbergCompatibilityWarningDialog(Context ctx,
+                                                               FragmentManager fragmentManager,
+                                                               PostModel post,
+                                                               SiteModel site) {
+        GutenbergWarningFragmentDialog gutenbergCompatibilityDialog = new GutenbergWarningFragmentDialog();
+        gutenbergCompatibilityDialog.initialize(TAG_GUTENBERG_CONFIRM_DIALOG, post.isPage(), post.getRemotePostId());
+        gutenbergCompatibilityDialog.show(fragmentManager, TAG_GUTENBERG_CONFIRM_DIALOG);
+
+        // track event
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put("is_page", post.isPage());
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN, site,
+                properties);
+    }
+
+    public static void trackGutenbergDialogEvent(AnalyticsTracker.Stat stat, PostModel post, SiteModel site) {
+        // track event
+        Map<String, Object> properties = new HashMap<>();
+        if (!post.isLocalDraft()) {
+            properties.put("post_id", post.getRemotePostId());
+        }
+        properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, true);
+        properties.put("is_page", post.isPage());
+        AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 }

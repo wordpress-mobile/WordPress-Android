@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -16,12 +17,13 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity implements GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostsListFragment mPostList;
@@ -141,5 +143,43 @@ public class PostsListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    // used for Gutenberg compatibility dialog
+    @Override
+    public void onGutenbergWarningDialogEditPostClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onGutenbergWarningDialogEditPostClicked(instanceTag, gutenbergRemotePostId);
+            }
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogCancelClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onGutenbergWarningDialogCancelClicked(instanceTag, gutenbergRemotePostId);
+            }
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(@NotNull String instanceTag, long gutenbergRemotePostId) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag, gutenbergRemotePostId);
+            }
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogDontShowAgainClicked(@NotNull String instanceTag, long gutenbergRemotePostId,
+                                                             boolean checked) {
+        if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+            if (mPostList != null) {
+                mPostList.onGutenbergWarningDialogDontShowAgainClicked(instanceTag, gutenbergRemotePostId, checked);
+            }
+        }
     }
 }

@@ -9,11 +9,16 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
+import org.wordpress.android.ui.posts.PostUtils
 
 const val EXTRA_PAGE_REMOTE_ID_KEY = "extra_page_remote_id_key"
 const val EXTRA_PAGE_PARENT_ID_KEY = "extra_page_parent_id_key"
 
-class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, BasicDialogNegativeClickInterface {
+class PagesActivity : AppCompatActivity(),
+        BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface,
+        GutenbergWarningDialogClickInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,6 +61,46 @@ class PagesActivity : AppCompatActivity(), BasicDialogPositiveClickInterface, Ba
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+    }
+
+    override fun onGutenbergWarningDialogEditPostClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is GutenbergWarningDialogClickInterface) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                fragment.onGutenbergWarningDialogEditPostClicked(instanceTag, gutenbergRemotePostId)
+            }
+        }
+    }
+
+    override fun onGutenbergWarningDialogCancelClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is GutenbergWarningDialogClickInterface) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                fragment.onGutenbergWarningDialogCancelClicked(instanceTag, gutenbergRemotePostId)
+            }
+        }
+    }
+
+    override fun onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag: String, gutenbergRemotePostId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is GutenbergWarningDialogClickInterface) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                fragment.onGutenbergWarningDialogLearnMoreLinkClicked(instanceTag, gutenbergRemotePostId)
+            }
+        }
+    }
+
+    override fun onGutenbergWarningDialogDontShowAgainClicked(
+        instanceTag: String,
+        gutenbergRemotePostId: Long,
+        checked: Boolean
+    ) {
+        val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
+        if (fragment is GutenbergWarningDialogClickInterface) {
+            if (instanceTag.equals(PostUtils.TAG_GUTENBERG_CONFIRM_DIALOG)) {
+                fragment.onGutenbergWarningDialogDontShowAgainClicked(instanceTag, gutenbergRemotePostId, checked)
+            }
+        }
     }
 
     private fun passDeleteConfirmation(remoteId: Long) {
