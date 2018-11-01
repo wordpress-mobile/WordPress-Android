@@ -65,30 +65,26 @@ class PagesActivity : AppCompatActivity(),
 
     override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-        if (fragment is GutenbergWarningDialogClickInterface) {
-            fragment.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
-        }
+                as GutenbergWarningDialogClickInterface
+        fragment.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
     }
 
     override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-        if (fragment is GutenbergWarningDialogClickInterface) {
-            fragment.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
-        }
+                as GutenbergWarningDialogClickInterface
+        fragment.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
     }
 
     override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-        if (fragment is GutenbergWarningDialogClickInterface) {
-            fragment.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
-        }
+                as GutenbergWarningDialogClickInterface
+        fragment.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
     }
 
     override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
         val fragment = supportFragmentManager.findFragmentById(id.fragment_container)
-        if (fragment is GutenbergWarningDialogClickInterface) {
-            fragment.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
-        }
+                as GutenbergWarningDialogClickInterface
+        fragment.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
     }
 
     private fun passDeleteConfirmation(remoteId: Long) {
