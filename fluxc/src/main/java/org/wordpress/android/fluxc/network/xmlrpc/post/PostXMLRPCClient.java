@@ -43,6 +43,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,9 +118,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset) {
         SiteModel site = listDescriptor.getSite();
-        List<String> fields = new ArrayList<>();
-        fields.add("post_id");
-        fields.add("post_modified");
+        List<String> fields = Arrays.asList("post_id", "post_modified");
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
                         offset, listDescriptor.getPageSize(), listDescriptor.getStatusList(), fields,
@@ -326,9 +325,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
             String postID = MapUtils.getMapStr(postMap, "post_id");
-            String postModified = MapUtils.getMapStr(postMap, "post_modified");
+            Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified");
+            String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
 
-            postListItems.add(new PostListItem(Long.parseLong(postID), postModified));
+            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601));
         }
         return postListItems;
     }
