@@ -120,8 +120,13 @@ class PostListAdapter(
             val diffResult = calculateDiff(this@PostListAdapter.listManager, listManager)
             if (isActive) {
                 GlobalScope.launch(Dispatchers.Main) {
+                    // Save and restore the visible view. Without this the scroll position might be lost during inserts
+                    val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
                     this@PostListAdapter.listManager = listManager
                     diffResult.dispatchUpdatesTo(this@PostListAdapter)
+                    recyclerViewState?.let {
+                        recyclerView?.layoutManager?.onRestoreInstanceState(it)
+                    }
                 }
             }
         }

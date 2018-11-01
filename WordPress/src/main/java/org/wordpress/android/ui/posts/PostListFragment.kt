@@ -469,21 +469,13 @@ class PostListFragment : Fragment(),
      * This function deals with all the UI actions that needs to be taken after a [ListManager] change, including but
      * not limited to, updating the swipe to refresh layout, loading progress bar and updating the empty views.
      */
-    private fun updateListManager(
-        listManager: ListManager<PostModel>
-    ) {
+    private fun updateListManager(listManager: ListManager<PostModel>) {
         if (!isAdded) {
             return
         }
         swipeRefreshLayout?.isRefreshing = listManager.isFetchingFirstPage
         progressLoadMore?.visibility = if (listManager.isLoadingMore) View.VISIBLE else View.GONE
-        // TODO: We most likely need to move this to adapter since setListManager is now async
-        // Save and restore the visible view. Without this, for example, if a new row is inserted, it does not show up.
-        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
         postListAdapter.setListManager(listManager)
-        recyclerViewState?.let {
-            recyclerView?.layoutManager?.onRestoreInstanceState(it)
-        }
 
         // TODO: This might be an issue now that we moved the diff calculation to adapter
         // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
