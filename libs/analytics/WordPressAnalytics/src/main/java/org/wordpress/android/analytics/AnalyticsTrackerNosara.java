@@ -1272,6 +1272,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "installation_referrer_failed";
             case OPENED_PAGE_PARENT:
                 return "page_parent_opened";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN:
+                return "gutenberg_warning_confirm_dialog_shown";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED:
+                return "gutenberg_warning_confirm_dialog_shown_yes_tapped";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED:
+                return "gutenberg_warning_confirm_dialog_shown_cancel_tapped";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED:
+                return "gutenberg_warning_confirm_dialog_shown_dont_show_again_checked";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED:
+                return "gutenberg_warning_confirm_dialog_shown_dont_show_again_unchecked";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED:
+                return "gutenberg_warning_confirm_dialog_shown_learn_more_tapped";
         }
         return null;
     }
