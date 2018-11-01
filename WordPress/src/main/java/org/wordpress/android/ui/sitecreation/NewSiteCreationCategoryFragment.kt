@@ -17,7 +17,7 @@ class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     @LayoutRes
     override fun getContentLayout(): Int {
-        return R.layout.site_creation_category_screen
+        return R.layout.new_site_creation_category_screen
     }
 
     override fun setupContent(rootView: ViewGroup) {
