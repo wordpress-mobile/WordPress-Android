@@ -10,9 +10,7 @@ import android.os.Handler
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.RecyclerView
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +20,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListManager
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -65,15 +62,11 @@ class PostListFragment : Fragment(),
     private var actionableEmptyView: ActionableEmptyView? = null
     private var progressLoadMore: ProgressBar? = null
 
-    private var targetPost: PostModel? = null
-
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
 
-    @Inject internal lateinit var postStore: PostStore
-
     private val postListAdapter: PostListAdapter by lazy {
-        val postListAdapter = PostListAdapter(nonNullActivity, site)
+        val postListAdapter = PostListAdapter(nonNullActivity)
         postListAdapter.setOnPostSelectedListener(this)
         postListAdapter.setOnPostButtonClickListener(this)
         postListAdapter
@@ -88,15 +81,9 @@ class PostListFragment : Fragment(),
         if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
             site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
-            targetPost = postStore.getPostByLocalPostId(
-                    nonNullIntent.getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0)
-            )
         } else {
             rvScrollPositionSaver.onRestoreInstanceState(savedInstanceState)
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-            targetPost = postStore.getPostByLocalPostId(
-                    savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID)
-            )
         }
 
         if (site == null) {
@@ -126,20 +113,14 @@ class PostListFragment : Fragment(),
             viewModel.postUploadAction.observe(this, Observer {
                 it?.let { uploadAction -> handleUploadAction(uploadAction) }
             })
-            viewModel.postDetailsUpdated.observe(this, Observer {
-                it?.let { post -> postListAdapter.refreshRowForPost(post) }
-            })
-            viewModel.mediaChanged.observe(this, Observer {
-                it?.let { mediaList -> postListAdapter.mediaChanged(mediaList) }
-            })
             viewModel.toastMessage.observe(this, Observer {
-                it?.let { toast -> toast.show(nonNullActivity) }
+                it?.show(nonNullActivity)
             })
             viewModel.snackbarAction.observe(this, Observer {
                 it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
             })
             viewModel.dialogAction.observe(this, Observer {
-                it?.let { dialogHolder -> dialogHolder.show(nonNullActivity) }
+                it?.show(nonNullActivity)
             })
         }
     }
@@ -328,41 +309,41 @@ class PostListFragment : Fragment(),
         }
     }
 
-    private fun showTargetPostIfNecessary() {
-        if (!isAdded) {
-            return
-        }
-        // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
-        targetPost?.let { targetPost ->
-            postListAdapter.getPositionForPost(targetPost)?.let { position ->
-                val smoothScroller = object : LinearSmoothScroller(nonNullActivity) {
-                    private val SCROLL_OFFSET_DP = 23
-
-                    override fun getVerticalSnapPreference(): Int {
-                        return LinearSmoothScroller.SNAP_TO_START
-                    }
-
-                    override fun calculateDtToFit(
-                        viewStart: Int,
-                        viewEnd: Int,
-                        boxStart: Int,
-                        boxEnd: Int,
-                        snapPreference: Int
-                    ): Int {
-                        // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
-                        val offsetPx = TypedValue.applyDimension(
-                                TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP.toFloat(), resources.displayMetrics
-                        ).toInt()
-                        return boxStart - viewStart + offsetPx
-                    }
-                }
-
-                smoothScroller.targetPosition = position
-                recyclerView?.layoutManager?.startSmoothScroll(smoothScroller)
-            }
-            this.targetPost = null
-        }
-    }
+//    private fun showTargetPostIfNecessary() {
+//        if (!isAdded) {
+//            return
+//        }
+//        // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
+//        targetPost?.let { targetPost ->
+//            postListAdapter.getPositionForPost(targetPost)?.let { position ->
+//                val smoothScroller = object : LinearSmoothScroller(nonNullActivity) {
+//                    private val SCROLL_OFFSET_DP = 23
+//
+//                    override fun getVerticalSnapPreference(): Int {
+//                        return LinearSmoothScroller.SNAP_TO_START
+//                    }
+//
+//                    override fun calculateDtToFit(
+//                        viewStart: Int,
+//                        viewEnd: Int,
+//                        boxStart: Int,
+//                        boxEnd: Int,
+//                        snapPreference: Int
+//                    ): Int {
+//                        // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
+//                        val offsetPx = TypedValue.applyDimension(
+//                                TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP.toFloat(), resources.displayMetrics
+//                        ).toInt()
+//                        return boxStart - viewStart + offsetPx
+//                    }
+//                }
+//
+//                smoothScroller.targetPosition = position
+//                recyclerView?.layoutManager?.startSmoothScroll(smoothScroller)
+//            }
+//            this.targetPost = null
+//        }
+//    }
 
     // PostListAdapter listeners
 
@@ -403,7 +384,7 @@ class PostListFragment : Fragment(),
             rvScrollPositionSaver.restoreScrollOffset(it)
         }
         // TODO: This too
-        showTargetPostIfNecessary()
+//        showTargetPostIfNecessary()
     }
 
     companion object {

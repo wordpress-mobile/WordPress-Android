@@ -67,6 +67,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItem
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
@@ -76,9 +77,11 @@ import org.wordpress.android.viewmodel.posts.PostListUserAction.PreviewPost
 import org.wordpress.android.viewmodel.posts.PostListUserAction.RetryUpload
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewPost
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewStats
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.system.measureTimeMillis
 
 sealed class PostListUserAction {
     class EditPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
@@ -96,19 +99,15 @@ sealed class PostListUserAction {
 }
 
 class PostListData(
-    val listManager: ListManager<PostModel>,
-    uploadStore: UploadStore,
-    private val site: SiteModel,
-    private val mediaStore: MediaStore,
-    private val dispatcher: Dispatcher
+    private val items: List<PostAdapterItem?>,
+    val listManager: ListManager<PostModel>?,
+    site: SiteModel
 ) {
     val isPhotonCapable: Boolean = SiteUtils.isPhotonCapable(site)
     val isAztecEditorEnabled: Boolean = AppPrefs.isAztecEditorEnabled()
     val hasCapabilityPublishPosts: Boolean = site.hasCapabilityPublishPosts
-    private val isStatsSupported: Boolean = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
-    private val items: List<PostAdapterItem?>
-    val isFetchingFirstPage: Boolean = listManager.isFetchingFirstPage
-    val isLoadingMore: Boolean = listManager.isLoadingMore
+    val isFetchingFirstPage: Boolean = listManager?.isFetchingFirstPage ?: false
+    val isLoadingMore: Boolean = listManager?.isLoadingMore ?: false
 
     data class PostAdapterItem(
         val title: String?,
@@ -119,58 +118,12 @@ class PostListData(
         val isLocallyChanged: Boolean,
         val canShowStats: Boolean,
         val canPublishPost: Boolean,
+        val canRetryUpload: Boolean,
         val featuredImageUrl: String?,
-
-            // Upload stuff
-        val isUploading: Boolean,
-        val isUploadingOrQueued: Boolean,
-        val isUploadFailed: Boolean,
-        val uploadError: UploadError?,
-        val isQueued: Boolean,
-        val hasInProgressMediaUpload: Boolean,
-        val mediaUploadProgress: Int,
-        val hasPendingMediaUpload: Boolean
+        val uploadStatus: PostAdapterItemUploadStatus
     )
 
-    init {
-        items = (0..(listManager.size - 1)).map { index ->
-            val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
-                    ?: return@map null
-            val title = if (post.title.isNotBlank()) {
-                StringEscapeUtils.unescapeHtml4(post.title)
-            } else null
-            val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
-                    ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
-            val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
-            val postStatus = PostStatus.fromPost(post)
-            val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
-                    !post.isLocallyChanged
-            val canPublishPost = isUploadingOrQueued &&
-                    (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-            PostAdapterItem(
-                    title = title,
-                    excerpt = excerpt,
-                    isLocalDraft = post.isLocalDraft,
-                    date = PostUtils.getFormattedDate(post),
-                    postStatus = postStatus,
-                    isLocallyChanged = post.isLocallyChanged,
-                    canShowStats = canShowStats,
-                    canPublishPost = canPublishPost,
-                    featuredImageUrl = getFeaturedImageUrl(post),
-                    // Upload stuff
-                    uploadError = uploadStore.getUploadErrorForPost(post),
-                    mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
-                    isUploading = UploadService.isPostUploading(post),
-                    isUploadingOrQueued = isUploadingOrQueued,
-                    isQueued = UploadService.isPostQueued(post),
-                    isUploadFailed = uploadStore.isFailedPost(post),
-                    hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post),
-                    hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
-            )
-        }
-    }
-
-    val size: Int = listManager.size
+    val size: Int = listManager?.size ?: 0
 
     fun getItem(
         index: Int,
@@ -179,29 +132,8 @@ class PostListData(
     ): PostAdapterItem? {
         val item = items[index]
         // TODO: Rework fetch item in ListManager
-        if (item == null) {
-            listManager.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
-        }
+        listManager?.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
         return item
-    }
-
-    private fun getFeaturedImageUrl(post: PostModel): String? {
-        var imageUrl: String? = null
-        if (post.featuredImageId != 0L) {
-            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
-            if (media != null) {
-                imageUrl = media.url
-            } else {
-                val mediaToDownload = MediaModel()
-                mediaToDownload.mediaId = post.featuredImageId
-                mediaToDownload.localSiteId = site.id
-                val payload = MediaPayload(site, mediaToDownload)
-                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-            }
-        } else {
-            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
-        }
-        return imageUrl
     }
 }
 
@@ -224,7 +156,7 @@ class PostListViewModel @Inject constructor(
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var site: SiteModel
-
+    private var listManager: ListManager<PostModel>? = null
     private val uploadedPostRemoteIds = ArrayList<Long>()
 
     private val _postListData = MutableLiveData<PostListData>()
@@ -244,12 +176,6 @@ class PostListViewModel @Inject constructor(
 
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
-
-    private val _postDetailsUpdated = SingleLiveEvent<PostModel>()
-    val postDetailsUpdated: LiveData<PostModel> = _postDetailsUpdated
-
-    private val _mediaChanged = SingleLiveEvent<List<MediaModel>>()
-    val mediaChanged: LiveData<List<MediaModel>> = _mediaChanged
 
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
@@ -462,9 +388,7 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            _postDetailsUpdated.postValue(post)
-        }
+        // TODO: Update the media list and UI
     }
 
     /**
@@ -472,7 +396,7 @@ class PostListViewModel @Inject constructor(
      */
     fun onEventMainThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
-            _postDetailsUpdated.postValue(event.post)
+            // TODO: Update the media list and UI
         }
     }
 
@@ -481,13 +405,13 @@ class PostListViewModel @Inject constructor(
      */
     fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
-            _postDetailsUpdated.postValue(event.post)
+            // TODO: Update the upload list and UI
         }
     }
 
     fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
         postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            _postDetailsUpdated.postValue(post)
+            // TODO: Update the upload list and UI
         }
     }
 
@@ -497,7 +421,7 @@ class PostListViewModel @Inject constructor(
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
             // now that we know which Posts to refresh, let's do it
             for (post in postsToRefresh) {
-                _postDetailsUpdated.postValue(post)
+                // TODO: Update the upload list and UI
             }
         }
     }
@@ -529,7 +453,7 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            _mediaChanged.postValue(event.mediaList)
+            // TODO: Update the media list and UI
         }
     }
 
@@ -539,15 +463,18 @@ class PostListViewModel @Inject constructor(
      * @param refreshFirstPageAfter Whether the first page of the list should be fetched after its loaded
      */
     private fun refreshListManagerFromStore(refreshFirstPageAfter: Boolean = false) {
-        listDescriptor?.let {
+        listDescriptor?.let { listDescriptor ->
             defaultScope.launch {
-                val listManager = getListManagerFromStore(it)
-                val postListData = PostListData(listManager, uploadStore, site, mediaStore, dispatcher)
-                _postListData.postValue(postListData)
-                updateEmptyViewState(listManager)
-                if (refreshFirstPageAfter) {
-                    listManager.refresh()
+                val timeTook = measureTimeMillis {
+                    val listManager = getListManagerFromStore(listDescriptor)
+                    this@PostListViewModel.listManager = listManager
+                    updateUI()?.let { _postListData.postValue(it) }
+                    updateEmptyViewState(listManager)
+                    if (refreshFirstPageAfter) {
+                        listManager.refresh()
+                    }
                 }
+                AppLog.e(T.POSTS, "Time took to updateUI: $timeTook ms!")
             }
         }
     }
@@ -572,5 +499,95 @@ class PostListViewModel @Inject constructor(
                 listDescriptor,
                 PostListDataSource(dispatcher, postStore, site, null, uploadedPostRemoteIds)
         )
+    }
+
+    private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
+
+    data class PostAdapterItemUploadStatus (
+        val uploadError: UploadError?,
+        val mediaUploadProgress: Int,
+        val isUploading: Boolean,
+        val isUploadingOrQueued: Boolean,
+        val isQueued: Boolean,
+        val isUploadFailed: Boolean,
+        val hasInProgressMediaUpload: Boolean,
+        val hasPendingMediaUpload: Boolean
+    )
+
+    private fun updateUI(): PostListData? {
+        listManager?.let { listManager ->
+            val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
+            val items = (0..(listManager.size - 1)).map { index ->
+                val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+                        ?: return@map null
+                val title = if (post.title.isNotBlank()) {
+                    StringEscapeUtils.unescapeHtml4(post.title)
+                } else null
+                val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
+                        ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
+                val postStatus = PostStatus.fromPost(post)
+                val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
+                        !post.isLocallyChanged
+                val uploadStatus = getUploadStatus(post)
+                val canPublishPost = !uploadStatus.isUploadingOrQueued &&
+                        (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
+                PostAdapterItem(
+                        title = title,
+                        excerpt = excerpt,
+                        isLocalDraft = post.isLocalDraft,
+                        date = PostUtils.getFormattedDate(post),
+                        postStatus = postStatus,
+                        isLocallyChanged = post.isLocallyChanged,
+                        canShowStats = canShowStats,
+                        canPublishPost = canPublishPost,
+                        canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
+                        featuredImageUrl = getFeaturedImageUrl(post),
+                        uploadStatus = getUploadStatus(post)
+                )
+            }
+            return PostListData(items, listManager, site)
+        }
+        return null
+    }
+
+    private fun getFeaturedImageUrl(post: PostModel): String? {
+        var imageUrl: String? = null
+        if (post.featuredImageId != 0L) {
+            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
+            if (media != null) {
+                imageUrl = media.url
+            } else {
+                val mediaToDownload = MediaModel()
+                mediaToDownload.mediaId = post.featuredImageId
+                mediaToDownload.localSiteId = site.id
+                val payload = MediaPayload(site, mediaToDownload)
+                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+            }
+        } else {
+            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
+        }
+        return imageUrl
+    }
+
+    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+        uploadStatusMap[post.id]?.let {
+            // return existing status
+            return it
+        }
+        val uploadError = uploadStore.getUploadErrorForPost(post)
+        val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
+        val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
+        val newStatus = PostAdapterItemUploadStatus(
+                        uploadError = uploadError,
+                        mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
+                        isUploading = UploadService.isPostUploading(post),
+                        isUploadingOrQueued = isUploadingOrQueued,
+                        isQueued = UploadService.isPostQueued(post),
+                        isUploadFailed = uploadStore.isFailedPost(post),
+                        hasInProgressMediaUpload = hasInProgressMediaUpload,
+                        hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
+                )
+        uploadStatusMap[post.id] = newStatus
+        return newStatus
     }
 }

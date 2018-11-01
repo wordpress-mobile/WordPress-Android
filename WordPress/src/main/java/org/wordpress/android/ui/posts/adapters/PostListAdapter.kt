@@ -38,6 +38,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListData
 import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItem
+import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 
@@ -136,7 +137,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             postListData?.getItem(
                     position,
                     shouldFetchIfNull = true,
-                    shouldLoadMoreIfNecessary = false
+                    shouldLoadMoreIfNecessary = true
             ) != null -> VIEW_TYPE_POST
             else -> VIEW_TYPE_LOADING
         }
@@ -214,26 +215,36 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
                 holder.trashButton.buttonType = PostListButton.BUTTON_TRASH
             }
 
-            // Move the overlay calculation to PostAdapterItem
-            if (postAdapterItem.isUploading) {
-                holder.disabledOverlay.visibility = View.VISIBLE
-                holder.progressBar.isIndeterminate = true
-            } else if (postListData?.isAztecEditorEnabled == false && postAdapterItem.isUploadingOrQueued) {
-                // TODO: Is this logic correct? Do we need to check for is uploading still?
-                // Editing posts with uploading media is only supported in Aztec
-                holder.disabledOverlay.visibility = View.VISIBLE
-            } else {
-                holder.progressBar.isIndeterminate = false
-                holder.disabledOverlay.visibility = View.GONE
-            }
-
+            updateForUploadStatus(holder, postAdapterItem.uploadStatus)
             updateStatusTextAndImage(holder.status, holder.statusImage, postAdapterItem)
-            updatePostUploadProgressBar(postAdapterItem, holder.progressBar)
             configurePostButtons(holder, postAdapterItem)
             holder.itemView.setOnClickListener {
                 // TODO: move to adapter
 //                onPostSelectedListener?.onPostSelected(post)
             }
+        }
+    }
+
+    private fun updateForUploadStatus(holder: PostViewHolder, uploadStatus: PostAdapterItemUploadStatus) {
+        if (uploadStatus.isUploading) {
+            holder.disabledOverlay.visibility = View.VISIBLE
+            holder.progressBar.isIndeterminate = true
+        } else if (postListData?.isAztecEditorEnabled == false && uploadStatus.isUploadingOrQueued) {
+            // TODO: Is this logic correct? Do we need to check for is uploading still?
+            // Editing posts with uploading media is only supported in Aztec
+            holder.disabledOverlay.visibility = View.VISIBLE
+        } else {
+            holder.progressBar.isIndeterminate = false
+            holder.disabledOverlay.visibility = View.GONE
+        }
+        if (!uploadStatus.isUploadFailed &&
+                (uploadStatus.isUploadingOrQueued || uploadStatus.hasInProgressMediaUpload)) {
+            holder.progressBar.visibility = View.VISIBLE
+            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
+            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
+            holder.progressBar.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, uploadStatus.mediaUploadProgress)
+        } else {
+            holder.progressBar.visibility = View.GONE
         }
     }
 
@@ -261,18 +272,6 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private fun updatePostUploadProgressBar(postAdapterItem: PostAdapterItem, view: ProgressBar) {
-        if (!postAdapterItem.isUploadFailed &&
-                (postAdapterItem.isUploadingOrQueued || postAdapterItem.hasInProgressMediaUpload)) {
-            view.visibility = View.VISIBLE
-            // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
-            // Cap the progress bar at MAX_DISPLAYED_UPLOAD_PROGRESS (until we move past the 'uploading media' phase)
-            view.progress = Math.min(MAX_DISPLAYED_UPLOAD_PROGRESS, postAdapterItem.mediaUploadProgress)
-        } else {
-            view.visibility = View.GONE
-        }
-    }
-
     private fun updateStatusTextAndImage(txtStatus: TextView, imgStatus: ImageView, postAdapterItem: PostAdapterItem) {
         val context = txtStatus.context
 
@@ -287,22 +286,23 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             var statusColorResId = R.color.grey_darken_10
             var errorMessage: String? = null
 
-            if (postAdapterItem.uploadError != null && !postAdapterItem.hasInProgressMediaUpload) {
-                if (postAdapterItem.uploadError.mediaError != null) {
+            if (postAdapterItem.uploadStatus.uploadError != null &&
+                    !postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
+                if (postAdapterItem.uploadStatus.uploadError.mediaError != null) {
                     errorMessage = context.getString(R.string.error_media_recover_post)
-                } else if (postAdapterItem.uploadError.postError != null) {
+                } else if (postAdapterItem.uploadStatus.uploadError.postError != null) {
                     // TODO: figure out!!
 //                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError)
                 }
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
                 statusColorResId = R.color.alert_red
-            } else if (postAdapterItem.isUploading) {
+            } else if (postAdapterItem.uploadStatus.isUploading) {
                 statusTextResId = R.string.post_uploading
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
-            } else if (postAdapterItem.hasInProgressMediaUpload) {
+            } else if (postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
                 statusTextResId = R.string.uploading_media
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
-            } else if (postAdapterItem.isQueued || postAdapterItem.hasPendingMediaUpload) {
+            } else if (postAdapterItem.uploadStatus.isQueued || postAdapterItem.uploadStatus.hasPendingMediaUpload) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
@@ -373,15 +373,14 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         holder: PostViewHolder,
         postAdapterItem: PostAdapterItem
     ) {
-        val canRetry = postAdapterItem.uploadError != null && !postAdapterItem.hasInProgressMediaUpload
-        val canShowViewButton = !canRetry
-        val canShowPublishButton = canRetry || postAdapterItem.canPublishPost
+        val canShowViewButton = !postAdapterItem.canRetryUpload
+        val canShowPublishButton = postAdapterItem.canRetryUpload || postAdapterItem.canPublishPost
 
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (postListData?.hasCapabilityPublishPosts == false) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SUBMIT
-            } else if (canRetry) {
+            } else if (postAdapterItem.canRetryUpload) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_RETRY
             } else if (postAdapterItem.postStatus == PostStatus.SCHEDULED && postAdapterItem.isLocallyChanged) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SYNC
@@ -514,10 +513,6 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 //        }
 //    }
 
-    fun getPositionForPost(post: PostModel): Int? = null
-//            listManager?.findWithIndex {
-//                if (post.isLocalDraft) it.id == post.id else it.remotePostId == post.remotePostId
-//            }?.asSequence()?.map { it.first }?.firstOrNull()
 
     interface OnPostSelectedListener {
         fun onPostSelected(post: PostModel)
@@ -564,7 +559,7 @@ private suspend fun calculateDiff(
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldRemoteItemId = oldListData?.listManager?.getRemoteItemId(oldItemPosition)
-            val newRemoteItemId = newListData.listManager.getRemoteItemId(newItemPosition)
+            val newRemoteItemId = newListData.listManager?.getRemoteItemId(newItemPosition)
             if (oldRemoteItemId != null && newRemoteItemId != null) {
                 // both remote items
                 return oldRemoteItemId == newRemoteItemId
@@ -575,7 +570,7 @@ private suspend fun calculateDiff(
                     shouldFetchIfNull = false,
                     shouldLoadMoreIfNecessary = false
             )
-            val newItem = newListData.listManager.getItem(
+            val newItem = newListData.listManager?.getItem(
                     position = newItemPosition,
                     shouldFetchIfNull = false,
                     shouldLoadMoreIfNecessary = false
