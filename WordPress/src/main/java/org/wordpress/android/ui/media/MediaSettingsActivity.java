@@ -933,13 +933,11 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     private void updateImageSizeParameters() {
-        if (mImageSize == MediaSettingsImageSize.FULL) {
-            // caption will not render without width and height attributes
-            if (TextUtils.isEmpty(mEditorImageMetaData.getCaption())) {
-                mEditorImageMetaData.setWidth(null);
-                mEditorImageMetaData.setHeight(null);
-                return;
-            }
+        // if caption is empty we can safely remove width and height attributes
+        if (mImageSize == MediaSettingsImageSize.FULL && TextUtils.isEmpty(mEditorImageMetaData.getCaption())) {
+            mEditorImageMetaData.setWidth(null);
+            mEditorImageMetaData.setHeight(null);
+            return;
         }
 
         int imageWidth = mEditorImageMetaData.getWidthInt();
