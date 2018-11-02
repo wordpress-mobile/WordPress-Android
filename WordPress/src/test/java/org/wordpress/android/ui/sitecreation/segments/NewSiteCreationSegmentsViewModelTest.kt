@@ -87,7 +87,6 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-
         inOrder(dataObserver).apply {
             verify(dataObserver).onChanged(firstModel.segmentList)
 
@@ -100,7 +99,6 @@ class NewSiteCreationSegmentsViewModelTest {
     fun fetchCategoriesChangesStateToProgress() = test {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
-
 
         inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
             verify(showProgressObserver).onChanged(true)
@@ -117,7 +115,6 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-
         inOrder(showProgressObserver, showErrorObserver).apply {
             verify(showProgressObserver).onChanged(true)
             verify(showProgressObserver).onChanged(false)
@@ -131,7 +128,6 @@ class NewSiteCreationSegmentsViewModelTest {
     fun onErrorEventChangesStateToError() = test {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
-
 
         inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
             verify(showProgressObserver).onChanged(true)
@@ -147,7 +143,6 @@ class NewSiteCreationSegmentsViewModelTest {
         viewModel.start()
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
-
 
         inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
             verify(showProgressObserver).onChanged(true)

@@ -30,7 +30,7 @@ class FetchSegmentsUseCaseTest {
 
     @Test
     fun coroutineResumedWhenResultEventDispatched() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onSiteCategoriesFetched(event) } // dispatch the real result event
+        whenever(dispatcher.dispatch(any())).then { useCase.onSiteCategoriesFetched(event) }
         val resultEvent = useCase.fetchCategories()
 
         assertThat(resultEvent).isEqualTo(event)
