@@ -15,17 +15,17 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.test
 
 @RunWith(MockitoJUnitRunner::class)
-class FetchCategoriesUseCaseTest {
+class FetchSegmentsUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var dispatcher: Dispatcher
-    private lateinit var useCase: FetchCategoriesUseCase
+    private lateinit var useCase: FetchSegmentsUseCase
     private val event = OnSegmentsFetched(emptyList(), null)
 
     @Before
     fun setUp() {
-        useCase = FetchCategoriesUseCase(dispatcher)
+        useCase = FetchSegmentsUseCase(dispatcher)
     }
 
     @Test
