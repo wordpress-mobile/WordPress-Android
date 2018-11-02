@@ -5,10 +5,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.A
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TODAYS_INSIGHTS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,6 +33,10 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, LATEST_POST_STATS_INSIGHTS, data)
     }
 
+    fun insert(site: SiteModel, data: VisitResponse) {
+        statsSqlUtils.insert(site, TODAYS_INSIGHTS, data)
+    }
+
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
         return statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
@@ -45,5 +51,9 @@ class InsightsSqlUtils
 
     fun selectLatestPostStats(site: SiteModel): PostStatsResponse? {
         return statsSqlUtils.select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java)
+    }
+
+    fun selectTodayInsights(site: SiteModel): VisitResponse? {
+        return statsSqlUtils.select(site, TODAYS_INSIGHTS, VisitResponse::class.java)
     }
 }

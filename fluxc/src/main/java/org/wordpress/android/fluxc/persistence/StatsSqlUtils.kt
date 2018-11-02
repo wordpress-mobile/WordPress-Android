@@ -17,12 +17,12 @@ class StatsSqlUtils
     fun <T> insert(site: SiteModel, type: Key, item: T) {
         val json = gson.toJson(item)
         WellSql.delete(StatsBlockBuilder::class.java)
-                    .where()
-                    .equals(StatsBlockTable.TYPE, type.name)
-                    .endWhere()
-                    .execute()
+                .where()
+                .equals(StatsBlockTable.TYPE, type.name)
+                .endWhere()
+                .execute()
         WellSql.insert(StatsBlockBuilder(localSiteId = site.id, type = type.name, json = json))
-                    .execute()
+                .execute()
     }
 
     fun <T> select(site: SiteModel, type: Key, classOfT: Class<T>): T? {
@@ -54,6 +54,10 @@ class StatsSqlUtils
     }
 
     enum class Key {
-        ALL_TIME_INSIGHTS, MOST_POPULAR_INSIGHTS, LATEST_POST_DETAIL_INSIGHTS, LATEST_POST_STATS_INSIGHTS
+        ALL_TIME_INSIGHTS,
+        MOST_POPULAR_INSIGHTS,
+        LATEST_POST_DETAIL_INSIGHTS,
+        LATEST_POST_STATS_INSIGHTS,
+        TODAYS_INSIGHTS
     }
 }
