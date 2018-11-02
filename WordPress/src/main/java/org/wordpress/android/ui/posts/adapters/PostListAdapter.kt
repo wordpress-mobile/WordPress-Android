@@ -114,8 +114,8 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             "Wrong size is passed in as there is no data to show yet!"
         }
         return when (data.getItem(position, true, true)) {
-            PostListData.PostAdapterItemType.PostAdapterItemLoading -> VIEW_TYPE_LOADING
             PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
+            is PostListData.PostAdapterItemType.PostAdapterItemLoading -> VIEW_TYPE_LOADING
             is PostListData.PostAdapterItemType.PostAdapterItemPost -> VIEW_TYPE_POST
         }
     }
@@ -505,43 +505,28 @@ private suspend fun calculateDiff(
             return newListData.size
         }
 
-        // TODO: Please cleanup!!
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldie = oldListData?.getItem(oldItemPosition, false, false)
-            val newbie = newListData.getItem(newItemPosition, false, false)
-            if (oldie is PostAdapterItemLoading && newbie is PostAdapterItemLoading) {
-                return true
-            }
-            if (oldie is PostAdapterItemEndListIndicator && newbie is PostAdapterItemEndListIndicator) {
-                return true
-            }
-            if (oldie !is PostAdapterItemPost || newbie !is PostAdapterItemPost) {
+            if (oldListData == null) {
                 return false
             }
-            val oldRemoteItemId = oldListData.listManager?.getRemoteItemId(oldItemPosition)
-            val newRemoteItemId = newListData.listManager?.getRemoteItemId(newItemPosition)
-            if (oldRemoteItemId != null && newRemoteItemId != null) {
-                // both remote items
-                return oldRemoteItemId == newRemoteItemId
+            val oldItem = oldListData.getItem(oldItemPosition, false, false)
+            val newItem = newListData.getItem(newItemPosition, false, false)
+            if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+                return true
             }
-            // We shouldn't fetch items or load more pages prematurely when we are just trying to compare them
-            val oldItem = oldListData.listManager?.getItem(
-                    position = oldItemPosition,
-                    shouldFetchIfNull = false,
-                    shouldLoadMoreIfNecessary = false
-            )
-            val newItem = newListData.listManager?.getItem(
-                    position = newItemPosition,
-                    shouldFetchIfNull = false,
-                    shouldLoadMoreIfNecessary = false
-            )
-            if (oldItem == null || newItem == null) {
-                // One remote and one local item. The remote item is not fetched yet, it can't be the same items.
-                return false
+            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
+                return oldItem.remotePostId == newItem.remotePostId
             }
-            // Either one remote item and one local item or both local items. In either case, we'll let the caller
-            // decide how to compare the two. In most cases, a local id comparison should be enough.
-            return oldItem.id == newItem.id
+            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
+                return oldItem.localPostId == newItem.localPostId
+            }
+            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemPost) {
+                return oldItem.remotePostId == newItem.remotePostId
+            }
+            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemLoading) {
+                return oldItem.remotePostId == newItem.remotePostId
+            }
+            return false
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

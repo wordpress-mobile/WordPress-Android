@@ -105,7 +105,7 @@ sealed class PostListUserAction {
 
 class PostListData(
     private val items: List<PostAdapterItemType>?,
-    val listManager: ListManager<PostModel>?,
+    private val listManager: ListManager<PostModel>?,
     listState: ListState?,
     site: SiteModel
 ) {
@@ -119,9 +119,11 @@ class PostListData(
     } else listState?.isFetchingFirstPage() ?: false
 
     sealed class PostAdapterItemType {
-        object PostAdapterItemLoading : PostAdapterItemType()
         object PostAdapterItemEndListIndicator : PostAdapterItemType()
+        data class PostAdapterItemLoading(val remotePostId: Long) : PostAdapterItemType()
         data class PostAdapterItemPost(
+            val localPostId: Int,
+            val remotePostId: Long?,
             val title: String?,
             val excerpt: String?,
             val isLocalDraft: Boolean,
@@ -225,7 +227,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun refreshList() {
-        postListData.value?.listManager?.refresh()
+        listManager?.refresh()
     }
 
     fun handlePostButton(buttonType: Int, post: PostModel) {
@@ -551,7 +553,13 @@ class PostListViewModel @Inject constructor(
         val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
         val items = (0..(listManager.size - 1)).map { index ->
             val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
-                    ?: return@map PostAdapterItemLoading
+            if (post == null) {
+                val remotePostId = requireNotNull(listManager.getRemoteItemId(index)) {
+                    // TODO: Rework this in ListManager
+                    "If the item is null, its remoteItemId has to be a valid id"
+                }
+                return@map PostAdapterItemLoading(remotePostId)
+            }
             val title = if (post.title.isNotBlank()) {
                 StringEscapeUtils.unescapeHtml4(post.title)
             } else null
@@ -564,6 +572,8 @@ class PostListViewModel @Inject constructor(
             val canPublishPost = !uploadStatus.isUploadingOrQueued &&
                     (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
             PostAdapterItemPost(
+                    localPostId = post.id,
+                    remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
                     title = title,
                     excerpt = excerpt,
                     isLocalDraft = post.isLocalDraft,
