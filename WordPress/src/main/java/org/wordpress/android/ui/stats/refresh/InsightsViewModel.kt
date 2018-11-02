@@ -26,19 +26,20 @@ class InsightsViewModel
     private val statsStore: StatsStore,
     @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
-    private val latestPostSummaryViewModel: LatestPostSummaryViewModel
+    private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
+    private val todayStatsUseCase: TodayStatsUseCase
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
             LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
+            TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
             COMMENTS,
             FOLLOWERS,
-            TODAY_STATS,
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }
