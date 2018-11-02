@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.segments
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -8,16 +8,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
+import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 
-class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
+class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private var linearLayoutManager: LinearLayoutManager? = null
     private val keyListState = "list_state"
 
     @LayoutRes
     override fun getContentLayout(): Int {
-        return R.layout.new_site_creation_category_screen
+        return R.layout.new_site_creation_segments_screen
     }
 
     override fun setupContent(rootView: ViewGroup) {
@@ -65,6 +67,6 @@ class NewSiteCreationCategoryFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     companion object {
-        val TAG = "site_creation_category_fragment_tag"
+        val TAG = "site_creation_segment_fragment_tag"
     }
 }
