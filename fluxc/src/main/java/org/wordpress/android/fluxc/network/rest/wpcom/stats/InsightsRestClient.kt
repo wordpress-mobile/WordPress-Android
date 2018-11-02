@@ -26,6 +26,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.network.utils.getFormattedDate
 import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType
@@ -138,6 +144,37 @@ constructor(
         }
     }
 
+    suspend fun fetchTimePeriodStats(
+        site: SiteModel,
+        period: StatsGranularity,
+        date: Date,
+        forced: Boolean
+    ): FetchInsightsPayload<VisitResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
+
+        val params = mapOf(
+                "unit" to period.toPath(),
+                "quantity" to "1",
+                "date" to getFormattedDate(site, date, period)
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                VisitResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchInsightsPayload(response.data)
+            }
+            is Error -> {
+                FetchInsightsPayload(buildStatsError(response.error))
+            }
+        }
+    }
+
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -213,19 +250,38 @@ constructor(
             @SerializedName("months") val months: Map<Int, Int>,
             @SerializedName("total") val total: Int
         )
+
         data class Week(
             @SerializedName("average") val average: Int,
             @SerializedName("change") val change: Int?,
             @SerializedName("total") val total: Int,
             @SerializedName("days") val days: List<Day>
         )
+
         data class Day(
             @SerializedName("day") val day: String,
             @SerializedName("count") val count: Int
         )
+
         data class Average(
             @SerializedName("months") val months: Map<Int, Int>,
             @SerializedName("overall") val overall: Int
         )
+    }
+
+    data class VisitResponse(
+        @SerializedName("date") val date: String,
+        @SerializedName("unit") val unit: String,
+        @SerializedName("fields") val fields: List<String>,
+        @SerializedName("data") val data: List<List<String>>
+    )
+
+    private fun StatsGranularity.toPath(): String {
+        return when (this) {
+            DAYS -> "day"
+            WEEKS -> "week"
+            MONTHS -> "month"
+            YEARS -> "year"
+        }
     }
 }

@@ -6,13 +6,17 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
@@ -137,6 +141,38 @@ class InsightsStore
                 commentCount,
                 first.likeCount,
                 daysViews
+        )
+    }
+
+    // Time period stats
+    suspend fun fetchTodayInsights(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchTimePeriodStats(siteModel, DAYS, Date(), forced)
+        return@withContext when {
+            response.isError -> { OnInsightsFetched(response.error) }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response)
+                OnInsightsFetched(response.response.toDomainModel())
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    fun getTodayInsights(site: SiteModel): VisitsModel? {
+        return sqlUtils.selectTodayInsights(site)?.toDomainModel()
+    }
+
+    private fun VisitResponse.toDomainModel(): VisitsModel? {
+        val result: Map<String, String> = this.fields.mapIndexed { index, value ->
+            value to this.data[0][index]
+        }.toMap()
+        return VisitsModel(
+                result["period"] ?: "",
+                result["views"]?.toInt() ?: 0,
+                result["visitors"]?.toInt() ?: 0,
+                result["likes"]?.toInt() ?: 0,
+                result["reblogs"]?.toInt() ?: 0,
+                result["comments"]?.toInt() ?: 0,
+                result["posts"]?.toInt() ?: 0
         )
     }
 
