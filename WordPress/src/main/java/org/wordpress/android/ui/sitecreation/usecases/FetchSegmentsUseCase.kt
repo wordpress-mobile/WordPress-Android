@@ -12,7 +12,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 /**
  * Transforms EventBus event to a coroutines.
  */
-class FetchCategoriesUseCase @Inject constructor(val dispatcher: Dispatcher) {
+class FetchSegmentsUseCase @Inject constructor(val dispatcher: Dispatcher) {
     private var continuation: Continuation<OnSegmentsFetched>? = null
 
     suspend fun fetchCategories(): OnSegmentsFetched {

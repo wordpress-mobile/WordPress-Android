@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation
+package org.wordpress.android.ui.sitecreation.segments
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -14,19 +14,19 @@ import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel.ListState.DONE
-import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel.ListState.ERROR
-import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel.ListState.FETCHING
-import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel.ListState.PREINIT
-import org.wordpress.android.ui.sitecreation.usecases.FetchCategoriesUseCase
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.DONE
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.ERROR
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.FETCHING
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.PREINIT
+import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
-class NewSiteCreationCategoryViewModel
+class NewSiteCreationSegmentsViewModel
 @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val fetchCategoriesUseCase: FetchCategoriesUseCase,
+    private val fetchSegmentsUseCase: FetchSegmentsUseCase,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineDispatcher,
     @Named(IO_DISPATCHER) private val IO: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -60,7 +60,7 @@ class NewSiteCreationCategoryViewModel
             withContext(MAIN) {
                 updateUIState(FETCHING)
             }
-            val event = fetchCategoriesUseCase.fetchCategories()
+            val event = fetchSegmentsUseCase.fetchCategories()
             withContext(MAIN) {
                 onCategoriesFetched(event)
             }
@@ -81,18 +81,18 @@ class NewSiteCreationCategoryViewModel
         fetchCategories()
     }
 
-    fun onCategorySelected(categoryId: Int) {
+    fun onSegmentSelected(segmentId: Int) {
         // TODO send result to the SCMainVM
     }
 
     init {
-        dispatcher.register(fetchCategoriesUseCase)
+        dispatcher.register(fetchSegmentsUseCase)
     }
 
     override fun onCleared() {
         super.onCleared()
         fetchCategoriesJob.cancel() // cancels all coroutines with the default coroutineContext
-        dispatcher.unregister(fetchCategoriesUseCase)
+        dispatcher.unregister(fetchSegmentsUseCase)
     }
 
     // TODO analytics
