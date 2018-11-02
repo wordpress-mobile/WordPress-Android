@@ -38,7 +38,7 @@ public class SelfHostedEndpointFinder {
         GENERIC_ERROR
     }
 
-    static class DiscoveryException extends Exception {
+    public static class DiscoveryException extends Exception {
         public final DiscoveryError discoveryError;
         public final String failedUrl;
 
@@ -204,6 +204,7 @@ public class SelfHostedEndpointFinder {
         AppLog.i(AppLog.T.NUX, "Running RSD discovery process on the following URLs: " + urlsToTry);
 
         String xmlrpcUrl = null;
+        boolean isWpSite = false;
         for (String currentURL : urlsToTry) {
             if (!URLUtil.isValidUrl(currentURL)) {
                 continue;
@@ -230,6 +231,8 @@ public class SelfHostedEndpointFinder {
                     xmlrpcUrl = UrlUtils.addUrlSchemeIfNeeded(DiscoveryUtils.getXMLRPCApiLink(responseHTML), false);
                 }
             } else {
+                // If the site contains RSD link, it is WP.org site
+                isWpSite = true;
                 AppLog.i(AppLog.T.NUX, "RSD endpoint found at the following address: " + rsdUrl);
                 AppLog.i(AppLog.T.NUX, "Downloading the RSD document...");
                 String rsdEndpointDocument = mDiscoveryXMLRPCClient.getResponse(rsdUrl);
@@ -256,8 +259,11 @@ public class SelfHostedEndpointFinder {
                 return xmlrpcUrl;
             }
         }
-
-        throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
+        if (!isWpSite) {
+            throw new DiscoveryException(DiscoveryError.NO_SITE_ERROR, xmlrpcUrl);
+        } else {
+            throw new DiscoveryException(DiscoveryError.MISSING_XMLRPC_METHOD, xmlrpcUrl);
+        }
     }
 
     /**
