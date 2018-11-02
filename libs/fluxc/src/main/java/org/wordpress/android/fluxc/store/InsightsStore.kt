@@ -5,14 +5,10 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
+import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
@@ -26,6 +22,7 @@ class InsightsStore
 @Inject constructor(
     private val restClient: InsightsRestClient,
     private val sqlUtils: InsightsSqlUtils,
+    private val insightsMapper: InsightsMapper,
     private val coroutineContext: CoroutineContext
 ) {
     // All time insights
@@ -35,27 +32,14 @@ class InsightsStore
             payload.isError -> OnInsightsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response)
-                OnInsightsFetched(payload.response.toDomainModel(site))
+                OnInsightsFetched(insightsMapper.map(payload.response, site))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
     fun getAllTimeInsights(site: SiteModel): InsightsAllTimeModel? {
-        return sqlUtils.selectAllTimeInsights(site)?.toDomainModel(site)
-    }
-
-    private fun AllTimeResponse.toDomainModel(site: SiteModel): InsightsAllTimeModel {
-        val stats = this.stats
-        return InsightsAllTimeModel(
-                site.siteId,
-                this.date,
-                stats.visitors,
-                stats.views,
-                stats.posts,
-                stats.viewsBestDay,
-                stats.viewsBestDayTotal
-        )
+        return sqlUtils.selectAllTimeInsights(site)?.let { insightsMapper.map(it, site) }
     }
 
     // Most popular insights
@@ -67,7 +51,7 @@ class InsightsStore
                 val data = payload.response
                 sqlUtils.insert(site, data)
                 OnInsightsFetched(
-                        data.toDomainModel(site)
+                        insightsMapper.map(data, site)
                 )
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
@@ -75,17 +59,7 @@ class InsightsStore
     }
 
     fun getMostPopularInsights(site: SiteModel): InsightsMostPopularModel? {
-        return sqlUtils.selectMostPopularInsights(site)?.toDomainModel(site)
-    }
-
-    private fun MostPopularResponse.toDomainModel(site: SiteModel): InsightsMostPopularModel {
-        return InsightsMostPopularModel(
-                site.siteId,
-                this.highestDayOfWeek,
-                this.highestHour,
-                this.highestDayPercent,
-                this.highestHourPercent
-        )
+        return sqlUtils.selectMostPopularInsights(site)?.let { insightsMapper.map(it, site) }
     }
 
     // Latest post insights
@@ -101,7 +75,7 @@ class InsightsStore
                 responsePost.response != null -> {
                     sqlUtils.insert(site, latestPost)
                     sqlUtils.insert(site, responsePost.response)
-                    OnInsightsFetched((latestPost to responsePost.response).toDomainModel(site))
+                    OnInsightsFetched(insightsMapper.map(latestPost, responsePost.response, site))
                 }
                 responsePost.isError -> OnInsightsFetched(responsePost.error)
                 else -> OnInsightsFetched()
@@ -117,31 +91,10 @@ class InsightsStore
         val latestPostDetailResponse = sqlUtils.selectLatestPostDetail(site)
         val latestPostViewsResponse = sqlUtils.selectLatestPostStats(site)
         return if (latestPostDetailResponse != null && latestPostViewsResponse != null) {
-            (latestPostDetailResponse to latestPostViewsResponse).toDomainModel(site)
+            insightsMapper.map(latestPostDetailResponse, latestPostViewsResponse, site)
         } else {
             null
         }
-    }
-
-    private fun Pair<PostResponse, PostStatsResponse>.toDomainModel(site: SiteModel): InsightsLatestPostModel {
-        val daysViews = if (second.fields.size > 1 && second.fields[0] == "period" && second.fields[1] == "views") {
-            second.data.map { list -> list[0] to list[1].toInt() }
-        } else {
-            listOf()
-        }
-        val viewsCount = second.views
-        val commentCount = first.discussion?.commentCount ?: 0
-        return InsightsLatestPostModel(
-                site.siteId,
-                first.title,
-                first.url,
-                first.date,
-                first.id,
-                viewsCount,
-                commentCount,
-                first.likeCount,
-                daysViews
-        )
     }
 
     // Time period stats
@@ -151,29 +104,14 @@ class InsightsStore
             response.isError -> { OnInsightsFetched(response.error) }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response)
-                OnInsightsFetched(response.response.toDomainModel())
+                OnInsightsFetched(insightsMapper.map(response.response))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
     fun getTodayInsights(site: SiteModel): VisitsModel? {
-        return sqlUtils.selectTodayInsights(site)?.toDomainModel()
-    }
-
-    private fun VisitResponse.toDomainModel(): VisitsModel? {
-        val result: Map<String, String> = this.fields.mapIndexed { index, value ->
-            value to this.data[0][index]
-        }.toMap()
-        return VisitsModel(
-                result["period"] ?: "",
-                result["views"]?.toInt() ?: 0,
-                result["visitors"]?.toInt() ?: 0,
-                result["likes"]?.toInt() ?: 0,
-                result["reblogs"]?.toInt() ?: 0,
-                result["comments"]?.toInt() ?: 0,
-                result["posts"]?.toInt() ?: 0
-        )
+        return sqlUtils.selectTodayInsights(site)?.let { insightsMapper.map(it) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
