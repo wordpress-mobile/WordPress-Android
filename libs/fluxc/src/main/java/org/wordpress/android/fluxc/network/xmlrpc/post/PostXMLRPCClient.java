@@ -118,7 +118,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset) {
         SiteModel site = listDescriptor.getSite();
-        List<String> fields = Arrays.asList("post_id", "post_modified");
+        List<String> fields = Arrays.asList("post_id", "post_modified_gmt");
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
                         offset, listDescriptor.getPageSize(), listDescriptor.getStatusList(), fields,
@@ -325,7 +325,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
             String postID = MapUtils.getMapStr(postMap, "post_id");
-            Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified");
+            Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
             String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
 
             postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601));
@@ -374,7 +374,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         String dateCreatedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
         post.setDateCreated(dateCreatedAsIso8601);
 
-        Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified");
+        Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
         String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
         post.setLastModified(lastModifiedAsIso8601);
 
