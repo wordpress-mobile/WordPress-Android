@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListManager
+import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
@@ -33,6 +34,7 @@ import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERRO
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
@@ -67,6 +69,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType
 import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator
 import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemLoading
 import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemPost
@@ -101,15 +104,19 @@ sealed class PostListUserAction {
 }
 
 class PostListData(
-    private val items: List<PostAdapterItemType>,
+    private val items: List<PostAdapterItemType>?,
     val listManager: ListManager<PostModel>?,
+    listState: ListState?,
     site: SiteModel
 ) {
     val isPhotonCapable: Boolean = SiteUtils.isPhotonCapable(site)
     val isAztecEditorEnabled: Boolean = AppPrefs.isAztecEditorEnabled()
     val hasCapabilityPublishPosts: Boolean = site.hasCapabilityPublishPosts
-    val isFetchingFirstPage: Boolean = listManager?.isFetchingFirstPage ?: false
-    val isLoadingMore: Boolean = listManager?.isLoadingMore ?: false
+    val isLoadingMore: Boolean = listState?.isLoadingMore() ?: false
+    val isLoadingFirstPage: Boolean = if (items == null) {
+        // If `items` is null, that means we haven't loaded the data yet, which means we are loading the first page
+        true
+    } else listState?.isFetchingFirstPage() ?: false
 
     sealed class PostAdapterItemType {
         object PostAdapterItemLoading : PostAdapterItemType()
@@ -129,7 +136,7 @@ class PostListData(
         ) : PostAdapterItemType()
     }
 
-    val size: Int = items.size
+    val size: Int = items?.size ?: 0
 
     fun getItem(
         index: Int,
@@ -142,7 +149,7 @@ class PostListData(
                 it.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
             }
         }
-        return items[index]
+        return requireNotNull(items) { "Wrong item size is passed while items is null" }[index]
     }
 }
 
@@ -165,7 +172,6 @@ class PostListViewModel @Inject constructor(
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var site: SiteModel
-    private var listManager: ListManager<PostModel>? = null
     private val uploadedPostRemoteIds = ArrayList<Long>()
 
     private val _postListData = MutableLiveData<PostListData>()
@@ -188,6 +194,10 @@ class PostListViewModel @Inject constructor(
 
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
+
+    private var listManager: ListManager<PostModel>? = null
+    private var listState: ListState? = null
+    private var items: List<PostAdapterItemType>? = null
 
     init {
         EventBus.getDefault().register(this)
@@ -363,6 +373,29 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListItemsChanged(event: OnListItemsChanged) {
+        if (listDescriptor?.typeIdentifier != event.type) {
+            return
+        }
+        refreshListManagerFromStore()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListStateChanged(event: OnListStateChanged) {
+        // There is no error to handle for `OnListStateChanged`
+        listState = event.newState
+        updatePostListData()
+    }
+
+    private fun updatePostListData() {
+        val data = PostListData(items, listManager, listState, site)
+        _postListData.postValue(data)
+        updateEmptyViewState(data)
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
@@ -377,15 +410,6 @@ class PostListViewModel @Inject constructor(
             // TODO: might not be the best way to start a refresh
             refreshList()
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onListItemsChanged(event: OnListItemsChanged) {
-        if (listDescriptor?.typeIdentifier != event.type) {
-            return
-        }
-        refreshListManagerFromStore()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -477,8 +501,8 @@ class PostListViewModel @Inject constructor(
                 val timeTook = measureTimeMillis {
                     val listManager = getListManagerFromStore(listDescriptor)
                     this@PostListViewModel.listManager = listManager
-                    updateUI()?.let { _postListData.postValue(it) }
-                    updateEmptyViewState(listManager)
+                    items = adapterItems(listManager)
+                    updatePostListData()
                     if (refreshFirstPageAfter) {
                         listManager.refresh()
                     }
@@ -488,9 +512,9 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    private fun updateEmptyViewState(listManager: ListManager<PostModel>) {
-        val state = if (listManager.size == 0) {
-            if (listManager.isFetchingFirstPage) LOADING else EMPTY_LIST
+    private fun updateEmptyViewState(postListData: PostListData) {
+        val state = if (postListData.size == 0) {
+            if (postListData.isLoadingFirstPage) LOADING else EMPTY_LIST
         } else {
             HIDDEN_LIST
         }
@@ -523,43 +547,46 @@ class PostListViewModel @Inject constructor(
         val hasPendingMediaUpload: Boolean
     )
 
-    private fun updateUI(): PostListData? {
-        listManager?.let { listManager ->
-            val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
-            val items = (0..(listManager.size - 1)).map { index ->
-                val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
-                        ?: return@map PostAdapterItemLoading
-                val title = if (post.title.isNotBlank()) {
-                    StringEscapeUtils.unescapeHtml4(post.title)
-                } else null
-                val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
-                        ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
-                val postStatus = PostStatus.fromPost(post)
-                val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
-                        !post.isLocallyChanged
-                val uploadStatus = getUploadStatus(post)
-                val canPublishPost = !uploadStatus.isUploadingOrQueued &&
-                        (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-                PostAdapterItemPost(
-                        title = title,
-                        excerpt = excerpt,
-                        isLocalDraft = post.isLocalDraft,
-                        date = PostUtils.getFormattedDate(post),
-                        postStatus = postStatus,
-                        isLocallyChanged = post.isLocallyChanged,
-                        canShowStats = canShowStats,
-                        canPublishPost = canPublishPost,
-                        canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
-                        featuredImageUrl = getFeaturedImageUrl(post),
-                        uploadStatus = getUploadStatus(post)
-                )
-            }
-            val finalItems = if (listManager.size != 0 && !listManager.canLoadMore) {
-                items.plus(PostAdapterItemEndListIndicator)
-            } else items
-            return PostListData(finalItems, listManager, site)
+    private fun adapterItems(listManager: ListManager<PostModel>): List<PostAdapterItemType> {
+        val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
+        val items = (0..(listManager.size - 1)).map { index ->
+            val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
+                    ?: return@map PostAdapterItemLoading
+            val title = if (post.title.isNotBlank()) {
+                StringEscapeUtils.unescapeHtml4(post.title)
+            } else null
+            val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
+                    ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
+            val postStatus = PostStatus.fromPost(post)
+            val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
+                    !post.isLocallyChanged
+            val uploadStatus = getUploadStatus(post)
+            val canPublishPost = !uploadStatus.isUploadingOrQueued &&
+                    (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
+            PostAdapterItemPost(
+                    title = title,
+                    excerpt = excerpt,
+                    isLocalDraft = post.isLocalDraft,
+                    date = PostUtils.getFormattedDate(post),
+                    postStatus = postStatus,
+                    isLocallyChanged = post.isLocallyChanged,
+                    canShowStats = canShowStats,
+                    canPublishPost = canPublishPost,
+                    canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
+                    featuredImageUrl = getFeaturedImageUrl(post),
+                    uploadStatus = getUploadStatus(post)
+            )
         }
-        return null
+        return if (hasLoadedAllPosts()) {
+            items.plus(PostAdapterItemEndListIndicator)
+        } else items
+    }
+
+    private fun hasLoadedAllPosts(): Boolean {
+        return if (items == null) {
+            // If items is null, that means we haven't loaded the data yet, which means there is more data to be loaded
+            false
+        } else listState?.canLoadMore() == false
     }
 
     private fun getFeaturedImageUrl(post: PostModel): String? {

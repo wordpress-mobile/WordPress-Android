@@ -303,7 +303,7 @@ class PostListFragment : Fragment() {
         if (!isAdded) {
             return
         }
-        swipeRefreshLayout?.isRefreshing = postListData.isFetchingFirstPage
+        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
         progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
         postListAdapter.setPostListData(postListData)
 
