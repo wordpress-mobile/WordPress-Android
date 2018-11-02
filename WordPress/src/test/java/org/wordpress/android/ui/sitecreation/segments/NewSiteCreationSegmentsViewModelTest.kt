@@ -49,7 +49,6 @@ class NewSiteCreationSegmentsViewModelTest {
     private val errorEvent = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, "dummyError"))
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
-
     @Mock private lateinit var dataObserver: Observer<List<VerticalSegmentModel>>
     @Mock private lateinit var showProgressObserver: Observer<Boolean>
     @Mock private lateinit var showErrorObserver: Observer<Boolean>
@@ -75,9 +74,10 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
-        val inOrder = inOrder(dataObserver)
-        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
-        inOrder.verifyNoMoreInteractions()
+        inOrder(dataObserver).apply {
+            verify(dataObserver).onChanged(firstModel.segmentList)
+            verifyNoMoreInteractions()
+        }
     }
 
     @Test
@@ -87,11 +87,13 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        val inOrder = inOrder(dataObserver)
-        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
 
-        inOrder.verify(dataObserver).onChanged(secondDummyEvent.segmentList)
-        inOrder.verifyNoMoreInteractions()
+        inOrder(dataObserver).apply {
+            verify(dataObserver).onChanged(firstModel.segmentList)
+
+            verify(dataObserver).onChanged(secondDummyEvent.segmentList)
+            verifyNoMoreInteractions()
+        }
     }
 
     @Test
@@ -99,11 +101,13 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
-        val inOrder = inOrder(dataObserver, showProgressObserver, showErrorObserver)
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verifyNoMoreInteractions()
+
+        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
+            verify(showProgressObserver).onChanged(true)
+            verify(dataObserver).onChanged(firstModel.segmentList)
+            verify(showProgressObserver).onChanged(false)
+            verifyNoMoreInteractions()
+        }
     }
 
     @Test
@@ -113,12 +117,14 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        val inOrder = inOrder(showProgressObserver, showErrorObserver)
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verifyNoMoreInteractions()
+
+        inOrder(showProgressObserver, showErrorObserver).apply {
+            verify(showProgressObserver).onChanged(true)
+            verify(showProgressObserver).onChanged(false)
+            verify(showProgressObserver).onChanged(true)
+            verify(showProgressObserver).onChanged(false)
+            verifyNoMoreInteractions()
+        }
     }
 
     @Test
@@ -126,11 +132,13 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
 
-        val inOrder = inOrder(dataObserver, showProgressObserver, showErrorObserver)
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verify(showErrorObserver).onChanged(true)
-        inOrder.verifyNoMoreInteractions()
+
+        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
+            verify(showProgressObserver).onChanged(true)
+            verify(showProgressObserver).onChanged(false)
+            verify(showErrorObserver).onChanged(true)
+            verifyNoMoreInteractions()
+        }
     }
 
     @Test
@@ -140,15 +148,17 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        val inOrder = inOrder(dataObserver, showProgressObserver, showErrorObserver)
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verify(showErrorObserver).onChanged(true)
 
-        inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(showErrorObserver).onChanged(false)
-        inOrder.verify(dataObserver).onChanged(secondDummyEvent.segmentList)
-        inOrder.verify(showProgressObserver).onChanged(false)
-        inOrder.verifyNoMoreInteractions()
+        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
+            verify(showProgressObserver).onChanged(true)
+            verify(showProgressObserver).onChanged(false)
+            verify(showErrorObserver).onChanged(true)
+
+            verify(showProgressObserver).onChanged(true)
+            verify(showErrorObserver).onChanged(false)
+            verify(dataObserver).onChanged(secondDummyEvent.segmentList)
+            verify(showProgressObserver).onChanged(false)
+            verifyNoMoreInteractions()
+        }
     }
 }
