@@ -600,7 +600,7 @@ class PostListFragment : Fragment(),
                     getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
                 }
         WPWebViewActivity.openURL(getActivity(), urlToUse)
-         // track event
+        // track event
         val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
         // guarding against null post as we only want to track here
         if (post != null) {
