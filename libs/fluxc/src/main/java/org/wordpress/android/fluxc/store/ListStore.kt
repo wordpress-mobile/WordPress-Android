@@ -115,13 +115,19 @@ class ListStore @Inject constructor(
                 items = allItems,
                 loadMoreOffset = loadMoreOffset,
                 isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
-                isLoadingMore = listState?.isLoadingMore() ?: false,
                 canLoadMore = listState?.canLoadMore() ?: false,
                 fetchItem = { remoteItemId ->
                     dataSource.fetchItem(listDescriptor, remoteItemId)
                 },
                 fetchList = dataSource::fetchList
         )
+    }
+
+    fun getListState(listDescriptor: ListDescriptor): ListState {
+        listSqlUtils.getList(listDescriptor)?.let {
+            return getListState(it)
+        }
+        return ListState.defaultState
     }
 
     /**
@@ -147,7 +153,7 @@ class ListStore @Inject constructor(
         }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListChanged(listOf(payload.listDescriptor), CauseOfListChange.STATE_CHANGED, null))
+        emitChange(OnListStateChanged(payload.listDescriptor, newState))
 
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
@@ -168,12 +174,17 @@ class ListStore @Inject constructor(
      * See [handleFetchList] to see how items are fetched.
      */
     private fun handleFetchedListItems(payload: FetchedListItemsPayload) {
+        val newState = when {
+            payload.isError -> ListState.ERROR
+            payload.canLoadMore -> ListState.CAN_LOAD_MORE
+            else -> ListState.FETCHED
+        }
+        listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
+
         if (!payload.isError) {
             if (!payload.loadedMore) {
                 deleteListItems(payload.listDescriptor)
             }
-            val state = if (payload.canLoadMore) ListState.CAN_LOAD_MORE else ListState.FETCHED
-            listSqlUtils.insertOrUpdateList(payload.listDescriptor, state)
             val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
                 "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
             }
@@ -183,8 +194,6 @@ class ListStore @Inject constructor(
                 listItemModel.remoteItemId = remoteItemId
                 return@map listItemModel
             })
-        } else {
-            listSqlUtils.insertOrUpdateList(payload.listDescriptor, ListState.ERROR)
         }
         val causeOfChange = if (payload.isError) {
             CauseOfListChange.ERROR
@@ -192,6 +201,7 @@ class ListStore @Inject constructor(
             if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
         }
         emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
+        emitChange(OnListStateChanged(payload.listDescriptor, newState))
     }
 
     /**
@@ -279,12 +289,17 @@ class ListStore @Inject constructor(
         error: ListError?
     ) : Store.OnChanged<ListError>() {
         enum class CauseOfListChange {
-            ERROR, FIRST_PAGE_FETCHED, LOADED_MORE, STATE_CHANGED
+            ERROR, FIRST_PAGE_FETCHED, LOADED_MORE
         }
         init {
             this.error = error
         }
     }
+
+    /**
+     * The event to be emitted whenever there is a change to the [ListState]
+     */
+    class OnListStateChanged(val listDescriptor: ListDescriptor, val newState: ListState) : Store.OnChanged<ListError>()
 
     /**
      * The event to be emitted when there is a change to items for a specific [ListDescriptorTypeIdentifier].

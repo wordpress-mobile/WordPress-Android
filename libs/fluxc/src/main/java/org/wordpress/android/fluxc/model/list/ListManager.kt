@@ -22,8 +22,7 @@ sealed class ListManagerItem<T>(val value: T?) {
  * other [ListManager]s
  * @param items List of items to manage
  * @param loadMoreOffset The offset from the end of list that'll be used to fetch the next page
- * @param isFetchingFirstPage A helper property to be used to show/hide pull-to-refresh progress bar
- * @param isLoadingMore A helper property to be used to show/hide load more progress bar
+ * @param isFetchingFirstPage Tells the [ListManager] whether there is already a fetch for the first page
  * @param canLoadMore Tells the [ListManager] whether there is more data to be fetched
  * @param fetchItem A function which fetches the item for the given `remoteItemId` as [Long].
  * @param fetchList A function which fetches the list for the given [ListDescriptor]. It'll be passed back to
@@ -37,9 +36,8 @@ class ListManager<T>(
     private val listDescriptor: ListDescriptor,
     private val items: List<ListManagerItem<T>>,
     private val loadMoreOffset: Int,
-    val isFetchingFirstPage: Boolean,
-    val isLoadingMore: Boolean,
-    val canLoadMore: Boolean,
+    private val isFetchingFirstPage: Boolean,
+    private val canLoadMore: Boolean,
     private val fetchItem: (Long) -> Unit,
     private val fetchList: (ListDescriptor, Int) -> Unit
 ) {
