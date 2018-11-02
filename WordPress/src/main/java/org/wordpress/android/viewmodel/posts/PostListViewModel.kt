@@ -67,7 +67,9 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItem
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemLoading
+import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
@@ -99,7 +101,7 @@ sealed class PostListUserAction {
 }
 
 class PostListData(
-    private val items: List<PostAdapterItem?>,
+    private val items: List<PostAdapterItemType>,
     val listManager: ListManager<PostModel>?,
     site: SiteModel
 ) {
@@ -109,31 +111,38 @@ class PostListData(
     val isFetchingFirstPage: Boolean = listManager?.isFetchingFirstPage ?: false
     val isLoadingMore: Boolean = listManager?.isLoadingMore ?: false
 
-    data class PostAdapterItem(
-        val title: String?,
-        val excerpt: String?,
-        val isLocalDraft: Boolean,
-        val date: String,
-        val postStatus: PostStatus,
-        val isLocallyChanged: Boolean,
-        val canShowStats: Boolean,
-        val canPublishPost: Boolean,
-        val canRetryUpload: Boolean,
-        val featuredImageUrl: String?,
-        val uploadStatus: PostAdapterItemUploadStatus
-    )
+    sealed class PostAdapterItemType {
+        object PostAdapterItemLoading : PostAdapterItemType()
+        object PostAdapterItemEndListIndicator : PostAdapterItemType()
+        data class PostAdapterItemPost(
+            val title: String?,
+            val excerpt: String?,
+            val isLocalDraft: Boolean,
+            val date: String,
+            val postStatus: PostStatus,
+            val isLocallyChanged: Boolean,
+            val canShowStats: Boolean,
+            val canPublishPost: Boolean,
+            val canRetryUpload: Boolean,
+            val featuredImageUrl: String?,
+            val uploadStatus: PostAdapterItemUploadStatus
+        ) : PostAdapterItemType()
+    }
 
-    val size: Int = listManager?.size ?: 0
+    val size: Int = items.size
 
     fun getItem(
         index: Int,
         shouldFetchIfNull: Boolean = false,
         shouldLoadMoreIfNecessary: Boolean = false
-    ): PostAdapterItem? {
-        val item = items[index]
+    ): PostAdapterItemType {
         // TODO: Rework fetch item in ListManager
-        listManager?.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
-        return item
+        listManager?.let {
+            if (index < it.size) {
+                it.getItem(index, shouldFetchIfNull, shouldLoadMoreIfNecessary)
+            }
+        }
+        return items[index]
     }
 }
 
@@ -503,7 +512,7 @@ class PostListViewModel @Inject constructor(
 
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
 
-    data class PostAdapterItemUploadStatus (
+    data class PostAdapterItemUploadStatus(
         val uploadError: UploadError?,
         val mediaUploadProgress: Int,
         val isUploading: Boolean,
@@ -519,7 +528,7 @@ class PostListViewModel @Inject constructor(
             val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
             val items = (0..(listManager.size - 1)).map { index ->
                 val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
-                        ?: return@map null
+                        ?: return@map PostAdapterItemLoading
                 val title = if (post.title.isNotBlank()) {
                     StringEscapeUtils.unescapeHtml4(post.title)
                 } else null
@@ -531,7 +540,7 @@ class PostListViewModel @Inject constructor(
                 val uploadStatus = getUploadStatus(post)
                 val canPublishPost = !uploadStatus.isUploadingOrQueued &&
                         (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-                PostAdapterItem(
+                PostAdapterItemPost(
                         title = title,
                         excerpt = excerpt,
                         isLocalDraft = post.isLocalDraft,
@@ -545,7 +554,10 @@ class PostListViewModel @Inject constructor(
                         uploadStatus = getUploadStatus(post)
                 )
             }
-            return PostListData(items, listManager, site)
+            val finalItems = if (listManager.size != 0 && !listManager.canLoadMore) {
+                items.plus(PostAdapterItemEndListIndicator)
+            } else items
+            return PostListData(finalItems, listManager, site)
         }
         return null
     }
@@ -578,15 +590,15 @@ class PostListViewModel @Inject constructor(
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
         val newStatus = PostAdapterItemUploadStatus(
-                        uploadError = uploadError,
-                        mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
-                        isUploading = UploadService.isPostUploading(post),
-                        isUploadingOrQueued = isUploadingOrQueued,
-                        isQueued = UploadService.isPostQueued(post),
-                        isUploadFailed = uploadStore.isFailedPost(post),
-                        hasInProgressMediaUpload = hasInProgressMediaUpload,
-                        hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
-                )
+                uploadError = uploadError,
+                mediaUploadProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100),
+                isUploading = UploadService.isPostUploading(post),
+                isUploadingOrQueued = isUploadingOrQueued,
+                isQueued = UploadService.isPostQueued(post),
+                isUploadFailed = uploadStore.isFailedPost(post),
+                hasInProgressMediaUpload = hasInProgressMediaUpload,
+                hasPendingMediaUpload = UploadService.hasPendingMediaUploadsForPost(post)
+        )
         uploadStatusMap[post.id] = newStatus
         return newStatus
     }

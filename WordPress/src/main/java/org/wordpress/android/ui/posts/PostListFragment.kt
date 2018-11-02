@@ -19,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -43,13 +42,10 @@ import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_E
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
 import org.wordpress.android.viewmodel.posts.PostListUserAction
 import org.wordpress.android.viewmodel.posts.PostListViewModel
-import org.wordpress.android.widgets.PostListButton
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class PostListFragment : Fragment(),
-        PostListAdapter.OnPostSelectedListener,
-        PostListAdapter.OnPostButtonClickListener {
+class PostListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostListViewModel
 
@@ -65,25 +61,19 @@ class PostListFragment : Fragment(),
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
 
-    private val postListAdapter: PostListAdapter by lazy {
-        val postListAdapter = PostListAdapter(nonNullActivity)
-        postListAdapter.setOnPostSelectedListener(this)
-        postListAdapter.setOnPostButtonClickListener(this)
-        postListAdapter
-    }
+    private val postListAdapter: PostListAdapter by lazy { PostListAdapter(nonNullActivity) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nonNullActivity = checkNotNull(activity)
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        val site: SiteModel?
-        if (savedInstanceState == null) {
+        val site: SiteModel? = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
             rvScrollPositionSaver.onRestoreInstanceState(savedInstanceState)
-            site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
         if (site == null) {
@@ -309,67 +299,6 @@ class PostListFragment : Fragment(),
         }
     }
 
-//    private fun showTargetPostIfNecessary() {
-//        if (!isAdded) {
-//            return
-//        }
-//        // If the activity was given a target post, and this is the first time posts are loaded, scroll to that post
-//        targetPost?.let { targetPost ->
-//            postListAdapter.getPositionForPost(targetPost)?.let { position ->
-//                val smoothScroller = object : LinearSmoothScroller(nonNullActivity) {
-//                    private val SCROLL_OFFSET_DP = 23
-//
-//                    override fun getVerticalSnapPreference(): Int {
-//                        return LinearSmoothScroller.SNAP_TO_START
-//                    }
-//
-//                    override fun calculateDtToFit(
-//                        viewStart: Int,
-//                        viewEnd: Int,
-//                        boxStart: Int,
-//                        boxEnd: Int,
-//                        snapPreference: Int
-//                    ): Int {
-//                        // Assume SNAP_TO_START, and offset the scroll, so the bottom of the above post shows
-//                        val offsetPx = TypedValue.applyDimension(
-//                                TypedValue.COMPLEX_UNIT_DIP, SCROLL_OFFSET_DP.toFloat(), resources.displayMetrics
-//                        ).toInt()
-//                        return boxStart - viewStart + offsetPx
-//                    }
-//                }
-//
-//                smoothScroller.targetPosition = position
-//                recyclerView?.layoutManager?.startSmoothScroll(smoothScroller)
-//            }
-//            this.targetPost = null
-//        }
-//    }
-
-    // PostListAdapter listeners
-
-    /**
-     * called by the adapter when the user clicks the edit/view/stats/trash button for a post
-     */
-    override fun onPostButtonClicked(buttonType: Int, postClicked: PostModel) {
-        viewModel.handlePostButton(buttonType, postClicked)
-    }
-
-    /**
-     * called by the adapter when the user clicks a post
-     */
-    override fun onPostSelected(post: PostModel) {
-        onPostButtonClicked(PostListButton.BUTTON_EDIT, post)
-    }
-
-    /**
-     * A helper function to update the current [ListManager] with the given [listManager].
-     *
-     * @param listManager [ListManager] to be used to change with the current one
-     *
-     * This function deals with all the UI actions that needs to be taken after a [ListManager] change, including but
-     * not limited to, updating the swipe to refresh layout, loading progress bar and updating the empty views.
-     */
-    // TODO: Update name and comment
     private fun update(postListData: PostListData) {
         if (!isAdded) {
             return
@@ -383,8 +312,6 @@ class PostListFragment : Fragment(),
         recyclerView?.let {
             rvScrollPositionSaver.restoreScrollOffset(it)
         }
-        // TODO: This too
-//        showTargetPostIfNecessary()
     }
 
     companion object {
