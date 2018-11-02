@@ -698,7 +698,7 @@ public class PostsListFragment extends Fragment
         PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
         // track event
         PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, mSite);
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, mSite);
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -714,7 +714,7 @@ public class PostsListFragment extends Fragment
         if (post != null) {
             // track event
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, mSite);
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, mSite);
         }
     }
 
@@ -731,7 +731,7 @@ public class PostsListFragment extends Fragment
         // guarding against null post as we only want to track here
         if (post != null) {
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED, post, mSite);
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, mSite);
         }
     }
 
@@ -744,8 +744,8 @@ public class PostsListFragment extends Fragment
         // guarding against null post as we only want to track here
         if (post != null) {
             PostUtils.trackGutenbergDialogEvent(
-                checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
-                        : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED,
+                checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
+                        : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED,
                 post, mSite);
         }
     }
