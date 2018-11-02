@@ -103,7 +103,6 @@ class InsightsStoreTest {
         val model = mock<InsightsMostPopularModel>()
         whenever(mapper.map(MOST_POPULAR_RESPONSE, site)).thenReturn(model)
 
-
         val responseModel = store.fetchMostPopularInsights(site, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
@@ -228,10 +227,11 @@ class InsightsStoreTest {
                 VISITS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(fetchInsightsPayload)
+        whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(
+                fetchInsightsPayload
+        )
         val model = mock<VisitsModel>()
         whenever(mapper.map(VISITS_RESPONSE)).thenReturn(model)
-
 
         val responseModel = store.fetchTodayInsights(site, forced)
 
