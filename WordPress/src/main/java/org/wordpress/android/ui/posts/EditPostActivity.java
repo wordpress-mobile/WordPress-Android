@@ -1175,7 +1175,7 @@ public class EditPostActivity extends AppCompatActivity implements
             if (itemId == R.id.menu_history) {
                 AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED);
                 ActivityUtils.hideKeyboard(this);
-                mViewPager.setCurrentItem(PAGE_HISTORY);
+                ActivityLauncher.viewPostOrPageHistoryForResult(this, mSite, mPost);
             } else if (itemId == R.id.menu_preview_post) {
                 mViewPager.setCurrentItem(PAGE_PREVIEW);
             } else if (itemId == R.id.menu_post_settings) {

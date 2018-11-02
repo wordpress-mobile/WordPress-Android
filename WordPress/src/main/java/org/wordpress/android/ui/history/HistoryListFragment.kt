@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.ui.history
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -15,8 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.history.HistoryAdapter
-import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -80,7 +78,9 @@ class HistoryListFragment : Fragment() {
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
-        viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(KEY_SITE) as SiteModel)
+        viewModel.create(arguments?.get(KEY_POST) as PostModel, arguments?.get(
+                KEY_SITE
+        ) as SiteModel)
 
         actionable_empty_view.subtitle.text = if ((arguments?.get(KEY_POST) as PostModel).isPage) {
             resources.getString(R.string.history_empty_subtitle_page)
