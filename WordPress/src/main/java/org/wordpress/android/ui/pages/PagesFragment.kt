@@ -294,7 +294,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
         // track event
         PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_YES_TAPPED, post, viewModel.site
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, viewModel.site
         )
         ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
     }
@@ -305,7 +305,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         if (post != null) {
             // track event
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_CANCEL_TAPPED, post, viewModel.site
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, viewModel.site
             )
         }
     }
@@ -326,7 +326,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         if (post != null) {
             // track event
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_LEARN_MORE_TAPPED,
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED,
                     post, viewModel.site
             )
         }
@@ -340,9 +340,9 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
             // track event
             val trackValue =
                     if (checked) {
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_CHECKED
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
                     } else {
-                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN_DONT_SHOW_AGAIN_UNCHECKED
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
                     }
             PostUtils.trackGutenbergDialogEvent(
                     trackValue,
