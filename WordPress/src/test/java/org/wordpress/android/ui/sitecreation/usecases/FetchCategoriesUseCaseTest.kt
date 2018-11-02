@@ -11,8 +11,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.OnSiteCategoriesFetchedDummy
 
 @RunWith(MockitoJUnitRunner::class)
 class FetchCategoriesUseCaseTest {
@@ -21,19 +21,18 @@ class FetchCategoriesUseCaseTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     private lateinit var useCase: FetchCategoriesUseCase
-    private val dummyEvent = OnSiteCategoriesFetchedDummy()
+    private val event = OnSegmentsFetched(emptyList(), null)
 
     @Before
     fun setUp() {
         useCase = FetchCategoriesUseCase(dispatcher)
-        // TODO add dispatcher.register and use .thanCallRealMethod
     }
 
     @Test
     fun coroutineResumedWhenResultEventDispatched() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onSiteCategoriesFetched(dummyEvent) } // dispatch the real result event
-        val event = useCase.fetchCategories()
+        whenever(dispatcher.dispatch(any())).then { useCase.onSiteCategoriesFetched(event) } // dispatch the real result event
+        val resultEvent = useCase.fetchCategories()
 
-        assertThat(event).isEqualTo(dummyEvent)
+        assertThat(resultEvent).isEqualTo(event)
     }
 }

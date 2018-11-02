@@ -3,7 +3,6 @@ package org.wordpress.android.ui.sitecreation.category
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.inOrder
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
 import org.junit.Before
@@ -13,9 +12,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
+import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
+import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
+import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel
-import org.wordpress.android.ui.sitecreation.OnSiteCategoriesFetchedDummy
 import org.wordpress.android.ui.sitecreation.usecases.FetchCategoriesUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -25,13 +27,31 @@ class NewSiteCreationCategoryViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchCategoriesUseCase: FetchCategoriesUseCase
-    private val firstDummyEvent = OnSiteCategoriesFetchedDummy()
-    private val secondDummyEvent = OnSiteCategoriesFetchedDummy()
-    private val errorEvent = OnSiteCategoriesFetchedDummy(true, emptyList())
+    private val firstModel = OnSegmentsFetched(
+            listOf(
+                    VerticalSegmentModel(
+                            "dummyTitle",
+                            "dummySubtitle",
+                            "http://dummy.com",
+                            123
+                    )
+            )
+    )
+    private val secondDummyEvent = OnSegmentsFetched(
+            listOf(
+                    VerticalSegmentModel(
+                            "dummyTitle",
+                            "dummySubtitle",
+                            "http://dummy.com",
+                            999
+                    )
+            )
+    )
+    private val errorEvent = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, "dummyError"))
     private lateinit var viewModel: NewSiteCreationCategoryViewModel
 
 
-    @Mock private lateinit var dataObserver: Observer<List<String>>
+    @Mock private lateinit var dataObserver: Observer<List<VerticalSegmentModel>>
     @Mock private lateinit var showProgressObserver: Observer<Boolean>
     @Mock private lateinit var showErrorObserver: Observer<Boolean>
 
@@ -53,43 +73,43 @@ class NewSiteCreationCategoryViewModelTest {
 
     @Test
     fun onStartFetchesCategories() = test {
-        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstDummyEvent)
+        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
         val inOrder = inOrder(dataObserver)
-        inOrder.verify(dataObserver).onChanged(firstDummyEvent.data)
+        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
         inOrder.verifyNoMoreInteractions()
     }
 
     @Test
     fun onRetryFetchesCategories() = test {
-        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstDummyEvent)
+        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
         whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
         val inOrder = inOrder(dataObserver)
-        inOrder.verify(dataObserver).onChanged(firstDummyEvent.data)
+        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
 
-        inOrder.verify(dataObserver).onChanged(secondDummyEvent.data)
+        inOrder.verify(dataObserver).onChanged(secondDummyEvent.segmentList)
         inOrder.verifyNoMoreInteractions()
     }
 
     @Test
     fun fetchCategoriesChangesStateToProgress() = test {
-        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstDummyEvent)
+        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
         val inOrder = inOrder(dataObserver, showProgressObserver, showErrorObserver)
         inOrder.verify(showProgressObserver).onChanged(true)
-        inOrder.verify(dataObserver).onChanged(firstDummyEvent.data)
+        inOrder.verify(dataObserver).onChanged(firstModel.segmentList)
         inOrder.verify(showProgressObserver).onChanged(false)
         inOrder.verifyNoMoreInteractions()
     }
 
     @Test
     fun onRetryChangesStateToProgress() = test {
-        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstDummyEvent)
+        whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
         whenever(fetchCategoriesUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
@@ -128,7 +148,7 @@ class NewSiteCreationCategoryViewModelTest {
 
         inOrder.verify(showProgressObserver).onChanged(true)
         inOrder.verify(showErrorObserver).onChanged(false)
-        inOrder.verify(dataObserver).onChanged(secondDummyEvent.data)
+        inOrder.verify(dataObserver).onChanged(secondDummyEvent.segmentList)
         inOrder.verify(showProgressObserver).onChanged(false)
         inOrder.verifyNoMoreInteractions()
     }
