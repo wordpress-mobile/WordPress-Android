@@ -84,6 +84,7 @@ import org.wordpress.android.viewmodel.posts.PostListUserAction.RetryUpload
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewPost
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewStats
 import org.wordpress.android.widgets.PostListButton
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.system.measureTimeMillis
@@ -389,6 +390,7 @@ class PostListViewModel @Inject constructor(
             // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
             // as the current `ListManager` might not have been updated yet since it's a bg action.
             uploadedPostRemoteIds.add(event.post.remotePostId)
+            updateUploadStatus(event.post)
             // TODO: might not be the best way to start a refresh
             refreshList()
         }
@@ -403,7 +405,8 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        // TODO: Update the media list and UI
+        featuredImageMap[event.media.mediaId] = event.media.url
+        updateItemsAndUI()
     }
 
     /**
@@ -411,7 +414,8 @@ class PostListViewModel @Inject constructor(
      */
     fun onEventMainThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
-            // TODO: Update the media list and UI
+            updateUploadStatus(event.post)
+            updateItemsAndUI()
         }
     }
 
@@ -420,13 +424,15 @@ class PostListViewModel @Inject constructor(
      */
     fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
-            // TODO: Update the upload list and UI
+            updateUploadStatus(event.post)
+            updateItemsAndUI()
         }
     }
 
     fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
         postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            // TODO: Update the upload list and UI
+            updateUploadStatus(post)
+            updateItemsAndUI()
         }
     }
 
@@ -436,8 +442,9 @@ class PostListViewModel @Inject constructor(
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
             // now that we know which Posts to refresh, let's do it
             for (post in postsToRefresh) {
-                // TODO: Update the upload list and UI
+                updateUploadStatus(post)
             }
+            updateItemsAndUI()
         }
     }
 
@@ -468,7 +475,10 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            // TODO: Update the media list and UI
+            event.mediaList.forEach {
+                featuredImageMap[it.mediaId] = it.url
+            }
+            updateItemsAndUI()
         }
     }
 
@@ -483,8 +493,7 @@ class PostListViewModel @Inject constructor(
                 val timeTook = measureTimeMillis {
                     val listManager = getListManagerFromStore(listDescriptor)
                     this@PostListViewModel.listManager = listManager
-                    items = adapterItems(listManager)
-                    updatePostListData()
+                    updateItemsAndUI()
                     if (refreshFirstPageAfter) {
                         listManager.refresh()
                     }
@@ -492,6 +501,11 @@ class PostListViewModel @Inject constructor(
                 AppLog.e(T.POSTS, "Time took to updateUI: $timeTook ms!")
             }
         }
+    }
+
+    private fun updateItemsAndUI() {
+        items = adapterItems(this.listManager)
+        updatePostListData()
     }
 
     private fun updateEmptyViewState(postListData: PostListData) {
@@ -516,7 +530,9 @@ class PostListViewModel @Inject constructor(
         )
     }
 
-    private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
+    private val uploadStatusMap = ConcurrentHashMap<Int, PostAdapterItemUploadStatus>()
+    private val featuredImageMap = ConcurrentHashMap<Long, String>()
+    private val featuredImageFromContentMap = ConcurrentHashMap<String, String>()
 
     data class PostAdapterItemUploadStatus(
         val uploadError: UploadError?,
@@ -529,7 +545,9 @@ class PostListViewModel @Inject constructor(
         val hasPendingMediaUpload: Boolean
     )
 
-    private fun adapterItems(listManager: ListManager<PostModel>): List<PostAdapterItemType> {
+    // TODO: Make this cancelable
+    private fun adapterItems(listManager: ListManager<PostModel>?): List<PostAdapterItemType> {
+        if (listManager == null) return emptyList()
         val isStatsSupported = SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
         val items = (0..(listManager.size - 1)).map { index ->
             val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
@@ -543,7 +561,7 @@ class PostListViewModel @Inject constructor(
             val title = if (post.title.isNotBlank()) {
                 StringEscapeUtils.unescapeHtml4(post.title)
             } else null
-            val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { it.isNullOrBlank() }
+            val excerpt = PostUtils.getPostListExcerptFromPost(post).takeIf { !it.isNullOrBlank() }
                     ?.let { StringEscapeUtils.unescapeHtml4(it) }.let { PostUtils.collapseShortcodes(it) }
             val postStatus = PostStatus.fromPost(post)
             val canShowStats = isStatsSupported && postStatus == PostStatus.PUBLISHED && !post.isLocalDraft &&
@@ -563,12 +581,12 @@ class PostListViewModel @Inject constructor(
                     canShowStats = canShowStats,
                     canPublishPost = canPublishPost,
                     canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
-                    featuredImageUrl = getFeaturedImageUrl(post),
-                    uploadStatus = getUploadStatus(post)
+                    featuredImageUrl = getFeaturedImageUrl(post.featuredImageId) ?: getFeaturedImageUrl(post.content),
+                    uploadStatus = uploadStatus
             )
             PostAdapterItemPost(
                     data = postData,
-                    onSelected = { handlePostButton(PostListButton.BUTTON_VIEW, post) },
+                    onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
                     onButtonClicked = { handlePostButton(it, post) }
             )
         }
@@ -584,30 +602,41 @@ class PostListViewModel @Inject constructor(
         } else listState?.canLoadMore() == false
     }
 
-    private fun getFeaturedImageUrl(post: PostModel): String? {
-        var imageUrl: String? = null
-        if (post.featuredImageId != 0L) {
-            val media = mediaStore.getSiteMediaWithId(site, post.featuredImageId)
-            if (media != null) {
-                imageUrl = media.url
-            } else {
-                val mediaToDownload = MediaModel()
-                mediaToDownload.mediaId = post.featuredImageId
-                mediaToDownload.localSiteId = site.id
-                val payload = MediaPayload(site, mediaToDownload)
-                dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-            }
-        } else {
-            imageUrl = ReaderImageScanner(post.content, !SiteUtils.isPhotonCapable(site)).largestImage
+    private fun getFeaturedImageUrl(postContent: String): String? {
+        featuredImageFromContentMap[postContent]?.let { return it }
+        val imageUrl = ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
+        if (imageUrl != null) {
+            featuredImageFromContentMap[postContent] = imageUrl
         }
         return imageUrl
     }
 
-    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
-        uploadStatusMap[post.id]?.let {
-            // return existing status
-            return it
+    private fun getFeaturedImageUrl(featuredImageId: Long): String? {
+        if (featuredImageId == 0L) {
+            return null
         }
+        featuredImageMap[featuredImageId]?.let { return it }
+        val media = mediaStore.getSiteMediaWithId(site, featuredImageId)
+        media?.let {
+            val mediaUrl = media.url
+            featuredImageMap[featuredImageId] = mediaUrl
+            return mediaUrl
+        }
+        // Media is not in the Store, we need to download it
+        val mediaToDownload = MediaModel()
+        mediaToDownload.mediaId = featuredImageId
+        mediaToDownload.localSiteId = site.id
+        val payload = MediaPayload(site, mediaToDownload)
+        dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
+        return null
+    }
+
+    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+        uploadStatusMap[post.id]?.let { return it }
+        return updateUploadStatus(post)
+    }
+
+    private fun updateUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)

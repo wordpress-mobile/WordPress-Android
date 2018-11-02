@@ -56,12 +56,13 @@ class PostListDataSource(
      */
     override fun localItems(listDescriptor: ListDescriptor): List<PostModel>? {
         if (listDescriptor is PostListDescriptor) {
+            val localPosts = postStore.getLocalPostsForDescriptor(listDescriptor)
             trashedPostIds?.let { trashedIds ->
                 // We should filter out the trashed posts from local drafts since they should be hidden
                 val trashedLocalPostIds = trashedIds.map { it.first }
-                return postStore.getLocalPostsForDescriptor(listDescriptor)
-                        .filter { !trashedLocalPostIds.contains(it.id) }
+                return localPosts.filter { !trashedLocalPostIds.contains(it.id) }
             }
+            return localPosts
         }
         return null
     }
