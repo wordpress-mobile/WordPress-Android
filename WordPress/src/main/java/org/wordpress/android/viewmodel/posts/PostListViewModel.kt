@@ -48,6 +48,11 @@ import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.PostAdapterItemPostData
+import org.wordpress.android.ui.posts.PostAdapterItemType
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
@@ -69,10 +74,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemLoading
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
@@ -82,7 +83,6 @@ import org.wordpress.android.viewmodel.posts.PostListUserAction.PreviewPost
 import org.wordpress.android.viewmodel.posts.PostListUserAction.RetryUpload
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewPost
 import org.wordpress.android.viewmodel.posts.PostListUserAction.ViewStats
-import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 import javax.inject.Named
@@ -117,26 +117,6 @@ class PostListData(
         // If `items` is null, that means we haven't loaded the data yet, which means we are loading the first page
         true
     } else listState?.isFetchingFirstPage() ?: false
-
-    sealed class PostAdapterItemType {
-        object PostAdapterItemEndListIndicator : PostAdapterItemType()
-        data class PostAdapterItemLoading(val remotePostId: Long) : PostAdapterItemType()
-        data class PostAdapterItemPost(
-            val localPostId: Int,
-            val remotePostId: Long?,
-            val title: String?,
-            val excerpt: String?,
-            val isLocalDraft: Boolean,
-            val date: String,
-            val postStatus: PostStatus,
-            val isLocallyChanged: Boolean,
-            val canShowStats: Boolean,
-            val canPublishPost: Boolean,
-            val canRetryUpload: Boolean,
-            val featuredImageUrl: String?,
-            val uploadStatus: PostAdapterItemUploadStatus
-        ) : PostAdapterItemType()
-    }
 
     val size: Int = items?.size ?: 0
 
@@ -230,7 +210,7 @@ class PostListViewModel @Inject constructor(
         listManager?.refresh()
     }
 
-    fun handlePostButton(buttonType: Int, post: PostModel) {
+    private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPost(site, post)
             PostListButton.BUTTON_RETRY -> _userAction.postValue(RetryUpload(post))
@@ -571,7 +551,7 @@ class PostListViewModel @Inject constructor(
             val uploadStatus = getUploadStatus(post)
             val canPublishPost = !uploadStatus.isUploadingOrQueued &&
                     (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-            PostAdapterItemPost(
+            val postData = PostAdapterItemPostData(
                     localPostId = post.id,
                     remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
                     title = title,
@@ -585,6 +565,11 @@ class PostListViewModel @Inject constructor(
                     canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
                     featuredImageUrl = getFeaturedImageUrl(post),
                     uploadStatus = getUploadStatus(post)
+            )
+            PostAdapterItemPost(
+                    data = postData,
+                    onSelected = { handlePostButton(PostListButton.BUTTON_VIEW, post) },
+                    onButtonClicked = { handlePostButton(it, post) }
             )
         }
         return if (hasLoadedAllPosts()) {

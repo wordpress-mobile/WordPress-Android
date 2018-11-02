@@ -29,17 +29,16 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.posts.PostAdapterItemPostData
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
+import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.ui.reader.utils.ReaderUtils
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListData
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemLoading
-import org.wordpress.android.viewmodel.posts.PostListData.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
@@ -114,9 +113,9 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             "Wrong size is passed in as there is no data to show yet!"
         }
         return when (data.getItem(position, true, true)) {
-            PostListData.PostAdapterItemType.PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
-            is PostListData.PostAdapterItemType.PostAdapterItemLoading -> VIEW_TYPE_LOADING
-            is PostListData.PostAdapterItemType.PostAdapterItemPost -> VIEW_TYPE_POST
+            PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
+            is PostAdapterItemLoading -> VIEW_TYPE_LOADING
+            is PostAdapterItemPost -> VIEW_TYPE_POST
         }
     }
 
@@ -152,14 +151,16 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         if (holder is LoadingViewHolder) {
             return
         }
-        val postAdapterItem = postListData?.getItem(position, true, true)
-        if (holder !is PostViewHolder || postAdapterItem !is PostAdapterItemPost) {
+        val postAdapterItemPost = postListData?.getItem(position, true, true)
+        if (holder !is PostViewHolder || postAdapterItemPost !is PostAdapterItemPost) {
             // Fail fast if a new view type is added so the we can handle it
             throw IllegalStateException("Only remaining ViewHolder type should be PostViewHolder and only remaining" +
                     " adapter item type should be PostAdapterItemPost")
         }
 
+        // TODO: Rename things a bit to cleanup
         val context = holder.itemView.context
+        val postAdapterItem = postAdapterItemPost.data
 
         holder.title.text = if (!postAdapterItem.title.isNullOrBlank()) {
             postAdapterItem.title
@@ -186,9 +187,9 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
         updateForUploadStatus(holder, postAdapterItem.uploadStatus)
         updateStatusTextAndImage(holder.status, holder.statusImage, postAdapterItem)
-        configurePostButtons(holder, postAdapterItem)
+        configurePostButtons(holder, postAdapterItemPost)
         holder.itemView.setOnClickListener {
-            //                postAdapterItem.onSelected()
+            postAdapterItemPost.onSelected()
         }
     }
 
@@ -242,7 +243,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private fun updateStatusTextAndImage(
         txtStatus: TextView,
         imgStatus: ImageView,
-        postAdapterItem: PostAdapterItemPost
+        postAdapterItem: PostAdapterItemPostData
     ) {
         val context = txtStatus.context
 
@@ -342,8 +343,9 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
     private fun configurePostButtons(
         holder: PostViewHolder,
-        postAdapterItem: PostAdapterItemPost
+        postAdapterItemPost: PostAdapterItemPost
     ) {
+        val postAdapterItem = postAdapterItemPost.data
         val canShowViewButton = !postAdapterItem.canRetryUpload
         val canShowPublishButton = postAdapterItem.canRetryUpload || postAdapterItem.canPublishPost
 
@@ -406,9 +408,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             when (buttonType) {
                 PostListButton.BUTTON_MORE -> animateButtonRows(holder, postAdapterItem, false)
                 PostListButton.BUTTON_BACK -> animateButtonRows(holder, postAdapterItem, true)
-                else -> {
-//                    postAdapterItem.onPostButtonClicked(buttonType)
-                }
+                else -> postAdapterItemPost.onButtonClicked(buttonType)
             }
         }
         holder.editButton.setOnClickListener(btnClickListener)
@@ -427,7 +427,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
      */
     private fun animateButtonRows(
         holder: PostViewHolder,
-        postAdapterItem: PostAdapterItemPost,
+        postAdapterItem: PostAdapterItemPostData,
         showRow1: Boolean
     ) {
         // first animate out the button row, then show/hide the appropriate buttons,
@@ -518,25 +518,30 @@ private suspend fun calculateDiff(
                 return oldItem.remotePostId == newItem.remotePostId
             }
             if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
-                return oldItem.localPostId == newItem.localPostId
+                return oldItem.data.localPostId == newItem.data.localPostId
             }
             if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemPost) {
-                return oldItem.remotePostId == newItem.remotePostId
+                return oldItem.remotePostId == newItem.data.remotePostId
             }
             if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemLoading) {
-                return oldItem.remotePostId == newItem.remotePostId
+                return oldItem.data.remotePostId == newItem.remotePostId
             }
             return false
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val old = oldListData?.getItem(oldItemPosition)
-            val new = newListData.getItem(newItemPosition)
-            val same = old == new
-            if (!same) {
-                AppLog.e(T.POSTS, "Not same: $old - $new")
+            val oldItem = oldListData?.getItem(oldItemPosition)
+            val newItem = newListData.getItem(newItemPosition)
+            if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+                return true
             }
-            return same
+            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
+                return true
+            }
+            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
+                return oldItem.data == newItem.data
+            }
+            return false
         }
     }
     DiffUtil.calculateDiff(callback)
