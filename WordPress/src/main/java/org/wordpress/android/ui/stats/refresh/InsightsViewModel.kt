@@ -27,7 +27,7 @@ class InsightsViewModel
     @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
     private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
-        private val todayStatsUseCase: TodayStatsUseCase
+    private val todayStatsUseCase: TodayStatsUseCase
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
