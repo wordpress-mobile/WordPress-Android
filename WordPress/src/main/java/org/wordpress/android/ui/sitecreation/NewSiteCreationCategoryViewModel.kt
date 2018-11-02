@@ -10,6 +10,8 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
+import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationCategoryViewModel.ListState.DONE
@@ -36,8 +38,8 @@ class NewSiteCreationCategoryViewModel
     /* Should be updated only within updateUIState() */
     private var listState: ListState = PREINIT
 
-    private val _categories: MutableLiveData<List<String>> = MutableLiveData()
-    val categories: LiveData<List<String>> = _categories
+    private val _categories: MutableLiveData<List<VerticalSegmentModel>> = MutableLiveData()
+    val categories: LiveData<List<VerticalSegmentModel>> = _categories
 
     private val _showProgress: MutableLiveData<Boolean> = MutableLiveData()
     val showProgress: LiveData<Boolean> = _showProgress
@@ -65,13 +67,12 @@ class NewSiteCreationCategoryViewModel
         }
     }
 
-    private fun onCategoriesFetched(event: OnSiteCategoriesFetchedDummy) {
-        // TODO change state - hide progress
-        if (event.error) {
+    private fun onCategoriesFetched(event: OnSegmentsFetched) {
+        if (event.isError) {
             // TODO handle error
             updateUIState(ERROR)
         } else {
-            _categories.value = event.data
+            _categories.value = event.segmentList
             updateUIState(DONE)
         }
     }
