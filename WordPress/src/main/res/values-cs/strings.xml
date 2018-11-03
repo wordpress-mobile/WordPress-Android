@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-08-30 10:57:13+0000
+Translation-Revision-Date: 2018-10-18 20:35:17+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -122,7 +122,7 @@ Language: cs_CZ
     <string name="plugin_install_site_ineligible_no_business_plan">Funkce pluginu vyžaduje business plán.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">Funkce pluginu vyžaduje vlastní doménu.</string>
     <string name="plugin_install_site_ineligible_default_error">Funkce pluginu není k dispozici pro tyto stránky.</string>
-    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Dokončujeme finální nastavení – téměř hotovo…</string>
+    <string name="plugin_install_first_plugin_almost_finished_dialog_message">Dokončujeme finální nastavení - téměř hotovo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instaluji plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalovat</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalace prvního pluginu na webu může trvat až 1 minutu. Během této doby nebudete moci provádět změny na webu.</string>
@@ -155,10 +155,10 @@ Language: cs_CZ
     <string name="site_settings_quota_space_unlimited">%1$s z neomezeného množství</string>
     <string name="preview_count">Náhled %d</string>
     <string name="add_count">Přidat %d</string>
-    <string name="site_creation_domain_selection_title">Vytvoření nových stránek – krok 4</string>
-    <string name="site_creation_site_details_title">Vytvoření nových stránek – krok 3</string>
-    <string name="site_creation_theme_selection_title">Vytvoření nových stránek – krok 2</string>
-    <string name="site_creation_category_title">Vytvoření nových stránek – krok 1</string>
+    <string name="site_creation_domain_selection_title">Vytvoření nových stránek - krok 4</string>
+    <string name="site_creation_site_details_title">Vytvoření nových stránek - krok 3</string>
+    <string name="site_creation_theme_selection_title">Vytvoření nových stránek - krok 2</string>
+    <string name="site_creation_category_title">Vytvoření nových stránek - krok 1</string>
     <string name="stats_followers_many_desc">%d fanoušků</string>
     <string name="stats_followers_one_desc">jeden fanoušek</string>
     <string name="stats_followers_zero_desc">žádný fanoušek</string>
@@ -380,7 +380,7 @@ Language: cs_CZ
     <string name="signup_epilogue_error_button_negative">Zpět</string>
     <string name="signup_epilogue_error_generic">Objevili se potíže při aktualizaci vašeho účtu. Můžete to zkusit znovu nebo vrátit změny.</string>
     <string name="signup_epilogue_error_avatar">Při nahrávání vašeho avataru došlo k potížím.</string>
-    <string name="signup_email_header">Chcete–li vytvořit svůj nový účet WordPress.com, zadejte svou emailovou adresu.</string>
+    <string name="signup_email_header">Chcete-li vytvořit svůj nový účet WordPress.com, zadejte svou emailovou adresu.</string>
     <string name="signup_email_error_generic">Při kontrole emailové adresy došlo k určitým potížím.</string>
     <string name="sign_up">Registrace na WordPress.com</string>
     <string name="enter_username_instead">Přihlásit se svým uživatelským jménem.</string>
@@ -399,9 +399,9 @@ Language: cs_CZ
     <string name="site_settings_like_header">To se mi líbí</string>
     <string name="my_site_add_new_site">Přidat novou stránku</string>
     <string name="my_site_create_new_site">Vytvořte nový web pro svůj podnik, časopis nebo osobní blog; nebo připojite existující stránky běžící na WordPress.</string>
-    <string name="notifications_jetpack_connection_setup_info">Chcete–li získat užitečná oznámení v zařízení z vašeho webu WordPress, musíte nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
+    <string name="notifications_jetpack_connection_setup_info">Chcete-li získat užitečná oznámení v zařízení z vašeho webu WordPress, musíte nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
     <string name="site_settings_lazy_load_images_summary">Zlepšete rychlost vašeho webu pouze načtením obrázků viditelných na obrazovce. Nové obrázky se načtou těsně předtím, než se projdou do zobrazení. To zabraňuje divákům, aby museli stahovat všechny snímky na stránce najednou, dokonce i ty, které nevidí.</string>
-    <string name="site_settings_lazy_load_images">Postupné načítání obrázků \"Lazy–load\"</string>
+    <string name="site_settings_lazy_load_images">Postupné načítání obrázků \"Lazy-load\"</string>
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack optimalizuje vaše obrázky a načítá je z nejbližších serverů. Pomocí naší globální sítě serverů pro doručování obsahu se zvýší rychlost načítání vašeho webu.</string>
     <string name="site_settings_serve_images_from_our_servers">Načítejte obrázky z našich serverů</string>
     <string name="site_settings_speed_up_your_site">Zrychlete svůj web</string>
@@ -440,7 +440,7 @@ Language: cs_CZ
     <string name="add_new_tag">Přidat nový štítek</string>
     <string name="tag_description_hint">Popis</string>
     <string name="tag_name_hint">Štítek</string>
-    <string name="site_settings_amp_summary">Tento web na WordPress.com podporuje Accelerated Mobile Pages – technologii od Google, která zrychluje čas načítání na mobilních zařízeních</string>
+    <string name="site_settings_amp_summary">Tento web na WordPress.com podporuje Accelerated Mobile Pages - technologii od Google, která zrychluje čas načítání na mobilních zařízeních</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_timezones_error">Nepodařilo se načíst časová pásma</string>
     <string name="site_settings_format_help">Více informací o formátování data a času</string>
@@ -493,10 +493,6 @@ Language: cs_CZ
     <string name="error_generic_error">Akci se nepodařilo vykonat</string>
     <string name="error_media_recover_page">Nepodařilo se nahrát média této stránky</string>
     <string name="error_media_recover_post">Nepodařilo se nahrát média tohoto příspěvku</string>
-    <string name="size_full">Původní velikost</string>
-    <string name="size_large">Velký obrázek</string>
-    <string name="size_medium">Střední velikost</string>
-    <string name="size_thumbnail">Náhled</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
     <string name="uploading_subtitle_media_only">Zbývá %1$d z %2$d souborů</string>
@@ -576,7 +572,7 @@ Language: cs_CZ
     <string name="notification_settings_item_your_sites_all_your_sites">Všechny moje weby</string>
     <string name="notification_settings_category_your_sites">Weby</string>
     <string name="notification_settings_master_off_message">Pokud vypnete Nastavení oznámení, zakáží se všechna oznámení z této aplikace. Můžete detailně nastavit, jaký typ upozornění chcete obdržet po zapnutí nastavení oznámení.</string>
-    <string name="notification_settings_master_off_title">Chcete–li dostávat oznámení na tomto zařízení, zapněte Nastavení oznámení.</string>
+    <string name="notification_settings_master_off_title">Chcete-li dostávat oznámení na tomto zařízení, zapněte Nastavení oznámení.</string>
     <string name="notification_settings_master_hint_off">Povolit oznámení</string>
     <string name="notification_settings_master_hint_on">Zakázat oznámení</string>
     <string name="notification_settings_master_status_off">Vypnuto</string>
@@ -600,8 +596,6 @@ Language: cs_CZ
     <string name="error_upload_page_media_param">Při nahrávání médií na tuto stránku došlo k chybě: %s.</string>
     <string name="error_upload_page_param">Při nahrávání této stránky došlo k chybě: %s.</string>
     <string name="async_promo_link">Jak to funguje?</string>
-    <string name="async_promo_description">Nyní můžete opustit editor a váš příspěvek uloží a zveřejní! Zkuste to!</string>
-    <string name="async_promo_title">Publikuj s důvěrou</string>
     <string name="editor_uploading_post">Příspěvek se nahrává</string>
     <string name="uploading_media">Nahrávám média…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Opravdu? Smazání tohoto příspěvku zruší také nahrávání médií.</string>
@@ -642,10 +636,10 @@ Language: cs_CZ
     <string name="open_mail">Otevřít email</string>
     <string name="next">Další</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí emailové adresy pro správu všech vašich stránek na WordPress.</string>
-    <string name="login_promo_text_jetpack">Spravujte své stránky s Jetpackem na cestách – budete mít WordPress všude sebou.</string>
-    <string name="login_promo_text_notifications">Vaše oznámení jsou vždy s vámi  – komentáře a liky uvidíte vždy v reálném čase.</string>
+    <string name="login_promo_text_jetpack">Spravujte své stránky s Jetpackem na cestách - budete mít WordPress všude sebou.</string>
+    <string name="login_promo_text_notifications">Vaše oznámení jsou vždy s vámi  - komentáře a liky uvidíte vždy v reálném čase.</string>
     <string name="login_promo_text_anytime">Spojte se s oblíbenými stránkami a zapojte se do rozhovoru kdekoli a kdykoliv.</string>
-    <string name="login_promo_text_realtime">Sledujte čtenáře z celého světa, kteří čtou a interagují s vaším webem – v reálném čase.</string>
+    <string name="login_promo_text_realtime">Sledujte čtenáře z celého světa, kteří čtou a interagují s vaším webem - v reálném čase.</string>
     <string name="login_promo_text_onthego">Publikujte z parku. Blogujte z autobusu. Komentujte z kavárny. WordPress máte všude sebou.</string>
     <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
@@ -703,7 +697,7 @@ Language: cs_CZ
     <string name="media_documents">Dokumenty</string>
     <string name="media_images">Obrázky</string>
     <string name="media_all">Vše</string>
-    <string name="photo_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete–li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s byl odepřen přístup k vašim fotografiím. Chcete-li to vyřešit, upravte oprávnění a zapněte %2$s.</string>
     <string name="format_bar_description_link">Odkaz</string>
     <string name="format_bar_description_media">Média</string>
     <string name="reader_view_comments">Zobrazit komentáře</string>
@@ -767,7 +761,7 @@ Language: cs_CZ
     <string name="media_downloading">Uložení média do tohoto zařízení</string>
     <string name="error_media_save">Nelze uložit médium</string>
     <string name="editor_draft_saved_locally">Koncept uložený v zařízení</string>
-    <string name="editor_draft_saved_online">Koncept byl uložen on–line</string>
+    <string name="editor_draft_saved_online">Koncept byl uložen on-line</string>
     <string name="editor_post_saved_locally">Příspěvek je uložený v zařízení </string>
     <string name="button_sync">Synchronizace</string>
     <string name="smart_toast_comments_long_press">Kliknutím a přidržením vyberte více poznámek</string>
@@ -832,7 +826,6 @@ Language: cs_CZ
     <string name="media_upload_error">Došlo k chybě nahrávání médií</string>
     <string name="retry">Znovu</string>
     <string name="confirm">Potvrdit</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Nelze se připojit. Došlo k chybě 403 při pokusu o přístup k vašemu XMLRPC endpoint. Aplikace potřebuje tuto aplikaci, aby mohla komunikovat s vaším webem. Obraťte se na svojí hostingovou společnost, abyste vyřešili tento problém.</string>
     <string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
     <string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
     <string name="visual_editor_disabled">Vizuální editor zakázán</string>
@@ -842,7 +835,7 @@ Language: cs_CZ
     <string name="pending_draft_one_generic">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_month">Nenechávejte ho čekat! \'%1$s\' čeká na zveřejnění.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' zůstává konceptem. Nezapomeňte ho publikovat!</string>
-    <string name="pending_draft_one_week_1">Váš koncept \'%1$s\' čeká na vás – publikujte ho!</string>
+    <string name="pending_draft_one_week_1">Váš koncept \'%1$s\' čeká na vás - publikujte ho!</string>
     <string name="pending_draft_one_day_2">Věděli jste, že \'%1$s\' je stále koncept? Publikujte ho!</string>
     <string name="pending_draft_one_day_1">Vaše včerejší koncepty \'%1$s\'. Nezapomeňte je publikovat!</string>
     <string name="reader_photo_by">Fotka od %s</string>
@@ -1008,7 +1001,7 @@ Language: cs_CZ
     <string name="comments_empty_list_filtered_trashed">Žádné komentáře v koši</string>
     <string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
     <string name="comments_empty_list_filtered_approved">Žádné schválené komentáře</string>
-    <string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML–RPC chybí na serveru.</string>
+    <string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
     <string name="alignment_center">Na střed</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Aktualita</string>
@@ -1020,7 +1013,7 @@ Language: cs_CZ
     <string name="post_format_chat">Chat</string>
     <string name="post_format_audio">Zvuk</string>
     <string name="post_format_aside">Poznámka</string>
-    <string name="notif_events">Informace o WordPress.com kurzech a akcích (on–line a osobně).</string>
+    <string name="notif_events">Informace o WordPress.com kurzech a akcích (on-line a osobně).</string>
     <string name="notif_surveys">Příležitosti k účasti na WordPress.com výzkumech a průzkumech.</string>
     <string name="notif_tips">Tipy pro získání maxima z WordPress.com.</string>
     <string name="notif_community">Komunita</string>
@@ -1052,7 +1045,7 @@ Language: cs_CZ
     <string name="primary_site">Hlavní web</string>
     <string name="pending_email_change_snackbar">Kliknutím na ověřovací odkaz v emailu zaslaném na %1$s musíte potvrdit tuto adresu</string>
     <string name="editor_toast_uploading_please_wait">Právě teď se nahrávají média. Počkejte, dokud se to nedokončí.</string>
-    <string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány – zobrazující se starší komentáře</string>
+    <string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány - zobrazující se starší komentáře</string>
     <string name="post_settings_set_featured_image">Nastavit náhledový obrázek</string>
     <string name="post_settings_featured_image">Náhledový obrázek</string>
     <string name="visual_editor_enabled">Vizuální editor povolen</string>
@@ -1104,8 +1097,8 @@ Language: cs_CZ
     <string name="site_settings_paging_dialog_description">Rozdělit vlákna komentářů do více stránek.</string>
     <string name="site_settings_paging_dialog_header">Komentářů na stránku</string>
     <string name="site_settings_close_after_dialog_title">Uzavřít komentování</string>
-    <string name="site_settings_blacklist_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e–mailu, nebo IP, bude označen jako spam. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
-    <string name="site_settings_hold_for_moderation_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e–mailu, nebo IP, tento komentář bude pozdržen a moderován. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
+    <string name="site_settings_blacklist_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, bude označen jako spam. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
+    <string name="site_settings_hold_for_moderation_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, tento komentář bude pozdržen a moderován. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Zadejte slovo nebo frázi</string>
     <string name="site_settings_list_editor_no_items_text">Žádné položky</string>
     <string name="site_settings_learn_more_caption">Tato nastavení můžete změnit pro jednotlivé příspěvky.</string>
@@ -1124,7 +1117,7 @@ Language: cs_CZ
     <string name="site_settings_multiple_links_hint">Ignorovat limit množství odkazů pro známé uživatele</string>
     <string name="site_settings_whitelist_hint">Autor komentáře musí mít dříve schválený komentář</string>
     <string name="site_settings_user_account_required_hint">Pro přidávání komentářů, musí být uživatelé registrovaní a přihlášeni</string>
-    <string name="site_settings_identity_required_hint">Autor komentáře musí vyplnit své jméno a e–mail</string>
+    <string name="site_settings_identity_required_hint">Autor komentáře musí vyplnit své jméno a e-mail</string>
     <string name="site_settings_paging_hint">Zobrazovat komentáře v bloku o specifické velikosti</string>
     <string name="site_settings_threading_hint">Povolit neslušné komentáře do určité hloubky</string>
     <string name="site_settings_sort_by_hint">Určuje v jakém pořadí jsou komentáře zobrazovány</string>
@@ -1293,7 +1286,7 @@ Language: cs_CZ
     <string name="stats_insights_popular">Nejoblíbenější den a hodina</string>
     <string name="stats_insights_all_time">Všechny příspěvky, zobrazení a návštěvníci</string>
     <string name="stats_insights">Přehledy</string>
-    <string name="stats_sign_in_jetpack_different_com_account">Chcete–li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
+    <string name="stats_sign_in_jetpack_different_com_account">Chcete-li zobrazit statistiky, přihlaste se do účtu WordPress.com, který jste použili pro připojení Jetpack.</string>
     <string name="stats_other_recent_stats_moved_label">Hledáte vaše nedávné statistiky? Přesunuli jsme je na stránku statistiky.</string>
     <string name="me_disconnect_from_wordpress_com">Odpojit od WordPress.com</string>
     <string name="me_btn_login_logout">Přihlášení/Odhlášení</string>
@@ -1335,9 +1328,9 @@ Language: cs_CZ
     <string name="stats_entry_search_terms">Hledaný výraz</string>
     <string name="stats_empty_search_terms">Nebyly zaznamenány žádné hledané výrazy</string>
     <string name="stats_empty_search_terms_desc">Zjistěte, jaká klíčová slova zvyšují návštěvnost vašeho webu.</string>
-    <string name="stats_followers_total_wpcom_paged">WordPress.com odběratelé %1$d – %2$d z %3$s</string>
+    <string name="stats_followers_total_wpcom_paged">WordPress.com odběratelé %1$d - %2$d z %3$s</string>
     <string name="stats_search_terms_unknown_search_terms">Neznámé hledané výrazy</string>
-    <string name="stats_followers_total_email_paged">Zobrazuje se %1$d – %2$d z %3$s odberatelů</string>
+    <string name="stats_followers_total_email_paged">Zobrazuje se %1$d - %2$d z %3$s odberatelů</string>
     <string name="error_notification_open">Oznámení se nepodařilo otevřít</string>
     <string name="publisher">Vydavatel:</string>
     <string name="reader_empty_posts_request_failed">Nedaří se načíst příspěvky</string>
@@ -1648,6 +1641,7 @@ Language: cs_CZ
     <string name="today">Dnes</string>
     <string name="quickpress_add_error">Název zkráceného odkazu nemůže být prázdný</string>
     <string name="quickpress_window_title">Vyberte web pro zkrácený odkaz QuickPress</string>
+    <string name="pages_private">Soukromé</string>
     <string name="categories">Rubriky</string>
     <string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>
     <string name="title">Název</string>

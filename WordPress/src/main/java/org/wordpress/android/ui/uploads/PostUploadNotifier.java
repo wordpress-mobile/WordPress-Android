@@ -511,7 +511,6 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
         return notificationIntent;
     }
 

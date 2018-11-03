@@ -1,20 +1,28 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.Adapter
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.ItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter.BlockItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TextViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.values
 
 class BlockListAdapter : Adapter<BlockItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
@@ -24,10 +32,14 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockItemViewHolder {
-        return when (BlockListItem.Type.values()[viewType]) {
-            BlockListItem.Type.TITLE -> TitleViewHolder(parent)
-            BlockListItem.Type.ITEM -> ItemViewHolder(parent)
-            BlockListItem.Type.EMPTY -> EmptyViewHolder(parent)
+        return when (values()[viewType]) {
+            TITLE -> TitleViewHolder(parent)
+            ITEM -> ItemViewHolder(parent)
+            EMPTY -> EmptyViewHolder(parent)
+            TEXT -> TextViewHolder(parent)
+            COLUMNS -> ColumnsViewHolder(parent)
+            LINK -> LinkViewHolder(parent)
+            BAR_CHART -> BarChartViewHolder(parent)
         }
     }
 
@@ -42,38 +54,10 @@ class BlockListAdapter : Adapter<BlockItemViewHolder>() {
         when (holder) {
             is TitleViewHolder -> holder.bind(item as Title)
             is ItemViewHolder -> holder.bind(item as Item)
+            is TextViewHolder -> holder.bind(item as Text)
+            is ColumnsViewHolder -> holder.bind(item as Columns)
+            is LinkViewHolder -> holder.bind(item as Link)
+            is BarChartViewHolder -> holder.bind(item as BarChartItem)
         }
-    }
-
-    sealed class BlockItemViewHolder(
-        parent: ViewGroup,
-        @LayoutRes layout: Int
-    ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-        class TitleViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_title) {
-            private val text = itemView.findViewById<TextView>(R.id.text)
-            fun bind(item: Title) {
-                text.setText(item.text)
-            }
-        }
-
-        class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_item) {
-            private val icon = itemView.findViewById<ImageView>(R.id.icon)
-            private val text = itemView.findViewById<TextView>(R.id.text)
-            private val value = itemView.findViewById<TextView>(R.id.value)
-            private val divider = itemView.findViewById<View>(R.id.divider)
-
-            fun bind(item: Item) {
-                icon.setImageResource(item.icon)
-                text.setText(item.text)
-                value.text = item.value
-                divider.visibility = if (item.showDivider) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
-            }
-        }
-
-        class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(parent, R.layout.stats_block_empty_item)
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                     android:layout_gravity="center_vertical"
                     android:padding="@dimen/margin_extra_small"
                     android:contentDescription="@null"
-                    app:srcCompat="@drawable/ic_reply_grey_min_24dp" />
+                    android:src="@drawable/ic_reply_grey_min_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"

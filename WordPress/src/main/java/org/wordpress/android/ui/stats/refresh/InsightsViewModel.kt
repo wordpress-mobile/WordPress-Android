@@ -25,19 +25,21 @@ class InsightsViewModel
 @Inject constructor(
     private val statsStore: StatsStore,
     @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
-    private val insightsAllTimeViewModel: InsightsAllTimeViewModel
+    private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
+    private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
+    private val todayStatsUseCase: TodayStatsUseCase
 ) {
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
-            LATEST_POST_SUMMARY,
+            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
+            TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
             COMMENTS,
             FOLLOWERS,
-            TODAY_STATS,
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }
@@ -45,8 +47,14 @@ class InsightsViewModel
 
     suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false): List<InsightsItem> =
             withContext(scope.coroutineContext) {
-                return@withContext statsStore.getInsights()
+                val items = statsStore.getInsights()
                         .map { async { load(site, it, forced) } }
                         .map { it.await() }
+
+                if (items.isEmpty()) {
+                    return@withContext listOf(Empty())
+                } else {
+                    return@withContext items
+                }
             }
 }
