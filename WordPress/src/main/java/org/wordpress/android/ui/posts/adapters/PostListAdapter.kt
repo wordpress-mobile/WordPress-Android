@@ -33,12 +33,12 @@ import org.wordpress.android.ui.posts.PostAdapterItemPostData
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
+import org.wordpress.android.ui.posts.PostListData
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostListData
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject

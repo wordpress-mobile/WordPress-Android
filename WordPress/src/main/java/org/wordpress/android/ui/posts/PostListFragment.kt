@@ -33,14 +33,12 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-import org.wordpress.android.viewmodel.posts.PostListData
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.PERMISSION_ERROR
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.REFRESH_ERROR
-import org.wordpress.android.viewmodel.posts.PostListUserAction
 import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject

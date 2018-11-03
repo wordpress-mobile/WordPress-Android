@@ -25,6 +25,25 @@ data class PostAdapterItemPostData(
     val canShowStats: Boolean,
     val canPublishPost: Boolean,
     val canRetryUpload: Boolean,
+    val featuredImageId: Long,
     val featuredImageUrl: String?,
     val uploadStatus: PostAdapterItemUploadStatus
-)
+) {
+    fun new(featuredImageUrl: String?): PostAdapterItemPostData =
+            PostAdapterItemPostData(
+                    localPostId,
+                    remotePostId,
+                    title,
+                    excerpt,
+                    isLocalDraft,
+                    date,
+                    postStatus,
+                    isLocallyChanged,
+                    canShowStats,
+                    canPublishPost,
+                    canRetryUpload,
+                    featuredImageId,
+                    featuredImageUrl,
+                    uploadStatus
+            )
+}
