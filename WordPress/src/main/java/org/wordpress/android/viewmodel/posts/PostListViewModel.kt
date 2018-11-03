@@ -211,6 +211,29 @@ class PostListViewModel @Inject constructor(
         listManager?.refresh()
     }
 
+    fun handleEditPostResult(data: Intent?) {
+        if (data == null) {
+            return
+        }
+        val localPostId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        if (localPostId == 0) {
+            return
+        }
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post == null) {
+            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
+                // TODO: This really shouldn't happen, but shouldn't we refresh the post ourselves when it does?
+                _toastMessage.postValue(ToastMessageHolder(R.string.post_not_found, Duration.LONG))
+            }
+        } else {
+            _postUploadAction.postValue(EditPostResult(site, post, data) { publishPost(post) })
+        }
+    }
+
+    fun newPost() {
+        _userAction.postValue(NewPost(site))
+    }
+
     private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPost(site, post)
@@ -260,29 +283,6 @@ class PostListViewModel @Inject constructor(
         _postUploadAction.postValue(PublishPost(dispatcher, site, post))
     }
 
-    fun handleEditPostResult(data: Intent?) {
-        if (data == null) {
-            return
-        }
-        val localPostId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
-        if (localPostId == 0) {
-            return
-        }
-        val post = postStore.getPostByLocalPostId(localPostId)
-        if (post == null) {
-            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
-                // TODO: This really shouldn't happen, but shouldn't we refresh the post ourselves when it does?
-                _toastMessage.postValue(ToastMessageHolder(R.string.post_not_found, Duration.LONG))
-            }
-        } else {
-            _postUploadAction.postValue(EditPostResult(site, post, data) { publishPost(post) })
-        }
-    }
-
-    fun newPost() {
-        _userAction.postValue(NewPost(site))
-    }
-
     private fun editPost(site: SiteModel, post: PostModel) {
         // track event
         val properties = HashMap<String, Any>()
@@ -317,21 +317,13 @@ class PostListViewModel @Inject constructor(
         _snackbarAction.postValue(snackbarHolder)
     }
 
-    fun onEventMainThread(event: UploadService.UploadErrorEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.post != null) {
-            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, true, event.errorMessage))
-        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
-        }
+    private fun updatePostListData() {
+        val data = PostListData(items, listManager, listState, site)
+        _postListData.postValue(data)
+        updateEmptyViewState(data)
     }
 
-    fun onEventMainThread(event: UploadService.UploadMediaSuccessEvent) {
-        EventBus.getDefault().removeStickyEvent(event)
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage))
-        }
-    }
+    // FluxC Events
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @Suppress("unused")
@@ -373,81 +365,6 @@ class PostListViewModel @Inject constructor(
         updatePostListData()
     }
 
-    private fun updatePostListData() {
-        val data = PostListData(items, listManager, listState, site)
-        _postListData.postValue(data)
-        updateEmptyViewState(data)
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPostUploaded(event: OnPostUploaded) {
-        if (event.post != null && event.post.localSiteId == site.id) {
-            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
-            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
-            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
-            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
-            // next refresh and pass it to `ListStore` so it'll be included in the list.
-            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
-            // as the current `ListManager` might not have been updated yet since it's a bg action.
-            uploadedPostRemoteIds.add(event.post.remotePostId)
-            updateUploadStatus(event.post)
-            // TODO: might not be the best way to start a refresh
-            refreshList()
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onMediaUploaded(event: OnMediaUploaded) {
-        if (event.isError || event.canceled) {
-            return
-        }
-        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
-            // Not interested in media not attached to posts or not belonging to the current site
-            return
-        }
-        featuredImageMap[event.media.mediaId] = event.media.url
-        updateItemsAndUI()
-    }
-
-    /**
-     * Upload started, reload so correct status on uploading post appears
-     */
-    fun onEventMainThread(event: PostEvents.PostUploadStarted) {
-        if (site.id == event.post.localSiteId) {
-            updateUploadStatus(event.post)
-            updateItemsAndUI()
-        }
-    }
-
-    /**
-     * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
-     */
-    fun onEventMainThread(event: PostEvents.PostUploadCanceled) {
-        if (site.id == event.post.localSiteId) {
-            updateUploadStatus(event.post)
-            updateItemsAndUI()
-        }
-    }
-
-    fun onEventMainThread(event: VideoOptimizer.ProgressEvent) {
-        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            updateUploadStatus(post)
-            updateItemsAndUI()
-        }
-    }
-
-    fun onEventMainThread(event: UploadService.UploadMediaRetryEvent) {
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            // if there' a Post to which the retried media belongs, clear their status
-            val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
-            // now that we know which Posts to refresh, let's do it
-            for (post in postsToRefresh) {
-                updateUploadStatus(post)
-            }
-            updateItemsAndUI()
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
         when (event.causeOfChange) {
@@ -481,6 +398,108 @@ class PostListViewModel @Inject constructor(
             updateItemsAndUI()
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPostUploaded(event: OnPostUploaded) {
+        if (event.post != null && event.post.localSiteId == site.id) {
+            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
+            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
+            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
+            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
+            // next refresh and pass it to `ListStore` so it'll be included in the list.
+            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
+            // as the current `ListManager` might not have been updated yet since it's a bg action.
+            uploadedPostRemoteIds.add(event.post.remotePostId)
+            updateUploadStatus(event.post)
+            // TODO: might not be the best way to start a refresh
+            refreshList()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onMediaUploaded(event: OnMediaUploaded) {
+        if (event.isError || event.canceled) {
+            return
+        }
+        if (event.media == null || event.media.localPostId == 0 || site.id != event.media.localSiteId) {
+            // Not interested in media not attached to posts or not belonging to the current site
+            return
+        }
+        featuredImageMap[event.media.mediaId] = event.media.url
+        updateItemsAndUI()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onPostUploadStarted(event: PostEvents.PostUploadStarted) {
+        if (site.id == event.post.localSiteId) {
+            updateUploadStatus(event.post)
+            updateItemsAndUI()
+        }
+    }
+
+    // EventBus
+
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (event.post != null) {
+            _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, true, event.errorMessage))
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, true, event.errorMessage))
+        }
+    }
+
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: UploadService.UploadMediaSuccessEvent) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            _postUploadAction.postValue(MediaUploadedSnackbar(site, event.mediaModelList, false, event.successMessage))
+        }
+    }
+    /**
+     * Upload started, reload so correct status on uploading post appears
+     */
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
+        if (site.id == event.post.localSiteId) {
+            updateUploadStatus(event.post)
+            updateItemsAndUI()
+        }
+    }
+
+    /**
+     * Upload cancelled (probably due to failed media), reload so correct status on uploading post appears
+     */
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
+        if (site.id == event.post.localSiteId) {
+            updateUploadStatus(event.post)
+            updateItemsAndUI()
+        }
+    }
+
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
+        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
+            updateUploadStatus(post)
+            updateItemsAndUI()
+        }
+    }
+
+    @Suppress("unused")
+    fun onEventBackgroundThread(event: UploadService.UploadMediaRetryEvent) {
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+            // if there' a Post to which the retried media belongs, clear their status
+            val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
+            // now that we know which Posts to refresh, let's do it
+            for (post in postsToRefresh) {
+                updateUploadStatus(post)
+            }
+            updateItemsAndUI()
+        }
+    }
+
+    // ListManager
 
     /**
      * A helper function to load the current [ListManager] from [ListStore].
