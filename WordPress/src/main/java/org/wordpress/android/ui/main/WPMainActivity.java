@@ -137,6 +137,7 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_READER = "show_reader";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
+    public static final String ARG_DEEP_LINK = "deep_link";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -293,6 +294,8 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
+        } else if (getIntent().hasExtra(ARG_DEEP_LINK)) {
+            onNewPostButtonClicked();
         }
     }
 
