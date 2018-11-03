@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -178,6 +180,20 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewNotificationsInNewStack(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void viewReaderInNewStack(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
     public static void viewSavedPostsListInReader(Context context) {
         // Easiest way to show reader with saved posts filter is to update the "last used filter" preference and make
         // WPMainActivity restart itself with Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -202,6 +218,12 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+    }
+
+    public static void viewBlogStatsFromDeepLink(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+//        startActivityWithParentStack(context, intent);
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
@@ -371,6 +393,13 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         intent.putExtra(WordPress.SITE, page.getSite());
         fragment.startActivity(intent);
+    }
+
+    public static void openEditor(Context context) {
+        Intent intent = new Intent(context, WPMainActivity.class);
+        intent.putExtra(WPMainActivity.ARG_DEEP_LINK, WPMainActivity.ARG_EDITOR);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     public static void addNewPostForResult(Activity activity, SiteModel site, boolean isPromo) {

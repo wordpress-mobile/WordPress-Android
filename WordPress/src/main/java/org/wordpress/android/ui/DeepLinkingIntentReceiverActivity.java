@@ -11,7 +11,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -45,6 +47,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mPostId;
 
     @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -89,18 +92,20 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private void handleAppBanner(String host) {
+        long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
+        SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
         switch (host) {
             case DEEP_LINK_HOST_NOTIFICATIONS:
-                ActivityLauncher.viewNotifications(getContext());
+                ActivityLauncher.viewNotificationsInNewStack(getContext());
                 break;
             case DEEP_LINK_HOST_POST:
-
+                ActivityLauncher.openEditor(getContext());
                 break;
             case DEEP_LINK_HOST_STATS:
-
+                ActivityLauncher.viewBlogStatsFromDeepLink(getContext(), siteModel);
                 break;
             case DEEP_LINK_HOST_READ:
-
+                ActivityLauncher.viewReaderInNewStack(getContext());
                 break;
         }
     }
