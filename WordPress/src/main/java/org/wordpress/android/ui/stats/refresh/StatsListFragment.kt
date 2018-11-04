@@ -41,6 +41,10 @@ class StatsListFragment : Fragment() {
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.stats_list_fragment, container, false)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
@@ -61,10 +65,6 @@ class StatsListFragment : Fragment() {
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 5)))
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
