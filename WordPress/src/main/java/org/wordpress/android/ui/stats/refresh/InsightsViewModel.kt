@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVI
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.DEFAULT_SCOPE
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
