@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVI
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
-import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.UI_SCOPE
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -28,7 +28,7 @@ import javax.inject.Singleton
 class InsightsViewModel
 @Inject constructor(
     private val statsStore: StatsStore,
-    @Named(DEFAULT_SCOPE) private val scope: CoroutineScope,
+    @Named(UI_SCOPE) private val scope: CoroutineScope,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
     private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
     private val todayStatsUseCase: TodayStatsUseCase
