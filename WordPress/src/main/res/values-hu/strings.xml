@@ -16,7 +16,7 @@ Language: hu
     <string name="media_fetching">Média betöltése…</string>
     <string name="comments_fetching">Hozzászólások betöltése…</string>
     <string name="posts_fetching">Bejegyzések betöltése…</string>
-    <string name="stats_followers_email_selector">E–mail</string>
+    <string name="stats_followers_email_selector">E-mail</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_seconds_ago">másodpercekkel ezelőtt</string>
     <string name="stats_followers_a_minute_ago">egy perccel ezelőtt</string>
@@ -61,7 +61,7 @@ Language: hu
     <string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
     <string name="notifications_empty_list">Nincsenek értesítések</string>
     <string name="stats_bar_graph_empty">Nincsenek elérhető statisztikák</string>
-    <string name="email_invalid">Adjunk meg egy valós e–mail címet</string>
+    <string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="preview_post">Bejegyzés előnézet</string>
@@ -127,7 +127,7 @@ Language: hu
     <string name="caption">Felirat (nem kötelező)</string>
     <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
-    <string name="blogusername">honlap–felhasználó</string>
+    <string name="blogusername">honlap-felhasználó</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Szolgáltatási feltételek</string>
     <string name="version">verzió</string>
@@ -154,7 +154,7 @@ Language: hu
     <string name="save">Mentés</string>
     <string name="add">Hozzáad</string>
     <string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
-    <string name="on"> –</string>
+    <string name="on"> -</string>
     <string name="reply">Válasz</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>

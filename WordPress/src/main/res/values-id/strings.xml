@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-20 08:54:07+0000
+Translation-Revision-Date: 2018-10-18 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Anda sekarang dapat menutup penyunting dan halaman akan disimpan serta dijadwalkan di latar belakang! Cobalah!</string>
+    <string name="async_promo_description_publish_post">Anda sekarang dapat menutup penyunting dan pos akan disimpan serta dipublikasikan secara otomatis! Cobalah!</string>
+    <string name="async_promo_description_publish_page">Anda sekarang dapat menutup penyunting dan halaman akan disimpan serta dipublikasikan di latar belakang! Cobalah!</string>
+    <string name="image_size_full_class">ukuran-penuh</string>
+    <string name="image_size_large_class">ukuran-besar</string>
+    <string name="image_size_medium_class">ukuran-sedang</string>
+    <string name="image_size_thumbnail_class">ukuran-gambar-mini</string>
+    <string name="image_size_full_label">Ukuran Penuh</string>
+    <string name="image_size_large_label">Besar</string>
+    <string name="image_size_medium_label">Sedang</string>
+    <string name="image_size_thumbnail_label">Gambar Mini</string>
+    <string name="menu_history">Riwayat</string>
+    <string name="async_promo_schedule_now">Jadwalkan sekarang</string>
+    <string name="async_promo_title_schedule">Jadwalkan Tanpa Ragu</string>
+    <string name="pages_pending">Menunggu peninjauan</string>
+    <string name="pages_open_page_error">Halaman yang dipilih tidak tersedia</string>
     <string name="news_card_announcement_action_sample_announcement">[Baca selengkapnya]</string>
     <string name="news_card_announcement_content_sample_announcement">[Tidak ada waktu untuk membaca sekarang? Tidak masalah: simpan pos untuk dibaca nanti.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Tersedia fitur baru]</string>
@@ -61,7 +77,7 @@ Language: id
     <string name="quick_start_dialog_publish_post_message_short">Ketuk %1$s Buat Pos %2$s untuk membuat pos baru</string>
     <string name="quick_start_dialog_publish_post_message">Sekarang waktunya! Buat konsep dan publikasikan pos pertama Anda.</string>
     <string name="quick_start_dialog_need_help_title">Perlu sedikit bantuan untuk memulai?</string>
-    <string name="quick_start_dialog_need_help_message">Anda akan dipandu menggunakan daftar periksa Mulai Cepat untuk dasar–dasar menyiapkan situs web baru.</string>
+    <string name="quick_start_dialog_need_help_message">Anda akan dipandu menggunakan daftar periksa Mulai Cepat untuk dasar-dasar menyiapkan situs web baru.</string>
     <string name="quick_start_dialog_need_help_button_positive">Ya</string>
     <string name="quick_start_dialog_need_help_button_neutral">Tidak pernah</string>
     <string name="quick_start_dialog_need_help_button_negative">Tidak</string>
@@ -233,7 +249,7 @@ Language: id
     <string name="notification_settings_item_your_sites_all_followed_sites">Semua Situs yang Saya Ikuti</string>
     <string name="notification_settings_category_followed_sites">Situs yang Diikuti</string>
     <string name="content_description_person_reading_device_notification">Orang membaca perangkat saat ada pemberitahuan</string>
-    <string name="content_description_people_looking_charts">Orang–orang melihat grafik dan bagan</string>
+    <string name="content_description_people_looking_charts">Orang-orang melihat grafik dan bagan</string>
     <string name="comment_title">%s pada %s</string>
     <string name="dialog_confirm_delete_permanently_page">Anda yakin ingin menghapus halaman ini secara permanen?</string>
     <string name="dialog_confirm_delete_permanently_post">Anda yakin ingin menghapus pos ini secara permanen?</string>
@@ -416,7 +432,7 @@ Language: id
     <string name="site_creation_title_hint">Judul situs</string>
     <string name="site_creation_domain_finish_button">Buat situs</string>
     <string name="site_creation_domain_keywords_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
-    <string name="site_creation_label_domain_selection">Pilih alamat \"yourname.wordpress.com\" yang tersedia agar orang–orang dapat menemukan Anda di web.</string>
+    <string name="site_creation_label_domain_selection">Pilih alamat \"yourname.wordpress.com\" yang tersedia agar orang-orang dapat menemukan Anda di web.</string>
     <string name="site_creation_label_domain_selection_title">Langkah 4 dari 4</string>
     <string name="site_creation_label_site_details">Ceritakan lebih banyak tentang apa yang sedang Anda buat. Apa judul dan slogannya?</string>
     <string name="site_creation_label_site_details_title">Langkah 3 dari 4</string>
@@ -489,7 +505,7 @@ Language: id
     <string name="my_site_create_new_site">Buat situs baru untuk bisnis, majalah, atau blog personal Anda; atau hubungkan akun WordPress yang sudah ada.</string>
     <string name="notifications_jetpack_connection_setup_info">Untuk mendapatkan pemberitahuan yang bermanfaat di perangkat dari situs WordPress, Anda perlu menginstal plugin Jetpack. Apakah Anda ingin menyiapkan Jetpack?</string>
     <string name="site_settings_lazy_load_images_summary">Menyempurnakan kecepatan situs Anda dengan hanya memuat gambar yang terlihat pada layar. Gambar baru akan dimuat sebelum mereka menggulir ke tampilan Dengan fitur ini, pengunjung tidak perlu mengunduh semua gambar pada halaman sekaligus, bahkan gambar yang tidak dapat mereka lihat.</string>
-    <string name="site_settings_lazy_load_images">\"Lazy–load” gambar</string>
+    <string name="site_settings_lazy_load_images">\"Lazy-load” gambar</string>
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack akan mengoptimalkan gambar Anda dan menyajikannya dari lokasi server yang terdekat dengan pengunjung situs. Dengan menggunakan jaringan pengiriman konten global, kami akan meningkatkan kecepatan pemuatan situs Anda.</string>
     <string name="site_settings_serve_images_from_our_servers">Sajikan gambar dari server kami</string>
     <string name="site_settings_speed_up_your_site">Tingkatkan kecepatan situs Anda</string>
@@ -564,10 +580,6 @@ Language: id
     <string name="error_generic_error">Tidak dapat melakukan operasi</string>
     <string name="error_media_recover_page">Tidak dapat mengunggah media halaman ini</string>
     <string name="error_media_recover_post">Tidak dapat mengunggah media pos ini</string>
-    <string name="size_full">Ukuran Penuh</string>
-    <string name="size_large">Besar</string>
-    <string name="size_medium">Sedang</string>
-    <string name="size_thumbnail">Miniatur</string>
     <string name="image_size">Ukuran</string>
     <string name="uploading_subtitle_media_only_one">1 file tersisa</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d file tersisa</string>
@@ -671,8 +683,6 @@ Language: id
     <string name="error_upload_page_media_param">Terjadi error saat mengunggah media dalam halaman ini: %s.</string>
     <string name="error_upload_page_param">Terjadi error saat mengunggah halaman ini: %s.</string>
     <string name="async_promo_link">Bagaimana cara kerjanya?</string>
-    <string name="async_promo_description">Anda sekarang dapat meninggalkan halaman penyunting dan pos Anda akan disimpan dan dipublikasi dari balik layar! Cobalah!</string>
-    <string name="async_promo_title">Publikasikan dengan Percaya Diri</string>
     <string name="editor_uploading_post">Pos Anda sedang diunggah</string>
     <string name="uploading_media">Mengunggah media…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Apakah Anda yakin? Menghapus pos ini juga akan membatalkan unggahan media.</string>
@@ -716,7 +726,7 @@ Language: id
     <string name="login_promo_text_jetpack">Kelola situs Anda yang didukung oleh Jetpack di mana saja — WordPress selalu ada di saku Anda.</string>
     <string name="login_promo_text_notifications">Bawa pemberitahuan ke mana pun Anda pergi — lihat komentar dan suka seketika.</string>
     <string name="login_promo_text_anytime">Dapatkan kabar terbaru dari situs favorit Anda dan bergabung dalam percakapan di mana pun, kapan pun.</string>
-    <string name="login_promo_text_realtime">Lihat pembaca dari seluruh dunia membaca dan berinteraksi dengan situs Anda, secara real–time.</string>
+    <string name="login_promo_text_realtime">Lihat pembaca dari seluruh dunia membaca dan berinteraksi dengan situs Anda, secara real-time.</string>
     <string name="login_promo_text_onthego">Publikasikan dari taman. Tulis blog dari bus. Beri komentar dari kafe. WordPress ada di mana pun Anda berada.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
     <string name="image_optimization_promo_title">Aktifkan pengoptimalan gambar?</string>
@@ -787,7 +797,7 @@ Language: id
     <string name="video_quality">Kualitas Video</string>
     <string name="button_edit_permissions">Edit izin</string>
     <string name="photo_picker_soft_ask_label">%s memerlukan izin untuk mengakses foto Anda</string>
-    <string name="sharing_twitter_message">Hal akan disertakan di tweet ketika orang–orang membagikannya menggunakan tombol Twitter</string>
+    <string name="sharing_twitter_message">Hal akan disertakan di tweet ketika orang-orang membagikannya menggunakan tombol Twitter</string>
     <string name="sharing_label_message">Ubah teks pada label tombol berbagi. Teks ini tidak akan muncul hingga Anda menambahkan setidaknya satu tombol berbagi.</string>
     <string name="cannot_connect_account_error">Sambungan %s tidak dapat dilakukan karena tidak ada akun yang dipilih.</string>
     <string name="sharing_comment_likes_description">Izinkan semua komentar Disukai oleh Anda dan pembaca Anda</string>
@@ -826,7 +836,7 @@ Language: id
     <string name="tabbar_accessibility_label_my_site">Situs Saya. Lihat situs dan kelola, termasuk statusnya.</string>
     <string name="my_site_btn_sharing">Berbagi</string>
     <string name="button_not_now">Jangan sekarang</string>
-    <string name="media_error_internal_server_error">Terjadi error saat mengunggah. Coba aktifkan Optimalkan Gambar di Situs–>Pengaturan</string>
+    <string name="media_error_internal_server_error">Terjadi error saat mengunggah. Coba aktifkan Optimalkan Gambar di Situs->Pengaturan</string>
     <string name="media_downloading">Menyimpan media ke perangkat ini</string>
     <string name="error_media_save">Tidak dapat menyimpan media</string>
     <string name="editor_draft_saved_locally">Konsep disimpan di perangkat</string>
@@ -851,7 +861,7 @@ Language: id
     <string name="toast_saving_post_as_draft">Menyimpan pos sebagai konsep</string>
     <string name="photo_picker_capture_video">Rekam video</string>
     <string name="photo_picker_capture_photo">Ambil foto</string>
-    <string name="delete_site_warning_subtitle">Hati–hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
+    <string name="delete_site_warning_subtitle">Hati-hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
     <string name="delete_site_warning">Semua pos, gambar, dan data Anda akan dihapus. Dan alamat situs ini (%s) akan hilang.</string>
     <string name="delete_site_warning_title">Hapus situs?</string>
     <string name="start_over_email_intent_error">Tidak dapat mengirim email</string>
@@ -891,7 +901,6 @@ Language: id
     <string name="media_upload_error">Terjadi error saat mengunggah media</string>
     <string name="retry">Coba lagi</string>
     <string name="confirm">Konfirmasi</string>
-    <string name="xmlrpc_endpoint_forbidden_error">Tidak dapat terhubung. Kami menerima error 403 saat mencoba mengakses\n titik akhir XMLRPC situs Anda. Aplikasi ini memerlukannya agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi\n masalah ini.</string>
     <string name="xmlrpc_post_blocked_error">Tidak dapat terhubung. Host Anda memblokir permintaan POST yang dibutuhkan aplikasi\n agar dapat berkomunikasi dengan situs Anda. Hubungi host Anda untuk mengatasi masalah ini.</string>
     <string name="reader_hint_search_followed_sites">Cari di situs yang diikuti</string>
     <string name="visual_editor_disabled">Editor Visual nonaktif</string>
@@ -901,7 +910,7 @@ Language: id
     <string name="pending_draft_one_generic">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' masih berupa konsep. Ingatlah untuk menerbitkannya!</string>
-    <string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda – pastikan untuk menerbitkannya!</string>
+    <string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda - pastikan untuk menerbitkannya!</string>
     <string name="pending_draft_one_day_2">Tahukah Anda bahwa \'%1$s\' masih berupa konsep? Terbitkan saja!</string>
     <string name="pending_draft_one_day_1">Anda membuat konsep \'%1$s\' kemarin. Jangan lupa menerbitkannya!</string>
     <string name="reader_photo_by">Foto oleh %s</string>
@@ -997,7 +1006,7 @@ Language: id
     <string name="invite_message_title">Pesan Kustom</string>
     <string name="invite">Undang</string>
     <string name="invite_names_title">Nama pengguna atau Email</string>
-    <string name="invite_people">Undang Orang–orang</string>
+    <string name="invite_people">Undang Orang-orang</string>
     <string name="my_site_header_external">Eksternal</string>
     <string name="send_link">Kirim tautan</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
@@ -1011,7 +1020,7 @@ Language: id
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
     <string name="role">Peran</string>
     <string name="people">Orang</string>
-    <string name="reader_empty_posts_in_custom_list">Situs dalam daftar ini belum memposting apa pun baru–baru ini</string>
+    <string name="reader_empty_posts_in_custom_list">Situs dalam daftar ini belum memposting apa pun baru-baru ini</string>
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
     <string name="error_fetch_viewers_list">Gagal menampilkan pengunjung situs</string>
@@ -1056,7 +1065,7 @@ Language: id
     <string name="editor_remove_failed_uploads">Buang unggahan yang gagal</string>
     <string name="editor_toast_failed_uploads">Gagal mengunggah beberapa media. Tidak dapat menyimpan atau menerbitkan\n pos Anda dalam status ini. Anda ingin membuang semua media yang gagal?</string>
     <string name="site_settings_advanced_header">Lanjutan</string>
-    <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML–RPC yang diperlukan tidak ditemukan di server.</string>
+    <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML-RPC yang diperlukan tidak ditemukan di server.</string>
     <string name="alignment_center">Tengah</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Status</string>
@@ -1100,7 +1109,7 @@ Language: id
     <string name="primary_site">Situs Utama</string>
     <string name="pending_email_change_snackbar">Klik tautan verifikasi di email yang dikirimkan ke %1$s untuk mengonfirmasi alamat baru Anda</string>
     <string name="editor_toast_uploading_please_wait">Saat ini Anda sedang mengunggah media. Harap tunggu hingga selesai.</string>
-    <string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini – menunjukkan komentar lama</string>
+    <string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
     <string name="visual_editor_enabled">Editor Visual diaktifkan</string>
     <string name="editor_content_placeholder">Editor Visual diaktifkan</string>
     <string name="editor_page_title_placeholder">Judul Halaman</string>
@@ -1148,8 +1157,8 @@ Language: id
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>
     <string name="site_settings_paging_dialog_header">Komentar per halaman</string>
     <string name="site_settings_close_after_dialog_title">Tutup komentar</string>
-    <string name="site_settings_blacklist_description">Saat komentar memuat kata–kata berikut dalam isi, nama, tautan, email, atau IP, maka akan ditandai sebagai spam. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata–kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
+    <string name="site_settings_blacklist_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan ditandai sebagai spam. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
+    <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Masukkan kata atau kalimat</string>
     <string name="site_settings_list_editor_no_items_text">Tidak ada item</string>
     <string name="site_settings_learn_more_caption">Anda dapat mengubah pengaturan ini untuk pos individual.</string>
@@ -1230,7 +1239,7 @@ Language: id
     <string name="reader_err_get_post_not_found">Pos ini tidak ada lagi</string>
     <string name="reader_err_get_post_not_authorized">Anda tidak diizinkan melihat pos ini</string>
     <string name="reader_err_get_post_generic">Gagal mengambil pos ini</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Situs–situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
     <string name="selected_theme">Tema Terpilih</string>
     <string name="could_not_load_theme">Tidak dapat memuat tema</string>
@@ -1334,7 +1343,7 @@ Language: id
     <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
-    <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self–hosted)</string>
+    <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
     <string name="my_site_btn_switch_site">Ganti Situs</string>
     <string name="site_picker_title">Pilih situs</string>
     <string name="my_site_btn_view_site">Tampilkan Situs</string>
@@ -1360,22 +1369,22 @@ Language: id
     <string name="posts_fetching">Memuat pos…</string>
     <string name="pages_fetching">Memuat laman…</string>
     <string name="comments_fetching">Memuat komentar…</string>
-    <string name="stats_view_search_terms">Terma–terma Pencarian</string>
+    <string name="stats_view_search_terms">Terma-terma Pencarian</string>
     <string name="stats_view_authors">Para Penulis</string>
     <string name="stats_entry_search_terms">Terma Pencarian</string>
     <string name="stats_empty_search_terms">Tak ada terma pencarian yang tercatat</string>
-    <string name="stats_empty_search_terms_desc">Pelajari lebih lanjut mengenai trafik pencarian Anda dengan melihat terma–terma pencarian yang dipergunakan oleh pengunjung saat menemukan situs Anda.</string>
-    <string name="stats_followers_total_wpcom_paged">Menampilkan %1$d – %2$d dari %3$s Pengikut WordPress.com</string>
+    <string name="stats_empty_search_terms_desc">Pelajari lebih lanjut mengenai trafik pencarian Anda dengan melihat terma-terma pencarian yang dipergunakan oleh pengunjung saat menemukan situs Anda.</string>
+    <string name="stats_followers_total_wpcom_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut WordPress.com</string>
     <string name="stats_search_terms_unknown_search_terms">Terma Pencarian Tak Dikenal</string>
-    <string name="stats_followers_total_email_paged">Menampilkan %1$d – %2$d dari %3$s Pengikut via Email</string>
+    <string name="stats_followers_total_email_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut via Email</string>
     <string name="error_notification_open">Gagal membuka notifikasi</string>
     <string name="publisher">Penerbit:</string>
-    <string name="reader_empty_posts_request_failed">Gagal memuat pos–pos</string>
+    <string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
     <string name="stats_months_and_years">Bulan dan Tahun</string>
     <string name="reader_page_recommended_blogs">Situs yang mungkin Anda sukai</string>
     <string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
     <string name="stats_recent_weeks">Beberapa Minggu Terakhir</string>
-    <string name="stats_average_per_day">Rata–Rata per Hari</string>
+    <string name="stats_average_per_day">Rata-Rata per Hari</string>
     <string name="reader_label_new_posts">Pos baru</string>
     <string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
     <string name="stats_period">Periode</string>
@@ -1397,7 +1406,7 @@ Language: id
     <string name="stats_entry_publicize">Layanan</string>
     <string name="stats_entry_top_commenter">Penulis</string>
     <string name="stats_entry_video_plays">Video</string>
-    <string name="stats_empty_geoviews_desc">Telusuri daftar untuk melihat negara dan wilayah mana yang menghasilkan lalu–lintas terbanyak ke situs Anda.</string>
+    <string name="stats_empty_geoviews_desc">Telusuri daftar untuk melihat negara dan wilayah mana yang menghasilkan lalu-lintas terbanyak ke situs Anda.</string>
     <string name="stats_empty_geoviews">Tak ada negara yang direkam</string>
     <string name="stats_totals_followers">Sejak</string>
     <string name="stats_empty_top_posts_desc">Temukan konten Anda yang paling sering dilihat, dan periksa kinerja pos dan halaman individual.</string>
@@ -1415,7 +1424,7 @@ Language: id
     <string name="stats_empty_publicize">Tidak ada pengikut publikasikan yang terekam</string>
     <string name="stats_empty_publicize_desc">Tetap pantau pengikut Anda dari berbagai layanan jejaring sosial menggunakan publikasikan.</string>
     <string name="stats_empty_followers">Tak ada pengikut</string>
-    <string name="stats_empty_followers_desc">Tetap lacak seluruh pengikut Anda, dan berapa lama masing–masing pengikut Anda telah mengikuti situs Anda.</string>
+    <string name="stats_empty_followers_desc">Tetap lacak seluruh pengikut Anda, dan berapa lama masing-masing pengikut Anda telah mengikuti situs Anda.</string>
     <string name="stats_comments_by_posts_and_pages">Berdasarkan Pos &amp; Halaman</string>
     <string name="stats_comments_by_authors">Berdasarkan Penulis</string>
     <string name="stats_comments_total_comments_followers">Total pos dengan pengikut komentar: %1$s</string>
@@ -1618,7 +1627,7 @@ Language: id
     <string name="media_gallery_type_slideshow">Slide</string>
     <string name="media_gallery_type_circles">Lingkaran</string>
     <string name="media_gallery_type_tiled">Tersusun</string>
-    <string name="media_gallery_type_squares">Kotak–kotak</string>
+    <string name="media_gallery_type_squares">Kotak-kotak</string>
     <string name="themes">Tema</string>
     <string name="discard">Batal</string>
     <string name="manage">Atur</string>

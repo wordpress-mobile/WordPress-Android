@@ -2,7 +2,6 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_gravity="center"
@@ -25,7 +24,7 @@
             android:layout_gravity="center"
             android:background="@color/grey_light"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/img_promo_editor" >
+            android:src="@drawable/img_promo_editor" >
         </ImageView>
 
     </LinearLayout>

@@ -99,14 +99,14 @@
     <!-- Stats Refresh -->
 
     <style name="StatsBlock">
-        <item name="android:layout_marginEnd">13dp</item>
-        <item name="android:layout_marginStart">13dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
         <item name="android:background">@color/white</item>
     </style>
 
     <style name="StatsBlockLine">
         <item name="android:layout_height">48dp</item>
-        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
@@ -127,6 +127,33 @@
     <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
     </style>
 
 

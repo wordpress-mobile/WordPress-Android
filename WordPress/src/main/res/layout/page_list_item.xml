@@ -25,7 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_ellipsis_grey_darken_10_24dp"/>
+            android:src="@drawable/ic_ellipsis_grey_darken_10_24dp"/>
 
         <View
             android:id="@+id/large_stretcher"
