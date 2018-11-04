@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.ViewModelProvider
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
@@ -11,9 +12,10 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class DaysTabViewModel @Inject constructor(
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val insightsViewModel: InsightsViewModel
+    @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : StatsListViewModel() {
+    private lateinit var insightsViewModel: InsightsViewModel
+
     private val _data = Transformations.map(insightsViewModel.data) {
         InsightsUiState(listOf(Empty()), DONE)
     }
