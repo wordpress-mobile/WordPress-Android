@@ -88,8 +88,22 @@ class InsightsMapper
     }
 
     fun map(wpComResponse: FollowersResponse, emailResponse: FollowersResponse): FollowersModel {
-        val wpComFollowers = wpComResponse.subscribers.map { FollowerModel(it.avatar, it.label, it.url, it.dateSubscribed) }
-        val emailFollowers = emailResponse.subscribers.map { FollowerModel(it.avatar, it.label, it.url, it.dateSubscribed) }
+        val wpComFollowers = wpComResponse.subscribers.map {
+            FollowerModel(
+                    it.avatar,
+                    it.label,
+                    it.url,
+                    it.dateSubscribed
+            )
+        }
+        val emailFollowers = emailResponse.subscribers.map {
+            FollowerModel(
+                    it.avatar,
+                    it.label,
+                    it.url,
+                    it.dateSubscribed
+            )
+        }
         return FollowersModel(wpComResponse.totalWpCom, emailResponse.totalEmail, wpComFollowers, emailFollowers)
     }
 }
