@@ -20,17 +20,18 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.WEEKS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
 class StatsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var insightsViewModel: InsightsViewModel
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
@@ -99,7 +100,7 @@ class StatsFragment : Fragment() {
                     Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
                     val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }
             }
