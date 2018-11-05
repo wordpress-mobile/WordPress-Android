@@ -20,7 +20,7 @@ class InsightsTabViewModel @Inject constructor(
     override val data: LiveData<InsightsUiState> = _data
 
     override fun start(site: SiteModel) {
-//        reload(site)
+        reload(site)
     }
 
     override fun reload(site: SiteModel) {
