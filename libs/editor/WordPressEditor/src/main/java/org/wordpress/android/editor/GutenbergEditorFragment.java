@@ -94,6 +94,7 @@ import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.MediaSelectedCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
 import org.xml.sax.Attributes;
 
@@ -173,6 +174,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ReactInstanceManager mReactInstanceManager;
     private ReactContext mReactContext;
     private RNReactNativeGutenbergBridgePackage mRnReactNativeGutenbergBridgePackage;
+    private MediaSelectedCallback mPendingMediaSelectedCallback;
 
     private String mContentHtml = "";
     private CountDownLatch mGetContentCountDownLatch;
@@ -257,8 +259,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 mGetContentCountDownLatch.countDown();
             }
 
-            @Override
-            public void onMediaLibraryPress() {
+            @Override public void onMediaLibraryPress(MediaSelectedCallback mediaSelectedCallback) {
+                mPendingMediaSelectedCallback = mediaSelectedCallback;
                 onToolbarMediaButtonClicked();
             }
         });
@@ -1071,7 +1073,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().setImageSource(mediaUrl);
+        if (mPendingMediaSelectedCallback != null) {
+            mPendingMediaSelectedCallback.onMediaSelected(mediaUrl);
+            mPendingMediaSelectedCallback = null;
+        }
 
 //        if (URLUtil.isNetworkUrl(mediaUrl)) {
 //            final AztecAttributes attributes = new AztecAttributes();
