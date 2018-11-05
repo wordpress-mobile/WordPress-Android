@@ -202,8 +202,8 @@ constructor(
         @SerializedName("highest_week_average") val highestWeekAverage: Int = 0,
         @SerializedName("views") val views: Int,
         @SerializedName("date") val date: String? = null,
-        @SerializedName("data") val data: List<List<String>>,
-        @SerializedName("fields") val fields: List<String>,
+        @SerializedName("data") val data: List<List<String>>?,
+        @SerializedName("fields") val fields: List<String>?,
         @SerializedName("weeks") val weeks: List<Week>,
         @SerializedName("years") val years: Map<Int, Year>,
         @SerializedName("averages") val averages: Map<Int, Average>
@@ -215,7 +215,6 @@ constructor(
         )
         data class Week(
             @SerializedName("average") val average: Int,
-            @SerializedName("change") val change: Int?,
             @SerializedName("total") val total: Int,
             @SerializedName("days") val days: List<Day>
         )
