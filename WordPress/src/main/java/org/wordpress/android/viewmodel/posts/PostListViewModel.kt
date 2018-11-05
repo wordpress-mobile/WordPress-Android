@@ -372,14 +372,6 @@ class PostListViewModel @Inject constructor(
         updateFeaturedMediaAndDispatchChanges(listOf(event.media))
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onPostUploadStarted(event: PostEvents.PostUploadStarted) {
-        if (site.id == event.post.localSiteId) {
-            updateUploadStatus(event.post)
-            updatePostsAndDispatchChanges(setOf(event.post))
-        }
-    }
-
     // EventBus
 
     @Suppress("unused")
@@ -466,6 +458,8 @@ class PostListViewModel @Inject constructor(
         }
     }
 
+    // TODO: Only dispatch changes if the data is updated
+    // TODO: Don't use suspend functions all over, currently there is no queue or order, just a chaos
     private fun updateFeaturedMediaAndDispatchChanges(mediaList: List<MediaModel>) {
         defaultScope.launch {
             mediaList.forEach { featuredImageMap[it.mediaId] = it.url }

@@ -305,7 +305,7 @@ class PostListFragment : Fragment() {
         progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
         postListAdapter.setPostListData(postListData)
 
-        // TODO: This might be an issue now that we moved the diff calculation to adapter
+        // TODO: This might be an issue now that we moved the diff calculation to adapter - rotation doesn't work
         // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
         recyclerView?.let {
             rvScrollPositionSaver.restoreScrollOffset(it)
