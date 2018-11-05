@@ -24,11 +24,12 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.posts.PostAdapterItemPostData
-import org.wordpress.android.ui.posts.PostAdapterItemType
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
+import org.wordpress.android.ui.posts.ListItemType
+import org.wordpress.android.ui.posts.ListItemType.EndListIndicatorItem
+import org.wordpress.android.ui.posts.ListItemType.LoadingItem
+import org.wordpress.android.ui.posts.ListItemType.ReadyItem
+import org.wordpress.android.ui.posts.PostAdapterItem
+import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
@@ -50,7 +51,7 @@ class PostListAdapter(
     private val isAztecEditorEnabled: Boolean,
     private val hasCapabilityPublishPosts: Boolean,
     private val isPhotonCapable: Boolean
-) : PagedListAdapter<PostAdapterItemType, ViewHolder>(DiffItemCallback) {
+) : PagedListAdapter<ListItemType<PostAdapterItem>, ViewHolder>(DiffItemCallback) {
     private val photonWidth: Int
     private val photonHeight: Int
     private val endlistIndicatorHeight: Int
@@ -80,9 +81,9 @@ class PostListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
-            is PostAdapterItemLoading -> VIEW_TYPE_LOADING
-            is PostAdapterItemPost -> VIEW_TYPE_POST
+            is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
+            is LoadingItem -> VIEW_TYPE_LOADING
+            is ReadyItem<PostAdapterItem> -> VIEW_TYPE_POST
             null -> VIEW_TYPE_LOADING // Placeholder by paged list
         }
     }
@@ -117,8 +118,8 @@ class PostListAdapter(
         if (holder is LoadingViewHolder) {
             return
         }
-        val postAdapterItemPost = getItem(position)
-        if (holder !is PostViewHolder || postAdapterItemPost !is PostAdapterItemPost) {
+        val postAdapterItemReady = getItem(position)
+        if (holder !is PostViewHolder || postAdapterItemReady !is ReadyItem<PostAdapterItem>) {
             // Fail fast if a new view type is added so the we can handle it
             throw IllegalStateException(
                     "Only remaining ViewHolder type should be PostViewHolder and only remaining" +
@@ -128,36 +129,37 @@ class PostListAdapter(
 
         // TODO: Rename things a bit to cleanup
         val context = holder.itemView.context
-        val postAdapterItem = postAdapterItemPost.data
+        val postAdapterItem = postAdapterItemReady.item
+        val postData = postAdapterItem.data
 
-        holder.title.text = if (!postAdapterItem.title.isNullOrBlank()) {
-            postAdapterItem.title
+        holder.title.text = if (!postData.title.isNullOrBlank()) {
+            postData.title
         } else context.getString(R.string.untitled_in_parentheses)
 
-        if (!postAdapterItem.excerpt.isNullOrBlank()) {
-            holder.excerpt.text = postAdapterItem.excerpt
+        if (!postData.excerpt.isNullOrBlank()) {
+            holder.excerpt.text = postData.excerpt
             holder.excerpt.visibility = View.VISIBLE
         } else {
             holder.excerpt.visibility = View.GONE
         }
 
-        showFeaturedImage(postAdapterItem.featuredImageUrl, holder.featuredImage)
+        showFeaturedImage(postData.featuredImageUrl, holder.featuredImage)
 
         // local drafts say "delete" instead of "trash"
-        if (postAdapterItem.isLocalDraft) {
+        if (postData.isLocalDraft) {
             holder.date.visibility = View.GONE
             holder.trashButton.buttonType = PostListButton.BUTTON_DELETE
         } else {
-            holder.date.text = postAdapterItem.date
+            holder.date.text = postData.date
             holder.date.visibility = View.VISIBLE
             holder.trashButton.buttonType = PostListButton.BUTTON_TRASH
         }
 
-        updateForUploadStatus(holder, postAdapterItem.uploadStatus)
-        updateStatusTextAndImage(holder.status, holder.statusImage, postAdapterItem)
-        configurePostButtons(holder, postAdapterItemPost)
+        updateForUploadStatus(holder, postData.uploadStatus)
+        updateStatusTextAndImage(holder.status, holder.statusImage, postData)
+        configurePostButtons(holder, postAdapterItem)
         holder.itemView.setOnClickListener {
-            postAdapterItemPost.onSelected()
+            postAdapterItem.onSelected()
         }
     }
 
@@ -211,7 +213,7 @@ class PostListAdapter(
     private fun updateStatusTextAndImage(
         txtStatus: TextView,
         imgStatus: ImageView,
-        postAdapterItem: PostAdapterItemPostData
+        postAdapterItem: PostAdapterItemData
     ) {
         val context = txtStatus.context
 
@@ -311,19 +313,19 @@ class PostListAdapter(
 
     private fun configurePostButtons(
         holder: PostViewHolder,
-        postAdapterItemPost: PostAdapterItemPost
+        postAdapterItem: PostAdapterItem
     ) {
-        val postAdapterItem = postAdapterItemPost.data
-        val canShowViewButton = !postAdapterItem.canRetryUpload
-        val canShowPublishButton = postAdapterItem.canRetryUpload || postAdapterItem.canPublishPost
+        val postData = postAdapterItem.data
+        val canShowViewButton = !postData.canRetryUpload
+        val canShowPublishButton = postData.canRetryUpload || postData.canPublishPost
 
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (!hasCapabilityPublishPosts) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SUBMIT
-            } else if (postAdapterItem.canRetryUpload) {
+            } else if (postData.canRetryUpload) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_RETRY
-            } else if (postAdapterItem.postStatus == PostStatus.SCHEDULED && postAdapterItem.isLocallyChanged) {
+            } else if (postData.postStatus == PostStatus.SCHEDULED && postData.isLocallyChanged) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SYNC
             } else {
                 holder.publishButton.buttonType = PostListButton.BUTTON_PUBLISH
@@ -332,7 +334,7 @@ class PostListAdapter(
 
         // posts with local changes have preview rather than view button
         if (canShowViewButton) {
-            if (postAdapterItem.isLocalDraft || postAdapterItem.isLocallyChanged) {
+            if (postData.isLocalDraft || postData.isLocallyChanged) {
                 holder.viewButton.buttonType = PostListButton.BUTTON_PREVIEW
             } else {
                 holder.viewButton.buttonType = PostListButton.BUTTON_VIEW
@@ -350,7 +352,7 @@ class PostListAdapter(
         if (canShowPublishButton) {
             numVisibleButtons++
         }
-        if (postAdapterItem.canShowStats) {
+        if (postData.canShowStats) {
             numVisibleButtons++
         }
 
@@ -360,7 +362,7 @@ class PostListAdapter(
             holder.moreButton.visibility = View.GONE
             holder.backButton.visibility = View.GONE
             holder.trashButton.visibility = View.VISIBLE
-            holder.statsButton.visibility = if (postAdapterItem.canShowStats) View.VISIBLE else View.GONE
+            holder.statsButton.visibility = if (postData.canShowStats) View.VISIBLE else View.GONE
             holder.publishButton.visibility = if (canShowPublishButton) View.VISIBLE else View.GONE
         } else {
             holder.moreButton.visibility = View.VISIBLE
@@ -374,9 +376,9 @@ class PostListAdapter(
             // handle back/more here, pass other actions to activity/fragment
             val buttonType = (view as PostListButton).buttonType
             when (buttonType) {
-                PostListButton.BUTTON_MORE -> animateButtonRows(holder, postAdapterItem, false)
-                PostListButton.BUTTON_BACK -> animateButtonRows(holder, postAdapterItem, true)
-                else -> postAdapterItemPost.onButtonClicked(buttonType)
+                PostListButton.BUTTON_MORE -> animateButtonRows(holder, postData, false)
+                PostListButton.BUTTON_BACK -> animateButtonRows(holder, postData, true)
+                else -> postAdapterItem.onButtonClicked(buttonType)
             }
         }
         holder.editButton.setOnClickListener(btnClickListener)
@@ -395,7 +397,7 @@ class PostListAdapter(
      */
     private fun animateButtonRows(
         holder: PostViewHolder,
-        postAdapterItem: PostAdapterItemPostData,
+        postAdapterItem: PostAdapterItemData,
         showRow1: Boolean
     ) {
         // first animate out the button row, then show/hide the appropriate buttons,
@@ -460,35 +462,41 @@ class PostListAdapter(
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-object DiffItemCallback : DiffUtil.ItemCallback<PostAdapterItemType>() {
-    override fun areItemsTheSame(oldItem: PostAdapterItemType, newItem: PostAdapterItemType): Boolean {
-        if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+object DiffItemCallback : DiffUtil.ItemCallback<ListItemType<PostAdapterItem>>() {
+    override fun areItemsTheSame(
+        oldItem: ListItemType<PostAdapterItem>,
+        newItem: ListItemType<PostAdapterItem>
+    ): Boolean {
+        if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
             return true
         }
-        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
-            return oldItem.remotePostId == newItem.remotePostId
+        if (oldItem is LoadingItem && newItem is LoadingItem) {
+            return oldItem.remoteItemId == newItem.remoteItemId
         }
-        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
-            return oldItem.data.localPostId == newItem.data.localPostId
+        if (oldItem is ReadyItem && newItem is ReadyItem) {
+            return oldItem.item.data.localPostId == newItem.item.data.localPostId
         }
-        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemPost) {
-            return oldItem.remotePostId == newItem.data.remotePostId
+        if (oldItem is LoadingItem && newItem is ReadyItem) {
+            return oldItem.remoteItemId == newItem.item.data.remotePostId
         }
-        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemLoading) {
-            return oldItem.data.remotePostId == newItem.remotePostId
+        if (oldItem is ReadyItem && newItem is LoadingItem) {
+            return oldItem.item.data.remotePostId == newItem.remoteItemId
         }
         return false
     }
 
-    override fun areContentsTheSame(oldItem: PostAdapterItemType, newItem: PostAdapterItemType): Boolean {
-        if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+    override fun areContentsTheSame(
+        oldItem: ListItemType<PostAdapterItem>,
+        newItem: ListItemType<PostAdapterItem>
+    ): Boolean {
+        if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
             return true
         }
-        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
-            return oldItem.remotePostId == newItem.remotePostId
+        if (oldItem is LoadingItem && newItem is LoadingItem) {
+            return oldItem.remoteItemId == newItem.remoteItemId
         }
-        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
-            return oldItem.data == newItem.data
+        if (oldItem is ReadyItem && newItem is ReadyItem) {
+            return oldItem.item.data == newItem.item.data
         }
         return false
     }

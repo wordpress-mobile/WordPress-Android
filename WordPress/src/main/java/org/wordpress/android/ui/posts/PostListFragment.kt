@@ -122,10 +122,17 @@ class PostListFragment : Fragment() {
             })
         }
         postListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            // TODO: Insert is not enough, what if the item is moved to the top (first and second item changes position
+            // TODO: and first one becomes invisible)
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                if (positionStart == 0) {
-                    // TODO: Do we always want to show when new items are inserted?
-//                    recyclerView?.smoothScrollToPosition(0)
+                val range = (positionStart..(positionStart + itemCount))
+                if (0 in range) {
+                    (recyclerView?.layoutManager as LinearLayoutManager?)?.let {
+                        // TODO: Need to do this better!
+                        if (it.findFirstCompletelyVisibleItemPosition() < 5) {
+                            recyclerView?.smoothScrollToPosition(0)
+                        }
+                    }
                 }
                 super.onItemRangeInserted(positionStart, itemCount)
             }
@@ -317,7 +324,7 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun updatePagedListData(pagedListData: PagedList<PostAdapterItemType>) {
+    private fun updatePagedListData(pagedListData: PagedList<ListItemType<PostAdapterItem>>) {
         if (!isAdded) {
             return
         }

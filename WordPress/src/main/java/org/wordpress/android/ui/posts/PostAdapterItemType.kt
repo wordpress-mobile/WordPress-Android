@@ -3,17 +3,13 @@ package org.wordpress.android.ui.posts
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 
-sealed class PostAdapterItemType {
-    object PostAdapterItemEndListIndicator : PostAdapterItemType()
-    data class PostAdapterItemLoading(val remotePostId: Long) : PostAdapterItemType()
-    class PostAdapterItemPost(
-        val data: PostAdapterItemPostData,
-        val onSelected: () -> Unit,
-        val onButtonClicked: (Int) -> Unit
-    ) : PostAdapterItemType()
-}
+class PostAdapterItem(
+    val data: PostAdapterItemData,
+    val onSelected: () -> Unit,
+    val onButtonClicked: (Int) -> Unit
+)
 
-data class PostAdapterItemPostData(
+data class PostAdapterItemData(
     val localPostId: Int,
     val remotePostId: Long?,
     val title: String?,
@@ -28,22 +24,4 @@ data class PostAdapterItemPostData(
     val featuredImageId: Long,
     val featuredImageUrl: String?,
     val uploadStatus: PostAdapterItemUploadStatus
-) {
-    fun new(featuredImageUrl: String?): PostAdapterItemPostData =
-            PostAdapterItemPostData(
-                    localPostId,
-                    remotePostId,
-                    title,
-                    excerpt,
-                    isLocalDraft,
-                    date,
-                    postStatus,
-                    isLocallyChanged,
-                    canShowStats,
-                    canPublishPost,
-                    canRetryUpload,
-                    featuredImageId,
-                    featuredImageUrl,
-                    uploadStatus
-            )
-}
+)

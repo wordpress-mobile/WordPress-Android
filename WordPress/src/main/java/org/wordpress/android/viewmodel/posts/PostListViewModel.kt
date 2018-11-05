@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
@@ -46,12 +45,12 @@ import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.PostAdapterItemPostData
-import org.wordpress.android.ui.posts.PostAdapterItemType
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
+import org.wordpress.android.ui.posts.ListItemType
+import org.wordpress.android.ui.posts.PostAdapterItem
+import org.wordpress.android.ui.posts.PostAdapterItemData
+import org.wordpress.android.ui.posts.PostFactory
+import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostListUserAction
-import org.wordpress.android.ui.posts.PostPositionalDataSource
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -126,36 +125,24 @@ class PostListViewModel @Inject constructor(
             .setPageSize(PAGE_SIZE)
             .build()
 
-    val pagedListData: LiveData<PagedList<PostAdapterItemType>> by lazy {
-        val dataSourceFactory = object : DataSource.Factory<Int, PostAdapterItemType>() {
-            override fun create(): DataSource<Int, PostAdapterItemType> {
-                val listDescriptor = requireNotNull(listDescriptor) {
-                    "ListDescriptor needs to be initialized before this is observed!"
-                }
-                return PostPositionalDataSource(postStore, site, listStore, listDescriptor,
-                        transform = { remotePostId, post ->
-                            if (post != null) {
-                                createPostAdapterItem(post)
-                            } else {
-                                val remoteId = requireNotNull(remotePostId) {
-                                    "If remotePostId is null, it has to be a local post, so post can't be null"
-                                }
-                                PostAdapterItemLoading(remoteId)
-                            }
-                        },
-                        fetchPost = { remotePostId ->
-                            fetchPost(remotePostId)
-                        })
-            }
+    val pagedListData: LiveData<PagedList<ListItemType<PostAdapterItem>>> by lazy {
+        val listDescriptor = requireNotNull(listDescriptor) {
+            "ListDescriptor needs to be initialized before this is observed!"
         }
-        val callback = object : BoundaryCallback<PostAdapterItemType>() {
-            override fun onItemAtEndLoaded(itemAtEnd: PostAdapterItemType) {
+        val dataSource = PostListDataSource(dispatcher, postStore, site)
+        val dataSourceFactory = PostFactory(dataSource, listStore, listDescriptor) { post ->
+            createPostAdapterItem(post)
+        }
+        val callback = object : BoundaryCallback<ListItemType<PostAdapterItem>>() {
+            override fun onItemAtEndLoaded(itemAtEnd: ListItemType<PostAdapterItem>) {
                 fetchList(true)
                 super.onItemAtEndLoaded(itemAtEnd)
             }
         }
-        LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).setBoundaryCallback(callback)
-                .build()
+        LivePagedListBuilder<Int, ListItemType<PostAdapterItem>>(
+                dataSourceFactory,
+                pagedListConfig
+        ).setBoundaryCallback(callback).build()
     }
 
     init {
@@ -181,13 +168,6 @@ class PostListViewModel @Inject constructor(
         }
         refreshList()
         isStarted = true
-    }
-
-    private fun fetchPost(remoteItemId: Long) {
-        val postToFetch = PostModel()
-        postToFetch.remotePostId = remoteItemId
-        val payload = RemotePostPayload(postToFetch, site)
-        dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
     }
 
     fun refreshList() {
@@ -394,6 +374,7 @@ class PostListViewModel @Inject constructor(
             // as the current `ListManager` might not have been updated yet since it's a bg action.
             uploadedPostRemoteIds.add(event.post.remotePostId)
             updateUploadStatus(event.post)
+            invalidateData()
             // TODO: We might be able to reload the posts without changing the list and then refresh
             // TODO: might not be the best way to start a refresh
             refreshList()
@@ -492,7 +473,7 @@ class PostListViewModel @Inject constructor(
         val hasPendingMediaUpload: Boolean
     )
 
-    private fun createPostAdapterItem(post: PostModel): PostAdapterItemPost {
+    private fun createPostAdapterItem(post: PostModel): PostAdapterItem {
         val title = if (post.title.isNotBlank()) {
             StringEscapeUtils.unescapeHtml4(post.title)
         } else null
@@ -504,7 +485,7 @@ class PostListViewModel @Inject constructor(
         val uploadStatus = getUploadStatus(post)
         val canPublishPost = !uploadStatus.isUploadingOrQueued &&
                 (post.isLocallyChanged || post.isLocalDraft || postStatus == PostStatus.DRAFT)
-        val postData = PostAdapterItemPostData(
+        val postData = PostAdapterItemData(
                 localPostId = post.id,
                 remotePostId = if (post.remotePostId != 0L) post.remotePostId else null,
                 title = title,
@@ -520,7 +501,7 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId) ?: getFeaturedImageUrl(post.content),
                 uploadStatus = uploadStatus
         )
-        return PostAdapterItemPost(
+        return PostAdapterItem(
                 data = postData,
                 onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
                 onButtonClicked = { handlePostButton(it, post) }
