@@ -4,6 +4,7 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -89,9 +90,12 @@ class PostListFragment : Fragment() {
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
             viewModel.start(site)
-            viewModel.postListData.observe(this, Observer {
-                it?.let { postListData -> update(postListData) }
+            viewModel.pagedListData.observe(this, Observer {
+                it?.let { pagedListData -> updatePagedListData(pagedListData) }
             })
+//            viewModel.postListData.observe(this, Observer {
+//                it?.let { postListData -> update(postListData) }
+//            })
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
             })
@@ -297,20 +301,27 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun update(postListData: PostListData) {
+    private fun updatePagedListData(pagedListData: PagedList<PostAdapterItemType>) {
         if (!isAdded) {
             return
         }
-        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
-        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
-        postListAdapter.setPostListData(postListData)
-
-        // TODO: This might be an issue now that we moved the diff calculation to adapter - rotation doesn't work
-        // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
-        recyclerView?.let {
-            rvScrollPositionSaver.restoreScrollOffset(it)
-        }
+        postListAdapter.submitList(pagedListData)
     }
+
+//    private fun update(postListData: PostListData) {
+//        if (!isAdded) {
+//            return
+//        }
+//        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
+//        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
+//        postListAdapter.setPostListData(postListData)
+//
+//        // TODO: This might be an issue now that we moved the diff calculation to adapter - rotation doesn't work
+//        // If offset is saved, restore it here. This is for when we save the scroll position in the bundle.
+//        recyclerView?.let {
+//            rvScrollPositionSaver.restoreScrollOffset(it)
+//        }
+//    }
 
     companion object {
         const val TAG = "post_list_fragment_tag"

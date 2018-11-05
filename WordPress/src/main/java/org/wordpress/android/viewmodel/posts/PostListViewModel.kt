@@ -3,6 +3,9 @@ package org.wordpress.android.viewmodel.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
 import android.content.Intent
 import de.greenrobot.event.EventBus
 import kotlinx.coroutines.experimental.CoroutineScope
@@ -56,6 +59,7 @@ import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
 import org.wordpress.android.ui.posts.PostListData
 import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostListUserAction
+import org.wordpress.android.ui.posts.PostPositionalDataSource
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -85,6 +89,9 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.system.measureTimeMillis
 
+private const val INITIAL_LOAD_SIZE_HINT = 20
+private const val PAGE_SIZE = 10
+
 enum class PostListEmptyViewState {
     EMPTY_LIST,
     HIDDEN_LIST,
@@ -108,6 +115,12 @@ class PostListViewModel @Inject constructor(
     private val isPhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(site)
     }
+
+    private val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+            .setPageSize(PAGE_SIZE)
+            .build()
 
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
@@ -134,6 +147,22 @@ class PostListViewModel @Inject constructor(
 
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
+
+    val pagedListData: LiveData<PagedList<PostAdapterItemType>> by lazy {
+        val dataSourceFactory = object : DataSource.Factory<Int, PostAdapterItemType>() {
+            override fun create(): DataSource<Int, PostAdapterItemType> {
+                // TODO: null cast !!
+                return PostPositionalDataSource(postStore, site, listStore, listDescriptor!!) { remotePostId, post ->
+                    if (post == null) {
+                        PostAdapterItemLoading(remotePostId)
+                    } else {
+                        createPostAdapterItem(post)
+                    }
+                }
+            }
+        }
+        LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).build()
+    }
 
     private var listManager: ListManager<PostModel>? = null
     private var listState: ListState? = null
@@ -576,7 +605,7 @@ class PostListViewModel @Inject constructor(
                 } else items
             }
 
-    private suspend fun createPostAdapterItem(post: PostModel): PostAdapterItemPost = withContext(Dispatchers.Default) {
+    private fun createPostAdapterItem(post: PostModel): PostAdapterItemPost {
         val title = if (post.title.isNotBlank()) {
             StringEscapeUtils.unescapeHtml4(post.title)
         } else null
@@ -604,7 +633,7 @@ class PostListViewModel @Inject constructor(
                 featuredImageUrl = getFeaturedImageUrl(post.featuredImageId) ?: getFeaturedImageUrl(post.content),
                 uploadStatus = uploadStatus
         )
-        PostAdapterItemPost(
+        return PostAdapterItemPost(
                 data = postData,
                 onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
                 onButtonClicked = { handlePostButton(it, post) }
@@ -618,25 +647,25 @@ class PostListViewModel @Inject constructor(
         } else listState?.canLoadMore() == false
     }
 
-    private suspend fun getFeaturedImageUrl(postContent: String): String? = withContext(Dispatchers.Default) {
-        featuredImageFromContentMap[postContent]?.let { return@withContext it }
+    private fun getFeaturedImageUrl(postContent: String): String? {
+        featuredImageFromContentMap[postContent]?.let { return it }
         val imageUrl = ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
         if (imageUrl != null) {
             featuredImageFromContentMap[postContent] = imageUrl
         }
-        imageUrl
+        return imageUrl
     }
 
-    private suspend fun getFeaturedImageUrl(featuredImageId: Long): String? = withContext(Dispatchers.Default) {
+    private fun getFeaturedImageUrl(featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
-            return@withContext null
+            return null
         }
-        featuredImageMap[featuredImageId]?.let { return@withContext it }
+        featuredImageMap[featuredImageId]?.let { return it }
         val media = mediaStore.getSiteMediaWithId(site, featuredImageId)
         media?.let {
             val mediaUrl = media.url
             featuredImageMap[featuredImageId] = mediaUrl
-            return@withContext mediaUrl
+            return mediaUrl
         }
         // Media is not in the Store, we need to download it
         val mediaToDownload = MediaModel()
@@ -644,7 +673,7 @@ class PostListViewModel @Inject constructor(
         mediaToDownload.localSiteId = site.id
         val payload = MediaPayload(site, mediaToDownload)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaAction(payload))
-        null
+        return null
     }
 
     private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {

@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlin_version = '1.2.61'
     ext.arch_components_version = '1.1.1'
+    ext.arch_paging_version = '1.0.1'
 
     repositories {
         google()
@@ -69,5 +70,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '6b346562d5'
+    fluxCVersion = '0ab8c5c18a5bcce900ec6e5098eab94fbe0ef1c3'
 }

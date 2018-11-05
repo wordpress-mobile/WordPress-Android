@@ -4,11 +4,13 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.arch.paging.PagedListAdapter
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -19,21 +21,14 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ProgressBar
 import android.widget.TextView
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.isActive
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.PostAdapterItemPostData
+import org.wordpress.android.ui.posts.PostAdapterItemType
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
-import org.wordpress.android.ui.posts.PostListData
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
@@ -53,20 +48,22 @@ private const val VIEW_TYPE_LOADING = 2
 /**
  * Adapter for Posts/Pages list
  */
-class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+// TODO: Pass correct values!
+class PostListAdapter(
+    context: Context,
+    private val isAztecEditorEnabled: Boolean = true,
+    private val hasCapabilityPublishPosts: Boolean = true,
+    private val isPhotonCapable: Boolean = true
+) : PagedListAdapter<PostAdapterItemType, ViewHolder>(DiffItemCallback) {
     private val photonWidth: Int
     private val photonHeight: Int
     private val endlistIndicatorHeight: Int
 
     private val showAllButtons: Boolean
 
-    private var recyclerView: RecyclerView? = null
     private val layoutInflater: LayoutInflater
 
-    private var postListData: PostListData? = null
     @Inject internal lateinit var imageManager: ImageManager
-
-    private var refreshListJob: Job? = null
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -85,41 +82,17 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         showAllButtons = displayWidth >= 1080
     }
 
-    fun setPostListData(listData: PostListData) {
-        refreshListJob?.cancel()
-        refreshListJob = GlobalScope.launch(Dispatchers.Default) {
-            val diffResult = calculateDiff(postListData, listData)
-            if (isActive) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    // Save and restore the visible view. Without this the scroll position might be lost during inserts
-                    val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-                    postListData = listData
-                    diffResult.dispatchUpdatesTo(this@PostListAdapter)
-                    recyclerViewState?.let {
-                        recyclerView?.layoutManager?.onRestoreInstanceState(it)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
+    override fun getItem(position: Int): PostAdapterItemType {
+        return super.getItem(position)!!
     }
 
     override fun getItemViewType(position: Int): Int {
-        val data = requireNotNull(postListData) {
-            "Wrong size is passed in as there is no data to show yet!"
-        }
-        return when (data.getItem(position, true, true)) {
+        return when (getItem(position)) {
             PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
             is PostAdapterItemLoading -> VIEW_TYPE_LOADING
             is PostAdapterItemPost -> VIEW_TYPE_POST
         }
     }
-
-    override fun getItemCount(): Int = postListData?.size ?: 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -151,11 +124,13 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         if (holder is LoadingViewHolder) {
             return
         }
-        val postAdapterItemPost = postListData?.getItem(position, true, true)
+        val postAdapterItemPost = getItem(position)
         if (holder !is PostViewHolder || postAdapterItemPost !is PostAdapterItemPost) {
             // Fail fast if a new view type is added so the we can handle it
-            throw IllegalStateException("Only remaining ViewHolder type should be PostViewHolder and only remaining" +
-                    " adapter item type should be PostAdapterItemPost")
+            throw IllegalStateException(
+                    "Only remaining ViewHolder type should be PostViewHolder and only remaining" +
+                            " adapter item type should be PostAdapterItemPost"
+            )
         }
 
         // TODO: Rename things a bit to cleanup
@@ -197,7 +172,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
         if (uploadStatus.isUploading) {
             holder.disabledOverlay.visibility = View.VISIBLE
             holder.progressBar.isIndeterminate = true
-        } else if (postListData?.isAztecEditorEnabled == false && uploadStatus.isUploadingOrQueued) {
+        } else if (!isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
             // TODO: Is this logic correct? Do we need to check for is uploading still?
             // Editing posts with uploading media is only supported in Aztec
             holder.disabledOverlay.visibility = View.VISIBLE
@@ -222,7 +197,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
             imageManager.cancelRequestAndClearImageView(imgFeatured)
         } else if (imageUrl.startsWith("http")) {
             val photonUrl = ReaderUtils.getResizedImageUrl(
-                    imageUrl, photonWidth, photonHeight, postListData?.isPhotonCapable == false
+                    imageUrl, photonWidth, photonHeight, !isPhotonCapable
             )
             imgFeatured.visibility = View.VISIBLE
             imageManager.load(imgFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
@@ -351,7 +326,7 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
 
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
-            if (postListData?.hasCapabilityPublishPosts == false) {
+            if (!hasCapabilityPublishPosts) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_SUBMIT
             } else if (postAdapterItem.canRetryUpload) {
                 holder.publishButton.buttonType = PostListButton.BUTTON_RETRY
@@ -492,57 +467,36 @@ class PostListAdapter(context: Context) : RecyclerView.Adapter<RecyclerView.View
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-private suspend fun calculateDiff(
-    oldListData: PostListData?,
-    newListData: PostListData
-) = withContext(Dispatchers.Default) {
-    val callback = object : DiffUtil.Callback() {
-        override fun getOldListSize(): Int {
-            return oldListData?.size ?: 0
+object DiffItemCallback : DiffUtil.ItemCallback<PostAdapterItemType>() {
+    override fun areItemsTheSame(oldItem: PostAdapterItemType, newItem: PostAdapterItemType): Boolean {
+        if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+            return true
         }
-
-        override fun getNewListSize(): Int {
-            return newListData.size
+        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
+            return oldItem.remotePostId == newItem.remotePostId
         }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            if (oldListData == null) {
-                return false
-            }
-            val oldItem = oldListData.getItem(oldItemPosition, false, false)
-            val newItem = newListData.getItem(newItemPosition, false, false)
-            if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
-                return true
-            }
-            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
-                return oldItem.remotePostId == newItem.remotePostId
-            }
-            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
-                return oldItem.data.localPostId == newItem.data.localPostId
-            }
-            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemPost) {
-                return oldItem.remotePostId == newItem.data.remotePostId
-            }
-            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemLoading) {
-                return oldItem.data.remotePostId == newItem.remotePostId
-            }
-            return false
+        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
+            return oldItem.data.localPostId == newItem.data.localPostId
         }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            val oldItem = oldListData?.getItem(oldItemPosition)
-            val newItem = newListData.getItem(newItemPosition)
-            if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
-                return true
-            }
-            if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
-                return true
-            }
-            if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
-                return oldItem.data == newItem.data
-            }
-            return false
+        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemPost) {
+            return oldItem.remotePostId == newItem.data.remotePostId
         }
+        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemLoading) {
+            return oldItem.data.remotePostId == newItem.remotePostId
+        }
+        return false
     }
-    DiffUtil.calculateDiff(callback)
+
+    override fun areContentsTheSame(oldItem: PostAdapterItemType, newItem: PostAdapterItemType): Boolean {
+        if (oldItem is PostAdapterItemEndListIndicator && newItem is PostAdapterItemEndListIndicator) {
+            return true
+        }
+        if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
+            return true
+        }
+        if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
+            return oldItem.data == newItem.data
+        }
+        return false
+    }
 }
