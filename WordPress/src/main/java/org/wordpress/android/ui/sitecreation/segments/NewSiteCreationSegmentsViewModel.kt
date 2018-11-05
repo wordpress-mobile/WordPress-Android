@@ -81,7 +81,7 @@ class NewSiteCreationSegmentsViewModel
         fetchCategories()
     }
 
-    fun onSegmentSelected(segmentId: Int) {
+    fun onSegmentSelected(segmentId: Long) {
         // TODO send result to the SCMainVM
     }
 

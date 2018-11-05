@@ -1,13 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical"
+            android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
+            android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
+            android:paddingTop="@dimen/site_creation_segments_content_padding_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="@string/site_creation_segments_title"
+                android:textColor="@color/wp_grey_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="Tell us what kind of site you'd like to make"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="center"
+                android:text="@string/site_creation_segments_subtitle"
+                android:textColor="@color/wp_grey_darken_20"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="This helps us make recommendations. But you're never locked in - all sites evolve!"/>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            />
+
+        <include
+            layout="@layout/site_creation_progress"
+            tools:visibility="gone"/>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/site_creation_error_with_retry"/>
 </LinearLayout>
