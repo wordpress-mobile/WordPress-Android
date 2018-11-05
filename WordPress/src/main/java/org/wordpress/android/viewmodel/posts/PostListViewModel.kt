@@ -8,7 +8,6 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.content.Intent
 import de.greenrobot.event.EventBus
-import kotlinx.coroutines.experimental.CoroutineScope
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -22,7 +21,6 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
@@ -45,7 +43,6 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.store.UploadStore.UploadError
-import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostAdapterItemPostData
@@ -61,7 +58,6 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -77,7 +73,6 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButton
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
-import javax.inject.Named
 
 private const val INITIAL_LOAD_SIZE_HINT = 20
 private const val PAGE_SIZE = 10
@@ -95,22 +90,11 @@ class PostListViewModel @Inject constructor(
     private val listStore: ListStore,
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
-    private val postStore: PostStore,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
+    private val postStore: PostStore
 ) : ViewModel() {
-    private val isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled()
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
     }
-    private val isPhotonCapable: Boolean by lazy {
-        SiteUtils.isPhotonCapable(site)
-    }
-
-    private val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
-            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
-            .setPageSize(PAGE_SIZE)
-            .build()
 
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
@@ -135,11 +119,19 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
+    private val pagedListConfig = PagedList.Config.Builder()
+            .setEnablePlaceholders(true)
+            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+            .setPageSize(PAGE_SIZE)
+            .build()
+
     val pagedListData: LiveData<PagedList<PostAdapterItemType>> by lazy {
         val dataSourceFactory = object : DataSource.Factory<Int, PostAdapterItemType>() {
             override fun create(): DataSource<Int, PostAdapterItemType> {
-                // TODO: null cast !!
-                return PostPositionalDataSource(postStore, site, listStore, listDescriptor!!,
+                val listDescriptor = requireNotNull(listDescriptor) {
+                    "ListDescriptor needs to be initialized before this is observed!"
+                }
+                return PostPositionalDataSource(postStore, site, listStore, listDescriptor,
                         transform = { remotePostId, post ->
                             if (post != null) {
                                 createPostAdapterItem(post)
@@ -154,9 +146,6 @@ class PostListViewModel @Inject constructor(
         }
         LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).build()
     }
-
-    private var listState: ListState? = null
-    private var items: List<PostAdapterItemType>? = null
 
     init {
         EventBus.getDefault().register(this)
@@ -352,7 +341,7 @@ class PostListViewModel @Inject constructor(
     @Suppress("unused")
     fun onListStateChanged(event: OnListStateChanged) {
         // There is no error to handle for `OnListStateChanged`
-        listState = event.newState
+        // TODO: Handle empty view and the error should probably be handled here as well
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -525,13 +514,6 @@ class PostListViewModel @Inject constructor(
                 onSelected = { handlePostButton(PostListButton.BUTTON_EDIT, post) },
                 onButtonClicked = { handlePostButton(it, post) }
         )
-    }
-
-    private fun hasLoadedAllPosts(): Boolean {
-        return if (items == null) {
-            // If items is null, that means we haven't loaded the data yet, which means there is more data to be loaded
-            false
-        } else listState?.canLoadMore() == false
     }
 
     private fun getFeaturedImageUrl(postContent: String): String? {

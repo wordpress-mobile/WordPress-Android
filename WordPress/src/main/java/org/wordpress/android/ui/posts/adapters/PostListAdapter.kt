@@ -45,15 +45,11 @@ private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
 private const val VIEW_TYPE_LOADING = 2
 
-/**
- * Adapter for Posts/Pages list
- */
-// TODO: Pass correct values!
 class PostListAdapter(
     context: Context,
-    private val isAztecEditorEnabled: Boolean = true,
-    private val hasCapabilityPublishPosts: Boolean = true,
-    private val isPhotonCapable: Boolean = true
+    private val isAztecEditorEnabled: Boolean,
+    private val hasCapabilityPublishPosts: Boolean,
+    private val isPhotonCapable: Boolean
 ) : PagedListAdapter<PostAdapterItemType, ViewHolder>(DiffItemCallback) {
     private val photonWidth: Int
     private val photonHeight: Int

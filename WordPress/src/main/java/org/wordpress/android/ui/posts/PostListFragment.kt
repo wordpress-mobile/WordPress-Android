@@ -24,11 +24,13 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
@@ -60,7 +62,14 @@ class PostListFragment : Fragment() {
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
 
-    private val postListAdapter: PostListAdapter by lazy { PostListAdapter(nonNullActivity) }
+    private val postListAdapter: PostListAdapter by lazy {
+        PostListAdapter(
+                context = nonNullActivity,
+                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
+                hasCapabilityPublishPosts = site.hasCapabilityPublishPosts,
+                isPhotonCapable = SiteUtils.isPhotonCapable(site)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,6 +121,15 @@ class PostListFragment : Fragment() {
                 it?.show(nonNullActivity)
             })
         }
+        postListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (positionStart == 0) {
+                    // TODO: Do we always want to show when new items are inserted?
+//                    recyclerView?.smoothScrollToPosition(0)
+                }
+                super.onItemRangeInserted(positionStart, itemCount)
+            }
+        })
     }
 
     private fun handleUserAction(action: PostListUserAction) {
