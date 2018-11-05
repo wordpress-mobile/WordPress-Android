@@ -26,6 +26,8 @@ class StatsViewModel
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
 ) : ViewModel() {
+    private lateinit var site: SiteModel
+
     private val _listState = MutableLiveData<StatsListState>()
     val listState: LiveData<StatsListState> = _listState
 
@@ -34,15 +36,13 @@ class StatsViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    private var _site: SiteModel? = null
-    val site: SiteModel
-        get() = checkNotNull(_site) { "Trying to access unitialized site" }
-
-
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, insightsViewModel: InsightsViewModel) {
         // Check if VM is not already initialized
-        if (_site == null) {
-            _site = site
+        if (!isInitialized) {
+            isInitialized = true
+
+            this.site = site
+            this.insightsViewModel = insightsViewModel
 
             loadStats()
         }
@@ -51,14 +51,12 @@ class StatsViewModel
     private fun loadStats() = defaultScope.launch {
         val loadState = DONE
         reloadStats(loadState)
-
-        isInitialized = true
     }
 
     private suspend fun reloadStats(state: StatsListState = FETCHING) {
         _listState.setOnUi(state)
 
-        insightsViewModel.loadInsightItems(_site!!)
+        insightsViewModel.loadInsightItems(site)
     }
 
     // TODO: To be implemented in the future
