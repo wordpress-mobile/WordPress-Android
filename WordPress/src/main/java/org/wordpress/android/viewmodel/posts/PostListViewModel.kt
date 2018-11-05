@@ -46,10 +46,10 @@ import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.ListItemType
+import org.wordpress.android.ui.posts.PagedListDataForPostStore
+import org.wordpress.android.ui.posts.PagedListFactory
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
-import org.wordpress.android.ui.posts.PostFactory
-import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostListUserAction
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
@@ -129,8 +129,8 @@ class PostListViewModel @Inject constructor(
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        val dataSource = PostListDataSource(dispatcher, postStore, site)
-        val dataSourceFactory = PostFactory(dataSource, listStore, listDescriptor) { post ->
+        val dataSource = PagedListDataForPostStore(dispatcher, postStore, site)
+        val factory = PagedListFactory(dataSource, listStore, listDescriptor) { post ->
             createPostAdapterItem(post)
         }
         val callback = object : BoundaryCallback<ListItemType<PostAdapterItem>>() {
@@ -139,10 +139,8 @@ class PostListViewModel @Inject constructor(
                 super.onItemAtEndLoaded(itemAtEnd)
             }
         }
-        LivePagedListBuilder<Int, ListItemType<PostAdapterItem>>(
-                dataSourceFactory,
-                pagedListConfig
-        ).setBoundaryCallback(callback).build()
+        LivePagedListBuilder<Int, ListItemType<PostAdapterItem>>(factory, pagedListConfig).setBoundaryCallback(callback)
+                .build()
     }
 
     init {

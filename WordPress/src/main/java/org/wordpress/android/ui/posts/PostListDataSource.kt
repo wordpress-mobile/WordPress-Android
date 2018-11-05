@@ -10,18 +10,18 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
-interface PagedListDataSource<T> {
+interface PagedListDataStoreInterface<T> {
     fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long)
     fun fetchList(listDescriptor: ListDescriptor, offset: Int)
     fun getItemByRemoteId(listDescriptor: ListDescriptor, remoteItemId: Long): T?
     fun localItems(listDescriptor: ListDescriptor): List<T> = emptyList()
 }
 
-class PostListDataSource(
+class PagedListDataForPostStore(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val site: SiteModel?
-) : PagedListDataSource<PostModel> {
+) : PagedListDataStoreInterface<PostModel> {
     override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
         site?.let {
             val postToFetch = PostModel()
