@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store
 
+import android.util.Log
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -123,8 +125,26 @@ class InsightsStore
     // Followers stats
     suspend fun fetchFollowers(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
         val currentDate = timeProvider.currentDate
-        val wpComResponse = restClient.fetchFollowers(siteModel, WP_COM, 0, date = currentDate, forced = forced)
-        val emailResponse = restClient.fetchFollowers(siteModel, EMAIL, 0, date = currentDate, forced = forced)
+        val deferredWpComResponse = async {
+            restClient.fetchFollowers(
+                    siteModel,
+                    WP_COM,
+                    0,
+                    date = currentDate,
+                    forced = forced
+            )
+        }
+        val deferredEmailResponse = async {
+            restClient.fetchFollowers(
+                    siteModel,
+                    EMAIL,
+                    0,
+                    date = currentDate,
+                    forced = forced
+            )
+        }
+        val wpComResponse = deferredWpComResponse.await()
+        val emailResponse = deferredEmailResponse.await()
         return@withContext when {
             wpComResponse.isError || emailResponse.isError -> {
                 OnInsightsFetched(wpComResponse.error ?: emailResponse.error)
@@ -132,6 +152,8 @@ class InsightsStore
             wpComResponse.response != null && emailResponse.response != null -> {
                 sqlUtils.insertWpComFollowers(siteModel, wpComResponse.response)
                 sqlUtils.insertEmailFollowers(siteModel, emailResponse.response)
+                Log.e("fetch_followers", "WPCOM: $wpComResponse")
+                Log.e("fetch_followers", "Email: $emailResponse")
                 OnInsightsFetched(insightsMapper.map(wpComResponse.response, emailResponse.response))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))

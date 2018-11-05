@@ -73,6 +73,6 @@ class InsightsSqlUtils
     }
 
     fun selectEmailFollowers(site: SiteModel): FollowersResponse? {
-        return statsSqlUtils.select(site, WP_COM_FOLLOWERS, FollowersResponse::class.java)
+        return statsSqlUtils.select(site, EMAIL_FOLLOWERS, FollowersResponse::class.java)
     }
 }

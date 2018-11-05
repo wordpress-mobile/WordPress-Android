@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
+import android.util.Log
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
@@ -56,6 +57,7 @@ class WPComGsonRequestBuilder
         if (forced) {
             request.setShouldForceUpdate()
         }
+        Log.d("sync_get_request", request.url)
         restClient.add(request)
     }
 
