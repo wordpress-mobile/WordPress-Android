@@ -41,6 +41,12 @@ class NewSiteCreationSegmentsViewModel
     private val _categories: MutableLiveData<List<VerticalSegmentModel>> = MutableLiveData()
     val categories: LiveData<List<VerticalSegmentModel>> = _categories
 
+    private val _showHeader: MutableLiveData<Boolean> = MutableLiveData()
+    val showHeader: LiveData<Boolean> = _showHeader
+
+    private val _showList: MutableLiveData<Boolean> = MutableLiveData()
+    val showList: LiveData<Boolean> = _showList
+
     private val _showProgress: MutableLiveData<Boolean> = MutableLiveData()
     val showProgress: LiveData<Boolean> = _showProgress
 
@@ -101,6 +107,8 @@ class NewSiteCreationSegmentsViewModel
         listState = state
         updateIfChanged(_showProgress, state == FETCHING)
         updateIfChanged(_showError, state == ERROR)
+        updateIfChanged(_showList, state == DONE)
+        updateIfChanged(_showHeader, state == FETCHING || state == DONE)
     }
 
     private fun updateIfChanged(liveData: MutableLiveData<Boolean>, newValue: Boolean) {
