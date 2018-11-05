@@ -1021,9 +1021,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
-        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
@@ -1036,11 +1036,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        if (historyMenuItem != null) {
-            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
-            historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
-        }
-
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
         }
@@ -1048,6 +1043,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (historyMenuItem != null) {
+            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
+            historyMenuItem.setVisible(showMenuItems && hasHistory);
         }
 
         if (settingsMenuItem != null) {
