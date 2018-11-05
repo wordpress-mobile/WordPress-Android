@@ -82,7 +82,7 @@ class StatsFragment : Fragment() {
 
         val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         val nonNullSite = checkNotNull(site)
-        viewModel.start(nonNullSite, insightsViewModel)
+        viewModel.start(nonNullSite)
         if (!isFirstStart) {
             restorePreviousSearch = true
         }

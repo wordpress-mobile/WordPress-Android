@@ -36,27 +36,28 @@ class StatsViewModel
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
 
-    fun start(site: SiteModel, insightsViewModel: InsightsViewModel) {
+    fun start(site: SiteModel) {
         // Check if VM is not already initialized
         if (!isInitialized) {
             isInitialized = true
 
             this.site = site
-            this.insightsViewModel = insightsViewModel
+            this.insightsViewModel.reset()
 
-            loadStats()
+            uiScope.loadStats()
         }
     }
 
-    private fun loadStats() = defaultScope.launch {
-        val loadState = DONE
-        reloadStats(loadState)
+    private fun CoroutineScope.loadStats() = launch {
+        reloadStats()
     }
 
-    private suspend fun reloadStats(state: StatsListState = FETCHING) {
-        _listState.setOnUi(state)
+    private suspend fun reloadStats() {
+        _listState.value = FETCHING
 
         insightsViewModel.loadInsightItems(site)
+
+        _listState.value = DONE
     }
 
     // TODO: To be implemented in the future
