@@ -124,6 +124,13 @@ class ListStore @Inject constructor(
         )
     }
 
+    suspend fun getList(listDescriptor: ListDescriptor): List<Long> = withContext(Dispatchers.Default) {
+        val listModel = listSqlUtils.getList(listDescriptor)
+        if (listModel != null) {
+            listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
+        } else emptyList()
+    }
+
     /**
      * Handles the [ListAction.FETCH_LIST] action.
      *
