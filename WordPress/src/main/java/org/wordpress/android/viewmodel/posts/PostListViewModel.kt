@@ -137,7 +137,10 @@ class PostListViewModel @Inject constructor(
                             if (post != null) {
                                 createPostAdapterItem(post)
                             } else {
-                                PostAdapterItemLoading(remotePostId)
+                                val remoteId = requireNotNull(remotePostId) {
+                                    "If remotePostId is null, it has to be a local post, so post can't be null"
+                                }
+                                PostAdapterItemLoading(remoteId)
                             }
                         },
                         fetchPost = { remotePostId ->
