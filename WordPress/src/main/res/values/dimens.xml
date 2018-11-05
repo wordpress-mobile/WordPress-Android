@@ -351,6 +351,7 @@
     <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
 
     <!--site creation-->
+    <dimen name="site_creation_screen_horizontal_padding">0dp</dimen>
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
     <dimen name="site_creation_list_divider_start_margin">72dp</dimen>
     <dimen name="site_creation_list_min_item_height">72dp</dimen>

@@ -9,4 +9,5 @@
     <dimen name="media_settings_margin">@dimen/media_settings_margin_tablet</dimen>
 
     <dimen name="bottom_sheet_dialog_width">300dp</dimen>
+    <dimen name="site_creation_screen_horizontal_padding">128dp</dimen>
 </resources>
