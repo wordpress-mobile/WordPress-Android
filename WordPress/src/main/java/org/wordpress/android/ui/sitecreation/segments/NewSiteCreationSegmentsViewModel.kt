@@ -38,14 +38,8 @@ class NewSiteCreationSegmentsViewModel
     /* Should be updated only within updateUIState() */
     private var listState: ListState = PREINIT
 
-    private val _categories: MutableLiveData<List<VerticalSegmentModel>> = MutableLiveData()
-    val categories: LiveData<List<VerticalSegmentModel>> = _categories
-
-    private val _showProgress: MutableLiveData<Boolean> = MutableLiveData()
-    val showProgress: LiveData<Boolean> = _showProgress
-
-    private val _showError: MutableLiveData<Boolean> = MutableLiveData()
-    val showError: LiveData<Boolean> = _showError
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
+    val uiState: LiveData<UiState> = _uiState
 
     fun start() {
         if (isStarted) return
@@ -72,8 +66,7 @@ class NewSiteCreationSegmentsViewModel
             // TODO handle error
             updateUIState(ERROR)
         } else {
-            _categories.value = event.segmentList
-            updateUIState(DONE)
+            updateUIState(DONE, event.segmentList)
         }
     }
 
@@ -97,16 +90,15 @@ class NewSiteCreationSegmentsViewModel
 
     // TODO analytics
 
-    private fun updateUIState(state: ListState) {
+    private fun updateUIState(state: ListState, data: List<VerticalSegmentModel> = emptyList()) {
         listState = state
-        updateIfChanged(_showProgress, state == FETCHING)
-        updateIfChanged(_showError, state == ERROR)
-    }
-
-    private fun updateIfChanged(liveData: MutableLiveData<Boolean>, newValue: Boolean) {
-        if (liveData.value != newValue) {
-            liveData.value = newValue
-        }
+        _uiState.value = UiState(
+                showProgress = state == FETCHING,
+                showError = state == ERROR,
+                showList = state == DONE,
+                showHeader = state == FETCHING || state == DONE,
+                data = data
+        )
     }
 
     private enum class ListState {
@@ -115,4 +107,12 @@ class NewSiteCreationSegmentsViewModel
         ERROR,
         DONE
     }
+
+    data class UiState(
+        val showProgress: Boolean,
+        val showError: Boolean,
+        val showList: Boolean,
+        val showHeader: Boolean,
+        val data: List<VerticalSegmentModel>
+    )
 }
