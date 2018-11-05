@@ -86,24 +86,24 @@ class InsightsStore
 
     // Latest post insights
     suspend fun fetchLatestPostInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val responsePost = restClient.fetchLatestPostForInsights(site, forced)
-        val postsFound = responsePost.response?.postsFound
+        val latestPost = restClient.fetchLatestPostForInsights(site, forced)
+        val postsFound = latestPost.response?.postsFound
 
-        val posts = responsePost.response?.posts
+        val posts = latestPost.response?.posts
         return@withContext if (postsFound != null && postsFound > 0 && posts != null && posts.isNotEmpty()) {
             val latestPost = posts[0]
-            val responsePost = restClient.fetchPostStats(site, latestPost.id, forced)
+            val postStats = restClient.fetchPostStats(site, latestPost.id, forced)
             when {
-                responsePost.response != null -> {
+                postStats.response != null -> {
                     sqlUtils.insert(site, latestPost)
-                    sqlUtils.insert(site, responsePost.response)
-                    OnInsightsFetched((latestPost to responsePost.response).toDomainModel(site))
+                    sqlUtils.insert(site, postStats.response)
+                    OnInsightsFetched((latestPost to postStats.response).toDomainModel(site))
                 }
-                responsePost.isError -> OnInsightsFetched(responsePost.error)
+                postStats.isError -> OnInsightsFetched(postStats.error)
                 else -> OnInsightsFetched()
             }
-        } else if (responsePost.isError) {
-            OnInsightsFetched(responsePost.error)
+        } else if (latestPost.isError) {
+            OnInsightsFetched(latestPost.error)
         } else {
             OnInsightsFetched()
         }
@@ -120,8 +120,14 @@ class InsightsStore
     }
 
     private fun Pair<PostResponse, PostStatsResponse>.toDomainModel(site: SiteModel): InsightsLatestPostModel {
-        val daysViews = if (second.fields.size > 1 && second.fields[0] == "period" && second.fields[1] == "views") {
-            second.data.map { list -> list[0] to list[1].toInt() }
+        val fields = second.fields
+        val data = second.data
+        val daysViews = if (fields != null &&
+                data != null &&
+                fields.size > 1 &&
+                fields[0] == "period" &&
+                fields[1] == "views") {
+            data.map { list -> list[0] to list[1].toInt() }
         } else {
             listOf()
         }
