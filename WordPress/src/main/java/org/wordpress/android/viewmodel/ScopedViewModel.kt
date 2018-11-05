@@ -8,9 +8,7 @@ import kotlinx.coroutines.experimental.android.HandlerDispatcher
 import kotlinx.coroutines.experimental.android.Main
 import kotlin.coroutines.experimental.CoroutineContext
 
-abstract class ScopedViewModel(
-    private val defaultDispatcher: HandlerDispatcher = Dispatchers.Main
-) : ViewModel(), CoroutineScope {
+abstract class ScopedViewModel(private val defaultDispatcher: HandlerDispatcher) : ViewModel(), CoroutineScope {
     protected var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
