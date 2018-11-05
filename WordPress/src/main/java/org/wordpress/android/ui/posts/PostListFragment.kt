@@ -252,6 +252,7 @@ class PostListFragment : Fragment() {
             if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
                 swipeRefreshLayout?.isRefreshing = false
             } else {
+                swipeRefreshLayout?.isRefreshing = false
                 viewModel.refreshList()
             }
         }

@@ -107,7 +107,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
+            .setEnablePlaceholders(false)
             .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
             .setPageSize(PAGE_SIZE)
             .build()
@@ -135,23 +135,21 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
-    val dataSource: PostPositionalDataSource by lazy {
-        // TODO: null cast !!
-        PostPositionalDataSource(postStore, site, listStore, listDescriptor!!, transform = { remotePostId, post ->
-            if (post == null) {
-                PostAdapterItemLoading(remotePostId)
-            } else {
-                createPostAdapterItem(post)
-            }
-        }, fetchPost = { remotePostId ->
-            fetchPost(remotePostId)
-        })
-    }
-
     val pagedListData: LiveData<PagedList<PostAdapterItemType>> by lazy {
         val dataSourceFactory = object : DataSource.Factory<Int, PostAdapterItemType>() {
             override fun create(): DataSource<Int, PostAdapterItemType> {
-                return dataSource
+                // TODO: null cast !!
+                return PostPositionalDataSource(postStore, site, listStore, listDescriptor!!,
+                        transform = { remotePostId, post ->
+                            if (post != null) {
+                                createPostAdapterItem(post)
+                            } else {
+                                PostAdapterItemLoading(remotePostId)
+                            }
+                        },
+                        fetchPost = { remotePostId ->
+                            fetchPost(remotePostId)
+                        })
             }
         }
         LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).build()
@@ -333,7 +331,7 @@ class PostListViewModel @Inject constructor(
                 uploadedPostRemoteIds.clear()
             }
             // We want to refresh the posts even if there is an error so we can get the state change
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
@@ -343,7 +341,7 @@ class PostListViewModel @Inject constructor(
         if (listDescriptor?.typeIdentifier != event.type) {
             return
         }
-        dataSource.invalidate()
+        pagedListData.value?.dataSource?.invalidate()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -376,7 +374,7 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
@@ -406,7 +404,7 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        dataSource.invalidate()
+        pagedListData.value?.dataSource?.invalidate()
     }
 
     // EventBus
@@ -436,7 +434,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
@@ -447,7 +445,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
@@ -455,7 +453,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
         postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
             updateUploadStatus(post)
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
@@ -468,7 +466,7 @@ class PostListViewModel @Inject constructor(
             for (post in postsToRefresh) {
                 updateUploadStatus(post)
             }
-            dataSource.invalidate()
+            pagedListData.value?.dataSource?.invalidate()
         }
     }
 
