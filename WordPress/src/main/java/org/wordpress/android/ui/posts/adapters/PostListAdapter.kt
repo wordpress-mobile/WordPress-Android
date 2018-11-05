@@ -485,7 +485,7 @@ object DiffItemCallback : DiffUtil.ItemCallback<PostAdapterItemType>() {
             return true
         }
         if (oldItem is PostAdapterItemLoading && newItem is PostAdapterItemLoading) {
-            return true
+            return oldItem.remotePostId == newItem.remotePostId
         }
         if (oldItem is PostAdapterItemPost && newItem is PostAdapterItemPost) {
             return oldItem.data == newItem.data

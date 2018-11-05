@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import android.arch.paging.PagedList.BoundaryCallback
 import android.content.Intent
 import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
@@ -144,7 +145,14 @@ class PostListViewModel @Inject constructor(
                         })
             }
         }
-        LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).build()
+        val callback = object : BoundaryCallback<PostAdapterItemType>() {
+            override fun onItemAtEndLoaded(itemAtEnd: PostAdapterItemType) {
+                fetchList(true)
+                super.onItemAtEndLoaded(itemAtEnd)
+            }
+        }
+        LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).setBoundaryCallback(callback)
+                .build()
     }
 
     init {
