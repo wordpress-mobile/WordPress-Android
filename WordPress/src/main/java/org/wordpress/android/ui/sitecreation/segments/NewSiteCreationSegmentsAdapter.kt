@@ -30,7 +30,10 @@ class NewSiteCreationSegmentsAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private class SegmentsDiffUtils(val oldItems: List<VerticalSegmentModel>, val newItems: List<VerticalSegmentModel>) :
+    private class SegmentsDiffUtils(
+        val oldItems: List<VerticalSegmentModel>,
+        val newItems: List<VerticalSegmentModel>
+    ) :
             DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
