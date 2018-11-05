@@ -24,6 +24,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+// TODO: This should be a "@SiteScope" of sorts
 @Singleton
 class InsightsViewModel
 @Inject constructor(
@@ -50,6 +51,11 @@ class InsightsViewModel
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }
+    }
+
+    // TODO: Remove once a separate instance is used every time a site is changed
+    fun reset() {
+        _data.value = listOf(Empty())
     }
 
     suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false) =
