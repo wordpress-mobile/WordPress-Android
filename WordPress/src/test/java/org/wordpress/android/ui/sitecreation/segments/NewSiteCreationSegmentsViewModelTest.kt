@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 
 @RunWith(MockitoJUnitRunner::class)
@@ -49,9 +50,7 @@ class NewSiteCreationSegmentsViewModelTest {
     private val errorEvent = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, "dummyError"))
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
-    @Mock private lateinit var dataObserver: Observer<List<VerticalSegmentModel>>
-    @Mock private lateinit var showProgressObserver: Observer<Boolean>
-    @Mock private lateinit var showErrorObserver: Observer<Boolean>
+    @Mock private lateinit var uiStateObserver: Observer<UiState>
 
     @Before
     fun setUp() {
@@ -61,12 +60,8 @@ class NewSiteCreationSegmentsViewModelTest {
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
         )
-        val dataObservable = viewModel.categories
-        dataObservable.observeForever(dataObserver)
-        val progressObservable = viewModel.showProgress
-        progressObservable.observeForever(showProgressObserver)
-        val errorObservable = viewModel.showError
-        errorObservable.observeForever(showErrorObserver)
+        val uiStateObservable = viewModel.uiState
+        uiStateObservable.observeForever(uiStateObserver)
     }
 
     @Test
@@ -74,25 +69,20 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
-        inOrder(dataObserver).apply {
-            verify(dataObserver).onChanged(firstModel.segmentList)
-            verifyNoMoreInteractions()
-        }
+        assert(viewModel.uiState.value!!.data == firstModel.segmentList)
     }
 
     @Test
     fun onRetryFetchesCategories() = test {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
+
+        assert(viewModel.uiState.value!!.data == firstModel.segmentList)
+
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        inOrder(dataObserver).apply {
-            verify(dataObserver).onChanged(firstModel.segmentList)
-
-            verify(dataObserver).onChanged(secondDummyEvent.segmentList)
-            verifyNoMoreInteractions()
-        }
+        assert(viewModel.uiState.value!!.data == secondDummyEvent.segmentList)
     }
 
     @Test
@@ -100,10 +90,20 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
         viewModel.start()
 
-        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
-            verify(showProgressObserver).onChanged(true)
-            verify(dataObserver).onChanged(firstModel.segmentList)
-            verify(showProgressObserver).onChanged(false)
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showHeader = true,
+                            showList = true,
+                            data = firstModel.segmentList
+                    )
+            )
             verifyNoMoreInteractions()
         }
     }
@@ -115,11 +115,33 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        inOrder(showProgressObserver, showErrorObserver).apply {
-            verify(showProgressObserver).onChanged(true)
-            verify(showProgressObserver).onChanged(false)
-            verify(showProgressObserver).onChanged(true)
-            verify(showProgressObserver).onChanged(false)
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showHeader = true,
+                            showList = true,
+                            data = firstModel.segmentList
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showHeader = true,
+                            showList = true,
+                            data = secondDummyEvent.segmentList
+                    )
+            )
             verifyNoMoreInteractions()
         }
     }
@@ -129,10 +151,14 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
 
-        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
-            verify(showProgressObserver).onChanged(true)
-            verify(showProgressObserver).onChanged(false)
-            verify(showErrorObserver).onChanged(true)
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(UiState(showError = true))
             verifyNoMoreInteractions()
         }
     }
@@ -144,15 +170,31 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
         viewModel.onRetryClicked()
 
-        inOrder(dataObserver, showProgressObserver, showErrorObserver).apply {
-            verify(showProgressObserver).onChanged(true)
-            verify(showProgressObserver).onChanged(false)
-            verify(showErrorObserver).onChanged(true)
-
-            verify(showProgressObserver).onChanged(true)
-            verify(showErrorObserver).onChanged(false)
-            verify(dataObserver).onChanged(secondDummyEvent.segmentList)
-            verify(showProgressObserver).onChanged(false)
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showError = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showProgress = true,
+                            showHeader = true
+                    )
+            )
+            verify(uiStateObserver).onChanged(
+                    UiState(
+                            showHeader = true,
+                            showList = true,
+                            data = secondDummyEvent.segmentList
+                    )
+            )
             verifyNoMoreInteractions()
         }
     }
