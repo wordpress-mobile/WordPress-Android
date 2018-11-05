@@ -307,10 +307,11 @@ public class WPMainActivity extends AppCompatActivity implements
         if (uri == null) {
             return;
         }
+        initSelectedSite();
 
         String host = StringUtils.notNullStr(uri.getHost());
         AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, host, uri);
-        
+
         switch (host) {
             case DEEP_LINK_HOST_NOTIFICATIONS:
                 mBottomNav.setCurrentPosition(PAGE_NOTIFS);
