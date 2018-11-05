@@ -20,7 +20,7 @@ abstract class StatsListViewModel(defaultDispatcher: HandlerDispatcher) : Scoped
 
     abstract fun start(site: SiteModel)
 
-    abstract fun reload(site: SiteModel)
+    abstract fun CoroutineScope.reload(site: SiteModel)
 }
 
 data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {

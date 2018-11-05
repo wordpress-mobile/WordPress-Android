@@ -19,6 +19,6 @@ class DaysTabViewModel @Inject constructor(
         reload(site)
     }
 
-    override fun reload(site: SiteModel) {
+    override fun CoroutineScope.reload(site: SiteModel) {
     }
 }

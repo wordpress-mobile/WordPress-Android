@@ -24,8 +24,8 @@ class InsightsTabViewModel @Inject constructor(
         reload(site)
     }
 
-    override fun reload(site: SiteModel) {
-        uiScope.launch {
+    override fun CoroutineScope.reload(site: SiteModel) {
+        launch {
             insightsViewModel.loadInsightItems(site, false)
         }
     }
