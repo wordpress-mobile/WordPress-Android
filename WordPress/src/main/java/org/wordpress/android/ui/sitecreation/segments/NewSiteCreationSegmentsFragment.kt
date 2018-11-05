@@ -28,6 +28,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var contentLayout: ViewGroup
     private lateinit var progressLayout: ViewGroup
     private lateinit var errorLayout: ViewGroup
+    private lateinit var headerLayout: ViewGroup
 
     @Inject protected lateinit var imageManager: ImageManager
     @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -40,7 +41,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // important for accessibility - talkback
         activity!!.setTitle(R.string.new_site_creation_segments_title)
-        contentLayout = rootView.findViewById(R.id.content_layout)
+        headerLayout = rootView.findViewById(R.id.header_layout)
         progressLayout = rootView.findViewById(R.id.progress_layout)
         errorLayout = rootView.findViewById(R.id.error_layout)
         initRecyclerView(rootView)
@@ -53,25 +54,28 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        val adapter = NewSiteCreationSegmentsAdapter(
+                onItemTapped = { segment -> viewModel.onSegmentSelected(segment.segmentId) },
+                imageManager = imageManager
+        )
+        recyclerView.adapter = adapter
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
-        viewModel.categories.observe(this, Observer { segments -> segments?.let { updateSegments(segments) } })
-        viewModel.showError.observe(this, Observer { showError ->
-            showError?.let {
-                if (showError) {
-                    showError()
-                }
-            }
-        })
-        viewModel.showProgress.observe(this, Observer { showProgress ->
-            showProgress?.let {
-                if (showProgress) {
-                    showProgress()
-                }
+        viewModel.uiState.observe(this, Observer { state ->
+            state?.let {
+                progressLayout.visibility = if (state.showProgress) View.VISIBLE else View.GONE
+                headerLayout.visibility = if (state.showHeader) View.VISIBLE else View.GONE
+                recyclerView.visibility = if (state.showList) View.VISIBLE else View.GONE
+                errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
+                updateSegments(state.data)
             }
         })
 
@@ -107,40 +111,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun updateSegments(segments: List<VerticalSegmentModel>) {
-        val adapter: NewSiteCreationSegmentsAdapter
-        if (recyclerView.adapter == null) {
-            adapter = NewSiteCreationSegmentsAdapter(
-                    onItemTapped = { segment -> viewModel.onSegmentSelected(segment.segmentId) },
-                    imageManager = imageManager
-            )
-            recyclerView.adapter = adapter
-        } else {
-            adapter = recyclerView.adapter as NewSiteCreationSegmentsAdapter
-        }
-
-        showContent()
-        adapter.update(segments)
-    }
-
-    private fun showContent() {
-        contentLayout.visibility = View.VISIBLE
-        recyclerView.visibility = View.VISIBLE
-        progressLayout.visibility = View.GONE
-        errorLayout.visibility = View.GONE
-    }
-
-    private fun showProgress() {
-        contentLayout.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-        progressLayout.visibility = View.VISIBLE
-        errorLayout.visibility = View.GONE
-    }
-
-    private fun showError() {
-        contentLayout.visibility = View.GONE
-        progressLayout.visibility = View.GONE
-        recyclerView.visibility = View.GONE
-        errorLayout.visibility = View.VISIBLE
+        (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments)
     }
 
     companion object {
