@@ -30,7 +30,7 @@ class NewSiteCreationSegmentsViewModel
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineDispatcher,
     @Named(IO_DISPATCHER) private val IO: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
-    val fetchCategoriesJob: Job = Job()
+    private val fetchCategoriesJob: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = IO + fetchCategoriesJob
 
