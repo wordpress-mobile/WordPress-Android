@@ -20,10 +20,9 @@ import javax.inject.Named
 
 class StatsViewModel
 @Inject constructor(
-    private val insightsViewModel: InsightsViewModel,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
-) : ScopedViewModel() {
+    private val insightsUseCase: InsightsUseCase,
+    @Named(UI_THREAD) private val mainDispatcher: HandlerDispatcher
+) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
     private val _listState = MutableLiveData<StatsListState>()
@@ -40,7 +39,7 @@ class StatsViewModel
             isInitialized = true
 
             this.site = site
-            this.insightsViewModel.reset()
+            this.insightsUseCase.reset()
 
             uiScope.loadStats()
         }
@@ -53,7 +52,7 @@ class StatsViewModel
     private suspend fun reloadStats() {
         _listState.value = FETCHING
 
-        insightsViewModel.loadInsightItems(site)
+        insightsUseCase.loadInsightItems(site)
 
         _listState.value = DONE
     }

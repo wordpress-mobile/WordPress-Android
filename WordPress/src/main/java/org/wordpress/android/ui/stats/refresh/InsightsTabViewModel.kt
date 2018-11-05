@@ -13,9 +13,9 @@ import javax.inject.Named
 
 class InsightsTabViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: HandlerDispatcher,
-    private val insightsViewModel: InsightsViewModel
+    private val insightsUseCase: InsightsUseCase
 ) : StatsListViewModel(mainDispatcher) {
-    private val _data = Transformations.map(insightsViewModel.data) { loadedData ->
+    private val _data = Transformations.map(insightsUseCase.data) { loadedData ->
         InsightsUiState(loadedData, DONE)
     }
     override val data: LiveData<InsightsUiState> = _data
@@ -26,7 +26,7 @@ class InsightsTabViewModel @Inject constructor(
 
     override fun CoroutineScope.reload(site: SiteModel) {
         launch {
-            insightsViewModel.loadInsightItems(site, false)
+            insightsUseCase.loadInsightItems(site, false)
         }
     }
 }

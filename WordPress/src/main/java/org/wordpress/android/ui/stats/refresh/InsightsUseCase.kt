@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 // TODO: This should be a "@SiteScope" of sorts
 @Singleton
-class InsightsViewModel
+class InsightsUseCase
 @Inject constructor(
     private val statsStore: StatsStore,
     @Named(UI_SCOPE) private val scope: CoroutineScope,
