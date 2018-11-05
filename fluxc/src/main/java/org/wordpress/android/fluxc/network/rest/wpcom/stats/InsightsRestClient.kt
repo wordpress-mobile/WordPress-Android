@@ -175,6 +175,54 @@ constructor(
         }
     }
 
+    suspend fun fetchFollowers(
+        site: SiteModel,
+        type: FollowerType,
+        pageOffset: Int,
+        pageSize: Int = 6,
+        period: StatsGranularity = DAYS,
+        date: Date,
+        forced: Boolean
+    ): FetchInsightsPayload<FollowersResponse> {
+        // followers?type=wpcom
+        // followers?type=email
+        // comment-followers
+        /*
+
+        if (pageOffset < 1) {
+            path = String.format(Locale.US, path + "&max=%s", maxResultsRequested);
+        } else {
+            path = String.format(Locale.US, path + "&period=%s&date=%s&max=%s&page=%s",
+                                 period, date, maxResultsRequested, pageOffset);
+        }
+         */
+        val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
+
+        val params = mapOf(
+                "type" to type.path,
+                "max" to pageSize.toString(),
+                "period" to period.toPath(),
+                "page" to pageOffset.toString(),
+                "date" to getFormattedDate(site, date, period)
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                FollowersResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchInsightsPayload(response.data)
+            }
+            is Error -> {
+                FetchInsightsPayload(buildStatsError(response.error))
+            }
+        }
+    }
+
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -281,6 +329,44 @@ constructor(
             WEEKS -> "week"
             MONTHS -> "month"
             YEARS -> "year"
+        }
+    }
+
+    enum class FollowerType(val path: String) {
+        EMAIL("email"), WP_COM("wpcom")
+    }
+
+    data class FollowersResponse(
+        @SerializedName("page") val page: Int,
+        @SerializedName("pages") val pages: Int,
+        @SerializedName("total") val total: Int,
+        @SerializedName("total_email") val totalEmail: Int,
+        @SerializedName("total_wpcom") val totalWpCom: Int,
+        @SerializedName("subscribers") val subscribers: List<FollowerResponse>
+
+    ) {
+        data class FollowerResponse(
+            @SerializedName("label") val label: String,
+            @SerializedName("avatar") val avatar: String,
+            @SerializedName("url") val url: String,
+            @SerializedName("date_subscribed") val dateSubscribed: String,
+            @SerializedName("follow_data") val followData: FollowData
+        )
+
+        data class FollowData(
+            @SerializedName("type") val type: String,
+            @SerializedName("params") val params: FollowParams
+        ) {
+            data class FollowParams(
+                @SerializedName("follow-text") val followText: String,
+                @SerializedName("following-text") val followingText: String,
+                @SerializedName("following-hover-text") val followingHoverText: String,
+                @SerializedName("is_following") val isFollowing: Boolean,
+                @SerializedName("blog_id") val blogId: String,
+                @SerializedName("site_id") val siteId: String,
+                @SerializedName("stats-source") val statsSource: String,
+                @SerializedName("blog_domain") val blogDomain: String
+            )
         }
     }
 }
