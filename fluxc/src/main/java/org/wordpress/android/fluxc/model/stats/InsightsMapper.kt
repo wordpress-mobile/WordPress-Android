@@ -1,7 +1,9 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
@@ -83,5 +85,11 @@ class InsightsMapper
                 result[COMMENTS]?.toInt() ?: 0,
                 result[POSTS]?.toInt() ?: 0
         )
+    }
+
+    fun map(wpComResponse: FollowersResponse, emailResponse: FollowersResponse): FollowersModel {
+        val wpComFollowers = wpComResponse.subscribers.map { FollowerModel(it.avatar, it.label, it.url, it.dateSubscribed) }
+        val emailFollowers = emailResponse.subscribers.map { FollowerModel(it.avatar, it.label, it.url, it.dateSubscribed) }
+        return FollowersModel(wpComResponse.totalWpCom, emailResponse.totalEmail, wpComFollowers, emailFollowers)
     }
 }

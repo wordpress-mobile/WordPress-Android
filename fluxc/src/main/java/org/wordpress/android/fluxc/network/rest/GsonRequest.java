@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.rest;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -30,7 +32,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     private final Map<String, Object> mBody;
 
     protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
-                       Type type, Listener<T> listener, BaseErrorListener errorListener) {
+                          Type type, Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
         // HTTP RFC requires a body (even empty) for all POST requests.
         if (method == Method.POST && body == null) {
@@ -73,6 +75,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            Log.e("model", "Response: " + json);
             T res;
             if (mClass == null) {
                 res = mGson.fromJson(json, mType);
