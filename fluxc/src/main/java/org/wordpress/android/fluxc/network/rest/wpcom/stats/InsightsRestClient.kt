@@ -192,7 +192,7 @@ constructor(
                 url,
                 params,
                 FollowersResponse::class.java,
-                enableCaching = true,
+                enableCaching = false,
                 forced = forced
         )
         return when (response) {
