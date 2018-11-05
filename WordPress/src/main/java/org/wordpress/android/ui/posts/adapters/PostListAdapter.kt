@@ -82,15 +82,12 @@ class PostListAdapter(
         showAllButtons = displayWidth >= 1080
     }
 
-    override fun getItem(position: Int): PostAdapterItemType {
-        return super.getItem(position)!!
-    }
-
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             PostAdapterItemEndListIndicator -> VIEW_TYPE_ENDLIST_INDICATOR
             is PostAdapterItemLoading -> VIEW_TYPE_LOADING
             is PostAdapterItemPost -> VIEW_TYPE_POST
+            null -> VIEW_TYPE_LOADING // Placeholder by paged list
         }
     }
 

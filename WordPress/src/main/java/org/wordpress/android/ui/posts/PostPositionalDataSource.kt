@@ -1,13 +1,14 @@
 package org.wordpress.android.ui.posts
 
 import android.arch.paging.PositionalDataSource
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 
 class PostPositionalDataSource(
     private val postStore: PostStore,
@@ -18,21 +19,30 @@ class PostPositionalDataSource(
     private val fetchPost: (Long) -> Unit
 ) : PositionalDataSource<PostAdapterItemType>() {
     private val remoteItemIds = listStore.getList(listDescriptor)
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PostAdapterItemType?>) {
-        val items = getItems(params.startPosition, params.loadSize)
-        callback.onResult(items)
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PostAdapterItemType>) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val items = getItems(params.startPosition, params.loadSize)
+            callback.onResult(items)
+        }
     }
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PostAdapterItemType?>) {
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PostAdapterItemType>) {
         val startPosition = if (params.requestedStartPosition < remoteItemIds.size) params.requestedStartPosition else 0
         val items = getItems(startPosition, params.requestedLoadSize)
-        callback.onResult(items, 0, remoteItemIds.size)
+        if (params.placeholdersEnabled) {
+            callback.onResult(items, startPosition, remoteItemIds.size)
+        } else {
+            callback.onResult(items, startPosition)
+        }
     }
 
-    private fun getItems(startPosition: Int, loadSize: Int): List<PostAdapterItemType?> {
-        AppLog.e(T.POSTS, "PostPositionalDataSource: Get items $startPosition - $loadSize")
-        return (normalizedIndex(startPosition)..normalizedIndex(startPosition + loadSize - 1)).map { index ->
-            AppLog.e(T.POSTS, "Loading index: $index")
+    private fun getItems(startPosition: Int, loadSize: Int): List<PostAdapterItemType> {
+        val normalizedStart = normalizedIndex(startPosition)
+        val normalizedEnd = normalizedIndex(normalizedStart + loadSize)
+        if (normalizedStart == normalizedEnd) {
+            return emptyList()
+        }
+        return (normalizedStart..(normalizedEnd - 1)).map { index ->
             val remotePostId = remoteItemIds[index]
             val post = postStore.getPostByRemotePostId(remotePostId, site)
             if (post == null) {
@@ -45,7 +55,7 @@ class PostPositionalDataSource(
     private fun normalizedIndex(index: Int): Int {
         return when {
             index <= 0 -> 0
-            index >= remoteItemIds.size -> remoteItemIds.size - 1
+            index >= remoteItemIds.size -> remoteItemIds.size
             else -> index
         }
     }

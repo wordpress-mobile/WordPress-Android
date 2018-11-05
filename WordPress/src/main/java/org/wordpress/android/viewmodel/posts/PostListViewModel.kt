@@ -107,7 +107,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
+            .setEnablePlaceholders(true)
             .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
             .setPageSize(PAGE_SIZE)
             .build()
@@ -179,7 +179,7 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site)
         }
-//        refreshList()
+        refreshList()
         isStarted = true
     }
 
@@ -331,8 +331,12 @@ class PostListViewModel @Inject constructor(
                 uploadedPostRemoteIds.clear()
             }
             // We want to refresh the posts even if there is an error so we can get the state change
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
+    }
+
+    private fun invalidateData() {
+        pagedListData.value?.dataSource?.invalidate()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -341,7 +345,7 @@ class PostListViewModel @Inject constructor(
         if (listDescriptor?.typeIdentifier != event.type) {
             return
         }
-        pagedListData.value?.dataSource?.invalidate()
+        invalidateData()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -374,7 +378,7 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
     }
 
@@ -390,6 +394,7 @@ class PostListViewModel @Inject constructor(
             // as the current `ListManager` might not have been updated yet since it's a bg action.
             uploadedPostRemoteIds.add(event.post.remotePostId)
             updateUploadStatus(event.post)
+            // TODO: We might be able to reload the posts without changing the list and then refresh
             // TODO: might not be the best way to start a refresh
             refreshList()
         }
@@ -404,7 +409,7 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        pagedListData.value?.dataSource?.invalidate()
+        invalidateData()
     }
 
     // EventBus
@@ -434,7 +439,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
     }
 
@@ -445,7 +450,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
     }
 
@@ -453,7 +458,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
         postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
             updateUploadStatus(post)
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
     }
 
@@ -466,7 +471,7 @@ class PostListViewModel @Inject constructor(
             for (post in postsToRefresh) {
                 updateUploadStatus(post)
             }
-            pagedListData.value?.dataSource?.invalidate()
+            invalidateData()
         }
     }
 
