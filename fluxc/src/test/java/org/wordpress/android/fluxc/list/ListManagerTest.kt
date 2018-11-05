@@ -269,7 +269,6 @@ class ListManagerTest {
                 items = localItems,
                 loadMoreOffset = 10,
                 isFetchingFirstPage = false,
-                isLoadingMore = false,
                 canLoadMore = false,
                 fetchItem = {},
                 fetchList = fetchList
@@ -292,7 +291,6 @@ class ListManagerTest {
                 items = items,
                 loadMoreOffset = 10,
                 isFetchingFirstPage = false,
-                isLoadingMore = false,
                 canLoadMore = false,
                 fetchItem = {},
                 fetchList = fetchList
@@ -330,13 +328,10 @@ class ListManagerTest {
                 items = listItems,
                 loadMoreOffset = loadMoreOffset,
                 isFetchingFirstPage = isFetchingFirstPage,
-                isLoadingMore = isLoadingMore,
                 canLoadMore = canLoadMore,
                 fetchItem = fetchItemFunction,
                 fetchList = fetchListFunction
         )
-        assertEquals(isFetchingFirstPage, listManager.isFetchingFirstPage)
-        assertEquals(isLoadingMore, listManager.isLoadingMore)
         assertEquals(numberOfItems, listManager.size)
         return listManager
     }
