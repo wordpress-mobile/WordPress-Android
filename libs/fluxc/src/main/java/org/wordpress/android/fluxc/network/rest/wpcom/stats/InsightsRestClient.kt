@@ -178,32 +178,14 @@ constructor(
     suspend fun fetchFollowers(
         site: SiteModel,
         type: FollowerType,
-        pageOffset: Int,
         pageSize: Int = 6,
-        period: StatsGranularity = DAYS,
-        date: Date,
         forced: Boolean
     ): FetchInsightsPayload<FollowersResponse> {
-        // followers?type=wpcom
-        // followers?type=email
-        // comment-followers
-        /*
-
-        if (pageOffset < 1) {
-            path = String.format(Locale.US, path + "&max=%s", maxResultsRequested);
-        } else {
-            path = String.format(Locale.US, path + "&period=%s&date=%s&max=%s&page=%s",
-                                 period, date, maxResultsRequested, pageOffset);
-        }
-         */
         val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
 
         val params = mapOf(
                 "type" to type.path,
-                "max" to pageSize.toString(),
-                "period" to period.toPath(),
-                "page" to pageOffset.toString(),
-                "date" to getFormattedDate(site, date, period)
+                "max" to pageSize.toString()
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

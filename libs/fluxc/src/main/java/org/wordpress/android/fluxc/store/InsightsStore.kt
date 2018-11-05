@@ -124,24 +124,11 @@ class InsightsStore
 
     // Followers stats
     suspend fun fetchFollowers(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val currentDate = timeProvider.currentDate
         val deferredWpComResponse = async {
-            restClient.fetchFollowers(
-                    siteModel,
-                    WP_COM,
-                    0,
-                    date = currentDate,
-                    forced = forced
-            )
+            restClient.fetchFollowers(siteModel, WP_COM, forced = forced)
         }
         val deferredEmailResponse = async {
-            restClient.fetchFollowers(
-                    siteModel,
-                    EMAIL,
-                    0,
-                    date = currentDate,
-                    forced = forced
-            )
+            restClient.fetchFollowers(siteModel, EMAIL, forced = forced)
         }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
