@@ -93,9 +93,6 @@ class PostListFragment : Fragment() {
             viewModel.pagedListData.observe(this, Observer {
                 it?.let { pagedListData -> updatePagedListData(pagedListData) }
             })
-//            viewModel.postListData.observe(this, Observer {
-//                it?.let { postListData -> update(postListData) }
-//            })
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
             })
@@ -305,6 +302,7 @@ class PostListFragment : Fragment() {
         if (!isAdded) {
             return
         }
+        actionableEmptyView?.visibility = if (pagedListData.size == 0) View.VISIBLE else View.GONE
         postListAdapter.submitList(pagedListData)
     }
 

@@ -9,30 +9,26 @@ import android.arch.paging.PagedList
 import android.content.Intent
 import de.greenrobot.event.EventBus
 import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.ListDescriptor
-import org.wordpress.android.fluxc.model.list.ListItemDataSource
-import org.wordpress.android.fluxc.model.list.ListManager
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
@@ -43,6 +39,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -53,11 +50,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostAdapterItemPostData
 import org.wordpress.android.ui.posts.PostAdapterItemType
-import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemEndListIndicator
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemLoading
 import org.wordpress.android.ui.posts.PostAdapterItemType.PostAdapterItemPost
-import org.wordpress.android.ui.posts.PostListData
-import org.wordpress.android.ui.posts.PostListDataSource
 import org.wordpress.android.ui.posts.PostListUserAction
 import org.wordpress.android.ui.posts.PostPositionalDataSource
 import org.wordpress.android.ui.posts.PostUploadAction
@@ -80,14 +74,10 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
-import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.LOADING
 import org.wordpress.android.widgets.PostListButton
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.system.measureTimeMillis
 
 private const val INITIAL_LOAD_SIZE_HINT = 20
 private const val PAGE_SIZE = 10
@@ -127,9 +117,6 @@ class PostListViewModel @Inject constructor(
     private lateinit var site: SiteModel
     private val uploadedPostRemoteIds = ArrayList<Long>()
 
-    private val _postListData = MutableLiveData<PostListData>()
-    val postListData: LiveData<PostListData> = _postListData
-
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
 
@@ -148,23 +135,28 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
+    val dataSource: PostPositionalDataSource by lazy {
+        // TODO: null cast !!
+        PostPositionalDataSource(postStore, site, listStore, listDescriptor!!, transform = { remotePostId, post ->
+            if (post == null) {
+                PostAdapterItemLoading(remotePostId)
+            } else {
+                createPostAdapterItem(post)
+            }
+        }, fetchPost = { remotePostId ->
+            fetchPost(remotePostId)
+        })
+    }
+
     val pagedListData: LiveData<PagedList<PostAdapterItemType>> by lazy {
         val dataSourceFactory = object : DataSource.Factory<Int, PostAdapterItemType>() {
             override fun create(): DataSource<Int, PostAdapterItemType> {
-                // TODO: null cast !!
-                return PostPositionalDataSource(postStore, site, listStore, listDescriptor!!) { remotePostId, post ->
-                    if (post == null) {
-                        PostAdapterItemLoading(remotePostId)
-                    } else {
-                        createPostAdapterItem(post)
-                    }
-                }
+                return dataSource
             }
         }
         LivePagedListBuilder<Int, PostAdapterItemType>(dataSourceFactory, pagedListConfig).build()
     }
 
-    private var listManager: ListManager<PostModel>? = null
     private var listState: ListState? = null
     private var items: List<PostAdapterItemType>? = null
 
@@ -189,12 +181,29 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site)
         }
-        refreshListManagerFromStore(refreshFirstPageAfter = true)
+//        refreshList()
         isStarted = true
     }
 
+    private fun fetchPost(remoteItemId: Long) {
+        val postToFetch = PostModel()
+        postToFetch.remotePostId = remoteItemId
+        val payload = RemotePostPayload(postToFetch, site)
+        dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+    }
+
     fun refreshList() {
-        listManager?.refresh()
+        fetchList(false)
+    }
+
+    private fun fetchList(loadMore: Boolean) {
+        listDescriptor?.let { listDescriptor ->
+            val payload = FetchListPayload(listDescriptor, loadMore) { _, offset ->
+                val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
+                dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
+            }
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(payload))
+        }
     }
 
     fun handleEditPostResult(data: Intent?) {
@@ -324,7 +333,7 @@ class PostListViewModel @Inject constructor(
                 uploadedPostRemoteIds.clear()
             }
             // We want to refresh the posts even if there is an error so we can get the state change
-            refreshListManagerFromStore()
+            dataSource.invalidate()
         }
     }
 
@@ -334,7 +343,7 @@ class PostListViewModel @Inject constructor(
         if (listDescriptor?.typeIdentifier != event.type) {
             return
         }
-        refreshListManagerFromStore()
+        dataSource.invalidate()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -342,7 +351,6 @@ class PostListViewModel @Inject constructor(
     fun onListStateChanged(event: OnListStateChanged) {
         // There is no error to handle for `OnListStateChanged`
         listState = event.newState
-        createAndDispatchPostListData()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -368,7 +376,7 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            updateFeaturedMediaAndDispatchChanges(event.mediaList)
+            dataSource.invalidate()
         }
     }
 
@@ -398,7 +406,7 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        updateFeaturedMediaAndDispatchChanges(listOf(event.media))
+        dataSource.invalidate()
     }
 
     // EventBus
@@ -428,7 +436,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            updatePostsAndDispatchChanges(setOf(event.post))
+            dataSource.invalidate()
         }
     }
 
@@ -439,7 +447,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
             updateUploadStatus(event.post)
-            updatePostsAndDispatchChanges(setOf(event.post))
+            dataSource.invalidate()
         }
     }
 
@@ -447,7 +455,7 @@ class PostListViewModel @Inject constructor(
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
         postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
             updateUploadStatus(post)
-            updatePostsAndDispatchChanges(setOf(post))
+            dataSource.invalidate()
         }
     }
 
@@ -460,114 +468,11 @@ class PostListViewModel @Inject constructor(
             for (post in postsToRefresh) {
                 updateUploadStatus(post)
             }
-            updatePostsAndDispatchChanges(postsToRefresh)
+            dataSource.invalidate()
         }
     }
 
     // ListManager
-
-    /**
-     * A helper function to load the current [ListManager] from [ListStore].
-     *
-     * @param refreshFirstPageAfter Whether the first page of the list should be fetched after its loaded
-     */
-    private fun refreshListManagerFromStore(refreshFirstPageAfter: Boolean = false) {
-        listDescriptor?.let { listDescriptor ->
-            defaultScope.launch {
-                val timeTook = measureTimeMillis {
-                    val listManager = getListManagerFromStore(listDescriptor)
-                    this@PostListViewModel.listManager = listManager
-                    updateAllItemsAndDispatchChanges(listManager)
-                    if (refreshFirstPageAfter) {
-                        listManager.refresh()
-                    }
-                }
-                AppLog.e(T.POSTS, "Time took to updateUI: $timeTook ms!")
-            }
-        }
-    }
-
-    // TODO: Only dispatch changes if the data is updated
-    // TODO: Don't use suspend functions all over, currently there is no queue or order, just a chaos
-    private fun updateFeaturedMediaAndDispatchChanges(mediaList: List<MediaModel>) {
-        defaultScope.launch {
-            mediaList.forEach { featuredImageMap[it.mediaId] = it.url }
-
-            items = items?.map { item ->
-                if (item is PostAdapterItemPost) {
-                    val mediaToUpdate = mediaList.find { it.mediaId == item.data.featuredImageId }
-                    if (mediaToUpdate != null) {
-                        PostAdapterItemPost(
-                                data = item.data.new(mediaToUpdate.url),
-                                onButtonClicked = item.onButtonClicked,
-                                onSelected = item.onSelected
-                        )
-                    }
-                }
-                item
-            }
-            createAndDispatchPostListData()
-        }
-    }
-
-    private fun updatePostsAndDispatchChanges(postSet: Set<PostModel>) {
-        defaultScope.launch {
-            items = items?.map { item ->
-                if (item is PostAdapterItemPost) {
-                    val postToUpdate = postSet.find { it.id == item.data.localPostId }
-                    if (postToUpdate != null) {
-                        return@map createPostAdapterItem(postToUpdate)
-                    }
-                }
-                item
-            }
-            createAndDispatchPostListData()
-        }
-    }
-
-    private fun updateAllItemsAndDispatchChanges(listManager: ListManager<PostModel>) {
-        defaultScope.launch {
-            items = createAdapterItems(listManager)
-            createAndDispatchPostListData()
-        }
-    }
-
-    private fun createAndDispatchPostListData() {
-        defaultScope.launch {
-            val data = PostListData(
-                    items,
-                    listManager,
-                    listState,
-                    isAztecEditorEnabled,
-                    isPhotonCapable,
-                    site.hasCapabilityPublishPosts
-            )
-            _postListData.postValue(data)
-            updateEmptyViewState(data)
-        }
-    }
-
-    private fun updateEmptyViewState(postListData: PostListData) {
-        val state = if (postListData.size == 0) {
-            if (postListData.isLoadingFirstPage) LOADING else EMPTY_LIST
-        } else {
-            HIDDEN_LIST
-        }
-        _emptyViewState.postValue(state)
-    }
-
-    /**
-     * A helper function to load the [ListManager] for the given [ListDescriptor] from [ListStore].
-     *
-     * [ListStore] requires an instance of [ListItemDataSource] which is a way for us to tell [ListStore] and
-     * [ListManager] how to take certain actions or how to access certain data.
-     */
-    private suspend fun getListManagerFromStore(listDescriptor: PostListDescriptor) = withContext(Dispatchers.Default) {
-        listStore.getListManager(
-                listDescriptor,
-                PostListDataSource(dispatcher, postStore, site, null, uploadedPostRemoteIds)
-        )
-    }
 
     private val uploadStatusMap = ConcurrentHashMap<Int, PostAdapterItemUploadStatus>()
     private val featuredImageMap = ConcurrentHashMap<Long, String>()
@@ -583,27 +488,6 @@ class PostListViewModel @Inject constructor(
         val hasInProgressMediaUpload: Boolean,
         val hasPendingMediaUpload: Boolean
     )
-
-    // TODO: Make this cancelable
-    private suspend fun createAdapterItems(listManager: ListManager<PostModel>?): List<PostAdapterItemType> =
-            withContext(Dispatchers.Default) {
-                if (listManager == null) return@withContext emptyList<PostAdapterItemType>()
-                val items = (0..(listManager.size - 1)).map { index ->
-                    val post = listManager.getItem(index, shouldFetchIfNull = false, shouldLoadMoreIfNecessary = false)
-                    if (post == null) {
-                        val remotePostId = requireNotNull(listManager.getRemoteItemId(index)) {
-                            // TODO: Rework this in ListManager
-                            "If the item is null, its remoteItemId has to be a valid id"
-                        }
-                        PostAdapterItemLoading(remotePostId)
-                    } else {
-                        createPostAdapterItem(post)
-                    }
-                }
-                if (hasLoadedAllPosts()) {
-                    items.plus(PostAdapterItemEndListIndicator)
-                } else items
-            }
 
     private fun createPostAdapterItem(post: PostModel): PostAdapterItemPost {
         val title = if (post.title.isNotBlank()) {

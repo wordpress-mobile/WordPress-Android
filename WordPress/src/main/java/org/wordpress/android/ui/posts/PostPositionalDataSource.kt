@@ -6,13 +6,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 
 class PostPositionalDataSource(
     private val postStore: PostStore,
     private val site: SiteModel,
     listStore: ListStore,
     listDescriptor: ListDescriptor,
-    private val transform: (Long, PostModel?) -> PostAdapterItemType
+    private val transform: (Long, PostModel?) -> PostAdapterItemType,
+    private val fetchPost: (Long) -> Unit
 ) : PositionalDataSource<PostAdapterItemType>() {
     private val remoteItemIds = listStore.getList(listDescriptor)
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PostAdapterItemType>) {
@@ -27,9 +30,14 @@ class PostPositionalDataSource(
     }
 
     private fun getItems(startPosition: Int, loadSize: Int): List<PostAdapterItemType> {
+        AppLog.e(T.POSTS, "PostPositionalDataSource: Get items $startPosition - $loadSize")
         return (startPosition..(startPosition + loadSize - 1)).map { index ->
+            AppLog.e(T.POSTS, "Loading index: $index")
             val remotePostId = remoteItemIds[index]
             val post = postStore.getPostByRemotePostId(remotePostId, site)
+            if (post == null) {
+                fetchPost(remotePostId)
+            }
             transform(remotePostId, post)
         }
     }
