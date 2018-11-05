@@ -2,12 +2,7 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,11 +21,9 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEG
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.experimental.CoroutineContext
 
 // TODO: This should be a "@SiteScope" of sorts
 @Singleton

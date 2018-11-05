@@ -5,8 +5,6 @@ import dagger.Provides
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.android.HandlerDispatcher
 import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
 
