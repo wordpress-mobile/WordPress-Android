@@ -15,7 +15,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
