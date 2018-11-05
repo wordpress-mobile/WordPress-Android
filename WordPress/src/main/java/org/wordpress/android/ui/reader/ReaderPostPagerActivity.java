@@ -259,7 +259,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         // default when post hasn't been retrieved yet
-        setTitle(ActivityUtils.isDeepLinking(getIntent()) ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+        setTitle(ActivityUtils.isDeepLinking(getIntent()) ? R.string.reader_title_post_detail_wpcom
+                : R.string.reader_title_post_detail);
     }
 
     /*
