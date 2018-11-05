@@ -3,10 +3,12 @@ package org.wordpress.android.ui.stats.refresh
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.android.HandlerDispatcher
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.DEFAULT_SCOPE
 import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -41,15 +43,11 @@ class StatsViewModel
             this.site = site
             this.insightsUseCase.reset()
 
-            uiScope.loadStats()
+            reloadStats()
         }
     }
 
-    private fun CoroutineScope.loadStats() = launch {
-        reloadStats()
-    }
-
-    private suspend fun reloadStats() {
+    private fun CoroutineScope.reloadStats() = launch {
         _listState.value = FETCHING
 
         insightsUseCase.loadInsightItems(site)
@@ -69,8 +67,6 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        launch {
-            reloadStats()
-        }
+        reloadStats()
     }
 }
