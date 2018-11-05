@@ -6,6 +6,7 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.android.HandlerDispatcher
 import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
 
@@ -22,6 +23,7 @@ class ThreadModule {
         return CoroutineScope(Dispatchers.Main)
     }
 
+    @Provides
     @Named(UI_THREAD)
     fun provideUiDispatcher(): CoroutineDispatcher {
         return Dispatchers.Main
@@ -33,6 +35,7 @@ class ThreadModule {
         return CoroutineScope(Dispatchers.Default)
     }
 
+    @Provides
     @Named(BG_THREAD)
     fun provideBackgroundDispatcher(): CoroutineDispatcher {
         return Dispatchers.IO

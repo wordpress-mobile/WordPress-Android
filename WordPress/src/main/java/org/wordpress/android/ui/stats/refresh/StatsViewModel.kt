@@ -2,12 +2,10 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.android.HandlerDispatcher
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.DEFAULT_SCOPE
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -23,7 +21,7 @@ import javax.inject.Named
 class StatsViewModel
 @Inject constructor(
     private val insightsUseCase: InsightsUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: HandlerDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 

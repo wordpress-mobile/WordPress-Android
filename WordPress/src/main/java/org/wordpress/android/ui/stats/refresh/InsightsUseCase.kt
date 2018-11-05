@@ -2,7 +2,9 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -19,21 +21,29 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.POSTING_ACTIVI
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlin.coroutines.experimental.CoroutineContext
 
 // TODO: This should be a "@SiteScope" of sorts
 @Singleton
 class InsightsUseCase
 @Inject constructor(
     private val statsStore: StatsStore,
-    @Named(UI_SCOPE) private val scope: CoroutineScope,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
     private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
     private val todayStatsUseCase: TodayStatsUseCase
-) {
+) : CoroutineScope {
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = bgDispatcher + job
+
     private val _data = MutableLiveData<List<InsightsItem>>()
     val data: LiveData<List<InsightsItem>> = _data
 
