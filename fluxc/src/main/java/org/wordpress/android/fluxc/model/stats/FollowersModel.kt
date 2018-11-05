@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.model.stats
 
+import java.util.Date
+
 data class FollowersModel(
     val totalWpCom: Int,
     val totalEmail: Int,
@@ -10,6 +12,6 @@ data class FollowersModel(
         val avatar: String,
         val label: String,
         val url: String,
-        val dateSubscribed: String
+        val dateSubscribed: Date
     )
 }
