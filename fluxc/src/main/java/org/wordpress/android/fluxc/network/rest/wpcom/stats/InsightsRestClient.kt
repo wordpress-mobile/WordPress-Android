@@ -349,7 +349,7 @@ constructor(
             @SerializedName("label") val label: String,
             @SerializedName("avatar") val avatar: String,
             @SerializedName("url") val url: String,
-            @SerializedName("date_subscribed") val dateSubscribed: String,
+            @SerializedName("date_subscribed") val dateSubscribed: Date,
             @SerializedName("follow_data") val followData: FollowData
         )
 
