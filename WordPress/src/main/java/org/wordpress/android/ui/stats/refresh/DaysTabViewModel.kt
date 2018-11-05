@@ -12,10 +12,9 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class DaysTabViewModel @Inject constructor(
+    private val insightsViewModel: InsightsViewModel,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) : StatsListViewModel() {
-    private lateinit var insightsViewModel: InsightsViewModel
-
     private val _data = Transformations.map(insightsViewModel.data) {
         InsightsUiState(listOf(Empty()), DONE)
     }

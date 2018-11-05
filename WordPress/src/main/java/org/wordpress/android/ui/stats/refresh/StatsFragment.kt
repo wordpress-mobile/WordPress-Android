@@ -31,6 +31,7 @@ import javax.inject.Inject
 
 class StatsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var insightsViewModel: InsightsViewModel
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
@@ -81,7 +82,7 @@ class StatsFragment : Fragment() {
 
         val site = activity.intent?.getSerializableExtra(WordPress.SITE) as SiteModel?
         val nonNullSite = checkNotNull(site)
-        viewModel.start(nonNullSite)
+        viewModel.start(nonNullSite, insightsViewModel)
         if (!isFirstStart) {
             restorePreviousSearch = true
         }
