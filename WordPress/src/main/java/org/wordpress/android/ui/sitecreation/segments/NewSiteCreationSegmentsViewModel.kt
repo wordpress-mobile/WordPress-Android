@@ -12,12 +12,12 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
+import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.models.networkresource.ListState.Error
+import org.wordpress.android.models.networkresource.ListState.Loading
+import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.DONE
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.ERROR
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.FETCHING
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ListState.PREINIT
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,8 +35,8 @@ class NewSiteCreationSegmentsViewModel
         get() = IO + fetchCategoriesJob
 
     private var isStarted = false
-    /* Should be updated only within updateUIState() */
-    private var listState: ListState = PREINIT
+    /* Should be updated only within updateUIState(). */
+    private var listState: ListState<VerticalSegmentModel> = ListState.Ready(emptyList())
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -49,10 +49,10 @@ class NewSiteCreationSegmentsViewModel
     }
 
     private fun fetchCategories() {
-        if (listState == FETCHING) return
+        if (!listState.shouldFetch(loadMore = false)) throw IllegalStateException("Fetch already in progress.")
         launch {
             withContext(MAIN) {
-                updateUIState(FETCHING)
+                updateUIState(ListState.Loading(listState))
             }
             val event = fetchSegmentsUseCase.fetchCategories()
             withContext(MAIN) {
@@ -63,10 +63,9 @@ class NewSiteCreationSegmentsViewModel
 
     private fun onCategoriesFetched(event: OnSegmentsFetched) {
         if (event.isError) {
-            // TODO handle error
-            updateUIState(ERROR)
+            updateUIState(ListState.Error(listState, event.error.message))
         } else {
-            updateUIState(DONE, event.segmentList)
+            updateUIState(ListState.Success(event.segmentList))
         }
     }
 
@@ -90,22 +89,15 @@ class NewSiteCreationSegmentsViewModel
 
     // TODO analytics
 
-    private fun updateUIState(state: ListState, data: List<VerticalSegmentModel> = emptyList()) {
+    private fun updateUIState(state: ListState<VerticalSegmentModel>) {
         listState = state
         _uiState.value = UiState(
-                showProgress = state == FETCHING,
-                showError = state == ERROR,
-                showList = state == DONE,
-                showHeader = state == FETCHING || state == DONE,
-                data = data
+                showProgress = state is Loading,
+                showError = state is Error,
+                showList = state is Success,
+                showHeader = state is Loading || state is Success,
+                data = state.data
         )
-    }
-
-    private enum class ListState {
-        PREINIT,
-        FETCHING,
-        ERROR,
-        DONE
     }
 
     data class UiState(
