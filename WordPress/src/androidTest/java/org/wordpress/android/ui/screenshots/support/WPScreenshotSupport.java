@@ -40,11 +40,11 @@ import static org.hamcrest.Matchers.is;
 public class WPScreenshotSupport {
     // HIGH-LEVEL METHODS
 
-    public static boolean hasElement(Integer elementID) {
-        return hasElement(onView(withId(elementID)));
+    public static boolean isElementDisplayed(Integer elementID) {
+        return isElementDisplayed(onView(withId(elementID)));
     }
 
-    public static boolean hasElement(ViewInteraction element) {
+    public static boolean isElementDisplayed(ViewInteraction element) {
         try {
             element.check(matches(isDisplayed()));
             return true;
@@ -66,7 +66,7 @@ public class WPScreenshotSupport {
     }
 
     public static void clickOnCellAtIndexIn(int index, int elementID) {
-        waitForAtLeastOneElementWithIdToExist(elementID);
+        waitForAtLeastOneElementWithIdToDisplay(elementID);
         onView(withId(elementID))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
@@ -108,7 +108,7 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return hasElement(elementID);
+                return isElementDisplayed(elementID);
             }
         });
     }
@@ -117,7 +117,7 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return hasElement(element);
+                return isElementDisplayed(element);
             }
         });
     }
@@ -126,7 +126,7 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return !hasElement(elementID);
+                return !isElementDisplayed(elementID);
             }
         });
     }
@@ -147,20 +147,20 @@ public class WPScreenshotSupport {
         waitOneFrame();
     }
 
-    public static void waitForAtLeastOneElementOfTypeToExist(final Class c) {
+    public static void waitForAtLeastOneElementOfTypeToBeDisplayed(final Class c) {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return atLeastOneElementOfTypeExists(c);
+                return atLeastOneElementOfTypeIsDisplayed(c);
             }
         });
     }
 
-    public static void waitForAtLeastOneElementWithIdToExist(final int elementID) {
+    public static void waitForAtLeastOneElementWithIdToBeDisplayed(final int elementID) {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return atLeastOneElementWithIdExists(elementID);
+                return atLeastOneElementWithIdIsDisplayed(elementID);
             }
         });
     }
@@ -174,8 +174,8 @@ public class WPScreenshotSupport {
         });
     }
 
-    public static void pressBackUntilElementIsVisible(int elementID) {
-        while (!hasElement(elementID)) {
+    public static void pressBackUntilElementIsDisplayed(int elementID) {
+        while (!isElementDisplayed(elementID)) {
             Espresso.pressBack();
         }
     }
@@ -211,7 +211,7 @@ public class WPScreenshotSupport {
 
     // HELPERS
 
-    public static Boolean atLeastOneElementOfTypeExists(Class c) {
+    public static Boolean atLeastOneElementOfTypeIsDisplayed(Class c) {
         try {
             onView(
                     allOf(
@@ -226,7 +226,7 @@ public class WPScreenshotSupport {
         }
     }
 
-    public static Boolean atLeastOneElementWithIdExists(int elementID) {
+    public static Boolean atLeastOneElementWithIdIsDisplayed(int elementID) {
         try {
             onView(
                     allOf(
