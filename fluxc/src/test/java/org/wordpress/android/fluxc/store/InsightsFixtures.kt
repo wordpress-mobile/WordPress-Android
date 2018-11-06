@@ -2,6 +2,10 @@ package org.wordpress.android.fluxc.store
 
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse.StatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowData
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowData.FollowParams
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowerResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
@@ -60,3 +64,14 @@ val VISITS_DATA = listOf(
 val VISITS_RESPONSE = VisitResponse(
         FIRST_DAY, "day", VISITS_FIELDS, listOf(VISITS_DATA)
 )
+const val USER_LABEL = "John Smith"
+const val AVATAR = "avatar.jpg"
+val PARAMS = FollowParams("follow", "following", "FollowingHover", true, "55", "75", "Source", "Blog.com")
+val FOLLOWER_RESPONSE = FollowerResponse(
+        USER_LABEL,
+        AVATAR,
+        URL,
+        DATE,
+        FollowData("type", PARAMS)
+)
+val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf())

@@ -3,10 +3,8 @@ package org.wordpress.android.fluxc.model.stats
 import java.util.Date
 
 data class FollowersModel(
-    val totalWpCom: Int,
-    val totalEmail: Int,
-    val wpComFollowers: List<FollowerModel>,
-    val emailFollowers: List<FollowerModel>
+    val totalCount: Int,
+    val followers: List<FollowerModel>
 ) {
     data class FollowerModel(
         val avatar: String,

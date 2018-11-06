@@ -2,6 +2,9 @@ package org.wordpress.android.fluxc.persistence
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
@@ -40,12 +43,8 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, TODAYS_INSIGHTS, data)
     }
 
-    fun insertWpComFollowers(site: SiteModel, data: FollowersResponse) {
-        statsSqlUtils.insert(site, WP_COM_FOLLOWERS, data)
-    }
-
-    fun insertEmailFollowers(site: SiteModel, data: FollowersResponse) {
-        statsSqlUtils.insert(site, EMAIL_FOLLOWERS, data)
+    fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType) {
+        statsSqlUtils.insert(site, followerType.toDbKey(), data)
     }
 
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
@@ -68,11 +67,14 @@ class InsightsSqlUtils
         return statsSqlUtils.select(site, TODAYS_INSIGHTS, VisitResponse::class.java)
     }
 
-    fun selectWpComFollowers(site: SiteModel): FollowersResponse? {
-        return statsSqlUtils.select(site, WP_COM_FOLLOWERS, FollowersResponse::class.java)
+    fun selectFollowers(site: SiteModel, followerType: FollowerType): FollowersResponse? {
+        return statsSqlUtils.select(site, followerType.toDbKey(), FollowersResponse::class.java)
     }
 
-    fun selectEmailFollowers(site: SiteModel): FollowersResponse? {
-        return statsSqlUtils.select(site, EMAIL_FOLLOWERS, FollowersResponse::class.java)
+    private fun FollowerType.toDbKey(): StatsSqlUtils.Key {
+        return when (this) {
+            WP_COM -> WP_COM_FOLLOWERS
+            EMAIL -> EMAIL_FOLLOWERS
+        }
     }
 }
