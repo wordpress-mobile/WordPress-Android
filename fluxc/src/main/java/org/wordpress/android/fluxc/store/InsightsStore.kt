@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import android.util.Log
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
@@ -12,6 +10,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -123,37 +122,46 @@ class InsightsStore
     }
 
     // Followers stats
-    suspend fun fetchFollowers(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val deferredWpComResponse = async {
-            restClient.fetchFollowers(siteModel, WP_COM, forced = forced)
-        }
-        val deferredEmailResponse = async {
-            restClient.fetchFollowers(siteModel, EMAIL, forced = forced)
-        }
-        val wpComResponse = deferredWpComResponse.await()
-        val emailResponse = deferredEmailResponse.await()
+    suspend fun fetchWpComFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, forced, WP_COM)
+    }
+
+    suspend fun fetchEmailFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, forced, EMAIL)
+    }
+
+    private suspend fun fetchFollowers(
+        siteModel: SiteModel,
+        forced: Boolean = false,
+        followerType: FollowerType
+    ) = withContext(coroutineContext) {
+        val response = restClient.fetchFollowers(siteModel, followerType, forced = forced)
         return@withContext when {
-            wpComResponse.isError || emailResponse.isError -> {
-                OnInsightsFetched(wpComResponse.error ?: emailResponse.error)
+            response.isError -> {
+                OnInsightsFetched(response.error)
             }
-            wpComResponse.response != null && emailResponse.response != null -> {
-                sqlUtils.insertWpComFollowers(siteModel, wpComResponse.response)
-                sqlUtils.insertEmailFollowers(siteModel, emailResponse.response)
-                Log.e("fetch_followers", "WPCOM: $wpComResponse")
-                Log.e("fetch_followers", "Email: $emailResponse")
-                OnInsightsFetched(insightsMapper.map(wpComResponse.response, emailResponse.response))
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response, followerType)
+                OnInsightsFetched(insightsMapper.map(response.response, followerType))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getFollowers(site: SiteModel): FollowersModel? {
-        val wpComResponse = sqlUtils.selectWpComFollowers(site)
-        val emailResponse = sqlUtils.selectEmailFollowers(site)
-        return if (wpComResponse != null && emailResponse != null) insightsMapper.map(
-                wpComResponse,
-                emailResponse
-        ) else null
+    fun getWpComFollowers(site: SiteModel): FollowersModel? {
+        return getFollowers(site, WP_COM)
+    }
+
+    fun getEmailFollowers(site: SiteModel): FollowersModel? {
+        return getFollowers(site, EMAIL)
+    }
+
+    private fun getFollowers(
+        site: SiteModel,
+        followerType: FollowerType
+    ): FollowersModel? {
+        val wpComResponse = sqlUtils.selectFollowers(site, followerType)
+        return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
