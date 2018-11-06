@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -19,10 +17,6 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
-import org.wordpress.android.fluxc.model.list.ListManager
-import org.wordpress.android.fluxc.model.list.ListManagerItem
-import org.wordpress.android.fluxc.model.list.ListManagerItem.LocalItem
-import org.wordpress.android.fluxc.model.list.ListManagerItem.RemoteItem
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -37,8 +31,6 @@ import javax.inject.Singleton
 
 // How long a list should stay in DB if it hasn't been updated
 const val DEFAULT_EXPIRATION_DURATION = 1000L * 60 * 60 * 24 * 7
-// When we should load more data for a list
-const val DEFAULT_LOAD_MORE_OFFSET = 10
 
 /**
  * This Store is responsible for managing lists and their metadata. One of the designs goals for this Store is expose
@@ -67,60 +59,6 @@ class ListStore @Inject constructor(
 
     override fun onRegister() {
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
-    }
-
-    /**
-     * This is the function that'll be used to consume lists.
-     *
-     * It'll add the [ListItemDataSource.localItems], [ListItemDataSource.remoteItemIdsToInclude] and the list items
-     * from the DB one after another and then filter out [ListItemDataSource.remoteItemsToHide] and finally
-     * pass it to [ListManager].
-     *
-     * @param listDescriptor List to be consumed
-     * @param dataSource An interface that tells the [ListStore] how to get/fetch items. See [ListItemDataSource]
-     * for more details.
-     * @param loadMoreOffset Indicates when more data for a list should be fetched. It'll be passed to [ListManager].
-     *
-     * @return An immutable list manager that exposes enough information about a list to be used by adapters. See
-     * [ListManager] for more details.
-     */
-    suspend fun <T> getListManager(
-        listDescriptor: ListDescriptor,
-        dataSource: ListItemDataSource<T>,
-        loadMoreOffset: Int = DEFAULT_LOAD_MORE_OFFSET
-    ): ListManager<T> = withContext(Dispatchers.Default) {
-        val listModel = listSqlUtils.getList(listDescriptor)
-        // Get the remote ids of items for the list from the DB
-        val remoteIdsFromDb = if (listModel != null) {
-            listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
-        } else emptyList()
-        // Get the remote ids that client asks for to be included if they are not already in the remote ids from DB
-        val remoteItemIdsToInclude = dataSource.remoteItemIdsToInclude(listDescriptor)?.let { remoteIdsToInclude ->
-            remoteIdsToInclude.filter { !remoteIdsFromDb.contains(it) }
-        } ?: emptyList()
-        // Add the remote ids together and filter out the ids the client asks to be hidden
-        val remoteIds = remoteItemIdsToInclude.asSequence().plus(remoteIdsFromDb).filter {
-            dataSource.remoteItemsToHide(listDescriptor)?.contains(it) != true
-        }.toList()
-
-        val listState = if (listModel != null) getListState(listModel) else null
-        val listData = dataSource.getItems(listDescriptor, remoteIds)
-        val localItems = dataSource.localItems(listDescriptor) ?: emptyList()
-        // Add the local items and remote items in one list of `ListManagerItem`s
-        val allItems: List<ListManagerItem<T>> = localItems.asSequence().map { LocalItem(it) }
-                .plus(remoteIds.map { RemoteItem(it, listData[it]) }).toList()
-        return@withContext ListManager(
-                dispatcher = mDispatcher,
-                listDescriptor = listDescriptor,
-                items = allItems,
-                loadMoreOffset = loadMoreOffset,
-                isFetchingFirstPage = listState?.isFetchingFirstPage() ?: false,
-                canLoadMore = listState?.canLoadMore() ?: false,
-                fetchItem = { remoteItemId ->
-                    dataSource.fetchItem(listDescriptor, remoteItemId)
-                },
-                fetchList = dataSource::fetchList
-        )
     }
 
     fun getList(listDescriptor: ListDescriptor): List<Long> {
