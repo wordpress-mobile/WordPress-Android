@@ -25,19 +25,15 @@ class FetchSegmentsUseCase @Inject constructor(
         }
         return suspendCoroutine { cont ->
             continuation = cont
-            dispatchEvent()
+            dispatcher.dispatch(VerticalActionBuilder.newFetchSegmentsAction())
         }
-    }
-
-    private fun dispatchEvent() {
-        dispatcher.dispatch(VerticalActionBuilder.newFetchSegmentsAction())
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSiteCategoriesFetched(event: OnSegmentsFetched) {
         checkNotNull(continuation) { "onSiteCategoriesFetched received without a suspended coroutine." }
-        continuation!!.resume(event)
+                .resume(event)
         continuation = null
     }
 }
