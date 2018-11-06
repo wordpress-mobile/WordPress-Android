@@ -75,6 +75,8 @@ class PagedListFactory<T, R>(
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
 
     override fun create(): DataSource<Int, PagedListItemType<R>> {
+        // Cleanup the previous source!
+        currentSource?.onDestroy()
         val source = PagedListPositionalDataSource(dispatcher, dataStore, listDescriptor, lifecycle, getList, transform)
         currentSource = source
         return source
@@ -104,7 +106,7 @@ private class PagedListPositionalDataSource<T, R>(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
+    private fun onCreate() {
         if (!isRegistered) {
             isRegistered = true
             dispatcher.register(this)
@@ -113,9 +115,11 @@ private class PagedListPositionalDataSource<T, R>(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy() {
-        lifecycle.removeObserver(this)
-        dispatcher.unregister(this)
-        isRegistered = false
+        if (isRegistered) {
+            lifecycle.removeObserver(this)
+            dispatcher.unregister(this)
+            isRegistered = false
+        }
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PagedListItemType<R>>) {
@@ -131,7 +135,6 @@ private class PagedListPositionalDataSource<T, R>(
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PagedListItemType<R>>) {
-        // TODO: Take the scope/context as parameter
         CoroutineScope(Dispatchers.Default).launch {
             val items = getItems(params.startPosition, params.loadSize)
             callback.onResult(items)

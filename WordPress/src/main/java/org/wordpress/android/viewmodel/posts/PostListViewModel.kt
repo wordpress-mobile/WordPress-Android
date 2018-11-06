@@ -1,6 +1,8 @@
 package org.wordpress.android.viewmodel.posts
 
 import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -85,7 +87,7 @@ class PostListViewModel @Inject constructor(
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
     private val postStore: PostStore
-) : ViewModel() {
+) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
     }
@@ -113,8 +115,6 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
-    private lateinit var lifecycle: Lifecycle
-
     private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
@@ -132,14 +132,10 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.liveData
     }
 
-    override fun onCleared() {
-        EventBus.getDefault().unregister(this)
-        dispatcher.unregister(this)
-        super.onCleared()
-    }
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
-    fun start(site: SiteModel, lifecycle: Lifecycle) {
-        this.lifecycle = lifecycle
+    fun start(site: SiteModel) {
         if (isStarted) {
             return
         }
@@ -156,6 +152,14 @@ class PostListViewModel @Inject constructor(
 
         refreshList()
         isStarted = true
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+    }
+
+    override fun onCleared() {
+        lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
+        EventBus.getDefault().unregister(this)
+        dispatcher.unregister(this)
+        super.onCleared()
     }
 
     fun refreshList() {
