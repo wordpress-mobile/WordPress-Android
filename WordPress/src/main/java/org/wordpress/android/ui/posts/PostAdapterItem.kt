@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
+import org.wordpress.android.fluxc.store.UploadStore.UploadError
 
 class PostAdapterItem(
     val data: PostAdapterItemData,
@@ -28,3 +28,14 @@ data class PostAdapterItemData(
     // Even if there is no featured image yet, if we have the id, we should show the empty version while we load it
     val shouldShowFeaturedImage: Boolean = featuredImageUrl != null || featuredImageId != 0L
 }
+
+data class PostAdapterItemUploadStatus(
+    val uploadError: UploadError?,
+    val mediaUploadProgress: Int,
+    val isUploading: Boolean,
+    val isUploadingOrQueued: Boolean,
+    val isQueued: Boolean,
+    val isUploadFailed: Boolean,
+    val hasInProgressMediaUpload: Boolean,
+    val hasPendingMediaUpload: Boolean
+)

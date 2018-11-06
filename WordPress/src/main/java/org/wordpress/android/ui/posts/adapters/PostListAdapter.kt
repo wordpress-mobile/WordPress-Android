@@ -24,18 +24,18 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.posts.ListItemType
-import org.wordpress.android.ui.posts.ListItemType.EndListIndicatorItem
-import org.wordpress.android.ui.posts.ListItemType.LoadingItem
-import org.wordpress.android.ui.posts.ListItemType.ReadyItem
+import org.wordpress.android.ui.posts.PagedListItemType
+import org.wordpress.android.ui.posts.PagedListItemType.EndListIndicatorItem
+import org.wordpress.android.ui.posts.PagedListItemType.LoadingItem
+import org.wordpress.android.ui.posts.PagedListItemType.ReadyItem
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
+import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-import org.wordpress.android.viewmodel.posts.PostListViewModel.PostAdapterItemUploadStatus
 import org.wordpress.android.widgets.PostListButton
 import javax.inject.Inject
 
@@ -51,7 +51,7 @@ class PostListAdapter(
     private val isAztecEditorEnabled: Boolean,
     private val hasCapabilityPublishPosts: Boolean,
     private val isPhotonCapable: Boolean
-) : PagedListAdapter<ListItemType<PostAdapterItem>, ViewHolder>(DiffItemCallback) {
+) : PagedListAdapter<PagedListItemType<PostAdapterItem>, ViewHolder>(DiffItemCallback) {
     private val photonWidth: Int
     private val photonHeight: Int
     private val endlistIndicatorHeight: Int
@@ -462,10 +462,10 @@ class PostListAdapter(
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-object DiffItemCallback : DiffUtil.ItemCallback<ListItemType<PostAdapterItem>>() {
+object DiffItemCallback : DiffUtil.ItemCallback<PagedListItemType<PostAdapterItem>>() {
     override fun areItemsTheSame(
-        oldItem: ListItemType<PostAdapterItem>,
-        newItem: ListItemType<PostAdapterItem>
+        oldItem: PagedListItemType<PostAdapterItem>,
+        newItem: PagedListItemType<PostAdapterItem>
     ): Boolean {
         if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
             return true
@@ -486,8 +486,8 @@ object DiffItemCallback : DiffUtil.ItemCallback<ListItemType<PostAdapterItem>>()
     }
 
     override fun areContentsTheSame(
-        oldItem: ListItemType<PostAdapterItem>,
-        newItem: ListItemType<PostAdapterItem>
+        oldItem: PagedListItemType<PostAdapterItem>,
+        newItem: PagedListItemType<PostAdapterItem>
     ): Boolean {
         if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
             return true

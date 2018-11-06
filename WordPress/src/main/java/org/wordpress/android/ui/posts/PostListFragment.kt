@@ -324,7 +324,7 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun updatePagedListData(pagedListData: PagedList<ListItemType<PostAdapterItem>>) {
+    private fun updatePagedListData(pagedListData: PagedList<PagedListItemType<PostAdapterItem>>) {
         if (!isAdded) {
             return
         }

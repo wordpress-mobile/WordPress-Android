@@ -28,8 +28,6 @@ import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
-import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
-import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
@@ -41,14 +39,14 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.fluxc.store.UploadStore.UploadError
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.ListItemType
 import org.wordpress.android.ui.posts.PagedListDataForPostStore
+import org.wordpress.android.ui.posts.PagedListItemType
 import org.wordpress.android.ui.posts.PagedListWrapper
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
+import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListUserAction
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
@@ -71,7 +69,6 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButton
-import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 enum class PostListEmptyViewState {
@@ -92,11 +89,11 @@ class PostListViewModel @Inject constructor(
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
     }
-
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var site: SiteModel
-    private val uploadedPostRemoteIds = ArrayList<Long>()
+    private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
+    private val featuredImageMap = HashMap<Long, String>()
 
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
@@ -131,13 +128,8 @@ class PostListViewModel @Inject constructor(
                 transform = { post -> createPostAdapterItem(post) })
     }
 
-    val pagedListData: LiveData<PagedList<ListItemType<PostAdapterItem>>> by lazy {
+    val pagedListData: LiveData<PagedList<PagedListItemType<PostAdapterItem>>> by lazy {
         pagedListWrapper.liveData
-    }
-
-    init {
-        EventBus.getDefault().register(this)
-        dispatcher.register(this)
     }
 
     override fun onCleared() {
@@ -157,6 +149,11 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site)
         }
+
+        // We should register after we have the SiteModel and ListDescriptor set
+        EventBus.getDefault().register(this)
+        dispatcher.register(this)
+
         refreshList()
         isStarted = true
     }
@@ -290,33 +287,14 @@ class PostListViewModel @Inject constructor(
             if (!event.listDescriptors.contains(it)) {
                 return
             }
+            // TODO: Move to OnListStateChanged
             if (event.isError) {
                 val emptyViewState = if (event.error.type == PERMISSION_ERROR) {
                     PostListEmptyViewState.PERMISSION_ERROR
                 } else PostListEmptyViewState.REFRESH_ERROR
                 _emptyViewState.postValue(emptyViewState)
-            } else if (event.causeOfChange == FIRST_PAGE_FETCHED) {
-                // `uploadedPostRemoteIds` is kept as a workaround when the local drafts are uploaded and the list
-                // has not yet been updated yet. Since we just fetched the first page, we can safely clear it.
-                // Please check out `onPostUploaded` for more context.
-                uploadedPostRemoteIds.clear()
             }
-            // We want to refresh the posts even if there is an error so we can get the state change
-//            invalidateData()
         }
-    }
-
-    private fun invalidateData() {
-        pagedListWrapper.invalidate()
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onListItemsChanged(event: OnListItemsChanged) {
-        if (listDescriptor?.typeIdentifier != event.type) {
-            return
-        }
-//        invalidateData()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -349,7 +327,7 @@ class PostListViewModel @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
         if (!event.isError && event.mediaList != null) {
-            invalidateData()
+            invalidateFeaturedMediaAndPagedListData(*event.mediaList.map { it.mediaId }.toLongArray())
         }
     }
 
@@ -357,15 +335,7 @@ class PostListViewModel @Inject constructor(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
-            // When a local draft is uploaded, it'll no longer be considered a local item by `ListManager` and it won't
-            // be in the remote item list until the next refresh, which means it'll briefly disappear from the list.
-            // This is not the behavior we want and to get around it, we'll keep the remote id of the post until the
-            // next refresh and pass it to `ListStore` so it'll be included in the list.
-            // Although the issue is related to local drafts, we can't check if uploaded post is local draft reliably
-            // as the current `ListManager` might not have been updated yet since it's a bg action.
-            uploadedPostRemoteIds.add(event.post.remotePostId)
-            updateUploadStatus(event.post)
-            invalidateData()
+            invalidateUploadStatusAndPagedListData(event.post.id)
             // TODO: We might be able to reload the posts without changing the list and then refresh
             // TODO: might not be the best way to start a refresh
             refreshList()
@@ -381,7 +351,7 @@ class PostListViewModel @Inject constructor(
             // Not interested in media not attached to posts or not belonging to the current site
             return
         }
-        invalidateData()
+        invalidateFeaturedMediaAndPagedListData(event.media.mediaId)
     }
 
     // EventBus
@@ -410,8 +380,7 @@ class PostListViewModel @Inject constructor(
     @Suppress("unused")
     fun onEventBackgroundThread(event: PostEvents.PostUploadStarted) {
         if (site.id == event.post.localSiteId) {
-            updateUploadStatus(event.post)
-            invalidateData()
+            invalidateUploadStatusAndPagedListData(event.post.id)
         }
     }
 
@@ -421,17 +390,13 @@ class PostListViewModel @Inject constructor(
     @Suppress("unused")
     fun onEventBackgroundThread(event: PostEvents.PostUploadCanceled) {
         if (site.id == event.post.localSiteId) {
-            updateUploadStatus(event.post)
-            invalidateData()
+            invalidateUploadStatusAndPagedListData(event.post.id)
         }
     }
 
     @Suppress("unused")
     fun onEventBackgroundThread(event: VideoOptimizer.ProgressEvent) {
-        postStore.getPostByLocalPostId(event.media.localPostId)?.let { post ->
-            updateUploadStatus(post)
-            invalidateData()
-        }
+        invalidateUploadStatusAndPagedListData(event.media.id)
     }
 
     @Suppress("unused")
@@ -440,29 +405,11 @@ class PostListViewModel @Inject constructor(
             // if there' a Post to which the retried media belongs, clear their status
             val postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(postStore, event.mediaModelList)
             // now that we know which Posts to refresh, let's do it
-            for (post in postsToRefresh) {
-                updateUploadStatus(post)
-            }
-            invalidateData()
+            invalidateUploadStatusAndPagedListData(*postsToRefresh.map { it.id }.toIntArray())
         }
     }
 
-    // ListManager
-
-    private val uploadStatusMap = ConcurrentHashMap<Int, PostAdapterItemUploadStatus>()
-    private val featuredImageMap = ConcurrentHashMap<Long, String>()
-    private val featuredImageFromContentMap = ConcurrentHashMap<String, String>()
-
-    data class PostAdapterItemUploadStatus(
-        val uploadError: UploadError?,
-        val mediaUploadProgress: Int,
-        val isUploading: Boolean,
-        val isUploadingOrQueued: Boolean,
-        val isQueued: Boolean,
-        val isUploadFailed: Boolean,
-        val hasInProgressMediaUpload: Boolean,
-        val hasPendingMediaUpload: Boolean
-    )
+    // PostAdapterItem management
 
     private fun createPostAdapterItem(post: PostModel): PostAdapterItem {
         val title = if (post.title.isNotBlank()) {
@@ -489,7 +436,7 @@ class PostListViewModel @Inject constructor(
                 canPublishPost = canPublishPost,
                 canRetryUpload = uploadStatus.uploadError != null && !uploadStatus.hasInProgressMediaUpload,
                 featuredImageId = post.featuredImageId,
-                featuredImageUrl = getFeaturedImageUrl(post.featuredImageId) ?: getFeaturedImageUrl(post.content),
+                featuredImageUrl = getFeaturedImageUrl(post.featuredImageId, post.content),
                 uploadStatus = uploadStatus
         )
         return PostAdapterItem(
@@ -499,18 +446,9 @@ class PostListViewModel @Inject constructor(
         )
     }
 
-    private fun getFeaturedImageUrl(postContent: String): String? {
-        featuredImageFromContentMap[postContent]?.let { return it }
-        val imageUrl = ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
-        if (imageUrl != null) {
-            featuredImageFromContentMap[postContent] = imageUrl
-        }
-        return imageUrl
-    }
-
-    private fun getFeaturedImageUrl(featuredImageId: Long): String? {
+    private fun getFeaturedImageUrl(featuredImageId: Long, postContent: String): String? {
         if (featuredImageId == 0L) {
-            return null
+            return ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
         }
         featuredImageMap[featuredImageId]?.let { return it }
         val media = mediaStore.getSiteMediaWithId(site, featuredImageId)
@@ -528,12 +466,21 @@ class PostListViewModel @Inject constructor(
         return null
     }
 
-    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
-        uploadStatusMap[post.id]?.let { return it }
-        return updateUploadStatus(post)
+    private fun invalidateFeaturedMediaAndPagedListData(vararg featuredImageIds: Long) {
+        val removedFeaturedImageIds = featuredImageIds.fold(mutableListOf<Long>()) { acc, id ->
+            if (featuredImageMap.containsKey(id)) {
+                acc.add(id)
+                featuredImageMap.remove(id)
+            }
+            acc
+        }
+        if (removedFeaturedImageIds.isNotEmpty()) {
+            pagedListWrapper.invalidate()
+        }
     }
 
-    private fun updateUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+    private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
+        uploadStatusMap[post.id]?.let { return it }
         val uploadError = uploadStore.getUploadErrorForPost(post)
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
@@ -549,5 +496,18 @@ class PostListViewModel @Inject constructor(
         )
         uploadStatusMap[post.id] = newStatus
         return newStatus
+    }
+
+    private fun invalidateUploadStatusAndPagedListData(vararg localPostIds: Int) {
+        val removedLocalPostIds = localPostIds.fold(mutableListOf<Int>()) { acc, id ->
+            if (uploadStatusMap.containsKey(id)) {
+                acc.add(id)
+                uploadStatusMap.remove(id)
+            }
+            acc
+        }
+        if (removedLocalPostIds.isNotEmpty()) {
+            pagedListWrapper.invalidate()
+        }
     }
 }
