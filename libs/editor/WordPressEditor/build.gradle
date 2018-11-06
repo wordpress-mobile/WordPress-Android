@@ -52,9 +52,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'org.wordpress:utils:1.22'
 
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:fix~immutable-attributes-external-integration-SNAPSHOT')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:fix~immutable-attributes-external-integration-SNAPSHOT')
-    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:fix~immutable-attributes-external-integration-SNAPSHOT')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:547dbaab85bc50bdfc48142c5a1be01ed590683b')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:547dbaab85bc50bdfc48142c5a1be01ed590683b')
+    api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:547dbaab85bc50bdfc48142c5a1be01ed590683b')
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
