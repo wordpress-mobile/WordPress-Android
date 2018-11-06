@@ -28,7 +28,9 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
@@ -48,6 +50,16 @@ sealed class BlockItemViewHolder(
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Title) {
             text.setText(item.text)
+        }
+    }
+
+    class InformationViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_information
+    ) {
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        fun bind(item: Information) {
+            text.text = item.text
         }
     }
 
@@ -221,6 +233,18 @@ sealed class BlockItemViewHolder(
                     (list.adapter as BlockListAdapter).update(item.tabs[tab.position].items)
                 }
             } )
+        }
+    }
+
+    class LabelViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_label
+    ) {
+        private val leftLabel = itemView.findViewById<TextView>(R.id.left_label)
+        private val rightLabel = itemView.findViewById<TextView>(R.id.right_label)
+        fun bind(item: Label) {
+            leftLabel.setText(item.leftLabel)
+            rightLabel.setText(item.rightLabel)
         }
     }
 }
