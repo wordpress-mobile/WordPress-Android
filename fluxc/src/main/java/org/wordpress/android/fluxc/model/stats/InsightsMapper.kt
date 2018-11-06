@@ -46,7 +46,9 @@ class InsightsMapper
         postStatsResponse: PostStatsResponse,
         site: SiteModel
     ): InsightsLatestPostModel {
-        val daysViews = if (postStatsResponse.fields.size > 1 &&
+        val daysViews = if (postStatsResponse.fields != null &&
+                postStatsResponse.data != null &&
+                postStatsResponse.fields.size > 1 &&
                 postStatsResponse.fields[0] == "period" &&
                 postStatsResponse.fields[1] == "views") {
             postStatsResponse.data.map { list -> list[0] to list[1].toInt() }
