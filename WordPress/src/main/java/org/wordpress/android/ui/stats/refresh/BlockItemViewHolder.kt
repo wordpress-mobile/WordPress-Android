@@ -222,7 +222,7 @@ sealed class BlockItemViewHolder(
                 list.adapter = BlockListAdapter(imageManager)
             }
             (list.adapter as BlockListAdapter).update(item.tabs[0].items)
-            tabLayout.addOnTabSelectedListener(object: OnTabSelectedListener {
+            tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }
 
@@ -232,7 +232,7 @@ sealed class BlockItemViewHolder(
                 override fun onTabSelected(tab: Tab) {
                     (list.adapter as BlockListAdapter).update(item.tabs[tab.position].items)
                 }
-            } )
+            })
         }
     }
 

@@ -48,7 +48,11 @@ class FollowersUseCase
         }
     }
 
-    private fun loadFollowers(site: SiteModel, wpComModel: FollowersModel?, emailModel: FollowersModel?): ListInsightItem {
+    private fun loadFollowers(
+        site: SiteModel,
+        wpComModel: FollowersModel?,
+        emailModel: FollowersModel?
+    ): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(

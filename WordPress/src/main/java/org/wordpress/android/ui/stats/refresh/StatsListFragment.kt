@@ -156,7 +156,12 @@ class StatsListFragment : Fragment() {
 sealed class NavigationTarget {
     object AddNewPost : NavigationTarget()
     data class SharePost(val url: String, val title: String) : NavigationTarget()
-    data class ViewPostDetailStats(val siteID: Long, val postID: String, val postTitle: String, val postUrl: String) :
-            NavigationTarget()
-    data class ViewFollowersStats(val siteID: Long): NavigationTarget()
+    data class ViewPostDetailStats(
+        val siteID: Long,
+        val postID: String,
+        val postTitle: String,
+        val postUrl: String
+    ) : NavigationTarget()
+
+    data class ViewFollowersStats(val siteID: Long) : NavigationTarget()
 }
