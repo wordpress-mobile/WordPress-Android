@@ -893,7 +893,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        mRecyclerView.setRefreshing(false);
+        if (!isUpdating()) {
+            mRecyclerView.setRefreshing(false);
+        }
         showLoadingProgress(false);
 
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
