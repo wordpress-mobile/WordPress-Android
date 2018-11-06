@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -113,6 +114,7 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
             try {
                 jsonString = new String(error.volleyError.networkResponse.data,
                         HttpHeaderParser.parseCharset(error.volleyError.networkResponse.headers));
+                Log.e("wp_com_gson_request", "Response: " + jsonString);
             } catch (UnsupportedEncodingException e) {
                 jsonString = "";
             }
