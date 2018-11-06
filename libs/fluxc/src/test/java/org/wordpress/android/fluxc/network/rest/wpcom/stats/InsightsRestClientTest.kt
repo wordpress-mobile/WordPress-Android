@@ -270,7 +270,8 @@ class InsightsRestClientTest {
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(FOLLOWERS_RESPONSE)
-        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/followers/")
+        val expectedUrl = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/followers/"
+        assertThat(urlCaptor.lastValue).isEqualTo(expectedUrl)
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to "$pageSize",
