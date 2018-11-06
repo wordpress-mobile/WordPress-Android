@@ -1405,8 +1405,12 @@ public class ReaderPostListFragment extends Fragment
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleDescriptionAndButton(false);
-                showEmptyView();
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
+                    || getSearchTabsPosition() == TAB_SITES && getSiteSearchAdapter().isEmpty()
+                    || getSearchTabsPosition() == TAB_POSTS && getPostAdapter().isEmpty()) {
+                    setEmptyTitleDescriptionAndButton(false);
+                    showEmptyView();
+                }
             } else {
                 hideEmptyView();
                 if (mRestorePosition > 0) {
