@@ -18,7 +18,9 @@ android:
     - extra-android-support
     - platform-tools
     - tools
+    - build-tools-26.0.3
     - build-tools-27.0.3
+    - android-26
     - android-27
 
 env:
@@ -32,9 +34,11 @@ install:
   # Setup gradle.properties
   - cp gradle.properties-example gradle.properties
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
+  - nvm install 8
+  - pushd libs/gutenberg-mobile && yarn && yarn install && popd
 
 script:
   - ./tools/validate-login-strings.sh
-  - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+  - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" --exclude-dir="wpandroidlink" WordPress libs; exit 1)
   - bundle install
   - bundle exec danger --fail-on-errors=true  

@@ -2,6 +2,83 @@
 <issues format="4" by="lint 3.0.1">
 
     <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            matched.appendReplacement(sb, matched.group(1).toUpperCase());"
+        errorLine2="                                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/horcrux/svg/RenderableShadowNode.java"
+            line="400"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="WrongCall"
+        message="Suspicious method call; should probably call &quot;`layout`&quot; rather than &quot;`onLayout`&quot;"
+        errorLine1="                    onLayout(false, getLeft(), getTop(), getRight(), getBottom());"
+        errorLine2="                    ~~~~~~~~">
+        <location
+            file="src/main/java/com/github/godness84/RNRecyclerViewList/RecyclerViewBackedScrollView.java"
+            line="364"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``EditTextWithKeyBackListener`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        mTitle.setOnTouchListener(this);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="315"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view ``SourceViewEditText`` has `setOnTouchListener` called on it but does not override `performClick`"
+        errorLine1="        mSource.setOnTouchListener(this);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="317"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="`GutenbergEditorFragment#onTouch` should call `View#performClick` when a click is detected"
+        errorLine1="    public boolean onTouch(View view, MotionEvent event) {"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="1499"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `RecyclableWrapperViewGroup` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="        public boolean onTouchEvent(MotionEvent event) {"
+        errorLine2="                       ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/github/godness84/RNRecyclerViewList/RecyclerViewBackedScrollView.java"
+            line="146"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `RecyclerViewBackedScrollView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    public boolean onTouchEvent(MotionEvent ev) {"
+        errorLine2="                   ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/github/godness84/RNRecyclerViewList/RecyclerViewBackedScrollView.java"
+            line="330"
+            column="20"/>
+    </issue>
+
+    <issue
         id="ExifInterface"
         message="Avoid using `android.media.ExifInterface`; use `android.support.media.ExifInterface` from the support library instead"
         errorLine1="import android.media.ExifInterface;"

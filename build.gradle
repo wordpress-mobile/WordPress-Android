@@ -24,6 +24,20 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
+        }
+        maven {
+            // Local Maven repo containing AARs with JSC library built for Android
+            url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'org.webkit:android-jsc:r224109'
+        }
     }
 
     task checkstyle(type: Checkstyle) {

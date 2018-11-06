@@ -27,6 +27,14 @@ apply plugin: 'io.fabric'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
+project.ext.react = [
+        entryFile: "index.js",
+        root: "../libs/gutenberg-mobile/",
+        inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
+]
+
+apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
+
 android {
     useLibrary 'org.apache.http.legacy'
 
@@ -47,6 +55,10 @@ android {
         targetSdkVersion 26
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
     }
 
     flavorDimensions "buildType"
@@ -159,6 +171,9 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     kapt 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
+
+    // React Native
+    implementation "com.facebook.react:react-native:+" // From node_modules.
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'

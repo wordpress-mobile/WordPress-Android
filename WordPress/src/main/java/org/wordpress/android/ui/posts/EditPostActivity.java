@@ -45,6 +45,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -68,6 +70,7 @@ import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
+import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
@@ -205,7 +208,8 @@ public class EditPostActivity extends AppCompatActivity implements
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface,
         FullScreenDialogFragment.OnConfirmListener,
-        FullScreenDialogFragment.OnDismissListener {
+        FullScreenDialogFragment.OnDismissListener,
+        DefaultHardwareBackBtnHandler {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -252,6 +256,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
+    private boolean mShowGutenbergEditor;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -365,8 +370,9 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
-        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
+        mShowGutenbergEditor = true; // AppPrefs.isGutenbergEditorEnabled();
+//        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
+//        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -2028,7 +2034,10 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (position) {
                 case 0:
                     // TODO: Remove editor options after testing.
-                    if (mShowAztecEditor) {
+                    if (mShowGutenbergEditor) {
+                        return GutenbergEditorFragment.newInstance("", "",
+                                AppPrefs.isAztecEditorToolbarExpanded());
+                    } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
@@ -3643,5 +3652,10 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
+    }
+
+    @Override
+    public void invokeDefaultOnBackPressed() {
+        onBackPressed();
     }
 }
