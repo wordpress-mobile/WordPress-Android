@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,11 +28,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.A
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import java.text.SimpleDateFormat
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsRestClientTest {
@@ -66,11 +70,12 @@ class InsightsRestClientTest {
         val response = mock<AllTimeResponse>()
         initAllTimeResponse(response)
 
-        val allTimeInsights = insightsRestClient.fetchAllTimeInsights(site, false)
+        val responseModel = insightsRestClient.fetchAllTimeInsights(site, false)
 
-        assertNotNull(allTimeInsights.response)
-        assertEquals(response, allTimeInsights.response)
-        assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/", urlCaptor.lastValue)
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/")
+        assertThat(paramsCaptor.lastValue).isEmpty()
     }
 
     @Test
@@ -86,11 +91,11 @@ class InsightsRestClientTest {
                 )
         )
 
-        val allTimeInsights = insightsRestClient.fetchAllTimeInsights(site, false)
+        val responseModel = insightsRestClient.fetchAllTimeInsights(site, false)
 
-        assertNotNull(allTimeInsights.error)
-        assertEquals(API_ERROR, allTimeInsights.error.type)
-        assertEquals(errorMessage, allTimeInsights.error.message)
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
     @Test
@@ -98,11 +103,12 @@ class InsightsRestClientTest {
         val response = mock<MostPopularResponse>()
         initMostPopularResponse(response)
 
-        val allTimeInsights = insightsRestClient.fetchMostPopularInsights(site, false)
+        val responseModel = insightsRestClient.fetchMostPopularInsights(site, false)
 
-        assertNotNull(allTimeInsights.response)
-        assertEquals(response, allTimeInsights.response)
-        assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/", urlCaptor.lastValue)
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/insights/")
+        assertThat(paramsCaptor.lastValue).isEmpty()
     }
 
     @Test
@@ -118,11 +124,11 @@ class InsightsRestClientTest {
                 )
         )
 
-        val allTimeInsights = insightsRestClient.fetchMostPopularInsights(site, false)
+        val responseModel = insightsRestClient.fetchMostPopularInsights(site, false)
 
-        assertNotNull(allTimeInsights.error)
-        assertEquals(API_ERROR, allTimeInsights.error.type)
-        assertEquals(errorMessage, allTimeInsights.error.message)
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
     @Test
@@ -130,11 +136,19 @@ class InsightsRestClientTest {
         val response = mock<PostsResponse>()
         initLatestPostResponse(response)
 
-        val allTimeInsights = insightsRestClient.fetchLatestPostForInsights(site, false)
+        val responseModel = insightsRestClient.fetchLatestPostForInsights(site, false)
 
-        assertNotNull(allTimeInsights.response)
-        assertEquals(response, allTimeInsights.response)
-        assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/12/posts/", urlCaptor.lastValue)
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(response)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/posts/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "fields" to "ID,title,URL,discussion,like_count,date",
+                        "number" to "1",
+                        "order_by" to "date",
+                        "type" to "post"
+                )
+        )
     }
 
     @Test
@@ -150,22 +164,23 @@ class InsightsRestClientTest {
                 )
         )
 
-        val allTimeInsights = insightsRestClient.fetchLatestPostForInsights(site, false)
+        val responseModel = insightsRestClient.fetchLatestPostForInsights(site, false)
 
-        assertNotNull(allTimeInsights.error)
-        assertEquals(API_ERROR, allTimeInsights.error.type)
-        assertEquals(errorMessage, allTimeInsights.error.message)
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
     @Test
     fun `returns posts view success response`() = test {
         initPostsViewResponse(POST_STATS_RESPONSE)
 
-        val allTimeInsights = insightsRestClient.fetchPostStats(site, postId, false)
+        val responseModel = insightsRestClient.fetchPostStats(site, postId, false)
 
-        assertNotNull(allTimeInsights.response)
-        assertEquals(POST_STATS_RESPONSE, allTimeInsights.response)
-        assertEquals("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/post/1/", urlCaptor.lastValue)
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(POST_STATS_RESPONSE)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/post/1/")
+        assertThat(paramsCaptor.lastValue).isEmpty()
     }
 
     @Test
@@ -181,11 +196,52 @@ class InsightsRestClientTest {
                 )
         )
 
-        val allTimeInsights = insightsRestClient.fetchPostStats(site, postId, false)
+        val responseModel = insightsRestClient.fetchPostStats(site, postId, false)
 
-        assertNotNull(allTimeInsights.error)
-        assertEquals(API_ERROR, allTimeInsights.error.type)
-        assertEquals(errorMessage, allTimeInsights.error.message)
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
+    @Test
+    fun `returns visits per time period`() = test {
+        initVisitResponse(VISITS_RESPONSE)
+
+        val date = Date()
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(VISITS_RESPONSE)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/visits/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "date" to format.format(date),
+                        "quantity" to "1",
+                        "unit" to "day"
+                )
+        )
+    }
+
+    @Test
+    fun `returns visits per time period error response`() = test {
+        val errorMessage = "message"
+        initVisitResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val date = Date()
+        val responseModel = insightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
     private suspend fun initAllTimeResponse(
@@ -214,6 +270,13 @@ class InsightsRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<PostStatsResponse> {
         return initResponse(PostStatsResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initVisitResponse(
+        data: VisitResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<VisitResponse> {
+        return initResponse(VisitResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(
