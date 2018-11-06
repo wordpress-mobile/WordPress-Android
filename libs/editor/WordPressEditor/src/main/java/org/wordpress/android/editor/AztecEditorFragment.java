@@ -574,7 +574,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 && !classes.hasClass(ATTR_STATUS_FAILED)
                 && !classes.hasClass(ATTR_STATUS_UPLOADING)
                 && MediaUtils.isGif(attributes.getValue(ATTR_SRC))) {
-                attributes.setValue(ANIMATED_MEDIA, ANIMATED_MEDIA);
+                attributes = attributes.withValues(new kotlin.Pair<>(ANIMATED_MEDIA, ANIMATED_MEDIA));
+                currentClass.setAttributes(attributes);
             }
         }
         overlayGifImages();
@@ -929,24 +930,26 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         if (URLUtil.isNetworkUrl(mediaUrl)) {
-            final AztecAttributes attributes = new AztecAttributes();
-            attributes.setValue(ATTR_SRC, mediaUrl);
+            AztecAttributes attributes = new AztecAttributes();
+            attributes = attributes.withValues(new kotlin.Pair<>(ATTR_SRC, mediaUrl));
 
             if (mediaFile.isVideo()) {
                 // VideoPress special case here
                 if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
-                    attributes.removeAttribute(ATTR_SRC);
+                    attributes = attributes.withoutValues(ATTR_SRC);
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), mediaUrl);
+                    attributes = attributes.withValues(new kotlin.Pair<>(
+                            VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId));
+                    attributes = attributes.withValues(new kotlin.Pair<>(
+                            VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), mediaUrl));
                 }
                 // Do not set default attributes here like for pictures
-                addVideoUploadingClassIfMissing(attributes);
+                attributes = addVideoUploadingClassIfMissing(attributes);
                 mContent.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
-                setDefaultAttributes(attributes, mediaFile);
+                attributes = setDefaultAttributes(attributes, mediaFile);
                 mContent.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
@@ -1008,11 +1011,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     : Utils.escapeQuotes(mediaUrl);
 
             AztecAttributes attrs = new AztecAttributes();
-            attrs.setValue(ATTR_ID_WP, localMediaId);
-            attrs.setValue(ATTR_SRC, Utils.escapeQuotes(mediaUrl));
-            attrs.setValue(ATTR_CLASS, ATTR_STATUS_UPLOADING);
+            attrs = attrs.withValues(
+                    new kotlin.Pair<>(ATTR_ID_WP, localMediaId),
+                    new kotlin.Pair<>(ATTR_SRC, Utils.escapeQuotes(mediaUrl)),
+                    new kotlin.Pair<>(ATTR_CLASS, ATTR_STATUS_UPLOADING));
 
-            addDefaultSizeClassIfMissing(attrs);
+            attrs = addDefaultSizeClassIfMissing(attrs);
 
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     getActivity(), safeMediaPreviewUrl, maxMediaSize
@@ -1023,7 +1027,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // to correctly set the input density to 160 ourselves.
                 bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 if (mediaFile.isVideo()) {
-                    addVideoUploadingClassIfMissing(attrs);
+                    attrs = addVideoUploadingClassIfMissing(attrs);
                     mContent.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
                 } else {
                     mContent.insertImage(new BitmapDrawable(getResources(), bitmapToShow), attrs);
@@ -1151,10 +1155,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
 
                 AztecAttributes attrs = mContent.getElementAttributes(predicate);
-                attrs.setValue("src", remoteUrl);
+                attrs = attrs.withValues(new kotlin.Pair<>("src", remoteUrl));
 
                 if (mediaType.equals(MediaType.IMAGE)) {
-                    setDefaultAttributes(attrs, mediaFile);
+                    attrs = setDefaultAttributes(attrs, mediaFile);
                 }
 
                 // remove the uploading class
@@ -1165,16 +1169,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attributesWithClass.removeClass(TEMP_VIDEO_UPLOADING_CLASS);
                 }
 
-                attrs.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
+                attrs = attrs.withValues(
+                        new kotlin.Pair<>(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS)));
 
                 // VideoPress special case here
                 if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
-                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), remoteUrl);
-                    attrs.removeAttribute("src");
-                    attrs.removeAttribute(ATTR_CLASS);
+                    attrs = attrs.withValues(
+                            new kotlin.Pair<>(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId));
+                    attrs = attrs.withValues(
+                            new kotlin.Pair<>(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), remoteUrl));
+                    attrs = attrs.withoutValues("src");
+                    attrs = attrs.withoutValues(ATTR_CLASS);
                 }
 
                 // clear overlay
@@ -1186,8 +1193,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
                 mContent.resetAttributedMediaSpan(predicate);
                 // finally remove the local id as it won't be necessary anynmore
-                attrs.removeAttribute(ATTR_ID_WP);
-                attrs.removeAttribute(TEMP_IMAGE_ID);
+                attrs = attrs.withoutValues(ATTR_ID_WP);
+                attrs = attrs.withoutValues(TEMP_IMAGE_ID);
                 mContent.updateElementAttributes(predicate, attrs);
 
                 mUploadingMediaProgressMax.remove(localMediaId);
@@ -1555,24 +1562,25 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onImageTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
-        onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
+    public AztecAttributes onImageTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
+        return onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
     }
 
     @Override
-    public void onVideoTapped(@NonNull AztecAttributes attrs) {
-        onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
+    public AztecAttributes onVideoTapped(@NonNull AztecAttributes attrs) {
+        return onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
-    private void setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
-        attrs.setValue(idName, localMediaId);
+    private AztecAttributes setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
+        attrs = attrs.withValues(new kotlin.Pair<>(idName, localMediaId));
         mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
+        return attrs;
     }
 
-    private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
+    private AztecAttributes onMediaTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight,
                                final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
-            return;
+            return attrs;
         }
 
         Set<String> classes = MetadataUtils.getClassAttribute(attrs);
@@ -1598,7 +1606,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             localMediaId = attrs.getValue(idName);
         }
 
-        setIdAttributeOnMedia(attrs, idName, localMediaId);
+        AztecAttributes newAttrs = setIdAttributeOnMedia(attrs, idName, localMediaId);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
@@ -1657,7 +1665,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 // just save the item and leave
                                 mContent.clearOverlays(mTappedMediaPredicate);
                                 mContent.resetAttributedMediaSpan(mTappedMediaPredicate);
-                                return;
+                                return newAttrs;
                             }
 
                             attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
@@ -1706,12 +1714,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 "No application can handle this request." + " Please install a Web browser",
                                 Toast.LENGTH_LONG).show();
                     }
-                    return;
+                    return newAttrs;
                 }
 
                 // If it's not a picture skip the click
                 if (!mediaType.equals(MediaType.IMAGE)) {
-                    return;
+                    return newAttrs;
                 }
 
                 Gson gson = new Gson();
@@ -1752,6 +1760,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 break;
         }
+
+        return newAttrs;
     }
 
     @Override
@@ -1780,30 +1790,30 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     AztecAttributes attributes = mContent.getElementAttributes(mTappedMediaPredicate);
-                    attributes.setValue(ATTR_SRC, metaData.getSrc());
+                    attributes = attributes.withValues(new kotlin.Pair<>(ATTR_SRC, metaData.getSrc()));
 
                     if (!TextUtils.isEmpty(metaData.getTitle())) {
-                        attributes.setValue(ATTR_TITLE, metaData.getTitle());
+                        attributes = attributes.withValues(new kotlin.Pair<>(ATTR_TITLE, metaData.getTitle()));
                     } else {
-                        attributes.removeAttribute(ATTR_TITLE);
+                        attributes = attributes.withoutValues(ATTR_TITLE);
                     }
 
                     if (!TextUtils.isEmpty(metaData.getAlt())) {
-                        attributes.setValue(ATTR_ALT, metaData.getAlt());
+                        attributes = attributes.withValues(new kotlin.Pair<>(ATTR_ALT, metaData.getAlt()));
                     } else {
-                        attributes.removeAttribute(ATTR_ALT);
+                        attributes = attributes.withoutValues(ATTR_ALT);
                     }
 
                     if (!TextUtils.isEmpty(metaData.getWidth())) {
-                        attributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                        attributes = attributes.withValues(new kotlin.Pair<>(ATTR_DIMEN_WIDTH, metaData.getWidth()));
                     } else {
-                        attributes.removeAttribute(ATTR_DIMEN_WIDTH);
+                        attributes = attributes.withoutValues(ATTR_DIMEN_WIDTH);
                     }
 
                     if (!TextUtils.isEmpty(metaData.getHeight())) {
-                        attributes.setValue(ATTR_DIMEN_HEIGHT, metaData.getHeight());
+                        attributes = attributes.withValues(new kotlin.Pair<>(ATTR_DIMEN_HEIGHT, metaData.getHeight()));
                     } else {
-                        attributes.removeAttribute(ATTR_DIMEN_HEIGHT);
+                        attributes = attributes.withoutValues(ATTR_DIMEN_HEIGHT);
                     }
 
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
@@ -1811,15 +1821,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                 MediaLinkExtensionsKt.getMediaLinkAttributes(mContent, mTappedMediaPredicate);
 
                         // without "noopener" img tag around img might be removed by calypso editor
-                        linkAttributes.setValue("rel", "noopener");
+                        linkAttributes = linkAttributes.withValues(new kotlin.Pair<>("rel", "noopener"));
 
                         // when reusing attributes do not forget to remove href
-                        linkAttributes.removeAttribute("href");
+                        linkAttributes = linkAttributes.withoutValues("href");
 
                         if (metaData.isLinkTargetBlank()) {
-                            linkAttributes.setValue(ATTR_TARGET, "_blank");
+                            linkAttributes = linkAttributes.withValues(new kotlin.Pair<>(ATTR_TARGET, "_blank"));
                         } else {
-                            linkAttributes.removeAttribute(ATTR_TARGET);
+                            linkAttributes = linkAttributes.withoutValues(ATTR_TARGET);
                         }
 
                         MediaLinkExtensionsKt.addLinkToMedia(mContent, mTappedMediaPredicate,
@@ -1844,13 +1854,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                         // if caption is present apply align attribute to it instead of image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
-                            captionAttributes.setValue(ATTR_ALIGN, ATTR_ALIGN + metaData.getAlign());
+                            captionAttributes = captionAttributes.withValues(
+                                    new kotlin.Pair<>(ATTR_ALIGN, ATTR_ALIGN + metaData.getAlign()));
                         } else {
-                            captionAttributes.removeAttribute(ATTR_ALIGN);
+                            captionAttributes = captionAttributes.withoutValues(ATTR_ALIGN);
                         }
 
                         // without width attribute caption will not render on the web
-                        captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
+                        captionAttributes = captionAttributes.withValues(
+                                new kotlin.Pair<>(ATTR_DIMEN_WIDTH, metaData.getWidth()));
 
                         CaptionExtensionsKt.setImageCaption(mContent, mTappedMediaPredicate, metaData.getCaption(),
                                                             captionAttributes);
@@ -1874,9 +1886,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         attributesWithClass.addClass(ATTR_IMAGE_WP_DASH + metaData.getAttachmentId());
                     }
 
-                    attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
+                    attributes = attributes.withValues(
+                            new kotlin.Pair<>(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS)));
 
-                    attributes.removeAttribute(TEMP_IMAGE_ID);
+                    attributes = attributes.withoutValues(TEMP_IMAGE_ID);
                     mContent.updateElementAttributes(mTappedMediaPredicate, attributes);
                 }
 
@@ -1886,13 +1899,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
 
-    private static void setDefaultAttributes(AztecAttributes attributes, MediaFile mediaFile) {
+    private static AztecAttributes setDefaultAttributes(AztecAttributes attributes, MediaFile mediaFile) {
         if (mediaFile.getWidth() > 0) {
-            attributes.setValue(ATTR_DIMEN_WIDTH, String.valueOf(mediaFile.getWidth()));
+            attributes = attributes.withValues(
+                    new kotlin.Pair<>(ATTR_DIMEN_WIDTH, String.valueOf(mediaFile.getWidth())));
         }
 
         if (mediaFile.getHeight() > 0) {
-            attributes.setValue(ATTR_DIMEN_HEIGHT, String.valueOf(mediaFile.getHeight()));
+            attributes = attributes.withValues(
+                    new kotlin.Pair<>(ATTR_DIMEN_HEIGHT, String.valueOf(mediaFile.getHeight())));
         }
 
         AttributesWithClass attributesWithClass = getAttributesWithClass(attributes);
@@ -1905,25 +1920,33 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (!attributesWithClass.hasClassStartingWith(ATTR_SIZE_DASH)) {
             attributesWithClass.addClass(ATTR_SIZE_DASH + "full");
         }
-        attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
+        attributes = attributes.withValues(
+                new kotlin.Pair<>(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS)));
+
+        return attributes;
     }
 
-    private static void addDefaultSizeClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = getAttributesWithClass(attributes);
-        if (!attrs.hasClassStartingWith(ATTR_SIZE_DASH)) {
-            attrs.addClass(ATTR_SIZE_DASH + "full");
+    private static AztecAttributes addDefaultSizeClassIfMissing(AztecAttributes attributes) {
+        AttributesWithClass attrsWithClass = getAttributesWithClass(attributes);
+        if (!attrsWithClass.hasClassStartingWith(ATTR_SIZE_DASH)) {
+            attrsWithClass.addClass(ATTR_SIZE_DASH + "full");
         }
-        attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
+        AztecAttributes newAttributes = attributes.withValues(
+                new kotlin.Pair<>(ATTR_CLASS, attrsWithClass.getAttributes().getValue(ATTR_CLASS)));
+
+        return newAttributes;
     }
 
     // this is used for reattachment: when the editor is opened again on a Post that has in-progress
     // video uploads, we need to show the progress bar and the video play icon to differentiate from images
-    private static void addVideoUploadingClassIfMissing(AztecAttributes attributes) {
-        AttributesWithClass attrs = getAttributesWithClass(attributes);
-        if (!attrs.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
-            attrs.addClass(TEMP_VIDEO_UPLOADING_CLASS);
+    private static AztecAttributes addVideoUploadingClassIfMissing(AztecAttributes attributes) {
+        AttributesWithClass attrsWithClass = getAttributesWithClass(attributes);
+        if (!attrsWithClass.hasClass(TEMP_VIDEO_UPLOADING_CLASS)) {
+            attrsWithClass.addClass(TEMP_VIDEO_UPLOADING_CLASS);
         }
-        attributes.setValue(ATTR_CLASS, attrs.getAttributes().getValue(ATTR_CLASS));
+        AztecAttributes newAttributes = attributes.withValues(
+                new kotlin.Pair<>(ATTR_CLASS, attrsWithClass.getAttributes().getValue(ATTR_CLASS)));
+        return newAttributes;
     }
 
     private static Attributes getFirstElementAttributes(Spanned content, AztecText.AttributePredicate predicate) {
@@ -2032,9 +2055,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 // add then new src property with the remoteUrl
                 AztecAttributes attrs = attributesWithClass.getAttributes();
-                attrs.setValue("src", remoteUrl);
+                attrs = attrs.withValues(new kotlin.Pair<>("src", remoteUrl));
 
-                addDefaultSizeClassIfMissing(attrs);
+                attrs = addDefaultSizeClassIfMissing(attrs);
 
                 updateElementAttributes(builder, predicate, attrs);
 

@@ -193,7 +193,7 @@ public class MetadataUtils {
 
         private void updateClassAttribute() {
             String classesStr = TextUtils.join(" ", mClasses);
-            mAztecAttributes.setValue("class", classesStr);
+            mAztecAttributes = mAztecAttributes.withValues(new kotlin.Pair<>("class", classesStr));
         }
     }
 }
