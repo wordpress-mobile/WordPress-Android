@@ -3,7 +3,12 @@ package org.wordpress.android.ui.stats.refresh
 import android.content.Context
 import android.graphics.Typeface
 import android.support.annotation.LayoutRes
+import android.support.design.widget.TabLayout
+import android.support.design.widget.TabLayout.OnTabSelectedListener
+import android.support.design.widget.TabLayout.Tab
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.Spannable
 import android.text.SpannableString
@@ -25,8 +30,12 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.AVATAR
 
 sealed class BlockItemViewHolder(
     parent: ViewGroup,
@@ -54,6 +63,27 @@ sealed class BlockItemViewHolder(
         fun bind(item: Item) {
             icon.setImageResource(item.icon)
             text.setText(item.text)
+            value.text = item.value
+            divider.visibility = if (item.showDivider) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+    }
+
+    class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_item
+    ) {
+        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val divider = itemView.findViewById<View>(R.id.divider)
+
+        fun bind(item: UserItem) {
+            imageManager.loadIntoCircle(icon, AVATAR, item.avatarUrl)
+            text.text = item.text
             value.text = item.value
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
@@ -160,6 +190,37 @@ sealed class BlockItemViewHolder(
             GlobalScope.launch(Dispatchers.Main) {
                 chart.draw(item, labelStart, labelEnd)
             }
+        }
+    }
+
+    class TabsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_tabs_item
+    ) {
+        private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout)
+        private val list = itemView.findViewById<RecyclerView>(R.id.recycler_view)
+
+        fun bind(item: TabsItem) {
+            item.tabs.forEach {
+                tabLayout.addTab(tabLayout.newTab().setText(it.title))
+            }
+
+            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            if (list.adapter == null) {
+                list.adapter = BlockListAdapter(imageManager)
+            }
+            (list.adapter as BlockListAdapter).update(item.tabs[0].items)
+            tabLayout.addOnTabSelectedListener(object: OnTabSelectedListener {
+                override fun onTabReselected(tab: Tab) {
+                }
+
+                override fun onTabUnselected(tab: Tab) {
+                }
+
+                override fun onTabSelected(tab: Tab) {
+                    (list.adapter as BlockListAdapter).update(item.tabs[tab.position].items)
+                }
+            } )
         }
     }
 }

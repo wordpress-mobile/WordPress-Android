@@ -24,12 +24,14 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMore
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class StatsListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
 
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -138,7 +140,7 @@ class StatsListFragment : Fragment() {
     private fun updateInsights(insightsState: InsightsUiState) {
         val adapter: InsightsAdapter
         if (recyclerView.adapter == null) {
-            adapter = InsightsAdapter()
+            adapter = InsightsAdapter(imageManager)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as InsightsAdapter
