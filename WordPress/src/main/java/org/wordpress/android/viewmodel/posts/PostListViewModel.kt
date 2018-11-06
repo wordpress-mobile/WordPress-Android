@@ -3,9 +3,7 @@ package org.wordpress.android.viewmodel.posts
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.arch.paging.PagedList.BoundaryCallback
 import android.content.Intent
 import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
@@ -47,7 +45,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.ListItemType
 import org.wordpress.android.ui.posts.PagedListDataForPostStore
-import org.wordpress.android.ui.posts.PagedListFactory
+import org.wordpress.android.ui.posts.PagedListWrapper
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostListUserAction
@@ -58,6 +56,7 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.getList
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -73,9 +72,6 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButton
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
-
-private const val INITIAL_LOAD_SIZE_HINT = 20
-private const val PAGE_SIZE = 10
 
 enum class PostListEmptyViewState {
     EMPTY_LIST,
@@ -119,28 +115,20 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
-    private val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(true)
-            .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
-            .setPageSize(PAGE_SIZE)
-            .build()
-
-    val pagedListData: LiveData<PagedList<ListItemType<PostAdapterItem>>> by lazy {
+    private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        val dataSource = PagedListDataForPostStore(dispatcher, postStore, site)
-        val factory = PagedListFactory(dataSource, listStore, listDescriptor) { post ->
-            createPostAdapterItem(post)
-        }
-        val callback = object : BoundaryCallback<ListItemType<PostAdapterItem>>() {
-            override fun onItemAtEndLoaded(itemAtEnd: ListItemType<PostAdapterItem>) {
-                fetchList(true)
-                super.onItemAtEndLoaded(itemAtEnd)
-            }
-        }
-        LivePagedListBuilder<Int, ListItemType<PostAdapterItem>>(factory, pagedListConfig).setBoundaryCallback(callback)
-                .build()
+        getList(
+                dispatcher,
+                listDescriptor,
+                PagedListDataForPostStore(dispatcher, postStore, site),
+                getList = { listStore.getList(listDescriptor) },
+                transform = { post -> createPostAdapterItem(post) })
+    }
+
+    val pagedListData: LiveData<PagedList<ListItemType<PostAdapterItem>>> by lazy {
+        pagedListWrapper.liveData
     }
 
     init {
@@ -314,7 +302,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun invalidateData() {
-        pagedListData.value?.dataSource?.invalidate()
+        pagedListWrapper.invalidate()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

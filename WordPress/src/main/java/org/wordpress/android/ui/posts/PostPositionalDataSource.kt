@@ -1,12 +1,18 @@
 package org.wordpress.android.ui.posts
 
+import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
+import android.arch.paging.PagedList.BoundaryCallback
 import android.arch.paging.PositionalDataSource
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.list.ListDescriptor
-import org.wordpress.android.fluxc.store.ListStore
+import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.ui.posts.ListItemType.LoadingItem
 import org.wordpress.android.ui.posts.ListItemType.ReadyItem
 
@@ -16,29 +22,68 @@ sealed class ListItemType<T> {
     class ReadyItem<T>(val item: T) : ListItemType<T>()
 }
 
+private const val INITIAL_LOAD_SIZE_HINT = 20
+private const val PAGE_SIZE = 10
+
+class PagedListWrapper<T>(val liveData: LiveData<PagedList<ListItemType<T>>>, val invalidate: () -> Unit)
+
+private val pagedListConfig = PagedList.Config.Builder()
+        .setEnablePlaceholders(true)
+        .setInitialLoadSizeHint(INITIAL_LOAD_SIZE_HINT)
+        .setPageSize(PAGE_SIZE)
+        .build()
+
+fun <T, R> getList(
+    dispatcher: Dispatcher,
+    listDescriptor: ListDescriptor,
+    dataStore: PagedListDataStoreInterface<T>,
+    getList: (ListDescriptor) -> List<Long>,
+    transform: (T) -> R
+): PagedListWrapper<R> {
+    val factory = PagedListFactory(dataStore, listDescriptor, getList, transform)
+    val callback = object : BoundaryCallback<ListItemType<R>>() {
+        override fun onItemAtEndLoaded(itemAtEnd: ListItemType<R>) {
+            val payload = FetchListPayload(listDescriptor, true) { _, offset ->
+                dataStore.fetchList(listDescriptor, offset)
+            }
+            dispatcher.dispatch(ListActionBuilder.newFetchListAction(payload))
+            super.onItemAtEndLoaded(itemAtEnd)
+        }
+    }
+    val liveData = LivePagedListBuilder<Int, ListItemType<R>>(factory, pagedListConfig).setBoundaryCallback(callback)
+                .build()
+    return PagedListWrapper(liveData) {
+        factory.invalidate()
+    }
+}
+
 class PagedListFactory<T, R>(
     private val dataStore: PagedListDataStoreInterface<T>,
-    private val listStore: ListStore,
     private val listDescriptor: ListDescriptor,
+    private val getList: (ListDescriptor) -> List<Long>,
     private val transform: (T) -> R
 ) : DataSource.Factory<Int, ListItemType<R>>() {
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
 
     override fun create(): DataSource<Int, ListItemType<R>> {
-        val source = PagedListPositionalDataSource(dataStore, listStore, listDescriptor, transform)
+        val source = PagedListPositionalDataSource(dataStore, listDescriptor, getList, transform)
         currentSource = source
         return source
+    }
+
+    fun invalidate() {
+        currentSource?.invalidate()
     }
 }
 
 private class PagedListPositionalDataSource<T, R>(
     private val dataStore: PagedListDataStoreInterface<T>,
-    listStore: ListStore,
     private val listDescriptor: ListDescriptor,
+    getList: (ListDescriptor) -> List<Long>,
     private val transform: (T) -> R
 ) : PositionalDataSource<ListItemType<R>>() {
     private val localItems = dataStore.localItems(listDescriptor)
-    private val remoteItemIds: List<Long> = listStore.getList(listDescriptor)
+    private val remoteItemIds: List<Long> = getList(listDescriptor)
     private val totalSize: Int = localItems.size + remoteItemIds.size
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<ListItemType<R>>) {
