@@ -29,6 +29,8 @@ class StatsListViewModel
     private val mutableData: MutableLiveData<InsightsUiState> = MutableLiveData()
     val data: LiveData<InsightsUiState> = mutableData
 
+    val navigationTarget: LiveData<NavigationTarget> = insightsViewModel.navigationTarget
+
     private lateinit var statsType: StatsListType
 
     fun start(site: SiteModel, statsType: StatsListType) {
