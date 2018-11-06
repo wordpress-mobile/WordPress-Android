@@ -1177,7 +1177,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
                     attrs = attrs.withValues(
-                            new kotlin.Pair<>(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId));
+                            new kotlin.Pair<>(
+                                    VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId));
                     attrs = attrs.withValues(
                             new kotlin.Pair<>(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), remoteUrl));
                     attrs = attrs.withoutValues("src");
