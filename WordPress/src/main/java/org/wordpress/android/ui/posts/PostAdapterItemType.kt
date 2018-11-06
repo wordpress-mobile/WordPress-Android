@@ -24,4 +24,7 @@ data class PostAdapterItemData(
     val featuredImageId: Long,
     val featuredImageUrl: String?,
     val uploadStatus: PostAdapterItemUploadStatus
-)
+) {
+    // Even if there is no featured image yet, if we have the id, we should show the empty version while we load it
+    val shouldShowFeaturedImage: Boolean = featuredImageUrl != null || featuredImageId != 0L
+}
