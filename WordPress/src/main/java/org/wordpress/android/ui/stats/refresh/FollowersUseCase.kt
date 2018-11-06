@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.wordpress.android.R
@@ -17,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -26,6 +29,9 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) {
+    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
+
     suspend fun loadFollowers(site: SiteModel, forced: Boolean = false): InsightsItem {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
@@ -37,12 +43,12 @@ class FollowersUseCase
 
         return when {
             error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
-            wpComModel != null || emailModel != null -> loadFollowers(wpComModel, emailModel)
+            wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
             else -> throw IllegalArgumentException("Unexpected empty body")
         }
     }
 
-    private fun loadFollowers(wpComModel: FollowersModel?, emailModel: FollowersModel?): ListInsightItem {
+    private fun loadFollowers(site: SiteModel, wpComModel: FollowersModel?, emailModel: FollowersModel?): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(
@@ -54,7 +60,9 @@ class FollowersUseCase
                 )
         )
 
-        items.add(Link(text = string.stats_insights_view_more) {})
+        items.add(Link(text = string.stats_insights_view_more) {
+            mutableNavigationTarget.value = ViewFollowersStats(site.siteId)
+        })
         return ListInsightItem(items)
     }
 

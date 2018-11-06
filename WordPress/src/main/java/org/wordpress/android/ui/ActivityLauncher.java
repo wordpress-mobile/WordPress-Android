@@ -58,10 +58,14 @@ import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
+import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.StatsViewAllActivity;
+import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.refresh.StatsListActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
@@ -202,6 +206,19 @@ public class ActivityLauncher {
     public static void viewBlogStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void viewFollowersStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_followers);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
         context.startActivity(intent);
     }
 

@@ -39,6 +39,9 @@ class InsightsViewModel
         mediatorNavigationTarget.addSource(latestPostSummaryViewModel.navigationTarget) {
             mediatorNavigationTarget.value = it
         }
+        mediatorNavigationTarget.addSource(followersUseCase.navigationTarget) {
+            mediatorNavigationTarget.value = it
+        }
     }
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
