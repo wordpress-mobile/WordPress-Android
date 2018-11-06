@@ -131,8 +131,26 @@ public class WPScreenshotSupport {
         });
     }
 
+    public static boolean waitForElementToBeDisplayedWithoutFailure(final Integer elementID) {
+        try {
+            waitForConditionToBeTrueWithoutFailure(new Supplier<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return isElementDisplayed(elementID);
+                }
+            });
+        } catch (Exception e) {
+
+        }
+        return isElementDisplayed(elementID);
+    }
+
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {
         new SupplierIdler(supplier).idleUntilReady();
+    }
+
+    public static void waitForConditionToBeTrueWithoutFailure(Supplier<Boolean> supplier) {
+        new SupplierIdler(supplier).idleUntilReady(false);
     }
 
     public static void waitForImagesOfTypeWithPlaceholder(final Integer elementID, final ImageType imageType) {

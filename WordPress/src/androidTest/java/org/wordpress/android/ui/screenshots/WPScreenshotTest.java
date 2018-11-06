@@ -35,6 +35,7 @@ import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.w
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForConditionToBeTrue;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayed;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
@@ -174,6 +175,8 @@ public class WPScreenshotTest {
         clickOn(R.id.nav_sites);
         scrollToThenClickOn(R.id.row_stats);
 
+        // Wait for the dialog, but don't fai if its not there
+        waitForElementToBeDisplayedWithoutFailure(R.id.promo_dialog_button_positive);
         // If there's a pop-up message, dismiss it
         if (isElementDisplayed(R.id.promo_dialog_button_positive)) {
             clickOn(R.id.promo_dialog_button_positive);
