@@ -109,44 +109,6 @@ class NewSiteCreationSegmentsViewModelTest {
     }
 
     @Test
-    fun onRetryChangesStateToProgress() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
-        viewModel.start()
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
-        viewModel.onRetryClicked()
-
-        inOrder(uiStateObserver).apply {
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showHeader = true,
-                            showList = true,
-                            data = firstModel.segmentList
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showHeader = true,
-                            showList = true,
-                            data = secondDummyEvent.segmentList
-                    )
-            )
-            verifyNoMoreInteractions()
-        }
-    }
-
-    @Test
     fun onErrorEventChangesStateToError() = test {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
