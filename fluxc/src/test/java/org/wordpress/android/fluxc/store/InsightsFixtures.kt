@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import java.util.Date
 
 val DATE = Date(10)
@@ -42,3 +43,20 @@ const val SECOND_DAY_VIEWS = 11
 val DATA = listOf(listOf(FIRST_DAY, FIRST_DAY_VIEWS.toString()), listOf(SECOND_DAY, SECOND_DAY_VIEWS.toString()))
 
 val POST_STATS_RESPONSE = PostStatsResponse(0, 0, 0, VIEWS, null, DATA, FIELDS, listOf(), mapOf(), mapOf())
+
+const val REBLOG_COUNT = 13
+const val POST_COUNT = 17
+val VISITS_FIELDS = listOf("period", "views", "visitors", "likes", "reblogs", "comments", "posts")
+const val VISITS_DATE = "2018-11-02"
+val VISITS_DATA = listOf(
+        VISITS_DATE,
+        "$VIEWS",
+        "$VISITORS",
+        "$LIKE_COUNT",
+        "$REBLOG_COUNT",
+        "$COMMENT_COUNT",
+        "$POST_COUNT"
+)
+val VISITS_RESPONSE = VisitResponse(
+        FIRST_DAY, "day", VISITS_FIELDS, listOf(VISITS_DATA)
+)
