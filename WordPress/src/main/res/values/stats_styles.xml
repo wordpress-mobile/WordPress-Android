@@ -134,7 +134,7 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body1">
+    <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/wp_grey</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
