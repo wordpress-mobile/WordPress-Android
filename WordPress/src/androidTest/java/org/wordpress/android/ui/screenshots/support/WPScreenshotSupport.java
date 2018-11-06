@@ -6,7 +6,6 @@ import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
@@ -48,7 +46,7 @@ public class WPScreenshotSupport {
 
     public static boolean hasElement(ViewInteraction element) {
         try {
-            element.check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            element.check(matches(isDisplayed()));
             return true;
         } catch (Throwable e) {
             return false;
@@ -73,6 +71,17 @@ public class WPScreenshotSupport {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
 
+    public static void clickOnSpinnerItemAtIndex(int index) {
+        final ViewInteraction spinnerItem = onView(
+                allOf(
+                        withId(R.id.text),
+                        childAtPosition(withClassName(is("android.widget.DropDownListView")), index)
+                )
+        );
+        waitForElementToBeDisplayed(spinnerItem);
+        spinnerItem.perform(click());
+    }
+
     public static void populateTextField(Integer elementID, String text) {
         waitForElementToBeDisplayed(elementID);
         onView(withId(elementID))
@@ -89,16 +98,9 @@ public class WPScreenshotSupport {
         waitOneFrame();
     }
 
-    public static void selectItemAtIndexInSpinner(Integer index, Integer elementID) {
-        waitForElementToBeDisplayed(elementID);
-        clickOn(elementID);
-
-        onView(
-                allOf(
-                        withId(R.id.text),
-                        childAtPosition(withClassName(is("android.widget.DropDownListView")), index)
-                )
-        ).perform(click());
+    public static void selectItemAtIndexInSpinner(Integer index, Integer spinnerElementID) {
+        clickOn(spinnerElementID);
+        clickOnSpinnerItemAtIndex(index);
     }
 
     // WAITERS
@@ -107,6 +109,15 @@ public class WPScreenshotSupport {
             @Override
             public Boolean get() {
                 return hasElement(elementID);
+            }
+        });
+    }
+
+    public static void waitForElementToBeDisplayed(final ViewInteraction element) {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return hasElement(element);
             }
         });
     }
@@ -207,7 +218,7 @@ public class WPScreenshotSupport {
                             Matchers.<View>instanceOf(c),
                             first()
                     )
-            ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {
@@ -222,7 +233,7 @@ public class WPScreenshotSupport {
                             withId(elementID),
                             first()
                     )
-            ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {
