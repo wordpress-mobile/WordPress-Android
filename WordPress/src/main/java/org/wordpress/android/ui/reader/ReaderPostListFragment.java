@@ -977,11 +977,22 @@ public class ReaderPostListFragment extends Fragment
                         if (mPostSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos);
                         }
+                        if (getPostAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
+                        }
                     } else if (tab.getPosition() == TAB_SITES) {
                         mRecyclerView.setAdapter(getSiteSearchAdapter());
                         if (mSiteSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
                         }
+                        if (getSiteSearchAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
                         }
                     }
                 }
