@@ -5,4 +5,4 @@ source "https://rubygems.org" do
 end
 
 
-gem "fastlane"
+gem 'fastlane', "2.107.0"
