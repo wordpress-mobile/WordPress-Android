@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
@@ -115,6 +116,8 @@ class PostListViewModel @Inject constructor(
     private val _snackbarAction = SingleLiveEvent<SnackbarMessageHolder>()
     val snackbarAction: LiveData<SnackbarMessageHolder> = _snackbarAction
 
+    private lateinit var lifecycle: Lifecycle
+
     private val pagedListWrapper: PagedListWrapper<PostAdapterItem> by lazy {
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
@@ -123,6 +126,7 @@ class PostListViewModel @Inject constructor(
                 dispatcher,
                 listDescriptor,
                 PagedListDataForPostStore(dispatcher, postStore, site),
+                lifecycle,
                 getList = { listStore.getList(listDescriptor) },
                 transform = { post -> createPostAdapterItem(post) })
     }
@@ -142,7 +146,8 @@ class PostListViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, lifecycle: Lifecycle) {
+        this.lifecycle = lifecycle
         if (isStarted) {
             return
         }
@@ -297,7 +302,7 @@ class PostListViewModel @Inject constructor(
                 uploadedPostRemoteIds.clear()
             }
             // We want to refresh the posts even if there is an error so we can get the state change
-            invalidateData()
+//            invalidateData()
         }
     }
 
@@ -311,7 +316,7 @@ class PostListViewModel @Inject constructor(
         if (listDescriptor?.typeIdentifier != event.type) {
             return
         }
-        invalidateData()
+//        invalidateData()
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)

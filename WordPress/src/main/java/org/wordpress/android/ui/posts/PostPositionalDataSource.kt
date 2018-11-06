@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.posts
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
@@ -9,10 +12,14 @@ import android.arch.paging.PositionalDataSource
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.launch
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.ui.posts.ListItemType.LoadingItem
 import org.wordpress.android.ui.posts.ListItemType.ReadyItem
 
@@ -37,10 +44,11 @@ fun <T, R> getList(
     dispatcher: Dispatcher,
     listDescriptor: ListDescriptor,
     dataStore: PagedListDataStoreInterface<T>,
+    lifecycle: Lifecycle,
     getList: (ListDescriptor) -> List<Long>,
     transform: (T) -> R
 ): PagedListWrapper<R> {
-    val factory = PagedListFactory(dataStore, listDescriptor, getList, transform)
+    val factory = PagedListFactory(dispatcher, dataStore, listDescriptor, lifecycle, getList, transform)
     val callback = object : BoundaryCallback<ListItemType<R>>() {
         override fun onItemAtEndLoaded(itemAtEnd: ListItemType<R>) {
             val payload = FetchListPayload(listDescriptor, true) { _, offset ->
@@ -51,22 +59,24 @@ fun <T, R> getList(
         }
     }
     val liveData = LivePagedListBuilder<Int, ListItemType<R>>(factory, pagedListConfig).setBoundaryCallback(callback)
-                .build()
+            .build()
     return PagedListWrapper(liveData) {
         factory.invalidate()
     }
 }
 
 class PagedListFactory<T, R>(
+    private val dispatcher: Dispatcher,
     private val dataStore: PagedListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
+    private val lifecycle: Lifecycle,
     private val getList: (ListDescriptor) -> List<Long>,
     private val transform: (T) -> R
 ) : DataSource.Factory<Int, ListItemType<R>>() {
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
 
     override fun create(): DataSource<Int, ListItemType<R>> {
-        val source = PagedListPositionalDataSource(dataStore, listDescriptor, getList, transform)
+        val source = PagedListPositionalDataSource(dispatcher, dataStore, listDescriptor, lifecycle, getList, transform)
         currentSource = source
         return source
     }
@@ -77,14 +87,37 @@ class PagedListFactory<T, R>(
 }
 
 private class PagedListPositionalDataSource<T, R>(
+    private val dispatcher: Dispatcher,
     private val dataStore: PagedListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
+    private val lifecycle: Lifecycle,
     getList: (ListDescriptor) -> List<Long>,
     private val transform: (T) -> R
-) : PositionalDataSource<ListItemType<R>>() {
+) : PositionalDataSource<ListItemType<R>>(), LifecycleObserver {
     private val localItems = dataStore.localItems(listDescriptor)
     private val remoteItemIds: List<Long> = getList(listDescriptor)
     private val totalSize: Int = localItems.size + remoteItemIds.size
+    private var isRegistered = true
+
+    init {
+        dispatcher.register(this)
+        lifecycle.addObserver(this)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreate() {
+        if (isRegistered) {
+            isRegistered = true
+            dispatcher.register(this)
+        }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
+        lifecycle.removeObserver(this)
+        dispatcher.unregister(this)
+        isRegistered = false
+    }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<ListItemType<R>>) {
         val startPosition = if (params.requestedStartPosition < remoteItemIds.size) params.requestedStartPosition else 0
@@ -132,5 +165,23 @@ private class PagedListPositionalDataSource<T, R>(
             index >= totalSize -> totalSize
             else -> index
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListChanged(event: OnListChanged) {
+        if (!event.listDescriptors.contains(listDescriptor)) {
+            return
+        }
+        invalidate()
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Suppress("unused")
+    fun onListItemsChanged(event: OnListItemsChanged) {
+        if (listDescriptor.typeIdentifier != event.type) {
+            return
+        }
+        invalidate()
     }
 }

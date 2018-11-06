@@ -98,7 +98,7 @@ class PostListFragment : Fragment() {
         activity?.let { postListActivity ->
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
-            viewModel.start(site)
+            viewModel.start(site, lifecycle)
             viewModel.pagedListData.observe(this, Observer {
                 it?.let { pagedListData -> updatePagedListData(pagedListData) }
             })
