@@ -876,12 +876,7 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
-
-        // only submit a site search if the sites tab is active - otherwise we'll delay the site search
-        // until the user taps the sites tab
-        if (getSearchTabsPosition() == TAB_SITES) {
-            updateSitesInCurrentSearch(0);
-        }
+        updateSitesInCurrentSearch(0);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
