@@ -77,5 +77,13 @@ val FOLLOWER_RESPONSE = FollowerResponse(
 )
 val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf())
 val AUTHOR = CommentsResponse.Author(USER_LABEL, URL, AVATAR, COMMENT_COUNT, null)
-val POST= CommentsResponse.Post(TITLE, URL, ID, COMMENT_COUNT)
-val TOP_COMMENTS_RESPONSE = CommentsResponse(FIRST_DAY, COMMENT_COUNT, COMMENT_COUNT, SECOND_DAY, null, listOf(AUTHOR), listOf(POST))
+val POST = CommentsResponse.Post(TITLE, URL, ID, COMMENT_COUNT)
+val TOP_COMMENTS_RESPONSE = CommentsResponse(
+        FIRST_DAY,
+        COMMENT_COUNT,
+        COMMENT_COUNT,
+        SECOND_DAY,
+        null,
+        listOf(AUTHOR),
+        listOf(POST)
+)
