@@ -27,7 +27,7 @@ import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.datastore.PagedListDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -72,7 +72,7 @@ class ListStore @Inject constructor(
 
     fun <T, R> getList(
         listDescriptor: ListDescriptor,
-        dataStore: PagedListDataStoreInterface<T>,
+        dataStore: ListDataStoreInterface<T>,
         lifecycle: Lifecycle,
         transform: (T) -> R
     ): PagedListWrapper<R> {
