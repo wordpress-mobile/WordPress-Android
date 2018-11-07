@@ -13,7 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.widgets.WPTextView
 
 /**
- * Basic dialog fragment with support for 1,2 or 3 buttons.
+ * This dialog is to be presented when Gutenberg content is detected within a Post and users attempt to open on current
+ * (non-Gutenberg) editors
  */
 class GutenbergWarningFragmentDialog : AppCompatDialogFragment() {
     private var mGutenbergRemotePostId: Long = 0

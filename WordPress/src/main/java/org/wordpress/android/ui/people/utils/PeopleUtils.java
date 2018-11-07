@@ -15,6 +15,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,7 +27,7 @@ public class PeopleUtils {
     public static final int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -63,6 +64,55 @@ public class PeopleUtils {
         WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
     }
 
+    public static void fetchRevisionAuthorsDetails(final SiteModel site, List<String> authors,
+                                                   final FetchUsersCallback callback) {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject != null && callback != null) {
+                    try {
+                        List<Person> people = new ArrayList<>();
+
+                        Iterator<String> keys = jsonObject.keys();
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            if (jsonObject.get(key) instanceof JSONObject) {
+                                JSONArray jsonArray = ((JSONObject) jsonObject.get(key)).getJSONArray("users");
+                                people.addAll(peopleListFromJSON(jsonArray, site.getId(), Person.PersonType.USER));
+                            }
+                        }
+
+                        callback.onSuccess(people, true);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the revision author details"
+                                        + " from batch response for sites/%s/users: " + e);
+                        callback.onError();
+                    }
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.API, volleyError);
+                if (callback != null) {
+                    callback.onError();
+                }
+            }
+        };
+
+        Map<String, String> batchParams = new HashMap<>();
+
+        for (int i = 0; i < authors.size(); i++) {
+            batchParams.put(String.format(Locale.US, "urls[%d]", i),
+                    String.format(Locale.US, "/sites/%d/users?search=%s&search_columns=ID",
+                            site.getSiteId(), authors.get(i)));
+        }
+
+        WordPress.getRestClientUtilsV1_1().get("batch/", batchParams, null, listener, errorListener);
+    }
+
     public static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback) {
         fetchFollowers(site, page, callback, false);
     }
@@ -74,7 +124,7 @@ public class PeopleUtils {
 
     private static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback,
                                        final boolean isEmailFollower) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -115,7 +165,7 @@ public class PeopleUtils {
     }
 
     public static void fetchViewers(final SiteModel site, final int offset, final FetchViewersCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -154,7 +204,7 @@ public class PeopleUtils {
 
     public static void updateRole(final SiteModel site, long personID, String newRole, final int localTableBlogId,
                                   final UpdateUserCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -190,7 +240,7 @@ public class PeopleUtils {
     }
 
     public static void removeUser(final SiteModel site, final long personID, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -221,7 +271,7 @@ public class PeopleUtils {
 
     public static void removeFollower(final SiteModel site, final long personID,
                                       Person.PersonType personType, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -256,7 +306,7 @@ public class PeopleUtils {
     }
 
     public static void removeViewer(final SiteModel site, final long personID, final RemovePersonCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -337,7 +387,7 @@ public class PeopleUtils {
 
     public static void validateUsernames(final List<String> usernames, String role, long wpComBlogId, final
     ValidateUsernameCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject != null && callback != null) {
@@ -449,7 +499,7 @@ public class PeopleUtils {
 
     public static void sendInvitations(final List<String> usernames, String role, String message, long wpComBlogId,
                                        final InvitationsSendCallback callback) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (callback == null) {

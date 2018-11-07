@@ -334,7 +334,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
+                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR_WITH_BACKGROUND;
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
                         transformToFormattableContentList(mNote.getHeader()),

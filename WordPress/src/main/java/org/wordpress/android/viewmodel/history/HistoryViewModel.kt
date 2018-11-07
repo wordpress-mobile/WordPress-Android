@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.history
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.text.TextUtils
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
@@ -15,9 +16,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.revisions.RevisionModel
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnRevisionsFetched
+import org.wordpress.android.models.Person
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.history.HistoryListItem
 import org.wordpress.android.ui.history.HistoryListItem.Revision
+import org.wordpress.android.ui.people.utils.PeopleUtils
+import org.wordpress.android.ui.people.utils.PeopleUtils.FetchUsersCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,23 +41,20 @@ class HistoryViewModel @Inject constructor(
     }
 
     private val _listStatus = MutableLiveData<HistoryListStatus>()
-    val eventListStatus: LiveData<HistoryListStatus>
+    val listStatus: LiveData<HistoryListStatus>
         get() = _listStatus
-
-    private val _showLoadDialog = SingleLiveEvent<HistoryListItem>()
-    val showLoadDialog: LiveData<HistoryListItem>
-        get() = _showLoadDialog
-
-    private val _showSnackbarMessage = SingleLiveEvent<String>()
-    val showSnackbarMessage: LiveData<String>
-        get() = _showSnackbarMessage
 
     private val _revisions = MutableLiveData<List<HistoryListItem>>()
     val revisions: LiveData<List<HistoryListItem>>
         get() = _revisions
 
+    private val _showDialog = SingleLiveEvent<HistoryListItem>()
+    val showDialog: LiveData<HistoryListItem>
+        get() = _showDialog
+
     private var isStarted = false
 
+    lateinit var revisionsList: ArrayList<Revision>
     lateinit var post: PostModel
     lateinit var site: SiteModel
 
@@ -66,6 +67,7 @@ class HistoryViewModel @Inject constructor(
             return
         }
 
+        this.revisionsList = ArrayList()
         this.post = post
         this.site = site
 
@@ -75,6 +77,63 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun createRevisionsList(revisions: List<RevisionModel>) {
+        var revisionAuthorsId = ArrayList<String>()
+        revisions.forEach {
+            if (!TextUtils.isEmpty(it.postAuthorId)) {
+                revisionAuthorsId.add(it.postAuthorId!!)
+            }
+        }
+
+        revisionAuthorsId = ArrayList(revisionAuthorsId.distinct())
+        _revisions.value = getHistoryListItemsFromRevisionModels(revisions)
+        fetchRevisionAuthorDetails(revisionAuthorsId)
+    }
+
+    private fun fetchRevisionAuthorDetails(authorsId: List<String>) {
+        PeopleUtils.fetchRevisionAuthorsDetails(site, authorsId, object : FetchUsersCallback {
+            override fun onSuccess(peopleList: List<Person>, isEndOfList: Boolean) {
+                val existingRevisions = _revisions.value ?: return
+                val updatedRevisions = mutableListOf<HistoryListItem>()
+                revisionsList.clear()
+
+                existingRevisions.forEach { it ->
+                    var mutableRevision = it
+
+                    if (mutableRevision is HistoryListItem.Revision) {
+                        // we shouldn't directly update items in MutableLiveData, as they will be updated downstream
+                        // and DiffUtil will not catch this change
+                        mutableRevision = mutableRevision.copy()
+
+                        val person = peopleList.firstOrNull { it.personID.toString() == mutableRevision.postAuthorId }
+                        if (person != null) {
+                            mutableRevision.authorAvatarURL = person.avatarUrl
+                            mutableRevision.authorDisplayName = person.displayName
+                        }
+
+                        revisionsList.add(mutableRevision)
+                    }
+
+                    updatedRevisions.add(mutableRevision)
+                }
+
+                _revisions.postValue(updatedRevisions)
+            }
+
+            override fun onError() {
+                AppLog.e(T.API, "Can't fetch details of revision authors")
+            }
+        })
+    }
+
+    private fun fetchRevisions() {
+        _listStatus.value = HistoryListStatus.FETCHING
+        val payload = FetchRevisionsPayload(post, site)
+        uiScope.launch {
+            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
+        }
+    }
+
+    private fun getHistoryListItemsFromRevisionModels(revisions: List<RevisionModel>): List<HistoryListItem> {
         val items = mutableListOf<HistoryListItem>()
 
         revisions.forEach {
@@ -86,6 +145,7 @@ class HistoryViewModel @Inject constructor(
             }
 
             items.add(item)
+            revisionsList.add(item)
         }
 
         if (revisions.isNotEmpty()) {
@@ -98,15 +158,7 @@ class HistoryViewModel @Inject constructor(
             items.add(HistoryListItem.Footer(footer))
         }
 
-        _revisions.value = items
-    }
-
-    private fun fetchRevisions() {
-        _listStatus.value = HistoryListStatus.FETCHING
-        val payload = FetchRevisionsPayload(post, site)
-        uiScope.launch {
-            dispatcher.dispatch(PostActionBuilder.newFetchRevisionsAction(payload))
-        }
+        return items
     }
 
     override fun onCleared() {
@@ -116,7 +168,7 @@ class HistoryViewModel @Inject constructor(
 
     fun onItemClicked(item: HistoryListItem) {
         if (item is HistoryListItem.Revision) {
-            _showLoadDialog.value = item
+            _showDialog.value = item
         }
     }
 

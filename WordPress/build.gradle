@@ -41,14 +41,12 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "11.1"
-        versionCode 634
+        versionName "11.2-rc-1"
+        versionCode 635
         minSdkVersion 21
         targetSdkVersion 26
 
         multiDexEnabled true
-
-        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -67,7 +65,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "REVISIONS_ENABLED", "true"
         }
     }
 
@@ -153,6 +150,7 @@ dependencies {
     implementation 'com.squareup.okio:okio:1.13.0'
     implementation 'org.apache.commons:commons-text:1.1'
     implementation 'com.airbnb.android:lottie:2.0.0-rc2'
+    implementation 'com.facebook.shimmer:shimmer:0.3.0'
 
     implementation ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'

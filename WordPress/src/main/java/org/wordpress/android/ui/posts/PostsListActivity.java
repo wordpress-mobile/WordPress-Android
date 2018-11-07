@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class PostsListActivity extends AppCompatActivity implements GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
-    private PostsListFragment mPostList;
+    private PostListFragment mPostList;
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
@@ -94,17 +94,17 @@ public class PostsListActivity extends AppCompatActivity implements GutenbergWar
             }
         }
 
-        mPostList = (PostsListFragment) getSupportFragmentManager().findFragmentByTag(PostsListFragment.TAG);
+        mPostList = (PostListFragment) getSupportFragmentManager().findFragmentByTag(PostListFragment.TAG);
         if (mPostList == null || siteHasChanged || targetPost != null) {
-            PostsListFragment oldFragment = mPostList;
-            mPostList = PostsListFragment.newInstance(mSite, targetPost);
+            PostListFragment oldFragment = mPostList;
+            mPostList = PostListFragment.newInstance(mSite, targetPost);
             if (oldFragment == null) {
                 getSupportFragmentManager().beginTransaction()
-                                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .add(R.id.post_list_container, mPostList, PostListFragment.TAG)
                                     .commit();
             } else {
                 getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .replace(R.id.post_list_container, mPostList, PostListFragment.TAG)
                                     .commit();
             }
         }
@@ -123,10 +123,6 @@ public class PostsListActivity extends AppCompatActivity implements GutenbergWar
         if (requestCode == RequestCodes.EDIT_POST) {
             mPostList.handleEditPostResult(resultCode, data);
         }
-    }
-
-    public boolean isRefreshing() {
-        return mPostList.isRefreshing();
     }
 
     @Override

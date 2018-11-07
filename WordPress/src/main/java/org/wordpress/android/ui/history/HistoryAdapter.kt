@@ -1,20 +1,27 @@
 package org.wordpress.android.ui.history
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.history.HistoryListItem.Footer
 import org.wordpress.android.ui.history.HistoryListItem.Header
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.history.HistoryListItem.ViewType
+import org.wordpress.android.util.image.ImageManager
+import javax.inject.Inject
 
 class HistoryAdapter(
+    val activity: Activity,
     private val itemClickListener: (HistoryListItem) -> Unit
 ) : Adapter<HistoryViewHolder>() {
     private val list = mutableListOf<HistoryListItem>()
+    @Inject lateinit var imageManager: ImageManager
 
     init {
+        (activity.applicationContext as WordPress).component().inject(this)
         setHasStableIds(true)
     }
 
@@ -48,8 +55,10 @@ class HistoryAdapter(
         return when (viewType) {
             ViewType.REVISION.id -> RevisionItemViewHolder(
                     parent,
-                    itemClickListener
+                    itemClickListener,
+                    imageManager
             )
+
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in History")
@@ -57,8 +66,11 @@ class HistoryAdapter(
     }
 
     internal fun updateList(items: List<HistoryListItem>) {
+        val diffCallback = HistoryDiffCallback(list.toList(), items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         list.clear()
         list.addAll(items)
-        DiffUtil.calculateDiff(HistoryDiffCallback(list.toList(), items)).dispatchUpdatesTo(this)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

@@ -80,6 +80,8 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AccessibilityUtils;
+import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -104,6 +106,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_ME;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
@@ -134,6 +137,10 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_READER = "show_reader";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
+    public static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
+    public static final String DEEP_LINK_HOST_POST = "post";
+    public static final String DEEP_LINK_HOST_STATS = "stats";
+    public static final String DEEP_LINK_HOST_READ = "read";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -242,6 +249,8 @@ public class WPMainActivity extends AppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
+                } else if (ActivityUtils.isDeepLinking(getIntent())) {
+                    handleAppBannerDeepLink();
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -291,6 +300,37 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
+    }
+
+    private void handleAppBannerDeepLink() {
+        Uri uri = getIntent().getData();
+        if (uri == null) {
+            return;
+        }
+        initSelectedSite();
+
+        String host = StringUtils.notNullStr(uri.getHost());
+        AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, host, uri);
+
+        switch (host) {
+            case DEEP_LINK_HOST_NOTIFICATIONS:
+                mBottomNav.setCurrentPosition(PAGE_NOTIFS);
+                break;
+            case DEEP_LINK_HOST_POST:
+                onNewPostButtonClicked();
+                break;
+            case DEEP_LINK_HOST_STATS:
+                switchToStatsTab();
+                break;
+            case DEEP_LINK_HOST_READ:
+                mBottomNav.setCurrentPosition(PAGE_READER);
+                break;
+        }
+    }
+
+    private void switchToStatsTab() {
+        mBottomNav.setCurrentPosition(PAGE_MY_SITE);
+        ActivityLauncher.viewBlogStats(getContext(), mSelectedSite);
     }
 
     private @Nullable String getAuthToken() {
