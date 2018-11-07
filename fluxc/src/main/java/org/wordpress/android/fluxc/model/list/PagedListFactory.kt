@@ -2,10 +2,8 @@ package org.wordpress.android.fluxc.model.list
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.DataSource
-import android.arch.paging.PagedList
 import android.arch.paging.PositionalDataSource
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
@@ -15,15 +13,13 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
-import org.wordpress.android.fluxc.model.list.datastore.PagedListDataStoreInterface
+import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 
-class PagedListWrapper<T>(val liveData: LiveData<PagedList<PagedListItemType<T>>>, val invalidate: () -> Unit)
-
 class PagedListFactory<T, R>(
     private val dispatcher: Dispatcher,
-    private val dataStore: PagedListDataStoreInterface<T>,
+    private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     private val lifecycle: Lifecycle,
     private val getList: (ListDescriptor) -> List<Long>,
@@ -46,7 +42,7 @@ class PagedListFactory<T, R>(
 
 private class PagedListPositionalDataSource<T, R>(
     private val dispatcher: Dispatcher,
-    private val dataStore: PagedListDataStoreInterface<T>,
+    private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     private val lifecycle: Lifecycle,
     getList: (ListDescriptor) -> List<Long>,
