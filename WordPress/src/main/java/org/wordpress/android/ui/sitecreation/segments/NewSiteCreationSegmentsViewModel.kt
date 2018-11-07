@@ -101,10 +101,10 @@ class NewSiteCreationSegmentsViewModel
     }
 
     data class UiState(
-        val showProgress: Boolean,
-        val showError: Boolean,
-        val showList: Boolean,
-        val showHeader: Boolean,
-        val data: List<VerticalSegmentModel>
+        val showProgress: Boolean = false,
+        val showError: Boolean = false,
+        val showList: Boolean = false,
+        val showHeader: Boolean = false,
+        val data: List<VerticalSegmentModel> = emptyList()
     )
 }
