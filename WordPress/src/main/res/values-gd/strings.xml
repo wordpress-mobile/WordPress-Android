@@ -171,7 +171,6 @@ Language: gd_GB
     <string name="comment_trashed">Chaidh am beachd a chur dhan sgudal</string>
     <string name="posts_empty_list">Chan eil post agad fhathast. Carson nach cruthaich thu fear?</string>
     <string name="comment_reply_to_user">Freagair %s</string>
-    <string name="pages_empty_list">Chan eil duilleag agad fhathast. Carson nach cruthaich thu tè?</string>
     <string name="mnu_comment_liked">’S toil leat seo</string>
     <string name="comment">Beachd</string>
     <string name="stats_no_blog">Cha b’ urrainn dhuinn na stats aig a’ bhloga sin a luchdadh</string>
@@ -378,7 +377,6 @@ Language: gd_GB
     <string name="edit">Deasaich</string>
     <string name="immediately">Sa bhad</string>
     <string name="quickpress_add_alert_title">Suidhich ainm na h-ath-ghoirid</string>
-    <string name="today">An-diugh</string>
     <string name="settings">Roghainnean</string>
     <string name="quickpress_window_title">Tagh bloga airson ath-ghoirid QuickPress</string>
     <string name="quickpress_add_error">Chan fhaod ainm na h-ath-ghoirid a bhith bàn</string>
