@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.persistence
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentingFollowersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
@@ -11,6 +13,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTING_FOLLOWERS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
@@ -47,6 +51,14 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, followerType.toDbKey(), data)
     }
 
+    fun insert(site: SiteModel, data: CommentsResponse) {
+        statsSqlUtils.insert(site, COMMENTS_INSIGHTS, data)
+    }
+
+    fun insert(site: SiteModel, data: CommentingFollowersResponse) {
+        statsSqlUtils.insert(site, COMMENTING_FOLLOWERS_INSIGHTS, data)
+    }
+
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
         return statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
@@ -76,5 +88,13 @@ class InsightsSqlUtils
             WP_COM -> WP_COM_FOLLOWERS
             EMAIL -> EMAIL_FOLLOWERS
         }
+    }
+
+    fun selectCommentInsights(site: SiteModel): CommentsResponse? {
+        return statsSqlUtils.select(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
+    }
+
+    fun selectCommentingFollowersInsights(site: SiteModel): CommentingFollowersResponse? {
+        return statsSqlUtils.select(site, COMMENTING_FOLLOWERS_INSIGHTS, CommentingFollowersResponse::class.java)
     }
 }

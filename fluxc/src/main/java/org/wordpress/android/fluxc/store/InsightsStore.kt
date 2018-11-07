@@ -164,6 +164,36 @@ class InsightsStore
         return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
     }
 
+    // Comments stats
+    suspend fun fetchComments(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchTopComments(siteModel, forced = forced)
+        return@withContext when {
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response)
+                OnInsightsFetched(response.response)
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    suspend fun fetchCommentingFollowers(siteModel: SiteModel, forced: Boolean = false) =
+            withContext(coroutineContext) {
+                val response = restClient.fetchTopCommentingFollowers(siteModel, forced = forced)
+                return@withContext when {
+                    response.isError -> {
+                        OnInsightsFetched(response.error)
+                    }
+                    response.response != null -> {
+                        sqlUtils.insert(siteModel, response.response)
+                        OnInsightsFetched(response.response)
+                    }
+                    else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+                }
+            }
+
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
