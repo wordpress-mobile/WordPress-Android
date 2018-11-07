@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.withContext
@@ -20,6 +19,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.util.merge
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,17 +33,11 @@ class InsightsViewModel
     private val commentsUseCase: CommentsUseCase,
     private val followersUseCase: FollowersUseCase
 ) {
-    private val mediatorNavigationTarget: MediatorLiveData<NavigationTarget> = MediatorLiveData()
-    val navigationTarget: LiveData<NavigationTarget> = mediatorNavigationTarget
-
-    init {
-        mediatorNavigationTarget.addSource(latestPostSummaryViewModel.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-        mediatorNavigationTarget.addSource(followersUseCase.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-    }
+    val navigationTarget: LiveData<NavigationTarget> = merge(
+            latestPostSummaryViewModel.navigationTarget,
+            followersUseCase.navigationTarget,
+            commentsUseCase.navigationTarget
+    )
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {

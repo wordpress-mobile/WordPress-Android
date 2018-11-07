@@ -21,6 +21,7 @@ import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
@@ -137,6 +138,9 @@ class StatsListFragment : Fragment() {
                 is ViewFollowersStats -> {
                     ActivityLauncher.viewFollowersStats(activity, site)
                 }
+                is ViewCommentsStats -> {
+                    ActivityLauncher.viewCommentsStats(activity, site)
+                }
             }
         })
     }
@@ -164,4 +168,5 @@ sealed class NavigationTarget {
     ) : NavigationTarget()
 
     data class ViewFollowersStats(val siteID: Long) : NavigationTarget()
+    data class ViewCommentsStats(val siteID: Long) : NavigationTarget()
 }

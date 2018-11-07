@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import javax.inject.Inject
 
 private const val PAGE_SIZE = 6
@@ -44,7 +44,7 @@ class CommentsUseCase
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
         items.add(Link(text = string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewFollowersStats(site.siteId)
+            mutableNavigationTarget.value = ViewCommentsStats(site.siteId)
         })
         return ListInsightItem(items)
     }
