@@ -30,6 +30,7 @@ class InsightsViewModel
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
     private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
     private val todayStatsUseCase: TodayStatsUseCase,
+    private val commentsUseCase: CommentsUseCase,
     private val followersUseCase: FollowersUseCase
 ) {
     private val mediatorNavigationTarget: MediatorLiveData<NavigationTarget> = MediatorLiveData()
@@ -50,11 +51,11 @@ class InsightsViewModel
             LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
             TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, forced)
             FOLLOWERS -> followersUseCase.loadFollowers(site, forced)
+            COMMENTS -> commentsUseCase.loadComments(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
-            COMMENTS,
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }

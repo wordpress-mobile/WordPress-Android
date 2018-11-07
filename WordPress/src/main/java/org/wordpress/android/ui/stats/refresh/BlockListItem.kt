@@ -10,13 +10,14 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
-    enum class Type { TITLE, ITEM, USER_ITEM, INFO, EMPTY, TEXT, COLUMNS, LINK, BAR_CHART, TABS, LABEL }
+    enum class Type { TITLE, ITEM, USER_ITEM, LIST_ITEM, INFO, EMPTY, TEXT, COLUMNS, LINK, BAR_CHART, TABS, LABEL }
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
     data class Item(
         @DrawableRes val icon: Int,
@@ -31,6 +32,12 @@ sealed class BlockListItem(val type: Type) {
         val value: String,
         val showDivider: Boolean = true
     ) : BlockListItem(USER_ITEM)
+
+    data class ListItem(
+        val text: String,
+        val value: String,
+        val showDivider: Boolean = true
+    ) : BlockListItem(LIST_ITEM)
 
     data class Information(val text: String) : BlockListItem(INFO)
 
