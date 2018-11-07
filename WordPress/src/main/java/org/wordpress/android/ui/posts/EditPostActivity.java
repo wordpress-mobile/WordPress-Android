@@ -329,6 +329,10 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
+    private boolean isModernEditor() {
+        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
+    }
+
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -1010,7 +1014,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor) {
+        if (isModernEditor()) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
@@ -1404,7 +1408,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Update post object from fragment fields
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
-            if (mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor) {
+            if (isModernEditor()) {
                 postTitleOrContentChanged =
                         updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                                 (String) mEditorFragment.getContent(mPost.getContent()));
@@ -1711,7 +1715,7 @@ public class EditPostActivity extends AppCompatActivity implements
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor && !mShowGutenbergEditor);
+            UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
                 UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
@@ -1750,7 +1754,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor) {
+                if (isModernEditor()) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                 }
@@ -2209,7 +2213,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (mPost.isLocalDraft() && !mShowNewEditor && !mShowAztecEditor && !mShowGutenbergEditor) {
+                if (mPost.isLocalDraft() && !isModernEditor()) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -2639,7 +2643,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
-            } else if (mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor) {
+            } else if (isModernEditor()) {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
@@ -2674,7 +2678,7 @@ public class EditPostActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor) {
+                    if (isModernEditor()) {
                         addMediaVisualEditor(mediaUri, path);
                     } else {
                         addMediaLegacyEditor(mediaUri, isVideo);
