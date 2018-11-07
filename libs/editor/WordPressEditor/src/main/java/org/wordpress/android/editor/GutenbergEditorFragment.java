@@ -94,6 +94,7 @@ import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.MediaSelectedCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
 import org.xml.sax.Attributes;
 
@@ -173,6 +174,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private ReactInstanceManager mReactInstanceManager;
     private ReactContext mReactContext;
     private RNReactNativeGutenbergBridgePackage mRnReactNativeGutenbergBridgePackage;
+    private MediaSelectedCallback mPendingMediaSelectedCallback;
 
     private String mContentHtml = "";
     private CountDownLatch mGetContentCountDownLatch;
@@ -255,6 +257,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             public void responseHtml(String html) {
                 mContentHtml = html;
                 mGetContentCountDownLatch.countDown();
+            }
+
+            @Override public void onMediaLibraryPress(MediaSelectedCallback mediaSelectedCallback) {
+                mPendingMediaSelectedCallback = mediaSelectedCallback;
+                onToolbarMediaButtonClicked();
             }
         });
         return Arrays.asList(
@@ -1058,14 +1065,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-//        if (getActivity() == null) {
-//            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
-//            // Activity may have already be gone.
-//            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
-//            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
-//            return;
-//        }
-//
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            // Activity may have already be gone.
+            // Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
+            return;
+        }
+
+        if (mPendingMediaSelectedCallback != null) {
+            mPendingMediaSelectedCallback.onMediaSelected(mediaUrl);
+            mPendingMediaSelectedCallback = null;
+        }
+
 //        if (URLUtil.isNetworkUrl(mediaUrl)) {
 //            final AztecAttributes attributes = new AztecAttributes();
 //            attributes.setValue(ATTR_SRC, mediaUrl);
@@ -1675,23 +1687,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     };
 
-//    @Override
-//    public boolean onToolbarMediaButtonClicked() {
-//        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-//
-//        if (isActionInProgress()) {
-//            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-//        }
-//
-//        if (mSource.isFocused()) {
-//            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
-//        } else {
-//            mEditorFragmentListener.onAddMediaClicked();
-//        }
-//
-//        return true;
-//    }
-//
+    public boolean onToolbarMediaButtonClicked() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+
+        if (isActionInProgress()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
+        }
+
+        if (mSource.isFocused()) {
+            ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mEditorFragmentListener.onAddMediaClicked();
+                }
+            });
+        }
+
+        return true;
+    }
+
 //    @Override
 //    public void onImageTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight) {
 //        onMediaTapped(attrs, naturalWidth, naturalHeight, MediaType.IMAGE);
