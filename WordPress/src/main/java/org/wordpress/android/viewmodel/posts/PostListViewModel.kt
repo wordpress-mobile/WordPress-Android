@@ -179,20 +179,12 @@ class PostListViewModel @Inject constructor(
     }
 
     fun handleEditPostResult(data: Intent?) {
-        if (data == null) {
-            return
-        }
-        val localPostId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
-        if (localPostId == 0) {
+        val localPostId = data?.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        if (localPostId == null || localPostId == 0) {
             return
         }
         val post = postStore.getPostByLocalPostId(localPostId)
-        if (post == null) {
-            if (!data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
-                // TODO: This really shouldn't happen, but shouldn't we refresh the post ourselves when it does?
-                _toastMessage.postValue(ToastMessageHolder(R.string.post_not_found, Duration.LONG))
-            }
-        } else {
+        if (post != null) {
             _postUploadAction.postValue(EditPostResult(site, post, data) { publishPost(post) })
         }
     }
@@ -342,8 +334,6 @@ class PostListViewModel @Inject constructor(
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
             invalidateUploadStatusAndPagedListData(event.post.id)
-            // TODO: We might be able to reload the posts without changing the list and then refresh
-            // TODO: might not be the best way to start a refresh
             refreshList()
         }
     }

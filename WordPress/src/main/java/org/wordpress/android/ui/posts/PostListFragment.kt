@@ -293,9 +293,6 @@ class PostListFragment : Fragment() {
     }
 
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
-        if (!isAdded) {
-            return
-        }
         if (emptyViewState == HIDDEN_LIST) {
             actionableEmptyView?.visibility = View.GONE
             return
@@ -327,11 +324,7 @@ class PostListFragment : Fragment() {
     }
 
     private fun updatePagedListData(pagedListData: PagedList<PagedListItemType<PostAdapterItem>>) {
-        if (!isAdded) {
-            return
-        }
-        // TODO: !!
-        actionableEmptyView?.visibility = View.GONE // if (pagedListData.size == 0) View.VISIBLE else View.GONE
+        actionableEmptyView?.visibility = if (pagedListData.size == 0) View.VISIBLE else View.GONE
         postListAdapter.submitList(pagedListData)
 //        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
 //        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
