@@ -187,7 +187,7 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return hasReloadingRecyclerView();
+                return hasLoadedRecyclerView();
             }
         });
     }
@@ -276,14 +276,20 @@ public class WPScreenshotSupport {
         }
     }
 
-    public static boolean hasReloadingRecyclerView() {
+    public static boolean hasLoadedRecyclerView() {
         try {
             onView(
                     allOf(
-                            new RefreshingRecyclerViewMatcher(),
+                            new RefreshingRecyclerViewMatcher(false),
                             first()
                     )
-            ).check(doesNotExist());
+            ).check(matches(isDisplayed()));
+
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
 
             return true;
         } catch (Throwable e) {

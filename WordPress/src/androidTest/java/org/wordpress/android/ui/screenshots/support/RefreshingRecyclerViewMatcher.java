@@ -7,15 +7,18 @@ import org.hamcrest.TypeSafeMatcher;
 import org.wordpress.android.ui.FilteredRecyclerView;
 
 public class RefreshingRecyclerViewMatcher extends TypeSafeMatcher<View> {
-    public RefreshingRecyclerViewMatcher() {
+    private final boolean matchesRefreshing;
+
+    public RefreshingRecyclerViewMatcher(boolean matchesRefreshing) {
         super(View.class);
+        this.matchesRefreshing = matchesRefreshing;
     }
 
     @Override
     protected boolean matchesSafely(View item) {
         if (item instanceof FilteredRecyclerView) {
             FilteredRecyclerView recyclerView = (FilteredRecyclerView) item;
-            return recyclerView.isRefreshing();
+            return recyclerView.isRefreshing() == matchesRefreshing;
         }
 
         return false;
