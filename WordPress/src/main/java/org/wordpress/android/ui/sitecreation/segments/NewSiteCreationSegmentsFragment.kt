@@ -19,13 +19,13 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
+private const val keyListState = "list_state"
+
 class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
-    private val keyListState = "list_state"
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
-    private lateinit var contentLayout: ViewGroup
     private lateinit var progressLayout: ViewGroup
     private lateinit var errorLayout: ViewGroup
     private lateinit var headerLayout: ViewGroup
