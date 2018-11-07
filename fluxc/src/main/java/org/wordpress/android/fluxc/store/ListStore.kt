@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.ListStateWrapper
 import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
@@ -106,11 +107,13 @@ class ListStore @Inject constructor(
         } else emptyList()
     }
 
-    fun getListState(listDescriptor: ListDescriptor): ListState {
+    fun getListState(listDescriptor: ListDescriptor): ListStateWrapper {
         listSqlUtils.getList(listDescriptor)?.let {
-            return getListState(it)
+            // TODO: improve!
+            val isEmpty = listItemSqlUtils.getListItems(it.id).isEmpty()
+            return ListStateWrapper(state = getListState(it), isEmpty = isEmpty)
         }
-        return ListState.defaultState
+        return ListStateWrapper(ListState.defaultState, isEmpty = false)
     }
 
     /**
@@ -136,13 +139,17 @@ class ListStore @Inject constructor(
         }
         val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        emitChange(OnListStateChanged(payload.listDescriptor, newState))
+        handleListStateChange(payload.listDescriptor)
 
         val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
         val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
         payload.fetchList(payload.listDescriptor, offset)
+    }
+
+    private fun handleListStateChange(listDescriptor: ListDescriptor, error: ListError? = null) {
+        emitChange(OnListStateChanged(listDescriptor, getListState(listDescriptor), error))
     }
 
     /**
@@ -184,7 +191,7 @@ class ListStore @Inject constructor(
             if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
         }
         emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
-        emitChange(OnListStateChanged(payload.listDescriptor, newState))
+        handleListStateChange(payload.listDescriptor, payload.error)
     }
 
     /**
@@ -283,7 +290,15 @@ class ListStore @Inject constructor(
     /**
      * The event to be emitted whenever there is a change to the [ListState]
      */
-    class OnListStateChanged(val listDescriptor: ListDescriptor, val newState: ListState) : Store.OnChanged<ListError>()
+    class OnListStateChanged(
+        val listDescriptor: ListDescriptor,
+        val newState: ListStateWrapper,
+        error: ListError?
+    ) : Store.OnChanged<ListError>() {
+        init {
+            this.error = error
+        }
+    }
 
     /**
      * The event to be emitted when there is a change to items for a specific [ListDescriptorTypeIdentifier].
