@@ -5,7 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,7 +154,7 @@ public class WPScreenshotSupport {
                 }
             });
         } catch (Exception e) {
-
+            // ignore the failure
         }
         return isElementDisplayed(elementID);
     }
