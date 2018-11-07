@@ -177,6 +177,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private MediaSelectedCallback mPendingMediaSelectedCallback;
 
     private String mContentHtml = "";
+    private boolean mContentChanged;
     private CountDownLatch mGetContentCountDownLatch;
 
     private static final String PROP_NAME_INITIAL_DATA = "initialData";
@@ -254,8 +255,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     protected List<ReactPackage> getPackages() {
         mRnReactNativeGutenbergBridgePackage = new RNReactNativeGutenbergBridgePackage(new GutenbergBridgeJS2Parent() {
             @Override
-            public void responseHtml(String html) {
+            public void responseHtml(String html, boolean changed) {
                 mContentHtml = html;
+                mContentChanged = changed;
                 mGetContentCountDownLatch.countDown();
             }
 
@@ -1040,7 +1042,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 Thread.currentThread().interrupt();
             }
 
-            return StringUtils.notNullStr(mContentHtml);
+            return mContentChanged ? StringUtils.notNullStr(mContentHtml) : originalContent;
         } else {
             Log.d("QWER", "context is null");
         }
