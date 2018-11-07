@@ -13,7 +13,7 @@ class NewSiteCreationSegmentsAdapter(
 ) : Adapter<NewSiteCreationSegmentViewHolder>() {
     private val items = mutableListOf<VerticalSegmentModel>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SegmentViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSiteCreationSegmentViewHolder {
         return SegmentViewHolder(parent, imageManager, onItemTapped)
     }
 
@@ -33,8 +33,7 @@ class NewSiteCreationSegmentsAdapter(
     private class SegmentsDiffUtils(
         val oldItems: List<VerticalSegmentModel>,
         val newItems: List<VerticalSegmentModel>
-    ) :
-            DiffUtil.Callback() {
+    ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
