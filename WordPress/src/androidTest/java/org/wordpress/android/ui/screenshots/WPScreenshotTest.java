@@ -24,8 +24,8 @@ import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnCellAtIndexIn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.focusEditPostTitle;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.moveCaretToEndAndDisplayIn;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.isElementDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.populateTextField;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsDisplayed;
@@ -151,8 +151,7 @@ public class WPScreenshotTest {
         });
 
         // Click in the post title editor and ensure the caret is at the end of the title editor
-        scrollToThenClickOn(R.id.title);
-        moveCaretToEndAndDisplayIn(R.id.title);
+        focusEditPostTitle();
 
         Screengrab.screenshot("screenshot_1");
 

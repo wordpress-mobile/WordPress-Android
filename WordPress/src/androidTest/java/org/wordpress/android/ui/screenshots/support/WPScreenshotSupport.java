@@ -89,9 +89,19 @@ public class WPScreenshotSupport {
                 .perform(closeSoftKeyboard());
     }
 
-    public static void moveCaretToEndAndDisplayIn(int elementID) {
-        onView(withId(elementID))
-                .perform(new FlashCaretViewAction());
+    public static void focusEditPostTitle() {
+        ViewInteraction postTitle = onView(
+                allOf(
+                        withId(R.id.title),
+                        childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)
+                     )
+                                          );
+        postTitle.perform(scrollTo(), click());
+        moveCaretToEndAndDisplayIn(postTitle);
+    }
+
+    private static void moveCaretToEndAndDisplayIn(ViewInteraction element) {
+        element.perform(new FlashCaretViewAction());
 
         // To sync between the test target and the app target
         waitOneFrame();
