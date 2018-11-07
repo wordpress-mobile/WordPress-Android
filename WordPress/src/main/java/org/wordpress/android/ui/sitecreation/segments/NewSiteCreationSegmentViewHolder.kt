@@ -31,7 +31,7 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
         override fun onBind(model: VerticalSegmentModel, isLast: Boolean) {
             title.text = model.title
             subtitle.text = model.subtitle
-            imageManager.load(icon, IMAGE, StringUtils.notNullStr(model.iconUrl))
+            imageManager.load(icon, IMAGE, model.iconUrl)
             container.setOnClickListener { onItemTapped(model) }
             divider.visibility = if (isLast) View.GONE else View.VISIBLE
         }
