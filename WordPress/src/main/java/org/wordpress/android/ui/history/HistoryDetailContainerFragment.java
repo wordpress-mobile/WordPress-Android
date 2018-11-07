@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.history;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -9,7 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,21 +26,17 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.ui.FullScreenDialogFragment;
-import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
-import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 import java.util.ArrayList;
 
-public class HistoryDetailFullScreenDialogFragment extends Fragment implements FullScreenDialogContent {
-    protected FullScreenDialogController mDialogController;
-
+public class HistoryDetailContainerFragment extends Fragment {
     private ArrayList<Revision> mRevisions;
     private HistoryDetailFragmentAdapter mAdapter;
     private ImageView mNextButton;
@@ -51,16 +54,25 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
 
-    public static Bundle newBundle(Revision revision, ArrayList<Revision> revisions) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_REVISION, revision);
-        bundle.putParcelableArrayList(EXTRA_REVISIONS, revisions);
-        return bundle;
+    public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
+        Bundle args = new Bundle();
+        args.putParcelable(EXTRA_REVISION, revision);
+        args.putParcelableArrayList(EXTRA_REVISIONS, revisions);
+        HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
+
+//    public static Bundle newBundle(Revision revision, ArrayList<Revision> revisions) {
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(EXTRA_REVISION, revision);
+//        bundle.putParcelableArrayList(EXTRA_REVISIONS, revisions);
+//        return bundle;
+//    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_dialog_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_container_fragment, container, false);
 
         if (getArguments() != null) {
             mRevision = getArguments().getParcelable(EXTRA_REVISION);
@@ -71,10 +83,37 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(final FullScreenDialogController controller) {
-        mDialogController = controller;
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
+
+    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.revision_details, menu);
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.revision_load) {
+
+            Intent intent = new Intent();
+            intent.putExtra(KEY_REVISION, mRevision);
+
+            getActivity().setResult(Activity.RESULT_OK, intent);
+            getActivity().finish();
+        } else if (item.getItemId() == R.id.revision_html_preview) {
+
+        }
+
+
+        ToastUtils.showToast(getContext(), "Selected!");
+        return super.onOptionsItemSelected(item);
+    }
+
+    //    @Override
+//    public void onViewCreated(final FullScreenDialogController controller) {
+//        mDialogController = controller;
+//    }
 
     @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
@@ -115,25 +154,26 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
         }
     }
 
-    @Override
-    public boolean onConfirmClicked(FullScreenDialogController controller) {
-        AnalyticsTracker.track(Stat.REVISIONS_REVISION_LOADED);
-        Bundle result = new Bundle();
-        result.putParcelable(KEY_REVISION, mRevisions.get(mPosition));
-        controller.confirm(result);
-        return true;
-    }
-
-    @Override
-    public boolean onDismissClicked(FullScreenDialogController controller) {
-        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
-        controller.dismiss();
-        return true;
-    }
+//    @Override
+//    public boolean onConfirmClicked(FullScreenDialogController controller) {
+//        AnalyticsTracker.track(Stat.REVISIONS_REVISION_LOADED);
+//        Bundle result = new Bundle();
+//        result.putParcelable(KEY_REVISION, mRevisions.get(mPosition));
+//        controller.confirm(result);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onDismissClicked(FullScreenDialogController controller) {
+//        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
+//        controller.dismiss();
+//        return true;
+//    }
 
     private void refreshRevisionDetails() {
-        if (getParentFragment() instanceof FullScreenDialogFragment) {
-            ((FullScreenDialogFragment) getParentFragment()).setSubtitle(mRevision.getTimeSpan());
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setSubtitle(mRevision.getTimeSpan());
         }
 
         if (mRevision.getTotalAdditions() > 0) {
@@ -193,8 +233,8 @@ public class HistoryDetailFullScreenDialogFragment extends Fragment implements F
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
-        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
+        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+                                                                    ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
