@@ -4,7 +4,6 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -20,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -101,10 +99,16 @@ class PostListFragment : Fragment() {
                     .get<PostListViewModel>(PostListViewModel::class.java)
             viewModel.start(site)
             viewModel.pagedListData.observe(this, Observer {
-                it?.let { pagedListData -> updatePagedListData(pagedListData) }
+                it?.let { pagedListData -> postListAdapter.submitList(pagedListData) }
             })
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
+            })
+            viewModel.isFetchingFirstPage.observe(this, Observer {
+                swipeRefreshLayout?.isRefreshing = it == true
+            })
+            viewModel.isLoadingMore.observe(this, Observer {
+                progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
             })
             viewModel.userAction.observe(this, Observer {
                 it?.let { userAction -> handleUserAction(userAction) }
@@ -297,37 +301,27 @@ class PostListFragment : Fragment() {
             actionableEmptyView?.visibility = View.GONE
             return
         }
-        var isHidden = false
         val stringId = when (emptyViewState) {
-            EMPTY_LIST -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
-                isHidden = true
-                R.string.posts_empty_list
-            } else {
-                R.string.no_network_message
-            }
+            EMPTY_LIST -> R.string.posts_empty_list
             LOADING -> R.string.posts_fetching
-            REFRESH_ERROR -> R.string.error_refresh_posts
+            REFRESH_ERROR -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
+                R.string.error_refresh_posts
+            } else R.string.no_network_message
             PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
             HIDDEN_LIST -> throw IllegalArgumentException("Hidden state should already be handled")
         }
+        val isEmpty = emptyViewState == EMPTY_LIST
         actionableEmptyView?.let {
             it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
-            it.image.visibility = if (isHidden) View.VISIBLE else View.GONE
+            it.image.visibility = if (isEmpty) View.VISIBLE else View.GONE
             it.title.setText(stringId)
             it.button.setText(R.string.posts_empty_list_button)
-            it.button.visibility = if (isHidden) View.VISIBLE else View.GONE
+            it.button.visibility = if (isEmpty) View.VISIBLE else View.GONE
             it.button.setOnClickListener { _ ->
                 viewModel.newPost()
             }
             it.visibility = View.VISIBLE
         }
-    }
-
-    private fun updatePagedListData(pagedListData: PagedList<PagedListItemType<PostAdapterItem>>) {
-        actionableEmptyView?.visibility = if (pagedListData.size == 0) View.VISIBLE else View.GONE
-        postListAdapter.submitList(pagedListData)
-//        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
-//        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
     }
 
     companion object {

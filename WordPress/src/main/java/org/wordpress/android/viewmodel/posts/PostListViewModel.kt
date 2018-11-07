@@ -31,8 +31,7 @@ import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
-import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
-import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.ListErrorType
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
@@ -98,6 +97,12 @@ class PostListViewModel @Inject constructor(
 
     private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
     val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
+
+    private val _isFetchingFirstPage = MutableLiveData<Boolean>()
+    val isFetchingFirstPage: LiveData<Boolean> = _isFetchingFirstPage
+
+    private val _isLoadingMore = MutableLiveData<Boolean>()
+    val isLoadingMore: LiveData<Boolean> = _isLoadingMore
 
     private val _userAction = SingleLiveEvent<PostListUserAction>()
     val userAction: LiveData<PostListUserAction> = _userAction
@@ -280,26 +285,23 @@ class PostListViewModel @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @Suppress("unused")
-    fun onListChanged(event: OnListChanged) {
-        listDescriptor?.let {
-            if (!event.listDescriptors.contains(it)) {
-                return
-            }
-            // TODO: Move to OnListStateChanged
+    fun onListStateChanged(event: OnListStateChanged) {
+        val emptyViewState = if (event.newState.isEmpty) {
             if (event.isError) {
-                val emptyViewState = if (event.error.type == PERMISSION_ERROR) {
+                if (event.error.type == ListErrorType.PERMISSION_ERROR) {
                     PostListEmptyViewState.PERMISSION_ERROR
                 } else PostListEmptyViewState.REFRESH_ERROR
-                _emptyViewState.postValue(emptyViewState)
+            } else if (event.newState.state.isFetchingFirstPage()) {
+                PostListEmptyViewState.LOADING
+            } else {
+                PostListEmptyViewState.EMPTY_LIST
             }
+        } else {
+            PostListEmptyViewState.HIDDEN_LIST
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onListStateChanged(event: OnListStateChanged) {
-        // There is no error to handle for `OnListStateChanged`
-        // TODO: Handle empty view and the error should probably be handled here as well
+        _emptyViewState.postValue(emptyViewState)
+        _isFetchingFirstPage.postValue(event.newState.state.isFetchingFirstPage())
+        _isLoadingMore.postValue(event.newState.state.isLoadingMore())
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
