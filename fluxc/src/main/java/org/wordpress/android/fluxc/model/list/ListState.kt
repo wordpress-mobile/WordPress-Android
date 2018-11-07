@@ -24,3 +24,5 @@ enum class ListState(val value: Int) {
         val defaultState = ListState.NEEDS_REFRESH
     }
 }
+
+class ListStateWrapper(val state: ListState, val isEmpty: Boolean)
