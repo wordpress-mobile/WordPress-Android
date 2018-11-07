@@ -22,9 +22,12 @@ import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PagedListItemType
+import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForXmlRpcSite
+import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
 import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
@@ -43,9 +46,6 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
-import org.wordpress.android.ui.posts.PagedListDataForPostStore
-import org.wordpress.android.ui.posts.PagedListItemType
-import org.wordpress.android.ui.posts.PagedListWrapper
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
@@ -57,7 +57,6 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
-import org.wordpress.android.ui.posts.getList
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -109,6 +108,7 @@ class PostListViewModel @Inject constructor(
     private val _toastMessage = SingleLiveEvent<ToastMessageHolder>()
     val toastMessage: LiveData<ToastMessageHolder> = _toastMessage
 
+    // TODO: We need to use a dialog fragment, so it survives rotations and doesn't leak if not dismissed
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
@@ -119,12 +119,10 @@ class PostListViewModel @Inject constructor(
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        getList(
-                dispatcher,
+        listStore.getList(
                 listDescriptor,
-                PagedListDataForPostStore(dispatcher, postStore, site),
+                PostListDataStore(dispatcher, postStore, site),
                 lifecycle,
-                getList = { listStore.getList(listDescriptor) },
                 transform = { post -> createPostAdapterItem(post) })
     }
 
@@ -134,6 +132,10 @@ class PostListViewModel @Inject constructor(
 
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
+    init {
+        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+    }
 
     fun start(site: SiteModel) {
         if (isStarted) {
@@ -152,7 +154,7 @@ class PostListViewModel @Inject constructor(
 
         refreshList()
         isStarted = true
-        lifecycleRegistry.markState(Lifecycle.State.CREATED)
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
     }
 
     override fun onCleared() {
@@ -413,7 +415,7 @@ class PostListViewModel @Inject constructor(
         }
     }
 
-    // PostAdapterItem management
+    // PostAdapterItem Management
 
     private fun createPostAdapterItem(post: PostModel): PostAdapterItem {
         val title = if (post.title.isNotBlank()) {

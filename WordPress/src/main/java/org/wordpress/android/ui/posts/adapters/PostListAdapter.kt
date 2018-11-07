@@ -23,11 +23,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.list.PagedListItemType
+import org.wordpress.android.fluxc.model.list.PagedListItemType.EndListIndicatorItem
+import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
+import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.ui.posts.PagedListItemType
-import org.wordpress.android.ui.posts.PagedListItemType.EndListIndicatorItem
-import org.wordpress.android.ui.posts.PagedListItemType.LoadingItem
-import org.wordpress.android.ui.posts.PagedListItemType.ReadyItem
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus

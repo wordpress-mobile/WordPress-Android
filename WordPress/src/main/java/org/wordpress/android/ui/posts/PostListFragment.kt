@@ -20,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -328,7 +329,7 @@ class PostListFragment : Fragment() {
         if (!isAdded) {
             return
         }
-        actionableEmptyView?.visibility = if (pagedListData.size == 0) View.VISIBLE else View.GONE
+        actionableEmptyView?.visibility = View.GONE //if (pagedListData.size == 0) View.VISIBLE else View.GONE
         postListAdapter.submitList(pagedListData)
 //        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
 //        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE
