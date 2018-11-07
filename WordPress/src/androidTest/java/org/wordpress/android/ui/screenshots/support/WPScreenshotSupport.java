@@ -65,10 +65,15 @@ public class WPScreenshotSupport {
         onView(withId(elementID)).perform(click());
     }
 
-    public static void clickOnCellAtIndexIn(int index, int elementID) {
-        waitForAtLeastOneElementWithIdToDisplay(elementID);
-        onView(withId(elementID))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    public static void clickOnChildAtIndex(int index, int parentElementID, int childElementID) {
+        final ViewInteraction childElement = onView(
+                allOf(
+                        withId(childElementID),
+                        childAtPosition(withId(parentElementID), index)
+                )
+        );
+        waitForElementToBeDisplayed(childElement);
+        childElement.perform(click());
     }
 
     public static void clickOnSpinnerItemAtIndex(int index) {
@@ -202,6 +207,15 @@ public class WPScreenshotSupport {
         });
     }
 
+    public static void waitForSwipeRefreshLayoutToStopReloading() {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return hasLoadedSwipeRefreshLayout();
+            }
+        });
+    }
+
     public static void pressBackUntilElementIsDisplayed(int elementID) {
         while (!isElementDisplayed(elementID)) {
             Espresso.pressBack();
@@ -300,6 +314,15 @@ public class WPScreenshotSupport {
             return false;
         }
     }
+
+    public static boolean hasLoadedSwipeRefreshLayout() {
+        try {
+            onView(
+                    allOf(
+                            new SwipeRefreshLayoutMatcher(false),
+                            first()
+                    )
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {

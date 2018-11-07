@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.screenshots;
 
-import android.test.suitebuilder.annotation.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.CardView;
+import android.test.suitebuilder.annotation.LargeTest;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -20,10 +20,13 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.function.Supplier;
 
+import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnCellAtIndexIn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnChildAtIndex;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.focusEditPostTitle;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.isElementDisplayed;
@@ -39,9 +42,7 @@ import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.w
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
-
-import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForSwipeRefreshLayoutToStopReloading;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -137,9 +138,9 @@ public class WPScreenshotTest {
         scrollToThenClickOn(R.id.row_blog_posts);
 
         // Wait for the blog posts to load, then edit the first post
-        waitForRecyclerViewToStopReloading();
-        waitForAtLeastOneElementOfTypeToExist(CardView.class);
-        clickOnCellAtIndexIn(0, R.id.recycler_view);
+        waitForSwipeRefreshLayoutToStopReloading();
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.card_view);
+        clickOnChildAtIndex(0, R.id.recycler_view, R.id.card_view);
 
         // Wait for the editor to appear and load all images
         waitForElementToBeDisplayed(R.id.aztec);
