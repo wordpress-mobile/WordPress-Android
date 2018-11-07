@@ -248,14 +248,10 @@ Language: eu_ES
     <string name="notifications_tab">Jakinarazpenen erlaitza</string>
     <string name="email">E-posta</string>
     <string name="stats_insights_latest_post_summary">Azken bidalketaren laburpena</string>
-    <string name="days_ago">Duela %d egun</string>
-    <string name="yesterday">Atzo</string>
     <string name="connectionbar_no_connection">Konexiorik ez</string>
-    <string name="page_trashed">Orrialdea zaborretara bidalia</string>
     <string name="post_trashed">Bidalketa zaborretara bidalia</string>
     <string name="post_deleted">Bidalketa ezabatua</string>
     <string name="button_back">Itzuli</string>
-    <string name="page_deleted">Orrialdea ezabatua</string>
     <string name="button_stats">Estatistikak</string>
     <string name="button_trash">Zaborra</string>
     <string name="button_preview">Aurreikusi</string>
@@ -358,7 +354,6 @@ Language: eu_ES
     <string name="reader_label_view_original">Ikusi artikulu originala</string>
     <string name="reader_label_like">Gustukoa</string>
     <string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
-    <string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="browse_our_faq_button">Arakatu Galdera eta Erantzunak</string>
     <string name="error_publish_empty_post">Ezin da bidalketa huts bat argitaratu</string>
     <string name="older_two_days">2 egun baino zaharragoa</string>
@@ -549,7 +544,6 @@ Language: eu_ES
     <string name="edit">Editatu</string>
     <string name="immediately">Berehala</string>
     <string name="quickpress_add_alert_title">Sarbide zuzenaren izena</string>
-    <string name="today">Gaur</string>
     <string name="settings">Ezarpenak</string>
     <string name="quickpress_add_error">Sarbide zuzenaren izena ezin da hutsik egon.</string>
     <string name="quickpress_window_title">Aukeratu Argitaratze Azkarra erabiltzeko blog bat</string>
