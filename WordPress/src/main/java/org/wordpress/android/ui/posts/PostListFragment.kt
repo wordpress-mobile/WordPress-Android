@@ -118,6 +118,7 @@ class PostListFragment : Fragment() {
             viewModel.snackbarAction.observe(this, Observer {
                 it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
             })
+            // TODO: We need to use a DialogFragment!
             viewModel.dialogAction.observe(this, Observer {
                 it?.show(nonNullActivity)
             })
@@ -329,7 +330,8 @@ class PostListFragment : Fragment() {
         if (!isAdded) {
             return
         }
-        actionableEmptyView?.visibility = View.GONE //if (pagedListData.size == 0) View.VISIBLE else View.GONE
+        // TODO: !!
+        actionableEmptyView?.visibility = View.GONE // if (pagedListData.size == 0) View.VISIBLE else View.GONE
         postListAdapter.submitList(pagedListData)
 //        swipeRefreshLayout?.isRefreshing = postListData.isLoadingFirstPage
 //        progressLoadMore?.visibility = if (postListData.isLoadingMore) View.VISIBLE else View.GONE

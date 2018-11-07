@@ -32,6 +32,7 @@ import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
 import org.wordpress.android.util.image.ImageManager
@@ -123,11 +124,10 @@ class PostListAdapter(
             // Fail fast if a new view type is added so the we can handle it
             throw IllegalStateException(
                     "Only remaining ViewHolder type should be PostViewHolder and only remaining" +
-                            " adapter item type should be PostAdapterItemPost"
+                            " item type should be ReadyItem"
             )
         }
 
-        // TODO: Rename things a bit to cleanup
         val context = holder.itemView.context
         val postAdapterItem = postAdapterItemReady.item
         val postData = postAdapterItem.data
@@ -168,7 +168,6 @@ class PostListAdapter(
             holder.disabledOverlay.visibility = View.VISIBLE
             holder.progressBar.isIndeterminate = true
         } else if (!isAztecEditorEnabled && uploadStatus.isUploadingOrQueued) {
-            // TODO: Is this logic correct? Do we need to check for is uploading still?
             // Editing posts with uploading media is only supported in Aztec
             holder.disabledOverlay.visibility = View.VISIBLE
         } else {
@@ -186,7 +185,6 @@ class PostListAdapter(
         }
     }
 
-    // TODO: Rework this to move everything to ViewModel
     private fun showFeaturedImage(shouldShowFeaturedImage: Boolean, imageUrl: String?, imgFeatured: ImageView) {
         imgFeatured.visibility = if (shouldShowFeaturedImage) View.VISIBLE else View.GONE
         if (imageUrl == null || !shouldShowFeaturedImage) {
@@ -227,14 +225,13 @@ class PostListAdapter(
             var statusIconResId = 0
             var statusColorResId = R.color.grey_darken_10
             var errorMessage: String? = null
+            val uploadError = postAdapterItem.uploadStatus.uploadError
 
-            if (postAdapterItem.uploadStatus.uploadError != null &&
-                    !postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
-                if (postAdapterItem.uploadStatus.uploadError.mediaError != null) {
+            if (uploadError != null && !postAdapterItem.uploadStatus.hasInProgressMediaUpload) {
+                if (uploadError.mediaError != null) {
                     errorMessage = context.getString(R.string.error_media_recover_post)
-                } else if (postAdapterItem.uploadStatus.uploadError.postError != null) {
-                    // TODO: figure out!!
-//                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError)
+                } else if (uploadError.postError != null) {
+                    errorMessage = UploadUtils.getErrorMessageFromPostError(context, false, uploadError.postError)
                 }
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload
                 statusColorResId = R.color.alert_red
