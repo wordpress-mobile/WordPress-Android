@@ -449,14 +449,10 @@ Language: gl_ES
     <string name="notification_settings_item_other_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
     <string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento…</string>
     <string name="stats_insights_latest_post_summary">Resumo do último artigo</string>
-    <string name="days_ago">Hai %d días</string>
-    <string name="yesterday">Onte</string>
     <string name="connectionbar_no_connection">Sen conexión</string>
-    <string name="page_trashed">Páxina botada ao lixo</string>
     <string name="post_deleted">Artigo eliminado</string>
     <string name="post_trashed">Artigo botado ao lixo</string>
     <string name="stats_no_activity_this_period">Non hai actividade neste período</string>
-    <string name="page_deleted">Páxina eliminada</string>
     <string name="button_stats">Estatísticas</string>
     <string name="button_preview">Vista previa</string>
     <string name="button_view">Ver</string>
@@ -614,7 +610,6 @@ Language: gl_ES
     <string name="comment_trashed">Comentario no lixo</string>
     <string name="posts_empty_list">Aínda sen artigos. Por que non crear un?</string>
     <string name="comment_reply_to_user">Resposta a %s</string>
-    <string name="pages_empty_list">Aínda sen páxinas. Por que non crear unha?</string>
     <string name="stats_no_blog">Non foi posible cargar as estatísticas do blogue requirido</string>
     <string name="reader_label_like">Gústame</string>
     <string name="reader_label_liked_by">Gustoulle a</string>
@@ -824,7 +819,6 @@ Language: gl_ES
     <string name="immediately">Inmediatamente</string>
     <string name="quickpress_add_alert_title">Establecer o nome do atallo</string>
     <string name="settings">Configuración</string>
-    <string name="today">Hoxe</string>
     <string name="quickpress_window_title">Seleccionar un blogue para o atallo de QuickPress</string>
     <string name="quickpress_add_error">O nome do atallo non pode estar baleiro</string>
     <string name="title">Título</string>

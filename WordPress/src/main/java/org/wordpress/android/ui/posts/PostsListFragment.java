@@ -46,9 +46,12 @@ import org.wordpress.android.push.NativeNotificationsUtils;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter.LoadMode;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -81,7 +84,8 @@ public class PostsListFragment extends Fragment
         implements PostsListAdapter.OnPostsLoadedListener,
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
-        PostsListAdapter.OnPostButtonClickListener {
+        PostsListAdapter.OnPostButtonClickListener,
+        GutenbergWarningDialogClickInterface {
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
@@ -516,24 +520,27 @@ public class PostsListFragment extends Fragment
 
         switch (buttonType) {
             case PostListButton.BUTTON_EDIT:
+                boolean isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post.getContent());
                 // track event
                 Map<String, Object> properties = new HashMap<>();
                 properties.put("button", "edit");
                 if (!post.isLocalDraft()) {
                     properties.put("post_id", post.getRemotePostId());
                 }
-                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
-                        PostUtils.contentContainsGutenbergBlocks(post.getContent()));
+                properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY, isGutenbergContent);
                 AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, mSite,
                         properties);
 
-                if (UploadService.isPostUploadingOrQueued(post)) {
-                    // If the post is uploading media, allow the media to continue uploading, but don't upload the
-                    // post itself when they finish (since we're about to edit it again)
-                    UploadService.cancelQueuedPostUpload(post);
+                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+                    PostUtils.showGutenbergCompatibilityWarningDialog(getActivity(), getFragmentManager(), post, mSite);
+                } else {
+                    if (UploadService.isPostUploadingOrQueued(post)) {
+                        // If the post is uploading media, allow the media to continue uploading, but don't upload the
+                        // post itself when they finish (since we're about to edit it again)
+                        UploadService.cancelQueuedPostUpload(post);
+                    }
+                    ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
                 }
-                ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
-
                 break;
             case PostListButton.BUTTON_RETRY:
                 // restart the UploadService with retry parameters
@@ -684,6 +691,63 @@ public class PostsListFragment extends Fragment
         mPostIdForPostToBeDeleted = post.getId();
         mShouldCancelPendingDraftNotification = true;
         snackbar.show();
+    }
+
+    @Override
+    public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, mSite);
+        if (UploadService.isPostUploadingOrQueued(post)) {
+            // If the post is uploading media, allow the media to continue uploading, but don't upload the
+            // post itself when they finish (since we're about to edit it again)
+            UploadService.cancelQueuedPostUpload(post);
+        }
+        ActivityLauncher.editPostOrPageForResult(getActivity(), mSite, post);
+    }
+
+    @Override
+    public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, mSite);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
+        // here launch the web the Gutenberg Learn more
+        String urlToUse = (mSite.isWPCom() || mSite.isJetpackConnected())
+                ? getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
+                : getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg);
+        WPWebViewActivity.openURL(getActivity(), urlToUse);
+
+        // track event
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, mSite);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId,
+                                                             boolean checked) {
+        AppPrefs.setGutenbergWarningDialogDisabled(checked);
+        // track event
+        PostModel post = mPostStore.getPostByRemotePostId(gutenbergRemotePostId, mSite);
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                checked ? AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
+                        : AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED,
+                post, mSite);
+        }
     }
 
     @Override

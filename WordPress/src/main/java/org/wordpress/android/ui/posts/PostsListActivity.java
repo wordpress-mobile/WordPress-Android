@@ -16,12 +16,13 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends AppCompatActivity implements GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostsListFragment mPostList;
@@ -141,5 +142,35 @@ public class PostsListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    // used for Gutenberg compatibility dialog
+    @Override
+    public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId,
+                                                             boolean checked) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
+        }
     }
 }
