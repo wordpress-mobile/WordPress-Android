@@ -108,7 +108,7 @@ class InsightsMapper
     }
 
     fun map(response: CommentsResponse): CommentsModel {
-        val authors = response.authors.map { CommentsModel.Author(it.name,it.comments, it.link, it.gravatar) }
+        val authors = response.authors.map { CommentsModel.Author(it.name, it.comments, it.link, it.gravatar) }
         val posts = response.posts.map { CommentsModel.Post(it.id, it.name, it.comments, it.link) }
         return CommentsModel(posts, authors)
     }
