@@ -338,7 +338,7 @@ constructor(
         @SerializedName("monthly_comments") val monthlyComments: Int,
         @SerializedName("total_comments") val totalComments: Int,
         @SerializedName("most_active_day") val mostActiveDay: String,
-        @SerializedName("most_commented_post") val mostCommentedPost: Post,
+        @SerializedName("most_commented_post") val mostCommentedPost: Post?,
         @SerializedName("authors") val authors: List<Author>,
         @SerializedName("posts") val posts: List<Post>
     ) {
@@ -347,13 +347,13 @@ constructor(
             @SerializedName("link") val link: String,
             @SerializedName("gravatar") val gravatar: String,
             @SerializedName("comments") val comments: Int,
-            @SerializedName("follow_data") val followData: FollowData
+            @SerializedName("follow_data") val followData: FollowData?
         )
 
         data class Post(
             @SerializedName("name") val name: String,
             @SerializedName("link") val link: String,
-            @SerializedName("id") val id: Int,
+            @SerializedName("id") val id: Long,
             @SerializedName("comments") val comments: Int
         )
     }
