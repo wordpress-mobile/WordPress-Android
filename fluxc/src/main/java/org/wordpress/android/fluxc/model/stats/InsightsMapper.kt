@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.stats
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
@@ -104,5 +105,11 @@ class InsightsMapper
             EMAIL -> response.totalEmail
         }
         return FollowersModel(total, followers)
+    }
+
+    fun map(response: CommentsResponse): CommentsModel {
+        val authors = response.authors.map { CommentsModel.Author(it.name,it.comments, it.link, it.gravatar) }
+        val posts = response.posts.map { CommentsModel.Post(it.id, it.name, it.comments, it.link) }
+        return CommentsModel(posts, authors)
     }
 }
