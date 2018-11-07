@@ -1,5 +1,9 @@
 package org.wordpress.android.fluxc.store
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.PagedList
+import android.arch.paging.PagedList.BoundaryCallback
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -12,6 +16,7 @@ import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
@@ -19,6 +24,10 @@ import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.PagedListFactory
+import org.wordpress.android.fluxc.model.list.PagedListItemType
+import org.wordpress.android.fluxc.model.list.PagedListWrapper
+import org.wordpress.android.fluxc.model.list.datastore.PagedListDataStoreInterface
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
@@ -61,7 +70,36 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
-    fun getList(listDescriptor: ListDescriptor): List<Long> {
+    fun <T, R> getList(
+        listDescriptor: ListDescriptor,
+        dataStore: PagedListDataStoreInterface<T>,
+        lifecycle: Lifecycle,
+        transform: (T) -> R
+    ): PagedListWrapper<R> {
+        val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
+        val factory = PagedListFactory(mDispatcher, dataStore, listDescriptor, lifecycle, getList, transform)
+        val callback = object : BoundaryCallback<PagedListItemType<R>>() {
+            override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
+                val payload = FetchListPayload(listDescriptor, true) { _, offset ->
+                    dataStore.fetchList(listDescriptor, offset)
+                }
+                mDispatcher.dispatch(ListActionBuilder.newFetchListAction(payload))
+                super.onItemAtEndLoaded(itemAtEnd)
+            }
+        }
+        val pagedListConfig = PagedList.Config.Builder()
+                .setEnablePlaceholders(true)
+                .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
+                .setPageSize(listDescriptor.config.dbPageSize)
+                .build()
+        val liveData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
+                .setBoundaryCallback(callback).build()
+        return PagedListWrapper(liveData) {
+            factory.invalidate()
+        }
+    }
+
+    private fun getListItems(listDescriptor: ListDescriptor): List<Long> {
         val listModel = listSqlUtils.getList(listDescriptor)
         return if (listModel != null) {
             listItemSqlUtils.getListItems(listModel.id).map { it.remoteItemId }
