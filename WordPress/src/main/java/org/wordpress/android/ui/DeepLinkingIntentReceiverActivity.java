@@ -10,12 +10,10 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -25,9 +23,6 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 import static org.wordpress.android.WordPress.getContext;
-import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
-import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_NOTIFS;
-import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_READER;
 
 /**
  * An activity to handle deep linking and intercepting
@@ -99,7 +94,7 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 ActivityLauncher.viewNotificationsInNewStack(getContext());
                 break;
             case DEEP_LINK_HOST_POST:
-                ActivityLauncher.openEditor(getContext());
+                ActivityLauncher.openEditorInNewStack(getContext());
                 break;
             case DEEP_LINK_HOST_STATS:
                 ActivityLauncher.viewBlogStatsFromDeepLink(getContext(), siteModel);
