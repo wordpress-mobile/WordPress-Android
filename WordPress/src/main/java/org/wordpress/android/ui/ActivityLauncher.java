@@ -34,6 +34,8 @@ import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.history.HistoryActivity;
+import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
+import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -415,11 +417,11 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewPostOrPageHistoryForResult(Activity activity, SiteModel site, PostModel post) {
+    public static void viewRevisionDetailsForResult(Activity activity, Revision revision, ArrayList<Revision> revisions) {
         Intent intent = new Intent(activity, HistoryActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
-        activity.startActivityForResult(intent, RequestCodes.VIEW_HISTORY);
+        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
+        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);
+        activity.startActivityForResult(intent, RequestCodes.REVISION_DETAILS);
     }
 
     /*

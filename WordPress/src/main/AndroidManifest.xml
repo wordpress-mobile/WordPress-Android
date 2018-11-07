@@ -254,7 +254,6 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.history.HistoryActivity"
-            android:label="@string/history_title"
             android:theme="@style/CalypsoTheme" />
 
         <!-- plans -->
