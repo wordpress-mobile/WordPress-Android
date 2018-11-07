@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-12 10:21:20+0000
+Translation-Revision-Date: 2018-10-23 21:49:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">Ange en webbplats som ligger på WordPress.com eller en WordPress-webbplats på egen server som är ansluten till Jetpack</string>
+    <string name="history_loading_revision">Läser in version</string>
+    <string name="history_loaded_revision">Versionen har lästs in</string>
+    <string name="history_load_dialog_title">Läs in versionen</string>
+    <string name="history_load_dialog_message">Vill du läsa in versionen från den %1$s kl. %2$s?</string>
+    <string name="history_load_dialog_button_positive">Läs in</string>
+    <string name="history_footer_post">Inlägget skapades den %1$s kl. %2$s</string>
+    <string name="history_footer_page">Sidan skapades den %1$s kl. %2$s</string>
+    <string name="history_empty_title">Ingen historik har sparats ännu</string>
+    <string name="history_empty_subtitle_post">När du ändrar ditt inlägg kommer historiken att visas här</string>
+    <string name="history_empty_subtitle_page">När du ändrar din sida kommer historiken att visas här</string>
+    <string name="description_user">Användarens profilbild</string>
     <string name="async_promo_description_schedule_page">Om du nu lämnar redigeraren kommer din sida att sparas och schemaläggas i bakgrunden! Ta och prova!</string>
     <string name="async_promo_description_publish_post">Om du nu lämnar redigeraren kommer ditt inlägg att sparas och publiceras i bakgrunden! Ta och prova!</string>
     <string name="async_promo_description_publish_page">Om du nu lämnar redigeraren kommer din sida att sparas och publiceras i bakgrunden! Ta och prova!</string>
-    <string name="image_size_full_class">storlek-fullbredd</string>
-    <string name="image_size_large_class">storlek-stor</string>
-    <string name="image_size_medium_class">storlek-medium</string>
-    <string name="image_size_thumbnail_class">storlek-miniatyr</string>
     <string name="image_size_full_label">Full storlek</string>
     <string name="image_size_large_label">Stor</string>
     <string name="image_size_medium_label">Medium</string>
@@ -266,7 +275,6 @@ Language: sv_SE
     <string name="content_description_person_reading_device_notification">Person som läser en mobil enhet med notiser</string>
     <string name="content_description_people_looking_charts">Personers som studerar diagram och tabeller</string>
     <string name="comment_title">%s om %s</string>
-    <string name="dialog_confirm_delete_permanently_page">Är du säker på att du vill radera denna sida permanent?</string>
     <string name="dialog_confirm_delete_permanently_post">Är du säker på att du vill radera detta inlägg permanent?</string>
     <string name="notification_site_creation_title_in_progress">Skapar webbplatsen… Det kan ta några minuter.</string>
     <string name="notification_channel_important_title">Viktigt</string>
@@ -415,7 +423,6 @@ Language: sv_SE
     <string name="dialog_confirm_publish_message_page">Sidan kommer att publiceras direkt.</string>
     <string name="dialog_confirm_publish_message_post">Inlägget kommer att publiceras direkt.</string>
     <string name="dialog_confirm_publish_title">Redo att publicera?</string>
-    <string name="dialog_confirm_delete_page">Denna sida kommer att tas bort och läggas i papperskorgen</string>
     <string name="dialog_confirm_delete_post">Detta inlägg kommer att tas bort och läggas i papperskorgen</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d sidor/inlägg laddades inte upp</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sidor laddades inte upp</string>
@@ -617,7 +624,6 @@ Language: sv_SE
     <string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället.</string>
     <string name="enter_verification_code_sms">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
     <string name="error_generic_error">Åtgärden kunde inte utföras</string>
-    <string name="error_media_recover_page">Det gick inte att ladda upp sidans media</string>
     <string name="error_media_recover_post">Det gick inte att ladda upp inläggets media</string>
     <string name="image_size">Storlek</string>
     <string name="uploading_subtitle_media_only_one">1 fil återstår</string>
@@ -705,7 +711,6 @@ Language: sv_SE
     <string name="notification_settings_master_status_on">På</string>
     <string name="max_video_resolution">Maximal videostorlek</string>
     <string name="max_thumbnail_px_size">Maximal bildstorlek</string>
-    <string name="error_page_does_not_exist">Denna sida finns inte längre</string>
     <string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
     <string name="error_upload_post_param">Ett fel inträffade vid uppladdning av följande inlägg: %s.</string>
     <string name="add_media_progress">Lägger till media</string>
@@ -1387,8 +1392,6 @@ Language: sv_SE
     <string name="notification_settings_item_other_account_emails_summary">Viktiga e-postmeddelanden om ditt konto kommer vi alltid att sända, men du vill kan du dessutom få en del hjälpsamma ytterligare saker.</string>
     <string name="stats_insights_latest_post_trend">Det har gått %1$s sedan %2$s publicerades. Så här har det gått för inlägget hittills…</string>
     <string name="stats_insights_latest_post_summary">Sammanfattning av senaste inlägg</string>
-    <string name="yesterday">I går</string>
-    <string name="days_ago">%d dagar sedan</string>
     <string name="connectionbar_no_connection">Ingen anslutning</string>
     <string name="button_publish">Publicera</string>
     <string name="button_edit">Redigera</string>
@@ -1396,12 +1399,10 @@ Language: sv_SE
     <string name="button_preview">Förhandsgranska</string>
     <string name="button_trash">Ta bort</string>
     <string name="button_stats">Statistik</string>
-    <string name="page_deleted">Sidan borttagen</string>
     <string name="button_back">Tillbaka</string>
     <string name="stats_no_activity_this_period">Ingen aktivitet denna period</string>
     <string name="post_trashed">Inlägget placerat i papperskorgen</string>
     <string name="post_deleted">Inlägg raderat</string>
-    <string name="page_trashed">Sidan placerad i papperskorgen</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Du har inte behörighet för att komma åt denna blogg</string>
     <string name="reader_toast_err_follow_blog_not_found">Denna webbplats kunde inte hittas</string>
     <string name="undo">Ångra</string>
@@ -1536,7 +1537,6 @@ Language: sv_SE
     <string name="ssl_certificate_details">Detaljer</string>
     <string name="cab_selected">%d valda</string>
     <string name="signing_out">Loggar ut…</string>
-    <string name="pages_empty_list">Inga sidor än. Varför inte skapa en?</string>
     <string name="comment_reply_to_user">Svar till %s</string>
     <string name="posts_empty_list">Inga inlägg än. Varför inte skapa ett?</string>
     <string name="comment_trashed">Kommentar förkastad</string>
@@ -1614,7 +1614,6 @@ Language: sv_SE
     <string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
     <string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
     <string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
-    <string name="error_deleting_page">Ett fel inträffade när sidan skulle raderas</string>
     <string name="wordpress_blog">WordPress-blogg</string>
     <string name="image_settings">Bildinställningar</string>
     <string name="local_changes">Lokala ändringar</string>
@@ -1768,7 +1767,6 @@ Language: sv_SE
     <string name="immediately">Omedelbart</string>
     <string name="quickpress_add_alert_title">Ange genvägsnamn</string>
     <string name="settings">Inställningar</string>
-    <string name="today">Idag</string>
     <string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
     <string name="quickpress_window_title">Välj blogg för QuickPress-genväg</string>
     <string name="pages_private">Privat</string>
