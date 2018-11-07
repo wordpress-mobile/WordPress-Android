@@ -233,34 +233,6 @@ constructor(
         }
     }
 
-    suspend fun fetchTopCommentingFollowers(
-        site: SiteModel,
-        pageSize: Int = 6,
-        forced: Boolean
-    ): FetchInsightsPayload<CommentingFollowersResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.comment_followers.urlV1_1
-
-        val params = mapOf(
-                "max" to pageSize.toString()
-        )
-        val response = wpComGsonRequestBuilder.syncGetRequest(
-                this,
-                url,
-                params,
-                CommentingFollowersResponse::class.java,
-                enableCaching = true,
-                forced = forced
-        )
-        return when (response) {
-            is Success -> {
-                FetchInsightsPayload(response.data)
-            }
-            is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
-            }
-        }
-    }
-
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -385,33 +357,6 @@ constructor(
             @SerializedName("comments") val comments: Int
         )
     }
-
-    data class CommentingFollowersResponse(
-        @SerializedName("page") val page: Int,
-        @SerializedName("pages") val pages: Int,
-        @SerializedName("total") val total: Int,
-        @SerializedName("posts") val posts: List<Post>
-    ) {
-        data class Post(
-            @SerializedName("name") val name: String,
-            @SerializedName("link") val link: String,
-            @SerializedName("id") val id: Int,
-            @SerializedName("comments") val comments: Int
-        )
-    }
-
-    /*
-
-        setGroupId(authorJSON.getString("name"));
-        setName(authorJSON.getString("name"));
-        setViews(authorJSON.getInt("views"));
-        setAvatar(JSONUtils.getString(authorJSON, "avatar"));
-        {"sites":[{"ID":122536325,"name":"Jetpack Site 1","description":"Just another WordPress site","URL":"http:\/\/do.wpmt.co\/jp-1","user_can_manage":false,"capabilities":{"edit_pages":true,"edit_posts":true,"edit_others_posts":true,"edit_others_pages":true,"delete_posts":true,"delete_others_posts":true,"edit_theme_options":true,"edit_users":false,"list_users":true,"manage_categories":true,"manage_options":true,"moderate_comments":true,"activate_wordads":true,"promote_users":true,"publish_posts":true,"upload_files":true,"delete_users":false,"remove_users":true,"view_stats":true},"jetpack":true,"is_multisite":false,"post_count":3,"subscribers_count":0,"lang":"en-US","icon":{"img":"http:\/\/do.wpmt.co\/jp-1\/wp-content\/uploads\/2017\/03\/cropped-cropped-cropped-pony-4.jpeg","ico":"http:\/\/do.wpmt.co\/jp-1\/wp-content\/uploads\/2017\/03\/cropped-cropped-cropped-pony-4.jpeg?w=16","media_id":14},"logo":{"id":0,"sizes":[],"url":""},"visible":true,"is_private":false,"single_user_site":true,"is_vip":false,"is_following":false,"options":{"timezone":"","gmt_offset":0,"blog_public":0,"videopress_enabled":false,"upgraded_filetypes_enabled":true,"login_url":"http:\/\/do.wpmt.co\/jp-1\/wp-login.php","admin_url":"http:\/\/do.wpmt.co\/jp-1\/wp-admin\/","is_mapped_domain":true,"is_redirect":false,"unmapped_url":"http:\/\/do.wpmt.co\/jp-1","featured_images_enabled":false,"theme_slug":"edin-wpcom","header_image":false,"background_color":false,"image_default_link_type":"none","image_thumbnail_width":150,"image_thumbnail_height":150,"image_thumbnail_crop":0,"image_medium_width":300,"image_medium_height":300,"image_large_width":1024,"image_large_height":1024,"permalink_structure":"\/%year%\/%monthnum%\/%day%\/%postname%\/","post_formats":{"aside":"Aside","image":"Image","video":"Video","quote":"Quote","link":"Link","gallery":"Gallery","status":"Status","audio":"Audio","chat":"Chat"},"default_post_format":"0","default_category":1,"allowed_file_types":["jpg","jpeg","png","gif","pdf","doc","ppt","odt","pptx","docx","pps","ppsx","xls","xlsx","key"],"show_on_front":"posts","default_likes_enabled":true,"default_sharing_status":false,"default_comment_status":true,"default_ping_status":true,"software_version":"4.8.7","created_at":"2017-01-13T14:06:27+00:00","wordads":false,"publicize_permanently_disabled":false,"frame_nonce":"0368b4a9aa","headstart":false,"headstart_is_fresh":false,"ak_vp_bundle_enabled":0,"advanced_seo_front_page_description":"","advanced_seo_title_formats":[],"verification_services_codes":null,"podcasting_archive":null,"is_domain_only":false,"is_automated_transfer":false,"is_wpcom_store":false,"woocommerce_is_active":false,"design_type":null,"site_goals":null,"jetpack_version":"5.9","main_network_site":"http:\/\/do.wpmt.co\/jp-1","active_modules":["after-the-deadline","contact-form","custom-content-types","custom-css","enhanced-distribution","gravatar-hovercards","json-api","latex","manage","notes","post-by-email","protect","publicize","sharedaddy","shortcodes","shortlinks","sitemaps","stats","subscriptions","verification-tools","widget-visibility","widgets"],"max_upload_size":false,"wp_memory_limit":"40M","wp_max_memory_limit":"256M","is_multi_network":false,"is_multi_site":false,"file_mod_disabled":false},"plan":{"product_id":2002,"product_slug":"jetpack_free","product_name_short":"Free","free_trial":false,"expired":false,"user_is_owner":false,"is_free":true,"features":{"active":["akismet","support"],"available":{"akismet":["jetpack_premium","jetpack_business","jetpack_premium_monthly","jetpack_business_monthly"],"vaultpress-backups":["jetpack_premium","jetpack_business","jetpack_premium_monthly","jetpack_business_monthly"],"vaultpress-backup-archive":["jetpack_premium","jetpack_business","jetpack_premium_monthly","jetpack_business_monthly"],"vaultpress-storage-space":["jetpack_premium","jetpack_business","jetpack_premium_monthly","jetpack_business_monthly"],"vaultpress-automated-restores":["jetpack_premium","jetpack_business","jetpack_premium_monthly","jetpack_business_monthly"],"si
-        {"date":"2018-11-07","authors":[{"name":"A WordPress Commenter","link":"?s=wapuu@wordpress.example","gravatar":"https:\/\/1.gravatar.com\/avatar\/d7a973c7dab26985da5f961be7b74480?s=64&amp;d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G","comments":"1","follow_data":null}],"posts":[{"name":"Hello world!","link":"http:\/\/do.wpmt.co\/jp-1\/2017\/01\/13\/hello-world\/","id":"1","comments":"1"}],"monthly_comments":0,"total_comments":1,"most_active_day":"2017-01-13 13:07:09","most_active_time":"13:00","most_commented_post":{"name":"Hello world!","link":"http:\/\/do.wpmt.co\/jp-1\/2017\/01\/13\/hello-world\/","id":"1","comments":"1"}}
-        {"date":"2018-11-07","authors":[{"name":"A WordPress Commenter","link":"?s=wapuu@wordpress.example","gravatar":"https:\/\/1.gravatar.com\/avatar\/d7a973c7dab26985da5f961be7b74480?s=64&amp;d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G","comments":"1","follow_data":null}],"posts":[{"name":"Hello world!","link":"http:\/\/do.wpmt.co\/jp-1\/2017\/01\/13\/hello-world\/","id":"1","comments":"1"}],"monthly_comments":0,"total_comments":1,"most_active_day":"2017-01-13 13:07:09","most_active_time":"13:00","most_commented_post":{"name":"Hello world!","link":"http:\/\/do.wpmt.co\/jp-1\/2017\/01\/13\/hello-world\/","id":"1","comments":"1"}}
-        {"page":1,"pages":0,"total":0,"posts":[]}
-
-     */
 
     private fun StatsGranularity.toPath(): String {
         return when (this) {
