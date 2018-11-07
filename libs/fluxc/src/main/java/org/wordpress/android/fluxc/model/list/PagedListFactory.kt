@@ -5,9 +5,6 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.arch.paging.DataSource
 import android.arch.paging.PositionalDataSource
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -68,31 +65,27 @@ private class PagedListPositionalDataSource<T, R>(
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PagedListItemType<R>>) {
-        val startPosition = if (params.requestedStartPosition < remoteItemIds.size) {
-            params.requestedStartPosition
-        } else 0
-        val items = getItems(startPosition, params.requestedLoadSize)
+        val startPosition = computeInitialLoadPosition(params, totalSize)
+        val loadSize = computeInitialLoadSize(params, startPosition, totalSize)
+        val items = loadRangeInternal(startPosition, loadSize)
         if (params.placeholdersEnabled) {
-            callback.onResult(items, startPosition, remoteItemIds.size + localItems.size)
+            callback.onResult(items, startPosition, totalSize)
         } else {
             callback.onResult(items, startPosition)
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<PagedListItemType<R>>) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val items = getItems(params.startPosition, params.loadSize)
-            callback.onResult(items)
-        }
+        val items = loadRangeInternal(params.startPosition, params.loadSize)
+        callback.onResult(items)
     }
 
-    private fun getItems(startPosition: Int, loadSize: Int): List<PagedListItemType<R>> {
-        val normalizedStart = normalizedIndex(startPosition)
-        val normalizedEnd = normalizedIndex(normalizedStart + loadSize)
-        if (normalizedStart == normalizedEnd) {
+    private fun loadRangeInternal(startPosition: Int, loadSize: Int): List<PagedListItemType<R>> {
+        val endPosition = startPosition + loadSize
+        if (startPosition == endPosition) {
             return emptyList()
         }
-        return (normalizedStart..(normalizedEnd - 1)).map { index ->
+        return (startPosition..(endPosition - 1)).map { index ->
             if (index < localItems.size) {
                 return@map ReadyItem(transform(localItems[index]))
             }
@@ -105,14 +98,6 @@ private class PagedListPositionalDataSource<T, R>(
             } else {
                 ReadyItem(transform(item))
             }
-        }
-    }
-
-    private fun normalizedIndex(index: Int): Int {
-        return when {
-            index <= 0 -> 0
-            index >= totalSize -> totalSize
-            else -> index
         }
     }
 
