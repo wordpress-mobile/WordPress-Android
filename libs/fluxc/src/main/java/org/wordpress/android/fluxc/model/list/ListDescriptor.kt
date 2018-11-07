@@ -41,4 +41,5 @@ data class ListDescriptorUniqueIdentifier(val value: Int)
 interface ListDescriptor {
     val uniqueIdentifier: ListDescriptorUniqueIdentifier
     val typeIdentifier: ListDescriptorTypeIdentifier
+    val config: ListConfig
 }
