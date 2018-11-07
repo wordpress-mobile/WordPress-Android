@@ -68,7 +68,6 @@ Language: es_CO
     <string name="notification_settings_master_status_on">Activos</string>
     <string name="max_video_resolution">Tamaño máximo de vídeo</string>
     <string name="max_thumbnail_px_size">Tamaño máximo de imagen</string>
-    <string name="error_page_does_not_exist">Esta página ya no existe</string>
     <string name="error_upload_post_media_param">Hubo un error al subir los medios a esta entrada: %s.</string>
     <string name="error_upload_post_param">Hubo un error al subir esta entrada: %s.</string>
     <string name="add_media_progress">Añadiendo medios</string>
@@ -730,8 +729,6 @@ Language: es_CO
     <string name="notification_settings_item_other_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
     <string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
     <string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
-    <string name="yesterday">Ayer</string>
-    <string name="days_ago">Hace %d días</string>
     <string name="connectionbar_no_connection">Sin conexión</string>
     <string name="button_publish">Publicar</string>
     <string name="button_edit">Editar</string>
@@ -739,12 +736,10 @@ Language: es_CO
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
-    <string name="page_deleted">Página borrada</string>
     <string name="button_back">Atrás</string>
     <string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
     <string name="post_deleted">Entrada borrada</string>
-    <string name="page_trashed">Página enviada a la papelera</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% de vistas</string>
@@ -874,7 +869,6 @@ Language: es_CO
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
     <string name="signing_out">Cerrando sesión…</string>
-    <string name="pages_empty_list">Sin páginas todavía. ¿Por qué no crear una?</string>
     <string name="comment_reply_to_user">Responder a %s</string>
     <string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
     <string name="comment_trashed">El comentario se ha enviado a la papelera.</string>
@@ -941,7 +935,6 @@ Language: es_CO
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
-    <string name="error_deleting_page">Ocurrió un error al borrar la página</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="image_settings">Ajustes de imagen</string>
     <string name="local_changes">Cambios locales</string>
@@ -1090,7 +1083,6 @@ Language: es_CO
     <string name="immediately">Inmediatamente</string>
     <string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
     <string name="settings">Ajustes</string>
-    <string name="today">Hoy</string>
     <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
     <string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
     <string name="categories">Categorías</string>
