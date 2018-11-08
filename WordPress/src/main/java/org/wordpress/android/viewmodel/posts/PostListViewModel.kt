@@ -4,7 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
@@ -30,15 +29,12 @@ import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescrip
 import org.wordpress.android.fluxc.model.list.datastore.PostListDataStore
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.ListStore
-import org.wordpress.android.fluxc.store.ListStore.FetchListPayload
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType
-import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
@@ -95,15 +91,6 @@ class PostListViewModel @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
 
-    private val _emptyViewState = MutableLiveData<PostListEmptyViewState>()
-    val emptyViewState: LiveData<PostListEmptyViewState> = _emptyViewState
-
-    private val _isFetchingFirstPage = MutableLiveData<Boolean>()
-    val isFetchingFirstPage: LiveData<Boolean> = _isFetchingFirstPage
-
-    private val _isLoadingMore = MutableLiveData<Boolean>()
-    val isLoadingMore: LiveData<Boolean> = _isLoadingMore
-
     private val _userAction = SingleLiveEvent<PostListUserAction>()
     val userAction: LiveData<PostListUserAction> = _userAction
 
@@ -131,8 +118,33 @@ class PostListViewModel @Inject constructor(
                 transform = { post -> createPostAdapterItem(post) })
     }
 
+    val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
+    val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     val pagedListData: LiveData<PagedList<PagedListItemType<PostAdapterItem>>> by lazy {
-        pagedListWrapper.liveData
+        pagedListWrapper.data
+    }
+    val emptyViewState: MediatorLiveData<PostListEmptyViewState> by lazy {
+        val result = MediatorLiveData<PostListEmptyViewState>()
+        val update = {
+            val error = pagedListWrapper.listError.value
+            if (pagedListWrapper.isEmpty.value != false) {
+                if (error != null) {
+                    if (error.type == ListErrorType.PERMISSION_ERROR) {
+                        PostListEmptyViewState.PERMISSION_ERROR
+                    } else PostListEmptyViewState.REFRESH_ERROR
+                } else if (pagedListWrapper.isFetchingFirstPage.value == true) {
+                    PostListEmptyViewState.LOADING
+                } else {
+                    PostListEmptyViewState.EMPTY_LIST
+                }
+            } else {
+                PostListEmptyViewState.HIDDEN_LIST
+            }
+        }
+        result.addSource(pagedListWrapper.isEmpty) { result.value = update() }
+        result.addSource(pagedListWrapper.isFetchingFirstPage) { result.value = update() }
+        result.addSource(pagedListWrapper.listError) { result.value = update() }
+        result
     }
 
     private val lifecycleRegistry = LifecycleRegistry(this)
@@ -170,17 +182,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun refreshList() {
-        fetchList(false)
-    }
-
-    private fun fetchList(loadMore: Boolean) {
-        listDescriptor?.let { listDescriptor ->
-            val payload = FetchListPayload(listDescriptor, loadMore) { _, offset ->
-                val fetchPostListPayload = FetchPostListPayload(listDescriptor, offset)
-                dispatcher.dispatch(PostActionBuilder.newFetchPostListAction(fetchPostListPayload))
-            }
-            dispatcher.dispatch(ListActionBuilder.newFetchListAction(payload))
-        }
+        pagedListWrapper.refresh()
     }
 
     fun handleEditPostResult(data: Intent?) {
@@ -282,27 +284,6 @@ class PostListViewModel @Inject constructor(
     }
 
     // FluxC Events
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onListStateChanged(event: OnListStateChanged) {
-        val emptyViewState = if (event.newState.isEmpty) {
-            if (event.isError) {
-                if (event.error.type == ListErrorType.PERMISSION_ERROR) {
-                    PostListEmptyViewState.PERMISSION_ERROR
-                } else PostListEmptyViewState.REFRESH_ERROR
-            } else if (event.newState.state.isFetchingFirstPage()) {
-                PostListEmptyViewState.LOADING
-            } else {
-                PostListEmptyViewState.EMPTY_LIST
-            }
-        } else {
-            PostListEmptyViewState.HIDDEN_LIST
-        }
-        _emptyViewState.postValue(emptyViewState)
-        _isFetchingFirstPage.postValue(event.newState.state.isFetchingFirstPage())
-        _isLoadingMore.postValue(event.newState.state.isLoadingMore())
-    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {

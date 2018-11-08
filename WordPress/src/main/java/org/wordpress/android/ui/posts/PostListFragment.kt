@@ -297,26 +297,23 @@ class PostListFragment : Fragment() {
     }
 
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
-        if (emptyViewState == HIDDEN_LIST) {
-            actionableEmptyView?.visibility = View.GONE
-            return
-        }
+        actionableEmptyView?.visibility = if (emptyViewState == HIDDEN_LIST) View.GONE else View.VISIBLE
         val stringId = when (emptyViewState) {
+            HIDDEN_LIST -> return // nothing else to do!
             EMPTY_LIST -> R.string.posts_empty_list
             LOADING -> R.string.posts_fetching
             REFRESH_ERROR -> if (NetworkUtils.isNetworkAvailable(nonNullActivity)) {
                 R.string.error_refresh_posts
             } else R.string.no_network_message
             PERMISSION_ERROR -> R.string.error_refresh_unauthorized_posts
-            HIDDEN_LIST -> throw IllegalArgumentException("Hidden state should already be handled")
         }
-        val isEmpty = emptyViewState == EMPTY_LIST
+        val isNewPostActionVisible = emptyViewState == EMPTY_LIST
         actionableEmptyView?.let {
             it.image.setImageResource(R.drawable.img_illustration_posts_75dp)
-            it.image.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            it.image.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
             it.title.setText(stringId)
             it.button.setText(R.string.posts_empty_list_button)
-            it.button.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            it.button.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
             it.button.setOnClickListener { _ ->
                 viewModel.newPost()
             }
