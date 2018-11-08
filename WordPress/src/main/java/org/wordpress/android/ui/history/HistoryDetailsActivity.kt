@@ -8,7 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 
-class HistoryActivity : AppCompatActivity() {
+class HistoryDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -17,10 +17,10 @@ class HistoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = intent.extras
-        val revision = extras.getParcelable(HistoryDetailContainerFragment.EXTRA_REVISION) as Revision
-        val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailContainerFragment.EXTRA_REVISIONS)
+        val revision = extras.getParcelable(HistoryDetailsContainerFragment.EXTRA_REVISION) as Revision
+        val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailsContainerFragment.EXTRA_REVISIONS)
 
-        val fragment = HistoryDetailContainerFragment.newInstance(revision, revisions as ArrayList<Revision>)
+        val fragment = HistoryDetailsContainerFragment.newInstance(revision, revisions as ArrayList<Revision>)
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)

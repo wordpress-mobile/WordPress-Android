@@ -35,7 +35,7 @@ import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 import java.util.ArrayList;
 
-public class HistoryDetailContainerFragment extends Fragment {
+public class HistoryDetailsContainerFragment extends Fragment {
     private ArrayList<Revision> mRevisions;
     private HistoryDetailFragmentAdapter mAdapter;
     private ImageView mNextButton;
@@ -53,11 +53,11 @@ public class HistoryDetailContainerFragment extends Fragment {
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
 
-    public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
+    public static HistoryDetailsContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_REVISION, revision);
         args.putParcelableArrayList(EXTRA_REVISIONS, revisions);
-        HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
+        HistoryDetailsContainerFragment fragment = new HistoryDetailsContainerFragment();
         fragment.setArguments(args);
         return fragment;
     }

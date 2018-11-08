@@ -185,7 +185,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.ui.history.HistoryDetailsContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,

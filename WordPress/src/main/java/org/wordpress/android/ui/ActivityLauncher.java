@@ -33,8 +33,8 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
-import org.wordpress.android.ui.history.HistoryActivity;
-import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
+import org.wordpress.android.ui.history.HistoryDetailsActivity;
+import org.wordpress.android.ui.history.HistoryDetailsContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -419,9 +419,9 @@ public class ActivityLauncher {
 
     public static void viewRevisionDetailsForResult(Activity activity, Revision revision,
                                                     ArrayList<Revision> revisions) {
-        Intent intent = new Intent(activity, HistoryActivity.class);
-        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
-        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);
+        Intent intent = new Intent(activity, HistoryDetailsActivity.class);
+        intent.putExtra(HistoryDetailsContainerFragment.EXTRA_REVISION, revision);
+        intent.putParcelableArrayListExtra(HistoryDetailsContainerFragment.EXTRA_REVISIONS, revisions);
         activity.startActivityForResult(intent, RequestCodes.REVISION_DETAILS);
     }
 
