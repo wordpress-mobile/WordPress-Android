@@ -6,7 +6,6 @@ import android.arch.paging.PositionalDataSource
 import org.wordpress.android.fluxc.model.list.InternalItem.InternalEndListItem
 import org.wordpress.android.fluxc.model.list.InternalItem.InternalLocalItem
 import org.wordpress.android.fluxc.model.list.InternalItem.InternalRemoteItem
-import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListItemType.EndListIndicatorItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
@@ -22,7 +21,7 @@ class PagedListFactory<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     private val getList: (ListDescriptor) -> List<Long>,
-    private val getListState: (ListDescriptor) -> ListState,
+    private val isListFullyFetched: (ListDescriptor) -> Boolean,
     private val transform: (T) -> R
 ) : DataSource.Factory<Int, PagedListItemType<R>>() {
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
@@ -32,7 +31,7 @@ class PagedListFactory<T, R>(
                 dataStore = dataStore,
                 listDescriptor = listDescriptor,
                 getList = getList,
-                getListState = getListState,
+                isListFullyFetched = isListFullyFetched,
                 transform = transform
         )
         currentSource = source
@@ -48,7 +47,7 @@ private class PagedListPositionalDataSource<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     getList: (ListDescriptor) -> List<Long>,
-    getListState: (ListDescriptor) -> ListState,
+    isListFullyFetched: (ListDescriptor) -> Boolean,
     private val transform: (T) -> R
 ) : PositionalDataSource<PagedListItemType<R>>(), LifecycleObserver {
     private val internalItems: List<InternalItem<T>> by lazy {
@@ -58,7 +57,7 @@ private class PagedListPositionalDataSource<T, R>(
             !remoteItemIdsToHide.contains(it)
         }.map { InternalRemoteItem<T>(it) }
         val actualItems = localItems.plus(remoteItems)
-        if (getListState(listDescriptor) == FETCHED && actualItems.isNotEmpty()) {
+        if (isListFullyFetched(listDescriptor) && actualItems.isNotEmpty()) {
             actualItems.plus(InternalEndListItem<T>())
         } else {
             actualItems
