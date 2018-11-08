@@ -13,7 +13,8 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 class PostListDataStore(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
-    private val site: SiteModel?
+    private val site: SiteModel?,
+    private val getLocalItemIdsToHide: (ListDescriptor) -> List<Int>
 ) : ListDataStoreInterface<PostModel> {
     override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
         site?.let {
@@ -33,7 +34,8 @@ class PostListDataStore(
 
     override fun localItems(listDescriptor: ListDescriptor): List<PostModel> {
         if (listDescriptor is PostListDescriptor) {
-            return postStore.getLocalPostsForDescriptor(listDescriptor)
+            val localPostIdsToHide = getLocalItemIdsToHide(listDescriptor)
+            return postStore.getLocalPostsForDescriptor(listDescriptor).filter { !localPostIdsToHide.contains(it.id) }
         }
         return emptyList()
     }
