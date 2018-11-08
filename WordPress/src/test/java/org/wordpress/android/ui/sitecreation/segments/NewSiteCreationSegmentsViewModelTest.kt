@@ -164,6 +164,6 @@ class NewSiteCreationSegmentsViewModelTest {
         viewModel.start()
 
         val items = viewModel.uiState.value!!.items
-        assertFalse((items[items.size-1] as SegmentUiState).showDivider)
+        assertFalse((items[items.size - 1] as SegmentUiState).showDivider)
     }
 }
