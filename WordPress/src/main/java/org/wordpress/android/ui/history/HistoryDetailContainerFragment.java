@@ -92,8 +92,6 @@ public class HistoryDetailContainerFragment extends Fragment {
 
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
-        } else if (item.getItemId() == R.id.revision_html_preview) {
-            // TODO implement
         }
         return super.onOptionsItemSelected(item);
     }
@@ -200,8 +198,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
-                                                                    ArrayList<Revision> revisions) {
+        @SuppressWarnings("unchecked")
+        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }

@@ -252,6 +252,8 @@
             android:name=".ui.posts.PostSettingsTagsActivity"
             android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
+
+        <!-- History -->
         <activity
             android:name=".ui.history.HistoryActivity"
             android:label="@string/history_detail_title"

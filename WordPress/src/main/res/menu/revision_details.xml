@@ -7,9 +7,4 @@
         android:title="@string/history_load_dialog_button_positive"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/revision_html_preview"
-        android:title="@string/history_html_preview"
-        app:showAsAction="never"/>
-
 </menu>
