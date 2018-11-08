@@ -72,7 +72,8 @@ class ListStore @Inject constructor(
         transform: (T) -> R
     ): PagedListWrapper<R> {
         val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, transform)
+        val getListState = { descriptor: ListDescriptor -> getListState(descriptor) }
+        val factory = PagedListFactory(dataStore, listDescriptor, getList, getListState, transform)
         val callback = object : BoundaryCallback<PagedListItemType<R>>() {
             override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
                 handleFetchList(listDescriptor, true) { offset ->
@@ -105,6 +106,13 @@ class ListStore @Inject constructor(
                 invalidate = factory::invalidate,
                 isListEmpty = isEmpty
         )
+    }
+
+    private fun getListState(listDescriptor: ListDescriptor): ListState {
+        val listModel = listSqlUtils.getList(listDescriptor)
+        return if (listModel != null) {
+            getListState(listModel)
+        } else ListState.defaultState
     }
 
     private fun getListItems(listDescriptor: ListDescriptor): List<Long> {
