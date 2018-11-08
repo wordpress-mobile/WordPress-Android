@@ -150,6 +150,7 @@
     <string name="media_fetching">Fetching media…</string>
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
+    <string name="media_space_used">%1$s used</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
@@ -317,6 +318,18 @@
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
+
+    <!-- gutenberg compatibility dialog -->
+    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
+    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_message_page">We are working on the brand new WordPress editor. You can still edit this page, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url_wpcom" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wpcom</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url_wporg" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wporg</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1265,10 +1278,10 @@
     <string name="image_size_large_label">Large</string>
     <string name="image_size_full_label">Full Size</string>
 
-    <string name="image_size_thumbnail_class" translatable="false">size-thumbnail</string>
-    <string name="image_size_medium_class" translatable="false">size-medium</string>
-    <string name="image_size_large_class" translatable="false">size-large</string>
-    <string name="image_size_full_class" translatable="false">size-full</string>
+    <string name="image_size_thumbnail_css_class" translatable="false">size-thumbnail</string>
+    <string name="image_size_medium_css_class" translatable="false">size-medium</string>
+    <string name="image_size_large_css_class" translatable="false">size-large</string>
+    <string name="image_size_full_css_class" translatable="false">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>

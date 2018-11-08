@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <dimen name="min_touch_target_sz">48dp</dimen>
 
     <dimen name="category_row_height">48dp</dimen>
@@ -339,10 +341,13 @@
     <dimen name="two_line_list_item_height">72dp</dimen>
     <dimen name="page_list_divider_height">40dp</dimen>
 
+    <dimen name="quota_bar_text_minimum_height">36dp</dimen>
+
     <!--post skeleton-->
     <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
     <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
     <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
     <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
     <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+
 </resources>

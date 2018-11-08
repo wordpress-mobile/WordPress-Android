@@ -2,7 +2,7 @@
 
 source "https://rubygems.org" do 
   gem 'danger'
-  gem "fastlane"
+  gem 'fastlane', "2.107.0"
 end
 
 plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')

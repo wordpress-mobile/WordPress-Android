@@ -197,7 +197,6 @@ Language: da_DK
     <string name="ssl_certificate_details">Detaljer</string>
     <string name="cab_selected">%d markeret</string>
     <string name="signing_out">Logger ud…</string>
-    <string name="pages_empty_list">Endnu ingen sider! Hvorfor ikke lave en?</string>
     <string name="comment_reply_to_user">Besvar %s</string>
     <string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
     <string name="comment_trashed">Kommentar slettet</string>
@@ -399,7 +398,6 @@ Language: da_DK
     <string name="immediately">Øjeblikkeligt</string>
     <string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
     <string name="settings">Indstillinger</string>
-    <string name="today">I dag</string>
     <string name="quickpress_add_error">Genvejsnavn kan ikke være tomt</string>
     <string name="quickpress_window_title">Vælg blog til QuickPress genvej</string>
     <string name="categories">Kategorier</string>

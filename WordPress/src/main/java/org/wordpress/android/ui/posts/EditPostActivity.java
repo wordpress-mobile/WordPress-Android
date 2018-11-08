@@ -1021,9 +1021,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
-        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
@@ -1036,11 +1036,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        if (historyMenuItem != null) {
-            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
-            historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
-        }
-
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
         }
@@ -1048,6 +1043,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (historyMenuItem != null) {
+            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
+            historyMenuItem.setVisible(showMenuItems && hasHistory);
         }
 
         if (settingsMenuItem != null) {
@@ -1110,6 +1110,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean handleBackPressed() {
         if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
+            Fragment contentFragment = mFullScreenDialogFragment.getContent();
+            if (contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
+                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
+            }
             mFullScreenDialogFragment.dismiss();
             return false;
         }
@@ -1169,6 +1173,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (itemId == R.id.menu_history) {
+                AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED);
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
@@ -1597,7 +1602,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
-        // TODO: Add analytics tracking for history list item.
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
         Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
@@ -1649,7 +1654,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO: Add analytics tracking for loaded revision undo.
+                        AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
                         mPost = mPostForUndo.clone();

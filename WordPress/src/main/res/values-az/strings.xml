@@ -20,13 +20,10 @@ Language: az
     <string name="reader_short_comment_count_one">1 Şərh</string>
     <string name="reader_short_like_count_multi">%s Bəyənmə</string>
     <string name="email">E-poçt</string>
-    <string name="days_ago">%d gün öncə</string>
     <string name="connectionbar_no_connection">Qoşulma yoxdur</string>
-    <string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
     <string name="post_deleted">Yazı silindi</string>
     <string name="post_trashed">Yazını zibil qutusuna göndər</string>
     <string name="button_back">Geri</string>
-    <string name="page_deleted">Səhifə silindi</string>
     <string name="button_stats">Statistikalar</string>
     <string name="button_trash">Zibil qutusu</string>
     <string name="button_preview">Önizləmə</string>
@@ -175,7 +172,6 @@ Language: az
     <string name="stats_no_blog">İstənən bloq üçün statistiklar yüklənmir</string>
     <string name="posts_empty_list">Hələlik yazı yoxdur. Bir yazı yaratmağa nə deyərsiniz?</string>
     <string name="comment_reply_to_user">Bunu cavabla: %s</string>
-    <string name="pages_empty_list">Hələlik səhifə yoxdur. Bir səhifə yaratmağa nə deyərsiniz?</string>
     <string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
     <string name="contact_us">Əlaqə yaradın</string>
     <string name="update_verb">Yenilə</string>

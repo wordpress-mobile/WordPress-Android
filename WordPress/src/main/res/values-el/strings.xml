@@ -622,15 +622,11 @@ Language: el_GR
     <string name="notification_settings_item_other_account_emails_summary">Θα σας στέλνουμε πάντα σημαντικά email σχετικά με το λογαριασμό σας αλλά μπορείτε να λαμβάνετε και μερικά χρήσιμα επιπλέον.</string>
     <string name="stats_insights_latest_post_trend">Πέρασαν %1$s από τη δημοσίευση του %2$s. Να πως πήγε το άρθρο μέχρι στιγμής…</string>
     <string name="stats_insights_latest_post_summary">Πιο πρόσφατη σύνοψη άρθρων</string>
-    <string name="days_ago">%d μέρες πριν</string>
-    <string name="yesterday">Χθες</string>
     <string name="connectionbar_no_connection">Δεν υπάρχει σύνδεση</string>
-    <string name="page_trashed">Η σελίδα στάλθηκε στα διαγραμμένα</string>
     <string name="post_deleted">Το άρθρο διαγράφηκε</string>
     <string name="post_trashed">Το άρθρο στάλθηκε στα διαγραμμένα</string>
     <string name="stats_no_activity_this_period">Δεν υπήρξε δραστηριότητα αυτή την περίοδο</string>
     <string name="button_back">Πίσω</string>
-    <string name="page_deleted">Σελίδα διαγράφηκε</string>
     <string name="button_stats">Στατιστικά</string>
     <string name="button_trash">Διαγραφή</string>
     <string name="button_preview">Προεπισκόπηση</string>
@@ -792,7 +788,6 @@ Language: el_GR
     <string name="comment_trashed">Το σχόλιο διαγράφηκε</string>
     <string name="posts_empty_list">Δεν υπάρχουν άρθρα ακόμη. Γιατί να μη δημιουργήσετε ένα;</string>
     <string name="comment_reply_to_user">Απάντηση σε %s</string>
-    <string name="pages_empty_list">Δεν υπάρχουν σελίδες ακόμη. Γιατί να μη δημιουργήσετε μία;</string>
     <string name="signing_out">Αποσύνδεση…</string>
     <string name="reader_toast_err_generic">Αδυναμία εκτέλεσης αυτής της ενέργειας</string>
     <string name="reader_menu_block_blog">Μπλοκάρισμα του ιστότοπου</string>
@@ -901,7 +896,6 @@ Language: el_GR
     <string name="reader_toast_err_remove_tag">Αδυναμία αφαίρεσης αυτής της ετικέτας</string>
     <string name="notifications_empty_all">Καμία ειδοποίηση…ακόμα.</string>
     <string name="invalid_site_url_message">Βεβαιωθείτε ότι το URL του ιστότοπου που δώσατε είναι έγκυρο</string>
-    <string name="error_deleting_page">Παρουσιάστηκε ένα σφάλμα κατά την διαγραφή της σελίδας</string>
     <string name="plugin_not_found">Ένα σφάλμα παρουσιάστηκε κατά την πρόσβαση σε αυτό το πρόσθετο</string>
     <string name="delete_page">Διαγραφή σελίδας;</string>
     <string name="delete_post">Διαγραφή ανάρτησης;</string>
@@ -1001,7 +995,6 @@ Language: el_GR
     <string name="immediately">Αμέσως Τώρα</string>
     <string name="quickpress_add_alert_title">Θέστε συντομευμένο όνομα</string>
     <string name="settings">Ρυθμίσεις</string>
-    <string name="today">Σήμερα</string>
     <string name="quickpress_window_title">Επιλέξτε ιστότοπο για τη συντόμευση του QuickPress</string>
     <string name="quickpress_add_error">Το όνομα της συντόμευσης δεν επιτρέπεται να είναι κενό</string>
     <string name="pages_private">Ιδιωτικό</string>
