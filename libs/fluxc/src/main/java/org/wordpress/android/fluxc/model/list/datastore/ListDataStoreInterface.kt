@@ -7,4 +7,5 @@ interface ListDataStoreInterface<T> {
     fun fetchList(listDescriptor: ListDescriptor, offset: Int)
     fun getItemByRemoteId(listDescriptor: ListDescriptor, remoteItemId: Long): T?
     fun localItems(listDescriptor: ListDescriptor): List<T> = emptyList()
+    fun getItemIdsToHide(listDescriptor: ListDescriptor): List<Pair<Int?, Long?>> = emptyList()
 }

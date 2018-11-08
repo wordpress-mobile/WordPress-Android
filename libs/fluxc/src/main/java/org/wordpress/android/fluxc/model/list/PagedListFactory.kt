@@ -11,8 +11,7 @@ class PagedListFactory<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     private val getList: (ListDescriptor) -> List<Long>,
-    private val transform: (T) -> R,
-    private val getRemoteItemIdsToHide: (ListDescriptor) -> List<Long>
+    private val transform: (T) -> R
 ) : DataSource.Factory<Int, PagedListItemType<R>>() {
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
 
@@ -21,8 +20,7 @@ class PagedListFactory<T, R>(
                 dataStore = dataStore,
                 listDescriptor = listDescriptor,
                 getList = getList,
-                transform = transform,
-                getRemoteItemIdsToHide = getRemoteItemIdsToHide
+                transform = transform
         )
         currentSource = source
         return source
@@ -37,11 +35,10 @@ private class PagedListPositionalDataSource<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     getList: (ListDescriptor) -> List<Long>,
-    private val transform: (T) -> R,
-    getRemoteItemIdsToHide: (ListDescriptor) -> List<Long>
+    private val transform: (T) -> R
 ) : PositionalDataSource<PagedListItemType<R>>(), LifecycleObserver {
     private val localItems = dataStore.localItems(listDescriptor)
-    private val remoteItemIdsToHide = getRemoteItemIdsToHide(listDescriptor)
+    private val remoteItemIdsToHide = dataStore.getItemIdsToHide(listDescriptor).mapNotNull { it.second }
     private val remoteItemIds: List<Long> = getList(listDescriptor).filter {
         !remoteItemIdsToHide.contains(it)
     }

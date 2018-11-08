@@ -69,11 +69,10 @@ class ListStore @Inject constructor(
         listDescriptor: ListDescriptor,
         dataStore: ListDataStoreInterface<T>,
         lifecycle: Lifecycle,
-        transform: (T) -> R,
-        getRemoteItemIdsToHide: (ListDescriptor) -> List<Long> = { emptyList() }
+        transform: (T) -> R
     ): PagedListWrapper<R> {
         val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, transform, getRemoteItemIdsToHide)
+        val factory = PagedListFactory(dataStore, listDescriptor, getList, transform)
         val callback = object : BoundaryCallback<PagedListItemType<R>>() {
             override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
                 handleFetchList(listDescriptor, true) { offset ->
