@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/wordpress-mobile/release-toolkit
+  revision: a569711c6bdd4026f1c3e929f743a42189bfba0c
+  tag: 0.1.1
+  specs:
+    fastlane-plugin-wpmreleasetoolkit (0.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -173,7 +180,8 @@ PLATFORMS
 
 DEPENDENCIES
   danger!
-  fastlane (= 2.107.0)
+  fastlane (= 2.107.0)!
+  fastlane-plugin-wpmreleasetoolkit!
 
 BUNDLED WITH
    1.16.1
