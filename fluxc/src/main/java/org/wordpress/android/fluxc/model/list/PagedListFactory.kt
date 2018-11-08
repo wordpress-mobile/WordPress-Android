@@ -3,14 +3,26 @@ package org.wordpress.android.fluxc.model.list
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.paging.DataSource
 import android.arch.paging.PositionalDataSource
+import org.wordpress.android.fluxc.model.list.InternalItem.InternalEndListItem
+import org.wordpress.android.fluxc.model.list.InternalItem.InternalLocalItem
+import org.wordpress.android.fluxc.model.list.InternalItem.InternalRemoteItem
+import org.wordpress.android.fluxc.model.list.ListState.FETCHED
+import org.wordpress.android.fluxc.model.list.PagedListItemType.EndListIndicatorItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
+
+private sealed class InternalItem<T> {
+    class InternalLocalItem<T>(val localItem: T) : InternalItem<T>()
+    class InternalRemoteItem<T>(val remoteItemId: Long) : InternalItem<T>()
+    class InternalEndListItem<T> : InternalItem<T>()
+}
 
 class PagedListFactory<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     private val getList: (ListDescriptor) -> List<Long>,
+    private val getListState: (ListDescriptor) -> ListState,
     private val transform: (T) -> R
 ) : DataSource.Factory<Int, PagedListItemType<R>>() {
     private var currentSource: PagedListPositionalDataSource<T, R>? = null
@@ -20,6 +32,7 @@ class PagedListFactory<T, R>(
                 dataStore = dataStore,
                 listDescriptor = listDescriptor,
                 getList = getList,
+                getListState = getListState,
                 transform = transform
         )
         currentSource = source
@@ -35,14 +48,23 @@ private class PagedListPositionalDataSource<T, R>(
     private val dataStore: ListDataStoreInterface<T>,
     private val listDescriptor: ListDescriptor,
     getList: (ListDescriptor) -> List<Long>,
+    getListState: (ListDescriptor) -> ListState,
     private val transform: (T) -> R
 ) : PositionalDataSource<PagedListItemType<R>>(), LifecycleObserver {
-    private val localItems = dataStore.localItems(listDescriptor)
-    private val remoteItemIdsToHide = dataStore.getItemIdsToHide(listDescriptor).mapNotNull { it.second }
-    private val remoteItemIds: List<Long> = getList(listDescriptor).filter {
-        !remoteItemIdsToHide.contains(it)
+    private val internalItems: List<InternalItem<T>> by lazy {
+        val localItems = dataStore.localItems(listDescriptor).map { InternalLocalItem(it) }
+        val remoteItemIdsToHide = dataStore.getItemIdsToHide(listDescriptor).mapNotNull { it.second }
+        val remoteItems = getList(listDescriptor).filter {
+            !remoteItemIdsToHide.contains(it)
+        }.map { InternalRemoteItem<T>(it) }
+        val actualItems = localItems.plus(remoteItems)
+        if (getListState(listDescriptor) == FETCHED && actualItems.isNotEmpty()) {
+            actualItems.plus(InternalEndListItem<T>())
+        } else {
+            actualItems
+        }
     }
-    private val totalSize: Int = localItems.size + remoteItemIds.size
+    private val totalSize: Int by lazy { internalItems.size }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<PagedListItemType<R>>) {
         val startPosition = computeInitialLoadPosition(params, totalSize)
@@ -66,17 +88,20 @@ private class PagedListPositionalDataSource<T, R>(
             return emptyList()
         }
         return (startPosition..(endPosition - 1)).map { index ->
-            if (index < localItems.size) {
-                return@map ReadyItem(transform(localItems[index]))
-            }
-            val remoteIndex = index - localItems.size
-            val remoteItemId = remoteItemIds[remoteIndex]
-            val item = dataStore.getItemByRemoteId(listDescriptor, remoteItemId)
-            if (item == null) {
-                dataStore.fetchItem(listDescriptor, remoteItemId)
-                LoadingItem<R>(remoteItemId)
-            } else {
-                ReadyItem(transform(item))
+            val internalItem = internalItems[index]
+            when (internalItem) {
+                is InternalEndListItem -> EndListIndicatorItem<R>()
+                is InternalLocalItem -> ReadyItem(transform(internalItem.localItem))
+                is InternalRemoteItem -> {
+                    val remoteItemId = internalItem.remoteItemId
+                    val item = dataStore.getItemByRemoteId(listDescriptor, remoteItemId)
+                    if (item == null) {
+                        dataStore.fetchItem(listDescriptor, remoteItemId)
+                        LoadingItem<R>(remoteItemId)
+                    } else {
+                        ReadyItem(transform(item))
+                    }
+                }
             }
         }
     }
