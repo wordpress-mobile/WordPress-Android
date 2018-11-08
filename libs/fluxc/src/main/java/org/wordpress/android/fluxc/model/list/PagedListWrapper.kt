@@ -19,8 +19,8 @@ class PagedListWrapper<T>(
     val listDescriptor: ListDescriptor,
     val data: LiveData<PagedList<PagedListItemType<T>>>,
     val lifecycle: Lifecycle,
-    val refresh: () -> Unit,
-    val invalidate: () -> Unit,
+    private val refresh: () -> Unit,
+    private val invalidate: () -> Unit,
     private val isListEmpty: () -> Boolean
 ) : LifecycleObserver {
     private var isRegistered = true
@@ -40,6 +40,14 @@ class PagedListWrapper<T>(
     init {
         dispatcher.register(this)
         lifecycle.addObserver(this)
+    }
+
+    fun fetchFirstPage() {
+        refresh()
+    }
+
+    fun invalidateData() {
+        invalidate()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
