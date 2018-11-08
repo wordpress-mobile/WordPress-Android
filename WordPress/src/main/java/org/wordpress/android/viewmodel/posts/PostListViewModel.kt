@@ -446,16 +446,8 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun invalidateFeaturedMediaAndPagedListData(vararg featuredImageIds: Long) {
-        val removedFeaturedImageIds = featuredImageIds.fold(mutableListOf<Long>()) { acc, id ->
-            if (featuredImageMap.containsKey(id)) {
-                acc.add(id)
-                featuredImageMap.remove(id)
-            }
-            acc
-        }
-        if (removedFeaturedImageIds.isNotEmpty()) {
-            pagedListWrapper.invalidate()
-        }
+        featuredImageIds.forEach { featuredImageMap.remove(it) }
+        pagedListWrapper.invalidate()
     }
 
     private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
@@ -478,15 +470,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun invalidateUploadStatusAndPagedListData(vararg localPostIds: Int) {
-        val removedLocalPostIds = localPostIds.fold(mutableListOf<Int>()) { acc, id ->
-            if (uploadStatusMap.containsKey(id)) {
-                acc.add(id)
-                uploadStatusMap.remove(id)
-            }
-            acc
-        }
-        if (removedLocalPostIds.isNotEmpty()) {
-            pagedListWrapper.invalidate()
-        }
+        localPostIds.forEach { uploadStatusMap.remove(it) }
+        pagedListWrapper.invalidate()
     }
 }
