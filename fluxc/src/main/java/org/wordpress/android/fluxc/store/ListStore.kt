@@ -10,17 +10,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ListAction
 import org.wordpress.android.fluxc.action.ListAction.FETCHED_LIST_ITEMS
-import org.wordpress.android.fluxc.action.ListAction.FETCH_LIST
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_CHANGED
 import org.wordpress.android.fluxc.action.ListAction.LIST_ITEMS_REMOVED
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_ALL_LISTS
 import org.wordpress.android.fluxc.action.ListAction.REMOVE_EXPIRED_LISTS
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.list.LIST_STATE_TIMEOUT
 import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
-import org.wordpress.android.fluxc.model.list.ListItemDataSource
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
@@ -29,7 +26,6 @@ import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.datastore.ListDataStoreInterface
-import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.persistence.ListItemSqlUtils
 import org.wordpress.android.fluxc.persistence.ListSqlUtils
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
@@ -58,7 +54,6 @@ class ListStore @Inject constructor(
         val actionType = action.type as? ListAction ?: return
 
         when (actionType) {
-            FETCH_LIST -> handleFetchList(action.payload as FetchListPayload)
             FETCHED_LIST_ITEMS -> handleFetchedListItems(action.payload as FetchedListItemsPayload)
             LIST_ITEMS_CHANGED -> handleListItemsChanged(action.payload as ListItemsChangedPayload)
             LIST_ITEMS_REMOVED -> handleListItemsRemoved(action.payload as ListItemsRemovedPayload)
@@ -81,10 +76,9 @@ class ListStore @Inject constructor(
         val factory = PagedListFactory(mDispatcher, dataStore, listDescriptor, lifecycle, getList, transform)
         val callback = object : BoundaryCallback<PagedListItemType<R>>() {
             override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
-                val payload = FetchListPayload(listDescriptor, true) { _, offset ->
+                handleFetchList(listDescriptor, true) { offset ->
                     dataStore.fetchList(listDescriptor, offset)
                 }
-                mDispatcher.dispatch(ListActionBuilder.newFetchListAction(payload))
                 super.onItemAtEndLoaded(itemAtEnd)
             }
         }
@@ -95,9 +89,12 @@ class ListStore @Inject constructor(
                 .build()
         val liveData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
                 .setBoundaryCallback(callback).build()
-        return PagedListWrapper(liveData) {
-            factory.invalidate()
+        val refresh = {
+            handleFetchList(listDescriptor, false) { offset ->
+                dataStore.fetchList(listDescriptor, offset)
+            }
         }
+        return PagedListWrapper(liveData, refresh, factory::invalidate)
     }
 
     private fun getListItems(listDescriptor: ListDescriptor): List<Long> {
@@ -107,7 +104,7 @@ class ListStore @Inject constructor(
         } else emptyList()
     }
 
-    fun getListState(listDescriptor: ListDescriptor): ListStateWrapper {
+    private fun getListState(listDescriptor: ListDescriptor): ListStateWrapper {
         listSqlUtils.getList(listDescriptor)?.let {
             // TODO: improve!
             val isEmpty = listItemSqlUtils.getListItems(it.id).isEmpty()
@@ -116,36 +113,30 @@ class ListStore @Inject constructor(
         return ListStateWrapper(ListState.defaultState, isEmpty = false)
     }
 
-    /**
-     * Handles the [ListAction.FETCH_LIST] action.
-     *
-     * This acts as an intermediary action. It will first check the current state and ignore unnecessary actions.
-     * It will then update the state and emit the change. Afterwards, [FetchListPayload.fetchList] will be used to do
-     * the actual fetching. [ListAction.FETCHED_LIST_ITEMS] action should be used to let the [ListStore] know the
-     * results of the fetch.
-     *
-     * See [handleFetchedListItems] for what happens after items are fetched.
-     */
-    private fun handleFetchList(payload: FetchListPayload) {
-        listSqlUtils.getList(payload.listDescriptor)?.let { listModel ->
+    private fun handleFetchList(
+        listDescriptor: ListDescriptor,
+        loadMore: Boolean,
+        fetchList: (Int) -> Unit
+    ) {
+        listSqlUtils.getList(listDescriptor)?.let { listModel ->
             val currentState = getListState(listModel)
-            if (!payload.loadMore && currentState.isFetchingFirstPage()) {
+            if (!loadMore && currentState.isFetchingFirstPage()) {
                 // already fetching the first page
                 return
-            } else if (payload.loadMore && !currentState.canLoadMore()) {
+            } else if (loadMore && !currentState.canLoadMore()) {
                 // we can only load more if there is more data to be loaded
                 return
             }
         }
-        val newState = if (payload.loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
-        listSqlUtils.insertOrUpdateList(payload.listDescriptor, newState)
-        handleListStateChange(payload.listDescriptor)
+        val newState = if (loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
+        listSqlUtils.insertOrUpdateList(listDescriptor, newState)
+        handleListStateChange(listDescriptor)
 
-        val listModel = requireNotNull(listSqlUtils.getList(payload.listDescriptor)) {
+        val listModel = requireNotNull(listSqlUtils.getList(listDescriptor)) {
             "The `ListModel` can never be `null` here since either a new list is inserted or existing one updated"
         }
-        val offset = if (payload.loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
-        payload.fetchList(payload.listDescriptor, offset)
+        val offset = if (loadMore) listItemSqlUtils.getListItems(listModel.id).size else 0
+        fetchList(offset)
     }
 
     private fun handleListStateChange(listDescriptor: ListDescriptor, error: ListError? = null) {
@@ -328,21 +319,6 @@ class ListStore @Inject constructor(
      * @property remoteItemIds Remote item ids to be removed from the lists matching the [ListDescriptorTypeIdentifier].
      */
     class ListItemsRemovedPayload(val type: ListDescriptorTypeIdentifier, val remoteItemIds: List<Long>)
-
-    /**
-     * This is the payload for [ListAction.FETCH_LIST].
-     *
-     * @property listDescriptor List to be fetched
-     * @property loadMore Indicates whether the first page should be fetched or more data should be loaded.
-     * @property fetchList A function that tells ListStore how to fetch a list given the [ListDescriptor] and the offset
-     * calculated by [ListStore]. Please check [ListItemDataSource.fetchList] as that's how the fetch function is
-     * initially passed to [ListStore] in [getListManager].
-     */
-    class FetchListPayload(
-        val listDescriptor: ListDescriptor,
-        val loadMore: Boolean = false,
-        val fetchList: (ListDescriptor, Int) -> Unit
-    ) : Payload<BaseNetworkError>()
 
     /**
      * This is the payload for [ListAction.FETCHED_LIST_ITEMS].
