@@ -3,41 +3,69 @@ package org.wordpress.android.ui.sitecreation.segments
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentViewHolder
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsHeaderViewHolder
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsItemViewHolder
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsProgressViewHolder
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.util.image.ImageManager
 
+private const val headerViewType: Int = 1
+private const val progressViewType: Int = 2
+private const val segmentViewType: Int = 3
+
 class NewSiteCreationSegmentsAdapter(
-    private val onItemTapped: (VerticalSegmentModel) -> Unit = { },
     private val imageManager: ImageManager
 ) : Adapter<NewSiteCreationSegmentViewHolder>() {
-    private val items = mutableListOf<VerticalSegmentModel>()
+    private val items = mutableListOf<ItemUiState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSiteCreationSegmentViewHolder {
-        return SegmentViewHolder(parent, imageManager, onItemTapped)
+        return when (viewType) {
+            headerViewType -> SegmentsHeaderViewHolder(parent)
+            progressViewType -> SegmentsProgressViewHolder(parent)
+            segmentViewType -> SegmentsItemViewHolder(parent, imageManager)
+            else -> throw NotImplementedError("Unknown ViewType")
+        }
     }
 
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: NewSiteCreationSegmentViewHolder, position: Int) {
-        holder.onBind(items[position], isLast = position == items.size - 1)
+        holder.onBind(items[position])
     }
 
-    fun update(newItems: List<VerticalSegmentModel>) {
+    fun update(newItems: List<ItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(SegmentsDiffUtils(items.toList(), newItems))
         items.clear()
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position]) {
+            is HeaderUiState -> headerViewType
+            is ProgressUiState -> progressViewType
+            is SegmentUiState -> segmentViewType
+        }
+    }
+
     private class SegmentsDiffUtils(
-        val oldItems: List<VerticalSegmentModel>,
-        val newItems: List<VerticalSegmentModel>
+        val oldItems: List<ItemUiState>,
+        val newItems: List<ItemUiState>
     ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]
             val newItem = newItems[newItemPosition]
-            return oldItem.segmentId == newItem.segmentId
+            if (oldItem::class != newItem::class) {
+                return false
+            }
+            return when (oldItem) {
+                is HeaderUiState -> true // it's an object
+                is ProgressUiState -> true // it's an object
+                is SegmentUiState -> oldItem.segmentId == (newItem as SegmentUiState).segmentId
+            }
         }
 
         override fun getOldListSize(): Int = oldItems.size

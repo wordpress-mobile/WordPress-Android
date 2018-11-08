@@ -9,6 +9,7 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
@@ -16,9 +17,11 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
-import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import javax.inject.Inject
 import javax.inject.Named
@@ -49,9 +52,19 @@ class NewSiteCreationSegmentsViewModel
         fetchCategories()
     }
 
+    init {
+        dispatcher.register(fetchSegmentsUseCase)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        fetchCategoriesJob.cancel() // cancels all coroutines with the default coroutineContext
+        dispatcher.unregister(fetchSegmentsUseCase)
+    }
+
     private fun fetchCategories() {
         if (!listState.shouldFetch(loadMore = false)) {
-            if(BuildConfig.DEBUG){
+            if (BuildConfig.DEBUG) {
                 throw IllegalStateException("Fetch already in progress.")
             } else {
                 return
@@ -84,34 +97,79 @@ class NewSiteCreationSegmentsViewModel
         // TODO send result to the SCMainVM
     }
 
-    init {
-        dispatcher.register(fetchSegmentsUseCase)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        fetchCategoriesJob.cancel() // cancels all coroutines with the default coroutineContext
-        dispatcher.unregister(fetchSegmentsUseCase)
-    }
-
     // TODO analytics
 
     private fun updateUIState(state: ListState<VerticalSegmentModel>) {
         listState = state
         _uiState.value = UiState(
-                showProgress = state is Loading,
                 showError = state is Error,
-                showList = state is Success,
-                showHeader = state is Loading || state is Success,
-                data = state.data
+                showList = state !is Error,
+                items = createUiStatesForItems(state is Loading, state.data)
         )
     }
 
+    private fun createUiStatesForItems(
+        showProgress: Boolean,
+        segments: List<VerticalSegmentModel>
+    ): List<ItemUiState> {
+        val items: ArrayList<ItemUiState> = ArrayList()
+        addHeader(items)
+        if (showProgress) {
+            addProgress(items)
+        }
+        addSegments(segments, items)
+        return items
+    }
+
+    private fun addHeader(items: ArrayList<ItemUiState>) {
+        items.add(HeaderUiState)
+    }
+
+    private fun addProgress(items: ArrayList<ItemUiState>) {
+        items.add(ProgressUiState)
+    }
+
+    private fun addSegments(
+        segments: List<VerticalSegmentModel>,
+        items: ArrayList<ItemUiState>
+    ) {
+        val segmentsCount = segments.size
+        segments.forEachIndexed { index, model ->
+            val isLastItem = segmentsCount - 1 == index
+            val segment = SegmentUiState(
+                    model.segmentId,
+                    model.title,
+                    model.subtitle,
+                    model.iconUrl,
+                    showDivider = !isLastItem
+            )
+            segment.onItemTapped = { onSegmentSelected(model.segmentId) }
+            items.add(segment)
+        }
+    }
+
     data class UiState(
-        val showProgress: Boolean,
         val showError: Boolean,
         val showList: Boolean,
-        val showHeader: Boolean,
-        val data: List<VerticalSegmentModel>
+        val items: List<ItemUiState>
     )
+
+    sealed class ItemUiState {
+        object HeaderUiState : ItemUiState() {
+            val titleResId: Int = R.string.site_creation_segments_title
+            val subtitleResId: Int = R.string.site_creation_segments_subtitle
+        }
+
+        object ProgressUiState : ItemUiState()
+
+        data class SegmentUiState(
+            val segmentId: Long,
+            val title: String,
+            val subtitle: String,
+            val iconUrl: String,
+            val showDivider: Boolean
+        ) : ItemUiState() {
+            lateinit var onItemTapped: (Long) -> Unit
+        }
+    }
 }

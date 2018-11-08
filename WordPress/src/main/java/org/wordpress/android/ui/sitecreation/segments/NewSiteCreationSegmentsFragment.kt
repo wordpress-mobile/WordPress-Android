@@ -13,9 +13,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -26,9 +26,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
-    private lateinit var progressLayout: ViewGroup
     private lateinit var errorLayout: ViewGroup
-    private lateinit var headerLayout: ViewGroup
 
     @Inject protected lateinit var imageManager: ImageManager
     @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -41,8 +39,6 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // important for accessibility - talkback
         activity!!.setTitle(R.string.new_site_creation_segments_title)
-        headerLayout = rootView.findViewById(R.id.header_layout)
-        progressLayout = rootView.findViewById(R.id.progress_layout)
         errorLayout = rootView.findViewById(R.id.error_layout)
         initRecyclerView(rootView)
         initViewModel()
@@ -58,10 +54,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initAdapter() {
-        val adapter = NewSiteCreationSegmentsAdapter(
-                onItemTapped = { segment -> viewModel.onSegmentSelected(segment.segmentId) },
-                imageManager = imageManager
-        )
+        val adapter = NewSiteCreationSegmentsAdapter(imageManager = imageManager)
         recyclerView.adapter = adapter
     }
 
@@ -71,11 +64,9 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
-                progressLayout.visibility = if (state.showProgress) View.VISIBLE else View.GONE
-                headerLayout.visibility = if (state.showHeader) View.VISIBLE else View.GONE
                 recyclerView.visibility = if (state.showList) View.VISIBLE else View.GONE
                 errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
-                updateSegments(state.data)
+                updateSegments(state.items)
             }
         })
 
@@ -110,7 +101,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
-    private fun updateSegments(segments: List<VerticalSegmentModel>) {
+    private fun updateSegments(segments: List<ItemUiState>) {
         (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments)
     }
 
