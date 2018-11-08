@@ -4,6 +4,8 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.whenever
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.experimental.Dispatchers
 import org.junit.Before
 import org.junit.Rule
@@ -17,6 +19,9 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 
@@ -27,27 +32,55 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var mFetchSegmentsUseCase: FetchSegmentsUseCase
-    private val firstModel = OnSegmentsFetched(
+    private val firstModel =
+            VerticalSegmentModel(
+                    "dummyTitle",
+                    "dummySubtitle",
+                    "http://dummy.com",
+                    123
+            )
+    private val secondModel =
+            VerticalSegmentModel(
+                    "dummyTitle",
+                    "dummySubtitle",
+                    "http://dummy.com",
+                    999
+            )
+
+    private val progressState = UiState(false, true, listOf(HeaderUiState, ProgressUiState))
+    private val errorState = UiState(true, false, emptyList())
+    private val headerAndFirstItemState = UiState(
+            false, true,
             listOf(
-                    VerticalSegmentModel(
-                            "dummyTitle",
-                            "dummySubtitle",
-                            "http://dummy.com",
-                            123
+                    HeaderUiState,
+                    SegmentUiState(
+                            firstModel.segmentId,
+                            firstModel.title,
+                            firstModel.subtitle,
+                            firstModel.iconUrl,
+                            false
                     )
             )
     )
-    private val secondDummyEvent = OnSegmentsFetched(
+    private val headerAndSecondItemState = UiState(
+            false, true,
             listOf(
-                    VerticalSegmentModel(
-                            "dummyTitle",
-                            "dummySubtitle",
-                            "http://dummy.com",
-                            999
+                    HeaderUiState,
+                    SegmentUiState(
+                            secondModel.segmentId,
+                            secondModel.title,
+                            secondModel.subtitle,
+                            secondModel.iconUrl,
+                            false
                     )
             )
     )
+
+    private val firstModelEvent = OnSegmentsFetched(listOf(firstModel))
+    private val secondModelEvent = OnSegmentsFetched(listOf(secondModel))
+    private val firstAndSecondModelEvent = OnSegmentsFetched(listOf(firstModel, secondModel))
     private val errorEvent = OnSegmentsFetched(emptyList(), FetchSegmentsError(GENERIC_ERROR, "dummyError"))
+
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     @Mock private lateinit var uiStateObserver: Observer<UiState>
@@ -66,44 +99,33 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun onStartFetchesCategories() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
-        assert(viewModel.uiState.value!!.data == firstModel.segmentList)
+        assertTrue(viewModel.uiState.value!! == headerAndFirstItemState)
     }
 
     @Test
     fun onRetryFetchesCategories() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
-        assert(viewModel.uiState.value!!.data == firstModel.segmentList)
+        assertTrue(viewModel.uiState.value!! == headerAndFirstItemState)
 
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
         viewModel.onRetryClicked()
 
-        assert(viewModel.uiState.value!!.data == secondDummyEvent.segmentList)
+        assertTrue(viewModel.uiState.value!! == headerAndSecondItemState)
     }
 
     @Test
     fun fetchCategoriesChangesStateToProgress() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModel)
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
         inOrder(uiStateObserver).apply {
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showHeader = true,
-                            showList = true,
-                            data = firstModel.segmentList
-                    )
-            )
+            verify(uiStateObserver).onChanged(progressState)
+            verify(uiStateObserver).onChanged(headerAndFirstItemState)
             verifyNoMoreInteractions()
         }
     }
@@ -114,13 +136,8 @@ class NewSiteCreationSegmentsViewModelTest {
         viewModel.start()
 
         inOrder(uiStateObserver).apply {
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(UiState(showError = true))
+            verify(uiStateObserver).onChanged(progressState)
+            verify(uiStateObserver).onChanged(errorState)
             verifyNoMoreInteractions()
         }
     }
@@ -129,35 +146,24 @@ class NewSiteCreationSegmentsViewModelTest {
     fun onSuccessfulRetryRemovesErrorState() = test {
         whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondDummyEvent)
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
         viewModel.onRetryClicked()
 
         inOrder(uiStateObserver).apply {
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showError = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showProgress = true,
-                            showHeader = true
-                    )
-            )
-            verify(uiStateObserver).onChanged(
-                    UiState(
-                            showHeader = true,
-                            showList = true,
-                            data = secondDummyEvent.segmentList
-                    )
-            )
+            verify(uiStateObserver).onChanged(progressState)
+            verify(uiStateObserver).onChanged(errorState)
+            verify(uiStateObserver).onChanged(progressState)
+            verify(uiStateObserver).onChanged(headerAndSecondItemState)
             verifyNoMoreInteractions()
         }
+    }
+
+    @Test
+    fun verifyLastItemDoesntShowDivider() = test {
+        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstAndSecondModelEvent)
+        viewModel.start()
+
+        val items = viewModel.uiState.value!!.items
+        assertFalse((items[items.size-1] as SegmentUiState).showDivider)
     }
 }

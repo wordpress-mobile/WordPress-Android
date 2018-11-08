@@ -103,8 +103,11 @@ class NewSiteCreationSegmentsViewModel
         listState = state
         _uiState.value = UiState(
                 showError = state is Error,
-                showList = state !is Error,
-                items = createUiStatesForItems(state is Loading, state.data)
+                showContent = state !is Error,
+                items = if (state is Error)
+                    emptyList()
+                else
+                    createUiStatesForItems(showProgress = state is Loading, segments = state.data)
         )
     }
 
@@ -150,7 +153,7 @@ class NewSiteCreationSegmentsViewModel
 
     data class UiState(
         val showError: Boolean,
-        val showList: Boolean,
+        val showContent: Boolean,
         val items: List<ItemUiState>
     )
 

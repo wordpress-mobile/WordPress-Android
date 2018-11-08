@@ -64,7 +64,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
-                recyclerView.visibility = if (state.showList) View.VISIBLE else View.GONE
+                recyclerView.visibility = if (state.showContent) View.VISIBLE else View.GONE
                 errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
                 updateSegments(state.items)
             }

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.VerticalStore
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.test
 
@@ -20,12 +21,13 @@ class FetchSegmentsUseCaseTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var store: VerticalStore
     private lateinit var useCase: FetchSegmentsUseCase
     private val event = OnSegmentsFetched(emptyList(), null)
 
     @Before
     fun setUp() {
-        useCase = FetchSegmentsUseCase(dispatcher)
+        useCase = FetchSegmentsUseCase(dispatcher, store)
     }
 
     @Test
