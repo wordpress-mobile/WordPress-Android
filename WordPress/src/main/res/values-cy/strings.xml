@@ -427,15 +427,11 @@ Language: cy_GB
     <string name="app_notifications">Hysbysiadau apiau</string>
     <string name="stats_insights_latest_post_trend">Mae wedi bod yn %1$s ers cyhoeddi %2$s. Dyma sut mae\'r cofnod wedi performio hyd yma…</string>
     <string name="stats_insights_latest_post_summary">Crynodeb o\'r Cofnod Diweddaraf</string>
-    <string name="days_ago">%d diwrnod yn ôl</string>
-    <string name="yesterday">Ddoe</string>
     <string name="connectionbar_no_connection">Dim cysylltiad</string>
-    <string name="page_trashed">Anfonwyd y dudalen i\'r Sbwriel</string>
     <string name="post_deleted">Dilëwyd y dudalen</string>
     <string name="post_trashed">Anfonwyd y cofnod i\'r Sbwriel</string>
     <string name="stats_no_activity_this_period">Dim gweithgaredd yn ystod y cyfnod hwn</string>
     <string name="button_back">Nôl</string>
-    <string name="page_deleted">Dilëwyd y dudalen</string>
     <string name="button_stats">Ystadegau</string>
     <string name="button_trash">Sbwriel</string>
     <string name="button_edit">Golygu</string>
@@ -572,7 +568,6 @@ Language: cy_GB
     <string name="reader_empty_posts_in_tag">Dim cofnod gyda\'r tag hwn</string>
     <string name="posts_empty_list">Dim cofnod eto. Beth am greu un?</string>
     <string name="comment_reply_to_user">Ateb %s</string>
-    <string name="pages_empty_list">Dim tudalen eto. Beth am greu un?</string>
     <string name="comment_trashed">Gosod y sylw yn y sbwriel</string>
     <string name="comment">Sylw</string>
     <string name="mnu_comment_liked">Hoffi</string>
@@ -781,7 +776,6 @@ Language: cy_GB
     <string name="immediately">Ar unwaith</string>
     <string name="quickpress_add_alert_title">Gosod enw\'r llwybr byr</string>
     <string name="settings">Gosodiadau</string>
-    <string name="today">Heddiw</string>
     <string name="quickpress_window_title">Dewiswch flog ar gyfer llwybr byr QuickPress</string>
     <string name="quickpress_add_error">Nid yw enw\'r llwybr byr yn gallu bod yn wag</string>
     <string name="categories">Categorïau</string>

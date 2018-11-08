@@ -26,13 +26,19 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
+import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -47,11 +53,12 @@ import org.wordpress.android.viewmodel.pages.PagesViewModel
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class PagesFragment : Fragment() {
+class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PagesViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
+    @Inject lateinit var postStore: PostStore
 
     private var restorePreviousSearch = false
 
@@ -226,7 +233,16 @@ class PagesFragment : Fragment() {
         })
 
         viewModel.editPage.observe(this, Observer { page ->
-            page?.let { ActivityLauncher.editPageForResult(this, page) }
+            page?.let {
+                val post = postStore.getPostByLocalPostId(page.pageId)
+                val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
+                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+                    PostUtils.showGutenbergCompatibilityWarningDialog(
+                            getActivity(), fragmentManager, post, viewModel.site)
+                } else {
+                    ActivityLauncher.editPageForResult(this, page)
+                }
+            }
         })
 
         viewModel.previewPage.observe(this, Observer { page ->
@@ -272,6 +288,67 @@ class PagesFragment : Fragment() {
 
     fun onPageDeleteConfirmed(remoteId: Long) {
         viewModel.onDeleteConfirmed(remoteId)
+    }
+
+    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePageId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
+        // track event
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, viewModel.site
+        )
+        ActivityLauncher.editPostOrPageForResult(activity, viewModel.site, post)
+    }
+
+    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePageId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, viewModel.site
+            )
+        }
+    }
+
+    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePageId: Long) {
+        // here launch the web the Gutenberg Learn more
+        val site = viewModel.site
+        val urlToUse =
+                if (site.isWPCom || site.isJetpackConnected) {
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
+                } else {
+                    getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
+                }
+        WPWebViewActivity.openURL(activity, urlToUse)
+
+        // guarding against null post as we only want to track here
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
+        if (post != null) {
+            // track event
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED,
+                    post, viewModel.site
+            )
+        }
+    }
+
+    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
+        AppPrefs.setGutenbergWarningDialogDisabled(checked)
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, viewModel.site)
+        // guarding against null post as we only want to track here
+        if (post != null) {
+            // track event
+            val trackValue =
+                    if (checked) {
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
+                    } else {
+                        AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
+                    }
+            PostUtils.trackGutenbergDialogEvent(
+                    trackValue,
+                    post, viewModel.site
+            )
+        }
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
