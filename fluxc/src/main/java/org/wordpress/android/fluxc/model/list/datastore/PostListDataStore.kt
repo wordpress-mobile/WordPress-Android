@@ -14,7 +14,7 @@ class PostListDataStore(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val site: SiteModel?,
-    private val getLocalItemIdsToHide: (ListDescriptor) -> List<Int>
+    private val performGetItemIdsToHide: (ListDescriptor) -> List<Pair<Int?, Long?>>
 ) : ListDataStoreInterface<PostModel> {
     override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
         site?.let {
@@ -34,7 +34,7 @@ class PostListDataStore(
 
     override fun localItems(listDescriptor: ListDescriptor): List<PostModel> {
         if (listDescriptor is PostListDescriptor) {
-            val localPostIdsToHide = getLocalItemIdsToHide(listDescriptor)
+            val localPostIdsToHide = getItemIdsToHide(listDescriptor).mapNotNull { it.first }
             return postStore.getLocalPostsForDescriptor(listDescriptor).filter { !localPostIdsToHide.contains(it.id) }
         }
         return emptyList()
@@ -45,5 +45,9 @@ class PostListDataStore(
             return postStore.getPostByRemotePostId(remoteItemId, site)
         }
         return null
+    }
+
+    override fun getItemIdsToHide(listDescriptor: ListDescriptor): List<Pair<Int?, Long?>> {
+        return performGetItemIdsToHide(listDescriptor)
     }
 }
