@@ -60,7 +60,7 @@ class PagedListWrapper<T>(
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-@Suppress("unused")
+    @Suppress("unused")
     fun onListStateChanged(event: OnListStateChanged) {
         if (event.listDescriptor != listDescriptor) {
             return
@@ -76,7 +76,7 @@ class PagedListWrapper<T>(
         if (!event.listDescriptors.contains(listDescriptor)) {
             return
         }
-        invalidate()
+        invalidateData()
         postIsEmpty()
     }
 
@@ -86,7 +86,7 @@ class PagedListWrapper<T>(
         if (listDescriptor.typeIdentifier != event.type) {
             return
         }
-        invalidate()
+        invalidateData()
         postIsEmpty()
     }
 

@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.model.list.ListModel
 import org.wordpress.android.fluxc.model.list.ListState
+import org.wordpress.android.fluxc.model.list.ListState.FETCHED
 import org.wordpress.android.fluxc.model.list.PagedListFactory
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
@@ -72,8 +73,8 @@ class ListStore @Inject constructor(
         transform: (T) -> R
     ): PagedListWrapper<R> {
         val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
-        val getListState = { descriptor: ListDescriptor -> getListState(descriptor) }
-        val factory = PagedListFactory(dataStore, listDescriptor, getList, getListState, transform)
+        val isListFullyFetched = { descriptor: ListDescriptor -> getListState(descriptor) == FETCHED }
+        val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
         val callback = object : BoundaryCallback<PagedListItemType<R>>() {
             override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
                 handleFetchList(listDescriptor, true) { offset ->
