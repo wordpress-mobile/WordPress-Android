@@ -1110,10 +1110,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean handleBackPressed() {
         if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
-            Fragment contentFragment = mFullScreenDialogFragment.getContent();
-            if (contentFragment instanceof HistoryDetailContainerFragment) {
-                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
-            }
             mFullScreenDialogFragment.dismiss();
             return false;
         }

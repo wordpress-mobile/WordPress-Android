@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 
 class HistoryActivity : AppCompatActivity() {
@@ -26,7 +28,13 @@ class HistoryActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
         finish()
         return true
+    }
+
+    override fun onBackPressed() {
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED)
+        super.onBackPressed()
     }
 }
