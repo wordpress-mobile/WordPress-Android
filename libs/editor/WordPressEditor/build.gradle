@@ -73,6 +73,16 @@ dependencies {
     // React Native
     implementation "com.facebook.react:react-native:+" // From node_modules.
 
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:1.10.0'
+
+    // For WebP support, including animated WebP
+    implementation 'com.facebook.fresco:animated-webp:1.10.0'
+    implementation 'com.facebook.fresco:webpsupport:1.10.0'
+
+    // For WebP support, without animations
+    implementation 'com.facebook.fresco:webpsupport:1.10.0'
+
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
     implementation "org.jsoup:jsoup:1.10.3"
