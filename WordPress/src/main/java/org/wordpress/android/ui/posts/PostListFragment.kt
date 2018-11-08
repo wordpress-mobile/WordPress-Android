@@ -124,7 +124,7 @@ class PostListFragment : Fragment() {
             })
             // TODO: We need to use a DialogFragment!
             viewModel.dialogAction.observe(this, Observer {
-                it?.show(nonNullActivity)
+                it?.show(nonNullActivity, fragmentManager)
             })
         }
         postListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -318,6 +318,18 @@ class PostListFragment : Fragment() {
             }
             it.visibility = View.VISIBLE
         }
+    }
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        viewModel.onPositiveClickedForBasicDialog(instanceTag)
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        viewModel.onNegativeClickedForBasicDialog(instanceTag)
+    }
+
+    fun onDismissByOutsideTouch(instanceTag: String) {
+        viewModel.onDismissByOutsideTouch(instanceTag)
     }
 
     companion object {

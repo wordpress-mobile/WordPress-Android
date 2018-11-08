@@ -1,27 +1,26 @@
 package org.wordpress.android.viewmodel.helpers
 
-import android.app.AlertDialog
 import android.content.Context
 import android.support.annotation.StringRes
-import android.view.ContextThemeWrapper
-import org.wordpress.android.R
+import android.support.v4.app.FragmentManager
+import org.wordpress.android.ui.posts.BasicFragmentDialog
 
 class DialogHolder(
+    val tag: String,
     @StringRes val titleRes: Int,
     @StringRes val messageRes: Int,
     @StringRes val positiveButtonTextRes: Int,
-    @StringRes val negativeButtonTextRes: Int,
-    val positiveButtonAction: () -> Unit,
-    val cancelable: Boolean = true
+    @StringRes val negativeButtonTextRes: Int
 ) {
-    fun show(context: Context) {
-        val builder = AlertDialog.Builder(ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert))
-        builder.setTitle(titleRes)
-                .setMessage(messageRes)
-                .setPositiveButton(positiveButtonTextRes) { _, _ -> positiveButtonAction() }
-                .setNegativeButton(negativeButtonTextRes, null)
-                .setCancelable(cancelable)
-                .create()
-                .show()
+    fun show(context: Context, fragmentManager: FragmentManager?) {
+        if (fragmentManager == null) return
+        val dialog = BasicFragmentDialog()
+        dialog.initialize(tag,
+                context.getString(titleRes),
+                context.getString(messageRes),
+                context.getString(positiveButtonTextRes),
+                context.getString(negativeButtonTextRes),
+                null)
+        dialog.show(fragmentManager, tag)
     }
 }
