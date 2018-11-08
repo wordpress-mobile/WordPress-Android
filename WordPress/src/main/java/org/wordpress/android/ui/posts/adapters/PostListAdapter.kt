@@ -143,7 +143,7 @@ class PostListAdapter(
             holder.excerpt.visibility = View.GONE
         }
 
-        showFeaturedImage(postData.shouldShowFeaturedImage, postData.featuredImageUrl, holder.featuredImage)
+        showFeaturedImage(postData.featuredImageUrl, holder.featuredImage)
 
         // local drafts say "delete" instead of "trash"
         if (postData.isLocalDraft) {
@@ -185,23 +185,24 @@ class PostListAdapter(
         }
     }
 
-    private fun showFeaturedImage(shouldShowFeaturedImage: Boolean, imageUrl: String?, imgFeatured: ImageView) {
-        imgFeatured.visibility = if (shouldShowFeaturedImage) View.VISIBLE else View.GONE
-        if (imageUrl == null || !shouldShowFeaturedImage) {
+    private fun showFeaturedImage(imageUrl: String?, imgFeatured: ImageView) {
+        if (imageUrl == null) {
+            imgFeatured.visibility = View.GONE
             imageManager.cancelRequestAndClearImageView(imgFeatured)
         } else if (imageUrl.startsWith("http")) {
             val photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, photonWidth, photonHeight, !isPhotonCapable
             )
+            imgFeatured.visibility = View.VISIBLE
             imageManager.load(imgFeatured, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
         } else {
             val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     imgFeatured.context, imageUrl, photonWidth
             )
             if (bmp != null) {
+                imgFeatured.visibility = View.VISIBLE
                 imageManager.load(imgFeatured, bmp)
             } else {
-                // Override the `shouldShowFeaturedImage` since we couldn't load the image
                 imgFeatured.visibility = View.GONE
                 imageManager.cancelRequestAndClearImageView(imgFeatured)
             }
