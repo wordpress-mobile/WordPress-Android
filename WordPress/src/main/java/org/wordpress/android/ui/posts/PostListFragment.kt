@@ -186,6 +186,12 @@ class PostListFragment : Fragment() {
                     holder.buttonAction()
                 }
             }
+            snackbar.addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    holder.onDismissAction()
+                    super.onDismissed(transientBottomBar, event)
+                }
+            })
             snackbar.show()
         }
     }
@@ -283,7 +289,7 @@ class PostListFragment : Fragment() {
             if (!NetworkUtils.isNetworkAvailable(nonNullActivity)) {
                 swipeRefreshLayout?.isRefreshing = false
             } else {
-                viewModel.refreshList()
+                viewModel.fetchFirstPage()
             }
         }
         return view
@@ -328,8 +334,8 @@ class PostListFragment : Fragment() {
         viewModel.onNegativeClickedForBasicDialog(instanceTag)
     }
 
-    fun onDismissByOutsideTouch(instanceTag: String) {
-        viewModel.onDismissByOutsideTouch(instanceTag)
+    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
+        viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
     }
 
     companion object {

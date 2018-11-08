@@ -156,6 +156,6 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
 
     @Override
     public void onDismissByOutsideTouch(@NotNull String instanceTag) {
-        mPostList.onDismissByOutsideTouch(instanceTag);
+        mPostList.onDismissByOutsideTouchForBasicDialog(instanceTag);
     }
 }

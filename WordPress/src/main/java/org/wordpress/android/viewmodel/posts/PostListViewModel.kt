@@ -93,8 +93,9 @@ class PostListViewModel @Inject constructor(
     private lateinit var site: SiteModel
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
-    private var localPostIdToTrash: Int? = null
-    private var localPostIdToPublish: Int? = null
+    private var postIdToTrash: Pair<Int, Long>? = null
+    private var localPostIdForPublishDialog: Int? = null
+    private var localPostIdForTrashDialog: Int? = null
 
     private val _userAction = SingleLiveEvent<PostListUserAction>()
     val userAction: LiveData<PostListUserAction> = _userAction
@@ -115,11 +116,14 @@ class PostListViewModel @Inject constructor(
         val listDescriptor = requireNotNull(listDescriptor) {
             "ListDescriptor needs to be initialized before this is observed!"
         }
-        listStore.getList(
-                listDescriptor,
-                PostListDataStore(dispatcher, postStore, site),
-                lifecycle,
-                transform = { post -> createPostAdapterItem(post) })
+        val dataStore = PostListDataStore(dispatcher, postStore, site) { descriptor ->
+            if (descriptor is PostListDescriptor && !descriptor.statusList.contains(PostStatus.TRASHED)) {
+                postIdToTrash?.let { listOf(it) } ?: emptyList()
+            } else emptyList()
+        }
+        listStore.getList(listDescriptor, dataStore, lifecycle) { post ->
+            createPostAdapterItem(post)
+        }
     }
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
@@ -127,7 +131,7 @@ class PostListViewModel @Inject constructor(
     val pagedListData: LiveData<PagedList<PagedListItemType<PostAdapterItem>>> by lazy {
         pagedListWrapper.data
     }
-    val emptyViewState: MediatorLiveData<PostListEmptyViewState> by lazy {
+    val emptyViewState: LiveData<PostListEmptyViewState> by lazy {
         val result = MediatorLiveData<PostListEmptyViewState>()
         val update = {
             val error = pagedListWrapper.listError.value
@@ -173,9 +177,9 @@ class PostListViewModel @Inject constructor(
         EventBus.getDefault().register(this)
         dispatcher.register(this)
 
-        refreshList()
         isStarted = true
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
+        fetchFirstPage()
     }
 
     override fun onCleared() {
@@ -185,8 +189,8 @@ class PostListViewModel @Inject constructor(
         super.onCleared()
     }
 
-    fun refreshList() {
-        pagedListWrapper.refresh()
+    fun fetchFirstPage() {
+        pagedListWrapper.fetchFirstPage()
     }
 
     fun handleEditPostResult(data: Intent?) {
@@ -206,21 +210,21 @@ class PostListViewModel @Inject constructor(
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdToTrash?.let { trashPost(it) }
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdToPublish?.let { publishPost(it) }
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let { trashPost(it) }
+            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let { publishPost(it) }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdToTrash = null
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdToPublish = null
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
+            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
 
-    fun onDismissByOutsideTouch(instanceTag: String) {
+    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         // Cancel and outside touch dismiss works the same way
         onNegativeClickedForBasicDialog(instanceTag)
     }
@@ -242,7 +246,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun showTrashConfirmationDialog(post: PostModel) {
-        if (localPostIdToTrash != null) {
+        if (postIdToTrash != null) {
             // We can only handle one trash action at once due to be able to undo
             return
         }
@@ -260,12 +264,12 @@ class PostListViewModel @Inject constructor(
                 positiveButtonTextRes = R.string.delete,
                 negativeButtonTextRes = R.string.cancel
         )
-        localPostIdToTrash = post.id
+        localPostIdForTrashDialog = post.id
         _dialogAction.postValue(dialogHolder)
     }
 
     private fun showPublishConfirmationDialog(post: PostModel) {
-        if (localPostIdToPublish != null) {
+        if (localPostIdForPublishDialog != null) {
             // We can only handle one publish dialog at once
             return
         }
@@ -276,7 +280,7 @@ class PostListViewModel @Inject constructor(
                 positiveButtonTextRes = R.string.dialog_confirm_publish_yes,
                 negativeButtonTextRes = R.string.cancel
         )
-        localPostIdToPublish = post.id
+        localPostIdForPublishDialog = post.id
         _dialogAction.postValue(dialogHolder)
     }
 
@@ -285,7 +289,7 @@ class PostListViewModel @Inject constructor(
         if (post != null) {
             _postUploadAction.postValue(PublishPost(dispatcher, site, post))
         }
-        localPostIdToPublish = null
+        localPostIdForPublishDialog = null
     }
 
     private fun editPost(site: SiteModel, post: PostModel) {
@@ -307,26 +311,32 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun trashPost(localPostId: Int) {
-        val post = postStore.getPostByLocalPostId(localPostId)
-        if (post == null) {
-            // Post doesn't exist, nothing else to do
-            localPostIdToTrash = null
-            return
+        // If post doesn't exist, nothing else to do
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        postIdToTrash = Pair(post.id, post.remotePostId)
+        // Refresh the list so we can immediately hide the post
+        pagedListWrapper.invalidateData()
+        val undoAction = {
+            postIdToTrash = null
+            // Refresh the list, so we can re-show the post
+            pagedListWrapper.invalidateData()
         }
-        _postUploadAction.postValue(CancelPostAndMediaUpload(post))
-        if (post.isLocalDraft) {
-            dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
-        } else {
-            dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
+        val onDismissAction = {
+            // If postIdToTrash is set to `null`, user undid the action
+            if (postIdToTrash != null) {
+                postIdToTrash = null
+                // TODO: Remove the pending draft notification
+                _postUploadAction.postValue(CancelPostAndMediaUpload(post))
+                if (post.isLocalDraft) {
+                    dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
+                } else {
+                    dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))
+                }
+            }
         }
-
-        // TODO: Undo action
-        // TODO: Remove the pending draft notification
         val messageRes = if (post.isLocalDraft) R.string.post_deleted else R.string.post_trashed
-        val snackbarHolder = SnackbarMessageHolder(messageRes)
+        val snackbarHolder = SnackbarMessageHolder(messageRes, R.string.undo, undoAction, onDismissAction)
         _snackbarAction.postValue(snackbarHolder)
-        // TODO: !!
-        localPostIdToTrash = null
     }
 
     // FluxC Events
@@ -363,7 +373,7 @@ class PostListViewModel @Inject constructor(
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
             invalidateUploadStatusAndPagedListData(event.post.id)
-            refreshList()
+            fetchFirstPage()
         }
     }
 
@@ -493,7 +503,7 @@ class PostListViewModel @Inject constructor(
 
     private fun invalidateFeaturedMediaAndPagedListData(vararg featuredImageIds: Long) {
         featuredImageIds.forEach { featuredImageMap.remove(it) }
-        pagedListWrapper.invalidate()
+        pagedListWrapper.invalidateData()
     }
 
     private fun getUploadStatus(post: PostModel): PostAdapterItemUploadStatus {
@@ -517,6 +527,6 @@ class PostListViewModel @Inject constructor(
 
     private fun invalidateUploadStatusAndPagedListData(vararg localPostIds: Int) {
         localPostIds.forEach { uploadStatusMap.remove(it) }
-        pagedListWrapper.invalidate()
+        pagedListWrapper.invalidateData()
     }
 }
