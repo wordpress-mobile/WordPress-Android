@@ -8,6 +8,7 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
@@ -49,7 +50,13 @@ class NewSiteCreationSegmentsViewModel
     }
 
     private fun fetchCategories() {
-        if (!listState.shouldFetch(loadMore = false)) throw IllegalStateException("Fetch already in progress.")
+        if (!listState.shouldFetch(loadMore = false)) {
+            if(BuildConfig.DEBUG){
+                throw IllegalStateException("Fetch already in progress.")
+            } else {
+                return
+            }
+        }
         launch {
             withContext(MAIN) {
                 updateUIState(ListState.Loading(listState))
