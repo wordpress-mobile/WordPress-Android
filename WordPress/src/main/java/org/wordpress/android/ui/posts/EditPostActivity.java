@@ -1606,21 +1606,6 @@ public class EditPostActivity extends AppCompatActivity implements
         mRevision = revision;
 
         ActivityLauncher.viewRevisionDetailsForResult(this, mRevision, revisions);
-
-//        Bundle bundle = HistoryDetailContainerFragment.newBundle(mRevision, revisions);
-
-//        mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
-//                .setTitle(R.string.history_detail_title)
-//                .setSubtitle(revision.getTimeSpan())
-//                .setToolbarColor(R.color.status_bar_tint)
-//                .setAction(R.string.history_load_dialog_button_positive)
-//                .setOnConfirmListener(EditPostActivity.this)
-//                .setOnDismissListener(EditPostActivity.this)
-//                .setContent(HistoryDetailContainerFragment.class, bundle)
-//                .setHideActivityBar(true)
-//                .build();
-//
-//        mFullScreenDialogFragment.show(getSupportFragmentManager(), FullScreenDialogFragment.TAG);
     }
 
     @Override
@@ -2825,7 +2810,6 @@ public class EditPostActivity extends AppCompatActivity implements
                                 loadRevision();
                             }
                         }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
-
                     }
                     break;
             }

@@ -2,13 +2,9 @@ package org.wordpress.android.ui.history
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.history.HistoryListItem.Revision
-import javax.inject.Inject
 
 class HistoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,5 +29,4 @@ class HistoryActivity : AppCompatActivity() {
         finish()
         return true
     }
-
 }

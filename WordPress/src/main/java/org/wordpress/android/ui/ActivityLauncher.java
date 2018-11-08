@@ -417,7 +417,8 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    public static void viewRevisionDetailsForResult(Activity activity, Revision revision, ArrayList<Revision> revisions) {
+    public static void viewRevisionDetailsForResult(Activity activity, Revision revision,
+                                                    ArrayList<Revision> revisions) {
         Intent intent = new Intent(activity, HistoryActivity.class);
         intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
         intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);

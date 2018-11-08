@@ -29,7 +29,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -63,13 +62,6 @@ public class HistoryDetailContainerFragment extends Fragment {
         return fragment;
     }
 
-//    public static Bundle newBundle(Revision revision, ArrayList<Revision> revisions) {
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable(EXTRA_REVISION, revision);
-//        bundle.putParcelableArrayList(EXTRA_REVISIONS, revisions);
-//        return bundle;
-//    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_container_fragment, container, false);
@@ -95,25 +87,16 @@ public class HistoryDetailContainerFragment extends Fragment {
 
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.revision_load) {
-
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);
 
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         } else if (item.getItemId() == R.id.revision_html_preview) {
-
+            // TODO implement
         }
-
-
-        ToastUtils.showToast(getContext(), "Selected!");
         return super.onOptionsItemSelected(item);
     }
-
-    //    @Override
-//    public void onViewCreated(final FullScreenDialogController controller) {
-//        mDialogController = controller;
-//    }
 
     @Override
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
@@ -153,22 +136,6 @@ public class HistoryDetailContainerFragment extends Fragment {
             resetOnPageChangeListener();
         }
     }
-
-//    @Override
-//    public boolean onConfirmClicked(FullScreenDialogController controller) {
-//        AnalyticsTracker.track(Stat.REVISIONS_REVISION_LOADED);
-//        Bundle result = new Bundle();
-//        result.putParcelable(KEY_REVISION, mRevisions.get(mPosition));
-//        controller.confirm(result);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onDismissClicked(FullScreenDialogController controller) {
-//        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
-//        controller.dismiss();
-//        return true;
-//    }
 
     private void refreshRevisionDetails() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
