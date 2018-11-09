@@ -154,7 +154,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                 VerticalsListItemUiState()
 
         data class VerticalsModelUiState(val id: String, val title: String) : VerticalsListItemUiState()
-        data class VerticalsNewModelUiState(val title: String, val subtitleResId: Int) :
+        data class VerticalsUnknownVerticalUiState(val title: String, val subtitleResId: Int) :
                 VerticalsListItemUiState()
     }
 }
