@@ -175,6 +175,14 @@ class PostListFragment : Fragment(), GutenbergWarningDialogClickInterface {
             is PostListUserAction.ViewPost -> {
                 ActivityLauncher.browsePostOrPage(nonNullActivity, action.site, action.post)
             }
+            is PostListUserAction.ShowGutenbergWarningDialog -> {
+                PostUtils.showGutenbergCompatibilityWarningDialog(
+                        nonNullActivity,
+                        fragmentManager,
+                        action.post,
+                        action.site
+                )
+            }
         }
     }
 

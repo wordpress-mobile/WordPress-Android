@@ -45,6 +45,7 @@ import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
 import org.wordpress.android.ui.posts.PostListUserAction
+import org.wordpress.android.ui.posts.PostListUserAction.ShowGutenbergWarningDialog
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -299,7 +300,15 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
-        // track event
+        // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
+        if (PostUtils.contentContainsGutenbergBlocks(post.content) && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+            _userAction.postValue(ShowGutenbergWarningDialog(site, post))
+        } else {
+            editPost(site, post)
+        }
+    }
+
+    private fun editPost(site: SiteModel, post: PostModel) {
         val properties = HashMap<String, Any>()
         properties["button"] = "edit"
         if (!post.isLocalDraft) {
@@ -308,10 +317,6 @@ class PostListViewModel @Inject constructor(
         properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
 
-        editPost(site, post)
-    }
-
-    private fun editPost(site: SiteModel, post: PostModel) {
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -544,10 +549,12 @@ class PostListViewModel @Inject constructor(
 
     fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
         val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
-        PostUtils.trackGutenbergDialogEvent(
-                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
-        )
-        editPost(site, post)
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
+            )
+            editPost(site, post)
+        }
     }
 
     fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {

@@ -16,4 +16,5 @@ sealed class PostListUserAction {
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListUserAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListUserAction()
+    class ShowGutenbergWarningDialog(val site: SiteModel, val post: PostModel) : PostListUserAction()
 }
