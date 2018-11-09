@@ -970,7 +970,6 @@
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
-    <string name="invalid_url_message">Check that the URL entered is valid</string>
 
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
@@ -1911,7 +1910,6 @@
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
     <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
-    <string name="change_password_invalid_message">Your password isn\'t valid</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
@@ -43,27 +42,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String error = null;
-                    CharSequence text = getEditText().getText();
-                    if (mValidationType == ValidationType.EMAIL) {
-                        error = ValidationUtils.validateEmail(text) ? null
-                                : getContext().getString(R.string.invalid_email_message);
-                    } else if (!TextUtils.isEmpty(text)) {
-                        if (mValidationType == ValidationType.URL) {
-                            error = ValidationUtils.validateUrl(text) ? null
-                                    : getContext().getString(R.string.invalid_url_message);
-                        } else if (mValidationType == ValidationType.PASSWORD) {
-                            error = ValidationUtils.validatePassword(text) ? null
-                                    : getContext().getString(R.string.change_password_invalid_message);
-                        }
-                    }
-
-                    if (error != null) {
-                        getEditText().setError(error);
-                    } else {
-                        callChangeListener(text);
-                        dialog.dismiss();
-                    }
+                    callChangeListener(getEditText().getText());
+                    dialog.dismiss();
                 }
             });
 
@@ -104,9 +84,6 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
             getEditText().setText(summary);
             getEditText().setSelection(0, summary.length());
         }
-
-        // clear previous errors
-        getEditText().setError(null);
 
         // Use "hidden" input type for passwords so characters are replaced with dots for added security.
         hideInputCharacters(mValidationType == ValidationType.PASSWORD);
