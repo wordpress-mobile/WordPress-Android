@@ -202,9 +202,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface,
-        FullScreenDialogFragment.OnConfirmListener,
-        FullScreenDialogFragment.OnDismissListener {
+        HistoryListFragment.HistoryItemClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -353,11 +351,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mFullScreenDialogFragment = (FullScreenDialogFragment)
                     getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
-
-            if (mFullScreenDialogFragment != null) {
-                mFullScreenDialogFragment.setOnConfirmListener(EditPostActivity.this);
-                mFullScreenDialogFragment.setOnDismissListener(EditPostActivity.this);
-            }
         }
 
         // Check whether to show the visual editor
@@ -1603,25 +1596,6 @@ public class EditPostActivity extends AppCompatActivity implements
         ActivityLauncher.viewRevisionDetailsForResult(this, mRevision, revisions);
     }
 
-    @Override
-    public void onConfirm(@Nullable Bundle result) {
-        mViewPager.setCurrentItem(PAGE_CONTENT);
-
-        if (result != null && result.getParcelable(KEY_REVISION) != null) {
-            mRevision = result.getParcelable(KEY_REVISION);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override public void run() {
-                    loadRevision();
-                }
-            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
-        }
-    }
-
-    @Override
-    public void onDismiss() {
-    }
-
     private void loadRevision() {
         showDialogProgress(true);
         mPostForUndo = mPost.clone();
@@ -2792,6 +2766,18 @@ public class EditPostActivity extends AppCompatActivity implements
                             addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
                         savePostAsync(null);
+                    }
+                    break;
+                case RequestCodes.REVISION_DETAILS:
+                    if (data.hasExtra(KEY_REVISION)) {
+                        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                         new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                loadRevision();
+                            }
+                        }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
             }
