@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.Category
+import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.SingleTag
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
@@ -10,6 +12,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import javax.inject.Inject
 
@@ -104,5 +108,19 @@ class InsightsMapper
             EMAIL -> response.totalEmail
         }
         return FollowersModel(total, followers)
+    }
+
+    fun map(response: TagsResponse): TagsModel {
+        return TagsModel(response.tags.map { tag ->
+            if (tag.tags.size == 1) {
+                tag.tags[0].toSingleTag(tag.views)
+            } else {
+                Category(tag.tags.map { it.toSingleTag() }, tag.views)
+            }
+        })
+    }
+
+    private fun TagResponse.toSingleTag(views: Long? = null): SingleTag {
+        return SingleTag(this.name, this.type, this.link, views)
     }
 }
