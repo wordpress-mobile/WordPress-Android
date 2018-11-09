@@ -3,8 +3,11 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
@@ -35,7 +38,7 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         super.showDialog(state);
 
         final AlertDialog dialog = (AlertDialog) getDialog();
-        Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        final Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         if (positiveButton != null) {
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -60,6 +63,35 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                     } else {
                         callChangeListener(text);
                         dialog.dismiss();
+                    }
+                }
+            });
+
+            positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.dialog_button_selector));
+
+            getEditText().addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    switch (mValidationType) {
+                        case NONE:
+                            break;
+                        case EMAIL:
+                            positiveButton.setEnabled(ValidationUtils.validateEmail(s));
+                            break;
+                        case PASSWORD:
+                            positiveButton.setEnabled(ValidationUtils.validatePassword(s));
+                            break;
+                        case URL:
+                            positiveButton.setEnabled(ValidationUtils.validateUrl(s));
+                            break;
                     }
                 }
             });
