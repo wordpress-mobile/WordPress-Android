@@ -32,7 +32,7 @@ class InsightsUseCase
     private val statsStore: StatsStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
+    private val insightsAllTimeUseCase: InsightsAllTimeUseCase,
     private val latestPostSummaryUseCase: LatestPostSummaryUseCase,
     private val todayStatsUseCase: TodayStatsUseCase
 ) {
@@ -41,7 +41,7 @@ class InsightsUseCase
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {
-            ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
+            ALL_TIME_STATS -> insightsAllTimeUseCase.loadAllTimeInsights(site, forced)
             LATEST_POST_SUMMARY -> latestPostSummaryUseCase.loadLatestPostSummary(site, forced)
             TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, forced)
             MOST_POPULAR_DAY_AND_HOUR,
