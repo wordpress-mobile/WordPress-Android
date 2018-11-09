@@ -44,9 +44,14 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
                     if (mValidationType == ValidationType.EMAIL) {
                         error = ValidationUtils.validateEmail(text) ? null
                                 : getContext().getString(R.string.invalid_email_message);
-                    } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
-                        error = ValidationUtils.validateUrl(text) ? null
-                                : getContext().getString(R.string.invalid_url_message);
+                    } else if (!TextUtils.isEmpty(text)) {
+                        if (mValidationType == ValidationType.URL) {
+                            error = ValidationUtils.validateUrl(text) ? null
+                                    : getContext().getString(R.string.invalid_url_message);
+                        } else if (mValidationType == ValidationType.PASSWORD) {
+                            error = ValidationUtils.validatePassword(text) ? null
+                                    : getContext().getString(R.string.change_password_invalid_message);
+                        }
                     }
 
                     if (error != null) {
@@ -80,6 +85,6 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
     }
 
     public enum ValidationType {
-        NONE, EMAIL, URL
+        NONE, EMAIL, PASSWORD, URL
     }
 }

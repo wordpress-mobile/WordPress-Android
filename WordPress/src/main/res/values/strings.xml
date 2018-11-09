@@ -1909,6 +1909,7 @@
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
+    <string name="change_password_invalid_message">Your password isn\'t valid</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>
