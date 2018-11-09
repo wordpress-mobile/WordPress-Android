@@ -79,6 +79,68 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         }
     }
 
+    private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
+        if (event.isError) {
+            updateUiState(query, ListState.Error(listState, event.error.message))
+        } else {
+            updateUiState(query, ListState.Success(event.verticalList))
+        }
+    }
+
+    private fun updateUiState(query: String, state: ListState<VerticalModel>) {
+        listState = state
+        _uiState.value = VerticalsUiState(
+                showError = state is Error,
+                showContent = state !is Error,
+                showSkipButton = StringUtils.isEmpty(query),
+                items = if (state is Error)
+                    emptyList()
+                else
+                    createUiStates(query, showProgress = state is Loading, data = state.data)
+        )
+    }
+
+    private fun createUiStates(
+        query: String,
+        showProgress: Boolean,
+        data: List<VerticalModel>
+    ): List<VerticalsListItemUiState> {
+        val items: ArrayList<VerticalsListItemUiState> = ArrayList()
+        if (shouldShowHeader(query)) {
+            addHeaderUiState(items)
+        }
+        addSearchInputUiState(query, showProgress, items)
+        addModelsUiState(data, items)
+        // TODO unknown vertical item
+        return items
+    }
+
+    private fun shouldShowHeader(query: String): Boolean {
+        return StringUtils.isEmpty(query)
+    }
+
+    private fun addHeaderUiState(items: ArrayList<VerticalsListItemUiState>) {
+        // TODO replace with data from the server response
+        items.add(VerticalsHeaderUiState("dummyTitle", "dummySubtitle"))
+    }
+
+    private fun addSearchInputUiState(
+        query: String,
+        showProgress: Boolean,
+        items: ArrayList<VerticalsListItemUiState>
+    ) {
+        items.add(VerticalsSearchInputUiState(showProgress, !StringUtils.isEmpty(query)))
+    }
+
+    private fun addModelsUiState(
+        data: List<VerticalModel>,
+        items: ArrayList<VerticalsListItemUiState>
+    ) {
+        data.forEach { model ->
+            items.add(VerticalsModelUiState(model.verticalId, model.name))
+        }
+    }
+
     data class VerticalsUiState(
         val showError: Boolean,
         val showContent: Boolean,
