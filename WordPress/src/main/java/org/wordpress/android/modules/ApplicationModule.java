@@ -5,6 +5,7 @@ import android.content.Context;
 
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
+import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsListFragment;
 
 import dagger.Binds;
@@ -25,4 +26,7 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsListFragment contributeStatListFragment();
+
+    @ContributesAndroidInjector
+    abstract StatsFragment contributeStatsFragment();
 }
