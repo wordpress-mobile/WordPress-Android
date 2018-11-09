@@ -61,15 +61,17 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         updateUiState("", ListState.Ready(emptyList()))
     }
 
-    fun updateQuery(query: String) {
-        fetchVerticals(query)
+    fun updateQuery(query: String, delay: Int = throttleDelay) {
+        job.cancel() // cancel any previous requests
+        fetchVerticals(query, delay)
     }
 
-    private fun fetchVerticals(query: String) {
+    private fun fetchVerticals(query: String, throttleDelay: Int) {
         launch {
             withContext(MAIN) {
                 updateUiState(query, ListState.Loading(listState, false))
             }
+            delay(throttleDelay)
             val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
             withContext(MAIN) {
                 onVerticalsFetched(query, fetchedVerticals)
