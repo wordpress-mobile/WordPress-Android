@@ -3,9 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineDispatcher
-import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : ScopedViewModel(defaultDispatcher) {

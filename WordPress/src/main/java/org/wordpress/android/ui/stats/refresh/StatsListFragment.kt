@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
@@ -16,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.I
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
-import dagger.android.support.DaggerFragment
 
 class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
