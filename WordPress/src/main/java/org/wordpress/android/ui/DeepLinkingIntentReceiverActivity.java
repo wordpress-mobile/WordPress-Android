@@ -87,8 +87,6 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     }
 
     private void handleAppBanner(String host) {
-        long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
-        SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
         switch (host) {
             case DEEP_LINK_HOST_NOTIFICATIONS:
                 ActivityLauncher.viewNotificationsInNewStack(getContext());
@@ -97,7 +95,9 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 ActivityLauncher.openEditorInNewStack(getContext());
                 break;
             case DEEP_LINK_HOST_STATS:
-                ActivityLauncher.viewBlogStatsFromDeepLink(getContext(), siteModel);
+                long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
+                SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
+                ActivityLauncher.viewStatsInNewStack(getContext(), siteModel);
                 break;
             case DEEP_LINK_HOST_READ:
                 ActivityLauncher.viewReaderInNewStack(getContext());

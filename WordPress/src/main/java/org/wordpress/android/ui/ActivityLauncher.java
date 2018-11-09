@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -225,10 +226,18 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStatsFromDeepLink(Context context, SiteModel site) {
-        Intent intent = new Intent(context, StatsActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-//        startActivityWithParentStack(context, intent);
+    public static void viewStatsInNewStack(Context context, SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        
+        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Intent statsIntent = new Intent(context, StatsActivity.class);
+        statsIntent.putExtra(WordPress.SITE, site);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(statsIntent);
+        taskStackBuilder.startActivities();
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
