@@ -21,12 +21,5 @@ class InsightsTabViewModel @Inject constructor(
     override val data: LiveData<InsightsUiState> = _data
 
     override fun start(site: SiteModel) {
-        reload(site)
-    }
-
-    override fun CoroutineScope.reload(site: SiteModel) {
-        launch {
-            insightsUseCase.loadInsightItems(site, false)
-        }
     }
 }
