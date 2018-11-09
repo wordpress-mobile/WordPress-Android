@@ -135,7 +135,6 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
-    public static final String ARG_DEEP_LINK = "deep_link";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
