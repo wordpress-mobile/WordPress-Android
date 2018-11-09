@@ -51,10 +51,10 @@ class StatsViewModel
         reloadStats()
     }
 
-    private suspend fun reloadStats() {
+    private suspend fun reloadStats(forceReload: Boolean = false) {
         _listState.value = FETCHING
 
-        insightsViewModel.loadInsightItems(site)
+        insightsViewModel.loadInsightItems(site, forceReload)
 
         _listState.value = DONE
     }
@@ -72,7 +72,7 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         uiScope.launch {
-            reloadStats()
+            reloadStats(true)
         }
     }
 
