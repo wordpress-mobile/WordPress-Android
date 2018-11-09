@@ -200,6 +200,20 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewStatsInNewStack(Context context, SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+
+        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Intent statsIntent = new Intent(context, StatsActivity.class);
+        statsIntent.putExtra(WordPress.SITE, site);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(statsIntent);
+        taskStackBuilder.startActivities();
+    }
+
     public static void viewSavedPostsListInReader(Context context) {
         // Easiest way to show reader with saved posts filter is to update the "last used filter" preference and make
         // WPMainActivity restart itself with Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -224,20 +238,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
-    }
-
-    public static void viewStatsInNewStack(Context context, SiteModel site) {
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        
-        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
-        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        Intent statsIntent = new Intent(context, StatsActivity.class);
-        statsIntent.putExtra(WordPress.SITE, site);
-
-        taskStackBuilder.addNextIntent(mainActivityIntent);
-        taskStackBuilder.addNextIntent(statsIntent);
-        taskStackBuilder.startActivities();
     }
 
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
