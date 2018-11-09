@@ -255,7 +255,7 @@
 
         <!-- History -->
         <activity
-            android:name=".ui.history.HistoryDetailsActivity"
+            android:name=".ui.history.HistoryDetailActivity"
             android:label="@string/history_detail_title"
             android:theme="@style/CalypsoTheme" />
 

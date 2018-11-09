@@ -7,7 +7,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 
-class HistoryDetailsActivity : AppCompatActivity() {
+class HistoryDetailActivity : AppCompatActivity() {
     companion object {
         const val KEY_HISTORY_DETAILS_FRAGMENT = "account-settings-fragment"
     }
@@ -19,13 +19,13 @@ class HistoryDetailsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val extras = intent.extras
-        val revision = extras.getParcelable(HistoryDetailsContainerFragment.EXTRA_REVISION) as Revision
-        val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailsContainerFragment.EXTRA_REVISIONS)
+        val revision = extras.getParcelable(HistoryDetailContainerFragment.EXTRA_REVISION) as Revision
+        val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailContainerFragment.EXTRA_REVISIONS)
 
         var historyDetailsContainerFragment = supportFragmentManager.findFragmentByTag(KEY_HISTORY_DETAILS_FRAGMENT)
 
         if (historyDetailsContainerFragment == null) {
-            historyDetailsContainerFragment = HistoryDetailsContainerFragment.newInstance(
+            historyDetailsContainerFragment = HistoryDetailContainerFragment.newInstance(
                     revision,
                     revisions as ArrayList<Revision>
             )

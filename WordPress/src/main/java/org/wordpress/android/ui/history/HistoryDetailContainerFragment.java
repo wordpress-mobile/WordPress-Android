@@ -35,7 +35,7 @@ import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
 
 import java.util.ArrayList;
 
-public class HistoryDetailsContainerFragment extends Fragment {
+public class HistoryDetailContainerFragment extends Fragment {
     private ArrayList<Revision> mRevisions;
     private HistoryDetailFragmentAdapter mAdapter;
     private ImageView mNextButton;
@@ -53,11 +53,11 @@ public class HistoryDetailsContainerFragment extends Fragment {
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
 
-    public static HistoryDetailsContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
+    public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_REVISION, revision);
         args.putParcelableArrayList(EXTRA_REVISIONS, revisions);
-        HistoryDetailsContainerFragment fragment = new HistoryDetailsContainerFragment();
+        HistoryDetailContainerFragment fragment = new HistoryDetailContainerFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,18 +75,21 @@ public class HistoryDetailsContainerFragment extends Fragment {
         return rootView;
     }
 
-    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-    @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.revision_details, menu);
+        inflater.inflate(R.menu.history_details, menu);
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.revision_load) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.history_load) {
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);
 
@@ -198,8 +201,8 @@ public class HistoryDetailsContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
-        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
+        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+                                                                    ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }

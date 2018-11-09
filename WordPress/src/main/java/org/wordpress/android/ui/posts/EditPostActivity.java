@@ -185,7 +185,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.history.HistoryDetailsContainerFragment.KEY_REVISION;
+import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -1593,7 +1593,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
-        ActivityLauncher.viewRevisionDetailsForResult(this, mRevision, revisions);
+        ActivityLauncher.viewRevisionDetailForResult(this, mRevision, revisions);
     }
 
     private void loadRevision() {
@@ -2768,12 +2768,12 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
-                case RequestCodes.REVISION_DETAILS:
+                case RequestCodes.HISTORY_DETAILS:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
 
                         mRevision = data.getParcelableExtra(KEY_REVISION);
-                         new Handler().postDelayed(new Runnable() {
+                        new Handler().postDelayed(new Runnable() {
                             @Override public void run() {
                                 loadRevision();
                             }
