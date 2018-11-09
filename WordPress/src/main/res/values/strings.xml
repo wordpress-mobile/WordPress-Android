@@ -1909,6 +1909,7 @@
     <string name="web_address">Web Address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
     <string name="change_password">Change password</string>
+    <string name="change_password_confirmation">Password changed successfully</string>
     <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_dialog_message">Changing password&#8230;</string>
     <string name="exporting_content_progress">Exporting content…</string>

@@ -275,9 +275,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             return;
         }
 
-        showChangePasswordProgressDialog(false);
-
         if (event.isError()) {
+            showChangePasswordProgressDialog(false);
+
             switch (event.error.type) {
                 case SETTINGS_FETCH_ERROR:
                     ToastUtils
@@ -291,6 +291,12 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                     break;
             }
         } else {
+            // When account change is caused by password change, progress dialog will be shown (i.e. not null).
+            if (mChangePasswordProgressDialog != null) {
+                showChangePasswordProgressDialog(false);
+                ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
+            }
+
             refreshAccountDetails();
         }
     }
