@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -43,6 +44,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private DetailListPreference mPrimarySitePreference;
     private EditTextPreferenceWithValidation mWebAddressPreference;
     private EditTextPreferenceWithValidation mChangePasswordPreference;
+    private ProgressDialog mChangePasswordProgressDialog;
     private Snackbar mEmailSnackbar;
 
     @Inject Dispatcher mDispatcher;
@@ -144,6 +146,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             updateWebAddress(newValue.toString());
             return false;
         } else if (preference == mChangePasswordPreference) {
+            showChangePasswordProgressDialog(true);
             updatePassword(newValue.toString());
         }
 
@@ -160,6 +163,19 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
     private void setTextAlignment(EditText editText) {
         editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+    }
+
+    private void showChangePasswordProgressDialog(boolean show) {
+        if (show && mChangePasswordProgressDialog == null) {
+            mChangePasswordProgressDialog = new ProgressDialog(getActivity());
+            mChangePasswordProgressDialog.setCancelable(false);
+            mChangePasswordProgressDialog.setIndeterminate(true);
+            mChangePasswordProgressDialog.setMessage(getString(R.string.change_password_dialog_message));
+            mChangePasswordProgressDialog.show();
+        } else if (!show && mChangePasswordProgressDialog != null) {
+            mChangePasswordProgressDialog.dismiss();
+            mChangePasswordProgressDialog = null;
+        }
     }
 
     private void refreshAccountDetails() {
@@ -258,6 +274,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         if (!isAdded()) {
             return;
         }
+
+        showChangePasswordProgressDialog(false);
 
         if (event.isError()) {
             switch (event.error.type) {
