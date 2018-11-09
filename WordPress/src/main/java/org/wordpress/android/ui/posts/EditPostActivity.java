@@ -277,7 +277,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
-    private FullScreenDialogFragment mFullScreenDialogFragment;
     private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -349,8 +348,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mFullScreenDialogFragment = (FullScreenDialogFragment)
-                    getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
         }
 
         // Check whether to show the visual editor
@@ -1101,11 +1098,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
-        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
-            mFullScreenDialogFragment.dismiss();
-            return false;
-        }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
