@@ -5,12 +5,22 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
+import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalModel
+import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.models.networkresource.ListState
+import org.wordpress.android.models.networkresource.ListState.Error
+import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsHeaderUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsSearchInputUiState
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
@@ -48,6 +58,23 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             return
         }
         isStarted = true
+        updateUiState("", ListState.Ready(emptyList()))
+    }
+
+    fun updateQuery(query: String) {
+        fetchVerticals(query)
+    }
+
+    private fun fetchVerticals(query: String) {
+        launch {
+            withContext(MAIN) {
+                updateUiState(query, ListState.Loading(listState, false))
+            }
+            val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
+            withContext(MAIN) {
+                onVerticalsFetched(query, fetchedVerticals)
+            }
+        }
     }
 
     data class VerticalsUiState(
