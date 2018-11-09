@@ -19,8 +19,6 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
@@ -31,7 +29,6 @@ import javax.inject.Inject
 
 class StatsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var insightsViewModel: InsightsViewModel
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
@@ -89,8 +86,10 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.listState.observe(this, Observer {
-            refreshProgressBars(it)
+        viewModel.isRefreshing.observe(this, Observer {
+            it?.let { isRefreshing ->
+                swipeToRefreshHelper.isRefreshing = isRefreshing
+            }
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
@@ -105,14 +104,6 @@ class StatsFragment : Fragment() {
                 }
             }
         })
-    }
-
-    private fun refreshProgressBars(statsListState: StatsListState?) {
-        if (!isAdded || view == null) {
-            return
-        }
-        // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = statsListState == FETCHING
     }
 }
 

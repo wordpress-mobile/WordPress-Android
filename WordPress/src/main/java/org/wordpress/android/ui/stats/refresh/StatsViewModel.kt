@@ -12,9 +12,6 @@ import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,8 +24,8 @@ class StatsViewModel
 ) : ViewModel() {
     private lateinit var site: SiteModel
 
-    private val _listState = MutableLiveData<StatsListState>()
-    val listState: LiveData<StatsListState> = _listState
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private var isInitialized = false
 
@@ -52,11 +49,11 @@ class StatsViewModel
     }
 
     private suspend fun reloadStats(forceReload: Boolean = false) {
-        _listState.value = FETCHING
+        _isRefreshing.value = true
 
         insightsViewModel.loadInsightItems(site, forceReload)
 
-        _listState.value = DONE
+        _isRefreshing.value = false
     }
 
     // TODO: To be implemented in the future
