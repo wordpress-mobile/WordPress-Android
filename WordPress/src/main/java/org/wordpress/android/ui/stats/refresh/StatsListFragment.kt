@@ -5,23 +5,20 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
+import dagger.android.support.DaggerFragment
 
-class StatsListFragment : Fragment() {
+class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsListViewModel
 
@@ -65,9 +62,6 @@ class StatsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
         initializeViewModels()
