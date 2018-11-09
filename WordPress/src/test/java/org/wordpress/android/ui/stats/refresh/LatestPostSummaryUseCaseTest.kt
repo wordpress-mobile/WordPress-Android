@@ -25,14 +25,14 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class LatestPostSummaryViewModelTest {
+class LatestPostSummaryUseCaseTest {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var viewModel: LatestPostSummaryViewModel
+    private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() {
-        viewModel = LatestPostSummaryViewModel(insightsStore, latestPostSummaryMapper)
+        useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
     }
 
     @Test
@@ -48,7 +48,7 @@ class LatestPostSummaryViewModelTest {
                 )
         )
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, forced)
 
         assertThat(result).isInstanceOf(Failed::class.java)
         (result as Failed).let {
@@ -64,7 +64,7 @@ class LatestPostSummaryViewModelTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -91,7 +91,7 @@ class LatestPostSummaryViewModelTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -123,7 +123,7 @@ class LatestPostSummaryViewModelTest {
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {

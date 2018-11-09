@@ -9,7 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import javax.inject.Inject
 
-class LatestPostSummaryViewModel
+class LatestPostSummaryUseCase
 @Inject constructor(
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
