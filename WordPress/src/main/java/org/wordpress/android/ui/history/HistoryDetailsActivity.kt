@@ -14,7 +14,7 @@ class HistoryDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.history_activity)
+        setContentView(R.layout.history_details_activity)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
