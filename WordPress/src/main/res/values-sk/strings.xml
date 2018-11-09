@@ -1,11 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-28 11:17:41+0000
+Translation-Revision-Date: 2018-10-25 19:55:10+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="async_promo_description_schedule_page">Môžete opustiť editor a vaša stránka sa uloží a naplánuje na pozadí! Vyskúšajte to!</string>
+    <string name="async_promo_description_publish_post">Môžete opustiť editor a váš článok sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
+    <string name="async_promo_description_publish_page">Môžete opustiť editor a vaša stránka sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
+    <string name="image_size_full_label">Plná veľkosť</string>
+    <string name="image_size_large_label">Veľké</string>
+    <string name="image_size_medium_label">Stredné</string>
+    <string name="image_size_thumbnail_label">Miniatúra</string>
+    <string name="menu_history">História</string>
+    <string name="async_promo_schedule_now">Naplánovať teraz</string>
+    <string name="async_promo_title_schedule">Nsaplánovať s funkciou Spoľahlivosť</string>
+    <string name="pages_pending">Nepotvrdená recenzia</string>
+    <string name="pages_open_page_error">Vybraná stránka nie je dostupná</string>
+    <string name="news_card_announcement_action_sample_announcement">[Prečítať viac]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Nemáte čas na čítanie? Žiaden problém, uložte si články na neskôr.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Dostupná nová funkcia]</string>
+    <string name="pages_empty_trashed">Nemáte žiadne vyhodené stránky.</string>
+    <string name="pages_empty_scheduled">Nemáte žiadne plánované stránky.</string>
+    <string name="pages_empty_drafts">Nemáte žiadne koncepty stránok.</string>
+    <string name="pages_empty_published">Nezverejnili ste ešte žiadne stránky</string>
+    <string name="pages_search_suggestion">Vyhľadať stránky</string>
+    <string name="pages_empty_search_result">Vašim požiadávkam nezodpovedá žiadna stránka.</string>
+    <string name="pages_delete_permanently">Natrvalo vymazať.</string>
+    <string name="pages_move_to_trash">Presunúť do Kôš</string>
+    <string name="pages_move_to_draft">Presunúť do Koncepty</string>
+    <string name="pages_publish_now">Zverejniť teraz</string>
+    <string name="pages_set_parent">Nastaviť predlohu</string>
+    <string name="pages_view">Zobraziť</string>
+    <string name="pages_trashed">Vyhodené</string>
+    <string name="pages_scheduled">Naplánované</string>
+    <string name="pages_drafts">Koncepty</string>
+    <string name="pages_published">Zverejnené</string>
+    <string name="login_error_sms_throttled">Vynaložili sme veľké úsilie, aby sme odoslali cez SMS overovací kód - skús opätovne neskôr.</string>
+    <string name="login_error_email_not_found_v2">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
+    <string name="site_picker_remove_site_empty">Žiadna webová stránka nezodpovedá vyhľadávaniu.</string>
+    <string name="reader_empty_followed_blogs_search_title">Žiadna webová stránka nezodpovedá vášmu vyhľadávaniu.</string>
+    <string name="page_parent_changed">Strana predlohy sa zmenila</string>
+    <string name="page_permanently_deleted">Stránka bola trvalo zmazaná</string>
+    <string name="page_moved_to_scheduled">Stránka sa naplánovala</string>
+    <string name="page_moved_to_published">Stránka sa zverejnila</string>
+    <string name="page_moved_to_trash">Stránka sa vymazala</string>
+    <string name="page_moved_to_draft">Stránka bola presunutá do Koncepty</string>
+    <string name="top_level">Najvyššia úroveň</string>
+    <string name="page_delete_dialog_message">Naozaj chcete vymazať stránku %s? </string>
+    <string name="page_parent_change_error">Pri zmene strany predlohy nastal problém</string>
+    <string name="page_status_change_error">Pri zmene statusu stránky nastal problém.</string>
+    <string name="page_delete_error">Vyskytol sa problém pri mazaní stránky.</string>
+    <string name="set_parent">Nadradené nastavenia</string>
+    <string name="dismiss">Zrušiť</string>
+    <string name="quick_start_focus_point_description">Ťuknite sem</string>
+    <string name="quick_start_sites">Rýchly štart</string>
+    <string name="quick_start_list_create_site_title">Vytvorte si webovú stránku</string>
+    <string name="quick_start_list_create_site_subtitle">Naštartujte si webovú stránku</string>
+    <string name="quick_start_list_complete_title">Gratulujeme dokončili ste Rýchly štart</string>
+    <string name="quick_start_list_complete_subtitle">Cítite ten dobrý pocit pri preškrtávaní vecí zo zoznamu?</string>
+    <string name="quick_start_dialog_view_site_title">Zobraziť webovú stránku</string>
+    <string name="quick_start_dialog_view_site_message_short">Ťuknite na %1$s View Site %2$s keď chcete nahliadnuť na webovú stránku.</string>
+    <string name="quick_start_dialog_view_site_message">Ukážka webovej stránky, aby ste videli, čo sa zobrazí vašim nasledovateľom.</string>
+    <string name="quick_start_dialog_skip_title">Preskočiť Rýchly štart</string>
+    <string name="quick_start_dialog_skip_message">Rýchly návom vám ukáže ako si vytvoriť základnú webovú stránku. Naozaj chcete preskočiť tento krok?</string>
+    <string name="quick_start_dialog_share_site_title">Zdielajte webovú stránku</string>
+    <string name="quick_start_dialog_share_site_message_short_sharing">Ťuknite na %1$s Sharing %2$s a pokračujte</string>
+    <string name="quick_start_dialog_share_site_message_short_connections">Ťuknite na %1$s Connections %2$s a pridajte účty na sociálnych sieťach</string>
+    <string name="quick_start_dialog_share_site_message">Pripojte sa na účty sociálnych médii - vaša webová stránka automaticky zdieľa nové články.</string>
+    <string name="quick_start_dialog_publish_post_title">Zverejniť článok</string>
+    <string name="quick_start_dialog_publish_post_message_short">Ťuknite %1$s Create Post %2$s a vytvorte nový článok.</string>
+    <string name="quick_start_dialog_publish_post_message">Je to tu! Vytvorte koncept a zverejnite ssvoj prvý článok.</string>
+    <string name="quick_start_dialog_need_help_title">Chcete pomôcť na začiatku?</string>
+    <string name="quick_start_dialog_need_help_message">Kontrolný zoznam Rýchleho štartu vás navedie základmi nastavení novej webovej stránky.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Áno</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Nikdy</string>
+    <string name="quick_start_dialog_need_help_button_negative">Nie</string>
+    <string name="quick_start_dialog_follow_sites_title">Sledovať iné webové stránky</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Ťuknite %1$s Search %2$s , aby ste našli webové stránky s podobnými záujmami.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Ťuknite %1$s Reader %2$s, keď chcete pokračovať.</string>
+    <string name="quick_start_dialog_follow_sites_message">Nájdite webové stránky, ktoré vám vyhovujú. Sledujte ich a získajte upozornenia o novinkách.</string>
+    <string name="quick_start_dialog_customize_site_title">Prispôsobte si webovú stránku</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Ťuknite na %1$s Themes %2$s , keď chcete pokračovať.</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Ťuknite na %1$s Customize %2$s , keď chcete upraviť webovú stránku.</string>
+    <string name="quick_start_dialog_customize_site_message">Zmeniť farby, typy písma a obrázky pre lepšie upravenú webovú stránku.</string>
+    <string name="quick_start_dialog_continue_setup_title">Pokračovať v nastaveniach webovej stránky</string>
+    <string name="quick_start_dialog_continue_setup_message">Nastal čas dokončiť nastavenia webovej stránky! Náš kontrolný zoznam vám ukáže ďalšie kroky.</string>
+    <string name="quick_start_dialog_choose_theme_title">Vyberte tému</string>
+    <string name="quick_start_dialog_choose_theme_message_short">Ťuknite na %1$s Themes %2$s a zobrazia sa nové témy.</string>
+    <string name="quick_start_dialog_choose_theme_message">Prehľadávajte všetky témy a nájdite tú, ktorá vám vyhovuje.</string>
+    <string name="quick_start_button_skip_positive">Preskočiť</string>
+    <string name="quick_start_button_skip_negative">Zrušiť</string>
+    <string name="quick_start_button_skip">Preskočiť všetko</string>
+    <string name="quick_start_button_positive">Ísť</string>
+    <string name="quick_start_button_negative_short">Zrušiť</string>
+    <string name="quick_start_button_negative">Teraz nie</string>
+    <string name="content_description_done">Ukončené</string>
+    <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
+    <string name="reader_empty_followed_tags_title">Žiadne sledované značky</string>
+    <string name="reader_empty_followed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
+    <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
+    <string name="install_jetpack_retry">Znova</string>
+    <string name="install_jetpack_continue">Pokračovať</string>
+    <string name="jetpack_installation_problem_message">Nepodarilo sa teraz nainštalovať Jetpack</string>
+    <string name="jetpack_installation_problem">Vyskytol sa problém</string>
+    <string name="jetpack_installed_message">Jetpack je nainštalovaný na webovej stránke. Gratulujeme!</string>
+    <string name="jetpack_installed">Jetpack nainštalovaný</string>
+    <string name="installing_jetpack_message">Nainštalujte si Jetpack na webovú stránku. Inštalácia môže trvať niekolko minút.</string>
+    <string name="installing_jetpack">Inštalovanie Jetpack</string>
+    <string name="install_jetpack_message">Poverenia webovej stránky nebudú uložené. Používajú sa len pri inštalovaní Jetpack.</string>
+    <string name="install_jetpack">Inštalovať Jetpack</string>
+    <string name="jetpack">Jetpack</string>
+    <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
+    <string name="stats_jetpack_connection_terms_and_conditions">Nastavením Jetpack súhlasíte s našimi</string>
+    <string name="stats_jetpack_connection_setup_info">Budete si musieť nainštalovať Jetpack plugin, keď chcete používať Štatistiky na vašej webovej stránke WordPress.</string>
     <string name="themes_empty_list">Žiadne témy nezodpovedajú vášmu vyhľadávaniu</string>
     <string name="reader_label_post_search_explainer">Čo by ste chceli nájsť?</string>
     <string name="site_settings_tags_empty_title_search">Žiadne značky zodpovedajúce vášmu vyhľadávaniu</string>
@@ -153,7 +262,6 @@ Language: sk
     <string name="content_description_person_reading_device_notification">Človek čítajúci na zariadení s notifikáciami</string>
     <string name="content_description_people_looking_charts">Ľudia pozerajúci sa na grafy a tabuľky</string>
     <string name="comment_title">%s na %s</string>
-    <string name="dialog_confirm_delete_permanently_page">Ste si istý, že chcete natrvalo zmazať túto stránku?</string>
     <string name="dialog_confirm_delete_permanently_post">Ste si istý, že chcete natrvalo zmazať tento článok?</string>
     <string name="notification_site_creation_title_in_progress">Prebieha vytváranie webovej stránky… Môže to trvať niekoľko minút.</string>
     <string name="notification_channel_important_title">Dôležité</string>
@@ -191,6 +299,7 @@ Language: sk
     <string name="stats_tab_tap_content_description">zobrazenie %s</string>
     <string name="stats_legend">štatistiky legendy grafov</string>
     <string name="fab_create_desc">vytvoriť</string>
+    <string name="fab_add_tag_desc">Vytvoriť značku</string>
     <string name="stats_bar_week_desc">Týždeň z %s</string>
     <string name="stats_bar_date_value_desc">%s, %d zobrazení</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -301,7 +410,6 @@ Language: sk
     <string name="dialog_confirm_publish_message_page">Stránka bude okamžite publikovaná.</string>
     <string name="dialog_confirm_publish_message_post">Článok bude okamžite publikovaný.</string>
     <string name="dialog_confirm_publish_title">Ste pripravený publikovať?</string>
-    <string name="dialog_confirm_delete_page">Táto stránka bude zmazaná a odoslaná do Koša</string>
     <string name="dialog_confirm_delete_post">Tento článok bude zmazaný a odoslaný do Koša</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d príspevkov / stránok nebolo nahraných</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránok nebolo nahraných</string>
@@ -503,7 +611,6 @@ Language: sk
     <string name="login_text_otp_another">Pošlite mi druhý kód.</string>
     <string name="enter_verification_code_sms">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
     <string name="error_generic_error">Operáciu sa nepodarilo vykonať</string>
-    <string name="error_media_recover_page">Nepodarilo sa nahrať médiá tejto stránky</string>
     <string name="error_media_recover_post">Nemožno nahrať médium tohto príspevku</string>
     <string name="image_size">Veľkosť</string>
     <string name="uploading_subtitle_media_only_one">1 súbor zostáva</string>
@@ -591,7 +698,6 @@ Language: sk
     <string name="notification_settings_master_status_on">Zapnúť</string>
     <string name="max_video_resolution">Maximálna veľkosť videa</string>
     <string name="max_thumbnail_px_size">Maximálna veľkosť obrázku</string>
-    <string name="error_page_does_not_exist">Táto stránka už neexistuje.</string>
     <string name="error_upload_post_media_param">Nastala chyba pri načítavaní médiá v článku: %s.</string>
     <string name="error_upload_post_param">Nastala chyba pri načítavaní tohto článku: %s.</string>
     <string name="add_media_progress">Pridávanie médiá</string>
@@ -608,6 +714,8 @@ Language: sk
     <string name="error_upload_page_media_param">Došlo k chybe pri načítavaní médiá na tejto stránke: %s.</string>
     <string name="error_upload_page_param">Došlo k chybe pri načítavaní tejto stránky: %s.</string>
     <string name="async_promo_link">Ako to funguje?</string>
+    <string name="async_promo_description_schedule_post">Môžete opustiť editor a váš článok sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
+    <string name="async_promo_title_publish">Zverejniť s funkciou Spoľahlivosť</string>
     <string name="editor_uploading_post">Váš článok sa načítáva</string>
     <string name="uploading_media">Načítavanie médií…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Ste si istý? Odstránením článku sa zruší načítavanie médií.</string>
@@ -838,6 +946,7 @@ Language: sk
     <string name="media_upload_error">Vyskytla sa chyba pri nahrávaní médií</string>
     <string name="retry">Opakovať</string>
     <string name="confirm">Potvrdiť</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
     <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
     <string name="visual_editor_disabled">Zablokovaný vizuálny editor</string>
@@ -1270,8 +1379,6 @@ Language: sk
     <string name="notification_settings_item_other_account_emails_summary">Vždy vám pošleme dôležité e-maily týkajúce sa vášho účtu, ale získate aj niektoré užitočné informácie navyše.</string>
     <string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál…</string>
     <string name="stats_insights_latest_post_summary">Súhrn najnovších príspevkov</string>
-    <string name="yesterday">Včera</string>
-    <string name="days_ago">pred %d dňami</string>
     <string name="connectionbar_no_connection">Žiadne pripojenie</string>
     <string name="button_publish">Zverejniť</string>
     <string name="button_edit">Upraviť</string>
@@ -1279,12 +1386,10 @@ Language: sk
     <string name="button_preview">Náhľad</string>
     <string name="button_trash">Kôš</string>
     <string name="button_stats">Štatistiky</string>
-    <string name="page_deleted">Stránka vymazaná</string>
     <string name="button_back">Späť</string>
     <string name="stats_no_activity_this_period">Žiadna činnosť v toto obdobie</string>
     <string name="post_trashed">Článok presunutý do koša</string>
     <string name="post_deleted">Článok vymazaný</string>
-    <string name="page_trashed">Stránka presunutá do koša</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnenie na prístup na túto webovú stránku</string>
     <string name="reader_toast_err_follow_blog_not_found">Táto webová stránka sa nenašla</string>
     <string name="undo">Zrušiť zmenu</string>
@@ -1419,7 +1524,6 @@ Language: sk
     <string name="ssl_certificate_details">Detaily</string>
     <string name="cab_selected">%d vybraných</string>
     <string name="signing_out">Odhlasovanie…</string>
-    <string name="pages_empty_list">Zatiaľ nemáte žiadnu stránku. Želáte si nejakú vytvoriť?</string>
     <string name="comment_reply_to_user">Odpovedať užívateľovi %s</string>
     <string name="posts_empty_list">Žiadne príspevky. Želáte si nejaký vytvoriť?</string>
     <string name="comment_trashed">Komentár bol odstránený</string>
@@ -1497,7 +1601,6 @@ Language: sk
     <string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
     <string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
     <string name="error_refresh_media">Média momentálne nemohli byť obnovené </string>
-    <string name="error_deleting_page">Pri vymazávaní webovej stránky sa vyskytla chyba</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="image_settings">Nastavenie obrázka</string>
     <string name="local_changes">Miestne zmeny</string>
@@ -1651,7 +1754,6 @@ Language: sk
     <string name="immediately">Okamžite</string>
     <string name="quickpress_add_alert_title">Nastaviť skrátené meno</string>
     <string name="settings">Nastavenia</string>
-    <string name="today">Dnes</string>
     <string name="quickpress_add_error">Názov skratky nemôže byť prázdny</string>
     <string name="quickpress_window_title">Vyberte blog pre QuickPress skratku</string>
     <string name="pages_private">Súkromné</string>

@@ -52,6 +52,7 @@ import org.wordpress.android.ui.posts.PostUploadAction.MediaUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PostUploadedSnackbar
 import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.UploadService
@@ -76,6 +77,11 @@ enum class PostListEmptyViewState {
     LOADING,
     REFRESH_ERROR,
     PERMISSION_ERROR
+}
+
+enum class PostEditActionSource {
+    EDIT_BUTTON,
+    GUTENBERG_WARNING_DIALOG
 }
 
 class PostListViewModel @Inject constructor(
@@ -231,7 +237,7 @@ class PostListViewModel @Inject constructor(
 
     private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
-            PostListButton.BUTTON_EDIT -> editPost(site, post)
+            PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
             PostListButton.BUTTON_RETRY -> _userAction.postValue(PostListUserAction.RetryUpload(post))
             PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
@@ -292,7 +298,7 @@ class PostListViewModel @Inject constructor(
         localPostIdForPublishDialog = null
     }
 
-    private fun editPost(site: SiteModel, post: PostModel) {
+    private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // track event
         val properties = HashMap<String, Any>()
         properties["button"] = "edit"
@@ -302,6 +308,10 @@ class PostListViewModel @Inject constructor(
         properties[AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY] = PostUtils.contentContainsGutenbergBlocks(post.content)
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.POST_LIST_BUTTON_PRESSED, site, properties)
 
+        editPost(site, post)
+    }
+
+    private fun editPost(site: SiteModel, post: PostModel) {
         if (UploadService.isPostUploadingOrQueued(post)) {
             // If the post is uploading media, allow the media to continue uploading, but don't upload the
             // post itself when they finish (since we're about to edit it again)
@@ -528,5 +538,46 @@ class PostListViewModel @Inject constructor(
     private fun invalidateUploadStatusAndPagedListData(vararg localPostIds: Int) {
         localPostIds.forEach { uploadStatusMap.remove(it) }
         pagedListWrapper.invalidateData()
+    }
+
+    // Gutenberg Events
+
+    fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
+        PostUtils.trackGutenbergDialogEvent(
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED, post, site
+        )
+        editPost(site, post)
+    }
+
+    fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
+        if (post != null) {
+            // We only want to track the event if the post is not null
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED, post, site
+            )
+        }
+    }
+
+    fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
+        if (post != null) {
+            PostUtils.trackGutenbergDialogEvent(
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site)
+        }
+    }
+
+    fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePageId: Long, checked: Boolean) {
+        AppPrefs.setGutenbergWarningDialogDisabled(checked)
+        val post = postStore.getPostByRemotePostId(gutenbergRemotePageId, site)
+        if (post != null) { // We only want to track the event if the post is not null
+            val trackValue = if (checked) {
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED
+            } else {
+                AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED
+            }
+            PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
+        }
     }
 }

@@ -20,13 +20,15 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
 public class PostsListActivity extends AppCompatActivity implements BasicDialogPositiveClickInterface,
-        BasicDialogNegativeClickInterface, BasicDialogOnDismissByOutsideTouchInterface {
+        BasicDialogNegativeClickInterface, BasicDialogOnDismissByOutsideTouchInterface,
+        GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostListFragment mPostList;
@@ -144,18 +146,56 @@ public class PostsListActivity extends AppCompatActivity implements BasicDialogP
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
+    // BasicDialogFragment Callbacks
+
     @Override
     public void onPositiveClicked(@NotNull String instanceTag) {
-        mPostList.onPositiveClickedForBasicDialog(instanceTag);
+        if (mPostList != null) {
+            mPostList.onPositiveClickedForBasicDialog(instanceTag);
+        }
     }
 
     @Override
     public void onNegativeClicked(@NotNull String instanceTag) {
-        mPostList.onNegativeClickedForBasicDialog(instanceTag);
+        if (mPostList != null) {
+            mPostList.onNegativeClickedForBasicDialog(instanceTag);
+        }
     }
 
     @Override
     public void onDismissByOutsideTouch(@NotNull String instanceTag) {
-        mPostList.onDismissByOutsideTouchForBasicDialog(instanceTag);
+        if (mPostList != null) {
+            mPostList.onDismissByOutsideTouchForBasicDialog(instanceTag);
+        }
+    }
+
+    // GutenbergWarningDialogClickInterface Callbacks
+
+    @Override
+    public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogCancelClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogLearnMoreLinkClicked(long gutenbergRemotePostId) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId);
+        }
+    }
+
+    @Override
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId, boolean checked) {
+        if (mPostList != null) {
+            mPostList.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
+        }
     }
 }

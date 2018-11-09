@@ -21,7 +21,9 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
@@ -45,7 +47,7 @@ import org.wordpress.android.viewmodel.posts.PostListViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class PostListFragment : Fragment() {
+class PostListFragment : Fragment(), GutenbergWarningDialogClickInterface {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostListViewModel
 
@@ -319,10 +321,9 @@ class PostListFragment : Fragment() {
             it.title.setText(stringId)
             it.button.setText(R.string.posts_empty_list_button)
             it.button.visibility = if (isNewPostActionVisible) View.VISIBLE else View.GONE
-            it.button.setOnClickListener { _ ->
+            it.button.setOnClickListener {
                 viewModel.newPost()
             }
-            it.visibility = View.VISIBLE
         }
     }
 
@@ -336,6 +337,31 @@ class PostListFragment : Fragment() {
 
     fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
         viewModel.onDismissByOutsideTouchForBasicDialog(instanceTag)
+    }
+
+    // GutenbergWarningDialogClickInterface
+
+    override fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
+        viewModel.onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId)
+    }
+
+    override fun onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId: Long) {
+        viewModel.onGutenbergWarningDialogCancelClicked(gutenbergRemotePostId)
+    }
+
+    override fun onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId: Long) {
+        // here launch the web the Gutenberg Learn more
+        val urlToUse = if (site.isWPCom || site.isJetpackConnected) {
+            getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wpcom)
+        } else {
+            getString(R.string.dialog_gutenberg_compatibility_learn_more_url_wporg)
+        }
+        WPWebViewActivity.openURL(nonNullActivity, urlToUse)
+        viewModel.onGutenbergWarningDialogLearnMoreLinkClicked(gutenbergRemotePostId)
+    }
+
+    override fun onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId: Long, checked: Boolean) {
+        viewModel.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked)
     }
 
     companion object {
