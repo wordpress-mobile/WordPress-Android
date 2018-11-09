@@ -42,6 +42,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
     private EditTextPreferenceWithValidation mWebAddressPreference;
+    private EditTextPreferenceWithValidation mChangePasswordPreference;
     private Snackbar mEmailSnackbar;
 
     @Inject Dispatcher mDispatcher;
@@ -61,6 +62,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mPrimarySitePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_primary_site));
         mWebAddressPreference =
                 (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
+        mChangePasswordPreference =
+                (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_change_password));
 
         mEmailPreference.getEditText()
                         .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -68,13 +71,18 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
         mWebAddressPreference.setDialogMessage(R.string.web_address_dialog_hint);
+        mChangePasswordPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mChangePasswordPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.PASSWORD);
+        mChangePasswordPreference.setDialogMessage(R.string.change_password_dialog_hint);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
+        mChangePasswordPreference.setOnPreferenceChangeListener(this);
 
         setTextAlignment(mEmailPreference.getEditText());
         setTextAlignment(mWebAddressPreference.getEditText());
+        setTextAlignment(mChangePasswordPreference.getEditText());
 
         // load site list asynchronously
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -135,6 +143,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
             return false;
+        } else if (preference == mChangePasswordPreference) {
+            updatePassword(newValue.toString());
         }
 
         return true;
@@ -232,6 +242,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
         payload.params = new HashMap<>();
         payload.params.put("user_URL", newWebAddress);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
+    public void updatePassword(String newPassword) {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("password", newPassword);
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
