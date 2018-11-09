@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -162,6 +163,25 @@ class InsightsStore
     ): FollowersModel? {
         val wpComResponse = sqlUtils.selectFollowers(site, followerType)
         return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
+    }
+
+    // Tags
+    suspend fun fetchTags(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchTags(siteModel, forced = forced)
+        return@withContext when {
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response)
+                OnInsightsFetched(insightsMapper.map(response.response))
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    fun getTags(site: SiteModel): TagsModel? {
+        return sqlUtils.selectTags(site)?.let { insightsMapper.map(it) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
