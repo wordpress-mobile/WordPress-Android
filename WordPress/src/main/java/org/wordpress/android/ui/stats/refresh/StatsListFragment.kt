@@ -49,10 +49,6 @@ class StatsListFragment : Fragment() {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
-        val intent = activity?.intent
-        if (intent != null && intent.hasExtra(WordPress.SITE)) {
-            outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
-        }
         super.onSaveInstanceState(outState)
     }
 
@@ -74,10 +70,10 @@ class StatsListFragment : Fragment() {
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, savedInstanceState)
+        initializeViewModels()
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    private fun initializeViewModels() {
         val statsType = arguments?.getSerializable(typeKey) as StatsListType
 
         val viewModelClass = when (statsType) {
@@ -87,14 +83,6 @@ class StatsListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(statsType.name, viewModelClass)
-
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(activity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-        viewModel.start(site)
 
         setupObservers()
     }

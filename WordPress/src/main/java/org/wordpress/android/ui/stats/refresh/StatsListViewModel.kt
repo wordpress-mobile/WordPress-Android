@@ -17,8 +17,6 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : Scop
     }
 
     abstract val data: LiveData<InsightsUiState>
-
-    abstract fun start(site: SiteModel)
 }
 
 data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {

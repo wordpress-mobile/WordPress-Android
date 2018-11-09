@@ -6,15 +6,17 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
 import javax.inject.Inject
 import javax.inject.Named
 
 class DaysTabViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : StatsListViewModel(mainDispatcher) {
-    override val data: LiveData<InsightsUiState> = MutableLiveData()
+    private val _data = MutableLiveData<InsightsUiState>()
+    override val data: LiveData<InsightsUiState> = _data
 
-    override fun start(site: SiteModel) {
-        reload(site)
+    init {
+        _data.value = InsightsUiState(listOf(Empty()), DONE)
     }
 }
