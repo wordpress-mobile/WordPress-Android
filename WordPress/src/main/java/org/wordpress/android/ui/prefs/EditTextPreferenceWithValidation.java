@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -74,6 +75,9 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
         // clear previous errors
         getEditText().setError(null);
+
+        // Use "hidden" input type for passwords so characters are replaced with dots for added security.
+        hideInputCharacters(mValidationType == ValidationType.PASSWORD);
     }
 
     public void setValidationType(ValidationType validationType) {
@@ -82,6 +86,13 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
 
     public void setStringToIgnoreForPrefilling(String stringToIgnoreForPrefilling) {
         mStringToIgnoreForPrefilling = stringToIgnoreForPrefilling;
+    }
+
+    private void hideInputCharacters(boolean hide) {
+        int selectionStart = getEditText().getSelectionStart();
+        int selectionEnd = getEditText().getSelectionEnd();
+        getEditText().setTransformationMethod(hide ? PasswordTransformationMethod.getInstance() : null);
+        getEditText().setSelection(selectionStart, selectionEnd);
     }
 
     public enum ValidationType {
