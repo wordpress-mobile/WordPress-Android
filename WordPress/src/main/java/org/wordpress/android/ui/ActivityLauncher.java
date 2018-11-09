@@ -180,31 +180,27 @@ public class ActivityLauncher {
     }
 
     public static void viewNotificationsInNewStack(Context context) {
-        Intent intent = new Intent(context, WPMainActivity.class);
+        Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
     public static void viewReaderInNewStack(Context context) {
-        Intent intent = new Intent(context, WPMainActivity.class);
+        Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
     public static void openEditorInNewStack(Context context) {
-        Intent intent = new Intent(context, WPMainActivity.class);
+        Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
 
-        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
-        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
 
         Intent statsIntent = new Intent(context, StatsActivity.class);
         statsIntent.putExtra(WordPress.SITE, site);
@@ -212,6 +208,13 @@ public class ActivityLauncher {
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
         taskStackBuilder.startActivities();
+    }
+
+    private static Intent getMainActivityInNewStack(Context context) {
+        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return mainActivityIntent;
     }
 
     public static void viewSavedPostsListInReader(Context context) {
