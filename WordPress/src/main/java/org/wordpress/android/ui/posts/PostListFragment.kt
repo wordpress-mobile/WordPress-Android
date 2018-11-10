@@ -37,7 +37,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.helpers.RecyclerViewScrollPositionManager
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
@@ -54,7 +53,6 @@ class PostListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostListViewModel
 
-    private val rvScrollPositionSaver = RecyclerViewScrollPositionManager()
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var fabView: View? = null
 
@@ -84,7 +82,6 @@ class PostListFragment : Fragment() {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
             nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel?
         } else {
-            rvScrollPositionSaver.onRestoreInstanceState(savedInstanceState)
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
@@ -249,7 +246,6 @@ class PostListFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
-        rvScrollPositionSaver.onSaveInstanceState(outState, recyclerView)
     }
 
     override fun onResume() {

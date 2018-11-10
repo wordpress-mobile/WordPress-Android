@@ -136,8 +136,8 @@ class PostListViewModel @Inject constructor(
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
     val pagedListDataAndScrollPosition: LiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>> by lazy {
         val result = MediatorLiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>>()
-        result.addSource(pagedListWrapper.data) { listData ->
-            listData?.let { list ->
+        result.addSource(pagedListWrapper.data) { pagedListData ->
+            pagedListData?.let { list ->
                 if (targetLocalPostId == null) {
                     result.value = Pair(list, null)
                     return@let
