@@ -24,6 +24,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
+import org.wordpress.android.ui.posts.PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID
 import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.uploads.UploadService
@@ -97,9 +98,12 @@ class PostListFragment : Fragment(), GutenbergWarningDialogClickInterface {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let { postListActivity ->
+            val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
+                if (it != -1) it else null
+            }
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
-            viewModel.start(site)
+            viewModel.start(site, targetLocalPostId)
             viewModel.pagedListData.observe(this, Observer {
                 it?.let { pagedListData -> postListAdapter.submitList(pagedListData) }
             })
@@ -124,7 +128,6 @@ class PostListFragment : Fragment(), GutenbergWarningDialogClickInterface {
             viewModel.snackbarAction.observe(this, Observer {
                 it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
             })
-            // TODO: We need to use a DialogFragment!
             viewModel.dialogAction.observe(this, Observer {
                 it?.show(nonNullActivity, fragmentManager)
             })

@@ -103,6 +103,7 @@ class PostListViewModel @Inject constructor(
     private var postIdToTrash: Pair<Int, Long>? = null
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
+    private var targetLocalPostId: Int? = null
 
     private val _userAction = SingleLiveEvent<PostListUserAction>()
     val userAction: LiveData<PostListUserAction> = _userAction
@@ -169,7 +170,7 @@ class PostListViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, targetLocalPostId: Int?) {
         if (isStarted) {
             return
         }
@@ -179,6 +180,9 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site)
         }
+        // TODO: Use the `targetLocalPostId` to scroll to given post when data is loaded
+        // We want to update the target post only for the first time ViewModel is started
+        this.targetLocalPostId = targetLocalPostId
 
         // We should register after we have the SiteModel and ListDescriptor set
         EventBus.getDefault().register(this)
@@ -388,7 +392,10 @@ class PostListViewModel @Inject constructor(
         if (event.post != null && event.post.localSiteId == site.id) {
             _postUploadAction.postValue(PostUploadedSnackbar(dispatcher, site, event.post, event.isError, null))
             invalidateUploadStatusAndPagedListData(event.post.id)
-            fetchFirstPage()
+            // If a post is successfully uploaded, we need to fetch the list again so it's id is added to ListStore
+            if (!event.isError) {
+                fetchFirstPage()
+            }
         }
     }
 
@@ -571,7 +578,8 @@ class PostListViewModel @Inject constructor(
         val post = postStore.getPostByRemotePostId(gutenbergRemotePostId, site)
         if (post != null) {
             PostUtils.trackGutenbergDialogEvent(
-                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site)
+                    AnalyticsTracker.Stat.GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED, post, site
+            )
         }
     }
 
