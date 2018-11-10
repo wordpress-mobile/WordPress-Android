@@ -268,6 +268,12 @@
             android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
+        <!-- History -->
+        <activity
+            android:name=".ui.history.HistoryDetailActivity"
+            android:label="@string/history_detail_title"
+            android:theme="@style/CalypsoTheme" />
+
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
