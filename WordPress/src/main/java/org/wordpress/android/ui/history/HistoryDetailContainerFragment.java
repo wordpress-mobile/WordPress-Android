@@ -84,7 +84,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.history_details, menu);
+        inflater.inflate(R.menu.history_detail, menu);
     }
 
     @Override
@@ -133,12 +133,12 @@ public class HistoryDetailContainerFragment extends Fragment {
                 }
             });
 
-            refreshRevisionDetails();
+            refreshHistoryDetail();
             resetOnPageChangeListener();
         }
     }
 
-    private void refreshRevisionDetails() {
+    private void refreshHistoryDetail() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setSubtitle(mRevision.getTimeSpan());
@@ -190,7 +190,7 @@ public class HistoryDetailContainerFragment extends Fragment {
 
                     mPosition = position;
                     mRevision = mAdapter.getRevisionAtPosition(mPosition);
-                    refreshRevisionDetails();
+                    refreshHistoryDetail();
                 }
             };
         }
@@ -201,7 +201,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+        @SuppressWarnings("unchecked")
+        HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
                                                                     ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();

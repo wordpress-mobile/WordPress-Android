@@ -1584,7 +1584,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
-        ActivityLauncher.viewRevisionDetailForResult(this, mRevision, revisions);
+        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
     }
 
     private void loadRevision() {
@@ -2759,7 +2759,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
-                case RequestCodes.HISTORY_DETAILS:
+                case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
 

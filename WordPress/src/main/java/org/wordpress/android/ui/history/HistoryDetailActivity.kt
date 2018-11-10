@@ -11,7 +11,7 @@ import org.wordpress.android.ui.history.HistoryListItem.Revision
 
 class HistoryDetailActivity : AppCompatActivity() {
     companion object {
-        const val KEY_HISTORY_DETAILS_FRAGMENT = "account-settings-fragment"
+        const val KEY_HISTORY_DETAIL_FRAGMENT = "history_detail_fragment"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,16 +27,16 @@ class HistoryDetailActivity : AppCompatActivity() {
         val revision = extras.getParcelable(HistoryDetailContainerFragment.EXTRA_REVISION) as Revision
         val revisions = extras.getParcelableArrayList<Revision>(HistoryDetailContainerFragment.EXTRA_REVISIONS)
 
-        var historyDetailsContainerFragment = supportFragmentManager.findFragmentByTag(KEY_HISTORY_DETAILS_FRAGMENT)
+        var historyDetailContainerFragment = supportFragmentManager.findFragmentByTag(KEY_HISTORY_DETAIL_FRAGMENT)
 
-        if (historyDetailsContainerFragment == null) {
-            historyDetailsContainerFragment = HistoryDetailContainerFragment.newInstance(
+        if (historyDetailContainerFragment == null) {
+            historyDetailContainerFragment = HistoryDetailContainerFragment.newInstance(
                     revision,
                     revisions as ArrayList<Revision>
             )
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.fragment_container, historyDetailsContainerFragment, KEY_HISTORY_DETAILS_FRAGMENT)
+                    .add(R.id.fragment_container, historyDetailContainerFragment, KEY_HISTORY_DETAIL_FRAGMENT)
                     .commit()
         }
     }
