@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PagedListItemType
+import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.list.PostListDescriptor.PostListDescriptorForRestSite
@@ -133,8 +134,29 @@ class PostListViewModel @Inject constructor(
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
-    val pagedListData: LiveData<PagedList<PagedListItemType<PostAdapterItem>>> by lazy {
-        pagedListWrapper.data
+    val pagedListDataAndScrollPosition: LiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>> by lazy {
+        val result = MediatorLiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>>()
+        result.addSource(pagedListWrapper.data) { listData ->
+            listData?.let { list ->
+                if (targetLocalPostId == null) {
+                    result.value = Pair(list, null)
+                    return@let
+                }
+                val scrollIndex = list.listIterator().withIndex().asSequence().find { listItem ->
+                    if (listItem.value is ReadyItem<PostAdapterItem>) {
+                        val readyItem = listItem.value as ReadyItem<PostAdapterItem>
+                        readyItem.item.data.localPostId == targetLocalPostId
+                    } else {
+                        false
+                    }
+                }?.let {
+                    targetLocalPostId = null
+                    it.index
+                }
+                result.value = Pair(list, scrollIndex)
+            }
+        }
+        result
     }
     val emptyViewState: LiveData<PostListEmptyViewState> by lazy {
         val result = MediatorLiveData<PostListEmptyViewState>()

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -19,6 +20,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
@@ -104,8 +106,8 @@ class PostListFragment : Fragment() {
             viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
                     .get<PostListViewModel>(PostListViewModel::class.java)
             viewModel.start(site, targetLocalPostId)
-            viewModel.pagedListData.observe(this, Observer {
-                it?.let { pagedListData -> postListAdapter.submitList(pagedListData) }
+            viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
+                it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
             })
             viewModel.emptyViewState.observe(this, Observer {
                 it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
@@ -132,22 +134,6 @@ class PostListFragment : Fragment() {
                 it?.show(nonNullActivity, fragmentManager)
             })
         }
-        postListAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            // TODO: Insert is not enough, what if the item is moved to the top (first and second item changes position
-            // TODO: and first one becomes invisible)
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                val range = (positionStart..(positionStart + itemCount))
-                if (0 in range) {
-                    (recyclerView?.layoutManager as LinearLayoutManager?)?.let {
-                        // TODO: Need to do this better!
-                        if (it.findFirstCompletelyVisibleItemPosition() < 5) {
-                            recyclerView?.smoothScrollToPosition(0)
-                        }
-                    }
-                }
-                super.onItemRangeInserted(positionStart, itemCount)
-            }
-        })
     }
 
     private fun handlePostListAction(action: PostListAction) {
@@ -315,6 +301,14 @@ class PostListFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK) {
             viewModel.handleEditPostResult(data)
         }
+    }
+
+    private fun updatePagedListData(
+        pagedListData: PagedList<PagedListItemType<PostAdapterItem>>,
+        scrollPosition: Int?
+    ) {
+        postListAdapter.submitList(pagedListData)
+        scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
 
     private fun updateEmptyViewForState(emptyViewState: PostListEmptyViewState) {
