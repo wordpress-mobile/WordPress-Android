@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
@@ -115,8 +116,8 @@ class PostListFragment : Fragment() {
             viewModel.isLoadingMore.observe(this, Observer {
                 progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
             })
-            viewModel.userAction.observe(this, Observer {
-                it?.let { userAction -> handleUserAction(userAction) }
+            viewModel.postListAction.observe(this, Observer {
+                it?.let { action -> handlePostListAction(action) }
             })
             viewModel.postUploadAction.observe(this, Observer {
                 it?.let { uploadAction -> handleUploadAction(uploadAction) }
@@ -149,18 +150,18 @@ class PostListFragment : Fragment() {
         })
     }
 
-    private fun handleUserAction(action: PostListUserAction) {
+    private fun handlePostListAction(action: PostListAction) {
         when (action) {
-            is PostListUserAction.EditPost -> {
+            is PostListAction.EditPost -> {
                 ActivityLauncher.editPostOrPageForResult(nonNullActivity, action.site, action.post)
             }
-            is PostListUserAction.NewPost -> {
+            is PostListAction.NewPost -> {
                 ActivityLauncher.addNewPostForResult(nonNullActivity, action.site, action.isPromo)
             }
-            is PostListUserAction.PreviewPost -> {
+            is PostListAction.PreviewPost -> {
                 ActivityLauncher.viewPostPreviewForResult(nonNullActivity, action.site, action.post)
             }
-            is PostListUserAction.RetryUpload -> {
+            is PostListAction.RetryUpload -> {
                 // restart the UploadService with retry parameters
                 val intent = UploadService.getUploadPostServiceIntent(
                         nonNullActivity,
@@ -171,19 +172,22 @@ class PostListFragment : Fragment() {
                 )
                 nonNullActivity.startService(intent)
             }
-            is PostListUserAction.ViewStats -> {
+            is PostListAction.ViewStats -> {
                 ActivityLauncher.viewStatsSinglePostDetails(nonNullActivity, action.site, action.post)
             }
-            is PostListUserAction.ViewPost -> {
+            is PostListAction.ViewPost -> {
                 ActivityLauncher.browsePostOrPage(nonNullActivity, action.site, action.post)
             }
-            is PostListUserAction.ShowGutenbergWarningDialog -> {
+            is PostListAction.ShowGutenbergWarningDialog -> {
                 PostUtils.showGutenbergCompatibilityWarningDialog(
                         nonNullActivity,
                         fragmentManager,
                         action.post,
                         action.site
                 )
+            }
+            is PostListAction.DismissPendingNotification -> {
+                NativeNotificationsUtils.dismissNotification(action.pushId, nonNullActivity)
             }
         }
     }

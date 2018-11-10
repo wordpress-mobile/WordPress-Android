@@ -39,13 +39,15 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
+import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
-import org.wordpress.android.ui.posts.PostListUserAction
-import org.wordpress.android.ui.posts.PostListUserAction.ShowGutenbergWarningDialog
+import org.wordpress.android.ui.posts.PostListAction
+import org.wordpress.android.ui.posts.PostListAction.DismissPendingNotification
+import org.wordpress.android.ui.posts.PostListAction.ShowGutenbergWarningDialog
 import org.wordpress.android.ui.posts.PostUploadAction
 import org.wordpress.android.ui.posts.PostUploadAction.CancelPostAndMediaUpload
 import org.wordpress.android.ui.posts.PostUploadAction.EditPostResult
@@ -80,11 +82,6 @@ enum class PostListEmptyViewState {
     PERMISSION_ERROR
 }
 
-enum class PostEditActionSource {
-    EDIT_BUTTON,
-    GUTENBERG_WARNING_DIALOG
-}
-
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
@@ -105,8 +102,8 @@ class PostListViewModel @Inject constructor(
     private var localPostIdForTrashDialog: Int? = null
     private var targetLocalPostId: Int? = null
 
-    private val _userAction = SingleLiveEvent<PostListUserAction>()
-    val userAction: LiveData<PostListUserAction> = _userAction
+    private val _postListAction = SingleLiveEvent<PostListAction>()
+    val postListAction: LiveData<PostListAction> = _postListAction
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
@@ -216,7 +213,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun newPost() {
-        _userAction.postValue(PostListUserAction.NewPost(site))
+        _postListAction.postValue(PostListAction.NewPost(site))
     }
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -243,13 +240,13 @@ class PostListViewModel @Inject constructor(
     private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
-            PostListButton.BUTTON_RETRY -> _userAction.postValue(PostListUserAction.RetryUpload(post))
+            PostListButton.BUTTON_RETRY -> _postListAction.postValue(PostListAction.RetryUpload(post))
             PostListButton.BUTTON_SUBMIT, PostListButton.BUTTON_SYNC, PostListButton.BUTTON_PUBLISH -> {
                 showPublishConfirmationDialog(post)
             }
-            PostListButton.BUTTON_VIEW -> _userAction.postValue(PostListUserAction.ViewPost(site, post))
-            PostListButton.BUTTON_PREVIEW -> _userAction.postValue(PostListUserAction.PreviewPost(site, post))
-            PostListButton.BUTTON_STATS -> _userAction.postValue(PostListUserAction.ViewStats(site, post))
+            PostListButton.BUTTON_VIEW -> _postListAction.postValue(PostListAction.ViewPost(site, post))
+            PostListButton.BUTTON_PREVIEW -> _postListAction.postValue(PostListAction.PreviewPost(site, post))
+            PostListButton.BUTTON_STATS -> _postListAction.postValue(PostListAction.ViewStats(site, post))
             PostListButton.BUTTON_TRASH, PostListButton.BUTTON_DELETE -> {
                 showTrashConfirmationDialog(post)
             }
@@ -306,7 +303,7 @@ class PostListViewModel @Inject constructor(
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
         if (PostUtils.contentContainsGutenbergBlocks(post.content) && !AppPrefs.isGutenbergWarningDialogDisabled()) {
-            _userAction.postValue(ShowGutenbergWarningDialog(site, post))
+            _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
         } else {
             editPost(site, post)
         }
@@ -326,7 +323,7 @@ class PostListViewModel @Inject constructor(
             // post itself when they finish (since we're about to edit it again)
             UploadService.cancelQueuedPostUpload(post)
         }
-        _userAction.postValue(PostListUserAction.EditPost(site, post))
+        _postListAction.postValue(PostListAction.EditPost(site, post))
     }
 
     private fun trashPost(localPostId: Int) {
@@ -344,9 +341,10 @@ class PostListViewModel @Inject constructor(
             // If postIdToTrash is set to `null`, user undid the action
             if (postIdToTrash != null) {
                 postIdToTrash = null
-                // TODO: Remove the pending draft notification
                 _postUploadAction.postValue(CancelPostAndMediaUpload(post))
                 if (post.isLocalDraft) {
+                    val pushId = PendingDraftsNotificationsUtils.makePendingDraftNotificationId(post.id)
+                    _postListAction.postValue(DismissPendingNotification(pushId))
                     dispatcher.dispatch(PostActionBuilder.newRemovePostAction(post))
                 } else {
                     dispatcher.dispatch(PostActionBuilder.newDeletePostAction(RemotePostPayload(post, site)))

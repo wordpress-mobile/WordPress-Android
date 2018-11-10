@@ -477,9 +477,6 @@ object DiffItemCallback : DiffUtil.ItemCallback<PagedListItemType<PostAdapterIte
         if (oldItem is LoadingItem && newItem is ReadyItem) {
             return oldItem.remoteItemId == newItem.item.data.remotePostId
         }
-        if (oldItem is ReadyItem && newItem is LoadingItem) {
-            return oldItem.item.data.remotePostId == newItem.remoteItemId
-        }
         return false
     }
 
