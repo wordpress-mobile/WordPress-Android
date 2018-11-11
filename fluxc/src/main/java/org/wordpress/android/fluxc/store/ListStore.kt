@@ -66,17 +66,44 @@ class ListStore @Inject constructor(
         AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
     }
 
+    /**
+     * This is the function that'll be used to consume lists.
+     *
+     * @param listDescriptor Describes which list will be consumed
+     * @param dataStore Describes how to take certain actions such as fetching list for the item type [T].
+     * @param lifecycle The lifecycle of the client that'll be consuming this list. It's used to make sure everything
+     * is cleaned up properly once the client is destroyed.
+     * @param transform A transform function from the actual item type [T], to the resulting item type [R]. In many
+     * cases there are a lot of expensive calculations that needs to be made before an item can be used. This function
+     * provides a way to do that during the pagination step in a background thread, so the clients won't need to
+     * worry about these expensive operations.
+     *
+     * @return A [PagedListWrapper] that provides all the necessary information to consume a list such as its data,
+     * whether the first page is being fetched, whether there are any errors etc. in `LiveData` format.
+     */
     fun <T, R> getList(
         listDescriptor: ListDescriptor,
         dataStore: ListDataStoreInterface<T>,
         lifecycle: Lifecycle,
         transform: (T) -> R
     ): PagedListWrapper<R> {
+        // Helper functions
         val getList = { descriptor: ListDescriptor -> getListItems(descriptor) }
         val isListFullyFetched = { descriptor: ListDescriptor -> getListState(descriptor) == FETCHED }
+        val fetchFirstPage = {
+            handleFetchList(listDescriptor, false) { offset ->
+                dataStore.fetchList(listDescriptor, offset)
+            }
+        }
+        val isEmpty = {
+            getListItems(listDescriptor).isEmpty()
+        }
+
+        // Create the PagedList
         val factory = PagedListFactory(dataStore, listDescriptor, getList, isListFullyFetched, transform)
         val callback = object : BoundaryCallback<PagedListItemType<R>>() {
             override fun onItemAtEndLoaded(itemAtEnd: PagedListItemType<R>) {
+                // Load more items if we are near the end of list
                 handleFetchList(listDescriptor, true) { offset ->
                     dataStore.fetchList(listDescriptor, offset)
                 }
@@ -88,20 +115,12 @@ class ListStore @Inject constructor(
                 .setInitialLoadSizeHint(listDescriptor.config.initialLoadSize)
                 .setPageSize(listDescriptor.config.dbPageSize)
                 .build()
-        val liveData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
+        val listData = LivePagedListBuilder<Int, PagedListItemType<R>>(factory, pagedListConfig)
                 .setBoundaryCallback(callback).build()
-        val fetchFirstPage = {
-            handleFetchList(listDescriptor, false) { offset ->
-                dataStore.fetchList(listDescriptor, offset)
-            }
-        }
-        val isEmpty = {
-            getListItems(listDescriptor).isEmpty()
-        }
         return PagedListWrapper(
+                data = listData,
                 dispatcher = mDispatcher,
                 listDescriptor = listDescriptor,
-                data = liveData,
                 lifecycle = lifecycle,
                 refresh = fetchFirstPage,
                 invalidate = factory::invalidate,
@@ -109,13 +128,9 @@ class ListStore @Inject constructor(
         )
     }
 
-    private fun getListState(listDescriptor: ListDescriptor): ListState {
-        val listModel = listSqlUtils.getList(listDescriptor)
-        return if (listModel != null) {
-            getListState(listModel)
-        } else ListState.defaultState
-    }
-
+    /**
+     * A helper function that returns the list items for the given [ListDescriptor].
+     */
     private fun getListItems(listDescriptor: ListDescriptor): List<Long> {
         val listModel = listSqlUtils.getList(listDescriptor)
         return if (listModel != null) {
@@ -123,21 +138,27 @@ class ListStore @Inject constructor(
         } else emptyList()
     }
 
+    /**
+     * A helper function that initiates the fetch from remote for the given [ListDescriptor].
+     *
+     * Before fetching the list, it'll first check if this is a valid fetch depending on the list's state. Then, it'll
+     * update the list's state and emit that change. Finally, it'll calculate the offset and initiate the fetch with
+     * the given [fetchList] function.
+     */
     private fun handleFetchList(
         listDescriptor: ListDescriptor,
         loadMore: Boolean,
         fetchList: (Int) -> Unit
     ) {
-        listSqlUtils.getList(listDescriptor)?.let { listModel ->
-            val currentState = getListState(listModel)
-            if (!loadMore && currentState.isFetchingFirstPage()) {
-                // already fetching the first page
-                return
-            } else if (loadMore && !currentState.canLoadMore()) {
-                // we can only load more if there is more data to be loaded
-                return
-            }
+        val currentState = getListState(listDescriptor)
+        if (!loadMore && currentState.isFetchingFirstPage()) {
+            // already fetching the first page
+            return
+        } else if (loadMore && !currentState.canLoadMore()) {
+            // we can only load more if there is more data to be loaded
+            return
         }
+
         val newState = if (loadMore) ListState.LOADING_MORE else ListState.FETCHING_FIRST_PAGE
         listSqlUtils.insertOrUpdateList(listDescriptor, newState)
         handleListStateChange(listDescriptor, newState)
@@ -149,6 +170,9 @@ class ListStore @Inject constructor(
         fetchList(offset)
     }
 
+    /**
+     * A helper function that emits the latest [ListState] for the given [ListDescriptor].
+     */
     private fun handleListStateChange(listDescriptor: ListDescriptor, newState: ListState, error: ListError? = null) {
         emitChange(OnListStateChanged(listDescriptor, newState, error))
     }
@@ -244,18 +268,21 @@ class ListStore @Inject constructor(
         }
     }
 
-    private fun getListState(listModel: ListModel): ListState =
-            if (isListStateOutdated(listModel)) {
-                ListState.defaultState
-            } else {
-                requireNotNull(ListState.values().firstOrNull { it.value == listModel.stateDbValue }) {
-                    "The stateDbValue of the ListModel didn't match any of the `ListState`s. This likely happened " +
-                            "because the ListState values were altered without a DB migration."
-                }
+    /**
+     * A helper function that returns the [ListState] for the given [ListDescriptor].
+     */
+    private fun getListState(listDescriptor: ListDescriptor): ListState {
+        val listModel = listSqlUtils.getList(listDescriptor)
+        return if (listModel != null && !isListStateOutdated(listModel)) {
+            requireNotNull(ListState.values().firstOrNull { it.value == listModel.stateDbValue }) {
+                "The stateDbValue of the ListModel didn't match any of the `ListState`s. This likely happened " +
+                        "because the ListState values were altered without a DB migration."
             }
+        } else ListState.defaultState
+    }
 
     /**
-     * A helper function to returns whether it has been more than a certain time has passed since it's `lastModified`.
+     * A helper function that returns whether it has been more than a certain time has passed since it's `lastModified`.
      *
      * Since we keep the state in the DB, in the case of application being closed during a fetch, it'll carry
      * over to the next session. To prevent such cases, we use a timeout approach. If it has been more than a
