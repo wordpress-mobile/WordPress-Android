@@ -583,8 +583,14 @@ class PostListViewModel @Inject constructor(
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let { trashPost(it) }
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let { publishPost(it) }
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let {
+                localPostIdForTrashDialog = null
+                trashPost(it)
+            }
+            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let {
+                localPostIdForPublishDialog = null
+                publishPost(it)
+            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
