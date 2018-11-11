@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts.adapters
 
 import android.arch.paging.PagedListAdapter
 import android.content.Context
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListItemType.EndListIndicatorItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.ReadyItem
+import org.wordpress.android.ui.PagedListDiffItemCallback
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
@@ -30,7 +30,7 @@ class PostListAdapter(
     isAztecEditorEnabled: Boolean,
     hasCapabilityPublishPosts: Boolean,
     isPhotonCapable: Boolean
-) : PagedListAdapter<PagedListItemType<PostAdapterItem>, ViewHolder>(DiffItemCallback) {
+) : PagedListAdapter<PagedListItemType<PostAdapterItem>, ViewHolder>(PostListDiffItemCallback) {
     private val endlistIndicatorHeight: Int
     private val layoutInflater: LayoutInflater
     private val postViewHolderConfig: PostViewHolderConfig
@@ -103,39 +103,8 @@ class PostListAdapter(
     private class EndListViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }
 
-private object DiffItemCallback : DiffUtil.ItemCallback<PagedListItemType<PostAdapterItem>>() {
-    override fun areItemsTheSame(
-        oldItem: PagedListItemType<PostAdapterItem>,
-        newItem: PagedListItemType<PostAdapterItem>
-    ): Boolean {
-        if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
-            return true
-        }
-        if (oldItem is LoadingItem && newItem is LoadingItem) {
-            return oldItem.remoteItemId == newItem.remoteItemId
-        }
-        if (oldItem is ReadyItem && newItem is ReadyItem) {
-            return oldItem.item.data.localPostId == newItem.item.data.localPostId
-        }
-        if (oldItem is LoadingItem && newItem is ReadyItem) {
-            return oldItem.remoteItemId == newItem.item.data.remotePostId
-        }
-        return false
-    }
-
-    override fun areContentsTheSame(
-        oldItem: PagedListItemType<PostAdapterItem>,
-        newItem: PagedListItemType<PostAdapterItem>
-    ): Boolean {
-        if (oldItem is EndListIndicatorItem && newItem is EndListIndicatorItem) {
-            return true
-        }
-        if (oldItem is LoadingItem && newItem is LoadingItem) {
-            return true
-        }
-        if (oldItem is ReadyItem && newItem is ReadyItem) {
-            return oldItem.item.data == newItem.item.data
-        }
-        return false
-    }
-}
+private val PostListDiffItemCallback = PagedListDiffItemCallback<PostAdapterItem>(
+        getRemoteItemId = { item -> item.data.remotePostId },
+        areItemsTheSame = { oldItem, newItem -> oldItem.data.localPostId == newItem.data.localPostId },
+        areContentsTheSame = { oldItem, newItem -> oldItem.data == newItem.data }
+)

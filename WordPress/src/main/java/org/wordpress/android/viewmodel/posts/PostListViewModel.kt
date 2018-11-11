@@ -85,6 +85,8 @@ enum class PostListEmptyViewState {
     PERMISSION_ERROR
 }
 
+typealias PagedPostList = PagedList<PagedListItemType<PostAdapterItem>>
+
 class PostListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val listStore: ListStore,
@@ -99,11 +101,17 @@ class PostListViewModel @Inject constructor(
     private var isStarted: Boolean = false
     private var listDescriptor: PostListDescriptor? = null
     private lateinit var site: SiteModel
+
+    // Cache upload statuses and featured images for posts for quicker access
     private val uploadStatusMap = HashMap<Int, PostAdapterItemUploadStatus>()
     private val featuredImageMap = HashMap<Long, String>()
+
+    // Keep a reference to the currently being trashed post, so we can hide it during Undo Snackbar
     private var postIdToTrash: Pair<Int, Long>? = null
+    // Since we are using DialogFragments we need to hold onto which post will be published or trashed
     private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForTrashDialog: Int? = null
+    // Initial target post to scroll to
     private var targetLocalPostId: Int? = null
 
     private val _postListAction = SingleLiveEvent<PostListAction>()
@@ -137,8 +145,9 @@ class PostListViewModel @Inject constructor(
 
     val isFetchingFirstPage: LiveData<Boolean> by lazy { pagedListWrapper.isFetchingFirstPage }
     val isLoadingMore: LiveData<Boolean> by lazy { pagedListWrapper.isLoadingMore }
-    val pagedListDataAndScrollPosition: LiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>> by lazy {
-        val result = MediatorLiveData<Pair<PagedList<PagedListItemType<PostAdapterItem>>, Int?>>()
+    // Since we can only scroll to a post when the data is loaded, we are keeping the information together
+    val pagedListDataAndScrollPosition: LiveData<Pair<PagedPostList, Int?>> by lazy {
+        val result = MediatorLiveData<Pair<PagedPostList, Int?>>()
         result.addSource(pagedListWrapper.data) { pagedListData ->
             pagedListData?.let { list ->
                 if (targetLocalPostId == null) {
@@ -189,6 +198,8 @@ class PostListViewModel @Inject constructor(
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
+    // Lifecycle
+
     init {
         connectionStatus.observe(this, Observer {
             isNetworkAvailable = it?.isConnected == true
@@ -206,7 +217,6 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(site)
         }
-        // TODO: Use the `targetLocalPostId` to scroll to given post when data is loaded
         // We want to update the target post only for the first time ViewModel is started
         this.targetLocalPostId = targetLocalPostId
 
@@ -225,6 +235,8 @@ class PostListViewModel @Inject constructor(
         dispatcher.unregister(this)
         super.onCleared()
     }
+
+    // Public Methods
 
     fun fetchFirstPage() {
         pagedListWrapper.fetchFirstPage()
@@ -245,6 +257,8 @@ class PostListViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
+    // Private List Actions
+
     private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
@@ -262,7 +276,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun showTrashConfirmationDialog(post: PostModel) {
-        if (postIdToTrash != null) {
+        if (localPostIdForTrashDialog != null) {
             // We can only handle one trash action at once due to be able to undo
             return
         }
@@ -424,7 +438,7 @@ class PostListViewModel @Inject constructor(
         invalidateFeaturedMediaAndPagedListData(event.media.mediaId)
     }
 
-    // EventBus
+    // EventBus Events
 
     @Suppress("unused")
     fun onEventBackgroundThread(event: UploadService.UploadErrorEvent) {
@@ -565,7 +579,7 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     }
 
-    // Dialog Events
+    // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
         when (instanceTag) {

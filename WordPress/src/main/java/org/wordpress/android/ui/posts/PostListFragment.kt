@@ -4,7 +4,6 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.PagedList
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -20,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
@@ -39,6 +37,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.EMPTY_LIST
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState.HIDDEN_LIST
@@ -299,10 +298,7 @@ class PostListFragment : Fragment() {
         }
     }
 
-    private fun updatePagedListData(
-        pagedListData: PagedList<PagedListItemType<PostAdapterItem>>,
-        scrollPosition: Int?
-    ) {
+    private fun updatePagedListData(pagedListData: PagedPostList, scrollPosition: Int?) {
         postListAdapter.submitList(pagedListData)
         scrollPosition?.let { recyclerView?.smoothScrollToPosition(it) }
     }
