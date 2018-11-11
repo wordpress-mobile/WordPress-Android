@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.PagedList
 import android.content.Intent
@@ -67,6 +68,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButton
@@ -88,7 +90,8 @@ class PostListViewModel @Inject constructor(
     private val listStore: ListStore,
     private val uploadStore: UploadStore,
     private val mediaStore: MediaStore,
-    private val postStore: PostStore
+    private val postStore: PostStore,
+    connectionStatus: LiveData<ConnectionStatus>
 ) : ViewModel(), LifecycleOwner {
     private val isStatsSupported: Boolean by lazy {
         SiteUtils.isAccessedViaWPComRest(site) && site.hasCapabilityViewStats
@@ -182,10 +185,14 @@ class PostListViewModel @Inject constructor(
         result
     }
 
+    private var isNetworkAvailable: Boolean = true
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     init {
+        connectionStatus.observe(this, Observer {
+            isNetworkAvailable = it?.isConnected == true
+        })
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
@@ -238,27 +245,6 @@ class PostListViewModel @Inject constructor(
         _postListAction.postValue(PostListAction.NewPost(site))
     }
 
-    fun onPositiveClickedForBasicDialog(instanceTag: String) {
-        when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let { trashPost(it) }
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let { publishPost(it) }
-            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
-        }
-    }
-
-    fun onNegativeClickedForBasicDialog(instanceTag: String) {
-        when (instanceTag) {
-            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
-            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
-        }
-    }
-
-    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
-        // Cancel and outside touch dismiss works the same way
-        onNegativeClickedForBasicDialog(instanceTag)
-    }
-
     private fun handlePostButton(buttonType: Int, post: PostModel) {
         when (buttonType) {
             PostListButton.BUTTON_EDIT -> editPostButtonAction(site, post)
@@ -278,6 +264,10 @@ class PostListViewModel @Inject constructor(
     private fun showTrashConfirmationDialog(post: PostModel) {
         if (postIdToTrash != null) {
             // We can only handle one trash action at once due to be able to undo
+            return
+        }
+        // We need network connection to delete a remote post, but not a local draft
+        if (!post.isLocalDraft && !checkNetworkConnection()) {
             return
         }
         val messageRes = if (!UploadService.isPostUploadingOrQueued(post)) {
@@ -301,6 +291,9 @@ class PostListViewModel @Inject constructor(
     private fun showPublishConfirmationDialog(post: PostModel) {
         if (localPostIdForPublishDialog != null) {
             // We can only handle one publish dialog at once
+            return
+        }
+        if (!checkNetworkConnection()) {
             return
         }
         val dialogHolder = DialogHolder(
@@ -572,6 +565,29 @@ class PostListViewModel @Inject constructor(
         pagedListWrapper.invalidateData()
     }
 
+    // Dialog Events
+
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        when (instanceTag) {
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog?.let { trashPost(it) }
+            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let { publishPost(it) }
+            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
+        }
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        when (instanceTag) {
+            CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
+            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
+            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
+        }
+    }
+
+    fun onDismissByOutsideTouchForBasicDialog(instanceTag: String) {
+        // Cancel and outside touch dismiss works the same way
+        onNegativeClickedForBasicDialog(instanceTag)
+    }
+
     // Gutenberg Events
 
     fun onGutenbergWarningDialogEditPostClicked(gutenbergRemotePostId: Long) {
@@ -615,4 +631,14 @@ class PostListViewModel @Inject constructor(
             PostUtils.trackGutenbergDialogEvent(trackValue, post, site)
         }
     }
+
+    // Utils
+
+    private fun checkNetworkConnection(): Boolean =
+            if (isNetworkAvailable) {
+                true
+            } else {
+                _toastMessage.postValue(ToastMessageHolder(R.string.no_network_message, Duration.SHORT))
+                false
+            }
 }
