@@ -8,9 +8,10 @@ sealed class PostListDescriptor(
     val site: SiteModel,
     val statusList: List<PostStatus>,
     val order: ListOrder,
-    val orderBy: PostListOrderBy
+    val orderBy: PostListOrderBy,
+    listConfig: ListConfig
 ) : ListDescriptor {
-    override val config: ListConfig = ListConfig.default
+    override val config: ListConfig = listConfig
 
     override val uniqueIdentifier: ListDescriptorUniqueIdentifier by lazy {
         // TODO: need a better hashing algorithm, preferably a perfect hash
@@ -58,15 +59,17 @@ sealed class PostListDescriptor(
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = ListOrder.DESC,
         orderBy: PostListOrderBy = PostListOrderBy.DATE,
-        val searchQuery: String? = null
-    ) : PostListDescriptor(site, statusList, order, orderBy)
+        val searchQuery: String? = null,
+        config: ListConfig = ListConfig.default
+    ) : PostListDescriptor(site, statusList, order, orderBy, config)
 
     class PostListDescriptorForXmlRpcSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = ListOrder.DESC,
-        orderBy: PostListOrderBy = PostListOrderBy.DATE
-    ) : PostListDescriptor(site, statusList, order, orderBy)
+        orderBy: PostListOrderBy = PostListOrderBy.DATE,
+        config: ListConfig = ListConfig.default
+    ) : PostListDescriptor(site, statusList, order, orderBy, config)
 }
 
 enum class PostListOrderBy(val value: String) {
