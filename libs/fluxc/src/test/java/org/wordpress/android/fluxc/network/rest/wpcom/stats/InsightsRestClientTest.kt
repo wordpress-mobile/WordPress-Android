@@ -32,11 +32,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.TAGS_RESPONSE
 import org.wordpress.android.fluxc.store.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
 import java.text.SimpleDateFormat
@@ -300,6 +302,38 @@ class InsightsRestClientTest {
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
+    @Test
+    fun `returns tags and categories`() = test {
+        initTagsResponse(TAGS_RESPONSE)
+
+        val responseModel = insightsRestClient.fetchTags(site, forced = false)
+
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(TAGS_RESPONSE)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/tags/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(mapOf("max" to "6"))
+    }
+
+    @Test
+    fun `returns tags and categories error response`() = test {
+        val errorMessage = "message"
+        initTagsResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val responseModel = insightsRestClient.fetchTags(site, forced = false)
+
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
     private suspend fun initAllTimeResponse(
         data: AllTimeResponse? = null,
         error: WPComGsonNetworkError? = null
@@ -340,6 +374,13 @@ class InsightsRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<FollowersResponse> {
         return initResponse(FollowersResponse::class.java, data ?: mock(), error, cachingEnabled = false)
+    }
+
+    private suspend fun initTagsResponse(
+        data: TagsResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<TagsResponse> {
+        return initResponse(TagsResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(

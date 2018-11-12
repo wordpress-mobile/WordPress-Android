@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key
@@ -24,12 +25,14 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TAGS_AND_CATEGORIES_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.WP_COM_FOLLOWERS
 import org.wordpress.android.fluxc.store.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.LATEST_POST
 import org.wordpress.android.fluxc.store.MOST_POPULAR_RESPONSE
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.TAGS_RESPONSE
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -162,5 +165,29 @@ class InsightsSqlUtilsTest {
         insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL)
 
         verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, FOLLOWERS_RESPONSE)
+    }
+
+    @Test
+    fun `returns rags response from stats utils`() {
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        TAGS_AND_CATEGORIES_INSIGHTS,
+                        TagsResponse::class.java
+                )
+        ).thenReturn(
+                TAGS_RESPONSE
+        )
+
+        val result = insightsSqlUtils.selectTags(site)
+
+        assertEquals(result, TAGS_RESPONSE)
+    }
+
+    @Test
+    fun `inserts rags response to stats utils`() {
+        insightsSqlUtils.insert(site, TAGS_RESPONSE)
+
+        verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, TAGS_RESPONSE)
     }
 }

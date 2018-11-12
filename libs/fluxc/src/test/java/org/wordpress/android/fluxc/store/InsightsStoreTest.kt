@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
+import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
@@ -353,6 +355,51 @@ class InsightsStoreTest {
         whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchEmailFollowers(site, forced)
+
+        assertNotNull(responseModel.error)
+        val error = responseModel.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `returns tags and categories per site`() = test {
+        val fetchInsightsPayload = FetchInsightsPayload(
+                TAGS_RESPONSE
+        )
+        val forced = true
+        whenever(insightsRestClient.fetchTags(site, forced = forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val model = mock<TagsModel>()
+        whenever(mapper.map(TAGS_RESPONSE)).thenReturn(model)
+
+        val responseModel = store.fetchTags(site, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        verify(sqlUtils).insert(site, TAGS_RESPONSE)
+    }
+
+    @Test
+    fun `returns tags and categories from db`() {
+        whenever(sqlUtils.selectTags(site)).thenReturn(TAGS_RESPONSE)
+        val model = mock<TagsModel>()
+        whenever(mapper.map(TAGS_RESPONSE)).thenReturn(model)
+
+        val result = store.getTags(site)
+
+        assertThat(result).isEqualTo(model)
+    }
+
+    @Test
+    fun `returns error when tags and categories call fail`() = test {
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = FetchInsightsPayload<TagsResponse>(StatsError(type, message))
+        val forced = true
+        whenever(insightsRestClient.fetchTags(site, forced = forced)).thenReturn(errorPayload)
+
+        val responseModel = store.fetchTags(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
