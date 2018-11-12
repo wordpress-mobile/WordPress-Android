@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
@@ -18,6 +19,9 @@ import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
@@ -259,6 +263,96 @@ class InsightsStoreTest {
         whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchTodayInsights(site, forced)
+
+        assertNotNull(responseModel.error)
+        val error = responseModel.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `returns WPCOM followers per site`() = test {
+        val fetchInsightsPayload = FetchInsightsPayload(
+                FOLLOWERS_RESPONSE
+        )
+        val forced = true
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, 6, forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val model = mock<FollowersModel>()
+        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM)).thenReturn(model)
+
+        val responseModel = store.fetchWpComFollowers(site, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, WP_COM)
+    }
+
+    @Test
+    fun `returns email followers per site`() = test {
+        val fetchInsightsPayload = FetchInsightsPayload(
+                FOLLOWERS_RESPONSE
+        )
+        val forced = true
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val model = mock<FollowersModel>()
+        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL)).thenReturn(model)
+
+        val responseModel = store.fetchEmailFollowers(site, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, EMAIL)
+    }
+
+    @Test
+    fun `returns WPCOM followers from db`() {
+        whenever(sqlUtils.selectFollowers(site, WP_COM)).thenReturn(FOLLOWERS_RESPONSE)
+        val model = mock<FollowersModel>()
+        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM)).thenReturn(model)
+
+        val result = store.getWpComFollowers(site)
+
+        assertThat(result).isEqualTo(model)
+    }
+
+    @Test
+    fun `returns email followers from db`() {
+        whenever(sqlUtils.selectFollowers(site, EMAIL)).thenReturn(FOLLOWERS_RESPONSE)
+        val model = mock<FollowersModel>()
+        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL)).thenReturn(model)
+
+        val result = store.getEmailFollowers(site)
+
+        assertThat(result).isEqualTo(model)
+    }
+
+    @Test
+    fun `returns error when WPCOM followers call fail`() = test {
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
+        val forced = true
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, 6, forced)).thenReturn(errorPayload)
+
+        val responseModel = store.fetchWpComFollowers(site, forced)
+
+        assertNotNull(responseModel.error)
+        val error = responseModel.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `returns error when email followers call fail`() = test {
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
+        val forced = true
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(errorPayload)
+
+        val responseModel = store.fetchEmailFollowers(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
