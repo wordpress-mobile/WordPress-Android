@@ -535,11 +535,12 @@ class PostListViewModel @Inject constructor(
             return ReaderImageScanner(postContent, !SiteUtils.isPhotonCapable(site)).largestImage
         }
         featuredImageMap[featuredImageId]?.let { return it }
-        val media = mediaStore.getSiteMediaWithId(site, featuredImageId)
-        media?.let {
-            val mediaUrl = media.url
-            featuredImageMap[featuredImageId] = mediaUrl
-            return mediaUrl
+        mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
+            // This should be a pretty rare case, but some media seems to be missing url
+            return if (media.url != null) {
+                featuredImageMap[featuredImageId] = media.url
+                media.url
+            } else null
         }
         // Media is not in the Store, we need to download it
         val mediaToDownload = MediaModel()
