@@ -657,4 +657,22 @@ public class ActivityLauncher {
             WPActivityUtils.enableComponent(context, ReaderPostPagerActivity.class);
         }
     }
+
+    public static void openStatsUrl(Context context, @NonNull String url) {
+        if (url.startsWith("https://wordpress.com/my-stats") || url.startsWith("http://wordpress.com/my-stats")) {
+            // make sure to load the no-chrome version of Stats over https
+            url = UrlUtils.makeHttps(url);
+            if (url.contains("?")) {
+                // add the no chrome parameters if not available
+                if (!url.contains("?no-chrome") && !url.contains("&no-chrome")) {
+                    url += "&no-chrome";
+                }
+            } else {
+                url += "?no-chrome";
+            }
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url);
+        } else if (url.startsWith("https") || url.startsWith("http")) {
+            WPWebViewActivity.openURL(context, url);
+        }
+    }
 }

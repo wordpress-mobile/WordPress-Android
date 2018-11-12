@@ -88,6 +88,14 @@ sealed class BlockItemViewHolder(
             } else {
                 View.GONE
             }
+            if (item.clickAction != null) {
+                itemView.isClickable = true
+                itemView.setOnClickListener { item.clickAction.invoke() }
+            } else {
+                itemView.isClickable = false
+                itemView.background = null
+                itemView.setOnClickListener(null)
+            }
         }
     }
 
@@ -303,7 +311,8 @@ sealed class BlockItemViewHolder(
                 list.adapter = BlockListAdapter(imageManager)
             }
             var isExpanded = false
-            expandButton.setOnClickListener {
+            itemView.isClickable = true
+            itemView.setOnClickListener {
                 isExpanded = !isExpanded
                 val rotationAngle = if (isExpanded) 180 else 0
                 expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start();

@@ -41,20 +41,35 @@ sealed class BlockListItem(val type: Type) {
         val icon: ImageResource,
         val text: TextResource,
         val value: TextResource,
-        val showDivider: Boolean = true
+        val showDivider: Boolean = true,
+        val clickAction: (() -> Unit)? = null
     ) : BlockListItem(ITEM) {
-        constructor(@DrawableRes icon: Int, @StringRes text: Int, value: String, showDivider: Boolean) : this(
+        constructor(
+            @DrawableRes icon: Int,
+            @StringRes text: Int,
+            value: String,
+            showDivider: Boolean,
+            clickAction: (() -> Unit)? = null
+        ) : this(
                 ImageResource(icon),
                 TextResource(text),
                 TextResource(value),
-                showDivider
+                showDivider,
+                clickAction
         )
 
-        constructor(@DrawableRes icon: Int, text: String, value: String, showDivider: Boolean) : this(
+        constructor(
+            @DrawableRes icon: Int,
+            text: String,
+            value: String,
+            showDivider: Boolean,
+            clickAction: (() -> Unit)? = null
+        ) : this(
                 ImageResource(icon),
                 TextResource(text),
                 TextResource(value),
-                showDivider
+                showDivider,
+                clickAction
         )
     }
 

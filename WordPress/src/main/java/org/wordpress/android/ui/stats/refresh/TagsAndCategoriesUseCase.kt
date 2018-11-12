@@ -13,14 +13,13 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
     private val insightsStore: InsightsStore,
-    private val rtlUtils: RtlUtils,
     private val resourceProvider: ResourceProvider
 ) {
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
@@ -62,10 +61,11 @@ class TagsAndCategoriesUseCase
     private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {
         val item = tag.items.first()
         return Item(
-                if (item.type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp,
+                getIcon(item.type),
                 item.name,
                 tag.views.toFormattedString(),
-                index < listSize - 1
+                index < listSize - 1,
+                clickAction = { click(item.link) }
         )
     }
 
@@ -86,11 +86,19 @@ class TagsAndCategoriesUseCase
 
     private fun mapItem(item: TagModel.Item): Item {
         return Item(
-                if (item.type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp,
+                getIcon(item.type),
                 item.name,
                 "",
-                false
+                false,
+                clickAction = { click(item.link) }
 
         )
+    }
+
+    private fun getIcon(type: String) =
+            if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
+
+    private fun click(link: String) {
+        mutableNavigationTarget.value = ViewTag(link)
     }
 }
