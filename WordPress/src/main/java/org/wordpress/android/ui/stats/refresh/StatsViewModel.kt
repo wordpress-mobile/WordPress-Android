@@ -39,7 +39,6 @@ class StatsViewModel
             isInitialized = true
 
             this.site = site
-            this.insightsViewModel.reset()
 
             uiScope.loadStats()
         }
