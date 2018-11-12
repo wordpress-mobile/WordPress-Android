@@ -71,6 +71,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     public static final String EXTRA_REVISION = "EXTRA_REVISION";
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
+    public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW ";
 
     @Inject ImageManager mImageManager;
 
@@ -86,6 +87,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.history_detail_container_fragment, container, false);
+
+        mIsFragmentRecreated = savedInstanceState != null;
 
         if (getArguments() != null) {
             mRevision = getArguments().getParcelable(EXTRA_REVISION);
@@ -147,7 +150,14 @@ public class HistoryDetailContainerFragment extends Fragment {
         refreshHistoryDetail();
         resetOnPageChangeListener();
 
-        mIsFragmentRecreated = savedInstanceState != null;
+        if (mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false)) {
+            mAztecTextContainer.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
+        } else {
+            mAztecTextContainer.setVisibility(View.GONE);
+            mViewPager.setVisibility(View.VISIBLE);
+        }
+
         return rootView;
     }
 
@@ -156,6 +166,11 @@ public class HistoryDetailContainerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
         setHasOptionsMenu(true);
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, mAztecTextContainer.getVisibility() == View.VISIBLE);
     }
 
     @Override
@@ -221,7 +236,6 @@ public class HistoryDetailContainerFragment extends Fragment {
                           bottomView.setVisibility(View.GONE);
                       }
                   });
-
     }
 
     private void refreshHistoryDetail() {
