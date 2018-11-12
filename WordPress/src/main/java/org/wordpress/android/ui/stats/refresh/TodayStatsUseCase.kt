@@ -12,18 +12,27 @@ import javax.inject.Inject
 class TodayStatsUseCase
 @Inject constructor(private val insightsStore: InsightsStore) {
     suspend fun loadTodayStats(site: SiteModel, forced: Boolean = false): InsightsItem {
-        val response = insightsStore.fetchTodayInsights(site, forced)
-        val model = response.model
-        val error = response.error
+        if (forced) {
+            val response = insightsStore.fetchTodayInsights(site, forced)
+            val model = response.model
+            val error = response.error
 
-        return when {
-            error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
-            model != null -> loadLatestPostSummaryItem(model)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            return when {
+                error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
+                model != null -> loadTodayStatsItem(model)
+                else -> throw IllegalArgumentException("Unexpected empty body")
+            }
+        } else {
+            val model = insightsStore.getTodayInsights(site)
+            return if (model != null) {
+                loadTodayStatsItem(model)
+            } else {
+                ListInsightItem(listOf(Empty))
+            }
         }
     }
 
-    private fun loadLatestPostSummaryItem(model: VisitsModel): ListInsightItem {
+    private fun loadTodayStatsItem(model: VisitsModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
         val hasViews = model.views > 0
