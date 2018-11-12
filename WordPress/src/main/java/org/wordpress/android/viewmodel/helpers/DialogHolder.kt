@@ -12,8 +12,7 @@ class DialogHolder(
     @StringRes val positiveButtonTextRes: Int,
     @StringRes val negativeButtonTextRes: Int
 ) {
-    fun show(context: Context, fragmentManager: FragmentManager?) {
-        if (fragmentManager == null) return
+    fun show(context: Context, fragmentManager: FragmentManager) {
         val dialog = BasicFragmentDialog()
         dialog.initialize(tag,
                 context.getString(titleRes),

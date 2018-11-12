@@ -126,7 +126,7 @@ class PostListFragment : Fragment() {
             it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
         })
         viewModel.dialogAction.observe(this, Observer {
-            it?.show(nonNullActivity, fragmentManager)
+            it?.show(nonNullActivity, requireNotNull(fragmentManager) { "FragmentManager can't be null at this point" })
         })
     }
 
