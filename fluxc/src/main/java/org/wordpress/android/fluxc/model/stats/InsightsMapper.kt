@@ -1,7 +1,12 @@
 package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
@@ -83,5 +88,21 @@ class InsightsMapper
                 result[COMMENTS]?.toInt() ?: 0,
                 result[POSTS]?.toInt() ?: 0
         )
+    }
+
+    fun map(response: FollowersResponse, followerType: FollowerType): FollowersModel {
+        val followers = response.subscribers.map {
+            FollowerModel(
+                    it.avatar,
+                    it.label,
+                    it.url,
+                    it.dateSubscribed
+            )
+        }
+        val total = when (followerType) {
+            WP_COM -> response.totalWpCom
+            EMAIL -> response.totalEmail
+        }
+        return FollowersModel(total, followers)
     }
 }

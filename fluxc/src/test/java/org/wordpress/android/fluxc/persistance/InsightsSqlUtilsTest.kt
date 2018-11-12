@@ -9,16 +9,24 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.WP_COM_FOLLOWERS
 import org.wordpress.android.fluxc.store.ALL_TIME_RESPONSE
+import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.LATEST_POST
 import org.wordpress.android.fluxc.store.MOST_POPULAR_RESPONSE
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
@@ -111,5 +119,48 @@ class InsightsSqlUtilsTest {
         insightsSqlUtils.insert(site, POST_STATS_RESPONSE)
 
         verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, POST_STATS_RESPONSE)
+    }
+
+    @Test
+    fun `returns WPCOM followers response from stats utils`() {
+        assertReturnsFollowers(WP_COM, WP_COM_FOLLOWERS)
+    }
+
+    @Test
+    fun `returns email followers response from stats utils`() {
+        assertReturnsFollowers(EMAIL, EMAIL_FOLLOWERS)
+    }
+
+    private fun assertReturnsFollowers(
+        followerType: FollowerType,
+        key: Key
+    ) {
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        key,
+                        FollowersResponse::class.java
+                )
+        ).thenReturn(
+                FOLLOWERS_RESPONSE
+        )
+
+        val result = insightsSqlUtils.selectFollowers(site, followerType)
+
+        assertEquals(result, FOLLOWERS_RESPONSE)
+    }
+
+    @Test
+    fun `inserts WPCOM followers response to stats utils`() {
+        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, WP_COM)
+
+        verify(statsSqlUtils).insert(site, WP_COM_FOLLOWERS, FOLLOWERS_RESPONSE)
+    }
+
+    @Test
+    fun `inserts email followers response to stats utils`() {
+        insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL)
+
+        verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, FOLLOWERS_RESPONSE)
     }
 }
