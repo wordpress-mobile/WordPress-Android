@@ -53,6 +53,9 @@ class PagedListWrapper<T>(
     init {
         dispatcher.register(this)
         lifecycle.addObserver(this)
+
+        // We need to update the initial value for isEmpty, so we can immediately hide/show the empty view
+        updateIsEmpty()
     }
 
     /**
