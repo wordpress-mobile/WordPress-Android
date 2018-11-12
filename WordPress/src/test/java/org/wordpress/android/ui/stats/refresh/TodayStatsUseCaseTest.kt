@@ -38,13 +38,14 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps full stats item to UI model`() = test {
         val forced = false
+        val refresh = false
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
                 )
         )
 
-        val result = useCase.loadTodayStats(site, forced)
+        val result = useCase.loadTodayStats(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -60,13 +61,14 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps partial stats item to UI model`() = test {
         val forced = false
+        val refresh = false
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
                 )
         )
 
-        val result = useCase.loadTodayStats(site, forced)
+        val result = useCase.loadTodayStats(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -80,13 +82,14 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps empty stats item to UI model`() = test {
         val forced = false
+        val refresh = false
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", 0, 0, 0, 0, 0, 0)
                 )
         )
 
-        val result = useCase.loadTodayStats(site, forced)
+        val result = useCase.loadTodayStats(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -99,6 +102,7 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps error item to UI model`() = test {
         val forced = false
+        val refresh = false
         val message = "Generic error"
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
@@ -106,7 +110,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadTodayStats(site, forced)
+        val result = useCase.loadTodayStats(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
