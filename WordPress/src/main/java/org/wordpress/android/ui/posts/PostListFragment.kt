@@ -95,41 +95,39 @@ class PostListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.let { postListActivity ->
-            val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
-                if (it != -1) it else null
-            }
-            viewModel = ViewModelProviders.of(postListActivity, viewModelFactory)
-                    .get<PostListViewModel>(PostListViewModel::class.java)
-            viewModel.start(site, targetLocalPostId)
-            viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
-                it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
-            })
-            viewModel.emptyViewState.observe(this, Observer {
-                it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
-            })
-            viewModel.isFetchingFirstPage.observe(this, Observer {
-                swipeRefreshLayout?.isRefreshing = it == true
-            })
-            viewModel.isLoadingMore.observe(this, Observer {
-                progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
-            })
-            viewModel.postListAction.observe(this, Observer {
-                it?.let { action -> handlePostListAction(action) }
-            })
-            viewModel.postUploadAction.observe(this, Observer {
-                it?.let { uploadAction -> handleUploadAction(uploadAction) }
-            })
-            viewModel.toastMessage.observe(this, Observer {
-                it?.show(nonNullActivity)
-            })
-            viewModel.snackbarAction.observe(this, Observer {
-                it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
-            })
-            viewModel.dialogAction.observe(this, Observer {
-                it?.show(nonNullActivity, fragmentManager)
-            })
+        val targetLocalPostId = activity?.intent?.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)?.let {
+            if (it != -1) it else null
         }
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get<PostListViewModel>(PostListViewModel::class.java)
+        viewModel.start(site, targetLocalPostId)
+        viewModel.pagedListDataAndScrollPosition.observe(this, Observer {
+            it?.let { (pagedListData, scrollPosition) -> updatePagedListData(pagedListData, scrollPosition) }
+        })
+        viewModel.emptyViewState.observe(this, Observer {
+            it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
+        })
+        viewModel.isFetchingFirstPage.observe(this, Observer {
+            swipeRefreshLayout?.isRefreshing = it == true
+        })
+        viewModel.isLoadingMore.observe(this, Observer {
+            progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
+        })
+        viewModel.postListAction.observe(this, Observer {
+            it?.let { action -> handlePostListAction(action) }
+        })
+        viewModel.postUploadAction.observe(this, Observer {
+            it?.let { uploadAction -> handleUploadAction(uploadAction) }
+        })
+        viewModel.toastMessage.observe(this, Observer {
+            it?.show(nonNullActivity)
+        })
+        viewModel.snackbarAction.observe(this, Observer {
+            it?.let { snackbarHolder -> showSnackbar(snackbarHolder) }
+        })
+        viewModel.dialogAction.observe(this, Observer {
+            it?.show(nonNullActivity, fragmentManager)
+        })
     }
 
     private fun handlePostListAction(action: PostListAction) {
