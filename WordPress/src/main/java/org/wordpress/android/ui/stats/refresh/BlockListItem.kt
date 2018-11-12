@@ -6,6 +6,7 @@ import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
@@ -15,16 +16,47 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
+import org.wordpress.android.util.ImageResource
+import org.wordpress.android.util.TextResource
 
 sealed class BlockListItem(val type: Type) {
-    enum class Type { TITLE, ITEM, USER_ITEM, LIST_ITEM, INFO, EMPTY, TEXT, COLUMNS, LINK, BAR_CHART, TABS, LABEL }
+    enum class Type {
+        TITLE,
+        ITEM,
+        USER_ITEM,
+        LIST_ITEM,
+        INFO,
+        EMPTY,
+        TEXT,
+        COLUMNS,
+        LINK,
+        BAR_CHART,
+        TABS,
+        LABEL,
+        EXPANDABLE_ITEM
+    }
+
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
     data class Item(
-        @DrawableRes val icon: Int,
-        @StringRes val text: Int,
-        val value: String,
+        val icon: ImageResource,
+        val text: TextResource,
+        val value: TextResource,
         val showDivider: Boolean = true
-    ) : BlockListItem(ITEM)
+    ) : BlockListItem(ITEM) {
+        constructor(@DrawableRes icon: Int, @StringRes text: Int, value: String, showDivider: Boolean) : this(
+                ImageResource(icon),
+                TextResource(text),
+                TextResource(value),
+                showDivider
+        )
+
+        constructor(@DrawableRes icon: Int, text: String, value: String, showDivider: Boolean) : this(
+                ImageResource(icon),
+                TextResource(text),
+                TextResource(value),
+                showDivider
+        )
+    }
 
     data class UserItem(
         val avatarUrl: String,
@@ -55,5 +87,9 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
+    data class ExpandableItem(val header: Item, val expandedItems: List<BlockListItem>) : BlockListItem(
+            EXPANDABLE_ITEM
+    )
+
     object Empty : BlockListItem(EMPTY)
 }

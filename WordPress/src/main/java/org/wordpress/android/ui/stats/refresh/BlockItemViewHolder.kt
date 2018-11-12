@@ -29,6 +29,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -40,6 +41,10 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.IMAGE
+import org.wordpress.android.util.loadImage
+import org.wordpress.android.util.setTextResource
+import org.wordpress.android.util.setVisible
 
 sealed class BlockItemViewHolder(
     parent: ViewGroup,
@@ -65,7 +70,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class ItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -75,9 +80,9 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
-            icon.setImageResource(item.icon)
-            text.setText(item.text)
-            value.text = item.value
+            icon.loadImage(item.icon) { imageManager.load(icon, IMAGE, it) }
+            text.setTextResource(item.text)
+            value.setTextResource(item.value)
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
             } else {
@@ -269,6 +274,47 @@ sealed class BlockItemViewHolder(
         fun bind(item: Label) {
             leftLabel.setText(item.leftLabel)
             rightLabel.setText(item.rightLabel)
+        }
+    }
+
+    class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_expandable_item
+    ) {
+        private val list= itemView.findViewById<RecyclerView>(R.id.expandable_items)
+        private val expandedListDivider = itemView.findViewById<View>(R.id.expanded_list_divider)
+
+        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val divider = itemView.findViewById<View>(R.id.divider)
+        private val expandButton = itemView.findViewById<View>(R.id.expand_button)
+
+        fun bind(expandableItem: ExpandableItem) {
+            val header = expandableItem.header
+            icon.loadImage(header.icon) { imageManager.load(icon, IMAGE, it) }
+            text.setTextResource(header.text)
+            expandButton.visibility = View.VISIBLE
+            value.setTextResource(header.value)
+            divider.setVisible(header.showDivider)
+
+            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            if (list.adapter == null) {
+                list.adapter = BlockListAdapter(imageManager)
+            }
+            var isExpanded = false
+            expandButton.setOnClickListener {
+                isExpanded = !isExpanded
+                val rotationAngle = if (isExpanded) 180 else 0
+                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start();
+                if (isExpanded) {
+                    (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
+                } else {
+                    (list.adapter as BlockListAdapter).update(listOf())
+                }
+                divider.setVisible(!isExpanded && header.showDivider)
+                expandedListDivider.setVisible(isExpanded)
+            }
         }
     }
 }
