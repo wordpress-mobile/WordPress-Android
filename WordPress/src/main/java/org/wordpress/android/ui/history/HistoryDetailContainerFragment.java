@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.history;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -24,16 +27,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
+import org.wordpress.aztec.AztecText;
+import org.wordpress.aztec.plugins.IAztecPlugin;
+import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
+import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
+import org.wordpress.aztec.plugins.wpcomments.HiddenGutenbergPlugin;
+import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 public class HistoryDetailContainerFragment extends Fragment {
     private ArrayList<Revision> mRevisions;
@@ -45,6 +61,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private TextView mTotalAdditions;
     private TextView mTotalDeletions;
     private WPViewPager mViewPager;
+    private AztecText mAztecText;
+    private View mAztecTextContainer;
     private int mPosition;
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
@@ -52,6 +70,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     public static final String EXTRA_REVISION = "EXTRA_REVISION";
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
+
+    @Inject ImageManager mImageManager;
 
     public static HistoryDetailContainerFragment newInstance(Revision revision, ArrayList<Revision> revisions) {
         Bundle args = new Bundle();
@@ -71,6 +91,60 @@ public class HistoryDetailContainerFragment extends Fragment {
             mRevisions = getArguments().getParcelableArrayList(EXTRA_REVISIONS);
         }
 
+        mPosition = mRevisions.indexOf(mRevision);
+
+        mViewPager = rootView.findViewById(R.id.diff_pager);
+        mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
+
+        mAdapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
+
+        mViewPager.setAdapter(mAdapter);
+        mViewPager.setCurrentItem(mPosition);
+
+        mTotalAdditions = rootView.findViewById(R.id.diff_additions);
+        mTotalDeletions = rootView.findViewById(R.id.diff_deletions);
+
+        mNextButton = rootView.findViewById(R.id.next);
+        mNextButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                mIsChevronClicked = true;
+                mViewPager.setCurrentItem(mPosition + 1, true);
+            }
+        });
+
+        mPreviousButton = rootView.findViewById(R.id.previous);
+        mPreviousButton.setOnClickListener(new OnClickListener() {
+            @Override public void onClick(View view) {
+                mIsChevronClicked = true;
+                mViewPager.setCurrentItem(mPosition - 1, true);
+            }
+        });
+
+        mAztecText = rootView.findViewById(R.id.aztec_text);
+        Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                getActivity(),
+                org.wordpress.android.editor.R.drawable.ic_gridicons_image,
+                EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity()));
+
+        mAztecText.setImageGetter(new AztecImageLoader(getActivity(), mImageManager, loadingImagePlaceholder));
+        mAztecText.setKeyListener(null);
+        mAztecText.setFocusable(false);
+        mAztecText.setTextIsSelectable(true);
+        mAztecText.setCursorVisible(false);
+
+        ArrayList<IAztecPlugin> plugins = new ArrayList<>();
+        plugins.add(new WordPressCommentsPlugin(mAztecText));
+        plugins.add(new CaptionShortcodePlugin(mAztecText));
+        plugins.add(new VideoShortcodePlugin());
+        plugins.add(new AudioShortcodePlugin());
+        plugins.add(new HiddenGutenbergPlugin(mAztecText));
+        mAztecText.setPlugins(plugins);
+
+        mAztecTextContainer = rootView.findViewById(R.id.aztec_text_container);
+
+        refreshHistoryDetail();
+        resetOnPageChangeListener();
+
         mIsFragmentRecreated = savedInstanceState != null;
         return rootView;
     }
@@ -78,6 +152,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
         setHasOptionsMenu(true);
     }
 
@@ -85,6 +160,17 @@ public class HistoryDetailContainerFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.history_detail, menu);
+    }
+
+    @Override public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
+        if (mAztecText.getVisibility() == View.VISIBLE) {
+            viewMode.setTitle(R.string.history_preview_html);
+        } else {
+            viewMode.setTitle(R.string.history_preview_visual);
+        }
     }
 
     @Override
@@ -95,48 +181,66 @@ public class HistoryDetailContainerFragment extends Fragment {
 
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
+        } else if (item.getItemId() == R.id.history_toggle_view) {
+            if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
+                mAztecText.setText(null);
+                showViewPager();
+                mPreviousButton.setEnabled(true);
+                mNextButton.setEnabled(true);
+            } else {
+                mAztecText.fromHtml(mRevision.getPostContent(), false);
+                showAztecText();
+                mPreviousButton.setEnabled(false);
+                mNextButton.setEnabled(false);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    private void showAztecText() {
+        mAztecTextContainer.setAlpha(0f);
+        mAztecTextContainer.setVisibility(View.VISIBLE);
 
-        if (getView() != null) {
-            mPosition = mRevisions.indexOf(mRevision);
+        mAztecTextContainer.animate()
+                           .alpha(1f)
+                           .setDuration(getResources().getInteger(
+                                   android.R.integer.config_shortAnimTime))
+                           .setListener(null);
 
-            mViewPager = getView().findViewById(R.id.diff_pager);
-            mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
-
-            mAdapter = new HistoryDetailFragmentAdapter(getChildFragmentManager(), mRevisions);
-
-            mViewPager.setAdapter(mAdapter);
-            mViewPager.setCurrentItem(mPosition);
-
-            mTotalAdditions = getView().findViewById(R.id.diff_additions);
-            mTotalDeletions = getView().findViewById(R.id.diff_deletions);
-
-            mNextButton = getView().findViewById(R.id.next);
-            mNextButton.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View view) {
-                    mIsChevronClicked = true;
-                    mViewPager.setCurrentItem(mPosition + 1, true);
-                }
-            });
-
-            mPreviousButton = getView().findViewById(R.id.previous);
-            mPreviousButton.setOnClickListener(new OnClickListener() {
-                @Override public void onClick(View view) {
-                    mIsChevronClicked = true;
-                    mViewPager.setCurrentItem(mPosition - 1, true);
-                }
-            });
-
-            refreshHistoryDetail();
-            resetOnPageChangeListener();
-        }
+        mViewPager.animate()
+                  .alpha(0f)
+                  .setDuration(getResources().getInteger(
+                          android.R.integer.config_shortAnimTime))
+                  .setListener(new AnimatorListenerAdapter() {
+                      @Override
+                      public void onAnimationEnd(Animator animation) {
+                          mViewPager.setVisibility(View.GONE);
+                      }
+                  });
     }
+
+    private void showViewPager() {
+        mViewPager.setAlpha(0f);
+        mViewPager.setVisibility(View.VISIBLE);
+
+        mViewPager.animate()
+                  .alpha(1f)
+                  .setDuration(getResources().getInteger(
+                          android.R.integer.config_shortAnimTime))
+                  .setListener(null);
+
+        mAztecText.animate()
+                  .alpha(0f)
+                  .setDuration(getResources().getInteger(
+                          android.R.integer.config_shortAnimTime))
+                  .setListener(new AnimatorListenerAdapter() {
+                      @Override
+                      public void onAnimationEnd(Animator animation) {
+                          mAztecTextContainer.setVisibility(View.GONE);
+                      }
+                  });
+    }
+
 
     private void refreshHistoryDetail() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -201,8 +305,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
-        HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
                                                                     ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
