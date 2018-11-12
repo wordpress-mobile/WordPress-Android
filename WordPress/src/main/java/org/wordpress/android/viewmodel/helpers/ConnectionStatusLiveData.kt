@@ -7,8 +7,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 
+/**
+ * A wrapper class for the network connection status. It can be extended to provide more details about the current
+ * network connection.
+ */
 class ConnectionStatus(val isConnected: Boolean)
 
+/**
+ * A LiveData instance that can be injected to keep track of the network availability.
+ *
+ * IMPORTANT: It needs to be observed for the changes to be posted.
+ */
 class ConnectionStatusLiveData(private val context: Context) : LiveData<ConnectionStatus>() {
     override fun onActive() {
         super.onActive()

@@ -10,7 +10,6 @@ class PagedListDiffItemCallback<T>(
     val getRemoteItemId: (T) -> Long?,
     val areItemsTheSame: (T, T) -> Boolean,
     val areContentsTheSame: (T, T) -> Boolean
-
 ) : DiffUtil.ItemCallback<PagedListItemType<T>>() {
     override fun areItemsTheSame(
         oldItem: PagedListItemType<T>,

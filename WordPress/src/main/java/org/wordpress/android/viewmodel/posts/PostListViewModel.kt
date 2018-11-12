@@ -600,7 +600,7 @@ class PostListViewModel @Inject constructor(
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForTrashDialog = null
             CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
-            else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
+            else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
 
