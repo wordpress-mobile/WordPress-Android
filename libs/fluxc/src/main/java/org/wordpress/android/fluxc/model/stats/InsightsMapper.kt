@@ -2,8 +2,7 @@ package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
-import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.Category
-import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel.SingleTag
+import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
@@ -112,15 +111,11 @@ class InsightsMapper
 
     fun map(response: TagsResponse): TagsModel {
         return TagsModel(response.tags.map { tag ->
-            if (tag.tags.size == 1) {
-                tag.tags[0].toSingleTag(tag.views)
-            } else {
-                Category(tag.tags.map { it.toSingleTag() }, tag.views)
-            }
+            TagModel(tag.tags.map { it.toItem() }, tag.views)
         })
     }
 
-    private fun TagResponse.toSingleTag(views: Long? = null): SingleTag {
-        return SingleTag(this.name, this.type, this.link, views)
+    private fun TagResponse.toItem(): TagModel.Item {
+        return TagModel.Item(this.name, this.type, this.link)
     }
 }
