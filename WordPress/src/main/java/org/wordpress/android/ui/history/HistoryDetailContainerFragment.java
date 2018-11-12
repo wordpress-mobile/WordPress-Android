@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -131,6 +132,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         mAztecText.setFocusable(false);
         mAztecText.setTextIsSelectable(true);
         mAztecText.setCursorVisible(false);
+        mAztecText.setMovementMethod(LinkMovementMethod.getInstance());
 
         ArrayList<IAztecPlugin> plugins = new ArrayList<>();
         plugins.add(new WordPressCommentsPlugin(mAztecText));
@@ -166,7 +168,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
-        if (mAztecText.getVisibility() == View.VISIBLE) {
+        if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
             viewMode.setTitle(R.string.history_preview_html);
         } else {
             viewMode.setTitle(R.string.history_preview_visual);
@@ -184,63 +186,43 @@ public class HistoryDetailContainerFragment extends Fragment {
         } else if (item.getItemId() == R.id.history_toggle_view) {
             if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
                 mAztecText.setText(null);
-                showViewPager();
                 mPreviousButton.setEnabled(true);
                 mNextButton.setEnabled(true);
             } else {
                 mAztecText.fromHtml(mRevision.getPostContent(), false);
-                showAztecText();
                 mPreviousButton.setEnabled(false);
                 mNextButton.setEnabled(false);
             }
+            animatePreviewScreens();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void showAztecText() {
-        mAztecTextContainer.setAlpha(0f);
-        mAztecTextContainer.setVisibility(View.VISIBLE);
+    private void animatePreviewScreens() {
+        final View topView = mAztecTextContainer.getVisibility() == View.GONE ? mAztecTextContainer : mViewPager;
+        final View bottomView = mAztecTextContainer.getVisibility() == View.GONE ? mViewPager : mAztecTextContainer;
 
-        mAztecTextContainer.animate()
-                           .alpha(1f)
-                           .setDuration(getResources().getInteger(
-                                   android.R.integer.config_shortAnimTime))
-                           .setListener(null);
+        topView.setAlpha(0f);
+        topView.setVisibility(View.VISIBLE);
 
-        mViewPager.animate()
+        topView.animate()
+               .alpha(1f)
+               .setDuration(getResources().getInteger(
+                       android.R.integer.config_shortAnimTime))
+               .setListener(null);
+
+        bottomView.animate()
                   .alpha(0f)
                   .setDuration(getResources().getInteger(
                           android.R.integer.config_shortAnimTime))
                   .setListener(new AnimatorListenerAdapter() {
                       @Override
                       public void onAnimationEnd(Animator animation) {
-                          mViewPager.setVisibility(View.GONE);
+                          bottomView.setVisibility(View.GONE);
                       }
                   });
+
     }
-
-    private void showViewPager() {
-        mViewPager.setAlpha(0f);
-        mViewPager.setVisibility(View.VISIBLE);
-
-        mViewPager.animate()
-                  .alpha(1f)
-                  .setDuration(getResources().getInteger(
-                          android.R.integer.config_shortAnimTime))
-                  .setListener(null);
-
-        mAztecText.animate()
-                  .alpha(0f)
-                  .setDuration(getResources().getInteger(
-                          android.R.integer.config_shortAnimTime))
-                  .setListener(new AnimatorListenerAdapter() {
-                      @Override
-                      public void onAnimationEnd(Animator animation) {
-                          mAztecTextContainer.setVisibility(View.GONE);
-                      }
-                  });
-    }
-
 
     private void refreshHistoryDetail() {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
