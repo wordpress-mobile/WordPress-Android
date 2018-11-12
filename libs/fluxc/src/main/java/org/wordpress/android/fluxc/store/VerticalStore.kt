@@ -66,7 +66,7 @@ class VerticalStore @Inject constructor(
     class OnVerticalsFetched(
         val searchQuery: String,
         val verticalList: List<VerticalModel>,
-        error: FetchVerticalsError
+        error: FetchVerticalsError?
     ) : Store.OnChanged<FetchVerticalsError>() {
         init {
             this.error = error
