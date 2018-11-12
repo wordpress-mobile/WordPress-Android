@@ -991,7 +991,13 @@ public class AccountStore extends Store {
                 emitChange(accountChanged);
             }
         } else {
-            emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
+            if (payload.error != null) {
+                OnAccountChanged accountChanged = new OnAccountChanged();
+                accountChanged.error = new AccountError(AccountErrorType.SETTINGS_POST_ERROR, payload.error.message);
+                emitChange(accountChanged);
+            } else {
+                emitAccountChangeError(AccountErrorType.SETTINGS_POST_ERROR);
+            }
         }
     }
 
