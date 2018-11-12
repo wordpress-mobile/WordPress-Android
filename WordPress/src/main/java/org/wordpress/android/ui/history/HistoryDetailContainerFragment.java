@@ -208,12 +208,12 @@ public class HistoryDetailContainerFragment extends Fragment {
                 mPreviousButton.setEnabled(false);
                 mNextButton.setEnabled(false);
             }
-            animatePreviewScreens();
+            crossfadePreviewScreens();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void animatePreviewScreens() {
+    private void crossfadePreviewScreens() {
         final View topView = mAztecTextContainer.getVisibility() == View.GONE ? mAztecTextContainer : mViewPager;
         final View bottomView = mAztecTextContainer.getVisibility() == View.GONE ? mViewPager : mAztecTextContainer;
 
@@ -222,14 +222,12 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         topView.animate()
                .alpha(1f)
-               .setDuration(getResources().getInteger(
-                       android.R.integer.config_shortAnimTime))
+               .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                .setListener(null);
 
         bottomView.animate()
                   .alpha(0f)
-                  .setDuration(getResources().getInteger(
-                          android.R.integer.config_shortAnimTime))
+                  .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
                   .setListener(new AnimatorListenerAdapter() {
                       @Override
                       public void onAnimationEnd(Animator animation) {
@@ -301,8 +299,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
-                                                                    ArrayList<Revision> revisions) {
+        @SuppressWarnings("unchecked")
+        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
