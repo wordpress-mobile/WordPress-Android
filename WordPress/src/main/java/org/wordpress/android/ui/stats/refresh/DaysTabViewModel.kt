@@ -13,6 +13,8 @@ class DaysTabViewModel @Inject constructor(
 ) : StatsListViewModel() {
     override val data: LiveData<InsightsUiState> = MutableLiveData()
 
+    override val navigationTarget: LiveData<NavigationTarget> = MutableLiveData()
+
     override fun start(site: SiteModel) {
         reload(site)
     }

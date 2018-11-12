@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.async
@@ -36,6 +37,15 @@ class InsightsViewModel
 ) {
     private val _data = MutableLiveData<List<InsightsItem>>()
     val data: LiveData<List<InsightsItem>> = _data
+
+    private val mediatorNavigationTarget: MediatorLiveData<NavigationTarget> = MediatorLiveData()
+    val navigationTarget: LiveData<NavigationTarget> = mediatorNavigationTarget
+
+    init {
+        mediatorNavigationTarget.addSource(latestPostSummaryViewModel.navigationTarget) {
+            mediatorNavigationTarget.value = it
+        }
+    }
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
         return when (type) {

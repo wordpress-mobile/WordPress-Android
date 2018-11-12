@@ -7,6 +7,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
+import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -18,6 +19,8 @@ class InsightsTabViewModel @Inject constructor(
         InsightsUiState(loadedData, DONE)
     }
     override val data: LiveData<InsightsUiState> = _data
+
+    override val navigationTarget: LiveData<NavigationTarget> = insightsViewModel.navigationTarget
 
     override fun start(site: SiteModel) {
         reload(site)
