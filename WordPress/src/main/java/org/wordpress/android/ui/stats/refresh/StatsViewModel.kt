@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -45,13 +46,16 @@ class StatsViewModel
     }
 
     private fun CoroutineScope.loadStats() = launch {
-        reloadStats()
+        loadData {
+            insightsViewModel.loadInsightItems(site, false)
+            insightsViewModel.loadInsightItems(site, true)
+        }
     }
 
-    private suspend fun reloadStats(forceReload: Boolean = false) {
+    private suspend fun loadData(load: suspend () -> Unit) {
         _isRefreshing.value = true
 
-        insightsViewModel.loadInsightItems(site, forceReload)
+        load()
 
         _isRefreshing.value = false
     }
@@ -69,7 +73,9 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         uiScope.launch {
-            reloadStats(true)
+            loadData {
+                insightsViewModel.loadInsightItems(site, true)
+            }
         }
     }
 
