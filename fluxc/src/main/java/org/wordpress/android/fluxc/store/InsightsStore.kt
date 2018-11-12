@@ -3,12 +3,16 @@ package org.wordpress.android.fluxc.store
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
@@ -102,7 +106,9 @@ class InsightsStore
     suspend fun fetchTodayInsights(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
         val response = restClient.fetchTimePeriodStats(siteModel, DAYS, timeProvider.currentDate, forced)
         return@withContext when {
-            response.isError -> { OnInsightsFetched(response.error) }
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response)
                 OnInsightsFetched(insightsMapper.map(response.response))
@@ -113,6 +119,49 @@ class InsightsStore
 
     fun getTodayInsights(site: SiteModel): VisitsModel? {
         return sqlUtils.selectTodayInsights(site)?.let { insightsMapper.map(it) }
+    }
+
+    // Followers stats
+    suspend fun fetchWpComFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, forced, WP_COM)
+    }
+
+    suspend fun fetchEmailFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, forced, EMAIL)
+    }
+
+    private suspend fun fetchFollowers(
+        siteModel: SiteModel,
+        forced: Boolean = false,
+        followerType: FollowerType
+    ) = withContext(coroutineContext) {
+        val response = restClient.fetchFollowers(siteModel, followerType, forced = forced)
+        return@withContext when {
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response, followerType)
+                OnInsightsFetched(insightsMapper.map(response.response, followerType))
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    fun getWpComFollowers(site: SiteModel): FollowersModel? {
+        return getFollowers(site, WP_COM)
+    }
+
+    fun getEmailFollowers(site: SiteModel): FollowersModel? {
+        return getFollowers(site, EMAIL)
+    }
+
+    private fun getFollowers(
+        site: SiteModel,
+        followerType: FollowerType
+    ): FollowersModel? {
+        val wpComResponse = sqlUtils.selectFollowers(site, followerType)
+        return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
