@@ -213,15 +213,16 @@ sealed class BlockItemViewHolder(
         private val list = itemView.findViewById<RecyclerView>(R.id.recycler_view)
 
         fun bind(item: TabsItem) {
-            item.tabs.forEach {
-                tabLayout.addTab(tabLayout.newTab().setText(it.title))
+            if (tabLayout.tabCount == 0) {
+                item.tabs.forEach {
+                    tabLayout.addTab(tabLayout.newTab().setText(it.title))
+                }
             }
-
             list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
             if (list.adapter == null) {
                 list.adapter = BlockListAdapter(imageManager)
             }
-            (list.adapter as BlockListAdapter).update(item.tabs[0].items)
+            (list.adapter as BlockListAdapter).update(item.tabs[tabLayout.selectedTabPosition].items)
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }
