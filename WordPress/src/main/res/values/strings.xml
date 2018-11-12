@@ -1218,6 +1218,8 @@
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
+    <string name="history_preview_visual">Preview</string>
+    <string name="history_preview_html">HTML</string>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
