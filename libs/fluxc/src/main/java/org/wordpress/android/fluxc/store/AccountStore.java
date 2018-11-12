@@ -955,7 +955,13 @@ public class AccountStore extends Store {
             mAccount.copyAccountSettingsAttributes(payload.account);
             updateDefaultAccount(mAccount, AccountAction.FETCH_SETTINGS);
         } else {
-            emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+            if (payload.error != null) {
+                OnAccountChanged accountChanged = new OnAccountChanged();
+                accountChanged.error = new AccountError(AccountErrorType.SETTINGS_FETCH_ERROR, payload.error.message);
+                emitChange(accountChanged);
+            } else {
+                emitAccountChangeError(AccountErrorType.SETTINGS_FETCH_ERROR);
+            }
         }
     }
 
