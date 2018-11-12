@@ -32,6 +32,7 @@ constructor(
                     title = "title-$it",
                     subtitle = "subtitle-$it",
                     iconUrl = "https://picsum.photos/50",
+                    iconColor = "#0000FF",
                     segmentId = it
             )
         }
