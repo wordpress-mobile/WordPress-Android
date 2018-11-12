@@ -27,6 +27,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -275,29 +277,37 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             return;
         }
 
-        if (event.isError()) {
+        // When account change is caused by password change, progress dialog will be shown (i.e. not null).
+        if (mChangePasswordProgressDialog != null) {
             showChangePasswordProgressDialog(false);
 
-            switch (event.error.type) {
-                case SETTINGS_FETCH_ERROR:
-                    ToastUtils
-                            .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
-                    break;
-                case SETTINGS_POST_ERROR:
-                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-                    // we optimistically show the email change snackbar, if that request fails, we should
-                    // remove the snackbar
-                    checkIfEmailChangeIsPending();
-                    break;
+            if (event.isError()) {
+                ToastUtils.showToast(getActivity(), event.error.message, ToastUtils.Duration.LONG);
+                AppLog.e(T.SETTINGS, event.error.message);
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
+                refreshAccountDetails();
             }
         } else {
-            // When account change is caused by password change, progress dialog will be shown (i.e. not null).
-            if (mChangePasswordProgressDialog != null) {
-                showChangePasswordProgressDialog(false);
-                ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
-            }
+            showChangePasswordProgressDialog(false);
 
-            refreshAccountDetails();
+            if (event.isError()) {
+                switch (event.error.type) {
+                    case SETTINGS_FETCH_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings,
+                                ToastUtils.Duration.LONG);
+                        break;
+                    case SETTINGS_POST_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_post_account_settings,
+                                ToastUtils.Duration.LONG);
+                        // we optimistically show the email change snackbar, if that request fails, we should
+                        // remove the snackbar
+                        checkIfEmailChangeIsPending();
+                        break;
+                }
+            } else {
+                refreshAccountDetails();
+            }
         }
     }
 
