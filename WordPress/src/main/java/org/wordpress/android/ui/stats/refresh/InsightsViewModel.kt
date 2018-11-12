@@ -47,11 +47,11 @@ class InsightsViewModel
         }
     }
 
-    private suspend fun load(site: SiteModel, type: InsightsTypes, forced: Boolean): InsightsItem {
+    private suspend fun load(site: SiteModel, type: InsightsTypes, refresh: Boolean, forced: Boolean): InsightsItem {
         return when (type) {
-            ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, forced)
-            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, forced)
-            TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, forced)
+            ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, refresh, forced)
+            LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, refresh, forced)
+            TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, refresh, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
@@ -63,10 +63,18 @@ class InsightsViewModel
         }
     }
 
-    suspend fun loadInsightItems(site: SiteModel, forced: Boolean = false) =
+    suspend fun loadInsightItems(site: SiteModel) {
+        loadItems(site, false)
+    }
+
+    suspend fun refreshInsightItems(site: SiteModel, forced: Boolean = false) {
+        loadItems(site, true, forced)
+    }
+
+    private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) =
             withContext(scope.coroutineContext) {
                 val items = statsStore.getInsights()
-                        .map { async { load(site, it, forced) } }
+                        .map { async { load(site, it, refresh, forced) } }
                         .map { it.await() }
 
                 _data.value = if (items.isEmpty()) {

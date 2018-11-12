@@ -46,8 +46,8 @@ class StatsViewModel
 
     private fun CoroutineScope.loadStats() = launch {
         loadData {
-            insightsViewModel.loadInsightItems(site, false)
-            insightsViewModel.loadInsightItems(site, true)
+            insightsViewModel.loadInsightItems(site)
+            insightsViewModel.refreshInsightItems(site)
         }
     }
 
@@ -73,7 +73,7 @@ class StatsViewModel
     fun onPullToRefresh() {
         uiScope.launch {
             loadData {
-                insightsViewModel.loadInsightItems(site, true)
+                insightsViewModel.refreshInsightItems(site, true)
             }
         }
     }

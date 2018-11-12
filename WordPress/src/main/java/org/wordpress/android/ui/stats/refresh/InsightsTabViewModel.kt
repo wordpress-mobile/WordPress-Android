@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -28,7 +27,7 @@ class InsightsTabViewModel @Inject constructor(
 
     override fun reload(site: SiteModel) {
         uiScope.launch {
-            insightsViewModel.loadInsightItems(site, false)
+            insightsViewModel.refreshInsightItems(site)
         }
     }
 }

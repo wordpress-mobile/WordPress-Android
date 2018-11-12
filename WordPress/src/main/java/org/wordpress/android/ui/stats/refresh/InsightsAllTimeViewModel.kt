@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class InsightsAllTimeViewModel
 @Inject constructor(private val insightsStore: InsightsStore) {
-    suspend fun loadAllTimeInsights(site: SiteModel, forced: Boolean = false): InsightsItem {
-        if (forced) {
+    suspend fun loadAllTimeInsights(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
             val response = insightsStore.fetchAllTimeInsights(site, forced)
             val model = response.model
             val error = response.error

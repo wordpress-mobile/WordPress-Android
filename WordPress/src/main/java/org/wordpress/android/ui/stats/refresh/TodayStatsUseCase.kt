@@ -11,8 +11,8 @@ import javax.inject.Inject
 
 class TodayStatsUseCase
 @Inject constructor(private val insightsStore: InsightsStore) {
-    suspend fun loadTodayStats(site: SiteModel, forced: Boolean = false): InsightsItem {
-        if (forced) {
+    suspend fun loadTodayStats(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
             val response = insightsStore.fetchTodayInsights(site, forced)
             val model = response.model
             val error = response.error

@@ -23,8 +23,8 @@ class LatestPostSummaryViewModel
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    suspend fun loadLatestPostSummary(site: SiteModel, forced: Boolean = false): InsightsItem {
-        if (forced) {
+    suspend fun loadLatestPostSummary(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
             val response = insightsStore.fetchLatestPostInsights(site, forced)
             val model = response.model
             val error = response.error
