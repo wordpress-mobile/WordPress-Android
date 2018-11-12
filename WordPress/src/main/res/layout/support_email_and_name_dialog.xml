@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -13,7 +14,8 @@
         android:layout_marginBottom="@dimen/margin_dialog"
         android:layout_width="wrap_content"
         android:textColor="@color/grey_darken_10"
-        android:textSize="@dimen/text_sz_large" >
+        android:textSize="@dimen/text_sz_large"
+        tools:text="@string/support_identity_input_dialog_enter_email_and_name" >
     </TextView>
 
     <android.support.design.widget.TextInputLayout
