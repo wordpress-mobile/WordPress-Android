@@ -34,7 +34,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `returns failed item when store fails`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val message = "error"
         whenever(
                 insightsStore.fetchAllTimeInsights(
@@ -54,7 +54,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `result contains only empty item when response is empty`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
@@ -77,7 +77,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `result contains post item when posts gt 0`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val posts = 10
         val model = InsightsAllTimeModel(1L, null, 0, 0, posts, "MONDAY", 0)
         whenever(
@@ -105,7 +105,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `result contains view item when views gt 0`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val views = 15
         val model = InsightsAllTimeModel(1L, null, 0, views, 0, "MONDAY", 0)
         whenever(
@@ -133,7 +133,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `result contains visitors item when views gt 0`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val visitors = 20
         val model = InsightsAllTimeModel(1L, null, visitors, 0, 0, "MONDAY", 0)
         whenever(
@@ -161,7 +161,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `result contains best day total item when it is gt 0`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val bestDayTotal = 20
         val model = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", bestDayTotal)
         whenever(
@@ -189,7 +189,7 @@ class InsightsAllTimeViewModelTest {
     @Test
     fun `shows divider between items`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val model = InsightsAllTimeModel(1L, null, 10, 15, 0, "MONDAY", 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(

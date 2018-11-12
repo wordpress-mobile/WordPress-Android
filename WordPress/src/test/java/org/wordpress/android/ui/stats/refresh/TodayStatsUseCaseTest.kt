@@ -38,7 +38,7 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps full stats item to UI model`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
@@ -61,7 +61,7 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps partial stats item to UI model`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
@@ -82,7 +82,7 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps empty stats item to UI model`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         VisitsModel("2018-10-02", 0, 0, 0, 0, 0, 0)
@@ -102,7 +102,7 @@ class TodayStatsUseCaseTest {
     @Test
     fun `maps error item to UI model`() = test {
         val forced = false
-        val refresh = false
+        val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
