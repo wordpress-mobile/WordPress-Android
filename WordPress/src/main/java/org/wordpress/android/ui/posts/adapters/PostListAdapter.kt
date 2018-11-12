@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.list.PagedListItemType
 import org.wordpress.android.fluxc.model.list.PagedListItemType.EndListIndicatorItem
 import org.wordpress.android.fluxc.model.list.PagedListItemType.LoadingItem
@@ -17,9 +16,6 @@ import org.wordpress.android.ui.PagedListDiffItemCallback
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostViewHolder
 import org.wordpress.android.ui.posts.PostViewHolderConfig
-import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.image.ImageManager
-import javax.inject.Inject
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 1
@@ -27,35 +23,9 @@ private const val VIEW_TYPE_LOADING = 2
 
 class PostListAdapter(
     context: Context,
-    isAztecEditorEnabled: Boolean,
-    hasCapabilityPublishPosts: Boolean,
-    isPhotonCapable: Boolean
-) : PagedListAdapter<PagedListItemType<PostAdapterItem>, ViewHolder>(PostListDiffItemCallback) {
-    private val endlistIndicatorHeight: Int
-    private val layoutInflater: LayoutInflater
     private val postViewHolderConfig: PostViewHolderConfig
-
-    @Inject internal lateinit var imageManager: ImageManager
-
-    init {
-        (context.applicationContext as WordPress).component().inject(this)
-
-        layoutInflater = LayoutInflater.from(context)
-        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
-        val contentSpacing = context.resources.getDimensionPixelSize(R.dimen.content_margin)
-        // endlist indicator height is hard-coded here so that its horizontal line is in the middle of the fab
-        endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74)
-
-        postViewHolderConfig = PostViewHolderConfig(
-                photonWidth = displayWidth - contentSpacing * 2,
-                photonHeight = context.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
-                isPhotonCapable = isPhotonCapable,
-                showAllButtons = displayWidth >= 1080, // on larger displays we can always show all buttons
-                imageManager = imageManager,
-                isAztecEditorEnabled = isAztecEditorEnabled,
-                hasCapabilityPublishPosts = hasCapabilityPublishPosts
-        )
-    }
+) : PagedListAdapter<PagedListItemType<PostAdapterItem>, ViewHolder>(PostListDiffItemCallback) {
+    private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -70,7 +40,7 @@ class PostListAdapter(
         return when (viewType) {
             VIEW_TYPE_ENDLIST_INDICATOR -> {
                 val view = layoutInflater.inflate(R.layout.endlist_indicator, parent, false)
-                view.layoutParams.height = endlistIndicatorHeight
+                view.layoutParams.height = postViewHolderConfig.endlistIndicatorHeight
                 EndListViewHolder(view)
             }
             VIEW_TYPE_LOADING -> {

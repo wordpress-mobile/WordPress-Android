@@ -29,6 +29,7 @@ private const val ROW_ANIM_DURATION: Long = 150
 private const val MAX_DISPLAYED_UPLOAD_PROGRESS = 90
 
 class PostViewHolderConfig(
+    val endlistIndicatorHeight: Int,
     val photonWidth: Int,
     val photonHeight: Int,
     val isPhotonCapable: Boolean,
@@ -39,25 +40,25 @@ class PostViewHolderConfig(
 )
 
 class PostViewHolder(private val view: View, private val config: PostViewHolderConfig) : RecyclerView.ViewHolder(view) {
-    val title: TextView = view.findViewById(R.id.text_title)
-    val excerpt: TextView = view.findViewById(R.id.text_excerpt)
-    val date: TextView = view.findViewById(R.id.text_date)
-    val status: TextView = view.findViewById(R.id.text_status)
+    private val title: TextView = view.findViewById(R.id.text_title)
+    private val excerpt: TextView = view.findViewById(R.id.text_excerpt)
+    private val date: TextView = view.findViewById(R.id.text_date)
+    private val status: TextView = view.findViewById(R.id.text_status)
 
-    val statusImage: ImageView = view.findViewById(R.id.image_status)
-    val featuredImage: ImageView = view.findViewById(R.id.image_featured)
+    private val statusImage: ImageView = view.findViewById(R.id.image_status)
+    private val featuredImage: ImageView = view.findViewById(R.id.image_featured)
 
-    val editButton: PostListButton = view.findViewById(R.id.btn_edit)
-    val viewButton: PostListButton = view.findViewById(R.id.btn_view)
-    val publishButton: PostListButton = view.findViewById(R.id.btn_publish)
-    val moreButton: PostListButton = view.findViewById(R.id.btn_more)
-    val statsButton: PostListButton = view.findViewById(R.id.btn_stats)
-    val trashButton: PostListButton = view.findViewById(R.id.btn_trash)
-    val backButton: PostListButton = view.findViewById(R.id.btn_back)
-    val buttonsLayout: ViewGroup = view.findViewById(R.id.layout_buttons)
+    private val editButton: PostListButton = view.findViewById(R.id.btn_edit)
+    private val viewButton: PostListButton = view.findViewById(R.id.btn_view)
+    private val publishButton: PostListButton = view.findViewById(R.id.btn_publish)
+    private val moreButton: PostListButton = view.findViewById(R.id.btn_more)
+    private val statsButton: PostListButton = view.findViewById(R.id.btn_stats)
+    private val trashButton: PostListButton = view.findViewById(R.id.btn_trash)
+    private val backButton: PostListButton = view.findViewById(R.id.btn_back)
+    private val buttonsLayout: ViewGroup = view.findViewById(R.id.layout_buttons)
 
-    val disabledOverlay: View = view.findViewById(R.id.disabled_overlay)
-    val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
+    private val disabledOverlay: View = view.findViewById(R.id.disabled_overlay)
+    private val progressBar: ProgressBar = view.findViewById(R.id.post_upload_progress)
 
     fun onBind(postAdapterItem: PostAdapterItem) {
         val context = view.context

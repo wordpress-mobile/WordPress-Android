@@ -31,11 +31,13 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.viewmodel.posts.PagedPostList
 import org.wordpress.android.viewmodel.posts.PostListEmptyViewState
@@ -49,7 +51,8 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class PostListFragment : Fragment() {
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var imageManager: ImageManager
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PostListViewModel
 
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
@@ -63,12 +66,26 @@ class PostListFragment : Fragment() {
     private lateinit var nonNullActivity: Activity
     private lateinit var site: SiteModel
 
+    private val postViewHolderConfig: PostViewHolderConfig by lazy {
+        val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
+        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
+        PostViewHolderConfig(
+                // endlist indicator height is hard-coded here so that its horizontal line is in the middle of the fab
+                endlistIndicatorHeight = DisplayUtils.dpToPx(context, 74),
+                photonWidth = displayWidth - contentSpacing * 2,
+                photonHeight = nonNullActivity.resources.getDimensionPixelSize(R.dimen.reader_featured_image_height),
+                isPhotonCapable = SiteUtils.isPhotonCapable(site),
+                showAllButtons = displayWidth >= 1080, // on larger displays we can always show all buttons
+                imageManager = imageManager,
+                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
+                hasCapabilityPublishPosts = site.hasCapabilityPublishPosts
+        )
+    }
+
     private val postListAdapter: PostListAdapter by lazy {
         PostListAdapter(
                 context = nonNullActivity,
-                isAztecEditorEnabled = AppPrefs.isAztecEditorEnabled(),
-                hasCapabilityPublishPosts = site.hasCapabilityPublishPosts,
-                isPhotonCapable = SiteUtils.isPhotonCapable(site)
+                postViewHolderConfig = postViewHolderConfig
         )
     }
 
