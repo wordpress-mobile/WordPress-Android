@@ -276,7 +276,7 @@ class PostListViewModel @Inject constructor(
     }
 
     private fun showTrashConfirmationDialog(post: PostModel) {
-        if (localPostIdForTrashDialog != null) {
+        if (postIdToTrash != null) {
             // We can only handle one trash action at once due to be able to undo
             return
         }
