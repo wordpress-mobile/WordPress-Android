@@ -14,6 +14,8 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : Scop
         MONTHS(R.string.stats_timeframe_months);
     }
 
+    abstract val navigationTarget: LiveData<NavigationTarget>
+
     abstract val data: LiveData<InsightsUiState>
 }
 

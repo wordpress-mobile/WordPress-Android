@@ -10,9 +10,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.FETCHING
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -25,8 +22,8 @@ class StatsViewModel
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
-    private val _listState = MutableLiveData<StatsListState>()
-    val listState: LiveData<StatsListState> = _listState
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
 
     private var isInitialized = false
 
@@ -39,18 +36,24 @@ class StatsViewModel
             isInitialized = true
 
             this.site = site
-            this.insightsUseCase.reset()
 
-            reloadStats()
+            loadStats()
         }
     }
 
-    private fun CoroutineScope.reloadStats() = launch {
-        _listState.value = FETCHING
+    private fun CoroutineScope.loadStats() = launch {
+        loadData {
+            insightsUseCase.loadInsightItems(site)
+            insightsUseCase.refreshInsightItems(site)
+        }
+    }
 
-        insightsUseCase.loadInsightItems(site)
+    private suspend fun loadData(executeLoading: suspend () -> Unit) {
+        _isRefreshing.value = true
 
-        _listState.value = DONE
+        executeLoading()
+
+        _isRefreshing.value = false
     }
 
     // TODO: To be implemented in the future
@@ -65,6 +68,10 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        reloadStats()
+        launch {
+            loadData {
+                insightsUseCase.refreshInsightItems(site, true)
+            }
+        }
     }
 }

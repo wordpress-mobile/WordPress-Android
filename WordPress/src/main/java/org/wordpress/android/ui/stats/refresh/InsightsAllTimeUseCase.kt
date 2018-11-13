@@ -11,14 +11,23 @@ import javax.inject.Inject
 
 class InsightsAllTimeUseCase
 @Inject constructor(private val insightsStore: InsightsStore) {
-    suspend fun loadAllTimeInsights(site: SiteModel, forced: Boolean = false): InsightsItem {
-        val response = insightsStore.fetchAllTimeInsights(site, forced)
-        val model = response.model
-        val error = response.error
-        return when {
-            model != null -> loadAllTimeInsightsItem(model)
-            error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
-            else -> throw Exception("All times stats response should contain a model or an error")
+    suspend fun loadAllTimeInsights(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
+            val response = insightsStore.fetchAllTimeInsights(site, forced)
+            val model = response.model
+            val error = response.error
+            return when {
+                model != null -> loadAllTimeInsightsItem(model)
+                error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+                else -> throw Exception("All times stats response should contain a model or an error")
+            }
+        } else {
+            val model = insightsStore.getAllTimeInsights(site)
+            return if (model != null) {
+                loadAllTimeInsightsItem(model)
+            } else {
+                ListInsightItem(listOf(Empty))
+            }
         }
     }
 

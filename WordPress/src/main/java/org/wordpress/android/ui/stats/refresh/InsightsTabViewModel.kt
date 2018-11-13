@@ -16,4 +16,6 @@ class InsightsTabViewModel @Inject constructor(
         InsightsUiState(loadedData, DONE)
     }
     override val data: LiveData<InsightsUiState> = _data
+
+    override val navigationTarget: LiveData<NavigationTarget> = insightsUseCase.navigationTarget
 }

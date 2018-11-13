@@ -14,6 +14,8 @@ class DaysTabViewModel @Inject constructor(
     private val _data = MutableLiveData<InsightsUiState>()
     override val data: LiveData<InsightsUiState> = _data
 
+    override val navigationTarget: LiveData<NavigationTarget> = MutableLiveData()
+
     init {
         _data.value = InsightsUiState(listOf(Empty()), DONE)
     }
