@@ -396,14 +396,10 @@ Language: vi_VN
     <string name="notification_settings_item_other_account_emails_summary">Chúng tôi sẽ luôn gửi những email liên quan đến tài khoản của bạn, nhưng bạn có thể muốn nhận thêm những thông tin hữu ích khác.</string>
     <string name="stats_insights_latest_post_trend">Đó là %1$s kể từ %2$s đã được xuất bản. Đây là cách các bài đã thực hiện cho đến nay …</string>
     <string name="stats_insights_latest_post_summary">Tóm tắt bài viết mới nhất</string>
-    <string name="days_ago">%d ngày trước</string>
-    <string name="yesterday">Hôm qua</string>
     <string name="connectionbar_no_connection">Không có kết nối</string>
-    <string name="page_trashed">Bỏ trang này vào thùng rác</string>
     <string name="post_deleted">Bài viết đã bị xóa</string>
     <string name="post_trashed">Bài viết đã bị bỏ vào thùng rác</string>
     <string name="button_back">Trở lại</string>
-    <string name="page_deleted">Trang đã bị xóa</string>
     <string name="button_stats">Thống kê</string>
     <string name="button_trash">Thùng rác</string>
     <string name="button_preview">Xem trước</string>
@@ -562,7 +558,6 @@ Language: vi_VN
     <string name="comment">Bình luận</string>
     <string name="posts_empty_list">Chưa viết bài nào. Tại sao không tạo 1 bài?</string>
     <string name="comment_reply_to_user">Trả lời tới %s</string>
-    <string name="pages_empty_list">Chưa có trang nào. Tại sao không tạo 1 trang?</string>
     <string name="browse_our_faq_button">Duyệt FAQ của chúng tôi</string>
     <string name="stats_no_blog">Thống kê không thể được nạp cho các blog yêu cầu</string>
     <string name="comment_trashed">Bình luận cho vào thùng rác</string>
@@ -755,7 +750,6 @@ Language: vi_VN
     <string name="edit">Sửa</string>
     <string name="immediately">Ngay lập tức</string>
     <string name="quickpress_add_alert_title">Đặt tên lối tắt</string>
-    <string name="today">Hôm nay</string>
     <string name="settings">Thiết đặt</string>
     <string name="quickpress_add_error">Tên lối tắt không thể để trống</string>
     <string name="quickpress_window_title">Chọn blog cho lối tắt QuickPress</string>
