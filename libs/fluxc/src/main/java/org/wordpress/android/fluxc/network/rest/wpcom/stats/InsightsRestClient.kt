@@ -346,8 +346,7 @@ constructor(
             @SerializedName("name") val name: String?,
             @SerializedName("link") val link: String?,
             @SerializedName("gravatar") val gravatar: String?,
-            @SerializedName("comments") val comments: Int?,
-            @SerializedName("follow_data") val followData: FollowData?
+            @SerializedName("comments") val comments: Int?
         )
 
         data class Post(
