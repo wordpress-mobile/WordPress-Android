@@ -75,8 +75,8 @@ val FOLLOWER_RESPONSE = FollowerResponse(
         DATE,
         FollowData("type", PARAMS)
 )
-val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf())
-val AUTHOR = CommentsResponse.Author(USER_LABEL, URL, AVATAR, COMMENT_COUNT, null)
+val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf(FOLLOWER_RESPONSE))
+val AUTHOR = CommentsResponse.Author(USER_LABEL, URL, AVATAR, COMMENT_COUNT)
 val POST = CommentsResponse.Post(TITLE, URL, ID, COMMENT_COUNT)
 val TOP_COMMENTS_RESPONSE = CommentsResponse(
         FIRST_DAY,
