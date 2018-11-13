@@ -98,7 +98,7 @@
     </org.wordpress.android.widgets.WPViewPager>
 
     <ScrollView
-        android:id="@+id/aztec_text_container"
+        android:id="@+id/visual_preview_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
@@ -120,7 +120,6 @@
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
-                android:textColorHint="@color/hint_text"
                 android:textSize="@dimen/aztec_title_size"
                 android:textStyle="bold"/>
 
@@ -131,18 +130,13 @@
                 android:layout_marginLeft="@dimen/sourceview_side_margin"
                 android:layout_marginRight="@dimen/sourceview_side_margin"/>
 
-
             <org.wordpress.aztec.AztecText
                 android:id="@+id/visual_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
                 android:inputType="none"
-                android:paddingEnd="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="16dp"
+                android:padding="16dp"
                 android:scrollbars="vertical"
                 aztec:bulletColor="@color/bullet"
                 aztec:bulletMargin="@dimen/bullet_margin"

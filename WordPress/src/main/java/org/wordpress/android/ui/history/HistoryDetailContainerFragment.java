@@ -64,7 +64,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     private WPViewPager mViewPager;
     private AztecText mVisualContent;
     private TextView mVisualTitle;
-    private View mAztecTextContainer;
+    private View mVisualPreviewContainer;
     private int mPosition;
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
@@ -72,7 +72,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     public static final String EXTRA_REVISION = "EXTRA_REVISION";
     public static final String EXTRA_REVISIONS = "EXTRA_REVISIONS";
     public static final String KEY_REVISION = "KEY_REVISION";
-    public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW ";
+    public static final String KEY_IS_IN_VISUAL_PREVIEW = "KEY_IS_IN_VISUAL_PREVIEW";
 
     @Inject ImageManager mImageManager;
 
@@ -148,18 +148,15 @@ public class HistoryDetailContainerFragment extends Fragment {
         plugins.add(new HiddenGutenbergPlugin(mVisualContent));
         mVisualContent.setPlugins(plugins);
 
-        mAztecTextContainer = rootView.findViewById(R.id.aztec_text_container);
+        mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
+
+        boolean isInVisualPreview =
+                mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false);
+        mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
+        mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
 
         refreshHistoryDetail();
         resetOnPageChangeListener();
-
-        if (mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false)) {
-            mAztecTextContainer.setVisibility(View.VISIBLE);
-            mViewPager.setVisibility(View.GONE);
-        } else {
-            mAztecTextContainer.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.VISIBLE);
-        }
 
         return rootView;
     }
@@ -173,7 +170,7 @@ public class HistoryDetailContainerFragment extends Fragment {
 
     @Override public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, mAztecTextContainer.getVisibility() == View.VISIBLE);
+        outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview());
     }
 
     @Override
@@ -186,7 +183,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
-        if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
+        if (isInVisualPreview()) {
             viewMode.setTitle(R.string.history_preview_html);
         } else {
             viewMode.setTitle(R.string.history_preview_visual);
@@ -202,7 +199,7 @@ public class HistoryDetailContainerFragment extends Fragment {
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
-            if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
+            if (isInVisualPreview()) {
                 mVisualContent.setText(null);
                 mVisualTitle.setText(null);
                 mPreviousButton.setEnabled(true);
@@ -213,14 +210,14 @@ public class HistoryDetailContainerFragment extends Fragment {
                 mPreviousButton.setEnabled(false);
                 mNextButton.setEnabled(false);
             }
-            crossfadePreviewScreens();
+            crossfadePreviewViews();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void crossfadePreviewScreens() {
-        final View topView = mAztecTextContainer.getVisibility() == View.GONE ? mAztecTextContainer : mViewPager;
-        final View bottomView = mAztecTextContainer.getVisibility() == View.GONE ? mViewPager : mAztecTextContainer;
+    private void crossfadePreviewViews() {
+        final View topView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
+        final View bottomView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
 
         topView.setAlpha(0f);
         topView.setVisibility(View.VISIBLE);
@@ -301,11 +298,15 @@ public class HistoryDetailContainerFragment extends Fragment {
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
+    private boolean isInVisualPreview() {
+        return mVisualPreviewContainer.getVisibility() == View.VISIBLE;
+    }
+
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked")
-        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
+        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+                                                                    ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
