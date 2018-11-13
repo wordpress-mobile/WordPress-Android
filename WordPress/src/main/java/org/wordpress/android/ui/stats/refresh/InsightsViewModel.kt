@@ -33,7 +33,8 @@ class InsightsViewModel
     @Named(UI_SCOPE) private val scope: CoroutineScope,
     private val insightsAllTimeViewModel: InsightsAllTimeViewModel,
     private val latestPostSummaryViewModel: LatestPostSummaryViewModel,
-    private val todayStatsUseCase: TodayStatsUseCase
+    private val todayStatsUseCase: TodayStatsUseCase,
+    private val followersUseCase: FollowersUseCase
 ) {
     private val _data = MutableLiveData<List<InsightsItem>>()
     val data: LiveData<List<InsightsItem>> = _data
@@ -45,6 +46,9 @@ class InsightsViewModel
         mediatorNavigationTarget.addSource(latestPostSummaryViewModel.navigationTarget) {
             mediatorNavigationTarget.value = it
         }
+        mediatorNavigationTarget.addSource(followersUseCase.navigationTarget) {
+            mediatorNavigationTarget.value = it
+        }
     }
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, refresh: Boolean, forced: Boolean): InsightsItem {
@@ -52,12 +56,12 @@ class InsightsViewModel
             ALL_TIME_STATS -> insightsAllTimeViewModel.loadAllTimeInsights(site, refresh, forced)
             LATEST_POST_SUMMARY -> latestPostSummaryViewModel.loadLatestPostSummary(site, refresh, forced)
             TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, refresh, forced)
+            FOLLOWERS -> followersUseCase.loadFollowers(site, refresh, forced)
             MOST_POPULAR_DAY_AND_HOUR,
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
             COMMENTS,
-            FOLLOWERS,
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }

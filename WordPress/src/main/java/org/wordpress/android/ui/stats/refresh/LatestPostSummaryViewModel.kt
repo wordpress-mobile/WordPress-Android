@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMore
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import javax.inject.Inject
 
 class LatestPostSummaryViewModel
@@ -72,7 +72,7 @@ class LatestPostSummaryViewModel
                 mutableNavigationTarget.value = AddNewPost
             }
             model.hasData() -> Link(text = R.string.stats_insights_view_more) {
-                mutableNavigationTarget.value = ViewMore(
+                mutableNavigationTarget.value = ViewPostDetailStats(
                         model.siteId,
                         model.postId.toString(),
                         model.postTitle,

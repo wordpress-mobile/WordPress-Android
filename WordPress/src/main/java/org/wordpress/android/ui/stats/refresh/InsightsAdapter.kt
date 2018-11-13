@@ -8,8 +8,9 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
+import org.wordpress.android.util.image.ImageManager
 
-class InsightsAdapter : Adapter<InsightsViewHolder>() {
+class InsightsAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHolder>() {
     private var items: List<InsightsItem> = listOf()
     fun update(newItems: List<InsightsItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -26,7 +27,7 @@ class InsightsAdapter : Adapter<InsightsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InsightsViewHolder {
         return when (values()[viewType]) {
             NOT_IMPLEMENTED -> NotImplementedViewHolder(parent)
-            LIST_INSIGHTS -> ListInsightsViewHolder(parent)
+            LIST_INSIGHTS -> ListInsightsViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyInsightsViewHolder(parent)
         }

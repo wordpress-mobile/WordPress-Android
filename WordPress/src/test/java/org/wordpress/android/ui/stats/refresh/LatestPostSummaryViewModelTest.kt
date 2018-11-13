@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMore
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -156,8 +156,8 @@ class LatestPostSummaryViewModelTest {
             assertThat(link.text).isEqualTo(R.string.stats_insights_view_more)
 
             link.toNavigationTarget().apply {
-                assertThat(this).isInstanceOf(ViewMore::class.java)
-                assertThat((this as ViewMore).postUrl).isEqualTo(model.postURL)
+                assertThat(this).isInstanceOf(ViewPostDetailStats::class.java)
+                assertThat((this as ViewPostDetailStats).postUrl).isEqualTo(model.postURL)
                 assertThat(this.postTitle).isEqualTo(model.postTitle)
                 assertThat(this.postID).isEqualTo(model.postId.toString())
                 assertThat(this.siteID).isEqualTo(model.siteId)
