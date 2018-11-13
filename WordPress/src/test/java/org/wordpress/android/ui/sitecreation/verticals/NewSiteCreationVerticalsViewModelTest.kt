@@ -45,15 +45,6 @@ class NewSiteCreationVerticalsViewModelTest {
             listOf(VerticalsHeaderUiState("dummyTitle", "dummySubtitle"), VerticalsSearchInputUiState(false, false))
     )
     private val progressState = VerticalsUiState(false, true, false, listOf(VerticalsSearchInputUiState(true, true)))
-    private val progressStateAfterFirstModelFetched = VerticalsUiState(
-            false,
-            true,
-            false,
-            listOf(
-                    VerticalsSearchInputUiState(true, true),
-                    VerticalsModelUiState(firstModel.verticalId, firstModel.name)
-            )
-    )
     private val firstModelDisplayedState = VerticalsUiState(
             false,
             true,
@@ -150,7 +141,7 @@ class NewSiteCreationVerticalsViewModelTest {
             verify(uiStateObserver).onChanged(headerAndEmptyInputState)
             verify(uiStateObserver).onChanged(progressState)
             verify(uiStateObserver).onChanged(firstModelDisplayedState)
-            verify(uiStateObserver).onChanged(progressStateAfterFirstModelFetched)
+            verify(uiStateObserver).onChanged(progressState)
             verify(uiStateObserver).onChanged(secondModelDisplayedState)
             verifyNoMoreInteractions()
         }
