@@ -41,14 +41,14 @@ class StatsViewModel
         }
     }
 
-    private fun CoroutineScope.loadStats() = launch {
+    private fun loadStats() {
         loadData {
             insightsUseCase.loadInsightItems(site)
             insightsUseCase.refreshInsightItems(site)
         }
     }
 
-    private suspend fun loadData(executeLoading: suspend () -> Unit) {
+    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
 
         executeLoading()
@@ -68,10 +68,8 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        launch {
-            loadData {
-                insightsUseCase.refreshInsightItems(site, true)
-            }
+        loadData {
+            insightsUseCase.refreshInsightItems(site, true)
         }
     }
 }
