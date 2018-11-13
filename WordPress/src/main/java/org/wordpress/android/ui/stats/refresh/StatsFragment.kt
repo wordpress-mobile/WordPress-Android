@@ -36,12 +36,6 @@ class StatsFragment : DaggerFragment() {
 
     private var restorePreviousSearch = false
 
-    companion object {
-        fun newInstance(): StatsFragment {
-            return StatsFragment()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
