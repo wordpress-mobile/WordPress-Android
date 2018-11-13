@@ -74,9 +74,9 @@ private class PagedListPositionalDataSource<T, R>(
     private val internalItems: List<InternalItem<T>> by lazy {
         val localItems = dataStore.localItems(listDescriptor).map { InternalLocalItem(it) }
         val remoteItemIdsToHide = dataStore.getItemIdsToHide(listDescriptor).mapNotNull { it.second }
-        val remoteItems = getList(listDescriptor).filter {
+        val remoteItems = getList(listDescriptor).asSequence().filter {
             !remoteItemIdsToHide.contains(it)
-        }.map { InternalRemoteItem<T>(it) }
+        }.map { InternalRemoteItem<T>(it) }.toList()
         val actualItems = localItems.plus(remoteItems)
         // We only want to show the end list indicator if the list is fully fetched and it's not empty
         if (isListFullyFetched(listDescriptor) && actualItems.isNotEmpty()) {
