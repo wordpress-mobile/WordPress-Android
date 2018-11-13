@@ -77,7 +77,7 @@ class InsightsUseCase
         loadItems(site, true, forced)
     }
 
-    suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
+    private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
         withContext(bgDispatcher) {
             val items = statsStore.getInsights()
                     .map { async { load(site, it, refresh, forced) } }
