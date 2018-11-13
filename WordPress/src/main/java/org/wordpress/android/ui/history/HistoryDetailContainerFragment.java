@@ -62,7 +62,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private TextView mTotalAdditions;
     private TextView mTotalDeletions;
     private WPViewPager mViewPager;
-    private AztecText mAztecText;
+    private AztecText mVisualContent;
+    private TextView mVisualTitle;
     private View mAztecTextContainer;
     private int mPosition;
     private boolean mIsChevronClicked = false;
@@ -124,26 +125,28 @@ public class HistoryDetailContainerFragment extends Fragment {
             }
         });
 
-        mAztecText = rootView.findViewById(R.id.aztec_text);
+        mVisualTitle = rootView.findViewById(R.id.visual_title);
+        mVisualContent = rootView.findViewById(R.id.visual_content);
+
         Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
                 getActivity(),
                 org.wordpress.android.editor.R.drawable.ic_gridicons_image,
                 EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity()));
 
-        mAztecText.setImageGetter(new AztecImageLoader(getActivity(), mImageManager, loadingImagePlaceholder));
-        mAztecText.setKeyListener(null);
-        mAztecText.setFocusable(false);
-        mAztecText.setTextIsSelectable(true);
-        mAztecText.setCursorVisible(false);
-        mAztecText.setMovementMethod(LinkMovementMethod.getInstance());
+        mVisualContent.setImageGetter(new AztecImageLoader(getActivity(), mImageManager, loadingImagePlaceholder));
+        mVisualContent.setKeyListener(null);
+        mVisualContent.setFocusable(false);
+        mVisualContent.setTextIsSelectable(true);
+        mVisualContent.setCursorVisible(false);
+        mVisualContent.setMovementMethod(LinkMovementMethod.getInstance());
 
         ArrayList<IAztecPlugin> plugins = new ArrayList<>();
-        plugins.add(new WordPressCommentsPlugin(mAztecText));
-        plugins.add(new CaptionShortcodePlugin(mAztecText));
+        plugins.add(new WordPressCommentsPlugin(mVisualContent));
+        plugins.add(new CaptionShortcodePlugin(mVisualContent));
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
-        plugins.add(new HiddenGutenbergPlugin(mAztecText));
-        mAztecText.setPlugins(plugins);
+        plugins.add(new HiddenGutenbergPlugin(mVisualContent));
+        mVisualContent.setPlugins(plugins);
 
         mAztecTextContainer = rootView.findViewById(R.id.aztec_text_container);
 
@@ -200,11 +203,13 @@ public class HistoryDetailContainerFragment extends Fragment {
             getActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
             if (mAztecTextContainer.getVisibility() == View.VISIBLE) {
-                mAztecText.setText(null);
+                mVisualContent.setText(null);
+                mVisualTitle.setText(null);
                 mPreviousButton.setEnabled(true);
                 mNextButton.setEnabled(true);
             } else {
-                mAztecText.fromHtml(mRevision.getPostContent(), false);
+                mVisualTitle.setText(mRevision.getPostTitle());
+                mVisualContent.fromHtml(mRevision.getPostContent(), false);
                 mPreviousButton.setEnabled(false);
                 mNextButton.setEnabled(false);
             }

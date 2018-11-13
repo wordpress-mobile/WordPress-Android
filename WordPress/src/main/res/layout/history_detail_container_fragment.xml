@@ -106,35 +106,62 @@
         android:fillViewport="true"
         android:visibility="gone">
 
-        <org.wordpress.aztec.AztecText
-            android:id="@+id/aztec_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="serif"
-            android:inputType="none"
-            android:paddingEnd="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingStart="16dp"
-            android:paddingTop="16dp"
-            android:scrollbars="vertical"
-            aztec:bulletColor="@color/bullet"
-            aztec:bulletMargin="@dimen/bullet_margin"
-            aztec:bulletPadding="@dimen/bullet_padding"
-            aztec:bulletWidth="@dimen/bullet_width"
-            aztec:codeBackground="@color/code_background"
-            aztec:codeColor="@color/code"
-            aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
-            aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
-            aztec:linkColor="@color/link"
-            aztec:linkUnderline="true"
-            aztec:quoteBackground="@color/quote_background"
-            aztec:quoteColor="@color/quote"
-            aztec:quoteMargin="@dimen/quote_margin"
-            aztec:quotePadding="@dimen/quote_padding"
-            aztec:quoteWidth="@dimen/quote_width"
-            aztec:textColor="@color/text">
-        </org.wordpress.aztec.AztecText>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/visual_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fontFamily="serif"
+                android:lineSpacingExtra="@dimen/spacing_extra_title"
+                android:padding="@dimen/margin_extra_large"
+                android:textColor="@color/grey_dark"
+                android:textColorHint="@color/hint_text"
+                android:textSize="@dimen/aztec_title_size"
+                android:textStyle="bold"/>
+
+            <View
+                style="@style/DividerSourceView"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/format_bar_horizontal_divider_height"
+                android:layout_marginLeft="@dimen/sourceview_side_margin"
+                android:layout_marginRight="@dimen/sourceview_side_margin"/>
+
+
+            <org.wordpress.aztec.AztecText
+                android:id="@+id/visual_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:inputType="none"
+                android:paddingEnd="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:scrollbars="vertical"
+                aztec:bulletColor="@color/bullet"
+                aztec:bulletMargin="@dimen/bullet_margin"
+                aztec:bulletPadding="@dimen/bullet_padding"
+                aztec:bulletWidth="@dimen/bullet_width"
+                aztec:codeBackground="@color/code_background"
+                aztec:codeColor="@color/code"
+                aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
+                aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
+                aztec:linkColor="@color/link"
+                aztec:linkUnderline="true"
+                aztec:quoteBackground="@color/quote_background"
+                aztec:quoteColor="@color/quote"
+                aztec:quoteMargin="@dimen/quote_margin"
+                aztec:quotePadding="@dimen/quote_padding"
+                aztec:quoteWidth="@dimen/quote_width"
+                aztec:textColor="@color/text">
+            </org.wordpress.aztec.AztecText>
+        </LinearLayout>
     </ScrollView>
 
 
