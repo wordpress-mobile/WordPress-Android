@@ -37,6 +37,7 @@ class NewSiteCreationSegmentsViewModelTest {
                     "dummyTitle",
                     "dummySubtitle",
                     "http://dummy.com",
+                    "ffffff",
                     123
             )
     private val secondModel =
@@ -44,7 +45,8 @@ class NewSiteCreationSegmentsViewModelTest {
                     "dummyTitle",
                     "dummySubtitle",
                     "http://dummy.com",
-                    999
+                    "ffffff",
+                    456
             )
 
     private val progressState = UiState(false, true, listOf(HeaderUiState, ProgressUiState))
