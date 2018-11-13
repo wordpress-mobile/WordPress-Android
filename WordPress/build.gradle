@@ -49,7 +49,7 @@ android {
         multiDexEnabled true
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
-        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "false"
+        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
     }
 
     flavorDimensions "buildType"
