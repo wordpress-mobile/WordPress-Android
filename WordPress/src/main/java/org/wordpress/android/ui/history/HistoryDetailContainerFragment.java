@@ -150,13 +150,16 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
 
-        boolean isInVisualPreview =
-                mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false);
-        mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
-        mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
-
         refreshHistoryDetail();
         resetOnPageChangeListener();
+
+        if (mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false)) {
+            mVisualPreviewContainer.setVisibility(View.VISIBLE);
+            mViewPager.setVisibility(View.GONE);
+        } else {
+            mVisualPreviewContainer.setVisibility(View.GONE);
+            mViewPager.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -200,8 +203,8 @@ public class HistoryDetailContainerFragment extends Fragment {
             getActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
             if (isInVisualPreview()) {
-                mVisualContent.setText(null);
                 mVisualTitle.setText(null);
+                mVisualContent.setText(null);
                 mPreviousButton.setEnabled(true);
                 mNextButton.setEnabled(true);
             } else {
@@ -216,8 +219,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     private void crossfadePreviewViews() {
-        final View topView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
-        final View bottomView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
+        final View topView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
+        final View bottomView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
 
         topView.setAlpha(0f);
         topView.setVisibility(View.VISIBLE);
