@@ -63,6 +63,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     fun updateQuery(query: String, delay: Int = throttleDelay) {
         job.cancel() // cancel any previous requests
+        updateUiState(query, ListState.Ready(emptyList()))
         fetchVerticals(query, delay)
     }
 
