@@ -141,10 +141,6 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_STORAGE_READ;
             case android.Manifest.permission.CAMERA:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
-            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
-                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_LOCATION_COURSE;
-            case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_LOCATION_FINE;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
@@ -161,9 +157,6 @@ public class WPPermissionUtils {
                 return context.getString(R.string.permission_storage);
             case android.Manifest.permission.CAMERA:
                 return context.getString(R.string.permission_camera);
-            case android.Manifest.permission.ACCESS_COARSE_LOCATION:
-            case android.Manifest.permission.ACCESS_FINE_LOCATION:
-                return context.getString(R.string.permission_location);
             default:
                 AppLog.w(AppLog.T.UTILS, "No name for requested permission");
                 return context.getString(R.string.unknown);

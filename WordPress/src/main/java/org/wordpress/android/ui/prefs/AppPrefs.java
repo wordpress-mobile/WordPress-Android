@@ -167,8 +167,6 @@ public class AppPrefs {
         ASKED_PERMISSION_STORAGE_WRITE,
         ASKED_PERMISSION_STORAGE_READ,
         ASKED_PERMISSION_CAMERA,
-        ASKED_PERMISSION_LOCATION_COURSE,
-        ASKED_PERMISSION_LOCATION_FINE,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
