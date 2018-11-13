@@ -36,6 +36,7 @@ import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -150,9 +151,6 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
 
-        refreshHistoryDetail();
-        resetOnPageChangeListener();
-
         if (mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false)) {
             mVisualPreviewContainer.setVisibility(View.VISIBLE);
             mViewPager.setVisibility(View.GONE);
@@ -160,6 +158,9 @@ public class HistoryDetailContainerFragment extends Fragment {
             mVisualPreviewContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
         }
+
+        refreshHistoryDetail();
+        resetOnPageChangeListener();
 
         return rootView;
     }
@@ -182,7 +183,8 @@ public class HistoryDetailContainerFragment extends Fragment {
         inflater.inflate(R.menu.history_detail, menu);
     }
 
-    @Override public void onPrepareOptionsMenu(Menu menu) {
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
@@ -202,17 +204,11 @@ public class HistoryDetailContainerFragment extends Fragment {
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
-            if (isInVisualPreview()) {
-                mVisualTitle.setText(null);
-                mVisualContent.setText(null);
-                mPreviousButton.setEnabled(true);
-                mNextButton.setEnabled(true);
-            } else {
-                mVisualTitle.setText(mRevision.getPostTitle());
-                mVisualContent.fromHtml(mRevision.getPostContent(), false);
-                mPreviousButton.setEnabled(false);
-                mNextButton.setEnabled(false);
-            }
+            mVisualTitle.setText(isInVisualPreview() ? null : mRevision.getPostTitle());
+            mVisualContent.fromHtml(
+                    isInVisualPreview() ? "" : StringUtils.notNullStr(mRevision.getPostContent()), false);
+            mPreviousButton.setEnabled(isInVisualPreview());
+            mNextButton.setEnabled(isInVisualPreview());
             crossfadePreviewViews();
         }
         return super.onOptionsItemSelected(item);
