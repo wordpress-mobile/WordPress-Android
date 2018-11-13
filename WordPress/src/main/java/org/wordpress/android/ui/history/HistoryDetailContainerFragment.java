@@ -304,7 +304,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     private class HistoryDetailFragmentAdapter extends FragmentStatePagerAdapter {
         private final ArrayList<Revision> mRevisions;
 
-        @SuppressWarnings("unchecked") HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
+        @SuppressWarnings("unchecked")
+        HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
                                                                     ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
