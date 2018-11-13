@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.screenshots;
 
-import android.test.suitebuilder.annotation.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.CardView;
+import android.test.suitebuilder.annotation.LargeTest;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -20,27 +20,29 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.function.Supplier;
 
+import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINPASSWORD;
 import static org.wordpress.android.BuildConfig.SCREENSHOT_LOGINUSERNAME;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnCellAtIndexIn;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.clickOnChildAtIndex;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.focusEditPostTitle;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.getCurrentActivity;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.moveCaretToEndAndDisplayIn;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.hasElement;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.isElementDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.populateTextField;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsVisible;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.pressBackUntilElementIsDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.scrollToThenClickOn;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.selectItemAtIndexInSpinner;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToExist;
-import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToExist;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementOfTypeToBeDisplayed;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForConditionToBeTrue;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayed;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForElementToNotBeDisplayed;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForImagesOfTypeWithPlaceholder;
 import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForRecyclerViewToStopReloading;
-
-import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import static org.wordpress.android.ui.screenshots.support.WPScreenshotSupport.waitForSwipeRefreshLayoutToStopReloading;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -68,7 +70,7 @@ public class WPScreenshotTest {
 
     private void wPLogin() {
         // If we're already logged in, log out before starting
-        if (!hasElement(R.id.login_button)) {
+        if (!isElementDisplayed(R.id.login_button)) {
             wPLogout();
         }
 
@@ -114,8 +116,8 @@ public class WPScreenshotTest {
         selectItemAtIndexInSpinner(getDiscoverTagIndex(), R.id.filter_spinner);
 
         // Wait for the blog articles to load
-        waitForAtLeastOneElementOfTypeToExist(ReaderSiteHeaderView.class);
-        waitForAtLeastOneElementOfTypeToExist(CardView.class);
+        waitForAtLeastOneElementOfTypeToBeDisplayed(ReaderSiteHeaderView.class);
+        waitForAtLeastOneElementOfTypeToBeDisplayed(CardView.class);
         waitForImagesOfTypeWithPlaceholder(R.id.image_featured, ImageType.PHOTO);
         waitForImagesOfTypeWithPlaceholder(R.id.image_avatar, ImageType.AVATAR);
         waitForImagesOfTypeWithPlaceholder(R.id.image_blavatar, ImageType.BLAVATAR);
@@ -136,9 +138,9 @@ public class WPScreenshotTest {
         scrollToThenClickOn(R.id.row_blog_posts);
 
         // Wait for the blog posts to load, then edit the first post
-        waitForRecyclerViewToStopReloading();
-        waitForAtLeastOneElementOfTypeToExist(CardView.class);
-        clickOnCellAtIndexIn(0, R.id.recycler_view);
+        waitForSwipeRefreshLayoutToStopReloading();
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.card_view);
+        clickOnChildAtIndex(0, R.id.recycler_view, R.id.card_view);
 
         // Wait for the editor to appear and load all images
         waitForElementToBeDisplayed(R.id.aztec);
@@ -150,20 +152,19 @@ public class WPScreenshotTest {
         });
 
         // Click in the post title editor and ensure the caret is at the end of the title editor
-        scrollToThenClickOn(R.id.title);
-        moveCaretToEndAndDisplayIn(R.id.title);
+        focusEditPostTitle();
 
         Screengrab.screenshot("screenshot_1");
 
         // Exit back to the main activity
-        pressBackUntilElementIsVisible(R.id.nav_sites);
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private void navigateNotifications() {
         // Click on the "Notifications" tab in the nav
         clickOn(R.id.nav_notifications);
 
-        waitForAtLeastOneElementWithIdToExist(R.id.note_content_container);
+        waitForAtLeastOneElementWithIdToBeDisplayed(R.id.note_content_container);
         waitForImagesOfTypeWithPlaceholder(R.id.note_avatar, ImageType.AVATAR);
 
         Screengrab.screenshot("screenshot_5");
@@ -174,8 +175,10 @@ public class WPScreenshotTest {
         clickOn(R.id.nav_sites);
         scrollToThenClickOn(R.id.row_stats);
 
+        // Wait for the dialog, but don't fai if its not there
+        waitForElementToBeDisplayedWithoutFailure(R.id.promo_dialog_button_positive);
         // If there's a pop-up message, dismiss it
-        if (hasElement(R.id.promo_dialog_button_positive)) {
+        if (isElementDisplayed(R.id.promo_dialog_button_positive)) {
             clickOn(R.id.promo_dialog_button_positive);
         }
 
@@ -188,7 +191,7 @@ public class WPScreenshotTest {
         Screengrab.screenshot("screenshot_4");
 
         // Exit the Stats Activity
-        pressBackUntilElementIsVisible(R.id.nav_sites);
+        pressBackUntilElementIsDisplayed(R.id.nav_sites);
     }
 
     private static int getDiscoverTagIndex() {

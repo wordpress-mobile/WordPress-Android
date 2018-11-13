@@ -34,6 +34,10 @@ public abstract class WPScreenshotIdler implements IdlingResource {
     public abstract boolean checkCondition();
 
     public void idleUntilReady() {
+        idleUntilReady(true);
+    }
+
+    public void idleUntilReady(boolean failIfUnsatisfied) {
         Integer tries = 0;
 
         while (!checkCondition() && ++tries < mNumberOfTries) {
@@ -44,7 +48,7 @@ public abstract class WPScreenshotIdler implements IdlingResource {
             }
         }
 
-        if (tries == mNumberOfTries) {
+        if (tries == mNumberOfTries && failIfUnsatisfied) {
             fail("Unable to continue – expectation wasn't satisfied quickly enough");
         }
     }

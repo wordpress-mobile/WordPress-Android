@@ -5,8 +5,6 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.AmbiguousViewMatcherException;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +29,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
@@ -42,13 +39,13 @@ import static org.hamcrest.Matchers.is;
 public class WPScreenshotSupport {
     // HIGH-LEVEL METHODS
 
-    public static boolean hasElement(Integer elementID) {
-        return hasElement(onView(withId(elementID)));
+    public static boolean isElementDisplayed(Integer elementID) {
+        return isElementDisplayed(onView(withId(elementID)));
     }
 
-    public static boolean hasElement(ViewInteraction element) {
+    public static boolean isElementDisplayed(ViewInteraction element) {
         try {
-            element.check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            element.check(matches(isDisplayed()));
             return true;
         } catch (Throwable e) {
             return false;
@@ -67,10 +64,26 @@ public class WPScreenshotSupport {
         onView(withId(elementID)).perform(click());
     }
 
-    public static void clickOnCellAtIndexIn(int index, int elementID) {
-        waitForAtLeastOneElementWithIdToExist(elementID);
-        onView(withId(elementID))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    public static void clickOnChildAtIndex(int index, int parentElementID, int childElementID) {
+        final ViewInteraction childElement = onView(
+                allOf(
+                        withId(childElementID),
+                        childAtPosition(withId(parentElementID), index)
+                )
+        );
+        waitForElementToBeDisplayed(childElement);
+        childElement.perform(click());
+    }
+
+    public static void clickOnSpinnerItemAtIndex(int index) {
+        final ViewInteraction spinnerItem = onView(
+                allOf(
+                        withId(R.id.text),
+                        childAtPosition(withClassName(is("android.widget.DropDownListView")), index)
+                )
+        );
+        waitForElementToBeDisplayed(spinnerItem);
+        spinnerItem.perform(click());
     }
 
     public static void populateTextField(Integer elementID, String text) {
@@ -80,25 +93,28 @@ public class WPScreenshotSupport {
                 .perform(closeSoftKeyboard());
     }
 
-    public static void moveCaretToEndAndDisplayIn(int elementID) {
-        onView(withId(elementID))
-                .perform(new FlashCaretViewAction());
+    public static void focusEditPostTitle() {
+        ViewInteraction postTitle = onView(
+                allOf(
+                        withId(R.id.title),
+                        childAtPosition(withClassName(is("android.widget.RelativeLayout")), 0)
+                     )
+                                          );
+        postTitle.perform(scrollTo(), click());
+        moveCaretToEndAndDisplayIn(postTitle);
+    }
+
+    private static void moveCaretToEndAndDisplayIn(ViewInteraction element) {
+        element.perform(new FlashCaretViewAction());
 
         // To sync between the test target and the app target
         waitOneFrame();
         waitOneFrame();
     }
 
-    public static void selectItemAtIndexInSpinner(Integer index, Integer elementID) {
-        waitForElementToBeDisplayed(elementID);
-        clickOn(elementID);
-
-        onView(
-                allOf(
-                        withId(R.id.text),
-                        childAtPosition(withClassName(is("android.widget.DropDownListView")), index)
-                )
-        ).perform(click());
+    public static void selectItemAtIndexInSpinner(Integer index, Integer spinnerElementID) {
+        clickOn(spinnerElementID);
+        clickOnSpinnerItemAtIndex(index);
     }
 
     // WAITERS
@@ -106,7 +122,16 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return hasElement(elementID);
+                return isElementDisplayed(elementID);
+            }
+        });
+    }
+
+    public static void waitForElementToBeDisplayed(final ViewInteraction element) {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return isElementDisplayed(element);
             }
         });
     }
@@ -115,13 +140,31 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return !hasElement(elementID);
+                return !isElementDisplayed(elementID);
             }
         });
     }
 
+    public static boolean waitForElementToBeDisplayedWithoutFailure(final Integer elementID) {
+        try {
+            waitForConditionToBeTrueWithoutFailure(new Supplier<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return isElementDisplayed(elementID);
+                }
+            });
+        } catch (Exception e) {
+            // ignore the failure
+        }
+        return isElementDisplayed(elementID);
+    }
+
     public static void waitForConditionToBeTrue(Supplier<Boolean> supplier) {
         new SupplierIdler(supplier).idleUntilReady();
+    }
+
+    public static void waitForConditionToBeTrueWithoutFailure(Supplier<Boolean> supplier) {
+        new SupplierIdler(supplier).idleUntilReady(false);
     }
 
     public static void waitForImagesOfTypeWithPlaceholder(final Integer elementID, final ImageType imageType) {
@@ -136,20 +179,20 @@ public class WPScreenshotSupport {
         waitOneFrame();
     }
 
-    public static void waitForAtLeastOneElementOfTypeToExist(final Class c) {
+    public static void waitForAtLeastOneElementOfTypeToBeDisplayed(final Class c) {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return atLeastOneElementOfTypeExists(c);
+                return atLeastOneElementOfTypeIsDisplayed(c);
             }
         });
     }
 
-    public static void waitForAtLeastOneElementWithIdToExist(final int elementID) {
+    public static void waitForAtLeastOneElementWithIdToBeDisplayed(final int elementID) {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return atLeastOneElementWithIdExists(elementID);
+                return atLeastOneElementWithIdIsDisplayed(elementID);
             }
         });
     }
@@ -158,13 +201,22 @@ public class WPScreenshotSupport {
         waitForConditionToBeTrue(new Supplier<Boolean>() {
             @Override
             public Boolean get() {
-                return hasReloadingRecyclerView();
+                return hasLoadedRecyclerView();
             }
         });
     }
 
-    public static void pressBackUntilElementIsVisible(int elementID) {
-        while (!hasElement(elementID)) {
+    public static void waitForSwipeRefreshLayoutToStopReloading() {
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return hasLoadedSwipeRefreshLayout();
+            }
+        });
+    }
+
+    public static void pressBackUntilElementIsDisplayed(int elementID) {
+        while (!isElementDisplayed(elementID)) {
             Espresso.pressBack();
         }
     }
@@ -200,14 +252,14 @@ public class WPScreenshotSupport {
 
     // HELPERS
 
-    public static Boolean atLeastOneElementOfTypeExists(Class c) {
+    public static Boolean atLeastOneElementOfTypeIsDisplayed(Class c) {
         try {
             onView(
                     allOf(
                             Matchers.<View>instanceOf(c),
                             first()
                     )
-            ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {
@@ -215,14 +267,14 @@ public class WPScreenshotSupport {
         }
     }
 
-    public static Boolean atLeastOneElementWithIdExists(int elementID) {
+    public static Boolean atLeastOneElementWithIdIsDisplayed(int elementID) {
         try {
             onView(
                     allOf(
                             withId(elementID),
                             first()
                     )
-            ).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {
@@ -247,14 +299,29 @@ public class WPScreenshotSupport {
         }
     }
 
-    public static boolean hasReloadingRecyclerView() {
+    public static boolean hasLoadedRecyclerView() {
         try {
             onView(
                     allOf(
-                            new RefreshingRecyclerViewMatcher(),
+                            new RefreshingRecyclerViewMatcher(false),
                             first()
                     )
-            ).check(doesNotExist());
+            ).check(matches(isDisplayed()));
+
+            return true;
+        } catch (Throwable e) {
+            return false;
+        }
+    }
+
+    public static boolean hasLoadedSwipeRefreshLayout() {
+        try {
+            onView(
+                    allOf(
+                            new SwipeRefreshLayoutMatcher(false),
+                            first()
+                    )
+            ).check(matches(isDisplayed()));
 
             return true;
         } catch (Throwable e) {
