@@ -21,15 +21,18 @@ import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewMore
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class StatsListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
 
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -97,10 +100,10 @@ class StatsListFragment : Fragment() {
         }
         viewModel.start(site, statsType)
 
-        setupObservers(site)
+        setupObservers(activity, site)
     }
 
-    private fun setupObservers(site: SiteModel) {
+    private fun setupObservers(activity: FragmentActivity, site: SiteModel) {
         viewModel.data.observe(this, Observer {
             if (it != null) {
                 updateInsights(it)
@@ -121,7 +124,7 @@ class StatsListFragment : Fragment() {
                         ToastUtils.showToast(activity, R.string.reader_toast_err_share_intent)
                     }
                 }
-                is ViewMore -> {
+                is ViewPostDetailStats -> {
                     val postModel = StatsPostModel(
                             it.siteID,
                             it.postID,
@@ -131,6 +134,9 @@ class StatsListFragment : Fragment() {
                     )
                     ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
                 }
+                is ViewFollowersStats -> {
+                    ActivityLauncher.viewFollowersStats(activity, site)
+                }
             }
         })
     }
@@ -138,7 +144,7 @@ class StatsListFragment : Fragment() {
     private fun updateInsights(insightsState: InsightsUiState) {
         val adapter: InsightsAdapter
         if (recyclerView.adapter == null) {
-            adapter = InsightsAdapter()
+            adapter = InsightsAdapter(imageManager)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as InsightsAdapter
@@ -150,6 +156,12 @@ class StatsListFragment : Fragment() {
 sealed class NavigationTarget {
     object AddNewPost : NavigationTarget()
     data class SharePost(val url: String, val title: String) : NavigationTarget()
-    data class ViewMore(val siteID: Long, val postID: String, val postTitle: String, val postUrl: String) :
-            NavigationTarget()
+    data class ViewPostDetailStats(
+        val siteID: Long,
+        val postID: String,
+        val postTitle: String,
+        val postUrl: String
+    ) : NavigationTarget()
+
+    data class ViewFollowersStats(val siteID: Long) : NavigationTarget()
 }

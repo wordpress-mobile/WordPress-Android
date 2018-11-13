@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/StatsBlockLine"
+              android:paddingStart="16dp"
+              android:paddingEnd="16dp"
+              android:layout_width="match_parent"
+              android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/left_label"
+        style="@style/StatsBlockLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:text="@string/unknown"/>
+
+    <TextView
+        android:id="@+id/right_label"
+        style="@style/StatsBlockLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:text="@string/unknown"/>
+
+</LinearLayout>

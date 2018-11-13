@@ -42,11 +42,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.stats.StatsAbstractFragment;
-import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.StatsViewAllActivity;
-import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.StringUtils;
@@ -383,15 +378,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         if (rangeType == FormattableRangeType.FOLLOW) {
-            Intent intent = new Intent(this, StatsViewAllActivity.class);
-            intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.FOLLOWERS);
-            intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
-            intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
-            intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
-            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
-
-            intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, getString(R.string.stats_view_followers));
-            startActivity(intent);
+            ActivityLauncher.viewFollowersStats(this, site);
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }
