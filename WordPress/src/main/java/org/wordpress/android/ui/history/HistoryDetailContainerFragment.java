@@ -151,13 +151,9 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
 
-        if (mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW, false)) {
-            mVisualPreviewContainer.setVisibility(View.VISIBLE);
-            mViewPager.setVisibility(View.GONE);
-        } else {
-            mVisualPreviewContainer.setVisibility(View.GONE);
-            mViewPager.setVisibility(View.VISIBLE);
-        }
+        boolean isInVisualPreview = mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
+        mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
+        mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
 
         refreshHistoryDetail();
         resetOnPageChangeListener();
@@ -186,13 +182,8 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
         MenuItem viewMode = menu.findItem(R.id.history_toggle_view);
-        if (isInVisualPreview()) {
-            viewMode.setTitle(R.string.history_preview_html);
-        } else {
-            viewMode.setTitle(R.string.history_preview_visual);
-        }
+        viewMode.setTitle(isInVisualPreview() ? R.string.history_preview_html : R.string.history_preview_visual);
     }
 
     @Override
@@ -305,8 +296,7 @@ public class HistoryDetailContainerFragment extends Fragment {
         private final ArrayList<Revision> mRevisions;
 
         @SuppressWarnings("unchecked")
-        HistoryDetailFragmentAdapter(FragmentManager fragmentManager,
-                                                                    ArrayList<Revision> revisions) {
+        HistoryDetailFragmentAdapter(FragmentManager fragmentManager, ArrayList<Revision> revisions) {
             super(fragmentManager);
             mRevisions = (ArrayList<Revision>) revisions.clone();
         }
