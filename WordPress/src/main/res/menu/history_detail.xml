@@ -9,6 +9,7 @@
 
      <item
         android:id="@+id/history_toggle_view"
+        android:title="@string/history_preview_html"
         app:showAsAction="never"/>
 
 </menu>
