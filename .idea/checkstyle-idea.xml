@@ -10,7 +10,7 @@
         <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
         <entry key="location-2" value="LOCAL_FILE:$PROJECT_DIR$/config/checkstyle.xml:a8c Style" />
         <entry key="scan-before-checkin" value="false" />
-        <entry key="scanscope" value="JavaOnly" />
+        <entry key="scanscope" value="AllSourcesWithTests" />
         <entry key="suppress-errors" value="false" />
       </map>
     </option>
