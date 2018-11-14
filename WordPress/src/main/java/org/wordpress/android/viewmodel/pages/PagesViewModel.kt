@@ -332,12 +332,16 @@ class PagesViewModel
                 }
             }
         }
-        action.undo = {
-            defaultScope.launch {
-                pageMap[page.remoteId]?.let { changed ->
-                    val updatedPage = updateParent(changed, oldParent)
 
-                    pageStore.uploadPageToServer(updatedPage)
+        // if page was local-only (negative remote ID), skip the undo option
+        if (page.remoteId > 0) {
+            action.undo = {
+                defaultScope.launch {
+                    pageMap[page.remoteId]?.let { changed ->
+                        val updatedPage = updateParent(changed, oldParent)
+
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
                 }
             }
         }
@@ -347,7 +351,11 @@ class PagesViewModel
 
                 delay(ACTION_DELAY)
                 _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                        if (action.undo != null) {
+                            SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
+                        } else {
+                            SnackbarMessageHolder(string.page_parent_changed)
+                        }
                 )
             }
         }
@@ -417,15 +425,20 @@ class PagesViewModel
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
-            action.undo = {
-                val updatedPage = updatePageStatus(page, oldStatus)
-                defaultScope.launch {
-                    pageStore.updatePageInDb(updatedPage)
-                    refreshPages()
 
-                    pageStore.uploadPageToServer(updatedPage)
+            if (remoteId > 0) {
+                action.undo = {
+                    val updatedPage = updatePageStatus(page, oldStatus)
+                    defaultScope.launch {
+                        pageStore.updatePageInDb(updatedPage)
+                        refreshPages()
+
+                        pageStore.uploadPageToServer(updatedPage)
+                    }
                 }
             }
+
+            // if page was local-only (negative remote ID), skip the undo option
             action.onSuccess = {
                 defaultScope.launch {
                     delay(ACTION_DELAY)
@@ -437,7 +450,7 @@ class PagesViewModel
             }
             action.onError = {
                 defaultScope.launch {
-                    action.undo()
+                    action.undo?.let { it() }
 
                     _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }

@@ -38,9 +38,9 @@ class ActionPerformer
         continuations.remove(action.remoteId)
 
         if (success == true) {
-            action.onSuccess()
+            action.onSuccess?.let { it() }
         } else {
-            action.onError()
+            action.onError?.let { it() }
         }
     }
 
@@ -70,9 +70,9 @@ class ActionPerformer
             }
 
     data class PageAction(val remoteId: Long, val event: EventType, val perform: () -> Unit) {
-        var onSuccess: () -> Unit = { }
-        var onError: () -> Unit = { }
-        var undo: () -> Unit = { }
+        var onSuccess: (() -> Unit)? = null
+        var onError: (() -> Unit)? = null
+        var undo: (() -> Unit)? = null
 
         enum class EventType { UPLOAD, UPDATE, DELETE }
     }
