@@ -57,6 +57,7 @@ class PageParentViewModel
 
     private fun loadPages(pageId: Long) = defaultScope.launch {
         page = if (pageId < 0) {
+            // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
             pageStore.getPageByLocalId(-pageId.toInt(), site)
         } else {
             pageStore.getPageByRemoteId(pageId, site)
