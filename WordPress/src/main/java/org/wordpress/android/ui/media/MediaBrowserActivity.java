@@ -55,6 +55,8 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -103,6 +105,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject SiteStore mSiteStore;
 
     private SiteModel mSite;
 
@@ -1047,6 +1050,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void reloadMediaGrid() {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reload();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        SiteModel site = mSiteStore.getSiteByLocalId(mSite.getId());
+
+        if (site != null) {
+            mSite = site;
+            showQuota(true);
         }
     }
 
