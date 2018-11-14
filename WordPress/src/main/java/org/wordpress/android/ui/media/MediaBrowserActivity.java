@@ -1053,6 +1053,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void reloadMediaGrid() {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reload();
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
         }
     }
 
