@@ -48,6 +48,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -719,6 +720,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+
         if (event.media != null) {
             updateMediaGridItem(event.media, event.isError());
         } else {
