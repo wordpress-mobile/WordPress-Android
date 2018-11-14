@@ -182,52 +182,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final String PROP_NAME_INITIAL_DATA = "initialData";
 
-    private static final String INITIAL_HTML =
-            "<!-- wp:image -->\n"
-            + "<figure class=\"wp-block-image\"><img alt=\"\"/></figure>\n"
-            + "<!-- /wp:image -->\n"
-            + "\n"
-            + "<!-- wp:image -->\n"
-            + "<figure class=\"wp-block-image\"><img src=\"https://cldup.com/cXyG__fTLN.jpg\" alt=\"\"/></figure>\n"
-            + "<!-- /wp:image -->\n"
-            + "\n"
-            + "<!-- wp:title -->\n"
-            + "    Hello World\n"
-            + "<!-- /wp:title -->\n"
-            + "\n"
-            + "<!-- wp:heading {\"level\": 2} -->\n"
-            + "    <h2>Welcome to Gutenberg Parented!</h2>\n"
-            + "<!-- /wp:heading -->\n"
-            + "\n"
-            + "<!-- wp:paragraph -->\n"
-            + "<p><b>Hello</b> World!</p>\n"
-            + "<!-- /wp:paragraph -->\n"
-            + "\n"
-            + "<!-- wp:paragraph {\"dropCap\":true,\"backgroundColor\":\"vivid-red\",\"fontSize\":\"large\","
-                + "\"className\":\"custom-class-1 custom-class-2\"} -->\n"
-            + "<p class=\"has-background has-drop-cap has-large-font-size has-vivid-red-background-color custom-class-1"
-                + "custom-class-2\">\n"
-            + "    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempor tincidunt sapien, quis "
-                + "dictum orci sollicitudin quis. Proin sed elit id est pulvinar feugiat vitae eget dolor. Lorem ipsum"
-                + "dolor sit amet, consectetur adipiscing elit.</p>\n"
-            + "<!-- /wp:paragraph -->\n"
-            + "\n"
-            + "<!-- wp:code -->\n"
-            + "<pre class=\"wp-block-code\"><code>if name == \"World\":\n"
-            + "            return \"Hello World\"\n"
-            + "            else:\n"
-            + "            return \"Hello Pony\"</code></pre>\n"
-            + "<!-- /wp:code -->\n"
-            + "\n"
-            + "<!-- wp:more -->\n"
-            + "<!--more-->\n"
-            + "<!-- /wp:more -->\n"
-            + "\n"
-            + "<!-- wp:p4ragraph -->\n"
-            + "    Лорем ипсум долор сит амет, адиписци трацтатос еа еум. Меа аудиам малуиссет те, хас меис либрис"
-                + "елеифенд ин. Нец ех тота деленит сусципит. Яуас порро инструцтиор но нец.\n"
-            + "<!-- /wp:p4ragraph -->";
-
     public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
@@ -300,7 +254,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (initialProps == null) {
             initialProps = new Bundle();
         }
-        initialProps.putString(PROP_NAME_INITIAL_DATA, INITIAL_HTML);
+        initialProps.putString(PROP_NAME_INITIAL_DATA, "");
 
 
         // The string here (e.g. "MyReactNativeApp") has to match
