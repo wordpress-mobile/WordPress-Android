@@ -289,8 +289,6 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 refreshAccountDetails();
             }
         } else {
-            showChangePasswordProgressDialog(false);
-
             if (event.isError()) {
                 switch (event.error.type) {
                     case SETTINGS_FETCH_ERROR:
