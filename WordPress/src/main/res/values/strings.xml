@@ -1633,6 +1633,7 @@
     <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_name_label">Name</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
