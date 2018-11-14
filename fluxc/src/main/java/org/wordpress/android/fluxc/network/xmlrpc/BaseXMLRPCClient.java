@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
@@ -45,6 +47,8 @@ public abstract class BaseXMLRPCClient {
     }
 
     protected Request add(XMLRPCRequest request) {
+        Log.d("sync_get_request", "Is caching: " + request.mUri.toString());
+        Log.d("sync_get_request", "Pokus: " + request.mUri.toString());
         if (request.shouldCache() && request.shouldForceUpdate()) {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }
