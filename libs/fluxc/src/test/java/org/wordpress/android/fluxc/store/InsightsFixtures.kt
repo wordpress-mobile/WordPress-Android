@@ -83,7 +83,6 @@ val TOP_COMMENTS_RESPONSE = CommentsResponse(
         COMMENT_COUNT,
         COMMENT_COUNT,
         SECOND_DAY,
-        null,
         listOf(AUTHOR),
         listOf(POST)
 )
