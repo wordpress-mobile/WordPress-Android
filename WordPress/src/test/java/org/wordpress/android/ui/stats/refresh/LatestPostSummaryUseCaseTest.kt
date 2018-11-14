@@ -29,17 +29,17 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailSta
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class LatestPostSummaryViewModelTest {
+class LatestPostSummaryUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var viewModel: LatestPostSummaryViewModel
+    private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() {
-        viewModel = LatestPostSummaryViewModel(insightsStore, latestPostSummaryMapper)
-        viewModel.navigationTarget.observeForever {}
+        useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
+        useCase.navigationTarget.observeForever {}
     }
 
     @Test
@@ -56,7 +56,7 @@ class LatestPostSummaryViewModelTest {
                 )
         )
 
-        val result = viewModel.loadLatestPostSummary(site, refresh, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(Failed::class.java)
         (result as Failed).let {
@@ -73,7 +73,7 @@ class LatestPostSummaryViewModelTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, refresh, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -103,7 +103,7 @@ class LatestPostSummaryViewModelTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, refresh, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -142,7 +142,7 @@ class LatestPostSummaryViewModelTest {
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
-        val result = viewModel.loadLatestPostSummary(site, refresh, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -167,7 +167,7 @@ class LatestPostSummaryViewModelTest {
 
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
-        viewModel.navigationTarget.observeForever { navigationTarget = it }
+        useCase.navigationTarget.observeForever { navigationTarget = it }
         this.action()
         return navigationTarget
     }

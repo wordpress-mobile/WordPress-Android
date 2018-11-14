@@ -6,12 +6,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -31,7 +31,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class StatsListFragment : Fragment() {
+class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
@@ -60,10 +60,12 @@ class StatsListFragment : Fragment() {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
+
         val intent = activity?.intent
         if (intent != null && intent.hasExtra(WordPress.SITE)) {
             outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
         }
+
         super.onSaveInstanceState(outState)
     }
 
@@ -82,7 +84,6 @@ class StatsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
         initializeViewModels(nonNullActivity, savedInstanceState)
@@ -105,7 +106,6 @@ class StatsListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
-        viewModel.start(site)
 
         setupObservers(activity, site)
     }

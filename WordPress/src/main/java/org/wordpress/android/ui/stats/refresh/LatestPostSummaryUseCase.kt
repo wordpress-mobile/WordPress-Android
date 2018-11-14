@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import javax.inject.Inject
 
-class LatestPostSummaryViewModel
+class LatestPostSummaryUseCase
 @Inject constructor(
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper

@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -27,19 +28,13 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
-class StatsFragment : Fragment() {
+class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var actionMenuItem: MenuItem
 
     private var restorePreviousSearch = false
-
-    companion object {
-        fun newInstance(): StatsFragment {
-            return StatsFragment()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +49,6 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
         initializeViewModels(nonNullActivity, savedInstanceState == null)

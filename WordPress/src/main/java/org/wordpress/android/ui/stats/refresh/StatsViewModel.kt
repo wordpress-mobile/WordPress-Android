@@ -2,26 +2,24 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.DEFAULT_SCOPE
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
 class StatsViewModel
 @Inject constructor(
-    private val insightsViewModel: InsightsViewModel,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
-) : ViewModel() {
+    private val insightsUseCase: InsightsUseCase,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -39,21 +37,21 @@ class StatsViewModel
 
             this.site = site
 
-            uiScope.loadStats()
+            loadStats()
         }
     }
 
-    private fun CoroutineScope.loadStats() = launch {
+    private fun loadStats() {
         loadData {
-            insightsViewModel.loadInsightItems(site)
-            insightsViewModel.refreshInsightItems(site)
+            insightsUseCase.loadInsightItems(site)
+            insightsUseCase.refreshInsightItems(site)
         }
     }
 
-    private suspend fun loadData(load: suspend () -> Unit) {
+    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
 
-        load()
+        executeLoading()
 
         _isRefreshing.value = false
     }
@@ -70,21 +68,8 @@ class StatsViewModel
     }
 
     fun onPullToRefresh() {
-        uiScope.launch {
-            loadData {
-                insightsViewModel.refreshInsightItems(site, true)
-            }
-        }
-    }
-
-    private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(uiScope.coroutineContext) {
-        setValue(value)
-    }
-
-    private fun <T> MutableLiveData<T>.postOnUi(value: T) {
-        val liveData = this
-        uiScope.launch {
-            liveData.value = value
+        loadData {
+            insightsUseCase.refreshInsightItems(site, true)
         }
     }
 }

@@ -9,7 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import javax.inject.Inject
 
-class InsightsAllTimeViewModel
+class InsightsAllTimeUseCase
 @Inject constructor(private val insightsStore: InsightsStore) {
     suspend fun loadAllTimeInsights(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
         if (refresh) {

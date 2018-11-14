@@ -2,32 +2,20 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.UI_SCOPE
+import kotlinx.coroutines.experimental.CoroutineDispatcher
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
 import javax.inject.Inject
 import javax.inject.Named
 
 class InsightsTabViewModel @Inject constructor(
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    private val insightsViewModel: InsightsViewModel
-) : StatsListViewModel() {
-    private val _data = Transformations.map(insightsViewModel.data) { loadedData ->
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    insightsUseCase: InsightsUseCase
+) : StatsListViewModel(mainDispatcher) {
+    private val _data = Transformations.map(insightsUseCase.data) { loadedData ->
         InsightsUiState(loadedData, DONE)
     }
     override val data: LiveData<InsightsUiState> = _data
 
-    override val navigationTarget: LiveData<NavigationTarget> = insightsViewModel.navigationTarget
-
-    override fun start(site: SiteModel) {
-        reload(site)
-    }
-
-    override fun reload(site: SiteModel) {
-        uiScope.launch {
-            insightsViewModel.refreshInsightItems(site)
-        }
-    }
+    override val navigationTarget: LiveData<NavigationTarget> = insightsUseCase.navigationTarget
 }
