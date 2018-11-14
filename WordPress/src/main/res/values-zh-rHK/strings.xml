@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 11:54:06+0000
+Translation-Revision-Date: 2018-10-30 08:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">請輸入 WordPress.com 或與 Jetpack 連線的自助託管 WordPress 網站</string>
+    <string name="history_loading_revision">正在載入修訂版本</string>
+    <string name="history_loaded_revision">修訂版本已經載入</string>
+    <string name="history_load_dialog_title">載入修訂版本</string>
+    <string name="history_load_dialog_message">你想要從 %1$s 載入在 %2$s 建立的修訂版本嗎？</string>
+    <string name="history_load_dialog_button_positive">載入</string>
+    <string name="history_footer_post">於 %2$s 時，在 %1$s 建立的文章</string>
+    <string name="history_footer_page">於 %2$s 時，在 %1$s 建立的頁面</string>
+    <string name="history_empty_title">尚未有記錄</string>
+    <string name="history_empty_subtitle_post">當你變更自己的文章內容時，即可在此查看記錄</string>
+    <string name="history_empty_subtitle_page">當你變更自己的頁面內容時，即可在此查看記錄</string>
+    <string name="description_user">使用者大頭貼</string>
     <string name="async_promo_description_schedule_page">你現在只要退出編輯器，頁面就會儲存並在幕後排程！馬上試用看看！</string>
     <string name="async_promo_description_publish_post">你現在只要退出編輯器，文章就會儲存並在幕後發表！馬上試用看看！</string>
     <string name="async_promo_description_publish_page">你現在只要退出編輯器，頁面就會儲存並在幕後發表！馬上試用看看！</string>
-    <string name="image_size_full_class">size-full</string>
-    <string name="image_size_large_class">size-large</string>
-    <string name="image_size_medium_class">size-medium</string>
-    <string name="image_size_thumbnail_class">size-thumbnail</string>
     <string name="image_size_full_label">完整大小</string>
     <string name="image_size_large_label">大</string>
     <string name="image_size_medium_label">中</string>
@@ -261,7 +270,6 @@ Language: zh_TW
     <string name="content_description_person_reading_device_notification">正在讀取通知裝置的使用者</string>
     <string name="content_description_people_looking_charts">正在查看圖表的使用者</string>
     <string name="comment_title">%s 於 %s</string>
-    <string name="dialog_confirm_delete_permanently_page">確定要永久刪除此頁面？</string>
     <string name="dialog_confirm_delete_permanently_post">確定要永久刪除此文章？</string>
     <string name="notification_site_creation_title_in_progress">正在建立網站… 可能需要一點時間。</string>
     <string name="notification_channel_important_title">重要</string>
@@ -406,7 +414,6 @@ Language: zh_TW
     <string name="dialog_confirm_publish_message_page">此頁面會立即發表。</string>
     <string name="dialog_confirm_publish_message_post">此文章會立即發表。</string>
     <string name="dialog_confirm_publish_title">現在要發表了嗎？</string>
-    <string name="dialog_confirm_delete_page">此頁面會刪除並傳送至垃圾桶</string>
     <string name="dialog_confirm_delete_post">此文章會刪除並傳送至垃圾桶</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">無法上傳 %1$d 篇文章/個頁面</string>
     <string name="media_file_pages_plural_only_not_uploaded">無法上傳 %1$d 個頁面</string>
@@ -603,7 +610,6 @@ Language: zh_TW
     <string name="login_text_otp_another">請使用簡訊傳送另一個驗證碼給我。</string>
     <string name="enter_verification_code_sms">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
     <string name="error_generic_error">無法執行這項操作</string>
-    <string name="error_media_recover_page">無法上傳此頁面的媒體</string>
     <string name="error_media_recover_post">無法上傳此文章的媒體</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
@@ -691,7 +697,6 @@ Language: zh_TW
     <string name="notification_settings_master_status_on">開啟</string>
     <string name="max_video_resolution">影片大小上限</string>
     <string name="max_thumbnail_px_size">圖片大小上限</string>
-    <string name="error_page_does_not_exist">此頁面已不存在</string>
     <string name="error_upload_post_media_param">於此文章中上傳媒體時發生錯誤：%s.</string>
     <string name="error_upload_post_param">上傳此文章時發生錯誤：%s.</string>
     <string name="add_media_progress">新增媒體</string>
@@ -1341,8 +1346,6 @@ Language: zh_TW
     <string name="app_notifications">應用程式通知</string>
     <string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
     <string name="stats_insights_latest_post_summary">最新文章摘要</string>
-    <string name="yesterday">昨天</string>
-    <string name="days_ago">%d 天前</string>
     <string name="connectionbar_no_connection">沒有連線</string>
     <string name="button_publish">發表</string>
     <string name="button_edit">編輯</string>
@@ -1350,12 +1353,10 @@ Language: zh_TW
     <string name="button_preview">預覽</string>
     <string name="button_trash">垃圾桶</string>
     <string name="button_stats">統計</string>
-    <string name="page_deleted">頁面已刪除</string>
     <string name="button_back">返回</string>
     <string name="stats_no_activity_this_period">此期間沒有任何活動</string>
     <string name="post_trashed">文章已移至垃圾桶</string>
     <string name="post_deleted">文章已刪除</string>
-    <string name="page_trashed">頁面已移至垃圾桶</string>
     <string name="undo">復原</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
     <string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
@@ -1484,7 +1485,6 @@ Language: zh_TW
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="cab_selected">已選取：%d</string>
     <string name="signing_out">正在登出…</string>
-    <string name="pages_empty_list">尚無任何頁面。建立頁面？</string>
     <string name="comment_reply_to_user">回覆 %s</string>
     <string name="posts_empty_list">尚無文章。建立文章？</string>
     <string name="comment_trashed">留言已移至垃圾桶</string>
@@ -1550,7 +1550,6 @@ Language: zh_TW
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
     <string name="error_refresh_media">目前無法重新整理媒體</string>
-    <string name="error_deleting_page">刪除頁面時發生錯誤</string>
     <string name="wordpress_blog">WordPress 網誌</string>
     <string name="image_settings">圖片設定</string>
     <string name="local_changes">本機變更</string>
@@ -1700,7 +1699,6 @@ Language: zh_TW
     <string name="immediately">立即</string>
     <string name="quickpress_add_alert_title">設定捷徑名稱</string>
     <string name="settings">設定</string>
-    <string name="today">今天</string>
     <string name="quickpress_add_error">捷徑名稱不能為空</string>
     <string name="quickpress_window_title">選擇用於 QuickPress 捷徑的網誌</string>
     <string name="categories">分類</string>

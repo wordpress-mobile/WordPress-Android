@@ -33,15 +33,11 @@ Language: sr_RS
     <string name="notifications_tab">Језичак обавештења</string>
     <string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
     <string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
-    <string name="yesterday">Јуче</string>
-    <string name="days_ago">пре %d дана</string>
     <string name="connectionbar_no_connection">Нема везе</string>
-    <string name="page_trashed">Страна је послата на отпад</string>
     <string name="post_deleted">Чланак је обрисан</string>
     <string name="post_trashed">Чланак је послат на отпад</string>
     <string name="stats_no_activity_this_period">Нема активности за овај период</string>
     <string name="button_back">Назад</string>
-    <string name="page_deleted">Страна је обрисана</string>
     <string name="button_stats">Статистике</string>
     <string name="button_trash">Отпад</string>
     <string name="button_preview">Предпреглед</string>
@@ -170,7 +166,6 @@ Language: sr_RS
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="cab_selected">%d изабрано</string>
     <string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
-    <string name="pages_empty_list">Не постоји ниједна страна. Зашто не бисте направили нову?</string>
     <string name="error_refresh_unauthorized_pages">Немате дозволу да прегледате или уређујете стране</string>
     <string name="comment_reply_to_user">Одговор %s</string>
     <string name="comment_trashed">Коментар померен на отпад</string>
@@ -372,7 +367,6 @@ Language: sr_RS
     <string name="immediately">Одмах</string>
     <string name="quickpress_add_alert_title">Подеси име пречице</string>
     <string name="settings">Подешавања</string>
-    <string name="today">Данас</string>
     <string name="quickpress_window_title">Одаберите блог за QuickPress пречицу</string>
     <string name="quickpress_add_error">Име пречице не може бити празно</string>
     <string name="categories">Категорије</string>

@@ -80,6 +80,6 @@ fastlane/README.md
 fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
 
-# Ruby Bundler Output
+# Bundler
 /.bundle
 /vendor
