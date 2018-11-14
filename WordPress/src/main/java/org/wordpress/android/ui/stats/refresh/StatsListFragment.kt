@@ -26,8 +26,10 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStat
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
@@ -111,7 +113,7 @@ class StatsListFragment : Fragment() {
             }
         })
 
-        viewModel.navigationTarget.observe(this, Observer {
+        viewModel.navigationTarget.observeEvent(this) {
             when (it) {
                 is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
                 is SharePost -> {
@@ -142,7 +144,8 @@ class StatsListFragment : Fragment() {
                     ActivityLauncher.viewCommentsStats(activity, site)
                 }
             }
-        })
+            true
+        }
     }
 
     private fun updateInsights(insightsState: InsightsUiState) {
@@ -157,7 +160,7 @@ class StatsListFragment : Fragment() {
     }
 }
 
-sealed class NavigationTarget {
+sealed class NavigationTarget : Event() {
     object AddNewPost : NavigationTarget()
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
