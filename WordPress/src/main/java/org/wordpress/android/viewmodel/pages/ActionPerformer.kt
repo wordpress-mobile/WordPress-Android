@@ -46,20 +46,26 @@ class ActionPerformer
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        continuations[event.post.remotePostId]?.get(UPLOAD)?.resume(!event.isError)
+        // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
+        val continuation = continuations[event.post.remotePostId] ?: continuations[-event.post.id.toLong()]
+        continuation?.get(UPLOAD)?.resume(!event.isError)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
-        postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, eventType) ->
-            continuations[remoteId]?.get(eventType)?.resume(!event.isError)
+        postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, localId, eventType) ->
+            // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
+            val continuation = continuations[remoteId] ?: continuations[-localId.toLong()]
+            continuation?.get(eventType)?.resume(!event.isError)
         }
     }
 
-    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Pair<Long, EventType>? =
+    private fun postCauseOfChangeToPostAction(postCauseOfChange: CauseOfOnPostChanged): Triple<Long, Int, EventType>? =
             when (postCauseOfChange) {
-                is CauseOfOnPostChanged.DeletePost -> postCauseOfChange.remotePostId to DELETE
-                is CauseOfOnPostChanged.UpdatePost -> postCauseOfChange.remotePostId to UPDATE
+                is CauseOfOnPostChanged.DeletePost ->
+                    Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, DELETE)
+                is CauseOfOnPostChanged.UpdatePost ->
+                    Triple(postCauseOfChange.remotePostId, postCauseOfChange.localPostId, UPDATE)
                 else -> null
             }
 
