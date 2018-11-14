@@ -19,14 +19,12 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.WEEKS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import javax.inject.Inject
 
 class StatsFragment : Fragment() {
@@ -88,8 +86,10 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.listState.observe(this, Observer {
-            refreshProgressBars(it)
+        viewModel.isRefreshing.observe(this, Observer {
+            it?.let { isRefreshing ->
+                swipeToRefreshHelper.isRefreshing = isRefreshing
+            }
         })
 
         viewModel.showSnackbarMessage.observe(this, Observer { holder ->
@@ -99,19 +99,11 @@ class StatsFragment : Fragment() {
                     Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG).show()
                 } else {
                     val snackbar = Snackbar.make(parent, getString(holder.messageRes), Snackbar.LENGTH_LONG)
-                    snackbar.setAction(getString(holder.buttonTitleRes)) { _ -> holder.buttonAction() }
+                    snackbar.setAction(getString(holder.buttonTitleRes)) { holder.buttonAction() }
                     snackbar.show()
                 }
             }
         })
-    }
-
-    private fun refreshProgressBars(statsListState: StatsListState?) {
-        if (!isAdded || view == null) {
-            return
-        }
-        // We want to show the swipe refresher for the initial fetch but not while loading more
-        swipeToRefreshHelper.isRefreshing = statsListState == FETCHING
     }
 }
 

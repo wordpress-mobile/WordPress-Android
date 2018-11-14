@@ -64,6 +64,7 @@ class FollowersUseCaseTest {
     @Test
     fun `maps WPCOM followers to UI model`() = test {
         val forced = false
+        val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
                 OnInsightsFetched(
                         FollowersModel(totalCount, listOf(FollowerModel(avatar, user, url, dateSubscribed)))
@@ -78,7 +79,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, forced)
+        val result = useCase.loadFollowers(site, refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -97,6 +98,7 @@ class FollowersUseCaseTest {
     @Test
     fun `maps email followers to UI model`() = test {
         val forced = false
+        val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
@@ -111,7 +113,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, forced)
+        val result = useCase.loadFollowers(site, refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -130,6 +132,7 @@ class FollowersUseCaseTest {
     @Test
     fun `maps empty followers to UI model`() = test {
         val forced = false
+        val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
@@ -147,7 +150,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, forced)
+        val result = useCase.loadFollowers(site, refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -166,6 +169,7 @@ class FollowersUseCaseTest {
     @Test
     fun `maps WPCOM error item to UI model`() = test {
         val forced = false
+        val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
                 OnInsightsFetched(
@@ -181,7 +185,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, forced)
+        val result = useCase.loadFollowers(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
@@ -193,6 +197,7 @@ class FollowersUseCaseTest {
     @Test
     fun `maps email error item to UI model`() = test {
         val forced = false
+        val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
                 OnInsightsFetched(
@@ -208,7 +213,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, forced)
+        val result = useCase.loadFollowers(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
