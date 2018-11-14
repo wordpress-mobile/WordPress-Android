@@ -7,16 +7,13 @@ import android.support.annotation.Nullable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -30,9 +27,8 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 public class MemorizingTrustManager implements X509TrustManager {
-    private static final String KEYSTORE_FILENAME = "wpstore_certs_truststore.bks";
-    private static final String KEYSTORE_PASSWORD = "secret";
     private static final long FUTURE_TASK_TIMEOUT_SECONDS = 10;
+    private static final String ANDROID_KEYSTORE_TYPE = "AndroidKeyStore";
 
     private FutureTask<X509TrustManager> mTrustManagerFutureTask;
     private FutureTask<KeyStore> mLocalKeyStoreFutureTask;
@@ -80,13 +76,6 @@ public class MemorizingTrustManager implements X509TrustManager {
         KeyStore localKeyStore;
         try {
             localKeyStore = loadTrustStore();
-        } catch (FileNotFoundException e) {
-            // Init the key store for the first time
-            try {
-                localKeyStore = initLocalKeyStoreFile();
-            } catch (IOException | GeneralSecurityException e1) {
-                throw new IllegalStateException(e1);
-            }
         } catch (IOException | GeneralSecurityException e) {
             AppLog.e(T.API, e);
             throw new IllegalStateException(e);
@@ -110,52 +99,9 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     private KeyStore loadTrustStore() throws IOException, GeneralSecurityException {
-        File localKeyStoreFile = new File(mContext.getFilesDir(), KEYSTORE_FILENAME);
-        KeyStore localKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream in = new FileInputStream(localKeyStoreFile);
-        try {
-            localKeyStore.load(in, KEYSTORE_PASSWORD.toCharArray());
-        } finally {
-            in.close();
-        }
+        KeyStore localKeyStore = KeyStore.getInstance(ANDROID_KEYSTORE_TYPE);
+        localKeyStore.load(null);
         return localKeyStore;
-    }
-
-    private void saveTrustStore(KeyStore localKeyStore) throws IOException, GeneralSecurityException {
-        FileOutputStream out = null;
-        try {
-            File localKeyStoreFile = new File(mContext.getFilesDir(), KEYSTORE_FILENAME);
-            out = new FileOutputStream(localKeyStoreFile);
-            localKeyStore.store(out, KEYSTORE_PASSWORD.toCharArray());
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    AppLog.e(T.UTILS, e);
-                }
-            }
-        }
-    }
-
-    private KeyStore initLocalKeyStoreFile() throws GeneralSecurityException, IOException {
-        FileOutputStream out = null;
-        try {
-            File localKeyStoreFile = new File(mContext.getFilesDir(), KEYSTORE_FILENAME);
-            out = new FileOutputStream(localKeyStoreFile);
-            KeyStore localTrustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            localTrustStore.load(null, KEYSTORE_PASSWORD.toCharArray());
-            localTrustStore.store(out, KEYSTORE_PASSWORD.toCharArray());
-            return localTrustStore;
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    AppLog.e(T.UTILS, e);
-                }
-            }
-        }
     }
 
     public boolean isCertificateAccepted(X509Certificate cert) {
@@ -173,8 +119,7 @@ public class MemorizingTrustManager implements X509TrustManager {
     public void storeCert(X509Certificate cert) {
         try {
             getLocalKeyStore().setCertificateEntry(cert.getSubjectDN().toString(), cert);
-            saveTrustStore(getLocalKeyStore());
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (KeyStoreException e) {
             AppLog.e(T.API, "Unable to store the certificate: " + cert);
         }
     }
@@ -207,7 +152,17 @@ public class MemorizingTrustManager implements X509TrustManager {
     }
 
     public void clearLocalTrustStore() {
-        File localKeyStoreFile = new File(mContext.getFilesDir(), KEYSTORE_FILENAME);
-        localKeyStoreFile.delete();
+        KeyStore localKeyStore = getLocalKeyStore();
+        try {
+            Enumeration<String> aliases = localKeyStore.aliases();
+            while (aliases.hasMoreElements()) {
+                String alias = aliases.nextElement();
+                if (localKeyStore.isCertificateEntry(alias)) {
+                    localKeyStore.deleteEntry(alias);
+                }
+            }
+        } catch (KeyStoreException e) {
+            AppLog.e(T.API, "Unable to clear KeyStore");
+        }
     }
 }

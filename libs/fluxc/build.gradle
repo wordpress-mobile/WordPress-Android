@@ -10,6 +10,7 @@ buildscript {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.dcendents.android-maven'
 
@@ -35,6 +36,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 kotlin { experimental { coroutines 'enable' } }
@@ -64,6 +69,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
 
     // WordPress libs
     implementation ('org.wordpress:utils:1.20.0') {
@@ -82,11 +88,12 @@ dependencies {
 
     // External libs
     api 'org.greenrobot:eventbus:3.0.0'
-    api 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.11.0'
+    api 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
     api 'com.android.volley:volley:1.1.1'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.apache.commons:commons-text:1.1'
+    api "android.arch.paging:runtime:$arch_paging_version"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
