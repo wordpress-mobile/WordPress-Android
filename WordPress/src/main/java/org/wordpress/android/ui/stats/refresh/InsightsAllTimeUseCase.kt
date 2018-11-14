@@ -1,34 +1,38 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import javax.inject.Inject
 
 class InsightsAllTimeUseCase
-@Inject constructor(private val insightsStore: InsightsStore) {
-    suspend fun loadAllTimeInsights(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
-        if (refresh) {
-            val response = insightsStore.fetchAllTimeInsights(site, forced)
-            val model = response.model
-            val error = response.error
-            return when {
-                model != null -> loadAllTimeInsightsItem(model)
-                error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
-                else -> throw Exception("All times stats response should contain a model or an error")
-            }
+@Inject constructor(private val insightsStore: InsightsStore) : BaseInsightsUseCase(ALL_TIME_STATS) {
+    private val mutableLiveData = MutableLiveData<InsightsItem>()
+    override val liveData: LiveData<InsightsItem> = mutableLiveData
+    override suspend fun fetch(site: SiteModel, forced: Boolean) {
+        val dbModel = insightsStore.getAllTimeInsights(site)
+        if (dbModel != null) {
+            mutableLiveData.postValue(loadAllTimeInsightsItem(dbModel))
         } else {
-            val model = insightsStore.getAllTimeInsights(site)
-            return if (model != null) {
-                loadAllTimeInsightsItem(model)
-            } else {
-                ListInsightItem(listOf(Empty))
-            }
+            mutableLiveData.postValue(ListInsightItem(listOf(Empty)))
         }
+        val response = insightsStore.fetchAllTimeInsights(site, forced)
+        val model = response.model
+        val error = response.error
+        mutableLiveData.postValue(
+                when {
+                    model != null -> loadAllTimeInsightsItem(model)
+                    error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+                    else -> throw Exception("All times stats response should contain a model or an error")
+                }
+        )
     }
 
     private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {

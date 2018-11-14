@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
@@ -28,30 +29,30 @@ class FollowersUseCase
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
-) {
+) : BaseInsightsUseCase(FOLLOWERS) {
+    private val mutableLiveData = MutableLiveData<InsightsItem>()
+    override val liveData: LiveData<InsightsItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    suspend fun loadFollowers(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
-        if (refresh) {
-            val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
-            val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
-            val wpComResponse = deferredWpComResponse.await()
-            val emailResponse = deferredEmailResponse.await()
-            val wpComModel = wpComResponse.model
-            val emailModel = emailResponse.model
-            val error = wpComResponse.error ?: emailResponse.error
+    override suspend fun fetch(site: SiteModel, forced: Boolean) {
+        val wpComFollowers = insightsStore.getWpComFollowers(site)
+        val emailFollowers = insightsStore.getEmailFollowers(site)
+        mutableLiveData.postValue(loadFollowers(site, wpComFollowers, emailFollowers))
 
-            return when {
-                error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
-                wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
-                else -> throw IllegalArgumentException("Unexpected empty body")
-            }
-        } else {
-            val wpComFollowers = insightsStore.getWpComFollowers(site)
-            val emailFollowers = insightsStore.getEmailFollowers(site)
-            return loadFollowers(site, wpComFollowers, emailFollowers)
-        }
+        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
+        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
+        val wpComResponse = deferredWpComResponse.await()
+        val emailResponse = deferredEmailResponse.await()
+        val wpComModel = wpComResponse.model
+        val emailModel = emailResponse.model
+        val error = wpComResponse.error ?: emailResponse.error
+
+        mutableLiveData.postValue(when {
+            error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
+            wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
+            else -> throw IllegalArgumentException("Unexpected empty body")
+        })
     }
 
     private fun loadFollowers(

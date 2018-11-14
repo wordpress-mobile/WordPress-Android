@@ -45,7 +45,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadTodayStats(site, refresh, forced)
+        val result = useCase.fetch(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -68,7 +68,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadTodayStats(site, refresh, forced)
+        val result = useCase.fetch(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -89,7 +89,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadTodayStats(site, refresh, forced)
+        val result = useCase.fetch(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -110,7 +110,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadTodayStats(site, refresh, forced)
+        val result = useCase.fetch(site, refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
