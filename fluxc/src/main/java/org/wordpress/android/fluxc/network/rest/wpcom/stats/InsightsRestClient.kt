@@ -338,7 +338,6 @@ constructor(
         @SerializedName("monthly_comments") val monthlyComments: Int?,
         @SerializedName("total_comments") val totalComments: Int?,
         @SerializedName("most_active_day") val mostActiveDay: String?,
-        @SerializedName("most_commented_post") val mostCommentedPost: Post?,
         @SerializedName("authors") val authors: List<Author>?,
         @SerializedName("posts") val posts: List<Post>?
     ) {
