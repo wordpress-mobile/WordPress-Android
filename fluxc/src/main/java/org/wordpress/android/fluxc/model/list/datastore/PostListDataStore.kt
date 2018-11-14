@@ -10,18 +10,30 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListPayload
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 
+// This is used for a temporary solution for preventing duplicate fetch requests for posts. This workaround should
+// be moved in a later minor rework of how we fetch individual posts for the paged list.
+private data class SitePostId(val localSiteId: Int, val remotePostId: Long)
+
 class PostListDataStore(
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
     private val site: SiteModel?,
     private val performGetItemIdsToHide: ((ListDescriptor) -> List<Pair<Int?, Long?>>)? = null
 ) : ListDataStoreInterface<PostModel> {
+    private val fetchingSet = HashSet<SitePostId>()
+
     override fun fetchItem(listDescriptor: ListDescriptor, remoteItemId: Long) {
         site?.let {
-            val postToFetch = PostModel()
-            postToFetch.remotePostId = remoteItemId
-            val payload = RemotePostPayload(postToFetch, it)
-            dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+            val sitePostId = SitePostId(localSiteId = it.id, remotePostId = remoteItemId)
+            // Only fetch the post if there is no request going on
+            if (!fetchingSet.contains(sitePostId)) {
+                fetchingSet.add(sitePostId)
+
+                val postToFetch = PostModel()
+                postToFetch.remotePostId = remoteItemId
+                val payload = RemotePostPayload(postToFetch, it)
+                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+            }
         }
     }
 
@@ -42,7 +54,12 @@ class PostListDataStore(
 
     override fun getItemByRemoteId(listDescriptor: ListDescriptor, remoteItemId: Long): PostModel? {
         if (listDescriptor is PostListDescriptor) {
-            return postStore.getPostByRemotePostId(remoteItemId, site)
+            val post = postStore.getPostByRemotePostId(remoteItemId, site)
+            if (post != null) {
+                val sitePostId = SitePostId(localSiteId = listDescriptor.site.id, remotePostId = remoteItemId)
+                fetchingSet.remove(sitePostId)
+            }
+            return post
         }
         return null
     }
