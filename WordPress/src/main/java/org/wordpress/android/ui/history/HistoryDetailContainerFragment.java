@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.history;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -34,6 +32,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
+import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AniUtils.Duration;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -209,26 +209,10 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     private void crossfadePreviewViews() {
-        final View topView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
-        final View bottomView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
-
-        topView.setAlpha(0f);
-        topView.setVisibility(View.VISIBLE);
-
-        topView.animate()
-               .alpha(1f)
-               .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-               .setListener(null);
-
-        bottomView.animate()
-                  .alpha(0f)
-                  .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-                  .setListener(new AnimatorListenerAdapter() {
-                      @Override
-                      public void onAnimationEnd(Animator animation) {
-                          bottomView.setVisibility(View.GONE);
-                      }
-                  });
+        final View fadeInView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
+        final View fadeOutView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
+        AniUtils.fadeIn(fadeInView, Duration.SHORT);
+        AniUtils.fadeOut(fadeOutView, Duration.SHORT);
     }
 
     private void refreshHistoryDetail() {
