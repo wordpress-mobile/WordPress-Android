@@ -5,8 +5,7 @@
     xmlns:aztec="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/bottom_bar"
@@ -103,6 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
         android:layout_alignParentTop="true"
+        android:background="@color/white"
         android:fillViewport="true"
         android:visibility="gone">
 
