@@ -205,6 +205,34 @@ constructor(
         }
     }
 
+    suspend fun fetchTopComments(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchInsightsPayload<CommentsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.comments.urlV1_1
+
+        val params = mapOf(
+                "max" to pageSize.toString()
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                CommentsResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchInsightsPayload(response.data)
+            }
+            is Error -> {
+                FetchInsightsPayload(buildStatsError(response.error))
+            }
+        }
+    }
+
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -305,6 +333,29 @@ constructor(
         @SerializedName("data") val data: List<List<String>>
     )
 
+    data class CommentsResponse(
+        @SerializedName("date") val date: String?,
+        @SerializedName("monthly_comments") val monthlyComments: Int?,
+        @SerializedName("total_comments") val totalComments: Int?,
+        @SerializedName("most_active_day") val mostActiveDay: String?,
+        @SerializedName("authors") val authors: List<Author>?,
+        @SerializedName("posts") val posts: List<Post>?
+    ) {
+        data class Author(
+            @SerializedName("name") val name: String?,
+            @SerializedName("link") val link: String?,
+            @SerializedName("gravatar") val gravatar: String?,
+            @SerializedName("comments") val comments: Int?
+        )
+
+        data class Post(
+            @SerializedName("name") val name: String?,
+            @SerializedName("link") val link: String?,
+            @SerializedName("id") val id: Long?,
+            @SerializedName("comments") val comments: Int?
+        )
+    }
+
     private fun StatsGranularity.toPath(): String {
         return when (this) {
             DAYS -> "day"
@@ -334,21 +385,21 @@ constructor(
             @SerializedName("date_subscribed") val dateSubscribed: Date,
             @SerializedName("follow_data") val followData: FollowData
         )
+    }
 
-        data class FollowData(
-            @SerializedName("type") val type: String,
-            @SerializedName("params") val params: FollowParams
-        ) {
-            data class FollowParams(
-                @SerializedName("follow-text") val followText: String,
-                @SerializedName("following-text") val followingText: String,
-                @SerializedName("following-hover-text") val followingHoverText: String,
-                @SerializedName("is_following") val isFollowing: Boolean,
-                @SerializedName("blog_id") val blogId: String,
-                @SerializedName("site_id") val siteId: String,
-                @SerializedName("stats-source") val statsSource: String,
-                @SerializedName("blog_domain") val blogDomain: String
-            )
-        }
+    data class FollowData(
+        @SerializedName("type") val type: String,
+        @SerializedName("params") val params: FollowParams
+    ) {
+        data class FollowParams(
+            @SerializedName("follow-text") val followText: String,
+            @SerializedName("following-text") val followingText: String,
+            @SerializedName("following-hover-text") val followingHoverText: String,
+            @SerializedName("is_following") val isFollowing: Boolean,
+            @SerializedName("blog_id") val blogId: String,
+            @SerializedName("site_id") val siteId: String,
+            @SerializedName("stats-source") val statsSource: String,
+            @SerializedName("blog_domain") val blogDomain: String
+        )
     }
 }

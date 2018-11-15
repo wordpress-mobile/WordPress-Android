@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -162,6 +163,25 @@ class InsightsStore
     ): FollowersModel? {
         val wpComResponse = sqlUtils.selectFollowers(site, followerType)
         return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
+    }
+
+    // Comments stats
+    suspend fun fetchComments(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchTopComments(siteModel, forced = forced)
+        return@withContext when {
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response)
+                OnInsightsFetched(insightsMapper.map(response.response))
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    fun getComments(site: SiteModel): CommentsModel? {
+        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
