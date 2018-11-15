@@ -132,11 +132,11 @@ public class HistoryDetailContainerFragment extends Fragment {
         mVisualContent = rootView.findViewById(R.id.visual_content);
 
         Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                getActivity(),
+                requireContext(),
                 org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity()));
+                EditorMediaUtils.getMaximumThumbnailSizeForEditor(requireContext()));
 
-        mVisualContent.setImageGetter(new AztecImageLoader(getActivity(), mImageManager, loadingImagePlaceholder));
+        mVisualContent.setImageGetter(new AztecImageLoader(requireContext(), mImageManager, loadingImagePlaceholder));
         mVisualContent.setKeyListener(null);
         mVisualContent.setFocusable(false);
         mVisualContent.setTextIsSelectable(true);
@@ -166,7 +166,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
         setHasOptionsMenu(true);
     }
 
@@ -195,8 +195,8 @@ public class HistoryDetailContainerFragment extends Fragment {
             Intent intent = new Intent();
             intent.putExtra(KEY_REVISION, mRevision);
 
-            getActivity().setResult(Activity.RESULT_OK, intent);
-            getActivity().finish();
+            requireActivity().setResult(Activity.RESULT_OK, intent);
+            requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
             mVisualTitle.setText(isInVisualPreview() ? null : mRevision.getPostTitle());
             mVisualContent.fromHtml(
@@ -232,7 +232,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     private void refreshHistoryDetail() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setSubtitle(mRevision.getTimeSpan());
         }
