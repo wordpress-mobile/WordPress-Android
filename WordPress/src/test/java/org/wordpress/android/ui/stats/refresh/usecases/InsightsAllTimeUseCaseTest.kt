@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -19,7 +19,10 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 
 class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
@@ -27,7 +30,10 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: InsightsAllTimeUseCase
     @Before
     fun setUp() {
-        useCase = InsightsAllTimeUseCase(Dispatchers.Unconfined, insightsStore)
+        useCase = InsightsAllTimeUseCase(
+                Dispatchers.Unconfined,
+                insightsStore
+        )
     }
 
     @Test

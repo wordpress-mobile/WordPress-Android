@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
+import org.wordpress.android.ui.stats.refresh.usecases.InsightsUseCase
 import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Named

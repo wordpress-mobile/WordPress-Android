@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -7,6 +7,8 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 
 abstract class BaseInsightsUseCase(
     val type: InsightsTypes,
@@ -17,7 +19,9 @@ abstract class BaseInsightsUseCase(
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
             withContext(mainDispatcher) {
-                mutableLiveData.value = loadCachedData(site) ?: ListInsightItem(listOf(Empty))
+                mutableLiveData.value = loadCachedData(site) ?: ListInsightItem(
+                        listOf(Empty)
+                )
             }
         }
         if (refresh) {

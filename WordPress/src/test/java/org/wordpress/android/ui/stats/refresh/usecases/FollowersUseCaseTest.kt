@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -31,8 +32,11 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -52,7 +56,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersUseCase(Dispatchers.Unconfined, insightsStore, statsUtilsWrapper, resourceProvider)
+        useCase = FollowersUseCase(
+                Dispatchers.Unconfined,
+                insightsStore,
+                statsUtilsWrapper,
+                resourceProvider
+        )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(

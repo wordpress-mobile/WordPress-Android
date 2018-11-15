@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
@@ -22,6 +22,11 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import java.util.Date
@@ -33,7 +38,11 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() = test {
-        useCase = LatestPostSummaryUseCase(Dispatchers.Unconfined, insightsStore, latestPostSummaryMapper)
+        useCase = LatestPostSummaryUseCase(
+                Dispatchers.Unconfined,
+                insightsStore,
+                latestPostSummaryMapper
+        )
         useCase.navigationTarget.observeForever {}
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
@@ -79,7 +88,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
             assertThat(link.icon).isEqualTo(R.drawable.ic_create_blue_medium_24dp)
             assertThat(link.text).isEqualTo(R.string.stats_insights_create_post)
 
-            assertThat(link.toNavigationTarget()).isEqualTo(NavigationTarget.AddNewPost)
+            assertThat(link.toNavigationTarget()).isEqualTo(AddNewPost)
         }
     }
 

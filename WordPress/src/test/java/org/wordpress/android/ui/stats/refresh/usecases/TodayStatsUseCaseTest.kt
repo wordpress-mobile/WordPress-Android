@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -15,11 +15,17 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
@@ -31,7 +37,10 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private val comments = 30
     @Before
     fun setUp() {
-        useCase = TodayStatsUseCase(Dispatchers.Unconfined, insightsStore)
+        useCase = TodayStatsUseCase(
+                Dispatchers.Unconfined,
+                insightsStore
+        )
     }
 
     @Test
@@ -94,7 +103,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         (result as ListInsightItem).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(BlockListItem.Empty)
+            assertThat(this.items[1]).isEqualTo(Empty)
         }
     }
 
@@ -125,7 +134,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
     private fun assertViews(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as BlockListItem.Item
+        val item = blockListItem as Item
         assertThat(item.text).isEqualTo(R.string.stats_views)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_visible_on_grey_dark_24dp)
@@ -134,7 +143,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
     private fun assertVisitors(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as BlockListItem.Item
+        val item = blockListItem as Item
         assertThat(item.text).isEqualTo(R.string.stats_visitors)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_user_grey_dark_24dp)
@@ -143,7 +152,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
     private fun assertLikes(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as BlockListItem.Item
+        val item = blockListItem as Item
         assertThat(item.text).isEqualTo(R.string.stats_likes)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_star_grey_dark_24dp)
@@ -152,7 +161,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
     private fun assertComments(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as BlockListItem.Item
+        val item = blockListItem as Item
         assertThat(item.text).isEqualTo(R.string.stats_comments)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_comment_grey_dark_24dp)

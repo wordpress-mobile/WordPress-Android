@@ -1,15 +1,21 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,7 +35,10 @@ class TodayStatsUseCase
         val error = response.error
 
         return when {
-            error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
+            error != null -> Failed(
+                    string.stats_insights_today_stats,
+                    error.message ?: error.type.name
+            )
             model != null -> loadTodayStatsItem(model)
             else -> throw IllegalArgumentException("Unexpected empty body")
         }

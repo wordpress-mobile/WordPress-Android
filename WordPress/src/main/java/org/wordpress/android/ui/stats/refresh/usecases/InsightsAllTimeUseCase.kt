@@ -1,15 +1,21 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,7 +36,7 @@ class InsightsAllTimeUseCase
         return when {
             model != null -> loadAllTimeInsightsItem(model)
             error != null -> Failed(
-                    R.string.stats_insights_all_time_stats,
+                    string.stats_insights_all_time_stats,
                     error.message ?: error.type.name
             )
             else -> throw Exception("All times stats response should contain a model or an error")
