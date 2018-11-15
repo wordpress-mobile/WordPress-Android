@@ -333,18 +333,16 @@ class PagesViewModel
             }
         }
 
-        // if page was local-only (negative remote ID), skip the undo option
-        if (page.remoteId > 0) {
-            action.undo = {
-                defaultScope.launch {
-                    pageMap[page.remoteId]?.let { changed ->
-                        val updatedPage = updateParent(changed, oldParent)
+        action.undo = {
+            defaultScope.launch {
+                pageMap[action.remoteId]?.let { changed ->
+                    val updatedPage = updateParent(changed, oldParent)
 
-                        pageStore.uploadPageToServer(updatedPage)
-                    }
+                    pageStore.uploadPageToServer(updatedPage)
                 }
             }
         }
+
         action.onSuccess = {
             defaultScope.launch {
                 reloadPages()
@@ -427,6 +425,8 @@ class PagesViewModel
                 pageStore.uploadPageToServer(updatedPage)
             }
 
+            action.undo = {
+                val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
@@ -435,19 +435,6 @@ class PagesViewModel
                 }
             }
 
-            if (remoteId > 0) {
-                action.undo = {
-                    val updatedPage = updatePageStatus(page, oldStatus)
-                    defaultScope.launch {
-                        pageStore.updatePageInDb(updatedPage)
-                        refreshPages()
-
-                        pageStore.uploadPageToServer(updatedPage)
-                    }
-                }
-            }
-
-            // if page was local-only (negative remote ID), skip the undo option
             action.onSuccess = {
                 defaultScope.launch {
                     delay(ACTION_DELAY)
