@@ -31,6 +31,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
@@ -46,11 +47,11 @@ import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
 private const val SEARCH_COLLAPSE_DELAY = 500
+private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 class PagesViewModel
 @Inject constructor(
@@ -185,10 +186,11 @@ class PagesViewModel
 
     private suspend fun waitForPageUpdate(remotePageId: Long) {
         _arePageActionsEnabled = false
-        suspendCoroutine<Unit> { cont ->
+        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
             pageUpdateContinuations[remotePageId] = cont
         }
         _arePageActionsEnabled = true
+        refreshPages()
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
