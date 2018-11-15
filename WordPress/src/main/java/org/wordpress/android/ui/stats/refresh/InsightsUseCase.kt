@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.async
@@ -22,6 +21,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEG
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.util.merge
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -36,23 +36,18 @@ class InsightsUseCase
     private val insightsAllTimeUseCase: InsightsAllTimeUseCase,
     private val latestPostSummaryUseCase: LatestPostSummaryUseCase,
     private val todayStatsUseCase: TodayStatsUseCase,
+    private val commentsUseCase: CommentsUseCase,
     private val followersUseCase: FollowersUseCase,
     private val mostPopularUseCase: InsightsMostPopularUseCase
 ) {
     private val _data = MutableLiveData<List<InsightsItem>>()
     val data: LiveData<List<InsightsItem>> = _data
 
-    private val mediatorNavigationTarget: MediatorLiveData<NavigationTarget> = MediatorLiveData()
-    val navigationTarget: LiveData<NavigationTarget> = mediatorNavigationTarget
-
-    init {
-        mediatorNavigationTarget.addSource(latestPostSummaryUseCase.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-        mediatorNavigationTarget.addSource(followersUseCase.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-    }
+    val navigationTarget: LiveData<NavigationTarget> = merge(
+            latestPostSummaryUseCase.navigationTarget,
+            followersUseCase.navigationTarget,
+            commentsUseCase.navigationTarget
+    )
 
     private suspend fun load(site: SiteModel, type: InsightsTypes, refresh: Boolean, forced: Boolean): InsightsItem {
         return when (type) {
@@ -60,11 +55,11 @@ class InsightsUseCase
             LATEST_POST_SUMMARY -> latestPostSummaryUseCase.loadLatestPostSummary(site, refresh, forced)
             TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, refresh, forced)
             FOLLOWERS -> followersUseCase.loadFollowers(site, refresh, forced)
+            COMMENTS -> commentsUseCase.loadComments(site, forced)
             MOST_POPULAR_DAY_AND_HOUR -> mostPopularUseCase.loadMostPopularInsights(site, refresh, forced)
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
-            COMMENTS,
             POSTING_ACTIVITY,
             PUBLICIZE -> NotImplemented(type.name)
         }

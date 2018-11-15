@@ -7,7 +7,6 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -24,22 +23,18 @@ class LatestPostSummaryUseCase
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
     suspend fun loadLatestPostSummary(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
-        if (refresh) {
+        return if (refresh) {
             val response = insightsStore.fetchLatestPostInsights(site, forced)
             val model = response.model
             val error = response.error
 
-            return when {
+            when {
                 error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
                 else -> loadLatestPostSummaryItem(model)
             }
         } else {
             val model = insightsStore.getLatestPostInsights(site)
-            return if (model != null) {
-                loadLatestPostSummaryItem(model)
-            } else {
-                ListInsightItem(listOf(Empty))
-            }
+            loadLatestPostSummaryItem(model)
         }
     }
 

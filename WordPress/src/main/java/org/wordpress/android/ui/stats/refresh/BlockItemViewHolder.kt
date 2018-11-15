@@ -115,6 +115,7 @@ sealed class BlockItemViewHolder(
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
+
         fun bind(item: ListItem) {
             icon.visibility = GONE
             text.text = item.text
