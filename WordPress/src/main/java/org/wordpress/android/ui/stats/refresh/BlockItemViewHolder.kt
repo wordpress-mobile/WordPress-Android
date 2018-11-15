@@ -17,6 +17,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
@@ -95,6 +97,26 @@ sealed class BlockItemViewHolder(
 
         fun bind(item: UserItem) {
             imageManager.loadIntoCircle(icon, AVATAR, item.avatarUrl)
+            text.text = item.text
+            value.text = item.value
+            divider.visibility = if (item.showDivider) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
+    }
+
+    class ListItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_item
+    ) {
+        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val divider = itemView.findViewById<View>(R.id.divider)
+        fun bind(item: ListItem) {
+            icon.visibility = GONE
             text.text = item.text
             value.text = item.value
             divider.visibility = if (item.showDivider) {

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.InformationVie
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LabelViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TabsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TextViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolder
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
@@ -57,6 +59,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             LABEL -> LabelViewHolder(parent)
+            LIST_ITEM -> ListItemViewHolder(parent)
         }
     }
 
