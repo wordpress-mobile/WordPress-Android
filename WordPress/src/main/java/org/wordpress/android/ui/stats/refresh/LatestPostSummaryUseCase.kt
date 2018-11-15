@@ -40,7 +40,7 @@ class LatestPostSummaryUseCase
             )
         }
         if (refresh) {
-            val response = insightsStore.fetchLatestPostInsights(site, refresh)
+            val response = insightsStore.fetchLatestPostInsights(site, forced)
             val model = response.model
             val error = response.error
 

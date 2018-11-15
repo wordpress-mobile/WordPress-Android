@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -28,18 +25,16 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
-class LatestPostSummaryUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
-    fun setUp() {
+    fun setUp() = test {
         useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
         useCase.navigationTarget.observeForever {}
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
     @Test
@@ -56,13 +51,12 @@ class LatestPostSummaryUseCaseTest {
                 )
         )
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(Failed::class.java)
-        (result as Failed).let {
-            assertThat(result.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
-            assertThat(result.errorMessage).isEqualTo(message)
-        }
+        val failed = result as Failed
+        assertThat(failed.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
+        assertThat(failed.errorMessage).isEqualTo(message)
     }
 
     @Test
@@ -73,7 +67,7 @@ class LatestPostSummaryUseCaseTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -103,7 +97,7 @@ class LatestPostSummaryUseCaseTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -142,7 +136,7 @@ class LatestPostSummaryUseCaseTest {
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -163,6 +157,16 @@ class LatestPostSummaryUseCaseTest {
                 assertThat(this.siteID).isEqualTo(model.siteId)
             }
         }
+    }
+
+    private suspend fun loadLatestPostSummary(
+        refresh: Boolean,
+        forced: Boolean
+    ): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 
     private fun Link.toNavigationTarget(): NavigationTarget? {

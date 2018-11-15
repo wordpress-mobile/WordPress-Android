@@ -7,9 +7,8 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,8 +35,7 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
-class FollowersUseCaseTest {
+class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -79,7 +77,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -113,7 +111,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -150,7 +148,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -185,7 +183,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
@@ -213,13 +211,20 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
             assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
+    }
+
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 
     private fun assertTabWithFollower(tab: TabsItem.Tab) {

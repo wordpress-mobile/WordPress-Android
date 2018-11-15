@@ -5,9 +5,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
@@ -21,8 +20,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
 
-@RunWith(MockitoJUnitRunner::class)
-class InsightsAllTimeUseCaseTest {
+class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: InsightsAllTimeUseCase
@@ -43,7 +41,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(StatsError(GENERIC_ERROR, message)))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is Failed)
         assertEquals(result.type, Type.FAILED)
@@ -63,7 +61,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(emptyModel))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -87,7 +85,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(model))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -115,7 +113,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(model))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -143,7 +141,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(model))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -171,7 +169,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(model))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -198,7 +196,7 @@ class InsightsAllTimeUseCaseTest {
                 )
         ).thenReturn(OnInsightsFetched(model))
 
-        val result = useCase.loadAllTimeInsights(site, refresh, forced)
+        val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
         assertEquals(result.type, Type.LIST_INSIGHTS)
@@ -208,5 +206,12 @@ class InsightsAllTimeUseCaseTest {
         assertTrue(items[2] is Item)
         assertEquals((items[1] as Item).showDivider, true)
         assertEquals((items[2] as Item).showDivider, false)
+    }
+
+    private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 }

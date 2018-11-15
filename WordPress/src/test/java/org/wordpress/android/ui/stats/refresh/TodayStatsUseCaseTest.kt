@@ -4,9 +4,8 @@ import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -21,8 +20,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 
-@RunWith(MockitoJUnitRunner::class)
-class TodayStatsUseCaseTest {
+class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TodayStatsUseCase
@@ -45,7 +43,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.fetch(site, refresh, forced)
+        val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -68,7 +66,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.fetch(site, refresh, forced)
+        val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -89,7 +87,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.fetch(site, refresh, forced)
+        val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -110,7 +108,7 @@ class TodayStatsUseCaseTest {
                 )
         )
 
-        val result = useCase.fetch(site, refresh, forced)
+        val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
@@ -158,5 +156,12 @@ class TodayStatsUseCaseTest {
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_comment_grey_dark_24dp)
         assertThat(item.value).isEqualTo(comments.toString())
+    }
+
+    private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 }
