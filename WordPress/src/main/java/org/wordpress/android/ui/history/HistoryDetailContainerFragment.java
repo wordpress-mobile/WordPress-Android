@@ -152,7 +152,8 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mVisualPreviewContainer = rootView.findViewById(R.id.visual_preview_container);
 
-        boolean isInVisualPreview = mIsFragmentRecreated && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
+        boolean isInVisualPreview = savedInstanceState != null
+                                    && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
         mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
         mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
 
