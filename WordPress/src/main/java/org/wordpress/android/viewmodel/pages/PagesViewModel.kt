@@ -50,7 +50,7 @@ import kotlin.coroutines.experimental.Continuation
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
-private const val ERROR_DELAY = 500
+private const val SNACKBAR_DELAY = 500
 private const val SEARCH_COLLAPSE_DELAY = 500
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
@@ -165,7 +165,7 @@ class PagesViewModel
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             _listState.setOnUi(ERROR)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
+            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
             AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _listState.setOnUi(DONE)
@@ -349,8 +349,7 @@ class PagesViewModel
             defaultScope.launch {
                 reloadPages()
 
-                delay(ACTION_DELAY)
-                _showSnackbarMessage.postValue(
+                showSnackbar(
                         if (action.undo != null) {
                             SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
                         } else {
@@ -363,8 +362,7 @@ class PagesViewModel
             defaultScope.launch {
                 refreshPages()
 
-                delay(ERROR_DELAY)
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
 
@@ -373,6 +371,11 @@ class PagesViewModel
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
         }
+    }
+
+    private suspend fun showSnackbar(message: SnackbarMessageHolder) {
+        delay(SNACKBAR_DELAY)
+        _showSnackbarMessage.postValue(message)
     }
 
     private fun updateParent(page: PageModel, parentId: Long): PageModel {
@@ -396,15 +399,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(string.page_permanently_deleted))
             }
         }
         action.onError = {
             defaultScope.launch {
                 refreshPages()
 
-                delay(ERROR_DELAY)
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(string.page_delete_error))
             }
         }
 
@@ -424,6 +426,7 @@ class PagesViewModel
 
                 pageStore.uploadPageToServer(updatedPage)
             }
+
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
@@ -451,15 +454,14 @@ class PagesViewModel
                     reloadPages()
 
                     val message = prepareStatusChangeSnackbar(status, action.undo)
-                    _showSnackbarMessage.postValue(message)
+                    showSnackbar(message)
                 }
             }
             action.onError = {
                 defaultScope.launch {
                     action.undo?.let { it() }
 
-                    delay(ERROR_DELAY)
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
+                    showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
 
