@@ -36,7 +36,8 @@ class InsightsUseCase
     private val insightsAllTimeUseCase: InsightsAllTimeUseCase,
     private val latestPostSummaryUseCase: LatestPostSummaryUseCase,
     private val todayStatsUseCase: TodayStatsUseCase,
-    private val followersUseCase: FollowersUseCase
+    private val followersUseCase: FollowersUseCase,
+    private val mostPopularUseCase: InsightsMostPopularUseCase
 ) {
     private val _data = MutableLiveData<List<InsightsItem>>()
     val data: LiveData<List<InsightsItem>> = _data
@@ -59,7 +60,7 @@ class InsightsUseCase
             LATEST_POST_SUMMARY -> latestPostSummaryUseCase.loadLatestPostSummary(site, refresh, forced)
             TODAY_STATS -> todayStatsUseCase.loadTodayStats(site, refresh, forced)
             FOLLOWERS -> followersUseCase.loadFollowers(site, refresh, forced)
-            MOST_POPULAR_DAY_AND_HOUR,
+            MOST_POPULAR_DAY_AND_HOUR -> mostPopularUseCase.loadMostPopularInsights(site, refresh, forced)
             FOLLOWER_TOTALS,
             TAGS_AND_CATEGORIES,
             ANNUAL_SITE_STATS,
