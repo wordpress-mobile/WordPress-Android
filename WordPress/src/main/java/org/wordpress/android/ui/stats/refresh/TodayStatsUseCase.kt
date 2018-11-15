@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
@@ -14,30 +12,34 @@ import javax.inject.Inject
 
 class TodayStatsUseCase
 @Inject constructor(private val insightsStore: InsightsStore) : BaseInsightsUseCase(TODAY_STATS) {
-    private val mutableLiveData = MutableLiveData<InsightsItem>()
-    override val liveData: LiveData<InsightsItem> = mutableLiveData
+    override suspend fun fetch(
+        site: SiteModel,
+        refresh: Boolean,
+        forced: Boolean
+    ) {
+        if (liveData.value == null) {
+            val dbModel = insightsStore.getTodayInsights(site)
+            mutableLiveData.postValue(
+                    if (dbModel != null) {
+                        loadTodayStatsItem(dbModel)
+                    } else {
+                        ListInsightItem(listOf(Empty))
+                    }
+            )
+        }
+        if (refresh) {
+            val response = insightsStore.fetchTodayInsights(site, forced)
+            val model = response.model
+            val error = response.error
 
-    override suspend fun fetch(site: SiteModel, forced: Boolean) {
-        val dbModel = insightsStore.getTodayInsights(site)
-        mutableLiveData.postValue(
-                if (dbModel != null) {
-                    loadTodayStatsItem(dbModel)
-                } else {
-                    ListInsightItem(listOf(Empty))
-                }
-        )
-
-        val response = insightsStore.fetchTodayInsights(site, forced)
-        val model = response.model
-        val error = response.error
-
-        mutableLiveData.postValue(
-                when {
-                    error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
-                    model != null -> loadTodayStatsItem(model)
-                    else -> throw IllegalArgumentException("Unexpected empty body")
-                }
-        )
+            mutableLiveData.postValue(
+                    when {
+                        error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
+                        model != null -> loadTodayStatsItem(model)
+                        else -> throw IllegalArgumentException("Unexpected empty body")
+                    }
+            )
+        }
     }
 
     private fun loadTodayStatsItem(model: VisitsModel): ListInsightItem {

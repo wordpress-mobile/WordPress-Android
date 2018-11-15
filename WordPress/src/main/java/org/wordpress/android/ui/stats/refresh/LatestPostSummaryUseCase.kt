@@ -21,33 +21,39 @@ class LatestPostSummaryUseCase
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
 ) : BaseInsightsUseCase(LATEST_POST_SUMMARY) {
-    private val mutableLiveData = MutableLiveData<InsightsItem>()
-    override val liveData: LiveData<InsightsItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    override suspend fun fetch(site: SiteModel, forced: Boolean) {
-        val dbModel = insightsStore.getLatestPostInsights(site)
-        mutableLiveData.postValue(
-                if (dbModel != null) {
-                    loadLatestPostSummaryItem(dbModel)
-                } else {
-                    ListInsightItem(listOf(Empty))
-                }
-        )
-        val response = insightsStore.fetchLatestPostInsights(site, forced)
-        val model = response.model
-        val error = response.error
+    override suspend fun fetch(
+        site: SiteModel,
+        refresh: Boolean,
+        forced: Boolean
+    ) {
+        if (liveData.value == null) {
+            val dbModel = insightsStore.getLatestPostInsights(site)
+            mutableLiveData.postValue(
+                    if (dbModel != null) {
+                        loadLatestPostSummaryItem(dbModel)
+                    } else {
+                        ListInsightItem(listOf(Empty))
+                    }
+            )
+        }
+        if (refresh) {
+            val response = insightsStore.fetchLatestPostInsights(site, refresh)
+            val model = response.model
+            val error = response.error
 
-        mutableLiveData.postValue(
-                when {
-                    error != null -> Failed(
-                            R.string.stats_insights_latest_post_summary,
-                            error.message ?: error.type.name
-                    )
-                    else -> loadLatestPostSummaryItem(model)
-                }
-        )
+            mutableLiveData.postValue(
+                    when {
+                        error != null -> Failed(
+                                R.string.stats_insights_latest_post_summary,
+                                error.message ?: error.type.name
+                        )
+                        else -> loadLatestPostSummaryItem(model)
+                    }
+            )
+        }
     }
 
     private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {

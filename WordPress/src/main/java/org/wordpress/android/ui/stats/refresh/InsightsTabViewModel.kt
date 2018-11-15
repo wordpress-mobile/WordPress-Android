@@ -10,7 +10,7 @@ import javax.inject.Named
 
 class InsightsTabViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    insightsUseCase: InsightsUseCase
+    val insightsUseCase: InsightsUseCase
 ) : StatsListViewModel(mainDispatcher) {
     private val _data = insightsUseCase.data.map { loadedData ->
         InsightsUiState(loadedData, DONE)
@@ -18,4 +18,9 @@ class InsightsTabViewModel @Inject constructor(
     override val data: LiveData<InsightsUiState> = _data
 
     override val navigationTarget: LiveData<NavigationTarget> = insightsUseCase.navigationTarget
+
+    override fun onCleared() {
+        super.onCleared()
+        insightsUseCase.onCleared()
+    }
 }

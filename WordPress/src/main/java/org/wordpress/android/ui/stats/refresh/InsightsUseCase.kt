@@ -55,21 +55,26 @@ class InsightsUseCase
             mediatorNavigationTarget.value = it
         }
     }
+
     suspend fun loadInsightItems(site: SiteModel) {
-        loadItems(site)
+        loadItems(site, false)
     }
 
     suspend fun refreshInsightItems(site: SiteModel, forced: Boolean = false) {
-        loadItems(site, forced)
+        loadItems(site, true, forced)
     }
 
-    private suspend fun loadItems(site: SiteModel, forced: Boolean = false) {
+    private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
         withContext(bgDispatcher) {
-            useCases.forEach { _, useCase -> launch { useCase.fetch(site, forced) } }
+            useCases.values.forEach { useCase -> launch { useCase.fetch(site, refresh, forced) } }
             val items = statsStore.getInsights()
             withContext(mainDispatcher) {
                 insights.value = items
             }
         }
+    }
+
+    fun onCleared() {
+        useCases.values.forEach { it.clear() }
     }
 }
