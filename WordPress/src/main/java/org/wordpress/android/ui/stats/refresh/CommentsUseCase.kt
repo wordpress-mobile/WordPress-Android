@@ -27,15 +27,20 @@ class CommentsUseCase
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    suspend fun loadComments(site: SiteModel, forced: Boolean = false): InsightsItem {
-        val response = insightsStore.fetchComments(site, forced)
-        val model = response.model
-        val error = response.error
+    suspend fun loadComments(site: SiteModel, refresh: Boolean = false, forced: Boolean = false): InsightsItem {
+        val dbModel = insightsStore.getComments(site)
+        return if (!refresh && dbModel != null) {
+            loadComments(site, dbModel)
+        } else {
+            val response = insightsStore.fetchComments(site, forced)
+            val model = response.model
+            val error = response.error
 
-        return when {
-            error != null -> Failed(R.string.stats_view_comments, error.message ?: error.type.name)
-            model != null -> loadComments(site, model)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            when {
+                error != null -> Failed(R.string.stats_view_comments, error.message ?: error.type.name)
+                model != null -> loadComments(site, model)
+                else -> throw IllegalArgumentException("Unexpected empty body")
+            }
         }
     }
 
