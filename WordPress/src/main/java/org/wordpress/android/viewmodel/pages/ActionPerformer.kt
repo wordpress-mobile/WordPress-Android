@@ -16,7 +16,7 @@ import kotlin.coroutines.experimental.Continuation
 
 class ActionPerformer
 @Inject constructor(private val dispatcher: Dispatcher) {
-    private var continuations: MutableMap<Long, Map<EventType, Continuation<Boolean>>> = mutableMapOf()
+    private var continuations: MutableMap<Pair<Long, EventType>, Continuation<Pair<Boolean, Long>>> = mutableMapOf()
 
     companion object {
         private const val ACTION_TIMEOUT = 30L * 1000
@@ -31,32 +31,36 @@ class ActionPerformer
     }
 
     suspend fun performAction(action: PageAction) {
-        val success = suspendCoroutineWithTimeout<Boolean>(ACTION_TIMEOUT) { uploadCont ->
-            continuations[action.remoteId] = mapOf(action.event to uploadCont)
+        val result = suspendCoroutineWithTimeout<Pair<Boolean, Long>>(ACTION_TIMEOUT) { continuation ->
+            continuations[action.remoteId to action.event] = continuation
             action.perform()
         }
-        continuations.remove(action.remoteId)
+        continuations.remove(action.remoteId to action.event)
+        result?.let { (success, remoteId) ->
+            action.remoteId = remoteId
 
-        if (success == true) {
-            action.onSuccess?.let { it() }
-        } else {
-            action.onError?.let { it() }
+            if (success) {
+                action.onSuccess?.let { it() }
+            } else {
+                action.onError?.let { it() }
+            }
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
-        val continuation = continuations[event.post.remotePostId] ?: continuations[-event.post.id.toLong()]
-        continuation?.get(UPLOAD)?.resume(!event.isError)
+        val continuation = continuations[event.post.remotePostId to UPLOAD]
+                ?: continuations[-event.post.id.toLong() to UPLOAD]
+        continuation?.resume(!event.isError to event.post.remotePostId)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
         postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, localId, eventType) ->
             // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
-            val continuation = continuations[remoteId] ?: continuations[-localId.toLong()]
-            continuation?.get(eventType)?.resume(!event.isError)
+            val continuation = continuations[remoteId to eventType] ?: continuations[-localId.toLong() to eventType]
+            continuation?.resume(!event.isError to remoteId)
         }
     }
 
@@ -69,7 +73,7 @@ class ActionPerformer
                 else -> null
             }
 
-    data class PageAction(val remoteId: Long, val event: EventType, val perform: () -> Unit) {
+    data class PageAction(var remoteId: Long, val event: EventType, val perform: () -> Unit) {
         var onSuccess: (() -> Unit)? = null
         var onError: (() -> Unit)? = null
         var undo: (() -> Unit)? = null
