@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -32,7 +33,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() = test {
-        useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
+        useCase = LatestPostSummaryUseCase(Dispatchers.Unconfined, insightsStore, latestPostSummaryMapper)
         useCase.navigationTarget.observeForever {}
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }

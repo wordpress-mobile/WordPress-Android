@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -51,7 +52,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersUseCase(insightsStore, statsUtilsWrapper, resourceProvider)
+        useCase = FollowersUseCase(Dispatchers.Unconfined, insightsStore, statsUtilsWrapper, resourceProvider)
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(

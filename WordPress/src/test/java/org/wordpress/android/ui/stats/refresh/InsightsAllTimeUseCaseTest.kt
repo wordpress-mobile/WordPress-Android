@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -26,7 +27,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: InsightsAllTimeUseCase
     @Before
     fun setUp() {
-        useCase = InsightsAllTimeUseCase(insightsStore)
+        useCase = InsightsAllTimeUseCase(Dispatchers.Unconfined, insightsStore)
     }
 
     @Test

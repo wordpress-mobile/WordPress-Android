@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -30,7 +31,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private val comments = 30
     @Before
     fun setUp() {
-        useCase = TodayStatsUseCase(insightsStore)
+        useCase = TodayStatsUseCase(Dispatchers.Unconfined, insightsStore)
     }
 
     @Test

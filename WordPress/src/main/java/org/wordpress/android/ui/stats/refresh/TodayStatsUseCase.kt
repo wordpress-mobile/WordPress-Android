@@ -1,17 +1,23 @@
 package org.wordpress.android.ui.stats.refresh
 
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import javax.inject.Inject
+import javax.inject.Named
 
 class TodayStatsUseCase
-@Inject constructor(private val insightsStore: InsightsStore) : BaseInsightsUseCase(TODAY_STATS) {
+@Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val insightsStore: InsightsStore
+) : BaseInsightsUseCase(TODAY_STATS, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val dbModel = insightsStore.getTodayInsights(site)
         return dbModel?.let { loadTodayStatsItem(it) }
