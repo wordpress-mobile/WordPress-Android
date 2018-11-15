@@ -50,6 +50,7 @@ import kotlin.coroutines.experimental.Continuation
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
+private const val ERROR_DELAY = 500
 private const val SEARCH_COLLAPSE_DELAY = 500
 private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
@@ -168,8 +169,8 @@ class PagesViewModel
             AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _listState.setOnUi(DONE)
-            refreshPages()
         }
+        refreshPages()
     }
 
     private suspend fun refreshPages() {
@@ -190,7 +191,6 @@ class PagesViewModel
             pageUpdateContinuations[remotePageId] = cont
         }
         _arePageActionsEnabled = true
-        refreshPages()
     }
 
     fun onPageParentSet(pageId: Long, parentId: Long) {
@@ -326,12 +326,10 @@ class PagesViewModel
         val oldParent = page.parent?.remoteId ?: 0
 
         val action = PageAction(page.remoteId, UPLOAD) {
-            defaultScope.launch {
-                if (page.parent?.remoteId != parentId) {
-                    val updatedPage = updateParent(page, parentId)
+            if (page.parent?.remoteId != parentId) {
+                val updatedPage = updateParent(page, parentId)
 
-                    pageStore.uploadPageToServer(updatedPage)
-                }
+                pageStore.uploadPageToServer(updatedPage)
             }
         }
 
@@ -365,6 +363,7 @@ class PagesViewModel
             defaultScope.launch {
                 refreshPages()
 
+                delay(ERROR_DELAY)
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
@@ -386,13 +385,11 @@ class PagesViewModel
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(page.remoteId, DELETE) {
-            defaultScope.launch {
-                pageMap = pageMap.filter { it.key != page.remoteId }
+            pageMap = pageMap.filter { it.key != page.remoteId }
 
-                checkIfNewPageButtonShouldBeVisible()
+            checkIfNewPageButtonShouldBeVisible()
 
-                pageStore.deletePageFromServer(page)
-            }
+            pageStore.deletePageFromServer(page)
         }
         action.onSuccess = {
             defaultScope.launch {
@@ -406,6 +403,7 @@ class PagesViewModel
             defaultScope.launch {
                 refreshPages()
 
+                delay(ERROR_DELAY)
                 _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
             }
         }
@@ -420,6 +418,12 @@ class PagesViewModel
             val oldStatus = page.status
             val action = PageAction(remoteId, UPLOAD) {
                 val updatedPage = updatePageStatus(page, status)
+                pageStore.updatePageInDb(updatedPage)
+
+                refreshPages()
+
+                pageStore.uploadPageToServer(updatedPage)
+            }
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
@@ -454,6 +458,7 @@ class PagesViewModel
                 defaultScope.launch {
                     action.undo?.let { it() }
 
+                    delay(ERROR_DELAY)
                     _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }

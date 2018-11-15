@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import kotlinx.coroutines.experimental.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -19,7 +20,7 @@ class ActionPerformer
     private var continuations: MutableMap<Pair<Long, EventType>, Continuation<Pair<Boolean, Long>>> = mutableMapOf()
 
     companion object {
-        private const val ACTION_TIMEOUT = 30L * 1000
+        private const val ACTION_TIMEOUT = 10L * 1000
     }
 
     init {
@@ -33,7 +34,7 @@ class ActionPerformer
     suspend fun performAction(action: PageAction) {
         val result = suspendCoroutineWithTimeout<Pair<Boolean, Long>>(ACTION_TIMEOUT) { continuation ->
             continuations[action.remoteId to action.event] = continuation
-            action.perform()
+            launch { action.perform() }
         }
         continuations.remove(action.remoteId to action.event)
         result?.let { (success, remoteId) ->
@@ -73,7 +74,7 @@ class ActionPerformer
                 else -> null
             }
 
-    data class PageAction(var remoteId: Long, val event: EventType, val perform: () -> Unit) {
+    data class PageAction(var remoteId: Long, val event: EventType, val perform: suspend () -> Unit) {
         var onSuccess: (() -> Unit)? = null
         var onError: (() -> Unit)? = null
         var undo: (() -> Unit)? = null
