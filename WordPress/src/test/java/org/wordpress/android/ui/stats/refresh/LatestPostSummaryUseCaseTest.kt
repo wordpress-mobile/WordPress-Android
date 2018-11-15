@@ -29,22 +29,23 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailSta
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class LatestPostSummaryViewModelTest {
+class LatestPostSummaryUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var viewModel: LatestPostSummaryViewModel
+    private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() {
-        viewModel = LatestPostSummaryViewModel(insightsStore, latestPostSummaryMapper)
-        viewModel.navigationTarget.observeForever {}
+        useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
+        useCase.navigationTarget.observeForever {}
     }
 
     @Test
     fun `returns Failed item on error`() = test {
         val forced = false
+        val refresh = true
         val message = "message"
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
@@ -55,7 +56,7 @@ class LatestPostSummaryViewModelTest {
                 )
         )
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(Failed::class.java)
         (result as Failed).let {
@@ -67,11 +68,12 @@ class LatestPostSummaryViewModelTest {
     @Test
     fun `returns create empty item when model is missing`() = test {
         val forced = false
+        val refresh = true
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnInsightsFetched())
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -89,6 +91,7 @@ class LatestPostSummaryViewModelTest {
     @Test
     fun `returns share empty item when views are empty`() = test {
         val forced = false
+        val refresh = true
         val viewsCount = 0
         val postTitle = "title"
         val model = buildLatestPostModel(postTitle, viewsCount, listOf())
@@ -100,7 +103,7 @@ class LatestPostSummaryViewModelTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -122,6 +125,7 @@ class LatestPostSummaryViewModelTest {
     @Test
     fun `returns populated item when views are not empty`() = test {
         val forced = false
+        val refresh = true
         val viewsCount = 10
         val postTitle = "title"
         val dayViews = listOf("2018-01-01" to 10)
@@ -138,7 +142,7 @@ class LatestPostSummaryViewModelTest {
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
-        val result = viewModel.loadLatestPostSummary(site, forced)
+        val result = useCase.loadLatestPostSummary(site, refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -163,7 +167,7 @@ class LatestPostSummaryViewModelTest {
 
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
-        viewModel.navigationTarget.observeForever { navigationTarget = it }
+        useCase.navigationTarget.observeForever { navigationTarget = it }
         this.action()
         return navigationTarget
     }

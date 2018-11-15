@@ -7,6 +7,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -14,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import javax.inject.Inject
 
-class LatestPostSummaryViewModel
+class LatestPostSummaryUseCase
 @Inject constructor(
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
@@ -22,14 +23,23 @@ class LatestPostSummaryViewModel
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    suspend fun loadLatestPostSummary(site: SiteModel, forced: Boolean = false): InsightsItem {
-        val response = insightsStore.fetchLatestPostInsights(site, forced)
-        val model = response.model
-        val error = response.error
+    suspend fun loadLatestPostSummary(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
+            val response = insightsStore.fetchLatestPostInsights(site, forced)
+            val model = response.model
+            val error = response.error
 
-        return when {
-            error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
-            else -> loadLatestPostSummaryItem(model)
+            return when {
+                error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
+                else -> loadLatestPostSummaryItem(model)
+            }
+        } else {
+            val model = insightsStore.getLatestPostInsights(site)
+            return if (model != null) {
+                loadLatestPostSummaryItem(model)
+            } else {
+                ListInsightItem(listOf(Empty))
+            }
         }
     }
 

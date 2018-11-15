@@ -32,19 +32,25 @@ class FollowersUseCase
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    suspend fun loadFollowers(site: SiteModel, forced: Boolean = false): InsightsItem {
-        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
-        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
-        val wpComResponse = deferredWpComResponse.await()
-        val emailResponse = deferredEmailResponse.await()
-        val wpComModel = wpComResponse.model
-        val emailModel = emailResponse.model
-        val error = wpComResponse.error ?: emailResponse.error
+    suspend fun loadFollowers(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        if (refresh) {
+            val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
+            val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
+            val wpComResponse = deferredWpComResponse.await()
+            val emailResponse = deferredEmailResponse.await()
+            val wpComModel = wpComResponse.model
+            val emailModel = emailResponse.model
+            val error = wpComResponse.error ?: emailResponse.error
 
-        return when {
-            error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
-            wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            return when {
+                error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
+                wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
+                else -> throw IllegalArgumentException("Unexpected empty body")
+            }
+        } else {
+            val wpComFollowers = insightsStore.getWpComFollowers(site)
+            val emailFollowers = insightsStore.getEmailFollowers(site)
+            return loadFollowers(site, wpComFollowers, emailFollowers)
         }
     }
 

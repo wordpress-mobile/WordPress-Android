@@ -6,12 +6,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
+import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
@@ -33,7 +34,7 @@ import org.wordpress.android.util.observeEvent
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
-class StatsListFragment : Fragment() {
+class StatsListFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
@@ -54,14 +55,20 @@ class StatsListFragment : Fragment() {
         }
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.stats_list_fragment, container, false)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         linearLayoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
+
         val intent = activity?.intent
         if (intent != null && intent.hasExtra(WordPress.SITE)) {
             outState.putSerializable(WordPress.SITE, intent.getSerializableExtra(WordPress.SITE))
         }
+
         super.onSaveInstanceState(outState)
     }
 
@@ -76,15 +83,10 @@ class StatsListFragment : Fragment() {
         recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 5)))
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_list_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
         initializeViewModels(nonNullActivity, savedInstanceState)
@@ -92,8 +94,14 @@ class StatsListFragment : Fragment() {
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
         val statsType = arguments?.getSerializable(typeKey) as StatsListType
+
+        val viewModelClass = when (statsType) {
+            INSIGHTS -> InsightsTabViewModel::class.java
+            else -> DaysTabViewModel::class.java
+        }
+
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(statsType.name, StatsListViewModel::class.java)
+                .get(statsType.name, viewModelClass)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -101,7 +109,6 @@ class StatsListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
-        viewModel.start(site, statsType)
 
         setupObservers(activity, site)
     }
