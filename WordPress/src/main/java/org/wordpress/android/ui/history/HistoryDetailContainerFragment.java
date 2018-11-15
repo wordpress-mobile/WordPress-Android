@@ -112,7 +112,8 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mNextButton = rootView.findViewById(R.id.next);
         mNextButton.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 mIsChevronClicked = true;
                 mViewPager.setCurrentItem(mPosition + 1, true);
             }
@@ -120,7 +121,8 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mPreviousButton = rootView.findViewById(R.id.previous);
         mPreviousButton.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 mIsChevronClicked = true;
                 mViewPager.setCurrentItem(mPosition - 1, true);
             }
@@ -168,7 +170,8 @@ public class HistoryDetailContainerFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_IS_IN_VISUAL_PREVIEW, isInVisualPreview());
     }
