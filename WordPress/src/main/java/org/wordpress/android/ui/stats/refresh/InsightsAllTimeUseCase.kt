@@ -12,33 +12,22 @@ import javax.inject.Inject
 
 class InsightsAllTimeUseCase
 @Inject constructor(private val insightsStore: InsightsStore) : BaseInsightsUseCase(ALL_TIME_STATS) {
-    override suspend fun fetch(
-        site: SiteModel,
-        refresh: Boolean,
-        forced: Boolean
-    ) {
-        if (liveData.value == null) {
-            val dbModel = insightsStore.getAllTimeInsights(site)
-            if (dbModel != null) {
-                mutableLiveData.postValue(loadAllTimeInsightsItem(dbModel))
-            } else {
-                mutableLiveData.postValue(ListInsightItem(listOf(Empty)))
-            }
-        }
-        if (refresh) {
-            val response = insightsStore.fetchAllTimeInsights(site, forced)
-            val model = response.model
-            val error = response.error
-            mutableLiveData.postValue(
-                    when {
-                        model != null -> loadAllTimeInsightsItem(model)
-                        error != null -> Failed(
-                                R.string.stats_insights_all_time_stats,
-                                error.message ?: error.type.name
-                        )
-                        else -> throw Exception("All times stats response should contain a model or an error")
-                    }
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val dbModel = insightsStore.getAllTimeInsights(site)
+        return dbModel?.let { loadAllTimeInsightsItem(it) }
+    }
+
+    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        val response = insightsStore.fetchAllTimeInsights(site, forced)
+        val model = response.model
+        val error = response.error
+        return when {
+            model != null -> loadAllTimeInsightsItem(model)
+            error != null -> Failed(
+                    R.string.stats_insights_all_time_stats,
+                    error.message ?: error.type.name
             )
+            else -> throw Exception("All times stats response should contain a model or an error")
         }
     }
 

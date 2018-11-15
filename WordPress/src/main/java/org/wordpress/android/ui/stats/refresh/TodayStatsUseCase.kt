@@ -12,33 +12,20 @@ import javax.inject.Inject
 
 class TodayStatsUseCase
 @Inject constructor(private val insightsStore: InsightsStore) : BaseInsightsUseCase(TODAY_STATS) {
-    override suspend fun fetch(
-        site: SiteModel,
-        refresh: Boolean,
-        forced: Boolean
-    ) {
-        if (liveData.value == null) {
-            val dbModel = insightsStore.getTodayInsights(site)
-            mutableLiveData.postValue(
-                    if (dbModel != null) {
-                        loadTodayStatsItem(dbModel)
-                    } else {
-                        ListInsightItem(listOf(Empty))
-                    }
-            )
-        }
-        if (refresh) {
-            val response = insightsStore.fetchTodayInsights(site, forced)
-            val model = response.model
-            val error = response.error
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val dbModel = insightsStore.getTodayInsights(site)
+        return dbModel?.let { loadTodayStatsItem(it) }
+    }
 
-            mutableLiveData.postValue(
-                    when {
-                        error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
-                        model != null -> loadTodayStatsItem(model)
-                        else -> throw IllegalArgumentException("Unexpected empty body")
-                    }
-            )
+    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        val response = insightsStore.fetchTodayInsights(site, forced)
+        val model = response.model
+        val error = response.error
+
+        return when {
+            error != null -> Failed(R.string.stats_insights_today_stats, error.message ?: error.type.name)
+            model != null -> loadTodayStatsItem(model)
+            else -> throw IllegalArgumentException("Unexpected empty body")
         }
     }
 

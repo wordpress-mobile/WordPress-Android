@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
@@ -24,35 +23,22 @@ class LatestPostSummaryUseCase
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
-    override suspend fun fetch(
-        site: SiteModel,
-        refresh: Boolean,
-        forced: Boolean
-    ) {
-        if (liveData.value == null) {
-            val dbModel = insightsStore.getLatestPostInsights(site)
-            mutableLiveData.postValue(
-                    if (dbModel != null) {
-                        loadLatestPostSummaryItem(dbModel)
-                    } else {
-                        ListInsightItem(listOf(Empty))
-                    }
-            )
-        }
-        if (refresh) {
-            val response = insightsStore.fetchLatestPostInsights(site, forced)
-            val model = response.model
-            val error = response.error
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val dbModel = insightsStore.getLatestPostInsights(site)
+        return dbModel?.let { loadLatestPostSummaryItem(it) }
+    }
 
-            mutableLiveData.postValue(
-                    when {
-                        error != null -> Failed(
-                                R.string.stats_insights_latest_post_summary,
-                                error.message ?: error.type.name
-                        )
-                        else -> loadLatestPostSummaryItem(model)
-                    }
+    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        val response = insightsStore.fetchLatestPostInsights(site, forced)
+        val model = response.model
+        val error = response.error
+
+        return when {
+            error != null -> Failed(
+                    R.string.stats_insights_latest_post_summary,
+                    error.message ?: error.type.name
             )
+            else -> loadLatestPostSummaryItem(model)
         }
     }
 
