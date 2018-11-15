@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
@@ -30,6 +32,7 @@ import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.LATEST_POST
 import org.wordpress.android.fluxc.store.MOST_POPULAR_RESPONSE
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -162,5 +165,29 @@ class InsightsSqlUtilsTest {
         insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL)
 
         verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, FOLLOWERS_RESPONSE)
+    }
+
+    @Test
+    fun `returns comments response from stats utils`() {
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        COMMENTS_INSIGHTS,
+                        CommentsResponse::class.java
+                )
+        ).thenReturn(
+                TOP_COMMENTS_RESPONSE
+        )
+
+        val result = insightsSqlUtils.selectCommentInsights(site)
+
+        assertEquals(result, TOP_COMMENTS_RESPONSE)
+    }
+
+    @Test
+    fun `inserts comments response to stats utils`() {
+        insightsSqlUtils.insert(site, TOP_COMMENTS_RESPONSE)
+
+        verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, TOP_COMMENTS_RESPONSE)
     }
 }

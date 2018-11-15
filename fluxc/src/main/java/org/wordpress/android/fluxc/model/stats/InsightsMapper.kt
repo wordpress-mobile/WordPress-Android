@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.stats
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
@@ -11,6 +12,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 
 private const val PERIOD = "period"
@@ -104,5 +107,25 @@ class InsightsMapper
             EMAIL -> response.totalEmail
         }
         return FollowersModel(total, followers)
+    }
+
+    fun map(response: CommentsResponse): CommentsModel {
+        val authors = response.authors?.mapNotNull {
+            if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
+                CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
+            } else {
+                AppLog.e(STATS, "CommentsResponse.authors: Non-null field is coming as null from API")
+                null
+            }
+        }
+        val posts = response.posts?.mapNotNull {
+            if (it.id != null && it.name != null && it.comments != null && it.link != null) {
+                CommentsModel.Post(it.id, it.name, it.comments, it.link)
+            } else {
+                AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
+                null
+            }
+        }
+        return CommentsModel(posts ?: listOf(), authors ?: listOf())
     }
 }

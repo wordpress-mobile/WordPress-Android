@@ -2,9 +2,10 @@ package org.wordpress.android.fluxc.store
 
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse.StatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowData
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowData.FollowParams
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowData
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowData.FollowParams
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse.FollowerResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
@@ -74,4 +75,14 @@ val FOLLOWER_RESPONSE = FollowerResponse(
         DATE,
         FollowData("type", PARAMS)
 )
-val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf())
+val FOLLOWERS_RESPONSE = FollowersResponse(0, 10, 100, 70, 30, listOf(FOLLOWER_RESPONSE))
+val AUTHOR = CommentsResponse.Author(USER_LABEL, URL, AVATAR, COMMENT_COUNT)
+val POST = CommentsResponse.Post(TITLE, URL, ID, COMMENT_COUNT)
+val TOP_COMMENTS_RESPONSE = CommentsResponse(
+        FIRST_DAY,
+        COMMENT_COUNT,
+        COMMENT_COUNT,
+        SECOND_DAY,
+        listOf(AUTHOR),
+        listOf(POST)
+)
