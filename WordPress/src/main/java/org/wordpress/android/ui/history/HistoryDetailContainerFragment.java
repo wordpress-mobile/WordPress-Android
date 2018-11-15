@@ -164,6 +164,12 @@ public class HistoryDetailContainerFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        showHistoryTimeStampInToolbar();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
@@ -215,12 +221,14 @@ public class HistoryDetailContainerFragment extends Fragment {
         AniUtils.fadeOut(fadeOutView, Duration.SHORT);
     }
 
-    private void refreshHistoryDetail() {
+    private void showHistoryTimeStampInToolbar() {
         ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setSubtitle(mRevision.getTimeSpan());
         }
+    }
 
+    private void refreshHistoryDetail() {
         if (mRevision.getTotalAdditions() > 0) {
             mTotalAdditions.setText(String.valueOf(mRevision.getTotalAdditions()));
             mTotalAdditions.setVisibility(View.VISIBLE);
@@ -268,6 +276,7 @@ public class HistoryDetailContainerFragment extends Fragment {
                     mPosition = position;
                     mRevision = mAdapter.getRevisionAtPosition(mPosition);
                     refreshHistoryDetail();
+                    showHistoryTimeStampInToolbar();
                 }
             };
         }
