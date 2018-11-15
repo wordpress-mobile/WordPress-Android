@@ -3,8 +3,11 @@ package org.wordpress.android.ui.prefs;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -34,26 +37,41 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         super.showDialog(state);
 
         final AlertDialog dialog = (AlertDialog) getDialog();
-        Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        final Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         if (positiveButton != null) {
             positiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String error = null;
-                    CharSequence text = getEditText().getText();
-                    if (mValidationType == ValidationType.EMAIL) {
-                        error = ValidationUtils.validateEmail(text) ? null
-                                : getContext().getString(R.string.invalid_email_message);
-                    } else if (!TextUtils.isEmpty(text) && mValidationType == ValidationType.URL) {
-                        error = ValidationUtils.validateUrl(text) ? null
-                                : getContext().getString(R.string.invalid_url_message);
-                    }
+                    callChangeListener(getEditText().getText());
+                    dialog.dismiss();
+                }
+            });
 
-                    if (error != null) {
-                        getEditText().setError(error);
-                    } else {
-                        callChangeListener(text);
-                        dialog.dismiss();
+            positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(), R.color.dialog_button_selector));
+
+            getEditText().addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    switch (mValidationType) {
+                        case NONE:
+                            break;
+                        case EMAIL:
+                            positiveButton.setEnabled(ValidationUtils.validateEmail(s));
+                            break;
+                        case PASSWORD:
+                            positiveButton.setEnabled(ValidationUtils.validatePassword(s));
+                            break;
+                        case URL:
+                            positiveButton.setEnabled(ValidationUtils.validateUrl(s));
+                            break;
                     }
                 }
             });
@@ -67,8 +85,8 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
             getEditText().setSelection(0, summary.length());
         }
 
-        // clear previous errors
-        getEditText().setError(null);
+        // Use "hidden" input type for passwords so characters are replaced with dots for added security.
+        hideInputCharacters(mValidationType == ValidationType.PASSWORD);
     }
 
     public void setValidationType(ValidationType validationType) {
@@ -79,7 +97,14 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         mStringToIgnoreForPrefilling = stringToIgnoreForPrefilling;
     }
 
+    private void hideInputCharacters(boolean hide) {
+        int selectionStart = getEditText().getSelectionStart();
+        int selectionEnd = getEditText().getSelectionEnd();
+        getEditText().setTransformationMethod(hide ? PasswordTransformationMethod.getInstance() : null);
+        getEditText().setSelection(selectionStart, selectionEnd);
+    }
+
     public enum ValidationType {
-        NONE, EMAIL, URL
+        NONE, EMAIL, PASSWORD, URL
     }
 }
