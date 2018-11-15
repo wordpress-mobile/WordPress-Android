@@ -37,10 +37,10 @@ class ActionPerformer
             launch { action.perform() }
         }
         continuations.remove(action.remoteId to action.event)
-        result?.let { (success, remoteId) ->
-            action.remoteId = remoteId
 
+        result?.let { (success, remoteId) ->
             if (success) {
+                action.remoteId = remoteId
                 action.onSuccess?.let { it() }
             } else {
                 action.onError?.let { it() }
