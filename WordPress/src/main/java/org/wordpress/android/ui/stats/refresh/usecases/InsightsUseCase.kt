@@ -13,8 +13,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
+import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
-import org.wordpress.android.util.mergeToMap
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,8 +38,8 @@ class InsightsUseCase
             followersUseCase
     ).associateBy { it.type }
 
-    private val liveData = mergeToMap(
-            useCases.map { (type, useCase) -> type to useCase.liveData }
+    private val liveData = combineMap(
+            useCases.mapValues { entry -> entry.value.liveData }
     )
     private val insights = MutableLiveData<List<InsightsTypes>>()
     val data: LiveData<List<InsightsItem>> = merge(insights, liveData) { insights, map ->
