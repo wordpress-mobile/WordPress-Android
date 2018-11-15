@@ -12,7 +12,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val sourceB = MutableLiveData<Int>()
 
         val mergedSources = merge(sourceA, sourceB)
-        mergedSources.observeForever {  }
+        mergedSources.observeForever { }
 
         assertThat(mergedSources.value).isNull()
         val firstValue = 1
@@ -31,7 +31,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val mergedSources = merge(sourceA, sourceB) { i, s ->
             "$s: $i"
         }
-        mergedSources.observeForever {  }
+        mergedSources.observeForever { }
 
         assertThat(mergedSources.value).isNull()
         val firstValue = 1
@@ -52,7 +52,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
 
         val combineMap = combineMap(mapOfStringToLiveData)
 
-        combineMap.observeForever {  }
+        combineMap.observeForever { }
 
         assertThat(combineMap.value).isEqualTo(mapOf<String, Int>())
         val valueA = 1
