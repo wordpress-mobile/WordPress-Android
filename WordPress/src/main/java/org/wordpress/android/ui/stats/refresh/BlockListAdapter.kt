@@ -9,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.InformationVie
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LabelViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TabsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TextViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolder
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
@@ -29,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
@@ -49,6 +52,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             TITLE -> TitleViewHolder(parent)
             ITEM -> ItemViewHolder(parent)
             USER_ITEM -> UserItemViewHolder(parent, imageManager)
+            LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> ColumnsViewHolder(parent)
@@ -72,6 +76,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             is TitleViewHolder -> holder.bind(item as Title)
             is ItemViewHolder -> holder.bind(item as Item)
             is UserItemViewHolder -> holder.bind(item as UserItem)
+            is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
             is ColumnsViewHolder -> holder.bind(item as Columns)
             is LinkViewHolder -> holder.bind(item as Link)

@@ -778,6 +778,11 @@
     <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
     <string name="stats_follower_label">Follower</string>
     <string name="stats_follower_since_label">Since</string>
+    <string name="stats_comments_authors">Authors</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_author_label">Author</string>
+    <string name="stats_comments_title_label">Title</string>
+    <string name="stats_comments_label">Comments</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
