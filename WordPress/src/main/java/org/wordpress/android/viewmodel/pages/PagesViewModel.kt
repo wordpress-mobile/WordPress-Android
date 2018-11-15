@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
@@ -390,7 +391,11 @@ class PagesViewModel
 
             checkIfNewPageButtonShouldBeVisible()
 
-            pageStore.deletePageFromServer(page)
+            if (page.remoteId < 0) {
+                pageStore.deletePageFromDb(page)
+            } else {
+                pageStore.deletePageFromServer(page)
+            }
         }
         action.onSuccess = {
             defaultScope.launch {
@@ -422,7 +427,10 @@ class PagesViewModel
 
                 refreshPages()
 
-                pageStore.uploadPageToServer(updatedPage)
+                // Local pages can be trashed locally
+                if (status != TRASHED || remoteId > 0) {
+                    pageStore.uploadPageToServer(updatedPage)
+                }
             }
 
             action.undo = {
