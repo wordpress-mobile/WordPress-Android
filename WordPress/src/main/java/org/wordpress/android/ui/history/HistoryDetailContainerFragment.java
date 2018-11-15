@@ -138,7 +138,6 @@ public class HistoryDetailContainerFragment extends Fragment {
 
         mVisualContent.setImageGetter(new AztecImageLoader(requireContext(), mImageManager, loadingImagePlaceholder));
         mVisualContent.setKeyListener(null);
-        mVisualContent.setFocusable(false);
         mVisualContent.setTextIsSelectable(true);
         mVisualContent.setCursorVisible(false);
         mVisualContent.setMovementMethod(LinkMovementMethod.getInstance());
