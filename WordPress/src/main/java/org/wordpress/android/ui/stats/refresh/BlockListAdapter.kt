@@ -61,7 +61,6 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             LABEL -> LabelViewHolder(parent)
-            LIST_ITEM -> ListItemViewHolder(parent)
         }
     }
 
