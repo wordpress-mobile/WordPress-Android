@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
@@ -46,11 +48,12 @@ import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
+private const val SNACKBAR_DELAY = 500
 private const val SEARCH_COLLAPSE_DELAY = 500
+private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 class PagesViewModel
 @Inject constructor(
@@ -163,12 +166,12 @@ class PagesViewModel
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             _listState.setOnUi(ERROR)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
+            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
             AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _listState.setOnUi(DONE)
-            refreshPages()
         }
+        refreshPages()
     }
 
     private suspend fun refreshPages() {
@@ -185,7 +188,7 @@ class PagesViewModel
 
     private suspend fun waitForPageUpdate(remotePageId: Long) {
         _arePageActionsEnabled = false
-        suspendCoroutine<Unit> { cont ->
+        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
             pageUpdateContinuations[remotePageId] = cont
         }
         _arePageActionsEnabled = true
@@ -324,30 +327,33 @@ class PagesViewModel
         val oldParent = page.parent?.remoteId ?: 0
 
         val action = PageAction(page.remoteId, UPLOAD) {
-            defaultScope.launch {
-                if (page.parent?.remoteId != parentId) {
-                    val updatedPage = updateParent(page, parentId)
+            if (page.parent?.remoteId != parentId) {
+                val updatedPage = updateParent(page, parentId)
 
-                    pageStore.uploadPageToServer(updatedPage)
-                }
+                pageStore.uploadPageToServer(updatedPage)
             }
         }
+
         action.undo = {
             defaultScope.launch {
-                pageMap[page.remoteId]?.let { changed ->
+                pageMap[action.remoteId]?.let { changed ->
                     val updatedPage = updateParent(changed, oldParent)
 
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
         }
+
         action.onSuccess = {
             defaultScope.launch {
                 reloadPages()
 
-                delay(ACTION_DELAY)
-                _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                showSnackbar(
+                        if (action.undo != null) {
+                            SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
+                        } else {
+                            SnackbarMessageHolder(string.page_parent_changed)
+                        }
                 )
             }
         }
@@ -355,7 +361,7 @@ class PagesViewModel
             defaultScope.launch {
                 refreshPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
 
@@ -364,6 +370,11 @@ class PagesViewModel
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
         }
+    }
+
+    private suspend fun showSnackbar(message: SnackbarMessageHolder) {
+        delay(SNACKBAR_DELAY)
+        _showSnackbarMessage.postValue(message)
     }
 
     private fun updateParent(page: PageModel, parentId: Long): PageModel {
@@ -376,11 +387,13 @@ class PagesViewModel
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(page.remoteId, DELETE) {
-            defaultScope.launch {
-                pageMap = pageMap.filter { it.key != page.remoteId }
+            pageMap = pageMap.filter { it.key != page.remoteId }
 
-                checkIfNewPageButtonShouldBeVisible()
+            checkIfNewPageButtonShouldBeVisible()
 
+            if (page.remoteId < 0) {
+                pageStore.deletePageFromDb(page)
+            } else {
                 pageStore.deletePageFromServer(page)
             }
         }
@@ -389,14 +402,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(string.page_permanently_deleted))
             }
         }
         action.onError = {
             defaultScope.launch {
                 refreshPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(string.page_delete_error))
             }
         }
 
@@ -410,15 +423,18 @@ class PagesViewModel
             val oldStatus = page.status
             val action = PageAction(remoteId, UPLOAD) {
                 val updatedPage = updatePageStatus(page, status)
-                defaultScope.launch {
-                    pageStore.updatePageInDb(updatedPage)
-                    refreshPages()
+                pageStore.updatePageInDb(updatedPage)
 
+                refreshPages()
+
+                // Local pages can be trashed locally
+                if (status != TRASHED || remoteId > 0) {
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
+
             action.undo = {
-                val updatedPage = updatePageStatus(page, oldStatus)
+                val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
@@ -426,20 +442,21 @@ class PagesViewModel
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
+
             action.onSuccess = {
                 defaultScope.launch {
                     delay(ACTION_DELAY)
                     reloadPages()
 
                     val message = prepareStatusChangeSnackbar(status, action.undo)
-                    _showSnackbarMessage.postValue(message)
+                    showSnackbar(message)
                 }
             }
             action.onError = {
                 defaultScope.launch {
-                    action.undo()
+                    action.undo?.let { it() }
 
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
+                    showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
 
