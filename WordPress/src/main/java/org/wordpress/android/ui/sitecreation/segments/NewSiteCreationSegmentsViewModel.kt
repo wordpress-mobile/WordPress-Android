@@ -3,7 +3,6 @@ package org.wordpress.android.ui.sitecreation.segments
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
@@ -31,8 +30,8 @@ class NewSiteCreationSegmentsViewModel
 @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
-    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineDispatcher,
-    @Named(IO_DISPATCHER) private val IO: CoroutineDispatcher
+    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
+    @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
     private val fetchCategoriesJob: Job = Job()
     override val coroutineContext: CoroutineContext
