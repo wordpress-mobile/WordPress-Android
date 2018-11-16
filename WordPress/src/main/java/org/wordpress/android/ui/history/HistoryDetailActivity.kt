@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.history
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -19,9 +17,6 @@ class HistoryDetailActivity : AppCompatActivity() {
         setContentView(R.layout.history_detail_activity)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setBackgroundDrawable(
-                ColorDrawable(ContextCompat.getColor(this, R.color.status_bar_tint))
-        )
 
         val extras = intent.extras
         val revision = extras.getParcelable(HistoryDetailContainerFragment.EXTRA_REVISION) as Revision
