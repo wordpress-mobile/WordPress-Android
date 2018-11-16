@@ -224,6 +224,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PlansActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PLANS, site);
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
@@ -332,6 +333,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PublicizeListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_SHARING_MANAGEMENT, site);
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
