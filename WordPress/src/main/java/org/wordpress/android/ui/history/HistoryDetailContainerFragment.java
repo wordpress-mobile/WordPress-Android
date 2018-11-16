@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -211,7 +212,9 @@ public class HistoryDetailContainerFragment extends Fragment {
                 AniUtils.fadeIn(mNextButton, Duration.SHORT);
                 AniUtils.fadeIn(mPreviousButton, Duration.SHORT);
             } else {
-                mVisualTitle.setText(mRevision.getPostTitle());
+                String title = TextUtils.isEmpty(mRevision.getPostTitle()) ?
+                        getString(R.string.history_no_title) : mRevision.getPostTitle();
+                mVisualTitle.setText(title);
                 mVisualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
                 AniUtils.fadeOut(mNextButton, Duration.SHORT, View.INVISIBLE);
                 AniUtils.fadeOut(mPreviousButton, Duration.SHORT, View.INVISIBLE);
