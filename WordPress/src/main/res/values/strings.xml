@@ -1220,7 +1220,7 @@
     <string name="history_title" translatable="false">@string/menu_history</string>
     <string name="history_preview_visual">Visual preview</string>
     <string name="history_preview_html">HTML preview</string>
-    <string name="history_no_title">No Title</string>
+    <string name="history_no_title">(no title)</string>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
