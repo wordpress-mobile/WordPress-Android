@@ -34,9 +34,11 @@ allprojects {
         }
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force 'org.webkit:android-jsc:r224109'
+    configurations.all { conf ->
+        if (conf.toString().contains("Release")) {
+            resolutionStrategy {
+                force 'org.webkit:android-jsc:r224109'
+            }
         }
     }
 

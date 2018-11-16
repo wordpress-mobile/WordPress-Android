@@ -5,6 +5,7 @@ include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:login:WordPressLoginFlow'
 
+/*
 include ':react-native-svg'
 project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-svg/android')
 include ':react-native-aztec'
@@ -13,3 +14,4 @@ include ':react-native-recyclerview-list'
 project(':react-native-recyclerview-list').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-recyclerview-list/android')
 include ':react-native-gutenberg-bridge'
 project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-gutenberg-bridge/android')
+*/

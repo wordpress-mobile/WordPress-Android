@@ -27,14 +27,6 @@ apply plugin: 'io.fabric'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
-project.ext.react = [
-        entryFile: "index.js",
-        root: "../libs/gutenberg-mobile/",
-        inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
-]
-
-apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
-
 android {
     useLibrary 'org.apache.http.legacy'
 
@@ -86,6 +78,16 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+
+            if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+                project.ext.react = [
+                        entryFile    : "index.js",
+                        root         : "../libs/gutenberg-mobile/",
+                        inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
+                ]
+
+                apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
+            }
         }
 
         debug {
@@ -172,8 +174,10 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
-    // React Native
-    implementation "com.facebook.react:react-native:+" // From node_modules.
+    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+        // React Native
+        implementation "com.facebook.react:react-native:+" // From node_modules.
+    }
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
@@ -204,7 +208,14 @@ dependencies {
     implementation project(path:':libs:utils:WordPressUtils')
     implementation project(path:':libs:networking:WordPressNetworking')
     implementation project(path:':libs:analytics:WordPressAnalytics')
-    implementation project(path:':libs:editor:WordPressEditor')
+
+
+    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+        implementation project(path:':libs:editor:WordPressEditor', configuration: 'release')
+    } else {
+        implementation project(path: ':libs:editor:WordPressEditor', configuration: 'debug')
+    }
+
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'

@@ -42,6 +42,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 
     // Avoid 'duplicate files during packaging of APK' errors
@@ -52,6 +56,11 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
+}
+
+configurations {
+    debug
+    release
 }
 
 dependencies {
@@ -65,13 +74,15 @@ dependencies {
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:fbf294b88d17996aff9e3d62a293d2638818dd0a')
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:fbf294b88d17996aff9e3d62a293d2638818dd0a')
 
-    implementation project(':react-native-svg')
-    implementation project(':react-native-aztec')
-    implementation project(':react-native-recyclerview-list')
-    implementation project(':react-native-gutenberg-bridge')
+    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+        implementation project(':react-native-svg')
+        implementation project(':react-native-aztec')
+        implementation project(':react-native-recyclerview-list')
+        implementation project(':react-native-gutenberg-bridge')
 
-    // React Native
-    implementation "com.facebook.react:react-native:+" // From node_modules.
+        // React Native
+        implementation "com.facebook.react:react-native:+" // From node_modules.
+    }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
@@ -80,12 +91,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'org.webkit:android-jsc:r224109'
-    }
 }
 
 signing {
