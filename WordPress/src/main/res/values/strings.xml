@@ -981,6 +981,12 @@
     <string name="stats_insights_create_post">Create post</string>
     <string name="stats_insights_share_post">Share post</string>
     <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_path">Path</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
