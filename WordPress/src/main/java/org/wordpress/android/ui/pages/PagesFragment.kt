@@ -41,6 +41,7 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
@@ -129,6 +130,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
         newPageButton.setOnClickListener {
             viewModel.onNewPageButtonTapped()
+
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PAGES_ADD_PAGE, viewModel.site)
         }
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
