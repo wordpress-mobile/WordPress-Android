@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model.stats
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
+import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -11,6 +12,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -127,5 +130,15 @@ class InsightsMapper
             }
         }
         return CommentsModel(posts ?: listOf(), authors ?: listOf())
+    }
+
+    fun map(response: TagsResponse): TagsModel {
+        return TagsModel(response.tags.map { tag ->
+            TagModel(tag.tags.map { it.toItem() }, tag.views)
+        })
+    }
+
+    private fun TagResponse.toItem(): TagModel.Item {
+        return TagModel.Item(this.name, this.type, this.link)
     }
 }
