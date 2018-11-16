@@ -38,7 +38,8 @@ class InsightsUseCase
             latestPostSummaryUseCase,
             todayStatsUseCase,
             followersUseCase,
-            commentsUseCase
+            commentsUseCase,
+            tagsAndCategoriesUseCase
     ).associateBy { it.type }
 
     private val liveData = combineMap(
