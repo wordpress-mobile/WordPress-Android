@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowersResponse
@@ -355,6 +357,51 @@ class InsightsStoreTest {
         whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchEmailFollowers(site, forced)
+
+        assertNotNull(responseModel.error)
+        val error = responseModel.error!!
+        assertEquals(type, error.type)
+        assertEquals(message, error.message)
+    }
+
+    @Test
+    fun `returns top comments per site`() = test {
+        val fetchInsightsPayload = FetchInsightsPayload(
+                TOP_COMMENTS_RESPONSE
+        )
+        val forced = true
+        whenever(insightsRestClient.fetchTopComments(site, 6, forced)).thenReturn(
+                fetchInsightsPayload
+        )
+        val model = mock<CommentsModel>()
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE)).thenReturn(model)
+
+        val responseModel = store.fetchComments(site, forced)
+
+        assertThat(responseModel.model).isEqualTo(model)
+        verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE)
+    }
+
+    @Test
+    fun `returns top comments from db`() {
+        whenever(sqlUtils.selectCommentInsights(site)).thenReturn(TOP_COMMENTS_RESPONSE)
+        val model = mock<CommentsModel>()
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE)).thenReturn(model)
+
+        val result = store.getComments(site)
+
+        assertThat(result).isEqualTo(model)
+    }
+
+    @Test
+    fun `returns error when top comments call fail`() = test {
+        val type = API_ERROR
+        val message = "message"
+        val errorPayload = FetchInsightsPayload<CommentsResponse>(StatsError(type, message))
+        val forced = true
+        whenever(insightsRestClient.fetchTopComments(site, 6, forced)).thenReturn(errorPayload)
+
+        val responseModel = store.fetchComments(site, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!

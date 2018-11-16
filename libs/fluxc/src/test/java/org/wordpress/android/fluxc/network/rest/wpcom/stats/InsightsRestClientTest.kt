@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
@@ -38,6 +39,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.TAGS_RESPONSE
 import org.wordpress.android.fluxc.store.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
@@ -303,6 +305,43 @@ class InsightsRestClientTest {
     }
 
     @Test
+    fun `returns top comments`() = test {
+        initCommentsResponse(TOP_COMMENTS_RESPONSE)
+
+        val pageSize = 10
+        val responseModel = insightsRestClient.fetchTopComments(site, pageSize, forced = false)
+
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(TOP_COMMENTS_RESPONSE)
+        assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/comments/")
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "max" to "$pageSize"
+                )
+        )
+    }
+
+    @Test
+    fun `returns top comments error response`() = test {
+        val errorMessage = "message"
+        initCommentsResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val responseModel = insightsRestClient.fetchTopComments(site, forced = false)
+
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
+    @Test
     fun `returns tags and categories`() = test {
         initTagsResponse(TAGS_RESPONSE)
 
@@ -374,6 +413,13 @@ class InsightsRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<FollowersResponse> {
         return initResponse(FollowersResponse::class.java, data ?: mock(), error, cachingEnabled = false)
+    }
+
+    private suspend fun initCommentsResponse(
+        data: CommentsResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<CommentsResponse> {
+        return initResponse(CommentsResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun initTagsResponse(
