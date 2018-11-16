@@ -289,7 +289,7 @@ sealed class BlockItemViewHolder(
             parent,
             R.layout.stats_block_expandable_item
     ) {
-        private val list= itemView.findViewById<RecyclerView>(R.id.expandable_items)
+        private val list = itemView.findViewById<RecyclerView>(R.id.expandable_items)
         private val expandedListDivider = itemView.findViewById<View>(R.id.expanded_list_divider)
 
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
@@ -315,7 +315,7 @@ sealed class BlockItemViewHolder(
             itemView.setOnClickListener {
                 expandableItem.isExpanded = !expandableItem.isExpanded
                 val rotationAngle = if (expandableItem.isExpanded) 180 else 0
-                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start();
+                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
                 updateExpandedList(expandableItem)
             }
         }
