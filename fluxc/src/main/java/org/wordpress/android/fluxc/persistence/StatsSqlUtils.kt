@@ -61,6 +61,7 @@ class StatsSqlUtils
         TODAYS_INSIGHTS,
         WP_COM_FOLLOWERS,
         EMAIL_FOLLOWERS,
+        COMMENTS_INSIGHTS,
         TAGS_AND_CATEGORIES_INSIGHTS
     }
 }
