@@ -19,9 +19,11 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
@@ -62,6 +64,15 @@ class PageParentFragment : Fragment() {
         result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
         result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
         activity?.setResult(Activity.RESULT_OK, result)
+
+        val properties = mutableMapOf(
+                "page_id" to pageId as Any,
+                "new_parent_id" to viewModel.currentParent.id
+        )
+        AnalyticsUtils.trackWithSiteDetails(
+                AnalyticsTracker.Stat.PAGES_SET_PARENT_CHANGES_SAVED,
+                viewModel.site,
+                properties)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

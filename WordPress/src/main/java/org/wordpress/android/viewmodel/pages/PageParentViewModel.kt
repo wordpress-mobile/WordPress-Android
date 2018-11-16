@@ -39,8 +39,9 @@ class PageParentViewModel
     val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
     private var isStarted: Boolean = false
-    private lateinit var site: SiteModel
     private var page: PageModel? = null
+
+    lateinit var site: SiteModel
 
     fun start(site: SiteModel, pageId: Long) {
         this.site = site
