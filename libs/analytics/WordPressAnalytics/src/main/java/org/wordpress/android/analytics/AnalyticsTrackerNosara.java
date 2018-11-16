@@ -792,6 +792,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_menu_opened";
             case OPENED_SHARING_MANAGEMENT:
                 return "site_menu_opened";
+            case OPENED_SHARING_BUTTON_MANAGEMENT:
+                return "sharing_buttons_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
