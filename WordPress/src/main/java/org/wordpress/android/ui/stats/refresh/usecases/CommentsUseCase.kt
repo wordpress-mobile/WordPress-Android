@@ -57,7 +57,7 @@ class CommentsUseCase
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
         items.add(Link(text = string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewCommentsStats(site.siteId)
+            navigateTo(ViewCommentsStats(site.siteId))
         })
         return ListInsightItem(items)
     }

@@ -78,7 +78,7 @@ class FollowersUseCase
         )
 
         items.add(Link(text = string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewFollowersStats(site.siteId)
+            navigateTo(ViewFollowersStats(site.siteId))
         })
         return ListInsightItem(items)
     }

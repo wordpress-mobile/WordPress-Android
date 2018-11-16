@@ -68,18 +68,18 @@ class LatestPostSummaryUseCase
     private fun buildLink(model: InsightsLatestPostModel?): Link {
         return when {
             model == null -> Link(R.drawable.ic_create_blue_medium_24dp, R.string.stats_insights_create_post) {
-                mutableNavigationTarget.value = AddNewPost
+                navigateTo(AddNewPost)
             }
             model.hasData() -> Link(text = R.string.stats_insights_view_more) {
-                mutableNavigationTarget.value = ViewPostDetailStats(
+                navigateTo(ViewPostDetailStats(
                         model.siteId,
                         model.postId.toString(),
                         model.postTitle,
                         model.postURL
-                )
+                ))
             }
             else -> Link(R.drawable.ic_share_blue_medium_24dp, R.string.stats_insights_share_post) {
-                mutableNavigationTarget.value = SharePost(model.postURL, model.postTitle)
+                navigateTo(SharePost(model.postURL, model.postTitle))
             }
         }
     }

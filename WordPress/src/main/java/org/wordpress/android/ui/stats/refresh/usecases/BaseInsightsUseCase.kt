@@ -17,7 +17,7 @@ abstract class BaseInsightsUseCase(
 ) {
     private val mutableLiveData = MutableLiveData<InsightsItem>()
     val liveData: LiveData<InsightsItem> = mutableLiveData
-    protected val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
@@ -33,10 +33,14 @@ abstract class BaseInsightsUseCase(
             }
         }
     }
-
-    protected abstract suspend fun loadCachedData(site: SiteModel): InsightsItem?
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem
     fun clear() {
         mutableLiveData.postValue(null)
     }
+
+    fun navigateTo(target: NavigationTarget) {
+        mutableNavigationTarget.value = target
+    }
+
+    protected abstract suspend fun loadCachedData(site: SiteModel): InsightsItem?
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem
 }
