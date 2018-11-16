@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
@@ -21,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.toFormattedString
@@ -35,8 +32,6 @@ class TagsAndCategoriesUseCase
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
     override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchTags(site, forced)
         val model = response.model
@@ -78,7 +73,7 @@ class TagsAndCategoriesUseCase
                     }
                 })
                 items.add(Link(text = R.string.stats_insights_view_more) {
-                    mutableNavigationTarget.value = ViewTagsAndCategoriesStats(site.siteId)
+                    navigateTo(ViewTagsAndCategoriesStats(site.siteId))
                 })
             }
         }
@@ -126,6 +121,6 @@ class TagsAndCategoriesUseCase
             if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
 
     private fun clickTag(link: String) {
-        mutableNavigationTarget.value = ViewTag(link)
+        navigateTo(ViewTag(link))
     }
 }

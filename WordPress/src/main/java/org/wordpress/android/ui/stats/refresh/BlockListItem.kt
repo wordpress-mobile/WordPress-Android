@@ -102,7 +102,11 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
-    data class ExpandableItem(val header: Item, val expandedItems: List<BlockListItem>) : BlockListItem(
+    data class ExpandableItem(
+        val header: Item,
+        val expandedItems: List<BlockListItem>,
+        var isExpanded: Boolean = false
+    ) : BlockListItem(
             EXPANDABLE_ITEM
     )
 

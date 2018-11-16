@@ -310,20 +310,24 @@ sealed class BlockItemViewHolder(
             if (list.adapter == null) {
                 list.adapter = BlockListAdapter(imageManager)
             }
-            var isExpanded = false
+            updateExpandedList(expandableItem)
             itemView.isClickable = true
             itemView.setOnClickListener {
-                isExpanded = !isExpanded
-                val rotationAngle = if (isExpanded) 180 else 0
+                expandableItem.isExpanded = !expandableItem.isExpanded
+                val rotationAngle = if (expandableItem.isExpanded) 180 else 0
                 expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start();
-                if (isExpanded) {
-                    (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
-                } else {
-                    (list.adapter as BlockListAdapter).update(listOf())
-                }
-                divider.setVisible(!isExpanded && header.showDivider)
-                expandedListDivider.setVisible(isExpanded)
+                updateExpandedList(expandableItem)
             }
+        }
+
+        private fun updateExpandedList(expandableItem: ExpandableItem) {
+            if (expandableItem.isExpanded) {
+                (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
+            } else {
+                (list.adapter as BlockListAdapter).update(listOf())
+            }
+            divider.setVisible(!expandableItem.isExpanded && expandableItem.header.showDivider)
+            expandedListDivider.setVisible(expandableItem.isExpanded)
         }
     }
 }
