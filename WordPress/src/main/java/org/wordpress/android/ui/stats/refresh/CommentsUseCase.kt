@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
