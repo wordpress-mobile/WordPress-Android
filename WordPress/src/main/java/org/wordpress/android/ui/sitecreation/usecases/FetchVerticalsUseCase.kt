@@ -41,7 +41,7 @@ class FetchVerticalsUseCase @Inject constructor(
     fun onVerticalsFetched(event: OnVerticalsFetched) {
         pair?.let {
             if (event.searchQuery == it.first) {
-                event.error = FetchVerticalsError(GENERIC_ERROR,"123msg")
+                event.error = FetchVerticalsError(GENERIC_ERROR, "123msg")
                 checkNotNull(it.second) { "onVerticalsFetched received without a suspended coroutine." }
                         .resume(event)
                 pair = null
