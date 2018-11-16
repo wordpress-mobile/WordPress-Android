@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
@@ -18,8 +19,12 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.usecases.BaseInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,7 +44,10 @@ class CommentsUseCase
         val error = response.error
 
         return when {
-            error != null -> Failed(R.string.stats_view_comments, error.message ?: error.type.name)
+            error != null -> Failed(
+                    string.stats_view_comments,
+                    error.message ?: error.type.name
+            )
             model != null -> loadComments(site, model)
             else -> throw IllegalArgumentException("Unexpected empty body")
         }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
@@ -26,8 +27,11 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 
 class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
