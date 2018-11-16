@@ -110,7 +110,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         clearAllButton.background = drawable
 
         val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
-        clearAllLayout.setOnClickListener{
+        clearAllLayout.setOnClickListener {
             viewModel.onClearTextBtnClicked()
         }
     }
@@ -182,13 +182,13 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
             headerLayout.animate()
                     .translationY(-headerLayout.height.toFloat())
-                    .withStartAction{
+                    .withStartAction {
                         headerLayout.visibility = View.GONE
                     }
-        } else if (uiState.isVisible && headerLayout.visibility == View.GONE){
+        } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
             headerLayout.animate()
                     .translationY(0f)
-                    .withStartAction{
+                    .withStartAction {
                         headerLayout.visibility = View.VISIBLE
                     }
         }

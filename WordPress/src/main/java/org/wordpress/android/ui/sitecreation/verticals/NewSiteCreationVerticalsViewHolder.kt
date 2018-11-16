@@ -52,7 +52,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsFetchSuggestionsErrorUiState
             text.text = itemView.context.getText(uiState.messageResId)
             retry.text = itemView.context.getText(uiState.retryButonResId)
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 uiState.onItemTapped.invoke()
             }
         }

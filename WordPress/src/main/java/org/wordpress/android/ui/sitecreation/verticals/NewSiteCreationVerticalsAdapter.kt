@@ -14,8 +14,7 @@ private const val searchInputViewType: Int = 2
 private const val suggestionItemViewType: Int = 3
 private const val suggestionErrorViewType: Int = 4
 
-class NewSiteCreationVerticalsAdapter(
-) : Adapter<NewSiteCreationVerticalsViewHolder>() {
+class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHolder>() {
     private val items = mutableListOf<VerticalsListItemUiState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSiteCreationVerticalsViewHolder {
