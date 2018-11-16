@@ -17,6 +17,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
+    @SuppressWarnings("checkstyle:RegexpSingleline")
     private static final String WPCOM_USER = "dotcom_user";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
