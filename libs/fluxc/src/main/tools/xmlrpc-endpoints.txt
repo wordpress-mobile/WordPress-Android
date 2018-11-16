@@ -9,6 +9,7 @@ wp.getPosts
 wp.newPost
 wp.editPost
 wp.deletePost
+wp.untrashPost
 wp.getTerm
 wp.getTerms
 wp.newTerm

@@ -318,6 +318,46 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+     public void restorePost(final PostModel post, final SiteModel site) {
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(post.getRemotePostId());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.UNTRASH_POST, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors:
+                        // 404 - "Invalid post ID."
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                        // Convert GenericErrorType to PostErrorType where applicable
+                        PostError postError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = postError;
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+                    }
+                });
+
+        request.disableRetries();
+        add(request);
+    }
+
     private @NotNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
         if (response == null) {
             return Collections.emptyList();
