@@ -212,8 +212,8 @@ public class HistoryDetailContainerFragment extends Fragment {
                 AniUtils.fadeIn(mNextButton, Duration.SHORT);
                 AniUtils.fadeIn(mPreviousButton, Duration.SHORT);
             } else {
-                String title = TextUtils.isEmpty(mRevision.getPostTitle()) ?
-                        getString(R.string.history_no_title) : mRevision.getPostTitle();
+                String title = TextUtils.isEmpty(mRevision.getPostTitle())
+                        ? getString(R.string.history_no_title) : mRevision.getPostTitle();
                 mVisualTitle.setText(title);
                 mVisualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
                 AniUtils.fadeOut(mNextButton, Duration.SHORT, View.INVISIBLE);
