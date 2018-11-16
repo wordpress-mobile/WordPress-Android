@@ -238,7 +238,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                 val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
                 if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
                     PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site)
+                            getActivity(), fragmentManager, post, viewModel.site
+                    )
                 } else {
                     ActivityLauncher.editPageForResult(this, page)
                 }
@@ -379,11 +380,13 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
     private fun displayDeleteDialog(page: Page) {
         val dialog = BasicFragmentDialog()
-        dialog.initialize(page.id.toString(),
+        dialog.initialize(
+                page.id.toString(),
                 getString(string.delete_page),
                 getString(string.page_delete_dialog_message, page.title),
                 getString(string.delete),
-                getString(string.cancel))
+                getString(string.cancel)
+        )
         dialog.show(fragmentManager, page.id.toString())
     }
 }
