@@ -353,9 +353,14 @@
     <!--site creation-->
     <dimen name="site_creation_screen_horizontal_padding">0dp</dimen>
     <dimen name="site_creation_segments_icon_size">24dp</dimen>
-    <dimen name="site_creation_list_divider_start_margin">72dp</dimen>
-    <dimen name="site_creation_list_min_item_height">72dp</dimen>
+    <dimen name="site_creation_segments_list_divider_start_margin">72dp</dimen>
+    <dimen name="site_creation_verticals_list_divider_start_margin">16dp</dimen>
+    <dimen name="site_creation_segments_list_min_item_height">72dp</dimen>
+    <dimen name="site_creation_verticals_list_min_item_height">48dp</dimen>
     <dimen name="site_creation_segments_content_padding_vertical">24dp</dimen>
     <dimen name="site_creation_segments_content_padding_horizontal">16dp</dimen>
+    <dimen name="site_creation_verticals_search_progress_size">24dp</dimen>
+    <dimen name="site_creation_verticals_clear_search_icon_size">24dp</dimen>
+    <dimen name="site_creation_verticals_clear_search_clickable_area_width">48dp</dimen>
 
 </resources>
