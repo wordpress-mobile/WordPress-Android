@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
@@ -26,7 +24,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -39,9 +36,6 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(FOLLOWERS, mainDispatcher) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-
     override suspend fun loadCachedData(site: SiteModel): InsightsItem {
         val wpComFollowers = insightsStore.getWpComFollowers(site)
         val emailFollowers = insightsStore.getEmailFollowers(site)

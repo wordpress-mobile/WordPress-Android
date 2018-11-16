@@ -47,11 +47,7 @@ class InsightsUseCase
         insights.mapNotNull { map[it] }
     }
 
-    val navigationTarget: LiveData<NavigationTarget> = merge(
-            latestPostSummaryUseCase.navigationTarget,
-            followersUseCase.navigationTarget,
-            commentsUseCase.navigationTarget
-    )
+    val navigationTarget: LiveData<NavigationTarget> = merge(useCases.map { it.value.navigationTarget })
 
     suspend fun loadInsightItems(site: SiteModel) {
         loadItems(site, false)

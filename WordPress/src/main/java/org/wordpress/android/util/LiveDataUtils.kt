@@ -22,6 +22,21 @@ fun <T> merge(vararg sources: LiveData<T>): LiveData<T> {
 }
 
 /**
+ * A helper function that merges sources into a single LiveData object
+ * @param sources producing an item of the same type
+ * @return merged results from all the sources
+ */
+fun <T> merge(sources: Iterable<LiveData<T>>): LiveData<T> {
+    val mediator = MediatorLiveData<T>()
+    for (source in sources) {
+        mediator.addSource(source) {
+            mediator.value = it
+        }
+    }
+    return mediator
+}
+
+/**
  * Merges two LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
  * @param sourceB second source

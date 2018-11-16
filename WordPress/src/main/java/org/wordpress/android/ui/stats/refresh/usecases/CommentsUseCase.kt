@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -22,7 +20,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
@@ -35,9 +32,6 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-
     override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchComments(site, forced)
         val model = response.model

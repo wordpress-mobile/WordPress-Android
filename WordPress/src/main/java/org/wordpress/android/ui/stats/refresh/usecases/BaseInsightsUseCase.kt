@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 
 abstract class BaseInsightsUseCase(
     val type: InsightsTypes,
@@ -16,6 +17,8 @@ abstract class BaseInsightsUseCase(
 ) {
     private val mutableLiveData = MutableLiveData<InsightsItem>()
     val liveData: LiveData<InsightsItem> = mutableLiveData
+    protected val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
             withContext(mainDispatcher) {

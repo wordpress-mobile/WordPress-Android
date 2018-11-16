@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -16,7 +14,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
@@ -29,9 +26,6 @@ class LatestPostSummaryUseCase
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
 ) : BaseInsightsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val dbModel = insightsStore.getLatestPostInsights(site)
         return dbModel?.let { loadLatestPostSummaryItem(it) }
