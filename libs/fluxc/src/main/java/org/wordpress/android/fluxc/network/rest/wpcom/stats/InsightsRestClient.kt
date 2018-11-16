@@ -233,6 +233,34 @@ constructor(
         }
     }
 
+    suspend fun fetchTags(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchInsightsPayload<TagsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.tags.urlV1_1
+
+        val params = mapOf(
+                "max" to pageSize.toString()
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                TagsResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchInsightsPayload(response.data)
+            }
+            is Error -> {
+                FetchInsightsPayload(buildStatsError(response.error))
+            }
+        }
+    }
+
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -401,5 +429,21 @@ constructor(
             @SerializedName("stats-source") val statsSource: String,
             @SerializedName("blog_domain") val blogDomain: String
         )
+    }
+
+    data class TagsResponse(
+        @SerializedName("date") val date: String,
+        @SerializedName("tags") val tags: List<TagsGroup>
+    ) {
+        data class TagsGroup(
+            @SerializedName("views") val views: Long,
+            @SerializedName("tags") val tags: List<TagResponse>
+        ) {
+            data class TagResponse(
+                @SerializedName("name") val name: String,
+                @SerializedName("type") val type: String,
+                @SerializedName("link") val link: String
+            )
+        }
     }
 }

@@ -11,6 +11,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import java.util.Date
 
@@ -86,3 +89,12 @@ val TOP_COMMENTS_RESPONSE = CommentsResponse(
         listOf(AUTHOR),
         listOf(POST)
 )
+
+const val FIRST_TAG_NAME = "Tag 1"
+const val SECOND_TAG_NAME = "Tag 2"
+const val TAG_TYPE = "tag"
+val FIRST_TAG = TagResponse(FIRST_TAG_NAME, TAG_TYPE, URL)
+val SECOND_TAG = TagResponse(SECOND_TAG_NAME, TAG_TYPE, URL)
+val TAGS_RESPONSE = TagsResponse(
+        FIRST_DAY,
+        listOf(TagsGroup(10, listOf(FIRST_TAG)), TagsGroup(5, listOf(FIRST_TAG, SECOND_TAG))))
