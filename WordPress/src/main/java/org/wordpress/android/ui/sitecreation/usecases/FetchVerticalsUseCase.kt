@@ -1,31 +1,37 @@
 package org.wordpress.android.ui.sitecreation.usecases
 
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.VerticalActionBuilder
 import org.wordpress.android.fluxc.store.VerticalStore
+import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
+import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
  * Transforms EventBus event to a coroutines.
+ *
+ * The client may dispatch multiple requests, but we want to accept only the latest one and ignore all others.
+ * We can't rely just on job.cancel() as the FetchVerticalsPayload may have already been dispatched and FluxC will
+ * return a result.
  */
 class FetchVerticalsUseCase @Inject constructor(
     val dispatcher: Dispatcher,
     @Suppress("unused") val verticalStore: VerticalStore
 ) {
-    private var continuation: Continuation<OnVerticalsFetched>? = null
+    /**
+     * Query - Continuation pair
+     */
+    private var pair: Pair<String, Continuation<OnVerticalsFetched>>? = null
 
     suspend fun fetchVerticals(query: String): OnVerticalsFetched {
-        if (continuation != null) {
-            throw IllegalStateException("Fetch already in progress.")
-        }
-        return suspendCoroutine { cont ->
-            continuation = cont
+        return suspendCancellableCoroutine { cont ->
+            pair = Pair(query, cont)
             dispatcher.dispatch(VerticalActionBuilder.newFetchVerticalsAction(FetchVerticalsPayload(query)))
         }
     }
@@ -33,8 +39,13 @@ class FetchVerticalsUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onVerticalsFetched(event: OnVerticalsFetched) {
-        checkNotNull(continuation) { "onVerticalsFetched received without a suspended coroutine." }
-                .resume(event)
-        continuation = null
+        pair?.let {
+            if (event.searchQuery == it.first) {
+                event.error = FetchVerticalsError(GENERIC_ERROR,"123msg")
+                checkNotNull(it.second) { "onVerticalsFetched received without a suspended coroutine." }
+                        .resume(event)
+                pair = null
+            }
+        }
     }
 }
