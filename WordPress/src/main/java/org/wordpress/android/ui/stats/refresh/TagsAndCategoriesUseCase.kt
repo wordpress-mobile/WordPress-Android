@@ -12,8 +12,8 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
+import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -53,7 +53,7 @@ class TagsAndCategoriesUseCase
             }
         })
         items.add(Link(text = R.string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewFollowersStats(site.siteId)
+            mutableNavigationTarget.value = ViewTagsAndCategoriesStats(site.siteId)
         })
         return ListInsightItem(items)
     }
@@ -65,7 +65,7 @@ class TagsAndCategoriesUseCase
                 item.name,
                 tag.views.toFormattedString(),
                 index < listSize - 1,
-                clickAction = { click(item.link) }
+                clickAction = { clickTag(item.link) }
         )
     }
 
@@ -90,7 +90,7 @@ class TagsAndCategoriesUseCase
                 item.name,
                 "",
                 false,
-                clickAction = { click(item.link) }
+                clickAction = { clickTag(item.link) }
 
         )
     }
@@ -98,7 +98,7 @@ class TagsAndCategoriesUseCase
     private fun getIcon(type: String) =
             if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
 
-    private fun click(link: String) {
+    private fun clickTag(link: String) {
         mutableNavigationTarget.value = ViewTag(link)
     }
 }

@@ -235,6 +235,19 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewTagsAndCategoriesStats(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.TAGS_AND_CATEGORIES);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, StatsTimeframe.DAY);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, "");
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_tags_and_categories);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
     public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
