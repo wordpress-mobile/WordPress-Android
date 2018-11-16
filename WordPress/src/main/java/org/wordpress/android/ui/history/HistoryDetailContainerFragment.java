@@ -254,8 +254,8 @@ public class HistoryDetailContainerFragment extends Fragment {
             mTotalDeletions.setVisibility(View.GONE);
         }
 
-        mNextButton.setEnabled(mPosition != mAdapter.getCount() - 1);
-        mPreviousButton.setEnabled(mPosition != 0);
+        mPreviousButton.setEnabled(!isInVisualPreview() && mPosition != 0);
+        mNextButton.setEnabled(!isInVisualPreview() && mPosition != mAdapter.getCount() - 1);
     }
 
     private void resetOnPageChangeListener() {
