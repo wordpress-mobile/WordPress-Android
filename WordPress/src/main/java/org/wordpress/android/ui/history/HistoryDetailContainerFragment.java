@@ -99,7 +99,11 @@ public class HistoryDetailContainerFragment extends Fragment {
             mRevisions = getArguments().getParcelableArrayList(EXTRA_REVISIONS);
         }
 
-        mPosition = mRevisions.indexOf(mRevision);
+        if (mRevisions != null) {
+            mPosition = mRevisions.indexOf(mRevision);
+        } else {
+            throw new IllegalArgumentException("Revisions list extra is null in HistoryDetailContainerFragment");
+        }
 
         mViewPager = rootView.findViewById(R.id.diff_pager);
         mViewPager.setPageTransformer(false, new WPViewPagerTransformer(TransformType.SLIDE_OVER));
