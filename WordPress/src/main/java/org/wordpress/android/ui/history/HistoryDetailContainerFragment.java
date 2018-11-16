@@ -157,6 +157,8 @@ public class HistoryDetailContainerFragment extends Fragment {
                                     && savedInstanceState.getBoolean(KEY_IS_IN_VISUAL_PREVIEW);
         mVisualPreviewContainer.setVisibility(isInVisualPreview ? View.VISIBLE : View.GONE);
         mViewPager.setVisibility(isInVisualPreview ? View.GONE : View.VISIBLE);
+        mPreviousButton.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
+        mNextButton.setVisibility(isInVisualPreview ? View.INVISIBLE : View.VISIBLE);
 
         refreshHistoryDetail();
         resetOnPageChangeListener();
@@ -206,13 +208,13 @@ public class HistoryDetailContainerFragment extends Fragment {
             requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
             if (isInVisualPreview()) {
-                mPreviousButton.setEnabled(mPosition != 0);
-                mNextButton.setEnabled(mPosition != mAdapter.getCount() - 1);
+                AniUtils.fadeIn(mNextButton, Duration.SHORT);
+                AniUtils.fadeIn(mPreviousButton, Duration.SHORT);
             } else {
-                mPreviousButton.setEnabled(false);
-                mNextButton.setEnabled(false);
                 mVisualTitle.setText(mRevision.getPostTitle());
                 mVisualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
+                AniUtils.fadeOut(mNextButton, Duration.SHORT, View.INVISIBLE);
+                AniUtils.fadeOut(mPreviousButton, Duration.SHORT, View.INVISIBLE);
             }
             crossfadePreviewViews();
         }
@@ -254,8 +256,8 @@ public class HistoryDetailContainerFragment extends Fragment {
             mTotalDeletions.setVisibility(View.GONE);
         }
 
-        mPreviousButton.setEnabled(!isInVisualPreview() && mPosition != 0);
-        mNextButton.setEnabled(!isInVisualPreview() && mPosition != mAdapter.getCount() - 1);
+        mPreviousButton.setEnabled(mPosition != 0);
+        mNextButton.setEnabled(mPosition != mAdapter.getCount() - 1);
     }
 
     private void resetOnPageChangeListener() {
