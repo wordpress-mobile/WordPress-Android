@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -65,7 +66,7 @@ public class HistoryDetailContainerFragment extends Fragment {
     private WPViewPager mViewPager;
     private AztecText mVisualContent;
     private TextView mVisualTitle;
-    private View mVisualPreviewContainer;
+    private ScrollView mVisualPreviewContainer;
     private int mPosition;
     private boolean mIsChevronClicked = false;
     private boolean mIsFragmentRecreated = false;
@@ -204,11 +205,15 @@ public class HistoryDetailContainerFragment extends Fragment {
             requireActivity().setResult(Activity.RESULT_OK, intent);
             requireActivity().finish();
         } else if (item.getItemId() == R.id.history_toggle_view) {
-            mVisualTitle.setText(isInVisualPreview() ? null : mRevision.getPostTitle());
-            mVisualContent.fromHtml(
-                    isInVisualPreview() ? "" : StringUtils.notNullStr(mRevision.getPostContent()), false);
-            mPreviousButton.setEnabled(isInVisualPreview());
-            mNextButton.setEnabled(isInVisualPreview());
+            if (isInVisualPreview()) {
+                mPreviousButton.setEnabled(mPosition != 0);
+                mNextButton.setEnabled(mPosition != mAdapter.getCount() - 1);
+            } else {
+                mPreviousButton.setEnabled(false);
+                mNextButton.setEnabled(false);
+                mVisualTitle.setText(mRevision.getPostTitle());
+                mVisualContent.fromHtml(StringUtils.notNullStr(mRevision.getPostContent()), false);
+            }
             crossfadePreviewViews();
         }
         return super.onOptionsItemSelected(item);
@@ -217,8 +222,14 @@ public class HistoryDetailContainerFragment extends Fragment {
     private void crossfadePreviewViews() {
         final View fadeInView = isInVisualPreview() ? mViewPager : mVisualPreviewContainer;
         final View fadeOutView = isInVisualPreview() ? mVisualPreviewContainer : mViewPager;
-        AniUtils.fadeIn(fadeInView, Duration.SHORT);
-        AniUtils.fadeOut(fadeOutView, Duration.SHORT);
+        mVisualPreviewContainer.smoothScrollTo(0, 0);
+        mVisualPreviewContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                AniUtils.fadeIn(fadeInView, Duration.SHORT);
+                AniUtils.fadeOut(fadeOutView, Duration.SHORT);
+            }
+        });
     }
 
     private void showHistoryTimeStampInToolbar() {
