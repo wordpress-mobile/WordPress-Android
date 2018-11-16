@@ -2,30 +2,35 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.usecases.BaseInsightsUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import javax.inject.Named
 
 class TagsAndCategoriesUseCase
 @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
-) {
+) : BaseInsightsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
-
-    suspend fun loadTagsAndCategories(site: SiteModel, forced: Boolean = false): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchTags(site, forced)
         val model = response.model
         val error = response.error
@@ -35,6 +40,11 @@ class TagsAndCategoriesUseCase
             model != null -> loadTagsAndCategories(site, model)
             else -> throw IllegalArgumentException("Unexpected empty body")
         }
+    }
+
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val model = insightsStore.getTags(site)
+        return model?.let { loadTagsAndCategories(site, model) }
     }
 
     private fun loadTagsAndCategories(
