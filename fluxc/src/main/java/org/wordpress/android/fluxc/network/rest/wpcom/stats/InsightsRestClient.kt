@@ -261,6 +261,32 @@ constructor(
         }
     }
 
+    suspend fun fetchPublicizeData(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchInsightsPayload<PublicizeResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.publicize.urlV1_1
+
+        val params = mapOf("max" to pageSize.toString())
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PublicizeResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchInsightsPayload(response.data)
+            }
+            is Error -> {
+                FetchInsightsPayload(buildStatsError(response.error))
+            }
+        }
+    }
+
     private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
         val type = when (error.type) {
             TIMEOUT -> StatsErrorType.TIMEOUT
@@ -445,5 +471,14 @@ constructor(
                 @SerializedName("link") val link: String
             )
         }
+    }
+
+    data class PublicizeResponse(
+        @SerializedName("services") val services: List<Service>
+    ) {
+        data class Service(
+            @SerializedName("service") val service: String,
+            @SerializedName("followers") val followers: Int
+        )
     }
 }
