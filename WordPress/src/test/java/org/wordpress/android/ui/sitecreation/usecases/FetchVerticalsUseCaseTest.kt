@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import org.assertj.core.api.Assertions
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -46,8 +45,6 @@ class FetchVerticalsUseCaseTest {
 
         verify(dispatcher).dispatch(dispatchCaptor.capture())
         assertEquals(dispatchCaptor.lastValue.payload.searchQuery, "test")
-
-
-        Assertions.assertThat(resultEvent).isEqualTo(event)
+        assertEquals(event, resultEvent)
     }
 }
