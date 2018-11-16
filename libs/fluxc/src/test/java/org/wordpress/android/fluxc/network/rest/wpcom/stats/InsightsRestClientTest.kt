@@ -34,11 +34,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.PUBLICIZE_RESPONSE
 import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.TAGS_RESPONSE
 import org.wordpress.android.fluxc.store.VISITS_RESPONSE
@@ -373,6 +375,44 @@ class InsightsRestClientTest {
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
+    @Test
+    fun `returns publicize`() = test {
+        initPublicizeResponse(PUBLICIZE_RESPONSE)
+
+        val pageSize = 10
+        val responseModel = insightsRestClient.fetchPublicizeData(site, pageSize, forced = false)
+
+        assertThat(responseModel.response).isNotNull()
+        assertThat(responseModel.response).isEqualTo(PUBLICIZE_RESPONSE)
+        val url = "https://public-api.wordpress.com/rest/v1.1/sites/12/stats/publicize/"
+        assertThat(urlCaptor.lastValue).isEqualTo(url)
+        assertThat(paramsCaptor.lastValue).isEqualTo(
+                mapOf(
+                        "max" to "$pageSize"
+                )
+        )
+    }
+
+    @Test
+    fun `returns publicize error response`() = test {
+        val errorMessage = "message"
+        initPublicizeResponse(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
+
+        val responseModel = insightsRestClient.fetchPublicizeData(site, forced = false)
+
+        assertThat(responseModel.error).isNotNull()
+        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
+        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+    }
+
     private suspend fun initAllTimeResponse(
         data: AllTimeResponse? = null,
         error: WPComGsonNetworkError? = null
@@ -427,6 +467,13 @@ class InsightsRestClientTest {
         error: WPComGsonNetworkError? = null
     ): Response<TagsResponse> {
         return initResponse(TagsResponse::class.java, data ?: mock(), error)
+    }
+
+    private suspend fun initPublicizeResponse(
+        data: PublicizeResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<PublicizeResponse> {
+        return initResponse(PublicizeResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(
