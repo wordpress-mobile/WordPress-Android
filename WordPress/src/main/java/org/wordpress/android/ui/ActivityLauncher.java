@@ -333,6 +333,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PublicizeListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {

@@ -190,6 +190,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_PLANS:
                 predefinedEventProperties.put("menu_item", "plans");
                 break;
+            case OPENED_SHARING_MANAGEMENT:
+                predefinedEventProperties.put("menu_item", "sharing_management");
+                break;
             case STATS_PERIOD_DAYS_ACCESSED:
                 predefinedEventProperties.put("period", "days");
                 break;
@@ -786,6 +789,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_PLUGIN_LIST:
                 return "plugin_list_opened";
             case OPENED_PLANS:
+                return "site_menu_opened";
+            case OPENED_SHARING_MANAGEMENT:
                 return "site_menu_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
