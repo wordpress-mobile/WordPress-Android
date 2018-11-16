@@ -34,7 +34,9 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:padding="@dimen/margin_small" >
+        android:padding="@dimen/margin_small"
+        android:visibility="gone"
+        tools:visibility="visible" >
 
         <TextView
             android:id="@+id/quota_text"

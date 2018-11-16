@@ -17,6 +17,8 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
+    @SuppressWarnings("checkstyle:RegexpSingleline")
+    private static final String WPCOM_USER = "dotcom_user";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -186,6 +188,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_PLANS:
+                predefinedEventProperties.put("menu_item", "plans");
+                break;
+            case OPENED_SHARING_MANAGEMENT:
+                predefinedEventProperties.put("menu_item", "sharing_management");
                 break;
             case STATS_PERIOD_DAYS_ACCESSED:
                 predefinedEventProperties.put("period", "days");
@@ -412,6 +420,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             JSONObject properties = new JSONObject();
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
+            properties.put(WPCOM_USER, metadata.isWordPressComUser());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -782,6 +791,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_directory_opened";
             case OPENED_PLUGIN_LIST:
                 return "plugin_list_opened";
+            case OPENED_PLANS:
+                return "site_menu_opened";
+            case OPENED_SHARING_MANAGEMENT:
+                return "site_menu_opened";
+            case OPENED_SHARING_BUTTON_MANAGEMENT:
+                return "sharing_buttons_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:

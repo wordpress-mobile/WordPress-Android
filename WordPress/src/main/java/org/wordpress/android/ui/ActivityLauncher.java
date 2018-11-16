@@ -34,6 +34,10 @@ import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.history.HistoryDetailActivity;
+import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
+import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -260,6 +264,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PlansActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_PLANS, site);
     }
 
     public static void viewCurrentBlogPosts(Context context, SiteModel site) {
@@ -368,6 +373,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, PublicizeListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_SHARING_MANAGEMENT, site);
     }
 
     public static void viewCurrentSite(Context context, SiteModel site, boolean openFromHeader) {
@@ -451,6 +457,13 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void viewHistoryDetailForResult(Activity activity, Revision revision, ArrayList<Revision> revisions) {
+        Intent intent = new Intent(activity, HistoryDetailActivity.class);
+        intent.putExtra(HistoryDetailContainerFragment.EXTRA_REVISION, revision);
+        intent.putParcelableArrayListExtra(HistoryDetailContainerFragment.EXTRA_REVISIONS, revisions);
+        activity.startActivityForResult(intent, RequestCodes.HISTORY_DETAIL);
     }
 
     /*
