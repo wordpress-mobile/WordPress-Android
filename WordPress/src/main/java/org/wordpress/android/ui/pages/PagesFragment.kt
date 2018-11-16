@@ -19,6 +19,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -148,6 +149,14 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                 .beginTransaction()
                 .replace(R.id.searchFrame, searchFragment)
                 .commit()
+
+        pagesPager.setOnTouchListener { _, event ->
+            swipeToRefreshHelper.setEnabled(false)
+            if (event.action == MotionEvent.ACTION_UP) {
+                swipeToRefreshHelper.setEnabled(true)
+            }
+            return@setOnTouchListener false
+        }
     }
 
     private fun initializeSearchView() {
