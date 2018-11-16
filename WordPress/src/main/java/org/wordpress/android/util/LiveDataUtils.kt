@@ -1,7 +1,9 @@
 package org.wordpress.android.util
 
+import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.Transformations
 
 /**
@@ -72,3 +74,18 @@ fun <T, U> LiveData<T>.map(mapper: (T) -> U?): LiveData<U> {
         it?.let(mapper)
     }
 }
+
+/**
+ * Use this in order to observe an emission only once - for example for displaying a Snackbar message
+ */
+fun <T : Event> LiveData<T>.observeEvent(owner: LifecycleOwner, observer: (T) -> Boolean) {
+    this.observe(owner, Observer {
+        if (it != null && !it.hasBeenHandled) {
+            if (observer(it)) {
+                it.hasBeenHandled = true
+            }
+        }
+    })
+}
+
+open class Event(var hasBeenHandled: Boolean = false)

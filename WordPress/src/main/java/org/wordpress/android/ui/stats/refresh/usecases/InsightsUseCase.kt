@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.launch
@@ -11,6 +10,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.util.combineMap
@@ -29,13 +29,15 @@ class InsightsUseCase
     insightsAllTimeUseCase: InsightsAllTimeUseCase,
     latestPostSummaryUseCase: LatestPostSummaryUseCase,
     todayStatsUseCase: TodayStatsUseCase,
-    followersUseCase: FollowersUseCase
+    followersUseCase: FollowersUseCase,
+    commentsUseCase: CommentsUseCase
 ) {
     private val useCases = listOf(
             insightsAllTimeUseCase,
             latestPostSummaryUseCase,
             todayStatsUseCase,
-            followersUseCase
+            followersUseCase,
+            commentsUseCase
     ).associateBy { it.type }
 
     private val liveData = combineMap(
@@ -46,17 +48,11 @@ class InsightsUseCase
         insights.mapNotNull { map[it] }
     }
 
-    private val mediatorNavigationTarget: MediatorLiveData<NavigationTarget> = MediatorLiveData()
-    val navigationTarget: LiveData<NavigationTarget> = mediatorNavigationTarget
-
-    init {
-        mediatorNavigationTarget.addSource(latestPostSummaryUseCase.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-        mediatorNavigationTarget.addSource(followersUseCase.navigationTarget) {
-            mediatorNavigationTarget.value = it
-        }
-    }
+    val navigationTarget: LiveData<NavigationTarget> = merge(
+            latestPostSummaryUseCase.navigationTarget,
+            followersUseCase.navigationTarget,
+            commentsUseCase.navigationTarget
+    )
 
     suspend fun loadInsightItems(site: SiteModel) {
         loadItems(site, false)

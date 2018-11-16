@@ -43,10 +43,7 @@ class LatestPostSummaryUseCase
         val error = response.error
 
         return when {
-            error != null -> Failed(
-                    string.stats_insights_latest_post_summary,
-                    error.message ?: error.type.name
-            )
+            error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
             else -> loadLatestPostSummaryItem(model)
         }
     }
