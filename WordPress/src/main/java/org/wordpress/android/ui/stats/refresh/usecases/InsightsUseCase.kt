@@ -12,7 +12,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.TagsAndCategoriesUseCase
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
 import javax.inject.Inject

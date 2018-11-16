@@ -1,23 +1,30 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.usecases.BaseInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,9 +43,11 @@ class TagsAndCategoriesUseCase
         val error = response.error
 
         return when {
-            error != null -> Failed(R.string.stats_view_tags_and_categories, error.message ?: error.type.name)
-            model != null -> loadTagsAndCategories(site, model)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            error != null -> Failed(
+                    string.stats_view_tags_and_categories,
+                    error.message ?: error.type.name
+            )
+            else -> loadTagsAndCategories(site, model)
         }
     }
 
@@ -49,22 +58,30 @@ class TagsAndCategoriesUseCase
 
     private fun loadTagsAndCategories(
         site: SiteModel,
-        model: TagsModel
+        model: TagsModel?
     ): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_view_tags_and_categories))
-        items.addAll(model.tags.mapIndexed { index, tag ->
-            when {
-                tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
-                else -> ExpandableItem(
-                        mapCategory(tag, index, model.tags.size),
-                        tag.items.map { subTag -> mapItem(subTag) }
-                )
+        if (model == null) {
+            items.add(Empty)
+        } else {
+            items.add(Title(R.string.stats_view_tags_and_categories))
+            if (model.tags.isEmpty()) {
+                    items.add(Empty)
+            } else {
+                items.addAll(model.tags.mapIndexed { index, tag ->
+                    when {
+                        tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
+                        else -> ExpandableItem(
+                                mapCategory(tag, index, model.tags.size),
+                                tag.items.map { subTag -> mapItem(subTag) }
+                        )
+                    }
+                })
+                items.add(Link(text = R.string.stats_insights_view_more) {
+                    mutableNavigationTarget.value = ViewTagsAndCategoriesStats(site.siteId)
+                })
             }
-        })
-        items.add(Link(text = R.string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewTagsAndCategoriesStats(site.siteId)
-        })
+        }
         return ListInsightItem(items)
     }
 
