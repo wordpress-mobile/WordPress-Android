@@ -390,8 +390,8 @@ public class PostStore extends Store {
      */
     public PostModel getPostByLocalPostId(int localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                .where().equals(PostModelTable.ID, localId).endWhere()
-                .getAsModel();
+                                        .where().equals(PostModelTable.ID, localId).endWhere()
+                                        .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -472,6 +472,7 @@ public class PostStore extends Store {
         }
         return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
+
     /**
      * returns the total number of posts with local changes across all sites
      */
@@ -524,6 +525,12 @@ public class PostStore extends Store {
             case DELETED_POST:
                 handleDeletePostCompleted((RemotePostPayload) action.getPayload());
                 break;
+            case RESTORE_POST:
+                restorePost((RemotePostPayload) action.getPayload());
+                break;
+            case RESTORED_POST:
+                handleRestorePostCompleted((RemotePostPayload) action.getPayload());
+                break;
             case REMOVE_POST:
                 removePost((PostModel) action.getPayload());
                 break;
@@ -545,6 +552,15 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.deletePost(payload.post, payload.site);
+        }
+    }
+
+    private void restorePost(RemotePostPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.restorePost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.restorePost(payload.post, payload.site);
         }
     }
 
@@ -640,6 +656,19 @@ public class PostStore extends Store {
         }
 
         emitChange(event);
+    }
+
+    private void handleRestorePostCompleted(RemotePostPayload payload) {
+        OnPostChanged event = new OnPostChanged(
+                new CauseOfOnPostChanged.RestoredPost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+
+        if (payload.isError()) {
+            event.error = payload.error;
+            emitChange(event);
+        } else {
+            updatePost(payload.post, false);
+            emitChange(event);
+        }
     }
 
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
