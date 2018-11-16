@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -140,5 +141,9 @@ class InsightsMapper
 
     private fun TagResponse.toItem(): TagModel.Item {
         return TagModel.Item(this.name, this.type, this.link)
+    }
+
+    fun map(response: PublicizeResponse): PublicizeModel {
+        return PublicizeModel(response.services.map { PublicizeModel.Service(it.service, it.followers) })
     }
 }

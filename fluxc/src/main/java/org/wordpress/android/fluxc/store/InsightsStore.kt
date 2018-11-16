@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
+import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -202,6 +203,25 @@ class InsightsStore
 
     fun getTags(site: SiteModel): TagsModel? {
         return sqlUtils.selectTags(site)?.let { insightsMapper.map(it) }
+    }
+
+    // Publicize stats
+    suspend fun fetchPublicizeData(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchPublicizeData(siteModel, forced = forced)
+        return@withContext when {
+            response.isError -> {
+                OnInsightsFetched(response.error)
+            }
+            response.response != null -> {
+                sqlUtils.insert(siteModel, response.response)
+                OnInsightsFetched(insightsMapper.map(response.response))
+            }
+            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+        }
+    }
+
+    fun getPublicizeData(site: SiteModel): PublicizeModel? {
+        return sqlUtils.selectPublicizeInsights(site)?.let { insightsMapper.map(it) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
