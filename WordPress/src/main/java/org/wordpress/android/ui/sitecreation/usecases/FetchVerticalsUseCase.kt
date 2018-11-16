@@ -6,10 +6,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.VerticalActionBuilder
 import org.wordpress.android.fluxc.store.VerticalStore
-import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
-import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 
@@ -41,7 +39,6 @@ class FetchVerticalsUseCase @Inject constructor(
     fun onVerticalsFetched(event: OnVerticalsFetched) {
         pair?.let {
             if (event.searchQuery == it.first) {
-                event.error = FetchVerticalsError(GENERIC_ERROR, "123msg")
                 checkNotNull(it.second) { "onVerticalsFetched received without a suspended coroutine." }
                         .resume(event)
                 pair = null
