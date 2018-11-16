@@ -17,7 +17,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
-    private static final String DOTCOM_USER = "dotcom_user";
+    private static final String WPCOM_USER = "dotcom_user";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -419,7 +419,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             JSONObject properties = new JSONObject();
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
-            properties.put(DOTCOM_USER, metadata.isWordPressComUser());
+            properties.put(WPCOM_USER, metadata.isWordPressComUser());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
