@@ -14,10 +14,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
@@ -287,14 +290,42 @@ class PagesViewModel
 
     fun onMenuAction(action: Action, page: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
-            SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
+            VIEW_PAGE -> previewPage(page)
+            SET_PARENT -> setParent(page)
             MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
-            DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
+            DELETE_PERMANENTLY -> deletePage(page)
         }
         return true
+    }
+
+    private fun deletePage(page: Page) {
+        _displayDeleteDialog.postValue(page)
+    }
+
+    private fun setParent(page: Page) {
+        trackMenuSelectionEvent(SET_PARENT)
+
+        _setPageParent.postValue(pageMap[page.id])
+    }
+
+    private fun previewPage(page: Page) {
+        trackMenuSelectionEvent(VIEW_PAGE)
+
+        _previewPage.postValue(pageMap[page.id])
+    }
+
+    private fun trackMenuSelectionEvent(action: Action) {
+        val menu = when (action) {
+            VIEW_PAGE -> "view"
+            SET_PARENT -> "set_parent"
+            MOVE_TO_DRAFT -> "move_to_draft"
+            MOVE_TO_TRASH -> "move_to_bin"
+            else -> return
+        }
+        val properties = mutableMapOf("option_name" to menu as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
     }
 
     private fun publishPageNow(remoteId: Long) {
@@ -410,6 +441,12 @@ class PagesViewModel
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
+        if (status == DRAFT) {
+            trackMenuSelectionEvent(MOVE_TO_DRAFT)
+        } else if (status == TRASHED) {
+            trackMenuSelectionEvent(MOVE_TO_TRASH)
+        }
+
         pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
             val action = PageAction(remoteId, UPLOAD) {
