@@ -130,8 +130,6 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
         newPageButton.setOnClickListener {
             viewModel.onNewPageButtonTapped()
-
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PAGES_ADD_PAGE, viewModel.site)
         }
 
         pagesPager.addOnPageChangeListener(object : OnPageChangeListener {
