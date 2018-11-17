@@ -210,11 +210,7 @@ dependencies {
     implementation project(path:':libs:analytics:WordPressAnalytics')
 
 
-    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
-        implementation project(path:':libs:editor:WordPressEditor', configuration: 'release')
-    } else {
-        implementation project(path: ':libs:editor:WordPressEditor', configuration: 'debug')
-    }
+    implementation project(path:':libs:editor:WordPressEditor')
 
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"

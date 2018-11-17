@@ -37,12 +37,25 @@ android {
             abiFilters 'armeabi-v7a', 'x86'
         }
     }
+
+    flavorDimensions "buildType"
+
+    productFlavors {
+        wasabi {
+            dimension "buildType"
+        }
+
+        vanilla {
+            dimension "buildType"
+        }
+
+        zalpha {
+            dimension "buildType"
+        }
+    }
+
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -56,11 +69,6 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
-}
-
-configurations {
-    debug
-    release
 }
 
 dependencies {
