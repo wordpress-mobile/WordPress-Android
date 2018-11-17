@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -258,7 +259,8 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         }
 
         // default when post hasn't been retrieved yet
-        setTitle(isDeepLinking() ? R.string.reader_title_post_detail_wpcom : R.string.reader_title_post_detail);
+        setTitle(ActivityUtils.isDeepLinking(getIntent()) ? R.string.reader_title_post_detail_wpcom
+                : R.string.reader_title_post_detail);
     }
 
     /*
@@ -269,10 +271,6 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         if (!isFinishing()) {
             updateTitle(mViewPager.getCurrentItem());
         }
-    }
-
-    private boolean isDeepLinking() {
-        return Intent.ACTION_VIEW.equals(getIntent().getAction());
     }
 
     private void handleDeepLinking() {
@@ -519,7 +517,7 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         EventBus.getDefault().register(this);
 
         if (!hasPagerAdapter() || mBackFromLogin) {
-            if (isDeepLinking()) {
+            if (ActivityUtils.isDeepLinking(getIntent())) {
                 handleDeepLinking();
             }
 

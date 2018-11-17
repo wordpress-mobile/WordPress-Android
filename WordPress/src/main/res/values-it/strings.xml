@@ -9,10 +9,6 @@ Language: it
     <string name="async_promo_description_schedule_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e programmata dietro le quinte! Prova!</string>
     <string name="async_promo_description_publish_post">Ora puoi abbandonare l’editor e il post verrà salvato e pubblicato dietro le quinte! Prova!</string>
     <string name="async_promo_description_publish_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e pubblicata dietro le quinte! Prova!</string>
-    <string name="image_size_full_class">dimensione-reale</string>
-    <string name="image_size_large_class">dimensione-grande</string>
-    <string name="image_size_medium_class">dimensione-media</string>
-    <string name="image_size_thumbnail_class">dimensione-miniatura</string>
     <string name="image_size_full_label">Dimensione reale</string>
     <string name="image_size_large_label">Grande</string>
     <string name="image_size_medium_label">Media</string>
@@ -266,7 +262,6 @@ Language: it
     <string name="content_description_person_reading_device_notification">Persona che legge dispositivo con notifiche</string>
     <string name="content_description_people_looking_charts">Persone che guardano grafici e mappe</string>
     <string name="comment_title">%s su %s</string>
-    <string name="dialog_confirm_delete_permanently_page">Desideri eliminare in modo permanente questa pagina?</string>
     <string name="dialog_confirm_delete_permanently_post">Desideri eliminare in modo permanente questo articolo?</string>
     <string name="notification_site_creation_title_in_progress">Creazione del sito… Questa operazione potrebbe richiedere qualche minuto.</string>
     <string name="notification_channel_important_title">Importante</string>
@@ -415,7 +410,6 @@ Language: it
     <string name="dialog_confirm_publish_message_page">Questa pagina verrà pubblicata immediatamente.</string>
     <string name="dialog_confirm_publish_message_post">Questo post verrà pubblicato immediatamente.</string>
     <string name="dialog_confirm_publish_title">Pronto a pubblicare?</string>
-    <string name="dialog_confirm_delete_page">Questa pagina verrà eliminata e inviata nel Cestino</string>
     <string name="dialog_confirm_delete_post">Questo post verrà eliminato e inviato nel Cestino</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d post/pagine non caricate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagine non caricate</string>
@@ -617,7 +611,6 @@ Language: it
     <string name="login_text_otp_another">Inviami invece un messaggio con un altro codice.</string>
     <string name="enter_verification_code_sms">Abbiamo inviato un messaggio di testo al numero di telefono che termina in %s. Inserisci il codice di verifica contenuto nell\'SMS.</string>
     <string name="error_generic_error">Impossibile eseguire l\'operazione</string>
-    <string name="error_media_recover_page">Impossibile caricare il contenuto multimediale di questa pagina</string>
     <string name="error_media_recover_post">Impossibile caricare il contenuto multimediale di questo articolo</string>
     <string name="image_size">Dimensione</string>
     <string name="uploading_subtitle_media_only_one">1 file rimanente</string>
@@ -705,7 +698,6 @@ Language: it
     <string name="notification_settings_master_status_on">Attivo</string>
     <string name="max_video_resolution">Dimensione video massima</string>
     <string name="max_thumbnail_px_size">Dimensione immagine massima</string>
-    <string name="error_page_does_not_exist">Questa pagina non esiste più</string>
     <string name="error_upload_post_media_param">Si è verificato un errore durante il caricamento dell\'elemento multimediale in questo articolo: %s.</string>
     <string name="error_upload_post_param">Si è verificato un errore durante il caricamento di questo articolo: %s.</string>
     <string name="add_media_progress">Aggiunta elemento multimediale</string>
@@ -1387,8 +1379,6 @@ Language: it
     <string name="notification_settings_item_other_account_emails_summary">Invieremo sempre email importanti riguardanti il tuo account, ma potresti ricevere anche altre utili informazioni.</string>
     <string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo…</string>
     <string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
-    <string name="yesterday">Ieri</string>
-    <string name="days_ago">%d giorni fa</string>
     <string name="connectionbar_no_connection">Nessuna connessione</string>
     <string name="button_publish">Pubblica</string>
     <string name="button_edit">Modifica</string>
@@ -1396,12 +1386,10 @@ Language: it
     <string name="button_preview">Anteprima</string>
     <string name="button_trash">Cestino</string>
     <string name="button_stats">Statistiche</string>
-    <string name="page_deleted">Pagina cancellata</string>
     <string name="button_back">Indietro</string>
     <string name="stats_no_activity_this_period">Nessuna attivata in questo periodo</string>
     <string name="post_trashed">Articolo inviato al cestino</string>
     <string name="post_deleted">Articolo cancellato</string>
-    <string name="page_trashed">Pagina inviata al cestino</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo sito</string>
     <string name="reader_toast_err_follow_blog_not_found">Impossibile trovare questo sito</string>
     <string name="undo">Annulla</string>
@@ -1536,7 +1524,6 @@ Language: it
     <string name="ssl_certificate_details">Dettagli</string>
     <string name="cab_selected">%d selezionati</string>
     <string name="signing_out">Disconnessione in corso…</string>
-    <string name="pages_empty_list">Ancora nessuna pagina. Perché non crearne una?</string>
     <string name="comment_reply_to_user">Replica a %s</string>
     <string name="posts_empty_list">Ancora nessun articolo. Perché non crearne uno?</string>
     <string name="comment_trashed">Commento cestinato</string>
@@ -1614,7 +1601,6 @@ Language: it
     <string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
     <string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
     <string name="error_refresh_media">Al momento non è stato possibile aggiornare l\'elemento multimediale</string>
-    <string name="error_deleting_page">Si è verificato un errore durante l\'eliminazione della pagina</string>
     <string name="wordpress_blog">Blog di WordPress</string>
     <string name="image_settings">Impostazioni immagini</string>
     <string name="local_changes">Modifiche locali</string>
@@ -1768,7 +1754,6 @@ Language: it
     <string name="immediately">Subito</string>
     <string name="quickpress_add_alert_title">Imposta nome breve</string>
     <string name="settings">Impostazioni</string>
-    <string name="today">Oggi</string>
     <string name="quickpress_add_error">Il nome breve non può essere vuoto</string>
     <string name="quickpress_window_title">Selezionare il blog per la scelta rapida QuickPress</string>
     <string name="pages_private">Privato</string>
