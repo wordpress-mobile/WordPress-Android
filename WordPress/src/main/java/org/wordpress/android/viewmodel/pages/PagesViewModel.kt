@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -284,6 +285,8 @@ class PagesViewModel
     }
 
     fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
+        AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+
         if (!restorePreviousSearch) {
             clearSearch()
         }
