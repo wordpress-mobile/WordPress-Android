@@ -17,7 +17,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
-
     public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded) {
         return null;
     }
@@ -139,5 +138,4 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public boolean isActionInProgress() {
         return false;
     }
-
 }

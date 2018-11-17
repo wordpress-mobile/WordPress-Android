@@ -13,7 +13,6 @@ package com.facebook.react.modules.core;
  * doesn't want to handle back press events.
  */
 public interface DefaultHardwareBackBtnHandler {
-
   /**
    * By default, all onBackPress() calls should not execute the default backpress handler and should
    * instead propagate it to the JS instance. If JS doesn't want to handle the back press itself,
