@@ -19,11 +19,9 @@ import kotlinx.android.synthetic.main.pages_list_fragment.*
 import kotlinx.coroutines.experimental.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
