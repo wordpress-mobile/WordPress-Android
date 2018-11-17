@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -46,6 +47,9 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
@@ -205,8 +209,21 @@ class PagesViewModel
     }
 
     fun onPageTypeChanged(type: PageListType) {
+        trackTabChangeEvent(type)
+
         currentPageType = type
         checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun trackTabChangeEvent(type: PageListType) {
+        val tab = when (type) {
+            PUBLISHED -> "published"
+            DRAFTS -> "drafts"
+            SCHEDULED -> "scheduled"
+            PageListType.TRASHED -> "binned"
+        }
+        val properties = mutableMapOf("tab_name" to tab as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_TAB_PRESSED, site, properties)
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
