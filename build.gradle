@@ -35,7 +35,8 @@ allprojects {
     }
 
     configurations.all { conf ->
-        if (conf.toString().contains("Release")) {
+        def configurationString = conf.toString().toLowerCase()
+        if (configurationString.contains("vanilla") || configurationString.contains("gutenberg")) {
             resolutionStrategy {
                 force 'org.webkit:android-jsc:r224109'
             }

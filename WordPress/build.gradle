@@ -27,6 +27,16 @@ apply plugin: 'io.fabric'
 
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
+def includeReactNativeGradle() {
+    project.ext.react = [
+            entryFile    : "index.js",
+            root         : "../libs/gutenberg-mobile/",
+            inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
+    ]
+
+    apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
+}
+
 android {
     useLibrary 'org.apache.http.legacy'
 
@@ -58,6 +68,11 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
+
+            def requestedTask = getGradle().getStartParameter().getTaskRequests().toString()
+            if (requestedTask.contains("Vanilla")) {
+                includeReactNativeGradle()
+            }
         }
 
         zalpha { // alpha version - enable experimental features
@@ -70,6 +85,16 @@ android {
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
         }
+
+        gutenberg { // gutenberg development version
+            applicationId "org.wordpress.android.beta"
+            dimension "buildType"
+
+            def requestedTask = getGradle().getStartParameter().getTaskRequests().toString()
+            if (requestedTask.contains("Gutenberg")) {
+                includeReactNativeGradle()
+            }
+        }
     }
 
     buildTypes {
@@ -78,16 +103,6 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-
-            if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
-                project.ext.react = [
-                        entryFile    : "index.js",
-                        root         : "../libs/gutenberg-mobile/",
-                        inputExcludes: ["**/wpandroidlink/**", "**/symlinked-packages/**", "**/symlinked-packages-in-parent/**"]
-                ]
-
-                apply from: "../libs/gutenberg-mobile/node_modules/react-native/react.gradle"
-            }
         }
 
         debug {
@@ -174,7 +189,8 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
-    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+    def requestedTask = getGradle().getStartParameter().getTaskRequests().toString()
+    if (requestedTask.contains("Vanilla") || requestedTask.contains("Gutenberg")) {
         // React Native
         implementation "com.facebook.react:react-native:+" // From node_modules.
     }

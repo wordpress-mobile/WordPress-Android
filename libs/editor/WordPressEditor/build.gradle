@@ -49,6 +49,10 @@ android {
             dimension "buildType"
         }
 
+        gutenberg {
+            dimension "buildType"
+        }
+
         zalpha {
             dimension "buildType"
         }
@@ -59,6 +63,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    sourceSets {
+        vanilla.java.srcDir 'src/gutenberg/java'
+        vanilla.res.srcDir 'src/gutenberg/res'
     }
 
     // Avoid 'duplicate files during packaging of APK' errors
@@ -82,7 +91,8 @@ dependencies {
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:fbf294b88d17996aff9e3d62a293d2638818dd0a')
     api ('com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:fbf294b88d17996aff9e3d62a293d2638818dd0a')
 
-    if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+    def requestedTask = getGradle().getStartParameter().getTaskRequests().toString()
+    if (requestedTask.contains("Vanilla") || requestedTask.contains("Gutenberg")) {
         implementation project(':react-native-svg')
         implementation project(':react-native-aztec')
         implementation project(':react-native-recyclerview-list')
