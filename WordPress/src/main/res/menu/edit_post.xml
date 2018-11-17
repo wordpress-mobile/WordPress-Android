@@ -19,11 +19,6 @@
         </item>
 
         <item
-            android:id="@+id/menu_history"
-            android:title="@string/menu_history" >
-        </item>
-
-        <item
             android:id="@+id/menu_preview_post"
             android:title="@string/menu_preview" >
         </item>
@@ -31,6 +26,11 @@
         <item
             android:id="@+id/menu_html_mode"
             android:title="@string/menu_html_mode" >
+        </item>
+
+        <item
+            android:id="@+id/menu_history"
+            android:title="@string/menu_history" >
         </item>
 
         <item

@@ -319,6 +319,18 @@
     <string name="dialog_confirm_publish_yes">Publish now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
+    <!-- gutenberg compatibility dialog -->
+    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
+    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_message_page">We are working on the brand new WordPress editor. You can still edit this page, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url_wpcom" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wpcom</string>
+    <string name="dialog_gutenberg_compatibility_learn_more_url_wporg" translatable="false">https://apps.wordpress.com/gutenberg?flavor=wporg</string>
+
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -958,7 +970,6 @@
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
-    <string name="invalid_url_message">Check that the URL entered is valid</string>
 
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
@@ -1207,6 +1218,9 @@
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
+    <string name="history_preview_visual">Visual preview</string>
+    <string name="history_preview_html">HTML preview</string>
+    <string name="history_no_title">(no title)</string>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
@@ -1267,10 +1281,10 @@
     <string name="image_size_large_label">Large</string>
     <string name="image_size_full_label">Full Size</string>
 
-    <string name="image_size_thumbnail_class" translatable="false">size-thumbnail</string>
-    <string name="image_size_medium_class" translatable="false">size-medium</string>
-    <string name="image_size_large_class" translatable="false">size-large</string>
-    <string name="image_size_full_class" translatable="false">size-full</string>
+    <string name="image_size_thumbnail_css_class" translatable="false">size-thumbnail</string>
+    <string name="image_size_medium_css_class" translatable="false">size-medium</string>
+    <string name="image_size_large_css_class" translatable="false">size-large</string>
+    <string name="image_size_full_css_class" translatable="false">size-full</string>
 
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
@@ -1622,6 +1636,7 @@
     <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_name_label">Name</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
@@ -1896,8 +1911,12 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
-    <string name="web_address">Web Address</string>
+    <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
+    <string name="change_password">Change password</string>
+    <string name="change_password_confirmation">Password changed successfully</string>
+    <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_dialog_message">Changing password&#8230;</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>

@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-15 08:19:27+0000
+Translation-Revision-Date: 2018-10-23 21:28:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">Por favor, introduce un sitio WordPress WordPress.com o alojado conectado a Jetpack</string>
+    <string name="history_loading_revision">Cargando revisión</string>
+    <string name="history_loaded_revision">Revisión cargada</string>
+    <string name="history_load_dialog_title">Cargar revisión</string>
+    <string name="history_load_dialog_message">¿Quieres cargar la revisión de %1$s a las %2$s?</string>
+    <string name="history_load_dialog_button_positive">Cargar</string>
+    <string name="history_footer_post">Entrada creada el %1$s a las %2$s</string>
+    <string name="history_footer_page">Página creada el %1$s a las %2$s</string>
+    <string name="history_empty_title">Aún no hay histórico</string>
+    <string name="history_empty_subtitle_post">Cuando haces cambios a tu entrada podrás ver aquí el histórico</string>
+    <string name="history_empty_subtitle_page">Cuando haces cambios a tu página podrás ver aquí el histórico</string>
+    <string name="description_user">Avatar del usuario</string>
     <string name="async_promo_description_schedule_page">¡Ahora puedes salir del editor y tu página se guardará y programará en segundo plano! ¡Pruébalo!</string>
     <string name="async_promo_description_publish_post">¡Ahora puedes salir del editor y tu entrada se guardará y publicará en segundo plano! ¡Pruébalo!</string>
     <string name="async_promo_description_publish_page">¡Ahora puedes salir del editor y tu página se guardará y publicará en segundo plano! ¡Pruébalo!</string>
-    <string name="image_size_full_class">size-full</string>
-    <string name="image_size_large_class">size-large</string>
-    <string name="image_size_medium_class">size-medium</string>
-    <string name="image_size_thumbnail_class">size-thumbnail</string>
     <string name="image_size_full_label">Tamaño completo</string>
     <string name="image_size_large_label">Grande</string>
     <string name="image_size_medium_label">Mediano</string>
@@ -266,7 +275,6 @@ Language: es
     <string name="content_description_person_reading_device_notification">Dispositivo de lectura personal con notificaciones</string>
     <string name="content_description_people_looking_charts">Gente mirando gráficos y tablas</string>
     <string name="comment_title">%s en %s</string>
-    <string name="dialog_confirm_delete_permanently_page">¿Estás seguro de que deseas eliminar definitivamente esta página?</string>
     <string name="dialog_confirm_delete_permanently_post">¿Seguro que quieres eliminar definitivamente esta publicación?</string>
     <string name="notification_site_creation_title_in_progress">Creando sitio… Puede tardar unos minutos.</string>
     <string name="notification_channel_important_title">Importante</string>
@@ -415,7 +423,6 @@ Language: es
     <string name="dialog_confirm_publish_message_page">Esta página se publicará de inmediato.</string>
     <string name="dialog_confirm_publish_message_post">Esta entrada se publicará de inmediato.</string>
     <string name="dialog_confirm_publish_title">¿Listo para publicar?</string>
-    <string name="dialog_confirm_delete_page">Esta página se borrará y se enviará a la papelera</string>
     <string name="dialog_confirm_delete_post">Esta entrada se borrará y se enviará a la papelera</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas / páginas sin subir</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas sin subir</string>
@@ -617,7 +624,6 @@ Language: es
     <string name="login_text_otp_another">Mándame otro código.</string>
     <string name="enter_verification_code_sms">Hemos enviado un mensaje de texto al número de teléfono terminado en %s. Por favor, introduce el código de verificación del SMS.</string>
     <string name="error_generic_error">No se pudo llevar a cabo la operación</string>
-    <string name="error_media_recover_page">No fue posible subir el medio a esta página</string>
     <string name="error_media_recover_post">No fue posible subir el medio a esta entrada</string>
     <string name="image_size">Tamaño</string>
     <string name="uploading_subtitle_media_only_one">Queda 1 archivo</string>
@@ -705,7 +711,6 @@ Language: es
     <string name="notification_settings_master_status_on">Activos</string>
     <string name="max_video_resolution">Tamaño máximo de vídeo</string>
     <string name="max_thumbnail_px_size">Tamaño máximo de imagen</string>
-    <string name="error_page_does_not_exist">Esta página ya no existe</string>
     <string name="error_upload_post_media_param">Hubo un error al subir los medios a esta entrada: %s.</string>
     <string name="error_upload_post_param">Hubo un error al subir esta entrada: %s.</string>
     <string name="add_media_progress">Añadiendo medios</string>
@@ -1387,8 +1392,6 @@ Language: es
     <string name="notification_settings_item_other_account_emails_summary">Siempre mandamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
     <string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
     <string name="stats_insights_latest_post_summary">Sumario de la última entrada</string>
-    <string name="yesterday">Ayer</string>
-    <string name="days_ago">Hace %d días</string>
     <string name="connectionbar_no_connection">Sin conexión</string>
     <string name="button_publish">Publicar</string>
     <string name="button_edit">Editar</string>
@@ -1396,12 +1399,10 @@ Language: es
     <string name="button_preview">Vista previa</string>
     <string name="button_trash">Papelera</string>
     <string name="button_stats">Estadísticas</string>
-    <string name="page_deleted">Página borrada</string>
     <string name="button_back">Atrás</string>
     <string name="stats_no_activity_this_period">Sin actividad en este periodo</string>
     <string name="post_trashed">Entrada enviada a la papelera</string>
     <string name="post_deleted">Entrada borrada</string>
-    <string name="page_trashed">Página enviada a la papelera</string>
     <string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este sitio</string>
     <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
     <string name="undo">Deshacer</string>
@@ -1536,7 +1537,6 @@ Language: es
     <string name="ssl_certificate_details">Detalles</string>
     <string name="cab_selected">%d seleccionados</string>
     <string name="signing_out">Cerrando sesión…</string>
-    <string name="pages_empty_list">No hay páginas aún. ¿Por qué no creas una?</string>
     <string name="comment_reply_to_user">Responder a %s</string>
     <string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
     <string name="comment_trashed">El comentario se ha enviado a la papelera.</string>
@@ -1614,7 +1614,6 @@ Language: es
     <string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
     <string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
-    <string name="error_deleting_page">Ocurrió un error al borrar la página</string>
     <string name="wordpress_blog">Blog de WordPress</string>
     <string name="image_settings">Ajustes de imagen</string>
     <string name="local_changes">Cambios locales</string>
@@ -1768,7 +1767,6 @@ Language: es
     <string name="immediately">Inmediatamente</string>
     <string name="quickpress_add_alert_title">Nombre del Acceso Directo</string>
     <string name="settings">Ajustes</string>
-    <string name="today">Hoy</string>
     <string name="quickpress_add_error">El nombre del acceso directo no puede ser vacío.</string>
     <string name="quickpress_window_title">Selecciona un blog para el acceso directo a la Publicación Rápida</string>
     <string name="pages_private">Privado</string>
