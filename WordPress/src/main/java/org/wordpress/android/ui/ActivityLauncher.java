@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -36,7 +37,6 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
-import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -60,6 +60,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -68,11 +69,11 @@ import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -179,6 +180,44 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
+    }
+
+    public static void viewNotificationsInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_NOTIFICATIONS);
+        context.startActivity(intent);
+    }
+
+    public static void viewReaderInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
+        context.startActivity(intent);
+    }
+
+    public static void openEditorInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_EDITOR);
+        context.startActivity(intent);
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent statsIntent = new Intent(context, StatsActivity.class);
+        statsIntent.putExtra(WordPress.SITE, site);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(statsIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    private static Intent getMainActivityInNewStack(Context context) {
+        Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        return mainActivityIntent;
     }
 
     public static void viewSavedPostsListInReader(Context context) {

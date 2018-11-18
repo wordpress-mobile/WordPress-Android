@@ -80,9 +80,6 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -96,6 +93,7 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
@@ -106,7 +104,6 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_ME;
 import static org.wordpress.android.ui.main.WPMainNavigationView.PAGE_MY_SITE;
@@ -135,12 +132,9 @@ public class WPMainActivity extends AppCompatActivity implements
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
+    public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_ME = "show_me";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
-    public static final String DEEP_LINK_HOST_NOTIFICATIONS = "notifications";
-    public static final String DEEP_LINK_HOST_POST = "post";
-    public static final String DEEP_LINK_HOST_STATS = "stats";
-    public static final String DEEP_LINK_HOST_READ = "read";
 
     private WPMainNavigationView mBottomNav;
     private WPDialogSnackbar mQuickStartSnackbar;
@@ -249,8 +243,6 @@ public class WPMainActivity extends AppCompatActivity implements
                             ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
-                } else if (ActivityUtils.isDeepLinking(getIntent())) {
-                    handleAppBannerDeepLink();
                 } else {
                     if (mIsMagicLinkLogin) {
                         if (mAccountStore.hasAccessToken()) {
@@ -302,37 +294,6 @@ public class WPMainActivity extends AppCompatActivity implements
         }
     }
 
-    private void handleAppBannerDeepLink() {
-        Uri uri = getIntent().getData();
-        if (uri == null) {
-            return;
-        }
-        initSelectedSite();
-
-        String host = StringUtils.notNullStr(uri.getHost());
-        AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, host, uri);
-
-        switch (host) {
-            case DEEP_LINK_HOST_NOTIFICATIONS:
-                mBottomNav.setCurrentPosition(PAGE_NOTIFS);
-                break;
-            case DEEP_LINK_HOST_POST:
-                onNewPostButtonClicked();
-                break;
-            case DEEP_LINK_HOST_STATS:
-                switchToStatsTab();
-                break;
-            case DEEP_LINK_HOST_READ:
-                mBottomNav.setCurrentPosition(PAGE_READER);
-                break;
-        }
-    }
-
-    private void switchToStatsTab() {
-        mBottomNav.setCurrentPosition(PAGE_MY_SITE);
-        ActivityLauncher.viewBlogStats(getContext(), mSelectedSite);
-    }
-
     private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
@@ -363,6 +324,12 @@ public class WPMainActivity extends AppCompatActivity implements
                     break;
                 case ARG_ME:
                     mBottomNav.setCurrentPosition(PAGE_ME);
+                    break;
+                case ARG_EDITOR:
+                    if (mSelectedSite == null) {
+                        initSelectedSite();
+                    }
+                    onNewPostButtonClicked();
                     break;
             }
         } else {
