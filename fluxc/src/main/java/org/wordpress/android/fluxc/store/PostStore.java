@@ -702,6 +702,18 @@ public class PostStore extends Store {
             return;
         }
 
+        if (payload.origin == PostAction.RESTORE_POST) {
+            if (payload.isError()) {
+                OnPostChanged event = new OnPostChanged(
+                        new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+                event.error = payload.error;
+                emitChange(event);
+            } else {
+                restorePost(payload);
+            }
+            return;
+        }
+
         if (payload.isError()) {
             OnPostChanged event = new OnPostChanged(
                     new CauseOfOnPostChanged.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
@@ -735,21 +747,22 @@ public class PostStore extends Store {
 
     private void handleRestorePostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
-            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
-            onPostUploaded.error = payload.error;
-            emitChange(onPostUploaded);
+            CauseOfOnPostChanged causeOfChange =
+                    new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId());
+            OnPostChanged onPostRestored = new OnPostChanged(causeOfChange, 0);
+            onPostRestored.error = payload.error;
+            emitChange(onPostRestored);
         } else {
             if (payload.site.isUsingWpComRestApi()) {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
-                updatePost(payload.post, false);
-                emitChange(new OnPostUploaded(payload.post));
+                restorePost(payload.post);
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
                 // Update the post locally to reflect its uploaded status, but also request a fresh copy
                 // from the server to ensure local copy matches server
                 PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.RESTORE_POST);
             }
         }
     }
@@ -769,6 +782,16 @@ public class PostStore extends Store {
         }
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        emitChange(onPostChanged);
+
+        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
+                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
+    }
+
+    private void restorePost(PostModel post) {
+        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RestorePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
