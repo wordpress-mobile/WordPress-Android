@@ -658,19 +658,6 @@ public class PostStore extends Store {
         emitChange(event);
     }
 
-    private void handleRestorePostCompleted(RemotePostPayload payload) {
-        OnPostChanged event = new OnPostChanged(
-                new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
-
-        if (payload.isError()) {
-            event.error = payload.error;
-            emitChange(event);
-        } else {
-            updatePost(payload.post, false);
-            emitChange(event);
-        }
-    }
-
     private void handleFetchPostsCompleted(FetchPostsResponsePayload payload) {
         OnPostChanged onPostChanged;
 
@@ -726,6 +713,27 @@ public class PostStore extends Store {
     }
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
+        if (payload.isError()) {
+            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
+            onPostUploaded.error = payload.error;
+            emitChange(onPostUploaded);
+        } else {
+            if (payload.site.isUsingWpComRestApi()) {
+                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
+                // All we need to do is store it and emit OnPostChanged
+                updatePost(payload.post, false);
+                emitChange(new OnPostUploaded(payload.post));
+            } else {
+                // XML-RPC does not respond to new/edit post calls with the modified post
+                // Update the post locally to reflect its uploaded status, but also request a fresh copy
+                // from the server to ensure local copy matches server
+                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
+            }
+        }
+    }
+
+    private void handleRestorePostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
             onPostUploaded.error = payload.error;
