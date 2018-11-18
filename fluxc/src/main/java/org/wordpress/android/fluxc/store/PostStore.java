@@ -660,7 +660,7 @@ public class PostStore extends Store {
 
     private void handleRestorePostCompleted(RemotePostPayload payload) {
         OnPostChanged event = new OnPostChanged(
-                new CauseOfOnPostChanged.RestoredPost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+                new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
 
         if (payload.isError()) {
             event.error = payload.error;
