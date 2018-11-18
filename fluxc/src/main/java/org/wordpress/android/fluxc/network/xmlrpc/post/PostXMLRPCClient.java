@@ -92,26 +92,26 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                     }
                 }, new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 404 - "Invalid post ID."
-                        FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
-                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = postError;
-                        payload.origin = origin;
-                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
-                    }
-                });
+            @Override
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                // Possible non-generic errors:
+                // 404 - "Invalid post ID."
+                FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
+                // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                // Convert GenericErrorType to PostErrorType where applicable
+                PostError postError;
+                switch (error.type) {
+                    case AUTHORIZATION_REQUIRED:
+                        postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                        break;
+                    default:
+                        postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                }
+                payload.error = postError;
+                payload.origin = origin;
+                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+            }
+        });
 
         add(request);
     }
@@ -245,7 +245,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                         post.setIsLocalDraft(false);
                         post.setIsLocallyChanged(false);
-
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
@@ -318,14 +317,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-     public void restorePost(final PostModel post, final SiteModel site) {
-        List<Object> params = new ArrayList<>(4);
+    public void restorePost(final PostModel post, final SiteModel site) {
+        post.setStatus(PostStatus.PUBLISHED.toString());
+
+        Map<String, Object> contentStruct = postModelToContentStruct(post);
+
+        List<Object> params = new ArrayList<>(5);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
         params.add(post.getRemotePostId());
+        params.add(contentStruct);
 
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.UNTRASH_POST, params,
+        final XMLRPC method = XMLRPC.EDIT_POST;
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
@@ -337,9 +343,12 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
-                        // 404 - "Invalid post ID."
+                        // 403 - "Invalid post type"
+                        // 403 - "Invalid term ID" (invalid category or tag id)
+                        // 404 - "Invalid post ID." (editing only)
+                        // 404 - "Invalid attachment ID." (invalid featured image)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
                         // Convert GenericErrorType to PostErrorType where applicable
                         PostError postError;
                         switch (error.type) {
@@ -356,6 +365,45 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         request.disableRetries();
         add(request);
+//
+//
+//        List<Object> params = new ArrayList<>(4);
+//        params.add(site.getSelfHostedSiteId());
+//        params.add(site.getUsername());
+//        params.add(site.getPassword());
+//        params.add(post.getRemotePostId());
+//
+//        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.UNTRASH_POST, params,
+//                new Listener<Object>() {
+//                    @Override
+//                    public void onResponse(Object response) {
+//                        RemotePostPayload payload = new RemotePostPayload(post, site);
+//                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+//                    }
+//                },
+//                new BaseErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+//                        // Possible non-generic errors:
+//                        // 404 - "Invalid post ID."
+//                        RemotePostPayload payload = new RemotePostPayload(post, site);
+//                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+//                        // Convert GenericErrorType to PostErrorType where applicable
+//                        PostError postError;
+//                        switch (error.type) {
+//                            case AUTHORIZATION_REQUIRED:
+//                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+//                                break;
+//                            default:
+//                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+//                        }
+//                        payload.error = postError;
+//                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+//                    }
+//                });
+//
+//        request.disableRetries();
+//        add(request);
     }
 
     private @NotNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
