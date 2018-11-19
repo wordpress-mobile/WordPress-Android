@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-30 08:54:07+0000
+Translation-Revision-Date: 2018-11-14 10:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="history_detail_title">版本</string>
+    <string name="history_detail_button_previous">上一篇</string>
+    <string name="history_detail_button_next">下一篇</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">瞭解更多</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">不要再顯示</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">返回</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">編輯頁面</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">編輯文章</string>
+    <string name="dialog_gutenberg_compatibility_message_page">我們正在開發全新的 WordPress 編輯器。你仍然可以編輯這個頁面，但我們建議你預覽後再發表。</string>
+    <string name="dialog_gutenberg_compatibility_message">我們正在開發全新的 WordPress 編輯器。你仍然可以編輯這篇文章，但我們建議你預覽後再發表。</string>
+    <string name="dialog_gutenberg_compatibility_title">在你繼續之前</string>
+    <string name="media_space_used">已使用 %1$s</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">請輸入 WordPress.com 或與 Jetpack 連線的自助託管 WordPress 網站</string>
     <string name="history_loading_revision">正在載入修訂版本</string>
     <string name="history_loaded_revision">修訂版本已經載入</string>
-    <string name="history_load_dialog_title">載入修訂版本</string>
-    <string name="history_load_dialog_message">你想要從 %1$s 載入在 %2$s 建立的修訂版本嗎？</string>
     <string name="history_load_dialog_button_positive">載入</string>
     <string name="history_footer_post">於 %2$s 時，在 %1$s 建立的文章</string>
     <string name="history_footer_page">於 %2$s 時，在 %1$s 建立的頁面</string>
@@ -179,10 +189,14 @@ Language: zh_TW
     <string name="support_contact_email">聯絡電子郵件</string>
     <string name="application_log_button">應用程式記錄檔</string>
     <string name="my_tickets">我的票證</string>
+    <string name="activity_log_rewind_dialog_message">確定要將你的網站還原至 %1$s 的 %2$s？這將移除在該時間點之後所建立或變更的全部內容和選項。</string>
     <string name="activity_log_rewind_site">還原網站</string>
     <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
+    <string name="activity_log_currently_restoring_message">正在還原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
+    <string name="activity_log_rewind_finished_snackbar_message">已成功還原你的網站\n已還原至 %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">正在還原網站\n正在還原至 %1$s %2$s</string>
     <string name="activity_log_button">活動記錄動作按鈕</string>
     <string name="plugin_auto_managed">自動管理</string>
     <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。(不過，我們正努力提供此功能！)</string>
@@ -201,6 +215,7 @@ Language: zh_TW
     <string name="email_address_login_title">電子郵件地址登入</string>
     <string name="alternatively">替代作法：</string>
     <string name="reader_empty_saved_posts_description">點選「%s」即可將文章儲存至你的清單。</string>
+    <string name="reader_empty_saved_posts_title">尚未儲存任何文章！</string>
     <string name="reader_bookmark_snack_title">文章已儲存</string>
     <string name="reader_bookmark_snack_btn">檢視全部</string>
     <string name="reader_btn_bookmarked">已儲存</string>
@@ -342,7 +357,9 @@ Language: zh_TW
     <string name="jetpack_connection_failed_with_reason">無法連結至 Jetpack：%s</string>
     <string name="jetpack_already_connected_toast">你已連結至 Jetpack</string>
     <string name="menu_undo_snackbar_action">復原</string>
+    <string name="menu_visual_mode_done_snackbar">已切換至「視覺化」模式</string>
     <string name="menu_visual_mode">視覺化模式</string>
+    <string name="menu_html_mode_done_snackbar">已切換至「HTML」模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
     <string name="menu_publish_now">立即發表</string>
@@ -391,6 +408,7 @@ Language: zh_TW
     <string name="sharing_disabled_description">由於你的「分享 Jetpack」模組已停用，因此無法存取分享設定。</string>
     <string name="sharing_disabled">「分享」模組已停用</string>
     <string name="version_with_name_param">版本 %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="publisher_with_company_param">發表者：%s</string>
     <string name="async_promo_publish_now">立即發表</string>
     <string name="notification_sound_has_invalid_path">所選音效的路徑無效。請選擇另一個。</string>
@@ -432,6 +450,8 @@ Language: zh_TW
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">無法上傳 1 篇文章和 1 個檔案</string>
     <string name="untitled_in_parentheses">(未命名)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s，%2$s</string>
+    <string name="latitude_longitude">%1$f，%2$f</string>
     <string name="site_creation_epilogue_write">撰寫第一篇文章</string>
     <string name="site_creation_epilogue_configure">設定</string>
     <string name="site_creation_epilogue_congrats">恭喜！\n你的網站已經準備就緒。</string>
@@ -526,6 +546,7 @@ Language: zh_TW
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack 會最佳化你的圖片，並從與訪客距離最近的伺服器提供圖片。使用我們的全球內容傳遞網路可大幅提升網站的載入速度。</string>
     <string name="site_settings_serve_images_from_our_servers">由我們的伺服器提供圖片</string>
     <string name="site_settings_speed_up_your_site">加快網站的速度</string>
+    <string name="stats_jetpack_connection_setup">安裝 Jetpack</string>
     <string name="plugin_chevron_icon_content_description">切換文字</string>
     <string name="plugin_info_your_version">你的 WordPress 版本</string>
     <string name="plugin_info_requires_version">需要的 WordPress 版本</string>
@@ -555,6 +576,7 @@ Language: zh_TW
     <string name="site_settings_tags_hint">管理你的網站標籤</string>
     <string name="dlg_saving_tag">儲存中</string>
     <string name="dlg_deleting_tag">正在刪除</string>
+    <string name="dlg_confirm_delete_tag">是否要永久刪除「%s」標籤？</string>
     <string name="error_tag_exists">已存在使用此名稱的標籤</string>
     <string name="add_new_tag">新增標籤</string>
     <string name="tag_description_hint">說明</string>
@@ -713,6 +735,7 @@ Language: zh_TW
     <string name="error_upload_page_media_param">於此頁面中上傳媒體時發生錯誤：%s。</string>
     <string name="error_upload_page_param">上傳此頁面時發生錯誤：%s。</string>
     <string name="async_promo_link">此流程如何運作？</string>
+    <string name="async_promo_description_schedule_post">你現在只要退出編輯器，文章就會儲存並在幕後排程！馬上試用看看！</string>
     <string name="editor_uploading_post">你的文章正在上傳</string>
     <string name="uploading_media">正在上傳媒體…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">你確定嗎？刪除此文章也會取消媒體上傳作業。</string>
@@ -874,6 +897,7 @@ Language: zh_TW
     <string name="tabbar_accessibility_label_my_site">我的網站。檢視和管理你的網站，包括統計資料。</string>
     <string name="my_site_btn_sharing">分享</string>
     <string name="button_not_now">現在不要</string>
+    <string name="media_error_internal_server_error">上傳錯誤。請試著在應用程式設定中變更「最佳化圖片」</string>
     <string name="media_downloading">將媒體儲存到此裝置</string>
     <string name="error_media_save">無法儲存媒體</string>
     <string name="editor_draft_saved_locally">草稿已儲存於裝置</string>
@@ -905,6 +929,7 @@ Language: zh_TW
     <string name="start_over_email_body">我想重新開始設計網站 %s</string>
     <string name="start_over_email_subject">重新開始設計網站 %s</string>
     <string name="site_picker_remove_site_error">移除網站時發生錯誤，請稍後再試</string>
+    <string name="editor_post_saved_locally_failed_media">此文章的媒體上傳作業失敗，但已儲存到本機</string>
     <string name="sure_to_remove_account">從應用程式移除此網站？</string>
     <string name="photo_picker_title">選擇照片</string>
     <string name="error_publish_no_network">裝置已離線。變更已儲存到本機。</string>
@@ -917,6 +942,7 @@ Language: zh_TW
     <string name="media_encoder_quality_85">中</string>
     <string name="media_encoder_quality_80">低</string>
     <string name="media_upload_state_uploaded">已上傳</string>
+    <string name="media_upload_state_failed">上傳失敗</string>
     <string name="media_upload_state_deleted">已刪除</string>
     <string name="media_upload_state_deleting">正在刪除</string>
     <string name="media_upload_state_uploading">正在上傳</string>
@@ -932,6 +958,7 @@ Language: zh_TW
     <string name="error_media_refresh_no_connection">需要網路連線，才能重新整理媒體庫</string>
     <string name="error_media_unauthorized">你沒有查看或編輯媒體的權限</string>
     <string name="error_media_not_found">找不到媒體</string>
+    <string name="error_media_insufficient_fs_permissions">裝置媒體拒絕讀取權限</string>
     <string name="site_settings_optimize_images">將圖片最佳化</string>
     <string name="no_site_error">無法連線至 WordPress 網站。此地址沒有有效的\nWordPress 網站。請檢查你輸入的網站地址 (URL)。</string>
     <string name="media_generic_error">發生媒體錯誤</string>
@@ -1013,6 +1040,8 @@ Language: zh_TW
     <string name="editor_failed_uploads_switch_html">部分媒體上傳失敗。在此狀態下，你無法\n切換至 HTML 模式。要移除所有上傳失敗的項目並繼續嗎？</string>
     <string name="image_thumbnail">縮圖</string>
     <string name="visual_editor">視覺化編輯器</string>
+    <string name="format_bar_description_html">HTML</string>
+    <string name="format_bar_description_more">閱讀更多</string>
     <string name="format_bar_description_strike">刪除線</string>
     <string name="format_bar_description_underline">底線</string>
     <string name="format_bar_description_italic">斜體</string>
@@ -1048,6 +1077,8 @@ Language: zh_TW
     <string name="send_link">傳送連結</string>
     <string name="label_clear_search_history">清除搜尋記錄</string>
     <string name="dlg_confirm_clear_search_history">清除搜尋記錄？</string>
+    <string name="reader_empty_search_description">在你的語言中找不到與 %s 相關的結果</string>
+    <string name="reader_hint_post_search">搜尋 WordPress</string>
     <string name="reader_title_related_post_detail">相關文章</string>
     <string name="preview_screen_links_disabled">預覽畫面上的連結已停用</string>
     <string name="draft_explainer">這篇文章只是草稿，尚未發表</string>
@@ -1089,6 +1120,7 @@ Language: zh_TW
     <string name="delete_site_hint">刪除網站</string>
     <string name="export_site_hint">將網站匯出為 XML 檔案</string>
     <string name="primary_domain">主要網域</string>
+    <string name="error_deleting_site_summary">刪除網站時發生錯誤。請聯絡支援團隊，尋求進一步協助。</string>
     <string name="error_deleting_site">刪除網站時發生錯誤</string>
     <string name="site_settings_export_content_title">匯出內容</string>
     <string name="confirm_delete_site_prompt">請在下方欄位中輸入 %1$s 以確認。系統將永久刪除你的網站。</string>
@@ -1102,6 +1134,7 @@ Language: zh_TW
     <string name="editor_remove_failed_uploads">移除失敗的上傳項目</string>
     <string name="editor_toast_failed_uploads">部分媒體上傳失敗。在此狀態中，你無法儲存或發表\n自己的文章。是否要移除所有失敗的媒體？</string>
     <string name="site_settings_advanced_header">進階</string>
+    <string name="comments_empty_list_filtered_pending">無待審核的迴響</string>
     <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
     <string name="alignment_center">置中</string>
     <string name="post_format_video">影片</string>
@@ -1158,6 +1191,7 @@ Language: zh_TW
     <string name="mnu_comment_delete_permanently">刪除</string>
     <string name="mnu_comment_untrash">還原</string>
     <string name="comment_deleted_permanently">留言已刪除</string>
+    <string name="comments_empty_list_filtered_spam">沒有垃圾留言</string>
     <string name="comment_status_all">全部</string>
     <string name="could_not_load_page">無法載入頁面</string>
     <string name="off">關閉</string>
@@ -1308,7 +1342,13 @@ Language: zh_TW
     <string name="reader_label_gap_marker">載入更多文章</string>
     <string name="notifications_no_search_results">沒有網站符合「%s」</string>
     <string name="search_sites">搜尋網站</string>
+    <string name="notifications_empty_view_reader">前往讀取器</string>
+    <string name="notifications_empty_action_followers_likes">接收通知：在已閱讀的文章上留言</string>
+    <string name="notifications_empty_action_comments">加入討論：在關注的網誌文章上留言</string>
+    <string name="notifications_empty_action_unread">再度展開討論：撰寫新文章</string>
     <string name="notifications_empty_action_all">動起來吧！立即在你關注的網誌文章上留言。</string>
+    <string name="notifications_empty_comments">尚未有留言</string>
+    <string name="notifications_empty_unread">全部都是最新版本！</string>
     <string name="stats_widget_error_jetpack_no_blogid">請先存取應用程式中的統計資料，稍後再試著新增小工具</string>
     <string name="stats_widget_error_readd_widget">請移除小工具，然後再新增一次</string>
     <string name="stats_widget_error_no_visible_blog">在未開放網誌的情況下無法存取統計資料</string>
@@ -1331,6 +1371,7 @@ Language: zh_TW
     <string name="reader_short_like_count_none">讚</string>
     <string name="reader_label_follow_count">%,d 個關注者</string>
     <string name="reader_short_like_count_one">1 個讚</string>
+    <string name="reader_menu_tags">編輯標籤和網站</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="local_draft_explainer">這篇文章是儲存在本機上的草稿，尚未發表</string>
     <string name="local_changes_explainer">這篇文章的本機存檔經過變更，變更內容尚未發表</string>
@@ -1357,6 +1398,8 @@ Language: zh_TW
     <string name="stats_no_activity_this_period">此期間沒有任何活動</string>
     <string name="post_trashed">文章已移至垃圾桶</string>
     <string name="post_deleted">文章已刪除</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網站的權限</string>
+    <string name="reader_toast_err_follow_blog_not_found">找不到這個網站</string>
     <string name="undo">復原</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
     <string name="stats_insights_most_popular_percent_views">瀏覽次數：%1$d%%</string>
@@ -1419,11 +1462,13 @@ Language: zh_TW
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="stats_recent_weeks">最近幾星期</string>
     <string name="stats_average_per_day">每天平均</string>
+    <string name="reader_empty_posts_in_blog">這個網站沒有內容</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
     <string name="stats_period">期間</string>
     <string name="stats_overall">整體</string>
     <string name="stats_total">總計</string>
+    <string name="post_uploading">正在上傳文章</string>
     <string name="stats_visitors">訪客</string>
     <string name="stats_views">點閱數</string>
     <string name="stats_timeframe_years">年</string>
@@ -1507,14 +1552,25 @@ Language: zh_TW
     <string name="reader_empty_posts_in_tag">沒有任何含有此標籤的文章</string>
     <string name="reader_empty_comments">尚未有留言</string>
     <string name="browse_our_faq_button">瀏覽常見問題集</string>
+    <string name="reader_menu_block_blog">封鎖此網站</string>
+    <string name="reader_toast_blog_blocked">將不再顯示此網站的文章</string>
+    <string name="reader_toast_err_block_blog">無法封鎖此網站</string>
     <string name="reader_toast_err_generic">無法執行此動作</string>
     <string name="contact_us">聯絡我們</string>
     <string name="schedule_verb">排程</string>
     <string name="update_verb">更新</string>
+    <string name="reader_empty_recommended_blogs">沒有推薦的網站</string>
+    <string name="reader_toast_err_unfollow_blog">無法取消關注此網站</string>
+    <string name="reader_toast_err_follow_blog">無法關注此網站</string>
+    <string name="reader_toast_err_already_follow_blog">你已經關注此網站</string>
+    <string name="reader_toast_err_get_blog_info">無法顯示此網站</string>
+    <string name="reader_label_followed_blog">已關注的網站</string>
     <string name="reader_hint_add_tag_or_url">輸入要關注的 URL 或標籤</string>
     <string name="reader_page_followed_blogs">關注的網站</string>
     <string name="reader_page_followed_tags">關注的標籤</string>
+    <string name="reader_title_subs">標籤與網站</string>
     <string name="reader_title_tag_preview">讀者標籤</string>
+    <string name="reader_title_blog_preview">讀者網站</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
     <string name="forgot_password">忘記密碼？</string>
@@ -1531,6 +1587,7 @@ Language: zh_TW
     <string name="error_refresh_comments">目前無法重新整理回應</string>
     <string name="error_refresh_pages">目前無法重新整理頁面</string>
     <string name="error_refresh_posts">目前無法重新整理文章</string>
+    <string name="error_deleting_post">刪除文章時發生錯誤</string>
     <string name="notifications_empty_list">沒有通知</string>
     <string name="invalid_url_message">檢查輸入的 URL 是否有效</string>
     <string name="stats_bar_graph_empty">沒有可用的統計</string>
@@ -1589,7 +1646,10 @@ Language: zh_TW
     <string name="comment_status_spam">垃圾</string>
     <string name="comment_status_unapproved">審核中</string>
     <string name="comment_status_approved">已核准</string>
+    <string name="delete_page">是否要刪除頁面？</string>
+    <string name="delete_post">是否要刪除文章？</string>
     <string name="post_settings">文章設定</string>
+    <string name="file_not_found">找不到可上傳的檔案。該檔案是否已刪除或移走？</string>
     <string name="horizontal_alignment">水平對齊</string>
     <string name="local_draft">本機草稿</string>
     <string name="page_settings">頁面設定</string>
@@ -1631,6 +1691,7 @@ Language: zh_TW
     <string name="reader_btn_follow">追蹤</string>
     <string name="reader_btn_share">分享</string>
     <string name="reader_untitled_post">（未命名）</string>
+    <string name="comments_empty_list">尚未有留言</string>
     <string name="empty_list_default">清單是空的</string>
     <string name="stats_totals_plays">播放次數</string>
     <string name="stats_totals_clicks">點擊率</string>
@@ -1701,7 +1762,9 @@ Language: zh_TW
     <string name="settings">設定</string>
     <string name="quickpress_add_error">捷徑名稱不能為空</string>
     <string name="quickpress_window_title">選擇用於 QuickPress 捷徑的網誌</string>
+    <string name="pages_private">私人</string>
     <string name="categories">分類</string>
+    <string name="tags_separate_with_commas">以逗號分隔標籤</string>
     <string name="title">標題</string>
     <string name="dlg_deleting_comments">刪除留言</string>
     <string name="sdcard_title">需要 SD 卡</string>

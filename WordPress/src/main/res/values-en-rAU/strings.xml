@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-24 00:48:49+0000
+Translation-Revision-Date: 2018-11-07 11:06:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="history_detail_title">Revision</string>
+    <string name="history_detail_button_previous">Previous</string>
+    <string name="history_detail_button_next">Next</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Learn more</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Don\'t show again</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Go Back</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edit Page</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edit Post</string>
+    <string name="dialog_gutenberg_compatibility_message_page">We are working on the brand new WordPress editor. You can still edit this page, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_message">We are working on the brand new WordPress editor. You can still edit this post, but we recommend previewing it before publishing.</string>
+    <string name="dialog_gutenberg_compatibility_title">Before you continue</string>
+    <string name="media_space_used">%1$s used</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_loaded_revision">Revision loaded</string>
-    <string name="history_load_dialog_title">Load Revision</string>
-    <string name="history_load_dialog_message">Do you want to load the revision from %1$s at %2$s?</string>
     <string name="history_load_dialog_button_positive">Load</string>
     <string name="history_footer_post">Post Created on %1$s at %2$s</string>
     <string name="history_footer_page">Page Created on %1$s at %2$s</string>

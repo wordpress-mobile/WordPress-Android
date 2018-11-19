@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-29 12:54:06+0000
+Translation-Revision-Date: 2018-11-14 13:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="history_detail_title">Herziening</string>
+    <string name="history_detail_button_previous">Vorige</string>
+    <string name="history_detail_button_next">Volgende</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Meer informatie</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Niet meer tonen</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Terugkeren</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Pagina bewerken</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Bericht bewerken</string>
+    <string name="dialog_gutenberg_compatibility_message_page">We werken aan een gloednieuwe WordPress-editor. Je kunt deze pagina nog steeds bewerken, maar we raden je aan een voorbeeld te bekijken voordat je deze publiceert.</string>
+    <string name="dialog_gutenberg_compatibility_message">We werken aan een gloednieuwe WordPress-editor. Je kunt dit bericht nog steeds bewerken, maar we raden je aan een voorbeeld te bekijken voordat je het publiceert.</string>
+    <string name="dialog_gutenberg_compatibility_title">Voordat je doorgaat</string>
+    <string name="media_space_used">%1$s gebruikt</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Voer een WordPress.com-site of een aan Jetpack gekoppelde zelf-gehoste WordPress-site in</string>
     <string name="history_loading_revision">Bezig met laden revisie</string>
     <string name="history_loaded_revision">Revisie geladen</string>
-    <string name="history_load_dialog_title">Revisie laden</string>
-    <string name="history_load_dialog_message">Wil je de revisie van %1$s om %2$s laden?</string>
     <string name="history_load_dialog_button_positive">Laden</string>
     <string name="history_footer_post">Bericht aangemaakt op %1$s om %2$s</string>
     <string name="history_footer_page">Pagina aangemaakt op %1$s om %2$s</string>
@@ -179,10 +189,14 @@ Language: nl
     <string name="support_contact_email">E-mail voor contact</string>
     <string name="application_log_button">Toepassingslog</string>
     <string name="my_tickets">Mijn tickets</string>
+    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugbrengen naar %1$s op %2$s? Hierdoor wordt alle inhoud en worden alle opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
     <string name="activity_log_rewind_site">Site terugbrengen</string>
     <string name="activity_log_currently_restoring_message_no_dates">Bezig met terugzetten</string>
+    <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Het herstellen van je site is geslaagd</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Het herstellen van je site is geslaagd\nTeruggezet naar %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Je site wordt hersteld\nTerugzetten naar %1$s %2$s</string>
     <string name="activity_log_button">Actieknop Activiteitenlog</string>
     <string name="plugin_auto_managed">Automatisch beheerd</string>
     <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op deze device beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten. (Nog niet, tenminste! We zijn ermee bezig.)</string>
@@ -192,6 +206,7 @@ Language: nl
     <string name="comment_read_source_post">Lees het oorspronkelijke bericht</string>
     <string name="sites">Sites</string>
     <string name="reader_empty_saved_posts_description">Tik op %s om een bericht op te slaan in je lijst.</string>
+    <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
     <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
     <string name="reader_bookmark_snack_btn">Alles weergeven</string>
     <string name="reader_btn_bookmarked">Opgeslagen</string>
@@ -298,6 +313,7 @@ Language: nl
     <string name="stats_tab_tap_content_description">%s wordt getoond</string>
     <string name="stats_legend">legenda statistiekengrafiek</string>
     <string name="fab_create_desc">aanmaken</string>
+    <string name="fab_add_tag_desc">Tag aanmaken</string>
     <string name="stats_bar_week_desc">Week van %s</string>
     <string name="stats_bar_date_value_desc">%s, %d weergaven</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -333,7 +349,9 @@ Language: nl
     <string name="jetpack_connection_failed_with_reason">Verbinden met Jetpack mislukt: %s</string>
     <string name="jetpack_already_connected_toast">Je bent al verbonden met Jetpack</string>
     <string name="menu_undo_snackbar_action">ONGEDAAN MAKEN</string>
+    <string name="menu_visual_mode_done_snackbar">Overgeschakeld op de visuele modus</string>
     <string name="menu_visual_mode">Visuele modus</string>
+    <string name="menu_html_mode_done_snackbar">Overgeschakeld op de HTML-modus</string>
     <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Voorbeeld bekijken</string>
     <string name="menu_publish_now">Nu publiceren</string>
@@ -472,6 +490,7 @@ Language: nl
     <string name="plugin_install">Installeer</string>
     <string name="my_site_add_new_site">Voeg nieuwe site toe</string>
     <string name="my_site_create_new_site">Creëer een nieuwe site voor jouw bedrijf, magazine, persoonlijke blog of verbind een bestaande WordPress installatie. </string>
+    <string name="stats_jetpack_connection_setup">Jetpack installeren</string>
     <string name="plugin_chevron_icon_content_description">Tekst in-/uitschakelen</string>
     <string name="plugin_info_your_version">Jouw WordPress versie</string>
     <string name="plugin_info_requires_version">Vereist WordPress versie</string>
@@ -500,6 +519,7 @@ Language: nl
     <string name="site_settings_tags_hint">Beheer de tags van je site</string>
     <string name="dlg_saving_tag">Opslaan</string>
     <string name="dlg_deleting_tag">Verwijderen</string>
+    <string name="dlg_confirm_delete_tag">Tag \'%s\' permanent verwijderen?</string>
     <string name="error_tag_exists">Een tag met deze naam bestaat al</string>
     <string name="add_new_tag">Voeg nieuwe tag toe</string>
     <string name="tag_description_hint">Beschrijving</string>
@@ -658,6 +678,8 @@ Language: nl
     <string name="error_upload_page_media_param">Er is een fout opgetreden bij het uploaden van media in deze pagina: %s.</string>
     <string name="error_upload_page_param">Er is een fout opgetreden bij het uploaden van deze pagina: %s.</string>
     <string name="async_promo_link">Hoe werkt het?</string>
+    <string name="async_promo_description_schedule_post">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en ingepland! Probeer het ook eens!</string>
+    <string name="async_promo_title_publish">Vol vertrouwen publiceren</string>
     <string name="editor_uploading_post">Je bericht wordt geüpload</string>
     <string name="uploading_media">Media uploaden…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
@@ -888,6 +910,7 @@ Language: nl
     <string name="media_upload_error">Er is een uploadfout opgetreden</string>
     <string name="retry">Opnieuw proberen</string>
     <string name="confirm">Bevestigen</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Kan geen verbinding maken. Er is een 403-fout opgetreden tijdens onze poging om het XMLRPC-eindpunt van je\n site te openen. De app heeft dat nodig om met je site te communiceren. Neem contact op met je host voor een oplossing voor\n dit probleem.</string>
     <string name="xmlrpc_post_blocked_error">Kan geen verbinding maken. Je host blokkeert POST-aanvragen en de app heeft\n dat nodig om met je site te communiceren. Neem contact op met je host om dit probleem op te lossen.</string>
     <string name="reader_hint_search_followed_sites">Zoek gevolgde sites</string>
     <string name="visual_editor_disabled">Visuele editor uitgeschakeld</string>
@@ -1003,6 +1026,7 @@ Language: nl
     <string name="send_link">Stuur link</string>
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
+    <string name="reader_empty_search_description">Geen resultaten gevonden voor %s in je taal.</string>
     <string name="reader_title_related_post_detail">Gerelateerd bericht</string>
     <string name="preview_screen_links_disabled">Links uitgeschakeld op voorbeeldscherm</string>
     <string name="draft_explainer">Dit bericht is een concept dat niet is gepubliceerd</string>
@@ -1044,6 +1068,7 @@ Language: nl
     <string name="delete_site_hint">Site verwijderen</string>
     <string name="export_site_hint">Exporteer je site naar een XML-bestand</string>
     <string name="primary_domain">Primair domein</string>
+    <string name="error_deleting_site_summary">Er is een fout opgetreden bij het verwijderen van je site. Neem contact op met de ondersteuning voor meer hulp.</string>
     <string name="error_deleting_site">Fout bij verwijderen site</string>
     <string name="site_settings_export_content_title">Content exporteren</string>
     <string name="confirm_delete_site_prompt">Voer %1$s in het onderstaande veld in om dit te bevestigen. Je site wordt dan voorgoed verwijderd.</string>
@@ -1057,6 +1082,9 @@ Language: nl
     <string name="editor_remove_failed_uploads">Mislukte uploads verwijderen</string>
     <string name="editor_toast_failed_uploads">Enkele media konden niet worden geüpload. Het opslaan of publiceren\n van je bericht is niet mogelijk in deze staat. Wil je alle mislukte uploads verwijderen?</string>
     <string name="site_settings_advanced_header">Geavanceerd</string>
+    <string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
+    <string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
+    <string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
     <string name="xmlrpc_missing_method_error">Kon geen verbinding maken. Vereiste XML-RPC-methoden ontbreken op de server.</string>
     <string name="alignment_center">Midden</string>
     <string name="post_format_video">Video</string>
@@ -1115,6 +1143,7 @@ Language: nl
     <string name="mnu_comment_delete_permanently">Verwijderen</string>
     <string name="mnu_comment_untrash">Herstellen</string>
     <string name="comment_deleted_permanently">Reactie verwijderd</string>
+    <string name="comments_empty_list_filtered_spam">Geen spamreacties</string>
     <string name="comment_status_all">Alle</string>
     <string name="could_not_load_page">Kan pagina niet laden</string>
     <string name="off">Uit</string>
@@ -1267,7 +1296,13 @@ Language: nl
     <string name="reader_label_gap_marker">Meer berichten laden</string>
     <string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
     <string name="search_sites">Zoek sites</string>
+    <string name="notifications_empty_view_reader">Ga naar Reader</string>
+    <string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen</string>
+    <string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt</string>
+    <string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht</string>
     <string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
+    <string name="notifications_empty_comments">Nog geen reacties</string>
+    <string name="notifications_empty_unread">Je bent helemaal up-to-date!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Bekijk de statistieken in de app en probeer later de widget toe te voegen</string>
     <string name="stats_widget_error_readd_widget">Verwijder de widget en voeg deze opnieuw in</string>
     <string name="stats_widget_error_no_visible_blog">Je hebt geen toegang tot de statistieken zonder een zichtbare blog</string>
@@ -1290,6 +1325,7 @@ Language: nl
     <string name="reader_short_like_count_none">Like</string>
     <string name="reader_label_follow_count">%,d volgers</string>
     <string name="reader_short_like_count_one">1 like</string>
+    <string name="reader_menu_tags">Tags en sites bijwerken</string>
     <string name="reader_title_post_detail">Reader-bericht</string>
     <string name="local_draft_explainer">Dit bericht is een lokaal concept dat niet is gepubliceerd</string>
     <string name="local_changes_explainer">Dit bericht bevat lokale wijzigingen die niet zijn gepubliceerd</string>
@@ -1598,6 +1634,7 @@ Language: nl
     <string name="reader_btn_follow">Volg</string>
     <string name="reader_btn_share">Delen</string>
     <string name="reader_untitled_post">(geen titel)</string>
+    <string name="comments_empty_list">Nog geen reacties</string>
     <string name="empty_list_default">Deze lijst is leeg</string>
     <string name="stats_totals_plays">Afgespeeld</string>
     <string name="stats_totals_clicks">Kliks</string>
@@ -1668,6 +1705,7 @@ Language: nl
     <string name="settings">Instellingen</string>
     <string name="quickpress_add_error">Snelkoppelingsnaam kan niet leeg zijn.</string>
     <string name="quickpress_window_title">Selecteer een blog voor de QuickPress snelkoppeling</string>
+    <string name="pages_private">Privé</string>
     <string name="categories">Categorieën </string>
     <string name="tags_separate_with_commas">Scheid tags met komma\'s</string>
     <string name="title">Titel</string>
