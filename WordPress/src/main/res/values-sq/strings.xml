@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 20:34:20+0000
+Translation-Revision-Date: 2018-11-10 10:30:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="history_detail_title">Rishikim</string>
+    <string name="history_detail_button_previous">I mëparshmi</string>
+    <string name="history_detail_button_next">Pasuesi</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Mësoni më tepër</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Mos e shfaq sërish</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Kthehuni Mbrapsht</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Përpunoni Faqen</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Përpunoni Postimin</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Po punojmë për një përpunues të ri fringo WordPress. Mundeni ende ta përpunoni këtë faqe, por këshillojmë t’i bëni një paraparje përpara se ta botoni.</string>
+    <string name="dialog_gutenberg_compatibility_message">Po punojmë për një përpunues të ri fringo WordPress. Mundeni ende ta përpunoni këtë postim, por këshillojmë t’i bëni një paraparje përpara se ta botoni.</string>
+    <string name="dialog_gutenberg_compatibility_title">Përpara se të vazhdoni</string>
+    <string name="media_space_used">%1$s të përdorura</string>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">Ju lutemi, jepni një sajt WordPress.com ose një WordPress që e strehoni diku dhe që është i lidhur me Jetpack-un</string>
+    <string name="history_loading_revision">Po ngarkohet rishikimi</string>
+    <string name="history_loaded_revision">Rishikimi u ngarkua</string>
+    <string name="history_load_dialog_button_positive">Ngarkoje</string>
+    <string name="history_footer_post">Postim i Krijuar në %1$s në %2$s</string>
+    <string name="history_footer_page">Faqe e Krijuar në %1$s në %2$s</string>
+    <string name="history_empty_title">Ende pa historik</string>
+    <string name="history_empty_subtitle_post">Kur bëni ndryshime te postimi juaj, këtu do të jeni në gjendje të shihni historikun</string>
+    <string name="history_empty_subtitle_page">Kur bëni ndryshime te faqja juaj, këtu do të jeni në gjendje të shihni historikun</string>
+    <string name="description_user">Avatar përdoruesi</string>
     <string name="async_promo_description_schedule_page">Tani mund të dilni nga përpunuesi dhe faqja juaj do të ruhet dhe planifikohet për botim në prapaskenë! Pa provojeni!</string>
     <string name="async_promo_description_publish_post">Tani mund të dilni nga përpunuesi dhe postimi juaj do të ruhet dhe botohet në prapaskenë! Pa provojeni!</string>
     <string name="async_promo_description_publish_page">Tani mund të dilni nga përpunuesi dhe faqja juaj do të ruhet dhe botohet në prapaskenë! Pa provojeni!</string>

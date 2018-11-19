@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-30 12:54:07+0000
+Translation-Revision-Date: 2018-11-14 13:54:08+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="history_detail_title">مراجعة</string>
+    <string name="history_detail_button_previous">السابق</string>
+    <string name="history_detail_button_next">التالي</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">تعرف على المزيد</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">عدم الإظهار مرة أخرى</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">الرجوع إلى الخلف</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">تحرير الصفحة</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">تحرير المقالة</string>
+    <string name="dialog_gutenberg_compatibility_message_page">نحن نعمل على محرر وردبرس الجديد تمامًا. لا يزال بإمكانك تحرير هذه الصفحة، ولكننا نوصي بمعاينتها قبل النشر.</string>
+    <string name="dialog_gutenberg_compatibility_message">نحن نعمل على محرر وردبرس الجديد تمامًا. لا يزال بإمكانك تحرير هذه المقالة، ولكننا نوصي بمعاينتها قبل النشر.</string>
+    <string name="dialog_gutenberg_compatibility_title">قبل المتابعة</string>
+    <string name="media_space_used">تم استخدام %1$s</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">يرجى إدخال موقع وردبرس.كوم أو موقع وردبرس مُستضاف ذاتيًّا ومتصل بـ Jetpack</string>
     <string name="history_loading_revision">جارٍ تحميل المراجعة</string>
     <string name="history_loaded_revision">تم تحميل المراجعة</string>
-    <string name="history_load_dialog_title">تحميل المراجعة</string>
-    <string name="history_load_dialog_message">هل ترغب في تحميل المراجعة من %1$s في %2$s؟</string>
     <string name="history_load_dialog_button_positive">تحميل</string>
     <string name="history_footer_post">تم إنشاء المقالة بتاريخ %1$s في تمام %2$s</string>
     <string name="history_footer_page">تم إنشاء الصفحة بتاريخ %1$s في تمام %2$s</string>
@@ -171,8 +181,10 @@ Language: ar
     <string name="my_tickets">تذاكري</string>
     <string name="activity_log_rewind_site">إرجاع الموقع</string>
     <string name="activity_log_currently_restoring_message_no_dates">الإرجاع قيد التقدّم</string>
+    <string name="activity_log_currently_restoring_message">الإرجاع إلى %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
+    <string name="activity_log_rewind_finished_snackbar_message">تمت استعادة موقعك بنجاح\nتم الإرجاع إلى %1$s %2$s</string>
     <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
     <string name="plugin_auto_managed">إدارة تلقائية</string>
     <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تكون متاحة إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة مع الأجهزة الأخرى. (ومع ذلك! نحن نعمل على إيجاد حل لهذا الأمر.)</string>
@@ -288,6 +300,7 @@ Language: ar
     <string name="stats_tab_tap_content_description">إظهار %s</string>
     <string name="stats_legend">وسيلة إيضاح الرسم البياني للإحصاءات</string>
     <string name="fab_create_desc">إنشاء</string>
+    <string name="fab_add_tag_desc">إنشاء وسم</string>
     <string name="stats_bar_week_desc">أسبوع %s</string>
     <string name="stats_bar_date_value_desc">%s، %d من المشاهدات</string>
     <string name="stats_bar_date_value_type_desc">%s، %d %s</string>
@@ -412,6 +425,8 @@ Language: ar
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">لم يتم رفع مقالة واحدة مع ملف واحد</string>
     <string name="untitled_in_parentheses">(بدون عنوان)</string>
     <string name="at_username">\@%s</string>
+    <string name="author_name_blog_name">%1$s، %2$s</string>
+    <string name="latitude_longitude">%1$f، %2$f</string>
     <string name="site_creation_creating_fetching_info">جارٍ استرداد معلومات الموقع…</string>
     <string name="site_creation_creating_laying_foundation">جارٍ وضع أساس الموقع…</string>
     <string name="site_creation_empty_site_title">يرجى إدخال عنوان الموقع</string>
@@ -496,6 +511,7 @@ Language: ar
     <string name="site_settings_serve_images_from_our_servers_summary">سيُحسّن Jetpack صورك ويوفِّرها من موقع الخادم الأقرب إلى زائريك. سيؤدي استخدام شبكة توصيل المحتوى العالمية إلى تعزيز سرعة التحميل في موقعك.</string>
     <string name="site_settings_serve_images_from_our_servers">الحصول على الصور من خوادمنا</string>
     <string name="site_settings_speed_up_your_site">زيادة سرعة موقعك</string>
+    <string name="stats_jetpack_connection_setup">تثبيت Jetpack</string>
     <string name="plugin_chevron_icon_content_description">التبديل بين النصوص</string>
     <string name="plugin_info_your_version">إصدار وردبرس الخاص بك</string>
     <string name="plugin_info_requires_version">يتطلب إصدار وردبرس</string>
@@ -525,6 +541,7 @@ Language: ar
     <string name="site_settings_tags_hint">إدارة علامات موقعك</string>
     <string name="dlg_saving_tag">حفظ</string>
     <string name="dlg_deleting_tag">جارٍ الحذف</string>
+    <string name="dlg_confirm_delete_tag">هل تريد حذف وسم \"%s\" بشكل دائم؟</string>
     <string name="error_tag_exists">توجد علامة تحمل هذا الاسم بالفعل</string>
     <string name="add_new_tag">إضافة علامة جديدة</string>
     <string name="tag_description_hint">الوصف</string>
@@ -683,6 +700,8 @@ Language: ar
     <string name="error_upload_page_media_param">ثمة خطأ في تحميل الوسائط على هذه الصفحة: %s.</string>
     <string name="error_upload_page_param">حدث خطأ أثناء رفع هذه الصفحة: %s.</string>
     <string name="async_promo_link">كيف يعمل؟</string>
+    <string name="async_promo_description_schedule_post">يمكنك الآن مغادرة المحرر وسيتم حفظ مقالتك وجدولتها من وراء الكواليس! جرّبها!</string>
+    <string name="async_promo_title_publish">النشر مع التمتع بالثقة</string>
     <string name="editor_uploading_post">يجري رفع مقالتك</string>
     <string name="dialog_confirm_cancel_post_media_uploading">هل أنت متأكد من ذلك؟ سيؤدي حذف هذه المقالة إلى إلغاء رفع الوسائط كذلك.</string>
     <string name="page_scheduled">تمت جدولة الصفحة</string>
@@ -878,6 +897,7 @@ Language: ar
     <string name="media_upload_state_uploading">جارٍ الرفع</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>
     <string name="keep_editing">متابعة التحرير</string>
+    <string name="image_quality">جودة الصورة</string>
     <string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
     <string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
     <string name="submit_for_review">إرسال</string>
@@ -895,6 +915,7 @@ Language: ar
     <string name="media_upload_error">حدث خطأ في رفع الوسائط</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="confirm">تأكيد</string>
+    <string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية XMLRPC على موقعك. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يرجى الاتصال بالمضيف لإيجاد حل\n لهذه المشكلة.</string>
     <string name="xmlrpc_post_blocked_error">تعذر الاتصال. يقوم المضيف الخاص بك بحظر طلبات POST، ويحتاج التطبيق إليها\n للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل هذه المشكلة.</string>
     <string name="reader_hint_search_followed_sites">بحث في المواقع التي تتم متابعتها</string>
     <string name="visual_editor_disabled">تم تعطيل المحرر المرئي</string>
@@ -970,6 +991,11 @@ Language: ar
     <string name="editor_failed_uploads_switch_html">فشل رفع بعض الوسائط. يمكنك الإنتقال الى وضع HTML\nبهذه الحالة. إزالة جميع المرفوعات الفاشلة والمتابعة؟</string>
     <string name="image_thumbnail">الصورة المصغرة</string>
     <string name="visual_editor">المحرر المرئي</string>
+    <string name="format_bar_description_html">تحرير HTML</string>
+    <string name="format_bar_description_ol">قائمة مرتبة</string>
+    <string name="format_bar_description_ul">قائمة غير مرتبة</string>
+    <string name="format_bar_description_more">قراءة المزيد</string>
+    <string name="format_bar_description_quote">حظر الاقتباس</string>
     <string name="format_bar_description_strike">يتوسطه خط</string>
     <string name="format_bar_description_underline">أسفله خط</string>
     <string name="format_bar_description_italic">مائل</string>
@@ -1005,6 +1031,8 @@ Language: ar
     <string name="send_link">إرسال رابط</string>
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
+    <string name="reader_empty_search_description">لم يتم العثور على نتائج تتعلق بـ %s بلغتك</string>
+    <string name="reader_hint_post_search">البحث في وردبرس</string>
     <string name="reader_title_related_post_detail">مقالة ذات صلة</string>
     <string name="preview_screen_links_disabled">تم تعطيل الروابط في شاشة المعاينة</string>
     <string name="draft_explainer">هذه المقالة مسود والتي لم تنشر بعد.</string>
@@ -1046,6 +1074,7 @@ Language: ar
     <string name="delete_site_hint">حذف الموقع</string>
     <string name="export_site_hint">تصدير موقعك إلى ملف XML</string>
     <string name="primary_domain">النطاق الرئيسي</string>
+    <string name="error_deleting_site_summary">حدث خطأ أثناء حذف موقعك. يرجى الاتصال بالدعم للحصول على مزيد من المساعدة.</string>
     <string name="error_deleting_site">حدث خطأ أثناء حذف الموقع</string>
     <string name="site_settings_export_content_title">تصدير المحتوى</string>
     <string name="confirm_delete_site_prompt">يرجى كتابة %1$s في الحقل أدناه للتأكيد. لن يبقى لموقعك بعد ذلك أي أثر.</string>
@@ -1059,6 +1088,9 @@ Language: ar
     <string name="editor_remove_failed_uploads">إزالة عمليات الرفع الفاشلة</string>
     <string name="editor_toast_failed_uploads">فشل بعض عمليات رفع الوسائط. لا يمكنك الحفظ أو النشر\n مقالتك بهذه الحالة. هل تريد إزالة كافة الوسائط الفاشلة؟</string>
     <string name="site_settings_advanced_header">متقدم</string>
+    <string name="comments_empty_list_filtered_trashed">لا توجد تعليقات موضوعة في سلة المهملات</string>
+    <string name="comments_empty_list_filtered_pending">لا توجد تعليقات معلّقة</string>
+    <string name="comments_empty_list_filtered_approved">لا توجد تعليقات تمت الموافقة عليها</string>
     <string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
     <string name="alignment_center">وسط</string>
     <string name="post_format_video">الفيديو</string>
@@ -1104,6 +1136,8 @@ Language: ar
     <string name="pending_email_change_snackbar">انقر فوق رابط التحقق في البريد الإلكتروني المرسل إلى %1$s للتأكيد على عنوانك الجديد</string>
     <string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
     <string name="error_refresh_comments_showing_older">يتعذر تحديث التعليقات في الوقت الحالي - إظهار تعليقات أقدم</string>
+    <string name="post_settings_set_featured_image">تعيين صورة مميزة</string>
+    <string name="post_settings_featured_image">الصورة المميزة</string>
     <string name="visual_editor_enabled">تم تمكين محرر مرئي</string>
     <string name="editor_content_placeholder">شارك قصتك هنا…</string>
     <string name="editor_page_title_placeholder">عنوان الصفحة</string>
@@ -1115,6 +1149,7 @@ Language: ar
     <string name="mnu_comment_delete_permanently">حذف</string>
     <string name="mnu_comment_untrash">استعادة</string>
     <string name="comment_deleted_permanently">تم حذف تعليق</string>
+    <string name="comments_empty_list_filtered_spam">لا توجد تعليقات مزعجة</string>
     <string name="comment_status_all">الكل</string>
     <string name="could_not_load_page">يتعذر تحميل الصفحة</string>
     <string name="off">إيقاف تشغيل</string>
@@ -1123,6 +1158,7 @@ Language: ar
     <string name="error_post_account_settings">تعذر حفظ إعدادات الحساب</string>
     <string name="error_fetch_account_settings">Deine Kontoeinstellungen konnten nicht abgerufen werden.</string>
     <string name="error_fetch_my_profile">Dein Profil konnte nicht abgerufen werden.</string>
+    <string name="stats_widget_promo_ok_btn_label">حسنًا، فهمت!</string>
     <string name="stats_widget_promo_desc">Füge das Widget zu deinem Startbildschirm hinzu, um auf deine Statistiken mit einem Klick zugreifen zu können.</string>
     <string name="stats_widget_promo_title">Statistik-Widget für den Startbildschirm</string>
     <string name="site_settings_unknown_language_code_error">Sprachcode nicht erkannt</string>
@@ -1206,6 +1242,7 @@ Language: ar
     <string name="site_settings_paging_title">ترقيم الصفحات</string>
     <string name="site_settings_threading_title">مؤشر الترابط</string>
     <string name="site_settings_sort_by_title">فرز حسب</string>
+    <string name="site_settings_account_required_title">يجب على المستخدمين تسجيل الدخول.</string>
     <string name="site_settings_identity_required_title">لا بد من تضمين الاسم والبريد الإلكتروني</string>
     <string name="site_settings_receive_pingbacks_title">تلقي تنبيهات</string>
     <string name="site_settings_send_pingbacks_title">إرسال تنبيهات</string>
@@ -1234,6 +1271,7 @@ Language: ar
     <string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
+    <string name="media_edit_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
     <string name="selected_theme">تحديد قالب</string>
     <string name="could_not_load_theme">يتعذر تحميل القالب</string>
     <string name="theme_activation_error">حدث خطأ. يتعذر تنشيط القالب</string>
@@ -1264,7 +1302,13 @@ Language: ar
     <string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
     <string name="notifications_no_search_results">لا توجد مواقع مطابقة \"%s\"</string>
     <string name="search_sites">بحث في المواقع</string>
+    <string name="notifications_empty_view_reader">الانتقال إلى القارئ</string>
+    <string name="notifications_empty_action_followers_likes">ملاحظة: قم بالتعليق على المقالات التي قرأتها</string>
+    <string name="notifications_empty_action_comments">الانضمام إلى محادثة: التعليق على المقالات من المدونات التي تتابعها</string>
+    <string name="notifications_empty_action_unread">إعادة بدء المحادثة: كتابة مقالة جديدة</string>
     <string name="notifications_empty_action_all">كن نشطًا! علّق على مقالات من المدونات التي تتابعها.</string>
+    <string name="notifications_empty_comments">لا توجد تعليقات حتى الآن</string>
+    <string name="notifications_empty_unread">تم تحديثك!</string>
     <string name="stats_widget_error_jetpack_no_blogid">يرجى الوصول إلى الإحصاءات في التطبيق، وجرب إضافة المربع الجانبي لاحقًا</string>
     <string name="stats_widget_error_readd_widget">يرجى إزالة المربع الجانبي وإضافته مرة أخرى</string>
     <string name="stats_widget_error_no_visible_blog">يتعذر الوصول إلى الإحصاءات بدون مدونة مرئية</string>
@@ -1287,6 +1331,7 @@ Language: ar
     <string name="reader_short_like_count_none">أعجبني</string>
     <string name="reader_label_follow_count">%,d متابعين</string>
     <string name="reader_short_like_count_one">إعجاب واحد</string>
+    <string name="reader_menu_tags">تحرير الوسوم والمواقع</string>
     <string name="reader_title_post_detail">مقالة القارئ</string>
     <string name="local_draft_explainer">هذه المقالة مسودة محلية لم تُنشَر بعد</string>
     <string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
@@ -1300,6 +1345,7 @@ Language: ar
     <string name="email">البريد الإلكتروني</string>
     <string name="notifications_tab">علامة تبويب التنبيهات</string>
     <string name="app_notifications">تنبيهات التطبيق</string>
+    <string name="notification_settings_item_other_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
     <string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
     <string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
     <string name="connectionbar_no_connection">لا يوجد اتصال</string>
@@ -1313,7 +1359,10 @@ Language: ar
     <string name="stats_no_activity_this_period">لا يوجد أي نشاط في هذه الفترة</string>
     <string name="post_trashed">تم إرسال المقالة إلى سلة المهملات</string>
     <string name="post_deleted">تم حذف المقالة</string>
+    <string name="reader_toast_err_follow_blog_not_authorized">غير مخوّل لك الوصول إلى هذا الموقع</string>
+    <string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذا الموقع</string>
     <string name="undo">تراجع</string>
+    <string name="push_auth_expired">انتهت صلاحية الطلب. سجِّل الدخول إلى وردبرس.كوم للمحاولة مرة أخرى.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% من المشاهدات</string>
     <string name="ignore">تجاهل</string>
     <string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
@@ -1323,13 +1372,18 @@ Language: ar
     <string name="stats_insights_popular">اليوم والساعة الأكثر شيوعًا</string>
     <string name="stats_insights_all_time">مقالات ومشاهدات وزوار كل الأوقات</string>
     <string name="stats_insights">الرؤى</string>
+    <string name="stats_sign_in_jetpack_different_com_account">لعرض إحصاءاتك، سجّل الدخول إلى حساب وردبرس.كوم الذي استخدمته للاتصال بـ Jetpack.</string>
     <string name="stats_other_recent_stats_moved_label">هل تبحث عن إحصاءاتك الحديثة الأخرى؟ لقد نقلناها إلى صفحة الرؤى.</string>
+    <string name="me_disconnect_from_wordpress_com">تسجيل الخروج من وردبرس.كوم</string>
     <string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
+    <string name="me_connect_to_wordpress_com">تسجيل الدخول إلى وردبرس.كوم</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
     <string name="me_btn_support">المساعدة والدعم</string>
     <string name="account_settings">إعدادات الحساب</string>
+    <string name="site_picker_create_wpcom">إنشاء موقع وردبرس.كوم</string>
     <string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
     <string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>
+    <string name="site_picker_add_site">إضافة موقع جديد</string>
     <string name="my_site_btn_switch_site">تبديل الموقع</string>
     <string name="site_picker_title">إختر الموقع</string>
     <string name="my_site_btn_view_site">عرض الموقع</string>
@@ -1346,6 +1400,7 @@ Language: ar
     <string name="show">إظهار</string>
     <string name="deselect_all">إلغاء تحديد الكل</string>
     <string name="stats_generic_error">تعذر تحميل الإحصاءات المطلوبة</string>
+    <string name="auth_required">سجّل الدخول مرة أخرى للمتابعة.</string>
     <string name="invalid_verification_code">رمز التحقق غير صالح</string>
     <string name="verification_code">رمز التحقق</string>
     <string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
@@ -1370,11 +1425,13 @@ Language: ar
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
     <string name="stats_recent_weeks">الأسابيع الأخيرة</string>
     <string name="stats_average_per_day">المتوسط لكل يوم</string>
+    <string name="reader_empty_posts_in_blog">هذا الموقع فارغ</string>
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="logs_copied_to_clipboard">تم نسخ سجلات التطبيق إلى الحافظة</string>
     <string name="stats_period">الفترة</string>
     <string name="stats_overall">الكلي</string>
     <string name="stats_total">الإجمالي</string>
+    <string name="post_uploading">جارٍ رفع المقالة</string>
     <string name="stats_visitors">الزوار</string>
     <string name="stats_views">مشاهدات</string>
     <string name="stats_timeframe_years">سنوات</string>
@@ -1435,6 +1492,7 @@ Language: ar
     <string name="themes_fetching">جارٍ إحضار القوالب…</string>
     <string name="ssl_certificate_details">تفاصيل</string>
     <string name="cab_selected">تم تحديد %d</string>
+    <string name="signing_out">جارٍ تسجيل الخروج…</string>
     <string name="comment_reply_to_user">رد على %s</string>
     <string name="posts_empty_list">لا توجد مقالات حتى الآن. لماذا لا تبادر بإنشاء واحدة؟</string>
     <string name="comment_trashed">تم وضع التعليق بسلة المهملات</string>
@@ -1451,19 +1509,31 @@ Language: ar
     <string name="error_publish_empty_post">يتعذر نشر مقالة فارغة</string>
     <string name="reader_title_photo_viewer">%1$d من %2$d</string>
     <string name="reader_label_comments_closed">التعليقات مغلقة</string>
+    <string name="reader_label_liked_by">إعجاب بواسطة</string>
     <string name="reader_label_like">أعجبني</string>
     <string name="reader_label_view_original">عرض المقالة الأصلية</string>
     <string name="reader_empty_posts_in_tag">لا توجد مقالات تحمل هذا الوسم</string>
     <string name="reader_empty_comments">لا توجد تعليقات حتى الآن</string>
     <string name="browse_our_faq_button">استعراض الأسئلة المتداولة</string>
+    <string name="reader_menu_block_blog">حظر هذا الموقع</string>
+    <string name="reader_toast_blog_blocked">لن تظهر المقالات من هذا الموقع بعد الآن</string>
+    <string name="reader_toast_err_block_blog">تعذر حظر هذا الموقع</string>
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="contact_us">اتصل بنا</string>
     <string name="schedule_verb">جدولة</string>
     <string name="update_verb">تحديث</string>
+    <string name="reader_empty_recommended_blogs">لا توجد مواقع موصى بها</string>
+    <string name="reader_toast_err_unfollow_blog">تعذر إلغاء متابعة هذا الموقع</string>
+    <string name="reader_toast_err_follow_blog">تعذرت متابعة هذا الموقع</string>
+    <string name="reader_toast_err_already_follow_blog">أنت تتابع هذا الموقع بالفعل</string>
+    <string name="reader_toast_err_get_blog_info">تعذر إظهار هذا الموقع</string>
+    <string name="reader_label_followed_blog">تمت متابعة الموقع</string>
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
+    <string name="reader_title_subs">الوسوم والمواقع</string>
     <string name="reader_title_tag_preview">وسم القارئ</string>
+    <string name="reader_title_blog_preview">موقع القارئ</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
@@ -1480,6 +1550,7 @@ Language: ar
     <string name="error_refresh_comments">لا يمكن تحديث التعليقات في الوقت الحاضر</string>
     <string name="error_refresh_pages">الصفحات لايمكن تحديثها في الوقت الحاضر</string>
     <string name="error_refresh_posts">المقالات لايمكن تحديثها في الوقت الحاضر</string>
+    <string name="error_deleting_post">حدث خطأ أثناء حذف المقالة</string>
     <string name="notifications_empty_list">لا تنبيهات</string>
     <string name="invalid_url_message">تحقق من أن عنوان URL الذي تم إدخاله صحيح</string>
     <string name="stats_bar_graph_empty">الإحصائيات غير متوفرة</string>
@@ -1538,7 +1609,10 @@ Language: ar
     <string name="comment_status_spam">مزعج</string>
     <string name="comment_status_unapproved">معلق</string>
     <string name="comment_status_approved">تمت الموافقة</string>
+    <string name="delete_page">هل تريد حذف الصفحة؟</string>
+    <string name="delete_post">هل تريد حذف المقالة؟</string>
     <string name="post_settings">إعدادات المقالة</string>
+    <string name="file_not_found">تعذر العثور على الملف المراد رفعه. هل تم حذفه أم نقله؟</string>
     <string name="horizontal_alignment">المحاذاة الأفقية</string>
     <string name="local_draft">مسودة محلية</string>
     <string name="page_settings">إعدادات الصفحة</string>
@@ -1580,6 +1654,7 @@ Language: ar
     <string name="reader_btn_follow">تابع</string>
     <string name="reader_btn_share">مشاركة</string>
     <string name="reader_untitled_post">( بدون اسم )</string>
+    <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="empty_list_default">هذه القائمة فارغة.</string>
     <string name="stats_totals_plays">يشغل</string>
     <string name="stats_totals_clicks">النقرات</string>
@@ -1616,6 +1691,7 @@ Language: ar
     <string name="new_notifications">%d تنبيهات جديدة</string>
     <string name="follows">متابعات</string>
     <string name="note_reply_successful">تم نشر الرد</string>
+    <string name="sign_in">تسجيل الدخول</string>
     <string name="loading">جاري التحميل…</string>
     <string name="httppassword">كلمة مرور HTTP</string>
     <string name="httpuser">اسم مستخدم HTTP</string>
@@ -1648,7 +1724,9 @@ Language: ar
     <string name="settings">الإعدادات</string>
     <string name="quickpress_add_error">الاسم المختصر لايمكن أن يكون فارغًا</string>
     <string name="quickpress_window_title">اختر مدونة لاختصار QuickPress</string>
+    <string name="pages_private">خاص</string>
     <string name="categories">التصنيفات</string>
+    <string name="tags_separate_with_commas">الفصل بين الوسوم بفواصل</string>
     <string name="title">العنوان</string>
     <string name="dlg_deleting_comments">جارٍ حذف التعليقات</string>
     <string name="sdcard_title">بطاقة الذاكرة مطلوبة</string>

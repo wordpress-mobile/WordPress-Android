@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-29 07:44:03+0000
+Translation-Revision-Date: 2018-11-08 08:02:18+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="history_detail_title">Revizie</string>
+    <string name="history_detail_button_previous">Anterioare</string>
+    <string name="history_detail_button_next">Următoare</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Află mai mult</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Nu mai arăta</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Înapoi</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editează pagina</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editează articolul</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Lucrăm la noul editor din WordPress. Încă poți să editezi această pagină, dar recomandăm să o previzualizezi înainte de publicare.</string>
+    <string name="dialog_gutenberg_compatibility_message">Lucrăm la noul editor din WordPress. Încă poți să editezi acest articol, dar recomandăm să-l previzualizezi înainte de publicare.</string>
+    <string name="dialog_gutenberg_compatibility_title">Înainte de a continua</string>
+    <string name="media_space_used">%1$s folosiți</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Te rog introdu un sit WordPress.com sau unul auto-găzduit conectat cu Jetpack</string>
     <string name="history_loading_revision">Încărcare revizie</string>
     <string name="history_loaded_revision">Revizie încărcată</string>
-    <string name="history_load_dialog_title">Încarcă revizie</string>
-    <string name="history_load_dialog_message">Vrei să încarci revizia de la %1$s la %2$s?</string>
     <string name="history_load_dialog_button_positive">Încarcă</string>
     <string name="history_footer_post">Articol creat în %1$s la %2$s</string>
     <string name="history_footer_page">Pagină creată în %1$s la %2$s</string>
