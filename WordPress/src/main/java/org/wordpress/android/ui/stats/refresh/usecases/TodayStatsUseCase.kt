@@ -58,8 +58,8 @@ class TodayStatsUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_visible_on_grey_dark_24dp,
-                                    R.string.stats_views,
-                                    model.views.toFormattedString(),
+                                    textResource = R.string.stats_views,
+                                    value = model.views.toFormattedString(),
                                     showDivider = hasVisitors || hasLikes || hasComments
                             )
                     )
@@ -68,8 +68,8 @@ class TodayStatsUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_user_grey_dark_24dp,
-                                    R.string.stats_visitors,
-                                    model.visitors.toFormattedString(),
+                                    textResource = R.string.stats_visitors,
+                                    value = model.visitors.toFormattedString(),
                                     showDivider = hasLikes || hasComments
                             )
                     )
@@ -78,8 +78,8 @@ class TodayStatsUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_star_grey_dark_24dp,
-                                    R.string.stats_likes,
-                                    model.likes.toFormattedString(),
+                                    textResource = R.string.stats_likes,
+                                    value = model.likes.toFormattedString(),
                                     showDivider = hasComments
                             )
                     )
@@ -88,8 +88,8 @@ class TodayStatsUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_comment_grey_dark_24dp,
-                                    R.string.stats_comments,
-                                    model.comments.toFormattedString(),
+                                    textResource = R.string.stats_comments,
+                                    value = model.comments.toFormattedString(),
                                     showDivider = false
                             )
                     )

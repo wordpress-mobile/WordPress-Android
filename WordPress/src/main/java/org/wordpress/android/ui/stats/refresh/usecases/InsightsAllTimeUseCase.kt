@@ -58,8 +58,8 @@ class InsightsAllTimeUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_posts_grey_dark_24dp,
-                                    R.string.posts,
-                                    model.posts.toFormattedString(),
+                                    textResource = R.string.posts,
+                                    value = model.posts.toFormattedString(),
                                     showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
                             )
                     )
@@ -68,8 +68,8 @@ class InsightsAllTimeUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_visible_on_grey_dark_24dp,
-                                    R.string.stats_views,
-                                    model.views.toFormattedString(),
+                                    textResource = R.string.stats_views,
+                                    value = model.views.toFormattedString(),
                                     showDivider = hasVisitors || hasViewsBestDayTotal
                             )
                     )
@@ -78,8 +78,8 @@ class InsightsAllTimeUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_user_grey_dark_24dp,
-                                    R.string.stats_visitors,
-                                    model.visitors.toFormattedString(),
+                                    textResource = R.string.stats_visitors,
+                                    value = model.visitors.toFormattedString(),
                                     showDivider = hasViewsBestDayTotal
                             )
                     )
@@ -88,8 +88,8 @@ class InsightsAllTimeUseCase
                     items.add(
                             Item(
                                     R.drawable.ic_trophy_grey_dark_24dp,
-                                    R.string.stats_insights_best_ever,
-                                    model.viewsBestDayTotal.toFormattedString(),
+                                    textResource = R.string.stats_insights_best_ever,
+                                    value = model.viewsBestDayTotal.toFormattedString(),
                                     showDivider = false
                             )
                     )

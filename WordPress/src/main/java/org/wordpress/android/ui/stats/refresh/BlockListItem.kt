@@ -16,8 +16,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
-import org.wordpress.android.util.ImageResource
-import org.wordpress.android.util.TextResource
 
 sealed class BlockListItem(val type: Type) {
     enum class Type {
@@ -38,40 +36,15 @@ sealed class BlockListItem(val type: Type) {
 
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
     data class Item(
-        val icon: ImageResource,
-        val text: TextResource,
-        val value: TextResource,
+        @DrawableRes val icon: Int? = null,
+        val iconUrl: String? = null,
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        @StringRes val valueResource: Int? = null,
+        val value: String? = null,
         val showDivider: Boolean = true,
         val clickAction: (() -> Unit)? = null
-    ) : BlockListItem(ITEM) {
-        constructor(
-            @DrawableRes icon: Int,
-            @StringRes text: Int,
-            value: String,
-            showDivider: Boolean,
-            clickAction: (() -> Unit)? = null
-        ) : this(
-                ImageResource(icon),
-                TextResource(text),
-                TextResource(value),
-                showDivider,
-                clickAction
-        )
-
-        constructor(
-            @DrawableRes icon: Int,
-            text: String,
-            value: String,
-            showDivider: Boolean,
-            clickAction: (() -> Unit)? = null
-        ) : this(
-                ImageResource(icon),
-                TextResource(text),
-                TextResource(value),
-                showDivider,
-                clickAction
-        )
-    }
+    ) : BlockListItem(ITEM)
 
     data class UserItem(
         val avatarUrl: String,

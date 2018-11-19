@@ -85,8 +85,8 @@ class TagsAndCategoriesUseCase
         return Item(
                 getIcon(item.type),
                 item.name,
-                tag.views.toFormattedString(),
-                index < listSize - 1,
+                value = tag.views.toFormattedString(),
+                showDivider = index < listSize - 1,
                 clickAction = { clickTag(item.link) }
         )
     }
@@ -101,8 +101,8 @@ class TagsAndCategoriesUseCase
         return Item(
                 R.drawable.ic_folder_multiple_grey_dark_24dp,
                 text,
-                tag.views.toFormattedString(),
-                index < listSize - 1
+                value = tag.views.toFormattedString(),
+                showDivider = index < listSize - 1
         )
     }
 
@@ -110,10 +110,8 @@ class TagsAndCategoriesUseCase
         return Item(
                 getIcon(item.type),
                 item.name,
-                "",
-                false,
+                showDivider = false,
                 clickAction = { clickTag(item.link) }
-
         )
     }
 

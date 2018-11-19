@@ -2,7 +2,9 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.content.Context
 import android.graphics.Typeface
+import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
@@ -42,8 +44,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.IMAGE
-import org.wordpress.android.util.loadImage
-import org.wordpress.android.util.setTextResource
 import org.wordpress.android.util.setVisible
 
 sealed class BlockItemViewHolder(
@@ -80,9 +80,16 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
-            icon.loadImage(item.icon) { imageManager.load(icon, IMAGE, it) }
-            text.setTextResource(item.text)
-            value.setTextResource(item.value)
+            icon.setImageOrLoad(item.icon, item.iconUrl) { imageView, url ->
+                imageManager.load(imageView, IMAGE, url)
+            }
+            if (item.icon != null) {
+                icon.setImageResource(item.icon)
+            } else if (item.iconUrl != null) {
+                imageManager.load(icon, IMAGE, item.iconUrl)
+            }
+            text.setTextOrHide(item.textResource, item.text)
+            value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
             } else {
@@ -300,10 +307,10 @@ sealed class BlockItemViewHolder(
 
         fun bind(expandableItem: ExpandableItem) {
             val header = expandableItem.header
-            icon.loadImage(header.icon) { imageManager.load(icon, IMAGE, it) }
-            text.setTextResource(header.text)
+            icon.setImageOrLoad(header.icon, header.iconUrl) { imageView, url -> imageManager.load(imageView, IMAGE, url) }
+            text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
-            value.setTextResource(header.value)
+            value.setTextOrHide(header.valueResource, header.value)
             divider.setVisible(header.showDivider)
 
             list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
@@ -328,6 +335,25 @@ sealed class BlockItemViewHolder(
             }
             divider.setVisible(!expandableItem.isExpanded && expandableItem.header.showDivider)
             expandedListDivider.setVisible(expandableItem.isExpanded)
+        }
+    }
+
+    fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+        when {
+            resource != null -> this.setText(resource)
+            value != null -> this.text = value
+            else -> this.visibility = GONE
+        }
+    }
+
+    fun ImageView.setImageOrLoad(
+        @DrawableRes resource: Int?, url: String?,
+        loadMethod: (imageView: ImageView, url: String) -> Unit
+    ) {
+        when {
+            resource != null -> this.setImageResource(resource)
+            url != null -> loadMethod(this, url)
+            else -> this.visibility = GONE
         }
     }
 }
