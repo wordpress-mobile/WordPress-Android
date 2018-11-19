@@ -2341,8 +2341,13 @@
     <string name="news_card_announcement_action_sample_announcement">[Read more]</string>
     <!--suppress UnusedResources -->
     <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://en.blog.wordpress.com/2018/06/21/bookmark-posts-with-save-for-later/</string>
+    <!-- END (News Card) -->
+
+    <!-- Site Creation -->
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="new_site_creation_segments_title">Create Site</string>
-    <!-- END (News Card) -->
+    <string name="site_creation_fetch_suggestions_failed">No connection</string>
+    <string name="new_site_creation_verticals_title">TODO</string>
+    <string name="new_site_creation_button_skip">Skip</string>
 </resources>

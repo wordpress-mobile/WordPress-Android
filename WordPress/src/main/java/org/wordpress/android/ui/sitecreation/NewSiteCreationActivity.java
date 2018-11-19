@@ -14,7 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -48,7 +48,7 @@ public class NewSiteCreationActivity extends AppCompatActivity implements NewSit
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
 
             earlyLoadThemeLoaderFragment();
-            showFragment(new NewSiteCreationSegmentsFragment(), NewSiteCreationSegmentsFragment.Companion.getTAG());
+            showFragment(new NewSiteCreationVerticalsFragment(), NewSiteCreationVerticalsFragment.Companion.getTAG());
         } else {
             mCategory = savedInstanceState.getString(KEY_CATERGORY);
             mThemeId = savedInstanceState.getString(KEY_THEME_ID);
