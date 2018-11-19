@@ -9,9 +9,10 @@ import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Named
 
-class InsightsTabViewModel @Inject constructor(
+class InsightsTabViewModel
+@Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    val insightsUseCase: InsightsUseCase
+    private val insightsUseCase: InsightsUseCase
 ) : StatsListViewModel(mainDispatcher) {
     private val _data = insightsUseCase.data.map { loadedData ->
         InsightsUiState(loadedData, DONE)
@@ -21,7 +22,7 @@ class InsightsTabViewModel @Inject constructor(
     override val navigationTarget: LiveData<NavigationTarget> = insightsUseCase.navigationTarget
 
     override fun onCleared() {
-        super.onCleared()
         insightsUseCase.onCleared()
+        super.onCleared()
     }
 }

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.usecases
 
-import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -26,7 +25,6 @@ import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import java.util.Date
@@ -70,26 +68,14 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns create empty item when model is missing`() = test {
+    fun `returns null item when model is missing`() = test {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnInsightsFetched())
-        val textItem = mock<Text>()
-        whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(ListInsightItem::class.java)
-        (result as ListInsightItem).items.apply {
-            val title = this[0] as Title
-            assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
-            assertThat(this[1]).isEqualTo(textItem)
-            val link = this[2] as Link
-            assertThat(link.icon).isEqualTo(R.drawable.ic_create_blue_medium_24dp)
-            assertThat(link.text).isEqualTo(R.string.stats_insights_create_post)
-
-            assertThat(link.toNavigationTarget()).isEqualTo(AddNewPost)
-        }
+        assertThat(result).isNull()
     }
 
     @Test
@@ -172,11 +158,11 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private suspend fun loadLatestPostSummary(
         refresh: Boolean,
         forced: Boolean
-    ): InsightsItem {
+    ): InsightsItem? {
         var result: InsightsItem? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
-        return checkNotNull(result)
+        return result
     }
 
     private fun Link.toNavigationTarget(): NavigationTarget? {

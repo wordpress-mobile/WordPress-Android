@@ -1,26 +1,29 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.annotation.StringRes
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LOADING
 
-sealed class InsightsItem(val type: Type) {
+sealed class InsightsItem(val type: Type, open val insightsType: InsightsTypes?) {
     enum class Type {
         LIST_INSIGHTS,
         FAILED,
         EMPTY,
-        // TODO Remove once all the Types are implemented
-        NOT_IMPLEMENTED
+        LOADING
     }
-    val uuid = type.ordinal
 }
 
-data class ListInsightItem(val items: List<BlockListItem>) : InsightsItem(LIST_INSIGHTS)
+data class ListInsightItem(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : InsightsItem(
+        LIST_INSIGHTS,
+        insightsType
+)
 
-data class NotImplemented(val text: String) : InsightsItem(NOT_IMPLEMENTED)
+data class Failed(override val insightsType: InsightsTypes, @StringRes val failedType: Int, val errorMessage: String) :
+        InsightsItem(FAILED, insightsType)
 
-data class Failed(@StringRes val failedType: Int, val errorMessage: String) : InsightsItem(FAILED)
+data class Empty(val isButtonVisible: Boolean = true) : InsightsItem(EMPTY, null)
 
-data class Empty(val isButtonVisible: Boolean = true) : InsightsItem(EMPTY)
+data class Loading(override val insightsType: InsightsTypes) : InsightsItem(LOADING, insightsType)

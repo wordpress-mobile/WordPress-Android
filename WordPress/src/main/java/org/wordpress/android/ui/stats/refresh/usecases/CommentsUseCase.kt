@@ -17,9 +17,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
@@ -32,18 +30,17 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchComments(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> Failed(
+            error != null -> failedItem(
                     string.stats_view_comments,
                     error.message ?: error.type.name
             )
-            model != null -> loadComments(site, model)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            else -> model?.let { loadComments(site, model) }
         }
     }
 
@@ -52,14 +49,14 @@ class CommentsUseCase
         return dbModel?.let { loadComments(site, dbModel) }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel): ListInsightItem {
+    private fun loadComments(site: SiteModel, model: CommentsModel): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
         items.add(Link(text = string.stats_insights_view_more) {
             navigateTo(ViewCommentsStats(site.siteId))
         })
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): Tab {
