@@ -14,13 +14,6 @@ sealed class InsightsItem(val type: Type, open val insightsType: InsightsTypes?)
         EMPTY,
         LOADING
     }
-    fun isTheSame(other: InsightsItem): Boolean {
-        return if (this.insightsType != null && other.insightsType != null) {
-            this.insightsType == other.insightsType
-        } else {
-            this.type == other.type
-        }
-    }
 }
 
 data class ListInsightItem(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : InsightsItem(LIST_INSIGHTS, insightsType)
