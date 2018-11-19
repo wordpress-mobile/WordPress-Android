@@ -58,8 +58,8 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun initializeViews(activity: FragmentActivity) {
-        pagesPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
-        tabLayout.setupWithViewPager(pagesPager)
+        statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
+        tabLayout.setupWithViewPager(statsPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
