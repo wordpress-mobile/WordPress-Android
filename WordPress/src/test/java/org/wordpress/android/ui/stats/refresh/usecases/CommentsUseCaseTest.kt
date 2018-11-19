@@ -1,12 +1,12 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
@@ -26,11 +27,13 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 
-@RunWith(MockitoJUnitRunner::class)
-class CommentsUseCaseTest {
+class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: CommentsUseCase
@@ -42,7 +45,10 @@ class CommentsUseCaseTest {
     private val totalCount = 50
     @Before
     fun setUp() {
-        useCase = CommentsUseCase(insightsStore)
+        useCase = CommentsUseCase(
+                Dispatchers.Unconfined,
+                insightsStore
+        )
     }
 
     @Test
@@ -54,7 +60,7 @@ class CommentsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadComments(site, forced)
+        val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -79,7 +85,7 @@ class CommentsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadComments(site, forced)
+        val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -104,7 +110,7 @@ class CommentsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadComments(site, forced)
+        val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -130,7 +136,7 @@ class CommentsUseCaseTest {
                 )
         )
 
-        val result = useCase.loadComments(site, forced)
+        val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
@@ -169,5 +175,12 @@ class CommentsUseCaseTest {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).text).isEqualTo(R.string.stats_view_comments)
+    }
+
+    private suspend fun loadComments(refresh: Boolean, forced: Boolean): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.content.Context
 import com.nhaarman.mockito_kotlin.mock
@@ -32,7 +32,11 @@ class LatestPostSummaryMapperTest {
     private val postURL = "url"
     @Before
     fun setUp() {
-        mapper = LatestPostSummaryMapper(statsUtilsWrapper, resourceProvider, localeManagerWrapper)
+        mapper = LatestPostSummaryMapper(
+                statsUtilsWrapper,
+                resourceProvider,
+                localeManagerWrapper
+        )
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 

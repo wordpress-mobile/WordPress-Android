@@ -1,12 +1,14 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
+import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
@@ -15,43 +17,46 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
+import javax.inject.Named
 
 private const val PAGE_SIZE = 6
 
 class CommentsUseCase
 @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
+) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+        val response = insightsStore.fetchComments(site, forced)
+        val model = response.model
+        val error = response.error
 
-    suspend fun loadComments(site: SiteModel, refresh: Boolean = false, forced: Boolean = false): InsightsItem {
-        val dbModel = insightsStore.getComments(site)
-        return if (!refresh && dbModel != null) {
-            loadComments(site, dbModel)
-        } else {
-            val response = insightsStore.fetchComments(site, forced)
-            val model = response.model
-            val error = response.error
-
-            when {
-                error != null -> Failed(R.string.stats_view_comments, error.message ?: error.type.name)
-                model != null -> loadComments(site, model)
-                else -> throw IllegalArgumentException("Unexpected empty body")
-            }
+        return when {
+            error != null -> failedItem(
+                    string.stats_view_comments,
+                    error.message ?: error.type.name
+            )
+            else -> model?.let { loadComments(site, model) }
         }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel): ListInsightItem {
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val dbModel = insightsStore.getComments(site)
+        return dbModel?.let { loadComments(site, dbModel) }
+    }
+
+    private fun loadComments(site: SiteModel, model: CommentsModel): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
         items.add(Link(text = string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewCommentsStats(site.siteId)
+            navigateTo(ViewCommentsStats(site.siteId))
         })
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): Tab {

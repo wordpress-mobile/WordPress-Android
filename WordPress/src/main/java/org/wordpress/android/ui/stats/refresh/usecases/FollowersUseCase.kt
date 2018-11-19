@@ -1,7 +1,6 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.wordpress.android.R
@@ -10,7 +9,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.InsightsStore
+import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -19,38 +21,41 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import javax.inject.Named
 
 class FollowersUseCase
 @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
-) {
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
-    val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
+) : BaseInsightsUseCase(FOLLOWERS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem {
+        val wpComFollowers = insightsStore.getWpComFollowers(site)
+        val emailFollowers = insightsStore.getEmailFollowers(site)
+        return loadFollowers(site, wpComFollowers, emailFollowers)
+    }
 
-    suspend fun loadFollowers(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
-        if (refresh) {
-            val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
-            val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
-            val wpComResponse = deferredWpComResponse.await()
-            val emailResponse = deferredEmailResponse.await()
-            val wpComModel = wpComResponse.model
-            val emailModel = emailResponse.model
-            val error = wpComResponse.error ?: emailResponse.error
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
+        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
+        val wpComResponse = deferredWpComResponse.await()
+        val emailResponse = deferredEmailResponse.await()
+        val wpComModel = wpComResponse.model
+        val emailModel = emailResponse.model
+        val error = wpComResponse.error ?: emailResponse.error
 
-            return when {
-                error != null -> Failed(R.string.stats_view_followers, error.message ?: error.type.name)
-                wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
-                else -> throw IllegalArgumentException("Unexpected empty body")
-            }
-        } else {
-            val wpComFollowers = insightsStore.getWpComFollowers(site)
-            val emailFollowers = insightsStore.getEmailFollowers(site)
-            return loadFollowers(site, wpComFollowers, emailFollowers)
+        return when {
+            error != null -> failedItem(
+                    string.stats_view_followers,
+                    error.message ?: error.type.name
+            )
+            wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
+            else -> null
         }
     }
 
@@ -58,7 +63,7 @@ class FollowersUseCase
         site: SiteModel,
         wpComModel: FollowersModel?,
         emailModel: FollowersModel?
-    ): ListInsightItem {
+    ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(
@@ -71,9 +76,9 @@ class FollowersUseCase
         )
 
         items.add(Link(text = string.stats_insights_view_more) {
-            mutableNavigationTarget.value = ViewFollowersStats(site.siteId)
+            navigateTo(ViewFollowersStats(site.siteId))
         })
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 
     private fun buildTab(model: FollowersModel?, label: Int): Tab {

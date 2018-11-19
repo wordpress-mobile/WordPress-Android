@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
@@ -9,6 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text.Clickable
+import org.wordpress.android.ui.stats.refresh.toFormattedString
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat

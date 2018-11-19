@@ -1,15 +1,15 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -31,13 +32,15 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
-class FollowersUseCaseTest {
+class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -53,7 +56,12 @@ class FollowersUseCaseTest {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersUseCase(insightsStore, statsUtilsWrapper, resourceProvider)
+        useCase = FollowersUseCase(
+                Dispatchers.Unconfined,
+                insightsStore,
+                statsUtilsWrapper,
+                resourceProvider
+        )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
         whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
@@ -79,7 +87,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -113,7 +121,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -150,7 +158,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
@@ -185,7 +193,7 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
@@ -213,13 +221,20 @@ class FollowersUseCaseTest {
                 )
         )
 
-        val result = useCase.loadFollowers(site, refresh, forced)
+        val result = loadFollowers(refresh, forced)
 
         assertThat(result.type).isEqualTo(FAILED)
         (result as Failed).apply {
             assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
+    }
+
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): InsightsItem {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return checkNotNull(result)
     }
 
     private fun assertTabWithFollower(tab: TabsItem.Tab) {
