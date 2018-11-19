@@ -153,11 +153,13 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
     private fun initializeSearchView() {
         actionMenuItem.setOnActionExpandListener(object : OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                return viewModel.onSearchExpanded(restorePreviousSearch)
+                viewModel.onSearchExpanded(restorePreviousSearch)
+                return true
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                return viewModel.onSearchCollapsed()
+                viewModel.onSearchCollapsed()
+                return true
             }
         })
 

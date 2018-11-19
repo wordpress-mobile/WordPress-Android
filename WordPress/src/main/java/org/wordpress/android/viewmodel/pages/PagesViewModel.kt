@@ -284,20 +284,20 @@ class PagesViewModel
                 })
     }
 
-    fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
-        AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+    fun onSearchExpanded(restorePreviousSearch: Boolean) {
+        if (isSearchExpanded.value != true) {
+            AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
 
-        if (!restorePreviousSearch) {
-            clearSearch()
+            if (!restorePreviousSearch) {
+                clearSearch()
+            }
+
+            _isSearchExpanded.value = true
+            _isNewPageButtonVisible.value = false
         }
-
-        _isSearchExpanded.value = true
-        _isNewPageButtonVisible.value = false
-
-        return true
     }
 
-    fun onSearchCollapsed(): Boolean {
+    fun onSearchCollapsed() {
         _isSearchExpanded.value = false
         clearSearch()
 
@@ -305,7 +305,6 @@ class PagesViewModel
             delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
-        return true
     }
 
     fun onMenuAction(action: Action, page: Page): Boolean {
