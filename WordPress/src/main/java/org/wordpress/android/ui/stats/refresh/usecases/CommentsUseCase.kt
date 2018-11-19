@@ -52,10 +52,17 @@ class CommentsUseCase
     private fun loadComments(site: SiteModel, model: CommentsModel): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
-        items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
-        items.add(Link(text = string.stats_insights_view_more) {
-            navigateTo(ViewCommentsStats(site.siteId))
-        })
+
+        val authorsTab = buildAuthorsTab(model.authors)
+        val postsTab = buildPostsTab(model.posts)
+        items.add(TabsItem(listOf(authorsTab, postsTab)))
+
+        if (authorsTab.items.size == PAGE_SIZE || postsTab.items.size == PAGE_SIZE) {
+            items.add(Link(text = string.stats_insights_view_more) {
+                navigateTo(ViewCommentsStats(site.siteId))
+            })
+        }
+
         return dataItem(items)
     }
 
