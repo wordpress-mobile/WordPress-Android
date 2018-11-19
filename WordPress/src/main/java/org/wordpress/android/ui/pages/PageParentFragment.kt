@@ -51,17 +51,17 @@ class PageParentFragment : Fragment() {
             return true
         } else if (item.itemId == R.id.save_parent) {
             viewModel.onSaveButtonTapped()
-            activity?.onBackPressed()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setParentChoice() {
+    private fun returnParentChoiceAndExit() {
         val result = Intent()
         result.putExtra(EXTRA_PAGE_REMOTE_ID_KEY, pageId)
         result.putExtra(EXTRA_PAGE_PARENT_ID_KEY, viewModel.currentParent.id)
         activity?.setResult(Activity.RESULT_OK, result)
+        activity?.onBackPressed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,7 +128,7 @@ class PageParentFragment : Fragment() {
         })
 
         viewModel.saveParent.observe(this, Observer {
-            setParentChoice()
+            returnParentChoiceAndExit()
         })
     }
 
