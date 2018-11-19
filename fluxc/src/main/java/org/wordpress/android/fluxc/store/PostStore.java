@@ -709,7 +709,7 @@ public class PostStore extends Store {
                 event.error = payload.error;
                 emitChange(event);
             } else {
-                restorePost(payload);
+                restorePostLocally(payload.post);
             }
             return;
         }
@@ -756,7 +756,7 @@ public class PostStore extends Store {
             if (payload.site.isUsingWpComRestApi()) {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
-                restorePost(payload.post);
+                restorePostLocally(payload.post);
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
                 // Update the post locally to reflect its uploaded status, but also request a fresh copy
@@ -789,7 +789,7 @@ public class PostStore extends Store {
                 new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
     }
 
-    private void restorePost(PostModel post) {
+    private void restorePostLocally(PostModel post) {
         int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RestorePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
