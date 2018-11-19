@@ -81,8 +81,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
             assertCategory(this.items[2], categoryName, categoryViews)
                     .apply {
                         assertThat(this.expandedItems).hasSize(2)
-                        assertSingleTag(this.expandedItems[0], firstTag.name, "")
-                        assertSingleTag(this.expandedItems[1], secondTag.name, "")
+                        assertSingleTag(this.expandedItems[0], firstTag.name, null)
+                        assertSingleTag(this.expandedItems[1], secondTag.name, null)
                     }
             assertLink(this.items[3])
         }
@@ -132,12 +132,16 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private fun assertSingleTag(
         item: BlockListItem,
         key: String,
-        label: String
+        label: String?
     ) {
         assertThat(item.type).isEqualTo(ITEM)
-        assertThat((item as Item).text.text).isEqualTo(key)
-        assertThat(item.value.text).isEqualTo(label)
-        assertThat(item.icon.id).isEqualTo(R.drawable.ic_tag_grey_dark_24dp)
+        assertThat((item as Item).text).isEqualTo(key)
+        if (label != null) {
+            assertThat(item.value).isEqualTo(label)
+        } else {
+            assertThat(item.value).isNull()
+        }
+        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_grey_dark_24dp)
     }
 
     private fun assertCategory(
@@ -146,9 +150,9 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         views: Long
     ): ExpandableItem {
         assertThat(item.type).isEqualTo(EXPANDABLE_ITEM)
-        assertThat((item as ExpandableItem).header.text.text).isEqualTo(label)
-        assertThat(item.header.value.text).isEqualTo(views.toString())
-        assertThat(item.header.icon.id).isEqualTo(R.drawable.ic_folder_multiple_grey_dark_24dp)
+        assertThat((item as ExpandableItem).header.text).isEqualTo(label)
+        assertThat(item.header.value).isEqualTo(views.toString())
+        assertThat(item.header.icon).isEqualTo(R.drawable.ic_folder_multiple_grey_dark_24dp)
         return item
     }
 

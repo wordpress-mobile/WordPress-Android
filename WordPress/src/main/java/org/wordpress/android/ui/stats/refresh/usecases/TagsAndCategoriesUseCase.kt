@@ -16,9 +16,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.toFormattedString
@@ -32,17 +30,17 @@ class TagsAndCategoriesUseCase
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchTags(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> Failed(
+            error != null -> failedItem(
                     string.stats_view_tags_and_categories,
                     error.message ?: error.type.name
             )
-            else -> loadTagsAndCategories(site, model)
+            else -> model?.let { loadTagsAndCategories(site, model) }
         }
     }
 
@@ -54,14 +52,14 @@ class TagsAndCategoriesUseCase
     private fun loadTagsAndCategories(
         site: SiteModel,
         model: TagsModel?
-    ): ListInsightItem {
+    ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         if (model == null) {
             items.add(Empty)
         } else {
             items.add(Title(R.string.stats_view_tags_and_categories))
             if (model.tags.isEmpty()) {
-                    items.add(Empty)
+                items.add(Empty)
             } else {
                 items.addAll(model.tags.mapIndexed { index, tag ->
                     when {
@@ -77,14 +75,14 @@ class TagsAndCategoriesUseCase
                 })
             }
         }
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 
     private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {
         val item = tag.items.first()
         return Item(
-                getIcon(item.type),
-                item.name,
+                icon = getIcon(item.type),
+                text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
                 clickAction = { clickTag(item.link) }
@@ -99,8 +97,8 @@ class TagsAndCategoriesUseCase
             }
         }
         return Item(
-                R.drawable.ic_folder_multiple_grey_dark_24dp,
-                text,
+                icon = R.drawable.ic_folder_multiple_grey_dark_24dp,
+                text = text,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1
         )
@@ -108,8 +106,8 @@ class TagsAndCategoriesUseCase
 
     private fun mapItem(item: TagModel.Item): Item {
         return Item(
-                getIcon(item.type),
-                item.name,
+                icon = getIcon(item.type),
+                text = item.name,
                 showDivider = false,
                 clickAction = { clickTag(item.link) }
         )
