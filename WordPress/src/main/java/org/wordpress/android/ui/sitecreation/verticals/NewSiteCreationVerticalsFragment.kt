@@ -20,8 +20,11 @@ import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.pages.PageListFragment
+import org.wordpress.android.ui.pages.PageListFragment.Companion
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
@@ -208,5 +211,14 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     companion object {
         val TAG = "site_creation_verticals_fragment_tag"
+        private val EXTRA_SEGMENT_ID = "extra_segment_id"
+
+        fun newInstance(segmentId: Long): NewSiteCreationVerticalsFragment {
+            val fragment = NewSiteCreationVerticalsFragment()
+            val bundle = Bundle()
+            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }

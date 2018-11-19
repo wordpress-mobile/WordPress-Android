@@ -107,5 +107,9 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     companion object {
         val TAG = "site_creation_segment_fragment_tag"
+
+        fun newInstance(): NewSiteCreationSegmentsFragment {
+            return NewSiteCreationSegmentsFragment()
+        }
     }
 }
