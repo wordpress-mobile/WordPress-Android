@@ -2,11 +2,15 @@ package org.wordpress.android.ui.stats.refresh.usecases
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.Loading
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 
@@ -28,7 +32,7 @@ abstract class BaseInsightsUseCase(
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
             withContext(mainDispatcher) {
-                mutableLiveData.value = loadCachedData(site) ?: Loading
+                mutableLiveData.value = loadCachedData(site) ?: Loading(type)
             }
         }
         if (refresh) {
@@ -66,4 +70,12 @@ abstract class BaseInsightsUseCase(
      * @return the list item or null when we haven't received a correct response from the API
      */
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem?
+
+    protected fun failedItem(@StringRes failingType: Int, message: String): Failed {
+        return Failed(type, failingType, message)
+    }
+
+    protected fun dataItem(data: List<BlockListItem>): ListInsightItem {
+        return ListInsightItem(type, data)
+    }
 }

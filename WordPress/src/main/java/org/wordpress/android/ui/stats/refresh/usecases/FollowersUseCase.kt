@@ -21,9 +21,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -52,7 +50,7 @@ class FollowersUseCase
         val error = wpComResponse.error ?: emailResponse.error
 
         return when {
-            error != null -> Failed(
+            error != null -> failedItem(
                     string.stats_view_followers,
                     error.message ?: error.type.name
             )
@@ -65,7 +63,7 @@ class FollowersUseCase
         site: SiteModel,
         wpComModel: FollowersModel?,
         emailModel: FollowersModel?
-    ): ListInsightItem {
+    ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(
@@ -80,7 +78,7 @@ class FollowersUseCase
         items.add(Link(text = string.stats_insights_view_more) {
             navigateTo(ViewFollowersStats(site.siteId))
         })
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 
     private fun buildTab(model: FollowersModel?, label: Int): Tab {

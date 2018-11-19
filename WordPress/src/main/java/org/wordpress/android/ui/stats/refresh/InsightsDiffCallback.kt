@@ -7,7 +7,7 @@ class InsightsDiffCallback(
     private val newList: List<InsightsItem>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].uuid == newList[newItemPosition].uuid
+        return oldList[oldItemPosition].isTheSame(newList[newItemPosition])
     }
 
     override fun getOldListSize(): Int = oldList.size

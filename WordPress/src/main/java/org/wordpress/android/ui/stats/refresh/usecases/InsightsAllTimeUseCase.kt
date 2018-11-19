@@ -11,9 +11,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,12 +32,12 @@ class InsightsAllTimeUseCase
         val error = response.error
 
         return when {
-            error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+            error != null -> failedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
             else -> model?.let { loadAllTimeInsightsItem(model) }
         }
     }
 
-    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
+    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
 
@@ -91,6 +89,6 @@ class InsightsAllTimeUseCase
                 )
             }
         }
-        return ListInsightItem(items)
+        return dataItem(items)
     }
 }
