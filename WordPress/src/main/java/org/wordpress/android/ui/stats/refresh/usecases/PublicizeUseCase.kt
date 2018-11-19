@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
+import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.PUBLICIZE
 import org.wordpress.android.modules.UI_THREAD
@@ -48,7 +49,8 @@ class PublicizeUseCase
 
     override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchPublicizeData(site, forced)
-        val model = response.model
+//        val model = response.model
+        val model = PublicizeModel(listOf(Service("facebook", 100), Service("twitter", 10000)))
         val error = response.error
 
         return when {
@@ -67,7 +69,7 @@ class PublicizeUseCase
         if (model == null || model.services.isEmpty()) {
             items.add(Empty)
         } else {
-            model.services.mapIndexed { index, service ->
+            items.addAll(model.services.mapIndexed { index, service ->
                 val mappedService = getService(service.name)
                 Item(
                         mappedService.iconUrl?.let { ImageResource(it + dimension) },
@@ -75,7 +77,7 @@ class PublicizeUseCase
                         TextResource(service.followers.toFormattedString()),
                         index < model.services.size - 1
                 )
-            }
+            })
         }
         return ListInsightItem(items)
     }
