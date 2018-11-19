@@ -42,7 +42,7 @@ class FollowersUseCase
         return loadFollowers(site, wpComFollowers, emailFollowers)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
         val wpComResponse = deferredWpComResponse.await()
@@ -57,7 +57,7 @@ class FollowersUseCase
                     error.message ?: error.type.name
             )
             wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            else -> null
         }
     }
 

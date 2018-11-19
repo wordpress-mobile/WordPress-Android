@@ -28,7 +28,7 @@ class InsightsAllTimeUseCase
         return dbModel?.let { loadAllTimeInsightsItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error

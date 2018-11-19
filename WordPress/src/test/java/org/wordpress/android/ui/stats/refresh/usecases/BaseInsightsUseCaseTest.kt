@@ -99,7 +99,7 @@ class BaseInsightsUseCaseTest : BaseUnitTest() {
             return localDataProvider.get()
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
             return remoteDataProvider.get()
         }
     }

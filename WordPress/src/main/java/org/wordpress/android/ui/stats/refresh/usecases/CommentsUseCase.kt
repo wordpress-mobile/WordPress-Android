@@ -32,7 +32,7 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
         val response = insightsStore.fetchComments(site, forced)
         val model = response.model
         val error = response.error

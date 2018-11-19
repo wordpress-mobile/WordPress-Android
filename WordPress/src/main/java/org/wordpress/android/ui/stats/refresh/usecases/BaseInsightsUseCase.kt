@@ -29,7 +29,7 @@ abstract class BaseInsightsUseCase(
         }
         if (refresh) {
             withContext(mainDispatcher) {
-                mutableLiveData.value = fetchRemoteData(site, refresh, forced)
+                mutableLiveData.value = fetchRemoteData(site, forced)
             }
         }
     }
@@ -42,5 +42,5 @@ abstract class BaseInsightsUseCase(
     }
 
     protected abstract suspend fun loadCachedData(site: SiteModel): InsightsItem?
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, refresh: Boolean, forced: Boolean): InsightsItem
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem?
 }
