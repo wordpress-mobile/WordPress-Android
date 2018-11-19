@@ -242,6 +242,7 @@ sealed class BlockItemViewHolder(
                 }
             }
             list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            list.isNestedScrollingEnabled = false
             if (list.adapter == null) {
                 list.adapter = BlockListAdapter(imageManager)
             }
