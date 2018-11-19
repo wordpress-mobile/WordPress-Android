@@ -32,7 +32,7 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchComments(site, forced)
         val model = response.model
         val error = response.error
@@ -42,8 +42,7 @@ class CommentsUseCase
                     string.stats_view_comments,
                     error.message ?: error.type.name
             )
-            model != null -> loadComments(site, model)
-            else -> throw IllegalArgumentException("Unexpected empty body")
+            else -> model?.let { loadComments(site, model) }
         }
     }
 

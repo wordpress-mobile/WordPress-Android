@@ -28,72 +28,67 @@ class InsightsAllTimeUseCase
         return dbModel?.let { loadAllTimeInsightsItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        return if (error != null) {
-            Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
-        } else {
-            loadAllTimeInsightsItem(model)
+        return when {
+            error != null -> Failed(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+            else -> model?.let { loadAllTimeInsightsItem(model) }
         }
     }
 
-    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel?): ListInsightItem {
+    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
 
-        if (model == null) {
+        val hasPosts = model.posts > 0
+        val hasViews = model.views > 0
+        val hasVisitors = model.visitors > 0
+        val hasViewsBestDayTotal = model.viewsBestDayTotal > 0
+        if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
             items.add(Empty)
         } else {
-            val hasPosts = model.posts > 0
-            val hasViews = model.views > 0
-            val hasVisitors = model.visitors > 0
-            val hasViewsBestDayTotal = model.viewsBestDayTotal > 0
-            if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
-                items.add(Empty)
-            } else {
-                if (hasPosts) {
-                    items.add(
-                            Item(
-                                    R.drawable.ic_posts_grey_dark_24dp,
-                                    R.string.posts,
-                                    model.posts.toFormattedString(),
-                                    showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
-                            )
-                    )
-                }
-                if (hasViews) {
-                    items.add(
-                            Item(
-                                    R.drawable.ic_visible_on_grey_dark_24dp,
-                                    R.string.stats_views,
-                                    model.views.toFormattedString(),
-                                    showDivider = hasVisitors || hasViewsBestDayTotal
-                            )
-                    )
-                }
-                if (hasVisitors) {
-                    items.add(
-                            Item(
-                                    R.drawable.ic_user_grey_dark_24dp,
-                                    R.string.stats_visitors,
-                                    model.visitors.toFormattedString(),
-                                    showDivider = hasViewsBestDayTotal
-                            )
-                    )
-                }
-                if (hasViewsBestDayTotal) {
-                    items.add(
-                            Item(
-                                    R.drawable.ic_trophy_grey_dark_24dp,
-                                    R.string.stats_insights_best_ever,
-                                    model.viewsBestDayTotal.toFormattedString(),
-                                    showDivider = false
-                            )
-                    )
-                }
+            if (hasPosts) {
+                items.add(
+                        Item(
+                                R.drawable.ic_posts_grey_dark_24dp,
+                                R.string.posts,
+                                model.posts.toFormattedString(),
+                                showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
+                        )
+                )
+            }
+            if (hasViews) {
+                items.add(
+                        Item(
+                                R.drawable.ic_visible_on_grey_dark_24dp,
+                                R.string.stats_views,
+                                model.views.toFormattedString(),
+                                showDivider = hasVisitors || hasViewsBestDayTotal
+                        )
+                )
+            }
+            if (hasVisitors) {
+                items.add(
+                        Item(
+                                R.drawable.ic_user_grey_dark_24dp,
+                                R.string.stats_visitors,
+                                model.visitors.toFormattedString(),
+                                showDivider = hasViewsBestDayTotal
+                        )
+                )
+            }
+            if (hasViewsBestDayTotal) {
+                items.add(
+                        Item(
+                                R.drawable.ic_trophy_grey_dark_24dp,
+                                R.string.stats_insights_best_ever,
+                                model.viewsBestDayTotal.toFormattedString(),
+                                showDivider = false
+                        )
+                )
             }
         }
         return ListInsightItem(items)

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    style="@style/StatsBlock">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:theme="@style/LinearProgress"
+        android:layout_width="@dimen/margin_extra_extra_medium_large"
+        android:layout_height="@dimen/margin_extra_extra_medium_large"
+        android:layout_margin="@dimen/margin_extra_medium_large"
+        android:layout_gravity="center"/>
+
+</android.support.v7.widget.CardView>

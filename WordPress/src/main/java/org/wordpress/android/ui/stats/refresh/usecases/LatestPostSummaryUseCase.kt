@@ -31,22 +31,22 @@ class LatestPostSummaryUseCase
         return dbModel?.let { loadLatestPostSummaryItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
             error != null -> Failed(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
-            else -> loadLatestPostSummaryItem(model)
+            else -> model?.let { loadLatestPostSummaryItem(model) }
         }
     }
 
-    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel?): ListInsightItem {
+    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(model))
-        if (model != null && model.hasData()) {
+        if (model.hasData()) {
             items.add(
                     latestPostSummaryMapper.buildColumnItem(
                             model.postViewsCount,
@@ -71,12 +71,14 @@ class LatestPostSummaryUseCase
                 navigateTo(AddNewPost)
             }
             model.hasData() -> Link(text = R.string.stats_insights_view_more) {
-                navigateTo(ViewPostDetailStats(
-                        model.siteId,
-                        model.postId.toString(),
-                        model.postTitle,
-                        model.postURL
-                ))
+                navigateTo(
+                        ViewPostDetailStats(
+                                model.siteId,
+                                model.postId.toString(),
+                                model.postTitle,
+                                model.postURL
+                        )
+                )
             }
             else -> Link(R.drawable.ic_share_blue_medium_24dp, R.string.stats_insights_share_post) {
                 navigateTo(SharePost(model.postURL, model.postTitle))

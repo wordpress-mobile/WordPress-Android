@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
 import org.wordpress.android.util.image.ImageManager
@@ -30,6 +31,7 @@ class InsightsAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHold
             LIST_INSIGHTS -> ListInsightsViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyInsightsViewHolder(parent)
+            LOADING -> LoadingInsightsViewHolder(parent)
         }
     }
 
