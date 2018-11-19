@@ -10,9 +10,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.Loading
 import javax.inject.Provider
 
 class BaseInsightsUseCaseTest : BaseUnitTest() {
@@ -54,13 +53,13 @@ class BaseInsightsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on fetch returns empty list when DB is empty`() = test {
+    fun `on fetch returns loading item when DB is empty`() = test {
         assertThat(useCase.liveData.value).isNull()
         whenever(localDataProvider.get()).thenReturn(null)
 
         useCase.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(ListInsightItem(listOf(Empty)))
+        assertThat(useCase.liveData.value).isEqualTo(Loading)
     }
 
     @Test
