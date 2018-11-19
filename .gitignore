@@ -77,3 +77,6 @@ google-services.json
 fastlane/.env*
 fastlane/report.xml
 fastlane/README.md
+
+# Bundler
+vendor/
