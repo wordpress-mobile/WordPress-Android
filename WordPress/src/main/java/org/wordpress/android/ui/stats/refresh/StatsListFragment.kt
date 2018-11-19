@@ -164,7 +164,7 @@ class StatsListFragment : DaggerFragment() {
             adapter = recyclerView.adapter as InsightsAdapter
         }
         val layoutManager = recyclerView?.layoutManager
-        val recyclerViewState = layoutManager?.onSaveInstanceState();
+        val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(insightsState.data)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }

@@ -59,7 +59,7 @@ class BaseInsightsUseCaseTest : BaseUnitTest() {
 
         useCase.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(Loading)
+        assertThat(useCase.liveData.value).isEqualTo(Loading(ALL_TIME_STATS))
     }
 
     @Test
