@@ -27,6 +27,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val PAGE_SIZE = 6
+
 class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -66,18 +68,24 @@ class FollowersUseCase
     ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
+
+        val wpComTab = buildTab(wpComModel, R.string.stats_followers_wordpress_com)
+        val emailTab = buildTab(emailModel, R.string.stats_followers_email)
         items.add(
                 TabsItem(
                         listOf(
-                                buildTab(wpComModel, R.string.stats_followers_wordpress_com),
-                                buildTab(emailModel, R.string.stats_followers_email)
+                                wpComTab,
+                                emailTab
                         )
                 )
         )
 
-        items.add(Link(text = string.stats_insights_view_more) {
-            navigateTo(ViewFollowersStats(site.siteId))
-        })
+        if (wpComTab.items.size == PAGE_SIZE || emailTab.items.size >= PAGE_SIZE) {
+            items.add(Link(text = string.stats_insights_view_more) {
+                navigateTo(ViewFollowersStats(site.siteId))
+            })
+        }
+
         return dataItem(items)
     }
 
