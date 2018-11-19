@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
@@ -76,6 +77,14 @@ class StatsFragment : DaggerFragment() {
         viewModel.start(nonNullSite)
         if (!isFirstStart) {
             restorePreviousSearch = true
+        }
+
+        statsPager.setOnTouchListener { _, event ->
+            swipeToRefreshHelper.setEnabled(false)
+            if (event.action == MotionEvent.ACTION_UP) {
+                swipeToRefreshHelper.setEnabled(true)
+            }
+            return@setOnTouchListener false
         }
     }
 
