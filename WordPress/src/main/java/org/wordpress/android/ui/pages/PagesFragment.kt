@@ -19,6 +19,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MenuItem.OnActionExpandListener
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -148,6 +149,14 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                 .beginTransaction()
                 .replace(R.id.searchFrame, searchFragment)
                 .commit()
+
+        pagesPager.setOnTouchListener { _, event ->
+            swipeToRefreshHelper.setEnabled(false)
+            if (event.action == MotionEvent.ACTION_UP) {
+                swipeToRefreshHelper.setEnabled(true)
+            }
+            return@setOnTouchListener false
+        }
     }
 
     private fun initializeSearchView() {
@@ -238,7 +247,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                 val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
                 if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
                     PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site)
+                            getActivity(), fragmentManager, post, viewModel.site
+                    )
                 } else {
                     ActivityLauncher.editPageForResult(this, page)
                 }
@@ -379,11 +389,13 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
     private fun displayDeleteDialog(page: Page) {
         val dialog = BasicFragmentDialog()
-        dialog.initialize(page.id.toString(),
+        dialog.initialize(
+                page.id.toString(),
                 getString(string.delete_page),
                 getString(string.page_delete_dialog_message, page.title),
                 getString(string.delete),
-                getString(string.cancel))
+                getString(string.cancel)
+        )
         dialog.show(fragmentManager, page.id.toString())
     }
 }
