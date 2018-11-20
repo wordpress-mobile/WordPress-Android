@@ -784,6 +784,8 @@
     <string name="stats_comments_title_label">Title</string>
     <string name="stats_comments_label">Comments</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_publicize_followers_label">Followers</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
