@@ -74,7 +74,6 @@
 /sites/$site/posts/$post_ID/restore/
 /sites/$site/posts/$post_ID/replies/new
 /sites/$site/posts/new/
-/sites/$site/posts/restore/
 /sites/$site/posts/slug:$post_slug#String/
 
 /sites/$site/stats/visits
