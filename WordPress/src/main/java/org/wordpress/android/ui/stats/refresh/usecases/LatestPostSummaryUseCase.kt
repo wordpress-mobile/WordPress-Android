@@ -35,7 +35,7 @@ class LatestPostSummaryUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
+            error != null -> createFailedItem(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
             else -> model?.let { loadLatestPostSummaryItem(model) }
         }
     }
@@ -57,7 +57,7 @@ class LatestPostSummaryUseCase
             }
         }
         items.add(buildLink(model))
-        return dataItem(items)
+        return createDataItem(items)
     }
 
     private fun InsightsLatestPostModel.hasData() =

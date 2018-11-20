@@ -32,7 +32,7 @@ class TodayStatsUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(R.string.stats_insights_today_stats, error.message ?: error.type.name)
+            error != null -> createFailedItem(R.string.stats_insights_today_stats, error.message ?: error.type.name)
             else -> model?.let { loadTodayStatsItem(model) }
         }
     }
@@ -89,6 +89,6 @@ class TodayStatsUseCase
                 )
             }
         }
-        return dataItem(items)
+        return createDataItem(items)
     }
 }
