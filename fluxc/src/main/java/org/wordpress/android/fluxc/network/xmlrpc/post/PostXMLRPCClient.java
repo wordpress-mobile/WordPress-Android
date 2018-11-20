@@ -245,6 +245,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                         post.setIsLocalDraft(false);
                         post.setIsLocallyChanged(false);
+
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
@@ -341,10 +342,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         // Possible non-generic errors:
-                        // 403 - "Invalid post type"
-                        // 403 - "Invalid term ID" (invalid category or tag id)
                         // 404 - "Invalid post ID." (editing only)
-                        // 404 - "Invalid attachment ID." (invalid featured image)
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         // TODO: Check the error message and flag this as one of the above specific errors if applicable
                         // Convert GenericErrorType to PostErrorType where applicable

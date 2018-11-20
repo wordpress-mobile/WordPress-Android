@@ -529,7 +529,7 @@ public class PostStore extends Store {
                 handleRestorePost((RemotePostPayload) action.getPayload());
                 break;
             case RESTORED_POST:
-                handleRestorePostCompleted((RemotePostPayload) action.getPayload());
+                handleRestorePostCompleted((RemotePostPayload) action.getPayload(), false);
                 break;
             case REMOVE_POST:
                 removePost((PostModel) action.getPayload());
@@ -700,19 +700,11 @@ public class PostStore extends Store {
             }
             emitChange(onPostUploaded);
             return;
-        }
-
-        if (payload.origin == PostAction.RESTORE_POST) {
-            if (payload.isError()) {
-                OnPostChanged event = new OnPostChanged(
-                        new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
-                event.error = payload.error;
-                emitChange(event);
-            } else {
-                restorePost(payload.post);
-            }
+        } else if (payload.origin == PostAction.RESTORE_POST) {
+            handleRestorePostCompleted(payload, true);
             return;
         }
+
 
         if (payload.isError()) {
             OnPostChanged event = new OnPostChanged(
@@ -745,18 +737,17 @@ public class PostStore extends Store {
         }
     }
 
-    private void handleRestorePostCompleted(RemotePostPayload payload) {
+    private void handleRestorePostCompleted(RemotePostPayload payload, boolean syncingNonWpComPost) {
         if (payload.isError()) {
-            CauseOfOnPostChanged causeOfChange =
-                    new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId());
-            OnPostChanged onPostRestored = new OnPostChanged(causeOfChange, 0);
-            onPostRestored.error = payload.error;
-            emitChange(onPostRestored);
+            OnPostChanged event = new OnPostChanged(
+                    new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+            event.error = payload.error;
+            emitChange(event);
         } else {
-            if (payload.site.isUsingWpComRestApi()) {
+            if (payload.site.isUsingWpComRestApi() || syncingNonWpComPost) {
                 restorePost(payload.post);
             } else {
-                // XML-RPC responds to post restore request with boolean
+                // XML-RPC responds to post restore request with status boolean
                 // Update the post locally to reflect its published state, and request a fresh copy
                 // from the server to ensure local copy matches server
                 PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
