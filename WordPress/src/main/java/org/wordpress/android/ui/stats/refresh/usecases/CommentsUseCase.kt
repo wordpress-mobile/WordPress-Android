@@ -57,7 +57,7 @@ class CommentsUseCase
         val postsTab = buildPostsTab(model.posts)
         items.add(TabsItem(listOf(authorsTab, postsTab)))
 
-        if (authorsTab.items.size == PAGE_SIZE || postsTab.items.size == PAGE_SIZE) {
+        if (authorsTab.items.size >= PAGE_SIZE || postsTab.items.size >= PAGE_SIZE) {
             items.add(Link(text = string.stats_insights_view_more) {
                 navigateTo(ViewCommentsStats(site.siteId))
             })

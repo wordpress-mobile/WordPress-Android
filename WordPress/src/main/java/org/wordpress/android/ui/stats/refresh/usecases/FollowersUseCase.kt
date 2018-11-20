@@ -80,7 +80,7 @@ class FollowersUseCase
                 )
         )
 
-        if (wpComTab.items.size == PAGE_SIZE || emailTab.items.size >= PAGE_SIZE) {
+        if (wpComTab.items.size >= PAGE_SIZE || emailTab.items.size >= PAGE_SIZE) {
             items.add(Link(text = string.stats_insights_view_more) {
                 navigateTo(ViewFollowersStats(site.siteId))
             })
