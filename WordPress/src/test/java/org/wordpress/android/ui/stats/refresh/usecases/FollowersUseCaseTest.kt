@@ -175,6 +175,44 @@ class FollowersUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `maps full followers to UI model`() = test {
+        val forced = false
+        val refresh = true
+        val wpComFollowers = List(6) { FollowerModel(avatar, user, url, dateSubscribed) }
+        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+                OnInsightsFetched(
+                        model = FollowersModel(
+                                0,
+                                wpComFollowers
+                        )
+                )
+        )
+        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+                OnInsightsFetched(
+                        model = FollowersModel(
+                                0,
+                                listOf()
+                        )
+                )
+        )
+
+        val result = loadFollowers(refresh, forced)
+
+        Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        (result as ListInsightItem).apply {
+            Assertions.assertThat(this.items).hasSize(3)
+            assertTitle(this.items[0])
+            val tabsItem = this.items[1] as TabsItem
+
+            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_followers_wordpress_com)
+            assertThat(tabsItem.tabs[0].items.size).isEqualTo(wpComFollowers.size + 2)
+
+            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_followers_email)
+            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
+        }
+    }
+
+    @Test
     fun `maps WPCOM error item to UI model`() = test {
         val forced = false
         val refresh = true

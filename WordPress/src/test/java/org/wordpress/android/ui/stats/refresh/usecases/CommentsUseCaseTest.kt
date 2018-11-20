@@ -127,6 +127,32 @@ class CommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `maps full comments to UI model`() = test {
+        val forced = false
+        val authors = List(6) { CommentsModel.Author(user, totalCount, url, avatar) }
+        whenever(insightsStore.fetchComments(site, forced)).thenReturn(
+                OnInsightsFetched(
+                        CommentsModel(listOf(), authors)
+                )
+        )
+
+        val result = loadComments(true, forced)
+
+        assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        (result as ListInsightItem).apply {
+            assertThat(this.items).hasSize(3)
+            assertTitle(this.items[0])
+            val tabsItem = this.items[1] as TabsItem
+
+            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_comments_authors)
+            assertThat(tabsItem.tabs[0].items).size().isEqualTo(authors.size + 1)
+
+            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_comments_posts_and_pages)
+            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
+        }
+    }
+
+    @Test
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
