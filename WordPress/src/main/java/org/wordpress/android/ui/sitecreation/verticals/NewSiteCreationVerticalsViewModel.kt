@@ -180,7 +180,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         if (errorFetchingSuggestions) {
             val errorUiState = VerticalsFetchSuggestionsErrorUiState(
                     messageResId = R.string.site_creation_fetch_suggestions_failed,
-                    retryButonResId = R.string.button_retry
+                    retryButtonResId = R.string.button_retry
             )
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
@@ -244,7 +244,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
         data class VerticalsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
-            @StringRes val retryButonResId: Int
+            @StringRes val retryButtonResId: Int
         ) : VerticalsListItemUiState() {
             lateinit var onItemTapped: () -> Unit
         }
