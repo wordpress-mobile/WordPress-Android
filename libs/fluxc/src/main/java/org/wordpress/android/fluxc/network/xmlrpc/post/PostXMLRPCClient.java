@@ -329,9 +329,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         params.add(post.getRemotePostId());
         params.add(contentStruct);
 
-        final XMLRPC method = XMLRPC.EDIT_POST;
-
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
@@ -365,45 +363,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         request.disableRetries();
         add(request);
-//
-//
-//        List<Object> params = new ArrayList<>(4);
-//        params.add(site.getSelfHostedSiteId());
-//        params.add(site.getUsername());
-//        params.add(site.getPassword());
-//        params.add(post.getRemotePostId());
-//
-//        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.UNTRASH_POST, params,
-//                new Listener<Object>() {
-//                    @Override
-//                    public void onResponse(Object response) {
-//                        RemotePostPayload payload = new RemotePostPayload(post, site);
-//                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
-//                    }
-//                },
-//                new BaseErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-//                        // Possible non-generic errors:
-//                        // 404 - "Invalid post ID."
-//                        RemotePostPayload payload = new RemotePostPayload(post, site);
-//                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-//                        // Convert GenericErrorType to PostErrorType where applicable
-//                        PostError postError;
-//                        switch (error.type) {
-//                            case AUTHORIZATION_REQUIRED:
-//                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-//                                break;
-//                            default:
-//                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-//                        }
-//                        payload.error = postError;
-//                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
-//                    }
-//                });
-//
-//        request.disableRetries();
-//        add(request);
     }
 
     private @NotNull List<PostListItem> postListItemsFromPostsResponse(@Nullable Object[] response) {
