@@ -32,7 +32,6 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.viewmodel.ResourceProvider
 
 class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore

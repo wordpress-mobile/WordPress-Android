@@ -20,7 +20,7 @@ class ResourceProvider @Inject constructor(private val context: Context) {
         return ContextCompat.getColor(context, resourceId)
     }
 
-    fun getDimensionPixelSize(@DimenRes dimen: Int): Int{
+    fun getDimensionPixelSize(@DimenRes dimen: Int): Int {
         val resources = context.resources
         return resources.getDimensionPixelSize(dimen)
     }
