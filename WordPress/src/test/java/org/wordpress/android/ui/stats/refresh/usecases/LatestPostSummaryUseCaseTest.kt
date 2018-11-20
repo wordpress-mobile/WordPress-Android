@@ -1,16 +1,13 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.usecases
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
@@ -24,22 +21,28 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.Failed
+import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
-@RunWith(MockitoJUnitRunner::class)
-class LatestPostSummaryUseCaseTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
-    fun setUp() {
-        useCase = LatestPostSummaryUseCase(insightsStore, latestPostSummaryMapper)
+    fun setUp() = test {
+        useCase = LatestPostSummaryUseCase(
+                Dispatchers.Unconfined,
+                insightsStore,
+                latestPostSummaryMapper
+        )
         useCase.navigationTarget.observeForever {}
+        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
     @Test
@@ -56,36 +59,23 @@ class LatestPostSummaryUseCaseTest {
                 )
         )
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(Failed::class.java)
-        (result as Failed).let {
-            assertThat(result.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
-            assertThat(result.errorMessage).isEqualTo(message)
-        }
+        val failed = result as Failed
+        assertThat(failed.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
+        assertThat(failed.errorMessage).isEqualTo(message)
     }
 
     @Test
-    fun `returns create empty item when model is missing`() = test {
+    fun `returns null item when model is missing`() = test {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnInsightsFetched())
-        val textItem = mock<Text>()
-        whenever(latestPostSummaryMapper.buildMessageItem(isNull())).thenReturn(textItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(ListInsightItem::class.java)
-        (result as ListInsightItem).items.apply {
-            val title = this[0] as Title
-            assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
-            assertThat(this[1]).isEqualTo(textItem)
-            val link = this[2] as Link
-            assertThat(link.icon).isEqualTo(R.drawable.ic_create_blue_medium_24dp)
-            assertThat(link.text).isEqualTo(R.string.stats_insights_create_post)
-
-            assertThat(link.toNavigationTarget()).isEqualTo(NavigationTarget.AddNewPost)
-        }
+        assertThat(result).isNull()
     }
 
     @Test
@@ -103,7 +93,7 @@ class LatestPostSummaryUseCaseTest {
         val textItem = mock<Text>()
         whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -142,7 +132,7 @@ class LatestPostSummaryUseCaseTest {
         val chartItem = mock<BarChartItem>()
         whenever(latestPostSummaryMapper.buildBarChartItem(dayViews)).thenReturn(chartItem)
 
-        val result = useCase.loadLatestPostSummary(site, refresh, forced)
+        val result = loadLatestPostSummary(refresh, forced)
 
         assertThat(result).isInstanceOf(ListInsightItem::class.java)
         (result as ListInsightItem).items.apply {
@@ -163,6 +153,16 @@ class LatestPostSummaryUseCaseTest {
                 assertThat(this.siteID).isEqualTo(model.siteId)
             }
         }
+    }
+
+    private suspend fun loadLatestPostSummary(
+        refresh: Boolean,
+        forced: Boolean
+    ): InsightsItem? {
+        var result: InsightsItem? = null
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
+        return result
     }
 
     private fun Link.toNavigationTarget(): NavigationTarget? {

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.NOT_IMPLEMENTED
+import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
 import org.wordpress.android.util.image.ImageManager
 
@@ -26,10 +26,10 @@ class InsightsAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHold
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InsightsViewHolder {
         return when (values()[viewType]) {
-            NOT_IMPLEMENTED -> NotImplementedViewHolder(parent)
             LIST_INSIGHTS -> ListInsightsViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyInsightsViewHolder(parent)
+            LOADING -> LoadingInsightsViewHolder(parent)
         }
     }
 
@@ -42,7 +42,6 @@ class InsightsAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHold
     override fun onBindViewHolder(holder: InsightsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
-            is NotImplementedViewHolder -> holder.bind(item as NotImplemented)
             is ListInsightsViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)
             is EmptyInsightsViewHolder -> holder.bind(item as Empty)
