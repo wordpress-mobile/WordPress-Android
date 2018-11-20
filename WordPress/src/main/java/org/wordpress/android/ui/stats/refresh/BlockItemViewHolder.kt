@@ -307,7 +307,13 @@ sealed class BlockItemViewHolder(
 
         fun bind(expandableItem: ExpandableItem) {
             val header = expandableItem.header
-            icon.setImageOrLoad(header.icon, header.iconUrl) { imageView, url -> imageManager.load(imageView, IMAGE, url) }
+            icon.setImageOrLoad(header.icon, header.iconUrl) { imageView, url ->
+                imageManager.load(
+                        imageView,
+                        IMAGE,
+                        url
+                )
+            }
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
@@ -347,7 +353,8 @@ sealed class BlockItemViewHolder(
     }
 
     fun ImageView.setImageOrLoad(
-        @DrawableRes resource: Int?, url: String?,
+        @DrawableRes resource: Int?,
+        url: String?,
         loadMethod: (imageView: ImageView, url: String) -> Unit
     ) {
         when {
