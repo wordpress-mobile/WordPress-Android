@@ -64,7 +64,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -89,7 +89,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -114,7 +114,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 

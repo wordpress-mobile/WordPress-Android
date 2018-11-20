@@ -91,7 +91,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -125,7 +125,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -162,7 +162,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
