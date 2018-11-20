@@ -526,7 +526,7 @@ public class PostStore extends Store {
                 handleDeletePostCompleted((RemotePostPayload) action.getPayload());
                 break;
             case RESTORE_POST:
-                restorePost((RemotePostPayload) action.getPayload());
+                handleRestorePost((RemotePostPayload) action.getPayload());
                 break;
             case RESTORED_POST:
                 handleRestorePostCompleted((RemotePostPayload) action.getPayload());
@@ -555,7 +555,7 @@ public class PostStore extends Store {
         }
     }
 
-    private void restorePost(RemotePostPayload payload) {
+    private void handleRestorePost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.restorePost(payload.post, payload.site);
         } else {
@@ -709,7 +709,7 @@ public class PostStore extends Store {
                 event.error = payload.error;
                 emitChange(event);
             } else {
-                restorePostLocally(payload.post);
+                restorePost(payload.post);
             }
             return;
         }
@@ -754,12 +754,10 @@ public class PostStore extends Store {
             emitChange(onPostRestored);
         } else {
             if (payload.site.isUsingWpComRestApi()) {
-                // The WP.COM REST API response contains the modified post, so we're already in sync with the server
-                // All we need to do is store it and emit OnPostChanged
-                restorePostLocally(payload.post);
+                restorePost(payload.post);
             } else {
-                // XML-RPC does not respond to new/edit post calls with the modified post
-                // Update the post locally to reflect its uploaded status, but also request a fresh copy
+                // XML-RPC responds to post restore request with boolean
+                // Update the post locally to reflect its published state, and request a fresh copy
                 // from the server to ensure local copy matches server
                 PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
                 mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.RESTORE_POST);
@@ -789,16 +787,6 @@ public class PostStore extends Store {
                 new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
     }
 
-    private void restorePostLocally(PostModel post) {
-        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.RestorePost(post.getId(), post.getRemotePostId());
-        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
-        emitChange(onPostChanged);
-
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
-    }
-
     private void removePost(PostModel post) {
         if (post == null) {
             return;
@@ -817,6 +805,17 @@ public class PostStore extends Store {
         int rowsAffected = PostSqlUtils.deleteAllPosts();
         OnPostChanged event = new OnPostChanged(RemoveAllPosts.INSTANCE, rowsAffected);
         emitChange(event);
+    }
+
+    private void restorePost(PostModel postModel) {
+        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        CauseOfOnPostChanged causeOfChange =
+                new CauseOfOnPostChanged.RestorePost(postModel.getId(), postModel.getRemotePostId());
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        emitChange(onPostChanged);
+
+        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
+                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId()))));
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
