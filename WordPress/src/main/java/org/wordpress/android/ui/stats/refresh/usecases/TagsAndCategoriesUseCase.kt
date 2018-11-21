@@ -24,6 +24,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val PAGE_SIZE = 6
+
 class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -31,7 +33,7 @@ class TagsAndCategoriesUseCase
     private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
-        val response = insightsStore.fetchTags(site, forced)
+        val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -45,31 +47,29 @@ class TagsAndCategoriesUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
-        val model = insightsStore.getTags(site)
+        val model = insightsStore.getTags(site, PAGE_SIZE)
         return model?.let { loadTagsAndCategories(site, model) }
     }
 
     private fun loadTagsAndCategories(
         site: SiteModel,
-        model: TagsModel?
+        model: TagsModel
     ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
-        if (model == null) {
+        items.add(Title(R.string.stats_view_tags_and_categories))
+        if (model.tags.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Title(R.string.stats_view_tags_and_categories))
-            if (model.tags.isEmpty()) {
-                items.add(Empty)
-            } else {
-                items.addAll(model.tags.mapIndexed { index, tag ->
-                    when {
-                        tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
-                        else -> ExpandableItem(
-                                mapCategory(tag, index, model.tags.size),
-                                tag.items.map { subTag -> mapItem(subTag) }
-                        )
-                    }
-                })
+            items.addAll(model.tags.take(PAGE_SIZE).mapIndexed { index, tag ->
+                when {
+                    tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
+                    else -> ExpandableItem(
+                            mapCategory(tag, index, model.tags.size),
+                            tag.items.map { subTag -> mapItem(subTag) }
+                    )
+                }
+            })
+            if (model.hasMore) {
                 items.add(Link(text = R.string.stats_insights_view_more) {
                     navigateTo(ViewTagsAndCategoriesStats(site.siteId))
                 })
