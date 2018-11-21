@@ -73,28 +73,11 @@ class MostPopularUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps empty stats item to UI model`() = test {
-        val forced = false
-        val refresh = true
-        val model: InsightsMostPopularModel? = null
-        whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(OnInsightsFetched(model))
-
-        val result = loadMostPopularInsights(refresh, forced)
-
-        assertThat(result.type).isEqualTo(LIST_INSIGHTS)
-        (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(Empty)
-        }
-    }
-
-    @Test
     fun `maps error item to UI model`() = test {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
+        whenever(insightsStore.fetchMostPopularInsights(site, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
