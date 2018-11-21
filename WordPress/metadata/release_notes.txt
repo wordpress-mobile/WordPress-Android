@@ -1,3 +1,3 @@
 * The Post Revision screen now shows a visual preview of each revision, so you can see exactly what the older versions looked like and find the one you need quicker.
-* Improved handling of links that open the app from WordPress.com.
-* Bug fixes.
+* If you used the mobile (i.e., browser) version of WordPress.com and clicked on a banner suggesting that you view something in the app, but then didn’t actually end up on the right page in the app? Those links are a lot more accurate now.
+* Found and squashed some bugs around changing your password and media storage limits.
