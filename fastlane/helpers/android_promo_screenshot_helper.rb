@@ -27,8 +27,8 @@ module Fastlane
         @device = device
         UI.message("Generate promo screenshot for device: #{@device[:device]}")
 
-        locales.each do | locale, options |
-          generate_locale(locale, options)
+        locales.each do | locale |
+          generate_locale(locale[:google_play], locale[:promo_config])
         end
       end
 

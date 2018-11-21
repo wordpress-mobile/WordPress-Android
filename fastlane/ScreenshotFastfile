@@ -114,31 +114,6 @@ platform :android do
   #####################################################################################
   desc "Creates promo screenshots"
   lane :create_promo_screenshots do |options| 
-    locales = {
-      "ar" => {},
-      "de-DE" => {},
-      "en-US" => {},
-      "es-ES" => {},
-      "fr-CA" => {},
-      "fr-FR" => {},
-      "iw-IL" => {},
-      "id" => {},
-      "it-IT" => {},
-      "ja-JP" => {}, {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60},
-      "ko-KR" => {}, {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60},
-      "nl-NL" => {},
-      "pl-PL" => {text_size: 70},
-      "pt-BR" => {},
-      "ru-RU" => {text_size: 70},
-      "sr" => {},
-      "sv-SE" => {},
-      "th" => {},
-      "tr-TR" => {},
-      "vi" => {},
-      "zh-CN" => {}, {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60},
-      "zh-TW" => {}, {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60}
-    }
-
     config_data = [
       {device: "phoneScreenshots", template: File.join(Dir.pwd, "playstoreres/assets/android-phone-template.png"), comp_size: "840x1478", comp_offset: "+121+532"},
       {device: "sevenInchScreenshots", template: File.join(Dir.pwd, "playstoreres/assets/android-tab7-template.png"), comp_size: "910x1458", comp_offset: "+145+552"},
@@ -158,7 +133,7 @@ platform :android do
     # Run screenshots generator tool 
     android_promo_screenshot(orig_folder: orig_folder,
       output_folder: output_folder,
-      locales: locales,
+      locales: SUPPORTED_LOCALES.map do |hash| { google_play: hash[:google_play], promo_config: hash[:promo_config] } end,
       device_config: config_data,
       default_locale: "en-US", 
       metadata_folder: File.join(Dir.pwd, "playstoreres/metadata"))  
