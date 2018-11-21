@@ -346,7 +346,7 @@ class InsightsRestClientTest {
     fun `returns tags and categories`() = test {
         initTagsResponse(TAGS_RESPONSE)
 
-        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize,  forced = false)
+        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(TAGS_RESPONSE)
