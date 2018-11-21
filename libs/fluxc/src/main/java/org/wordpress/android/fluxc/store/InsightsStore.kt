@@ -124,84 +124,97 @@ class InsightsStore
     }
 
     // Followers stats
-    suspend fun fetchWpComFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, WP_COM)
+    suspend fun fetchWpComFollowers(
+        siteModel: SiteModel,
+        pageSize: Int,
+        forced: Boolean = false
+    ): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, pageSize, forced, WP_COM)
     }
 
-    suspend fun fetchEmailFollowers(siteModel: SiteModel, forced: Boolean = false): OnInsightsFetched<FollowersModel> {
-        return fetchFollowers(siteModel, forced, EMAIL)
+    suspend fun fetchEmailFollowers(
+        siteModel: SiteModel,
+        pageSize: Int,
+        forced: Boolean = false
+    ): OnInsightsFetched<FollowersModel> {
+        return fetchFollowers(siteModel, pageSize, forced, EMAIL)
     }
 
     private suspend fun fetchFollowers(
         siteModel: SiteModel,
+        pageSize: Int,
         forced: Boolean = false,
         followerType: FollowerType
     ) = withContext(coroutineContext) {
-        val response = restClient.fetchFollowers(siteModel, followerType, forced = forced)
+        val response = restClient.fetchFollowers(siteModel, followerType, pageSize = pageSize + 1, forced = forced)
         return@withContext when {
             response.isError -> {
                 OnInsightsFetched(response.error)
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response, followerType)
-                OnInsightsFetched(insightsMapper.map(response.response, followerType))
+                OnInsightsFetched(insightsMapper.map(response.response, followerType, pageSize))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getWpComFollowers(site: SiteModel): FollowersModel? {
-        return getFollowers(site, WP_COM)
+    fun getWpComFollowers(site: SiteModel, pageSize: Int): FollowersModel? {
+        return getFollowers(site, WP_COM, pageSize)
     }
 
-    fun getEmailFollowers(site: SiteModel): FollowersModel? {
-        return getFollowers(site, EMAIL)
+    fun getEmailFollowers(site: SiteModel, pageSize: Int): FollowersModel? {
+        return getFollowers(site, EMAIL, pageSize)
     }
 
     private fun getFollowers(
         site: SiteModel,
-        followerType: FollowerType
+        followerType: FollowerType,
+        pageSize: Int
     ): FollowersModel? {
         val wpComResponse = sqlUtils.selectFollowers(site, followerType)
-        return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType) }
+        return wpComResponse?.let { insightsMapper.map(wpComResponse, followerType, pageSize) }
     }
 
     // Comments stats
-    suspend fun fetchComments(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val response = restClient.fetchTopComments(siteModel, forced = forced)
+    suspend fun fetchComments(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) = withContext(coroutineContext) {
+        val response = restClient.fetchTopComments(siteModel, pageSize = pageSize + 1, forced = forced)
         return@withContext when {
             response.isError -> {
                 OnInsightsFetched(response.error)
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response)
-                OnInsightsFetched(insightsMapper.map(response.response))
+                OnInsightsFetched(insightsMapper.map(response.response, pageSize))
             }
             else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getComments(site: SiteModel): CommentsModel? {
-        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it) }
+    fun getComments(site: SiteModel, pageSize: Int): CommentsModel? {
+        return sqlUtils.selectCommentInsights(site)?.let { insightsMapper.map(it, pageSize) }
     }
 
     // Tags
-    suspend fun fetchTags(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val response = restClient.fetchTags(siteModel, forced = forced)
-        return@withContext when {
-            response.isError -> {
-                OnInsightsFetched(response.error)
+    suspend fun fetchTags(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+            withContext(coroutineContext) {
+                val response = restClient.fetchTags(siteModel, pageSize = pageSize + 1, forced = forced)
+                return@withContext when {
+                    response.isError -> {
+                        OnInsightsFetched(response.error)
+                    }
+                    response.response != null -> {
+                        sqlUtils.insert(siteModel, response.response)
+                        OnInsightsFetched(
+                                insightsMapper.map(response.response, pageSize)
+                        )
+                    }
+                    else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+                }
             }
-            response.response != null -> {
-                sqlUtils.insert(siteModel, response.response)
-                OnInsightsFetched(insightsMapper.map(response.response))
-            }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
-        }
-    }
 
-    fun getTags(site: SiteModel): TagsModel? {
-        return sqlUtils.selectTags(site)?.let { insightsMapper.map(it) }
+    fun getTags(site: SiteModel, pageSize: Int): TagsModel? {
+        return sqlUtils.selectTags(site)?.let { insightsMapper.map(it, pageSize) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
