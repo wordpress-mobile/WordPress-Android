@@ -2,12 +2,19 @@ package org.wordpress.android.fluxc.tools
 
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
 
 class FormattableContentMapper @Inject constructor(val gson: Gson) {
     fun mapToFormattableContent(json: String): FormattableContent = gson.fromJson(json, FormattableContent::class.java)
 
+    fun mapToFormattableContentList(json: String): List<FormattableContent>
+            = gson.fromJson(json, object : TypeToken<List<FormattableContent>>() {}.type)
+
     fun mapFormattableContentToJson(formattableContent: FormattableContent): String = gson.toJson(formattableContent)
+
+    fun mapFormattableContentListToJson(formattableList: List<FormattableContent>): String
+            = gson.toJson(formattableList)
 }
 
 data class FormattableContent(
