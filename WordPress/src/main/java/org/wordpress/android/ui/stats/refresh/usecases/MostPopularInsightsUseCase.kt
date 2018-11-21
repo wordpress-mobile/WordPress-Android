@@ -34,7 +34,7 @@ class MostPopularInsightsUseCase
         val error = response.error
 
         return when {
-            error != null -> createFailedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+            error != null -> createFailedItem(R.string.stats_insights_popular, error.message ?: error.type.name)
             else -> model?.let { loadMostPopularInsightsItem(model) }
         }
     }
@@ -53,7 +53,7 @@ class MostPopularInsightsUseCase
                 ListItem(
                         dateUtils.getHour(model.highestHour),
                         "${model.highestHourPercent.roundToInt()}%",
-                        true
+                        false
                 )
         )
         return createDataItem(items)
