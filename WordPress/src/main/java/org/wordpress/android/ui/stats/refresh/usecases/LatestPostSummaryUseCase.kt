@@ -35,7 +35,10 @@ class LatestPostSummaryUseCase
         val error = response.error
 
         return when {
-            error != null -> createFailedItem(R.string.stats_insights_latest_post_summary, error.message ?: error.type.name)
+            error != null -> createFailedItem(
+                    R.string.stats_insights_latest_post_summary,
+                    error.message ?: error.type.name
+            )
             else -> model?.let { loadLatestPostSummaryItem(model) }
         }
     }
