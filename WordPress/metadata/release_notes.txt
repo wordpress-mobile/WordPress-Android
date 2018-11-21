@@ -1,4 +1,4 @@
-* Activity Log now available for free WordPress.com sites.
-* Improvements in support for some locales.
-* General improvements in Gif support.
-* A bunch of other bug fixes.
+* Jump directly from WordPress.com in your browser to the same content in your WordPress for Android app via the banner at the bottom of WordPress.com pages!
+* Post revision history is now available in the app via the History entry in the editor menu.
+* The media library now displays the space you’ve used.
+* Bug fixes.

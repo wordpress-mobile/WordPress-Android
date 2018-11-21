@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -69,8 +68,11 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             actionBar.setTitle(StringEscapeUtils.unescapeHtml4(SiteUtils.getSiteNameOrHomeURL(mSite)));
         }
 
+        // TODO: android.app.Fragment  is deprecated since Android P.
+        // Needs to be replaced with android.support.v4.app.Fragment
+        // See https://developer.android.com/reference/android/app/Fragment
         FragmentManager fragmentManager = getFragmentManager();
-        Fragment siteSettingsFragment = fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
+        android.app.Fragment siteSettingsFragment = fragmentManager.findFragmentByTag(KEY_SETTINGS_FRAGMENT);
 
         if (siteSettingsFragment == null) {
             siteSettingsFragment = new SiteSettingsFragment();

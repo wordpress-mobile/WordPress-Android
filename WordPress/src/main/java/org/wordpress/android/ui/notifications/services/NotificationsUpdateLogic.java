@@ -20,6 +20,7 @@ import org.wordpress.android.util.AppLog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -51,7 +52,7 @@ public class NotificationsUpdateLogic {
         params.put("num_note_items", "20");
         params.put("fields", RestClientUtils.NOTIFICATION_FIELDS);
         if (!TextUtils.isEmpty(mLocale)) {
-            params.put("locale", mLocale);
+            params.put("locale", mLocale.toLowerCase(Locale.ENGLISH));
         }
         RestListener listener = new RestListener();
         WordPress.getRestClientUtilsV1_1().getNotifications(params, listener, listener);
@@ -65,10 +66,7 @@ public class NotificationsUpdateLogic {
                 // Not sure this could ever happen, but make sure we're catching all response types
                 AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
                 EventBus.getDefault().post(
-                        new NotificationEvents.NotificationsRefreshCompleted(
-                                new ArrayList<Note>(0)
-                        )
-                                          );
+                        new NotificationEvents.NotificationsRefreshCompleted(new ArrayList<Note>(0)));
             } else {
                 try {
                     notes = NotificationsActions.parseNotes(response);
@@ -78,14 +76,10 @@ public class NotificationsUpdateLogic {
                         setNoteRead(mNoteId, notes);
                     }
                     NotificationsTable.saveNotes(notes, true);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshCompleted(notes)
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshCompleted(notes));
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response", e);
-                    EventBus.getDefault().post(
-                            new NotificationEvents.NotificationsRefreshError()
-                                              );
+                    EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError());
                 }
             }
             completed();
@@ -94,9 +88,7 @@ public class NotificationsUpdateLogic {
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             logVolleyErrorDetails(volleyError);
-            EventBus.getDefault().post(
-                    new NotificationEvents.NotificationsRefreshError(volleyError)
-                                      );
+            EventBus.getDefault().post(new NotificationEvents.NotificationsRefreshError(volleyError));
             completed();
         }
     }

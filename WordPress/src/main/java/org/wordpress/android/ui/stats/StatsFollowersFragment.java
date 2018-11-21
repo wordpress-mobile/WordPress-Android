@@ -177,7 +177,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             getString(R.string.stats_pagination_label),
                             FormatUtils.formatDecimal(followersModel.getPage()),
                             FormatUtils.formatDecimal(followersModel.getPages())
-                                                          );
+                    );
                     mBottomPaginationText.setText(paginationLabel);
                     mTopPaginationText.setText(paginationLabel);
                     setNavigationButtonsEnabled(true);
@@ -196,7 +196,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                         followersModel.getPage() - 1,
                                         new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                            );
+                                );
                             }
                         };
                         mBottomPaginationGoBackButton.setOnClickListener(clickListener);
@@ -217,7 +217,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                         followersModel.getPage() + 1,
                                         new StatsServiceLogic.StatsEndpointsEnum[]{
                                                 sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                            );
+                                );
                             }
                         };
                         mBottomPaginationGoForwardButton.setOnClickListener(clickListener);
@@ -236,7 +236,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             FormatUtils.formatDecimal(
                                     mTopPagerSelectedButtonIndex == 0 ? followersModel.getTotalWPCom()
                                             : followersModel.getTotalEmail())
-                                                 );
+                            );
                     mTotalsLabel.setText(pagedLabel);
                 } else {
                     // No paging required. Hide the controls.
@@ -360,10 +360,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    ReaderActivityLauncher.showReaderBlogPreview(
-                                            mContext,
-                                            blogID
-                                                                                );
+                                    ReaderActivityLauncher.showReaderBlogPreview(mContext, blogID);
                                 }
                             });
                 } else {
@@ -377,19 +374,14 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             }
 
             // since date
-            holder.totalsTextView.setText(
-                    StatsUtils.getSinceLabel(
-                            mContext,
-                            currentRowData.getDateSubscribed()
-                                            )
-                                         );
+            holder.totalsTextView.setText(StatsUtils.getSinceLabel(mContext, currentRowData.getDateSubscribed()));
             holder.totalsTextView.setContentDescription(
                     holder.totalsTextView.getContext().getString(
                             R.string.stats_follower_since_desc,
                             holder.totalsTextView.getText()));
 
             // Avatar
-            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR_WITH_BACKGROUND,
                     GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 

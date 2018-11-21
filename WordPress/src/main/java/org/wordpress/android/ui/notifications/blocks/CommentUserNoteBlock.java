@@ -4,17 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -22,6 +23,8 @@ import org.wordpress.android.util.image.ImageType;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
+    private static final String EMPTY_LINE = "\n\t";
+    private static final String DOUBLE_EMPTY_LINE = "\n\t\n\t";
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
@@ -31,15 +34,23 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     private boolean mStatusChanged;
 
+    private final FormattableContent mCommentData;
+    private final long mTimestamp;
+
     public interface OnCommentStatusChangeListener {
         void onCommentStatusChanged(CommentStatus newStatus);
     }
 
-    public CommentUserNoteBlock(Context context, JSONObject noteObject,
-                                OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+    public CommentUserNoteBlock(Context context, FormattableContent noteObject,
+                                FormattableContent commentTextBlock,
+                                long timestamp, OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener,
-                                ImageManager imageManager) {
-        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager);
+                                ImageManager imageManager, NotificationsUtilsWrapper notificationsUtilsWrapper) {
+        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
+                notificationsUtilsWrapper);
+
+        mCommentData = commentTextBlock;
+        mTimestamp = timestamp;
 
         if (context != null) {
             setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
@@ -61,7 +72,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
 
-        noteBlockHolder.mNameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
+        noteBlockHolder.mNameTextView
+                .setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
                 WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
@@ -81,9 +93,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setContentDescription(
-                    view.getContext().getString(R.string.profile_picture, getNoteText().toString()));
+                    view.getContext()
+                        .getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.mAvatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -105,9 +118,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
             noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
-        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
-        noteBlockHolder.mCommentTextView.setText(getCommentTextOfNotification(noteBlockHolder));
+        noteBlockHolder.mCommentTextView
+                .setText(getCommentTextOfNotification(noteBlockHolder));
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -159,33 +173,29 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
-    private String getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
-        String commentText = NotificationsUtils
-                .getSpannableContentForRanges(getNoteData().optJSONObject("comment_text"),
-                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false).toString();
-
-        return getStringWithNewlineInListsRemoved(commentText);
+    private Spannable getCommentTextOfNotification(CommentUserNoteBlockHolder noteBlockHolder) {
+        SpannableStringBuilder builder = mNotificationsUtilsWrapper
+                .getSpannableContentForRanges(mCommentData,
+                        noteBlockHolder.mCommentTextView, getOnNoteBlockTextClickListener(), false);
+        return removeNewLineInList(builder);
     }
 
-    private String getStringWithNewlineInListsRemoved(String noteString) {
-        if (noteString == null) {
-            return "";
+    private Spannable removeNewLineInList(SpannableStringBuilder builder) {
+        String content = builder.toString();
+        while (content.contains(DOUBLE_EMPTY_LINE)) {
+            int doubleSpaceIndex = content.indexOf(DOUBLE_EMPTY_LINE);
+            builder.replace(doubleSpaceIndex, doubleSpaceIndex + DOUBLE_EMPTY_LINE.length(), EMPTY_LINE);
+            content = builder.toString();
         }
-
-        return noteString.replace("\n\t\n\t", "\n\t");
+        return builder;
     }
 
     private long getTimestamp() {
-        return getNoteData().optInt("timestamp", 0);
+        return mTimestamp;
     }
 
     private boolean hasCommentNestingLevel() {
-        try {
-            JSONObject commentTextObject = getNoteData().getJSONObject("comment_text");
-            return commentTextObject.optInt("nest_level", 0) > 0;
-        } catch (JSONException e) {
-            return false;
-        }
+        return mCommentData.getNestLevel() != null && mCommentData.getNestLevel() > 0;
     }
 
     @Override

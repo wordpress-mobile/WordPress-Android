@@ -130,8 +130,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             int totalNumberOfFollowers = mCommentFollowersModel.getTotal();
             String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
             mTotalsLabel.setText(
-                    String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
-                                );
+                    String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers)));
         }
 
         ArrayAdapter adapter = null;
@@ -234,7 +233,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                             currentRowData.getViews()));
 
             // avatar
-            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(holder.networkImageView, ImageType.AVATAR_WITH_BACKGROUND,
                     GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx));
             holder.networkImageView.setVisibility(View.VISIBLE);
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/root_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator"
@@ -17,13 +17,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="@dimen/margin_medium"
-                android:scrollbars="vertical" />
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="@dimen/margin_medium"
+                    android:scrollbars="vertical"/>
+
+                <org.wordpress.android.ui.ActionableEmptyView
+                    android:id="@+id/actionable_empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/background_grey"
+                    android:visibility="gone"
+                    app:aevButton="@string/posts_empty_list_button"
+                    app:aevImage="@drawable/img_illustration_posts_75dp"
+                    app:aevTitle="@string/posts_empty_list"
+                    tools:visibility="visible">
+                </org.wordpress.android.ui.ActionableEmptyView>
+
+            </RelativeLayout>
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
@@ -33,26 +51,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_create_white_24dp"
+            android:layout_marginEnd="@dimen/fab_margin"
             android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed"
-            android:layout_marginEnd="@dimen/fab_margin"/>
+            android:src="@drawable/ic_create_white_24dp"/>
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:background="@color/background_grey"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        app:aevButton="@string/posts_empty_list_button"
-        app:aevImage="@drawable/img_illustration_posts_75dp"
-        app:aevTitle="@string/posts_empty_list"
-        tools:visibility="visible" >
-    </org.wordpress.android.ui.ActionableEmptyView>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -63,6 +68,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/margin_large"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 </RelativeLayout>

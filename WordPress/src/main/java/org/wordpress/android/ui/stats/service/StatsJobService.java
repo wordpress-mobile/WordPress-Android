@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.service;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.Bundle;
@@ -20,8 +19,6 @@ import static org.wordpress.android.ui.stats.service.StatsServiceStarter.ARG_STA
  * Parsing of response(s) and submission of new network calls are done by using a ThreadPoolExecutor
  * with a single thread.
  */
-
-@TargetApi(21)
 public class StatsJobService extends JobService implements StatsServiceLogic.ServiceCompletionListener {
     @Override
     public boolean onStartJob(JobParameters params) {

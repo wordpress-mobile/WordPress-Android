@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_gravity="center"
     android:layout_height="wrap_content"
-    android:layout_width="@dimen/default_dialog_width">
+    android:layout_width="@dimen/default_dialog_width" >
 
     <LinearLayout
         android:id="@+id/promo_dialog_image_container"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_height="wrap_content"
-        android:layout_width="@dimen/default_dialog_width"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="@color/grey_light" >
 
@@ -23,7 +24,7 @@
             android:layout_gravity="center"
             android:background="@color/grey_light"
             android:contentDescription="@null"
-            app:srcCompat="@drawable/img_promo_editor" >
+            android:src="@drawable/img_promo_editor" >
         </ImageView>
 
     </LinearLayout>
@@ -32,19 +33,19 @@
         android:id="@+id/promo_dialog_text"
         android:layout_below="@+id/promo_dialog_image_container"
         android:layout_height="wrap_content"
-        android:layout_width="@dimen/default_dialog_width"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:padding="@dimen/margin_dialog" >
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_title"
+            tools:text="Promotional Feature"
             style="@style/PromoDialogTitle" >
         </org.wordpress.android.widgets.WPTextView>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/promo_dialog_description"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            tools:text="This is a short description about the promotional feature."
             style="@style/PromoDialogDescription" >
         </org.wordpress.android.widgets.WPTextView>
 
@@ -52,48 +53,64 @@
             android:id="@+id/promo_dialog_link"
             android:clickable="true"
             android:focusable="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            tools:text="Link"
             style="@style/PromoDialogLink" >
         </org.wordpress.android.widgets.WPTextView>
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="@dimen/default_dialog_width"
-        android:layout_height="1dp"
+    <RelativeLayout
         android:layout_below="@+id/promo_dialog_text"
-        android:background="@color/grey_lighten_30" />
-
-    <LinearLayout
-        android:gravity="end|end"
-        android:layout_below="@+id/divider"
         android:layout_height="wrap_content"
-        android:layout_width="@dimen/default_dialog_width"
-        android:orientation="horizontal"
-        android:padding="@dimen/margin_medium" >
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/promo_dialog_button_negative"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:minHeight="@dimen/default_dialog_button_height"
-            android:textAllCaps="true"
-            android:textColor="@color/blue_medium"
-            style="?android:attr/borderlessButtonStyle" >
-        </android.support.v7.widget.AppCompatButton>
+        android:layout_width="match_parent"
+        android:padding="@dimen/margin_large" >
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/promo_dialog_button_positive"
+            android:ellipsize="end"
+            android:layout_alignParentEnd="true"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
             android:textAllCaps="true"
             android:textColor="@color/blue_medium"
-            style="?android:attr/borderlessButtonStyle" >
+            tools:text="Yes"
+            style="@style/Widget.AppCompat.Button.Borderless" >
         </android.support.v7.widget.AppCompatButton>
 
-    </LinearLayout>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/promo_dialog_button_negative"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/promo_dialog_button_positive"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_medium"
+            android:visibility="gone"
+            tools:text="No"
+            tools:visibility="visible"
+            style="@style/Widget.AppCompat.Button.Borderless" >
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/promo_dialog_button_neutral"
+            android:ellipsize="end"
+            android:layout_alignParentStart="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_medium"
+            android:visibility="gone"
+            tools:text="Maybe"
+            tools:visibility="visible"
+            style="@style/Widget.AppCompat.Button.Borderless" >
+        </android.support.v7.widget.AppCompatButton>
+
+    </RelativeLayout>
 
 </RelativeLayout>

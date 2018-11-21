@@ -5,6 +5,7 @@ import android.support.test.InstrumentationRegistry;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.LocaleManager;
 
 public class WPLocaleTestRule implements TestRule {
@@ -45,6 +46,7 @@ public class WPLocaleTestRule implements TestRule {
 
     private static void changeLocale(String localeCode) {
         LocaleManager.setNewLocale(InstrumentationRegistry.getTargetContext(), localeCode);
+        WordPress.updateContextLocale();
     }
 
     private static String localeCodeFromInstrumentation(String key) {

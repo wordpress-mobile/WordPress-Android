@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/checklist_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_list_complete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/grey_lighten_30"
+            android:gravity="center_horizontal"
+            android:minHeight="@dimen/quick_start_completed_row_height"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_extra_medium_large"
+            android:paddingStart="@dimen/margin_extra_extra_medium_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/text_list_complete_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/img_emoji_party_popper_24sp"
+                android:drawablePadding="@dimen/margin_small_medium"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="bottom"
+                android:text="@string/quick_start_list_complete_title"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/quick_start_completed_text" >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quick_start_list_complete_subtitle"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/quick_start_completed_text">
+            </TextView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_create_site"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_create_site"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_plus_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_create_site"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp"
+                tools:visibility="visible">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_create_site"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_create_site"
+                android:layout_toStartOf="@+id/done_create_site"
+                android:text="@string/quick_start_list_create_site_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_create_site"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_create_site"
+                android:layout_toEndOf="@+id/icon_create_site"
+                android:layout_toStartOf="@+id/done_create_site"
+                android:text="@string/quick_start_list_create_site_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_create_site"
+                android:layout_below="@+id/subtitle_create_site">
+            </View>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/layout_view_site"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_view_site"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_external_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_view_site"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_view_site"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_view_site"
+                android:layout_toStartOf="@+id/done_view_site"
+                android:text="@string/quick_start_list_view_site_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_view_site"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_view_site"
+                android:layout_toEndOf="@+id/icon_view_site"
+                android:layout_toStartOf="@+id/done_view_site"
+                android:text="@string/quick_start_list_view_site_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_view_site"
+                android:layout_below="@+id/subtitle_view_site">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_browse_themes"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_browse_themes"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_themes_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_browse_themes"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_browse_themes"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_browse_themes"
+                android:layout_toStartOf="@+id/done_browse_themes"
+                android:text="@string/quick_start_list_choose_theme_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_browse_themes"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_browse_themes"
+                android:layout_toEndOf="@+id/icon_browse_themes"
+                android:layout_toStartOf="@+id/done_browse_themes"
+                android:text="@string/quick_start_list_choose_theme_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_browse_themes"
+                android:layout_below="@+id/subtitle_browse_themes">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_customize_site"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_customize_site"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_customize_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_customize_site"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_customize_site"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_customize_site"
+                android:layout_toStartOf="@+id/done_customize_site"
+                android:text="@string/quick_start_list_customize_site_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_customize_site"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_customize_site"
+                android:layout_toEndOf="@+id/icon_customize_site"
+                android:layout_toStartOf="@+id/done_customize_site"
+                android:text="@string/quick_start_list_customize_site_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_customize_site"
+                android:layout_below="@+id/subtitle_customize_site">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_share_site"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_share_site"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_share_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_share_site"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_share_site"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_share_site"
+                android:layout_toStartOf="@+id/done_share_site"
+                android:text="@string/quick_start_list_share_site_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_share_site"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_share_site"
+                android:layout_toEndOf="@+id/icon_share_site"
+                android:layout_toStartOf="@+id/done_share_site"
+                android:text="@string/quick_start_list_share_site_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_share_site"
+                android:layout_below="@+id/subtitle_share_site">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_publish_post"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_publish_post"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_create_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_publish_post"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_publish_post"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_publish_post"
+                android:layout_toStartOf="@+id/done_publish_post"
+                android:text="@string/quick_start_list_publish_post_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_publish_post"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_publish_post"
+                android:layout_toEndOf="@+id/icon_publish_post"
+                android:layout_toStartOf="@+id/done_publish_post"
+                android:text="@string/quick_start_list_publish_post_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_publish_post"
+                android:layout_below="@+id/subtitle_publish_post">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_follow_site"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_follow_site"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_reader_follow_white_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_follow_site"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_follow_site"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_follow_site"
+                android:layout_toStartOf="@+id/done_follow_site"
+                android:text="@string/quick_start_list_follow_site_title">
+            </TextView>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/subtitle_follow_site"
+                style="@style/QuickStartSubtitle"
+                android:layout_below="@+id/title_follow_site"
+                android:layout_toEndOf="@+id/icon_follow_site"
+                android:layout_toStartOf="@+id/done_follow_site"
+                android:text="@string/quick_start_list_follow_site_subtitle"
+                app:fixWidowWords="true">
+            </org.wordpress.android.widgets.WPTextView>
+
+            <View
+                style="@style/QuickStartDivider"
+                android:layout_alignStart="@+id/title_follow_site"
+                android:layout_below="@+id/subtitle_follow_site">
+            </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_skip_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_medium">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_skip_all"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/quick_start_button_skip"
+                android:textColor="@color/blue_wordpress">
+            </android.support.v7.widget.AppCompatButton>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</ScrollView>

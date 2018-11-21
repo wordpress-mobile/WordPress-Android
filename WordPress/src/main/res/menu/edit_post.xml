@@ -1,32 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
     <item
         android:id="@+id/menu_save_post"
-        app:showAsAction="always"
-        android:title="@string/post_status_publish_post"/>
+        android:title="@string/post_status_publish_post"
+        app:showAsAction="always" >
+    </item>
 
     <group
         android:orderInCategory="1" >
+
         <item
             android:id="@+id/menu_save_as_draft_or_publish"
-            android:title="@string/menu_save_as_draft"/>
+            android:title="@string/menu_save_as_draft" >
+        </item>
+
         <item
             android:id="@+id/menu_preview_post"
-            android:title="@string/menu_preview"/>
+            android:title="@string/menu_preview" >
+        </item>
+
         <item
             android:id="@+id/menu_html_mode"
-            android:title="@string/menu_html_mode"/>
+            android:title="@string/menu_html_mode" >
+        </item>
+
+        <item
+            android:id="@+id/menu_history"
+            android:title="@string/menu_history" >
+        </item>
+
         <item
             android:id="@+id/menu_post_settings"
-            android:title="@string/post_settings"/>
+            android:title="@string/post_settings" >
+        </item>
+
     </group>
 
     <group
         android:orderInCategory="2" >
+
         <item
             android:id="@+id/menu_discard_changes"
-            android:title="@string/menu_discard_changes"/>
+            android:title="@string/menu_discard_changes" >
+        </item>
+
     </group>
 
 </menu>

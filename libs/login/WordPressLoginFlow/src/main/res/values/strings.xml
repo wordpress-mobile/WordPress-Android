@@ -58,8 +58,9 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
-    <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+    <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
@@ -80,7 +81,7 @@
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
     <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
-    <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
+    <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="auth_required">Log in again to continue.</string>
     <string name="checking_email">Checking email</string>
     <string name="email_invalid">Enter a valid email address</string>
@@ -96,6 +97,7 @@
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
         site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
+    <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
 
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
@@ -131,8 +133,7 @@
     This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
     <string name="default_web_client_id">placeholder</string>
 
-    <!-- same as above, we need to have these same-named string resources to be used as channel IDs in a similar way in the
-    host application -->
-    <string name="notification_channel_normal_id">placeholder</string>
-    <string name="notification_channel_important_id">placeholder</string>
+    <!-- Placeholder for notification channel to be used by login service notification.
+     This resource must be overwritten in the host project with a real notification channel id it has configured. -->
+    <string name="login_notification_channel_id">placeholder</string>
 </resources>

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -43,7 +43,7 @@ public class MyProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         MyProfileFragment myProfileFragment =
                 (MyProfileFragment) fragmentManager.findFragmentByTag(KEY_MY_PROFILE_FRAGMENT);
         if (myProfileFragment == null) {

@@ -2,7 +2,6 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,9 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/margin_extra_extra_large"
-            android:paddingLeft="@dimen/margin_extra_large"
             android:paddingStart="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
             android:paddingEnd="@dimen/margin_extra_large"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -27,7 +24,7 @@
                 android:layout_height="@dimen/site_creation_creating_illustration_height"
                 android:scaleType="centerInside"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/img_site_wordpress_camera_pencils_226dp"/>
+                android:src="@drawable/img_site_wordpress_camera_pencils_226dp"/>
 
             <LinearLayout
                 android:id="@+id/progress_container"
@@ -157,7 +154,7 @@
                 android:layout_above="@id/centerline"
                 android:contentDescription="@null"
                 android:scaleType="center"
-                app:srcCompat="@drawable/img_confetti_284dp"/>
+                android:src="@drawable/img_confetti_284dp"/>
 
             <TextView
                 style="@style/TextAppearance.AppCompat.Inverse"

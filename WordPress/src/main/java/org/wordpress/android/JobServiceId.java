@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.TargetApi;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class JobServiceId {
+    public static final int JOB_INSTALL_REFERRER_SERVICE_ID = 9000;
     public static final int JOB_STATS_SERVICE_ID = 8000;
     public static final int JOB_NOTIFICATIONS_UPDATE_SERVICE_ID = 7000;
     public static final int JOB_READER_SEARCH_SERVICE_ID = 5000;
@@ -29,7 +29,6 @@ public class JobServiceId {
      * implement each case as you see fit.
      */
 
-    @TargetApi(21)
     public static boolean isJobServiceWithSameParamsPending(Context context, ComponentName componentName,
                                                             PersistableBundle bundleCompare, String exceptKey) {
         JobScheduler scheduler = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);

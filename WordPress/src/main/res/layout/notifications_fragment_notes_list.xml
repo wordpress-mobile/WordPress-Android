@@ -31,8 +31,6 @@
                     android:id="@+id/recycler_view_notes"
                     android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:paddingLeft="@dimen/notifications_content_margin"
-                    android:paddingRight="@dimen/notifications_content_margin"
                     android:scrollbarStyle="outsideOverlay"
                     android:scrollbars="vertical"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -52,14 +50,11 @@
                 android:elevation="@dimen/message_bar_elevation"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/margin_large"
-                android:paddingLeft="24dp"
-                android:paddingRight="24dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:paddingTop="@dimen/margin_large"
                 android:visibility="gone"
-                tools:targetApi="LOLLIPOP"
-                tools:visibility="visible"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp">
+                tools:visibility="visible" >
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -83,8 +78,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/notifications_content_margin"
-                android:layout_marginLeft="@dimen/notifications_content_margin"
-                android:layout_marginRight="@dimen/notifications_content_margin"
                 android:layout_marginStart="@dimen/notifications_content_margin"
                 android:layout_width="match_parent"
                 app:elevation="0dp">
@@ -101,8 +94,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="@dimen/margin_medium"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
-                        android:layout_marginRight="@dimen/margin_extra_large"
                         android:layout_marginTop="@dimen/margin_medium"
                         android:fillViewport="true"
                         android:layout_marginStart="@dimen/margin_extra_large"
@@ -125,7 +116,6 @@
                             <RadioButton
                                 android:id="@+id/notifications_filter_unread"
                                 style="@style/Calypso.SegmentedControl"
-                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
                                 android:background="@drawable/calypso_segmented_control_button"
                                 android:text="@string/notifications_tab_title_unread" />
@@ -133,7 +123,6 @@
                             <RadioButton
                                 android:id="@+id/notifications_filter_comments"
                                 style="@style/Calypso.SegmentedControl"
-                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
                                 android:background="@drawable/calypso_segmented_control_button"
                                 android:text="@string/notifications_tab_title_comments" />
@@ -141,7 +130,6 @@
                             <RadioButton
                                 android:id="@+id/notifications_filter_follows"
                                 style="@style/Calypso.SegmentedControl"
-                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
                                 android:background="@drawable/calypso_segmented_control_button"
                                 android:text="@string/notifications_tab_title_follows" />
@@ -149,7 +137,6 @@
                             <RadioButton
                                 android:id="@+id/notifications_filter_likes"
                                 style="@style/Calypso.SegmentedControl"
-                                android:layout_marginLeft="-1dp"
                                 android:layout_marginStart="-1dp"
                                 android:background="@drawable/calypso_segmented_control_button_end"
                                 android:text="@string/notifications_tab_title_likes" />
@@ -204,13 +191,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/margin_extra_large"
                             android:layout_width="wrap_content"
-                            app:srcCompat="@drawable/img_illustration_notifications_152dp"/>
+                            android:src="@drawable/img_illustration_notifications_152dp"/>
 
                         <org.wordpress.android.widgets.WPTextView
                             style="@style/JetpackConnectionText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxWidth="290dp"
+                            android:maxWidth="@dimen/jetpack_text_width"
                             android:text="@string/notifications_jetpack_connection_setup_info"
                             android:textAlignment="center"
                             app:fixWidowWords="true"/>
@@ -222,6 +209,23 @@
                             android:layout_marginBottom="@dimen/margin_extra_large"
                             android:text="@string/stats_jetpack_connection_setup"
                             android:theme="@style/JetpackConnectionButton"/>
+
+                        <TextView
+                            android:id="@+id/jetpack_terms_and_conditions"
+                            android:layout_width="@dimen/jetpack_terms_and_conditions_width"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_extra_large"
+                            android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                            android:textAlignment="center"
+                            style="@style/JetpackTermsAndConditionsButton"/>
+
+                        <Button
+                            android:id="@+id/jetpack_faq"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/stats_jetpack_connection_faq"
+                            style="@style/JetpackFaqButton"/>
 
                     </LinearLayout>
 

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -98,9 +99,21 @@ public class AppPrefs {
         // Used to flag the account created stat needs to be bumped after account information is synced.
         SHOULD_TRACK_MAGIC_LINK_SIGNUP,
 
+        // indicates how many times quick start dialog for a single task wash shown
+        NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN,
+
+        // keeps track of quick start tasks that is prompted to user
+        PROMPTED_QUICK_START_TASK,
+
         // Support email address and name that's independent of any account or site
         SUPPORT_EMAIL,
-        SUPPORT_NAME
+        SUPPORT_NAME,
+
+        // Store a version of the last dismissed News Card
+        NEWS_CARD_DISMISSED_VERSION,
+        // Store a version of the last shown News Card
+        NEWS_CARD_SHOWN_VERSION,
+        AVATAR_VERSION
     }
 
     /**
@@ -161,7 +174,16 @@ public class AppPrefs {
         LAST_WP_COM_THEMES_SYNC,
 
         // user id last used to login with
-        LAST_USED_USER_ID
+        LAST_USED_USER_ID,
+
+        // used to indicate that user opted out of quick start
+        IS_QUICK_START_DISABLED,
+
+        // used to indicate that we already obtained and tracked the installation referrer
+        IS_INSTALLATION_REFERRER_OBTAINED,
+
+        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -459,7 +481,7 @@ public class AppPrefs {
 
     public static boolean isVisualEditorEnabled() {
         return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
-                                                       !isAztecEditorEnabled());
+                !isAztecEditorEnabled());
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -724,5 +746,70 @@ public class AppPrefs {
 
     public static void removeShouldTrackMagicLinkSignup() {
         remove(DeletablePrefKey.SHOULD_TRACK_MAGIC_LINK_SIGNUP);
+    }
+
+    public static void setNewsCardDismissedVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, version);
+    }
+
+    public static int getNewsCardDismissedVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_DISMISSED_VERSION, -1);
+    }
+
+    public static void setNewsCardShownVersion(int version) {
+        setInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, version);
+    }
+
+    public static int getNewsCardShownVersion() {
+        return getInt(DeletablePrefKey.NEWS_CARD_SHOWN_VERSION, -1);
+    }
+
+    public static void setQuickStartDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, isDisabled);
+    }
+
+    public static boolean isQuickStartDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
+    }
+
+    public static int getNumberOfTimesQuickStartDialogShown() {
+        return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
+    }
+
+    public static void setNumberOfTimesQuickStartDialogShown(int value) {
+        setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
+    }
+
+    @Nullable
+    public static String getPromptedQuickStartTask() {
+        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
+    }
+
+    public static void setPromptedQuickStartTask(@Nullable String task) {
+        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
+    }
+
+    public static void setInstallationReferrerObtained(Boolean isObtained) {
+        setBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, isObtained);
+    }
+
+    public static boolean isInstallationReferrerObtained() {
+        return getBoolean(UndeletablePrefKey.IS_INSTALLATION_REFERRER_OBTAINED, false);
+    }
+
+    public static int getAvatarVersion() {
+        return getInt(DeletablePrefKey.AVATAR_VERSION, 0);
+    }
+
+    public static void setAvatarVersion(int version) {
+        setInt(DeletablePrefKey.AVATAR_VERSION, version);
+    }
+
+    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
+    }
+
+    public static boolean isGutenbergWarningDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
     }
 }

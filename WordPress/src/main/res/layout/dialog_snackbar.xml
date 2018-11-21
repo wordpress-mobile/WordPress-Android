@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey_3"
+    android:paddingBottom="@dimen/margin_medium">
+
+    <RelativeLayout
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingEnd="@dimen/dialog_snackbar_content_padding"
+        android:paddingStart="@dimen/dialog_snackbar_content_padding"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_sz_large"
+            android:visibility="gone"
+            tools:text="Add social media account"
+            tools:visibility="visible">
+        </TextView>
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:textColor="@color/grey_c"
+            android:textSize="@dimen/text_sz_medium"
+            android:visibility="gone"
+            tools:text="Connect your favorite social media services to automatically share new posts with friend"
+            tools:visibility="visible">
+        </TextView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text"
+        android:paddingEnd="@dimen/margin_medium"
+        android:paddingStart="@dimen/margin_medium">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_positive"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:fontFamily="sans-serif-medium"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textColor="@color/color_accent"
+            android:visibility="gone"
+            tools:text="Yes, let's do it"
+            tools:visibility="visible">
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_negative"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_toStartOf="@+id/button_positive"
+            android:fontFamily="sans-serif-medium"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textColor="@color/color_accent"
+            android:visibility="gone"
+            tools:text="Not now"
+            tools:visibility="visible">
+        </android.support.v7.widget.AppCompatButton>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/button_neutral"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="sans-serif-medium"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textColor="@color/color_accent"
+            android:visibility="gone"
+            tools:text="Never ever"
+            tools:visibility="visible">
+        </android.support.v7.widget.AppCompatButton>
+
+    </RelativeLayout>
+
+</RelativeLayout>

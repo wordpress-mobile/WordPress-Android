@@ -10,12 +10,11 @@
 
     <RelativeLayout
         android:id="@+id/person_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:background="@color/color_primary"
         android:elevation="@dimen/card_elevation"
-        android:paddingBottom="@dimen/margin_medium"
-        tools:targetApi="LOLLIPOP">
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/margin_medium" >
 
         <ImageView
             android:id="@+id/person_avatar"
@@ -28,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/person_avatar"
-            android:layout_toRightOf="@id/person_avatar"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -55,15 +53,12 @@
         android:id="@+id/person_role_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/people_list_row_height"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/person_details"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
@@ -92,14 +87,11 @@
         android:id="@+id/subscribed_date_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/people_list_row_height"
-        android:layout_alignLeft="@id/person_role_container"
         android:layout_alignStart="@id/person_role_container"
         android:layout_below="@id/person_role_container"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView

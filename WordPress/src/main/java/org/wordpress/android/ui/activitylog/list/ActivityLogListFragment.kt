@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
+import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
@@ -38,22 +40,25 @@ class ActivityLogListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        log_list_view.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val nonNullActivity = checkNotNull(activity)
+
+        log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, LinearLayoutManager.VERTICAL, false)
 
         swipeToRefreshHelper = buildSwipeToRefreshHelper(swipe_refresh_layout) {
-            if (NetworkUtils.checkConnection(activity)) {
+            if (NetworkUtils.checkConnection(nonNullActivity)) {
                 viewModel.onPullToRefresh()
             } else {
                 swipeToRefreshHelper.isRefreshing = false
             }
         }
 
-        (activity?.application as WordPress).component()?.inject(this)
+        (nonNullActivity.application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
-            activity?.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+            val nonNullIntent = checkNotNull(nonNullActivity.intent)
+            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
@@ -105,7 +110,10 @@ class ActivityLogListFragment : Fragment() {
         viewModel.showSnackbarMessage.observe(this, Observer { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
-                Snackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
+                val snackbar = Snackbar.make(parent, message, Snackbar.LENGTH_LONG)
+                val snackbarText = snackbar.view.findViewById<TextView>(android.support.design.R.id.snackbar_text)
+                snackbarText.maxLines = 2
+                snackbar.show()
             }
         })
 
@@ -134,7 +142,7 @@ class ActivityLogListFragment : Fragment() {
         swipeToRefreshHelper.isRefreshing = eventListStatus == FETCHING
         // We want to show the progress bar at the bottom while loading more but not for initial fetch
         val showLoadMore = eventListStatus == LOADING_MORE
-        log_list_progress.visibility = if (showLoadMore) View.VISIBLE else View.GONE
+        progress?.visibility = if (showLoadMore) View.VISIBLE else View.GONE
     }
 
     private fun reloadEvents(data: List<ActivityLogListItem>) {
@@ -150,15 +158,13 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setEvents(events: List<ActivityLogListItem>) {
-        context?.let {
-            val adapter: ActivityLogAdapter
-            if (log_list_view.adapter == null) {
-                adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
-                log_list_view.adapter = adapter
-            } else {
-                adapter = log_list_view.adapter as ActivityLogAdapter
-            }
-            adapter.updateList(events)
+        val adapter: ActivityLogAdapter
+        if (log_list_view.adapter == null) {
+            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
+            log_list_view.adapter = adapter
+        } else {
+            adapter = log_list_view.adapter as ActivityLogAdapter
         }
+        adapter.updateList(events)
     }
 }

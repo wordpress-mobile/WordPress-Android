@@ -2,12 +2,10 @@ package org.wordpress.android.ui.activitylog
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.ActivityLogActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -18,13 +16,14 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewind
-import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
-import org.wordpress.android.util.AnalyticsUtils
+import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
@@ -32,7 +31,7 @@ class RewindStatusService
 @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindProgressChecker: RewindProgressChecker,
-    private val dispatcher: Dispatcher
+    @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private val mutableRewindAvailable = MutableLiveData<Boolean>()
     private val mutableRewindError = MutableLiveData<RewindError>()
@@ -40,6 +39,8 @@ class RewindStatusService
     private val mutableRewindProgress = MutableLiveData<RewindProgress>()
     private var site: SiteModel? = null
     private var activityLogModelItem: ActivityLogModel? = null
+    private var rewindProgressCheckerJob: Job? = null
+    private var fetchRewindJob: Job? = null
 
     val rewindingActivity: ActivityLogModel?
         get() = activityLogModelItem
@@ -59,35 +60,41 @@ class RewindStatusService
         const val REWIND_ID_TRACKING_KEY = "rewind_id"
     }
 
-    fun rewind(rewindId: String, site: SiteModel) {
+    fun rewind(rewindId: String, site: SiteModel) = uiScope.launch {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_REWIND_STARTED,
                 site, mutableMapOf(REWIND_ID_TRACKING_KEY to rewindId as Any))
 
-        dispatcher.dispatch(ActivityLogActionBuilder.newRewindAction(RewindPayload(site, rewindId)))
         updateRewindProgress(rewindId, 0, RUNNING)
-        mutableRewindAvailable.postValue(false)
-        mutableRewindError.postValue(null)
+        mutableRewindAvailable.value = false
+        mutableRewindError.value = null
+
+        val rewindResult = activityLogStore.rewind(RewindPayload(site, rewindId))
+        onRewind(rewindResult)
     }
 
     fun start(site: SiteModel) {
         if (this.site == null) {
             this.site = site
-            dispatcher.register(this)
             requestStatusUpdate()
             reloadRewindStatus()
         }
     }
 
     fun stop() {
+        rewindProgressCheckerJob?.cancel()
+        fetchRewindJob?.cancel()
         if (site != null) {
-            dispatcher.unregister(this)
             site = null
         }
     }
 
     fun requestStatusUpdate() {
         site?.let {
-            dispatcher.dispatch(ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(it)))
+            fetchRewindJob?.cancel()
+            fetchRewindJob = uiScope.launch {
+                val rewindStatus = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(it))
+                onRewindStatusFetched(rewindStatus.error, rewindStatus.isError)
+            }
         }
     }
 
@@ -103,46 +110,50 @@ class RewindStatusService
     }
 
     private fun updateRewindStatus(rewindStatus: RewindStatusModel?) {
-        mutableRewindAvailable.postValue(rewindStatus?.state == ACTIVE && rewindStatus.rewind?.status != RUNNING)
+        mutableRewindAvailable.value = rewindStatus?.state == ACTIVE && rewindStatus.rewind?.status != RUNNING
 
         val rewind = rewindStatus?.rewind
         if (rewind != null) {
             val restoreId = rewindStatus.rewind?.restoreId
-            if (!rewindProgressChecker.isRunning && restoreId != null) {
-                site?.let { rewindProgressChecker.startNow(it, restoreId) }
+            if (rewindProgressCheckerJob?.isActive != true && restoreId != null) {
+                site?.let {
+                    rewindProgressCheckerJob = uiScope.launch {
+                        val rewindStatusFetched = rewindProgressChecker.startNow(it, restoreId)
+                        onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
+                    }
+                }
             }
             updateRewindProgress(rewind.rewindId, rewind.progress, rewind.status, rewind.reason)
             if (rewind.status != RUNNING) {
-                rewindProgressChecker.cancel()
+                rewindProgressCheckerJob?.cancel()
             }
         } else {
-            mutableRewindProgress.postValue(null)
+            mutableRewindProgress.setValue(null)
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onRewindStatusFetched(event: OnRewindStatusFetched) {
-        mutableRewindStatusFetchError.postValue(event.error)
-        if (event.isError) {
-            rewindProgressChecker.cancel()
+    private fun onRewindStatusFetched(rewindStatusError: RewindStatusError?, isError: Boolean) {
+        mutableRewindStatusFetchError.value = rewindStatusError
+        if (isError) {
+            rewindProgressCheckerJob?.cancel()
         }
         reloadRewindStatus()
     }
 
-    @Subscribe(threadMode = BACKGROUND)
-    @SuppressWarnings("unused")
-    fun onRewind(event: OnRewind) {
-        mutableRewindError.postValue(event.error)
+    private fun onRewind(event: OnRewind) {
+        mutableRewindError.value = event.error
         if (event.isError) {
-            mutableRewindAvailable.postValue(true)
+            mutableRewindAvailable.value = true
             reloadRewindStatus()
             updateRewindProgress(event.rewindId, 0, Status.FAILED, event.error?.type?.toString())
             return
         }
         site?.let {
             event.restoreId?.let { restoreId ->
-                rewindProgressChecker.start(it, restoreId)
+                rewindProgressCheckerJob = uiScope.launch {
+                    val rewindStatusFetched = rewindProgressChecker.start(it, restoreId)
+                    onRewindStatusFetched(rewindStatusFetched?.error, rewindStatusFetched?.isError == true)
+                }
             }
         }
     }
@@ -167,7 +178,7 @@ class RewindStatusService
                 rewindStatus,
                 rewindError
         )
-        mutableRewindProgress.postValue(rewindProgress)
+        mutableRewindProgress.value = rewindProgress
     }
 
     data class RewindProgress(

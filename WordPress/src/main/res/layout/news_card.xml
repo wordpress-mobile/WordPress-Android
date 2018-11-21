@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_large"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/news_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/margin_large">
+
+        <ImageView
+            android:id="@+id/news_dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="?android:selectableItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/dismiss"
+            android:focusable="true"
+            android:padding="@dimen/margin_small"
+            android:tint="@color/grey"
+            android:src="@drawable/ic_close_white_24dp"/>
+
+        <ImageView
+            android:id="@+id/news_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/negative_margin_medium"
+            android:layout_toStartOf="@+id/news_dismiss"
+            android:contentDescription="@null"
+            android:src="@drawable/img_illustration_notifications_152dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/news_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/news_image"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="2"
+            android:textStyle="bold"
+            tools:text="New version available"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/news_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/news_title"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_toStartOf="@+id/news_image"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="4"
+            tools:text="There is a newer version of this app available"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/news_action"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/news_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_toStartOf="@+id/news_image"
+            android:maxLines="1"
+            android:textColor="@color/reader_hyperlink"
+            tools:text="Read more"/>
+
+    </RelativeLayout>
+</FrameLayout>

@@ -24,6 +24,8 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.fluxc.model.CommentStatus;
+import org.wordpress.android.fluxc.tools.FormattableContent;
+import org.wordpress.android.fluxc.tools.FormattableRange;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter;
 import org.wordpress.android.ui.notifications.blocks.BlockType;
@@ -35,12 +37,14 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -68,6 +72,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private NoteBlockAdapter mNoteBlockAdapter;
 
     @Inject ImageManager mImageManager;
+    @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
 
     public NotificationsDetailListFragment() {
     }
@@ -329,14 +334,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
+                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR_WITH_BACKGROUND;
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
-                        mNote.getHeader(),
+                        transformToFormattableContentList(mNote.getHeader()),
                         imageType,
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener,
-                        mImageManager
+                        mImageManager,
+                        mNotificationsUtilsWrapper
                 );
 
                 headerNoteBlock.setIsComment(mNote.isCommentType());
@@ -348,33 +354,33 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i = 0; i < bodyArray.length(); i++) {
                     try {
-                        JSONObject noteObject = bodyArray.getJSONObject(i);
+                        FormattableContent noteObject = mNotificationsUtilsWrapper
+                                .mapJsonToFormattableContent(bodyArray.getJSONObject(i));
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
-                        String noteBlockTypeString = JSONUtils.queryJSON(noteObject, "type", "");
-
-                        if (BlockType.fromString(noteBlockTypeString) == BlockType.USER) {
+                        if (BlockType.fromString(noteObject.getType()) == BlockType.USER) {
                             if (mNote.isCommentType()) {
                                 // Set comment position so we can target it later
                                 // See refreshBlocksForCommentStatus()
                                 mCommentListPosition = i + noteList.size();
 
-                                // We'll snag the next body array item for comment user blocks
+                                FormattableContent commentTextBlock = null;
+                                // Next item in the bodyArray is comment text
                                 if (i + 1 < bodyArray.length()) {
-                                    JSONObject commentTextBlock = bodyArray.getJSONObject(i + 1);
-                                    noteObject.put("comment_text", commentTextBlock);
+                                    commentTextBlock = mNotificationsUtilsWrapper
+                                            .mapJsonToFormattableContent(bodyArray.getJSONObject(i + 1));
                                     i++;
                                 }
-
-                                // Add timestamp to block for display
-                                noteObject.put("timestamp", mNote.getTimestamp());
 
                                 noteBlock = new CommentUserNoteBlock(
                                         getActivity(),
                                         noteObject,
+                                        commentTextBlock,
+                                        mNote.getTimestamp(),
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
-                                        mImageManager
+                                        mImageManager,
+                                        mNotificationsUtilsWrapper
                                 );
                                 pingbackUrl = noteBlock.getMetaSiteUrl();
 
@@ -389,17 +395,21 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener,
-                                        mImageManager
+                                        mImageManager,
+                                        mNotificationsUtilsWrapper
                                 );
                             }
                         } else if (isFooterBlock(noteObject)) {
-                            noteBlock = new FooterNoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
-                            ((FooterNoteBlock) noteBlock).setClickableSpan(
-                                    JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
-                                    mNote.getType()
-                                                                          );
+                            noteBlock = new FooterNoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                    mOnNoteBlockTextClickListener);
+                            if (noteObject.getRanges() != null && noteObject.getRanges().size() > 0) {
+                                FormattableRange range =
+                                        noteObject.getRanges().get(noteObject.getRanges().size() - 1);
+                                ((FooterNoteBlock) noteBlock).setClickableSpan(range, mNote.getType());
+                            }
                         } else {
-                            noteBlock = new NoteBlock(noteObject, mImageManager, mOnNoteBlockTextClickListener);
+                            noteBlock = new NoteBlock(noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                    mOnNoteBlockTextClickListener);
                         }
 
                         // Badge notifications apply different colors and formatting
@@ -435,6 +445,21 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             return noteList;
         }
 
+        @NonNull private List<FormattableContent> transformToFormattableContentList(JSONArray headerArray) {
+            List<FormattableContent> headersList = new ArrayList<>();
+            if (headerArray != null) {
+                for (int i = 0; i < headerArray.length(); i++) {
+                    try {
+                        headersList.add(mNotificationsUtilsWrapper.mapJsonToFormattableContent(
+                                headerArray.getJSONObject(i)));
+                    } catch (JSONException e) {
+                        AppLog.e(T.NOTIFS, "Header array has invalid format.");
+                    }
+                }
+            }
+            return headersList;
+        }
+
         private boolean isPingback(Note note) {
             boolean hasRangeOfTypeSite = false;
             boolean hasRangeOfTypePost = false;
@@ -462,6 +487,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             return new GeneratedNoteBlock(
                     message,
                     mImageManager,
+                    mNotificationsUtilsWrapper,
                     onNoteBlockTextClickListener,
                     pingbackUrl);
         }
@@ -490,21 +516,21 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
-    private boolean isFooterBlock(JSONObject blockObject) {
+    private boolean isFooterBlock(FormattableContent blockObject) {
         if (mNote == null || blockObject == null) {
             return false;
         }
 
         if (mNote.isCommentType()) {
+            Long commentReplyId = FormattableContentUtilsKt.getRangeIdOrZero(blockObject, 1);
             // Check if this is a comment notification that has been replied to
             // The block will not have a type, and its id will match the comment reply id in the Note.
-            return (JSONUtils.queryJSON(blockObject, "type", null) == null
-                    && mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
-        } else if (mNote.isFollowType() || mNote.isLikeType()
-                   || mNote.isCommentLikeType() || mNote.isReblogType()) {
+            return (blockObject.getType() == null
+                    && mNote.getCommentReplyId() == commentReplyId);
+        } else if (mNote.isFollowType() || mNote.isLikeType() || mNote.isReblogType()) {
             // User list notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
-            return JSONUtils.queryJSON(blockObject, "type", null) == null;
+            return blockObject.getType() == null;
         }
 
         return false;

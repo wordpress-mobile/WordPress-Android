@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <dimen name="min_touch_target_sz">48dp</dimen>
 
     <dimen name="category_row_height">48dp</dimen>
@@ -32,7 +34,7 @@
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
 
-    <dimen name="default_dialog_button_height">48dp</dimen>
+    <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
@@ -67,6 +69,7 @@
     <dimen name="margin_extra_extra_large">48dp</dimen>
     <dimen name="margin_filter_spinner">64dp</dimen>
     <dimen name="margin_theme_browser_top">160dp</dimen>
+    <dimen name="negative_margin_medium">-8dp</dimen>
 
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
@@ -105,6 +108,7 @@
     <dimen name="text_sz_extra_large">20sp</dimen>
     <dimen name="text_sz_double_extra_large">24sp</dimen>
     <dimen name="text_sz_triple_extra_large">26sp</dimen>
+    <dimen name="text_sz_post_content">18sp</dimen>
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
@@ -132,8 +136,8 @@
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
-    <item name="reader_photo_title_shadow_offset" type="dimen" format="float">3.0</item>
-    <item name="reader_photo_title_shadow_radius" type="dimen" format="float">1.5</item>
+    <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
+    <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">24dp</dimen>
@@ -146,7 +150,6 @@
     <dimen name="empty_list_title_bottom_margin">8dp</dimen>
 
     <dimen name="nux_title_font_size">28sp</dimen>
-    <dimen name="nux_edit_field_font_size">16sp</dimen>
     <dimen name="nux_main_button_height">48dp</dimen>
 
     <dimen name="nux_width">600dp</dimen>
@@ -205,7 +208,6 @@
     <dimen name="my_site_list_row_padding_left">20dp</dimen>
     <dimen name="my_site_list_row_padding_left_switch">12dp</dimen>
     <dimen name="my_site_margin_general">10dp</dimen>
-    <dimen name="my_site_no_site_view_margin">24dp</dimen>
 
     <!--me-->
     <dimen name="me_content_margin">@dimen/margin_large</dimen>
@@ -231,9 +233,6 @@
     <dimen name="text_sz_related_post_small">11sp</dimen>
     <dimen name="list_divider_height">1dp</dimen>
     <dimen name="list_editor_input_max_width">500dp</dimen>
-
-    <!--empty lists-->
-    <dimen name="empty_list_button_top_margin">32dp</dimen>
 
     <!--theme browser-->
     <dimen name="theme_browser_default_column_width">320dp</dimen>
@@ -312,6 +311,16 @@
 
     <dimen name="padding_input_row_start">60dp</dimen>
 
+    <dimen name="dialog_snackbar_content_padding">20dp</dimen>
+    <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>
+
+    <dimen name="quick_start_dot_size">8dp</dimen>
+    <dimen name="quick_start_completed_row_height">56dp</dimen>
+    <dimen name="quick_start_completed_text">14sp</dimen>
+    <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
+    <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>
+    <dimen name="quick_start_focus_point_size">40dp</dimen>
+
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
@@ -321,4 +330,24 @@
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
 
     <dimen name="snackbar_message_margin_bottom">18dp</dimen>
+    <dimen name="jetpack_terms_and_conditions_width">250dp</dimen>
+    <dimen name="jetpack_text_width">290dp</dimen>
+    <dimen name="jetpack_remote_install_container_padding">30dp</dimen>
+
+    <!-- pages -->
+    <dimen name="page_item_horizontal_padding">16dp</dimen>
+    <dimen name="page_parent_radio_button_offset">11dp</dimen>
+    <dimen name="one_line_list_item_height">48dp</dimen>
+    <dimen name="two_line_list_item_height">72dp</dimen>
+    <dimen name="page_list_divider_height">40dp</dimen>
+
+    <dimen name="quota_bar_text_minimum_height">36dp</dimen>
+
+    <!--post skeleton-->
+    <dimen name="post_list_row_skeleton_view_title_width">160dp</dimen>
+    <dimen name="post_list_row_skeleton_view_title_height">@dimen/margin_extra_medium_large</dimen>
+    <dimen name="post_list_row_skeleton_view_excerpt_height">@dimen/margin_extra_medium_large</dimen>
+    <dimen name="post_list_row_skeleton_view_date_width">80dp</dimen>
+    <dimen name="post_list_row_skeleton_view_date_height">@dimen/margin_extra_large</dimen>
+
 </resources>

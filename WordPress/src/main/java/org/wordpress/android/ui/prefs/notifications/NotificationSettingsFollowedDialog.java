@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -141,7 +140,10 @@ public class NotificationSettingsFollowedDialog extends DialogFragment implement
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        Fragment target = getTargetFragment();
+        // TODO: android.app.Fragment  is deprecated since Android P.
+        // Needs to be replaced with android.support.v4.app.Fragment
+        // See https://developer.android.com/reference/android/app/Fragment
+        android.app.Fragment target = getTargetFragment();
 
         if (target != null) {
             target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, getResultIntent());

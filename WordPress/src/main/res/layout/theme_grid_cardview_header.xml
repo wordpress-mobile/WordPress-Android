@@ -9,8 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginBottom="@dimen/cardview_default_radius"
-        android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
-        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation"
         android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large"
@@ -72,7 +70,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        card_view:srcCompat="@drawable/ic_customize_grey_dark_18dp" />
+                        android:src="@drawable/ic_customize_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -103,7 +101,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        card_view:srcCompat="@drawable/ic_info_outline_grey_dark_18dp" />
+                        android:src="@drawable/ic_info_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
@@ -134,7 +132,7 @@
                         android:layout_margin="@dimen/margin_none"
                         android:adjustViewBounds="true"
                         android:contentDescription="@null"
-                        card_view:srcCompat="@drawable/ic_help_outline_grey_dark_18dp" />
+                        android:src="@drawable/ic_help_outline_grey_dark_18dp" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"

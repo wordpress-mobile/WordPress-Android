@@ -8,7 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.FileUtils;
@@ -94,9 +94,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
-            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,
-                                   AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath)
-                                  );
+            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, AnalyticsUtils.getMediaProperties(getContext(), true,
+                    null, mInputPath));
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }

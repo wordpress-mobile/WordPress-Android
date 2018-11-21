@@ -83,7 +83,7 @@ public class StatsViewHolder {
                         }
                     }
                 }
-                                     );
+        );
 
         entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
     }

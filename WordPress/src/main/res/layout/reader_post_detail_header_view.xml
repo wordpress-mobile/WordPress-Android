@@ -11,7 +11,6 @@
         android:layout_width="@dimen/reader_detail_header_avatar_frame"
         android:layout_height="@dimen/reader_detail_header_avatar_frame"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large">
 
         <ImageView
@@ -39,7 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/frame_avatar"
         android:orientation="vertical"
         android:layout_toEndOf="@+id/frame_avatar">
 

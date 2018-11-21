@@ -2,21 +2,60 @@ module Fastlane
   module Helpers
     module AndroidVirtualDevicePathHelper
       def self.android_home
-        ENV['ANDROID_HOME'] || ENV['ANDROID_SDK_ROOT'] || ENV['ANDROID_SDK']
+
+        android_sdk_root = ENV['ANDROID_HOME'] || ENV['ANDROID_SDK_ROOT'] || ENV['ANDROID_SDK']
+
+        if android_sdk_root
+            return android_sdk_root
+        end
+
+        begin
+            require 'java-properties'
+        rescue LoadError
+            UI.user_error! "Unable to load dependencies. Did you run `bundle` and `bundle exec fastlane`?"
+        end
+
+        propertiesFile = "#{project_root_path}/local.properties"
+
+        local = nil
+
+        if File.exist? propertiesFile
+            properties = JavaProperties.load(propertiesFile)
+            local = properties[:"sdk.dir"]
+        end
+
+        if android_sdk_root.nil? && local.nil?
+            UI.user_error! "There is no Android SDK root set. Unable to continue."
+        elsif android_sdk_root.nil? && local
+            UI.user_error! "There is no Android SDK root set. Unable to continue.\nTo solve this, add:\n\nexport ANDROID_HOME=#{local}\nexport ANDROID_SDK_ROOT=$ANDROID_HOME\n\nto ~/.profile"
+        end
+
+        return android_sdk_root
       end
 
       def self.emulator_path
         Pathname.new(android_home).join("emulator/emulator").to_s
       end
+
+      def self.adb_path
+        Pathname.new(android_home).join("platform-tools/adb").to_s
+      end
+
+      def self.project_root_path
+        Pathname.new(File.dirname(__FILE__)).parent().parent()
+      end
     end
 
     module AndroidVirtualDevicesAdbHelper
       def self.adb(command: nil, serial: "")
-        Fastlane::Actions::AdbAction.run(command: command, serial: serial)
+        Fastlane::Actions::AdbAction.run(
+          adb_path: AndroidVirtualDevicePathHelper.adb_path,
+          command: command,
+          serial: serial)
       end
 
       def self.adb_devices
-        Fastlane::Actions::AdbDevicesAction.run({})
+        Fastlane::Actions::AdbDevicesAction.run(adb_path: AndroidVirtualDevicePathHelper.adb_path)
       end
 
       def self.boot_completed?

@@ -1,4 +1,0 @@
-10.4:
-* Novità: Ripristina Log attività: riporta il tuo sito ad uno stato precedente.
-*Una serie di piccoli miglioramenti e perfezionamenti dell'interfaccia utente
-*Varie correzioni di bug

@@ -40,7 +40,6 @@ Language: hi_IN
     <string name="notification_settings_master_status_on">ऑन </string>
     <string name="max_video_resolution">अधिकतम वीडियो साइज</string>
     <string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
-    <string name="error_page_does_not_exist">यह  पृष्ठ अब उपलब्ध नहीं है</string>
     <string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>
     <string name="error_upload_post_param">इस पोस्ट : %s में अपलोड करते समय त्रुटि आई।</string>
     <string name="add_media_progress">मीडिया जोड़े </string>
@@ -154,9 +153,7 @@ Language: hi_IN
     <string name="reader_label_gap_marker">अधिक लेख लोड करे </string>
     <string name="notifications_no_search_results">\'%s\' से किसी साइट का मेल नहीं हुआ </string>
     <string name="search_sites">साइट्स खोजें</string>
-    <string name="notifications_empty_view_reader">पाठक देखें</string>
     <string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
-    <string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है… अबतक।</string>
     <string name="stats_widget_error_readd_widget">कृपया विजेट को निकाल कर दोबारा जोड़ें</string>
     <string name="stats_widget_error_no_visible_blog">आंकड़े देखने के लिए एक ब्लॉग प्रत्यक्ष होना चाहिए</string>
     <string name="stats_enable_rest_api_in_jetpack">अपने आँकड़ों को देखने के लिए, जेटपैक में JSON API को सक्षम करें। </string>
@@ -176,16 +173,12 @@ Language: hi_IN
     <string name="notifications_tab">अधिसूचना सूचि</string>
     <string name="email">ईमेल</string>
     <string name="app_notifications">एप्लिकेशन अधिसूची</string>
-    <string name="days_ago">%d दिन पहले</string>
-    <string name="yesterday">कल</string>
     <string name="button_back">पीछे</string>
-    <string name="page_deleted">पृष्ठ हट गया</string>
     <string name="button_preview">पूर्वावलोकन</string>
     <string name="button_view">देखें</string>
     <string name="button_publish">प्रकाशित करें</string>
     <string name="button_edit">संपादित करें</string>
     <string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
-    <string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
     <string name="button_trash">ट्रैश</string>
     <string name="button_stats">आकड़े</string>
     <string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
@@ -196,7 +189,7 @@ Language: hi_IN
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="me_btn_support">मदद और सहायता</string>
-    <string name="site_picker_add_self_hosted">सेल्फ–होस्टेड साइट डाले </string>
+    <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
     <string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
     <string name="my_site_btn_view_site">साईट पर जाये</string>
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
@@ -226,7 +219,7 @@ Language: hi_IN
     <string name="stats_followers_a_minute_ago">एक दिन पहले</string>
     <string name="stats_followers_a_month">एक महीना</string>
     <string name="stats_followers_a_year">एक साल</string>
-    <string name="stats_followers_email_selector">ई–मेल</string>
+    <string name="stats_followers_email_selector">ई-मेल</string>
     <string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
     <string name="stats_entry_top_commenter">लेखक</string>
     <string name="stats_entry_followers">प्रसंशक</string>
@@ -251,7 +244,6 @@ Language: hi_IN
     <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>
-    <string name="media_empty_list">कोई मीडिया नहीं</string>
     <string name="help">सहायता</string>
     <string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
     <string name="forgot_password">आपका पासवर्ड खो गया?</string>
@@ -260,7 +252,6 @@ Language: hi_IN
     <string name="error_generic">एक त्रुटि हुई</string>
     <string name="adding_cat_success">श्रेणी सफलतापूर्वक जोड़ा गया</string>
     <string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
-    <string name="comments_empty_list">कोई टिप्पणी नहीं</string>
     <string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
     <string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
     <string name="mnu_comment_unspam">स्पैम नहीं</string>
@@ -269,7 +260,6 @@ Language: hi_IN
     <string name="invalid_email_message">आपका ईमेल पता मान्य नहीं है</string>
     <string name="adding_cat_failed">श्रेणी जोड़ना असफल हुआ</string>
     <string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
-    <string name="passcode_wrong_passcode">गलत पिन</string>
     <string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
     <string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
     <string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
@@ -287,7 +277,6 @@ Language: hi_IN
     <string name="hint_comment_content">टिप्पणी</string>
     <string name="content_required">टिप्पणी आवश्यक है</string>
     <string name="http_authorization_required">प्रमाणीकरण आवश्यक</string>
-    <string name="add_account_blog_url">ब्लॉग का पता</string>
     <string name="edit_comment">टिप्पणी संपादित करें</string>
     <string name="cancel_edit">संपादन रद्द करें</string>
     <string name="category_name">श्रेणी नाम</string>
@@ -324,7 +313,6 @@ Language: hi_IN
     <string name="connection_error">कनेक्शन त्रुटि</string>
     <string name="media_error_no_permission">आपको मीडिया समूह देखने की अनुमति नहीं है</string>
     <string name="select_categories">श्रेणियों को चुने</string>
-    <string name="required_field">आवश्यक फ़ील्ड</string>
     <string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
     <string name="toast_comment_unedited">टिप्पणी नहीं बदला है</string>
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
@@ -343,7 +331,6 @@ Language: hi_IN
     <string name="reader_title_applog">एप्लीकेशन लॉग</string>
     <string name="remove_account">ब्लॉग हटाये</string>
     <string name="share_link">कड़ी साझा करे</string>
-    <string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
     <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
     <string name="video">वीडियो</string>
     <string name="reader_label_reply">जवाब दें</string>
@@ -390,23 +377,15 @@ Language: hi_IN
     <string name="media_edit_failure">अपडेट करने में असफल</string>
     <string name="stats_entry_tags_and_categories">विषय</string>
     <string name="stats_totals_views">देखें गये</string>
-    <string name="passcode_change_passcode">पिन बदलें</string>
     <string name="stats">आँकड़े</string>
     <string name="media_gallery_type_squares">वर्गाकार</string>
     <string name="media_gallery_type_slideshow">स्लाइड शो</string>
     <string name="media_edit_caption_text">शीर्षक</string>
-    <string name="passcode_enter_old_passcode">अपना पुराना पिन दर्ज करें</string>
     <string name="stats_view_visitors_and_views">दर्शक और देखें गये</string>
     <string name="stats_entry_referrers">रेफ़रर</string>
     <string name="stats_view_referrers">रेफ़ररस</string>
-    <string name="passcode_set">पिन निर्धारित करें</string>
     <string name="stats_totals_plays">चलाया गया</string>
-    <string name="passcode_turn_off">पिन को ऑफ करे</string>
-    <string name="passcode_turn_on">पिन को ऑन करे</string>
-    <string name="passcode_manage">पिन का प्रबंधन करे</string>
-    <string name="passcode_preference_title">पिन लॉक</string>
     <string name="media_gallery_type_tiled">टाइल किया हुआ</string>
-    <string name="passcode_re_enter_passcode">अपना पिन फिर से दर्ज करें</string>
     <string name="stats_view_tags_and_categories">टैग और श्रेणियाँ</string>
     <string name="manage">प्रबंधन</string>
     <string name="discard">नज़रअंदाज़ करे</string>
@@ -426,6 +405,7 @@ Language: hi_IN
     <string name="reader">पाठक</string>
     <string name="anonymous">अनाम</string>
     <string name="no_network_title">नेटवर्क उपलब्ध नहीं </string>
+    <string name="pages">पृष्ठे</string>
     <string name="posts">पोस्ट</string>
     <string name="width">चौडाई</string>
     <string name="caption">शीर्षक (वैकल्पिक)</string>
@@ -443,7 +423,6 @@ Language: hi_IN
     <string name="immediately">तुरंत</string>
     <string name="quickpress_add_alert_title">शॉर्टकट नाम निर्धारित करें </string>
     <string name="settings">सेटिंग्स</string>
-    <string name="today">आज</string>
     <string name="quickpress_add_error">शॉर्टकट का नाम खाली नहीं हो सकता</string>
     <string name="quickpress_window_title">QuickPress शॉर्टकट के लिए एक ब्लॉग चुने</string>
     <string name="categories">श्रेणिया</string>

@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
 
-    <android.support.v7.widget.RecyclerView
+    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@+id/recycler"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white" />
+        android:layout_width="match_parent" >
+    </org.wordpress.android.ui.prefs.EmptyViewRecyclerView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_button"
-        android:layout_width="wrap_content"
+        android:contentDescription="@string/fab_add_tag_desc"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:contentDescription="@string/fab_add_tag_desc"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"
         app:borderWidth="0dp"
         app:rippleColor="@color/fab_pressed"
-        app:srcCompat="@drawable/ic_plus_white_24dp" />
+        android:src="@drawable/ic_plus_white_24dp"
+        tools:visibility="visible" >
+    </android.support.design.widget.FloatingActionButton>
 
-    <TextView
-        android:id="@+id/empty_view"
-        style="@style/EmptyListText"
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/empty_list_default"
         android:visibility="gone"
-        tools:visibility="visible" />
+        app:aevButton="@string/site_settings_tags_empty_button"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevSubtitle="@string/site_settings_tags_empty_subtitle"
+        app:aevTitle="@string/site_settings_tags_empty_title"
+        tools:visibility="visible" >
+    </org.wordpress.android.ui.ActionableEmptyView>
 
     <FrameLayout
         android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+    </FrameLayout>
 
-</FrameLayout>
+</RelativeLayout>

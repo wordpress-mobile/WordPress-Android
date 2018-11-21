@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Fragment;
+import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -9,10 +12,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
@@ -36,6 +42,7 @@ import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -49,10 +56,13 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ReaderActionBuilder;
 import org.wordpress.android.fluxc.model.ReaderSiteModel;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated;
+import org.wordpress.android.fluxc.store.QuickStartStore;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.ReaderStore;
 import org.wordpress.android.fluxc.store.ReaderStore.OnReaderSitesSearched;
 import org.wordpress.android.fluxc.store.ReaderStore.ReaderSearchSitesPayload;
@@ -62,14 +72,18 @@ import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -85,18 +99,20 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 
@@ -167,11 +183,22 @@ public class ReaderPostListFragment extends Fragment
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
     private AlertDialog mBookmarksSavedLocallyDialog;
+    private QuickStartEvent mQuickStartEvent;
 
+    private ReaderPostListViewModel mViewModel;
+
+    private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
+        @Override public void onChanged(@Nullable NewsItem newsItem) {
+            getPostAdapter().updateNewsCardItem(newsItem);
+        }
+    };
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject AccountStore mAccountStore;
     @Inject ReaderStore mReaderStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject QuickStartStore mQuickStartStore;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -259,6 +286,14 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    public @Nullable SiteModel getSelectedSite() {
+        if (getActivity() instanceof WPMainActivity) {
+            WPMainActivity mainActivity = (WPMainActivity) getActivity();
+            return mainActivity.getSelectedSite();
+        }
+        return null;
+    }
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -313,7 +348,17 @@ public class ReaderPostListFragment extends Fragment
             mHasUpdatedPosts = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mFirstLoad = savedInstanceState.getBoolean(ReaderConstants.KEY_FIRST_LOAD);
             mSearchTabsPos = savedInstanceState.getInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, NO_POSITION);
+            mQuickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY);
         }
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // we need to pass activity, since this fragment extends Android Native fragment (we can pass `this` as soon as
+        // this fragment extends Support fragment.
+        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
+                                       .get(ReaderPostListViewModel.class);
+        mViewModel.start(mCurrentTag);
     }
 
     @Override
@@ -345,6 +390,16 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS && mLastTappedSiteSearchResult != null) {
                 getSiteSearchAdapter().checkFollowStatusForSite(mLastTappedSiteSearchResult);
                 mLastTappedSiteSearchResult = null;
+            }
+
+            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+            ReaderTag readerTag = AppPrefs.getReaderTag();
+
+            if (discoverTag != null && discoverTag.equals(readerTag)) {
+                setCurrentTag(readerTag);
+                updateCurrentTag();
+            } else if (discoverTag == null) {
+                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
             }
         }
     }
@@ -400,7 +455,7 @@ public class ReaderPostListFragment extends Fragment
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
 
         reloadTags();
 
@@ -477,6 +532,27 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent(final QuickStartEvent event) {
+        if (!isAdded() || getView() == null) {
+            return;
+        }
+
+        mQuickStartEvent = event;
+        EventBus.getDefault().removeStickyEvent(event);
+
+        if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE) {
+            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                    R.string.quick_start_dialog_follow_sites_message_short_search,
+                    R.drawable.ic_search_grey_24dp);
+
+            if (getActivity() != null && getActivity() instanceof WPMainActivity) {
+                ((WPMainActivity) getActivity()).showQuickStartSnackBar(title);
+            }
+        }
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
@@ -502,6 +578,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_IS_REFRESHING, mRecyclerView.isRefreshing());
         outState.putInt(ReaderConstants.KEY_RESTORE_POSITION, getCurrentPosition());
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+        outState.putParcelable(QuickStartEvent.KEY, mQuickStartEvent);
 
         if (isSearchTabsShowing()) {
             int tabPosition = getSearchTabsPosition();
@@ -704,6 +781,11 @@ public class ReaderPostListFragment extends Fragment
                     mBottomNavController.onRequestHideBottomNavigation();
                 }
 
+                if (getSelectedSite() != null) {
+                    QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.FOLLOW_SITE, mDispatcher,
+                            getSelectedSite());
+                }
+
                 return true;
             }
 
@@ -727,24 +809,24 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                               @Override
-                                               public boolean onQueryTextSubmit(String query) {
-                                                   submitSearchQuery(query);
-                                                   return true;
-                                               }
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    submitSearchQuery(query);
+                    return true;
+                }
 
-                                               @Override
-                                               public boolean onQueryTextChange(String newText) {
-                                                   if (TextUtils.isEmpty(newText)) {
-                                                       showSearchMessage();
-                                                       hideSearchTabs();
-                                                   } else {
-                                                       populateSearchSuggestionAdapter(newText);
-                                                   }
-                                                   return true;
-                                               }
-                                           }
-                                          );
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (TextUtils.isEmpty(newText)) {
+                        showSearchMessage();
+                        hideSearchTabs();
+                    } else {
+                        populateSearchSuggestionAdapter(newText);
+                    }
+                    return true;
+                    }
+                }
+        );
     }
 
     /*
@@ -794,12 +876,7 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
-
-        // only submit a site search if the sites tab is active - otherwise we'll delay the site search
-        // until the user taps the sites tab
-        if (getSearchTabsPosition() == TAB_SITES) {
-            updateSitesInCurrentSearch(0);
-        }
+        updateSitesInCurrentSearch(0);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -816,7 +893,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        mRecyclerView.setRefreshing(false);
+        if (!isUpdating()) {
+            mRecyclerView.setRefreshing(false);
+        }
         showLoadingProgress(false);
 
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
@@ -900,19 +979,26 @@ public class ReaderPostListFragment extends Fragment
                         if (mPostSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos);
                         }
+                        if (getPostAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
+                        }
                     } else if (tab.getPosition() == TAB_SITES) {
                         mRecyclerView.setAdapter(getSiteSearchAdapter());
                         if (mSiteSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
                         }
-                        // perform a site search if the user switched to the site tab and results aren't already showing
-                        if (getSiteSearchAdapter().isEmpty()
-                            && !TextUtils.isEmpty(mCurrentSearchQuery)
-                            && !isEmptyViewShowing()) {
-                            updateSitesInCurrentSearch(0);
+                        if (getSiteSearchAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
                         }
                     }
                 }
+
                 @Override public void onTabUnselected(Tab tab) {
                     if (tab.getPosition() == TAB_POSTS) {
                         mPostSearchAdapterPos = mRecyclerView.getCurrentPosition();
@@ -920,6 +1006,7 @@ public class ReaderPostListFragment extends Fragment
                         mSiteSearchAdapterPos = mRecyclerView.getCurrentPosition();
                     }
                 }
+
                 @Override public void onTabReselected(Tab tab) {
                     mRecyclerView.smoothScrollToPosition(0);
                 }
@@ -1318,8 +1405,12 @@ public class ReaderPostListFragment extends Fragment
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleDescriptionAndButton(false);
-                showEmptyView();
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
+                    || getSearchTabsPosition() == TAB_SITES && getSiteSearchAdapter().isEmpty()
+                    || getSearchTabsPosition() == TAB_POSTS && getPostAdapter().isEmpty()) {
+                    setEmptyTitleDescriptionAndButton(false);
+                    showEmptyView();
+                }
             } else {
                 hideEmptyView();
                 if (mRestorePosition > 0) {
@@ -1453,6 +1544,24 @@ public class ReaderPostListFragment extends Fragment
                 }
             };
 
+    private final NewsCardListener mNewsCardListener = new NewsCardListener() {
+        @Override public void onItemShown(@NotNull NewsItem item) {
+            mViewModel.onNewsCardShown(item, getCurrentTag());
+        }
+
+        @Override public void onItemClicked(@NotNull NewsItem item) {
+            mViewModel.onNewsCardExtendedInfoRequested(item);
+            Activity activity = getActivity();
+            if (activity != null) {
+                WPWebViewActivity.openURL(activity, item.getActionUrl());
+            }
+        }
+
+        @Override public void onDismissClicked(NewsItem item) {
+            mViewModel.onNewsCardDismissed(item);
+        }
+    };
+
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -1464,11 +1573,14 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
+            mPostAdapter.setOnNewsCardListener(mNewsCardListener);
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
+            mViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
+                mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -1488,6 +1600,7 @@ public class ReaderPostListFragment extends Fragment
                     ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                             getActivity(), site.getSiteId(), site.getFeedId());
                 }
+
                 @Override
                 public void onLoadMore(int offset) {
                     showLoadingProgress(true);
@@ -1539,6 +1652,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mCurrentTag = tag;
+        mViewModel.onTagChanged(tag);
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
@@ -2195,4 +2309,3 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 }
-

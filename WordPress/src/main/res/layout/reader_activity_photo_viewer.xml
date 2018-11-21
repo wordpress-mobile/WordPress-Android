@@ -18,11 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/margin_small"
-        android:layout_marginLeft="@dimen/margin_small"
         android:background="@drawable/reader_photo_count_background"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_medium"
         android:textColor="@color/grey_light"
         android:textSize="@dimen/text_sz_large"
@@ -41,7 +38,7 @@
         app:contentInsetRight="@dimen/toolbar_content_offset_end"
         app:contentInsetStart="@dimen/toolbar_content_offset"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        tools:targetApi="LOLLIPOP" />
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" >
+    </android.support.v7.widget.Toolbar>
 
 </RelativeLayout>

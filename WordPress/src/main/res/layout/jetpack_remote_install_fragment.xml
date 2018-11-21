@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/jetpack_remote_install_container_padding"
+            android:paddingStart="@dimen/jetpack_remote_install_container_padding">
+
+            <ImageView
+                android:id="@+id/jetpack_install_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_extra_large"
+                android:contentDescription="@string/content_description_people_looking_charts"
+                android:src="@drawable/ic_plans_jetpack_green_88dp"/>
+
+            <TextView
+                android:id="@+id/jetpack_install_title"
+                style="@style/JetpackInstallTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/jetpack_text_width"
+                android:text="@string/install_jetpack"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
+            <TextView
+                android:id="@+id/jetpack_install_message"
+                style="@style/JetpackInstallMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="@dimen/jetpack_text_width"
+                android:text="@string/install_jetpack_message"
+                android:textAlignment="center"/>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/jetpack_install_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:text="@string/install_jetpack_continue"
+                android:theme="@style/JetpackConnectionButton"/>
+
+            <ProgressBar
+                android:id="@+id/jetpack_install_progress"
+                style="@style/BlueMediumProgressBar"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

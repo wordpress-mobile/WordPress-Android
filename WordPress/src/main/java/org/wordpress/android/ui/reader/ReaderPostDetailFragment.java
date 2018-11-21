@@ -3,12 +3,10 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -70,7 +68,6 @@ import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListe
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.util.AccessibilityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -80,12 +77,12 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.WPScrollView;
 import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.EnumSet;
 
@@ -246,7 +243,7 @@ public class ReaderPostDetailFragment extends Fragment
                         updatePost();
                     }
                 }
-                                                         );
+        );
 
         mScrollView = view.findViewById(R.id.scroll_view_reader);
         mScrollView.setScrollDirectionListener(this);
@@ -935,7 +932,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersDivider.setVisibility(View.VISIBLE);
         mLikingUsersLabel.setVisibility(View.VISIBLE);
         mLikingUsersView.setVisibility(View.VISIBLE);
-        mLikingUsersView.showLikingUsers(mPost);
+        mLikingUsersView.showLikingUsers(mPost, mAccountStore.getAccount().getUserId());
     }
 
     private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
@@ -1168,12 +1165,6 @@ public class ReaderPostDetailFragment extends Fragment
                     case COMMENT_JUMP:
                     case COMMENT_REPLY:
                     case COMMENT_LIKE:
-                        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
-                            // passcode screen was launched already (when ReaderPostPagerActivity got resumed) so reset
-                            // the timeout to let the passcode screen come up for the ReaderCommentListActivity.
-                            // See https://github.com/wordpress-mobile/WordPress-Android/issues/4887
-                            AppLockManager.getInstance().getAppLock().forcePasswordLock();
-                        }
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost.blogId, mPost.postId,
                                 mDirectOperation, mCommentId, mInterceptedUri);
                         getActivity().finish();
@@ -1226,11 +1217,6 @@ public class ReaderPostDetailFragment extends Fragment
 
                 TextView txtExcerptFooter = excerptFooter.findViewById(R.id.text_excerpt_footer);
                 txtExcerptFooter.setText(Html.fromHtml(linkText));
-
-                // we can't set the vector drawable in the layout because it will crash pre-API21
-                Drawable drawableRight = VectorDrawableCompat.create(
-                        txtExcerptFooter.getResources(), R.drawable.ic_external_grey_min_24dp, null);
-                txtExcerptFooter.setCompoundDrawablesWithIntrinsicBounds(null, null, drawableRight, null);
 
                 txtExcerptFooter.setOnClickListener(new View.OnClickListener() {
                     @Override

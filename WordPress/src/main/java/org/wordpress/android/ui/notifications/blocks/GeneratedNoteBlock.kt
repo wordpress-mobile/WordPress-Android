@@ -6,25 +6,27 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.StyleSpan
 import android.view.View
-import org.json.JSONObject
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.notifications.blocks.BlockType.BASIC
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 
 @Deprecated("This should be removed once we start receiving Read the source block from the backend")
 class GeneratedNoteBlock(
     val text: String,
     imageManager: ImageManager,
+    notificationsUtilsWrapper: NotificationsUtilsWrapper,
     val clickListener: OnNoteBlockTextClickListener,
     val pingbackUrl: String
-) : NoteBlock(JSONObject(), imageManager, clickListener) {
+) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, clickListener) {
     override fun getNoteText(): Spannable {
         val spannableStringBuilder = SpannableStringBuilder(text)
 
         // Process Ranges to add links and text formatting
-        val map = mapOf("url" to pingbackUrl)
-        val rangeObject = JSONObject(map)
-        val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
+        val formattableRange = FormattableRange(null, null, null, null, pingbackUrl, null)
+        val clickableSpan = object : NoteBlockClickableSpan(WordPress.getContext(), formattableRange,
                 true, false) {
             override fun onClick(widget: View) {
                 clickListener.onNoteBlockTextClicked(this)

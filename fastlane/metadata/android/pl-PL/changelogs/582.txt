@@ -1,4 +1,0 @@
-10.4:
-* Nowość: cofanie zmian z logu aktywności: przywróć swoją witrynę do poprzedniego stanu.
-* Usprawnienia interfejsu.
-* Poprawki błędów

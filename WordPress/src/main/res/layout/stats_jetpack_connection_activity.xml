@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -32,13 +32,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:layout_width="wrap_content"
-                    app:srcCompat="@drawable/img_illustration_stats_226dp" />
+                    android:src="@drawable/img_illustration_stats_226dp" />
 
                 <TextView
                     style="@style/JetpackConnectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="290dp"
+                    android:maxWidth="@dimen/jetpack_text_width"
                     android:text="@string/stats_jetpack_connection_setup_info"
                     android:textAlignment="center" />
 
@@ -46,9 +46,26 @@
                     android:id="@+id/jetpack_setup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/stats_jetpack_connection_setup"
                     android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:theme="@style/JetpackConnectionButton" />
+                    android:text="@string/stats_jetpack_connection_setup"
+                    android:theme="@style/JetpackConnectionButton"/>
+
+                <TextView
+                    android:id="@+id/jetpack_terms_and_conditions"
+                    android:layout_width="@dimen/jetpack_terms_and_conditions_width"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:textAlignment="center"
+                    android:text="@string/stats_jetpack_connection_terms_and_conditions"
+                    style="@style/JetpackTermsAndConditionsButton"/>
+
+                <Button
+                    android:id="@+id/jetpack_faq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/stats_jetpack_connection_faq"
+                    style="@style/JetpackFaqButton"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.main
 
 import android.annotation.SuppressLint
-import android.app.Fragment
-import android.app.FragmentManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -12,7 +10,8 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.BottomNavigationView.OnNavigationItemReselectedListener
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener
-import android.support.v4.content.ContextCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -77,6 +76,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             if (i == PAGE_NEW_POST) {
                 itemView.background = null
                 customView = inflater.inflate(R.layout.navbar_post_item, menuView, false)
+                customView.id = R.id.bottom_nav_new_post_button // identify view for QuickStart
             } else {
                 customView = inflater.inflate(R.layout.navbar_item, menuView, false)
                 val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
@@ -84,6 +84,9 @@ class WPMainNavigationView @JvmOverloads constructor(
                 txtLabel.text = getTitleForPosition(i)
                 customView.contentDescription = getContentDescriptionForPosition(i)
                 imgIcon.setImageResource(getDrawableResForPosition(i))
+                if (i == PAGE_READER) {
+                    customView.id = R.id.bottom_nav_reader_button // identify view for QuickStart
+                }
             }
 
             itemView.addView(customView)
@@ -220,14 +223,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    /*
-     * ideally we'd use a color selector to tint the icon based on its selected state, but prior to
-     * API 21 setting a color selector via XML will crash the app, and setting it programmatically
-     * will have no effect
-     */
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        val color = ContextCompat.getColor(context, if (isSelected) R.color.blue_medium else R.color.grey_lighten_10)
-        getImageViewForPosition(position)?.setColorFilter(color, android.graphics.PorterDuff.Mode.MULTIPLY)
+        getImageViewForPosition(position)?.isSelected = isSelected
     }
 
     @DrawableRes
@@ -299,11 +296,19 @@ class WPMainNavigationView @JvmOverloads constructor(
         return null
     }
 
-    /*
-     * show or hide the badge on the notification page
-     */
+    fun showReaderBadge(showBadge: Boolean) {
+        showBadge(PAGE_READER, showBadge)
+    }
+
     fun showNoteBadge(showBadge: Boolean) {
-        val badgeView = getItemView(PAGE_NOTIFS)?.findViewById<View>(R.id.badge)
+        showBadge(PAGE_NOTIFS, showBadge)
+    }
+
+    /*
+     * show or hide the badge on the 'pageId' icon in the bottom bar
+     */
+    private fun showBadge(pageId: Int, showBadge: Boolean) {
+        val badgeView = getItemView(pageId)?.findViewById<View>(R.id.badge)
 
         val currentVisibility = badgeView?.visibility
         val newVisibility = if (showBadge) View.VISIBLE else View.GONE

@@ -42,10 +42,11 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.analytics.AnalyticsUtils.QuickActionTrackPropertyValue;
 
 import java.util.HashMap;
 
@@ -225,7 +226,7 @@ public class NotificationsProcessingService extends Service {
                         NativeNotificationsUtils.dismissNotification(
                                 PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
                                 mContext
-                                                                    );
+                        );
                     }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_IGNORED);
                     return;
@@ -495,9 +496,7 @@ public class NotificationsProcessingService extends Service {
 
             HashMap<String, String> params = new HashMap<>();
             params.put("locale", LocaleManager.getLanguage(mContext));
-            WordPress.getRestClientUtils().getNotification(params,
-                                                           noteId, listener, errorListener
-                                                          );
+            WordPress.getRestClientUtils().getNotification(params, noteId, listener, errorListener);
         }
 
         // Like or unlike a comment via the REST API
@@ -508,7 +507,12 @@ public class NotificationsProcessingService extends Service {
             }
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED);
+            AnalyticsUtils.trackWithBlogPostDetails(
+                    AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_LIKED, mNote.getSiteId(), mNote.getPostId());
+            AnalyticsUtils.trackQuickActionTouched(
+                    QuickActionTrackPropertyValue.LIKE,
+                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    mNote.buildComment());
 
             SiteModel site = mSiteStore.getSiteBySiteId(mNote.getSiteId());
             if (site != null) {
@@ -527,7 +531,12 @@ public class NotificationsProcessingService extends Service {
             }
 
             // Bump analytics
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED);
+            AnalyticsUtils.trackWithBlogPostDetails(
+                    AnalyticsTracker.Stat.NOTIFICATION_QUICK_ACTIONS_APPROVED, mNote.getSiteId(), mNote.getPostId());
+            AnalyticsUtils.trackQuickActionTouched(
+                    QuickActionTrackPropertyValue.APPROVE,
+                    mSiteStore.getSiteBySiteId(mNote.getSiteId()),
+                    mNote.buildComment());
 
             // Update pseudo comment (built from the note)
             CommentModel comment = mNote.buildComment();
@@ -572,6 +581,7 @@ public class NotificationsProcessingService extends Service {
 
                 // Bump analytics
                 AnalyticsUtils.trackCommentReplyWithDetails(true, site, comment);
+                AnalyticsUtils.trackQuickActionTouched(QuickActionTrackPropertyValue.REPLY_TO, site, comment);
             } else {
                 // cancel the current notification
                 NativeNotificationsUtils.dismissNotification(mPushId, mContext);

@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.people;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextThemeWrapper;
 
 import org.wordpress.android.R;
@@ -70,9 +70,9 @@ public class RoleSelectDialogFragment extends DialogFragment {
         roleChangeDialogFragment.show(parentFragment.getFragmentManager(), null);
     }
 
-    public static <T extends Activity & OnRoleSelectListener> void show(T parentActivity) {
+    public static <T extends AppCompatActivity & OnRoleSelectListener> void show(T parentActivity) {
         RoleSelectDialogFragment roleChangeDialogFragment = new RoleSelectDialogFragment();
-        roleChangeDialogFragment.show(parentActivity.getFragmentManager(), null);
+        roleChangeDialogFragment.show(parentActivity.getSupportFragmentManager(), null);
     }
 
     // Container Activity must implement this interface

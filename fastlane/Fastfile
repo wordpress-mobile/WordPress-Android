@@ -1,17 +1,5 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
+default_platform(:android)
+fastlane_require 'dotenv'
 
 SUPPORTED_LOCALES = [
   { glotpress: "ar", google_play: "ar",  promo_config: {}},
@@ -38,16 +26,44 @@ SUPPORTED_LOCALES = [
   { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
 ].freeze
 
-default_platform(:android)
-
 platform :android do
 ########################################################################
 # Includes
 ########################################################################
 import "./ScreenshotFastfile"
 
+# Environment
+########################################################################
+Dotenv.load('~/.wpandroid-env.default')
+ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
 
-end
+########################################################################
+# Release Lanes
+########################################################################
+#####################################################################################
+  # code_freeze
+  # -----------------------------------------------------------------------------------
+  # This lane executes the steps planned on code freeze
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane code_freeze codefreeze_version:<version> [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
+  #
+  # Example:
+  # bundle exec fastlane code_freeze codefreeze_version:11.2
+  # bundle exec fastlane code_freeze codefreeze_version:11.2 update_release_branch_version:false
+  # bundle exec fastlane code_freeze codefreeze_version:11.2 skip_confirm:true
+  #####################################################################################
+  desc "Creates a new release branch from the current develop"
+  lane :code_freeze do | options |
+    old_version = android_codefreeze(options)
+    
+    setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
+    setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
+
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
+  end
+
+
 #####################################################################################
 # update_ps_strings 
 # -----------------------------------------------------------------------------------
@@ -60,63 +76,72 @@ end
 # Example:
 # fastlane update_ps_strings version:10.3
 #####################################################################################
-desc "Updates the PlayStoreStrings.po file"
-lane :update_ps_strings do |options| 
-  prj_folder = Dir.pwd + "/.."
+  desc "Updates the PlayStoreStrings.po file"
+  lane :update_ps_strings do |options| 
+    prj_folder = Dir.pwd + "/.."
 
-  files = {
-    release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
-    play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
-    play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
-    play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
-    play_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.txt",
-    play_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.txt",
-    play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
-    play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
-    play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
-  }
+    files = {
+      release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
+      play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
+      play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
+      play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
+      play_store_screenshot_1: prj_folder + "/WordPress/metadata/screenshot_1.txt",
+      play_store_screenshot_2: prj_folder + "/WordPress/metadata/screenshot_2.txt",
+      play_store_screenshot_3: prj_folder + "/WordPress/metadata/screenshot_3.txt",
+      play_store_screenshot_4: prj_folder + "/WordPress/metadata/screenshot_4.txt",
+      play_store_screenshot_5: prj_folder + "/WordPress/metadata/screenshot_5.txt",
+    }
 
-  update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
-    source_files: files, 
-    release_version: options[:version])
-end 
+    update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
+      source_files: files, 
+      release_version: options[:version])
+  end 
 
-#####################################################################################
-# download_metadata_string 
-# -----------------------------------------------------------------------------------
-# This lane downloads the translated metadata (release notes,
-# app store strings, title, etc.) from GlotPress and updates the local files
-# -----------------------------------------------------------------------------------
-# Usage:
-# fastlane download_metadata_string build_number:<build_number> version:<version>
-#
-# Example:
-# fastlane download_metadata_string build_number:573 version:10.3
-#####################################################################################
-desc "Downloads translated metadata from GlotPress"
-lane :download_metadata_strings do |options| 
-  values = options[:version].split('.')
-  files = {
-    "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 0},
-    play_store_promo: {desc:"short_description.txt", max_size: 80},
-    play_store_desc: {desc:"full_description.txt", max_size: 0},
-    play_store_app_title: {desc:"title.txt", max_size: 50}
-  }
+  #####################################################################################
+  # download_metadata_string 
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the translated metadata (release notes,
+  # app store strings, title, etc.) from GlotPress and updates the local files
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane download_metadata_string build_number:<build_number> version:<version>
+  #
+  # Example:
+  # fastlane download_metadata_string build_number:573 version:10.3
+  #####################################################################################
+  desc "Downloads translated metadata from GlotPress"
+  lane :download_metadata_strings do |options| 
+    values = options[:version].split('.')
+    files = {
+      "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 0},
+      play_store_promo: {desc:"short_description.txt", max_size: 80},
+      play_store_desc: {desc:"full_description.txt", max_size: 0},
+      play_store_app_title: {desc:"title.txt", max_size: 50}
+    }
 
-  delete_old_changelogs(build: options[:build_number])
-  download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
-    target_files: files, 
-    locales: SUPPORTED_LOCALES,
-    download_path: Dir.pwd + "/fastlane/metadata/android")
-end 
+    delete_old_changelogs(build: options[:build_number])
+    download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+      target_files: files, 
+      locales: SUPPORTED_LOCALES,
+      download_path: Dir.pwd + "/fastlane/metadata/android")
+  end 
+
+########################################################################
+# Helper Lanes
+########################################################################  
+  desc "Get a list of pull request from `start_tag` to the current state"
+  lane :get_pullrequests_list do | options |
+    get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
+  end
 
 #####################################################################################
 # Private lanes
 #####################################################################################
-private_lane :delete_old_changelogs do | options |
-  Dir.glob("./metadata/android/*/").each do | folder |
-    Dir["#{folder}changelogs/*"].each do | file |
-      File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
+  private_lane :delete_old_changelogs do | options |
+    Dir.glob("./metadata/android/*/").each do | folder |
+      Dir["#{folder}changelogs/*"].each do | file |
+        File.delete(file) if Integer(File.basename(file, ".*")) < Integer(options[:build]) rescue puts "Cannot delete file #{file}"
+      end
     end
   end
 end

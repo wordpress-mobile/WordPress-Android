@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
+    <integer name="full_screen_dialog_animation_duration">@android:integer/config_mediumAnimTime</integer>
+
     <integer name="smallest_width_dp">320</integer>
 
     <!-- max #chars user can type when adding a new topic to the reader -->
@@ -22,7 +26,15 @@
     <!-- People Management -->
     <integer name="invite_message_char_limit">500</integer>
 
+    <!-- Quick Start -->
+    <integer name="quick_start_snackbar_duration_ms">5000</integer>
+
     <!-- Support -->
     <integer name="max_length_support_name">50</integer>
+
+    <!-- Image Sizes -->
+    <integer name="image_size_thumbnail_px">150</integer>
+    <integer name="image_size_medium_px">300</integer>
+    <integer name="image_size_large_px">1024</integer>
 
 </resources>

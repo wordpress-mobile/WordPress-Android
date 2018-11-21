@@ -62,7 +62,7 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_device_desc"
-                app:srcCompat="@drawable/media_bar_button_image_multiple"/>
+                android:src="@drawable/media_bar_button_image_multiple"/>
 
             <ImageView
                 android:id="@+id/icon_camera"
@@ -71,7 +71,7 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_camera_desc"
-                app:srcCompat="@drawable/media_bar_button_camera"/>
+                android:src="@drawable/media_bar_button_camera"/>
 
             <ImageView
                 android:id="@+id/icon_wpmedia"
@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 android:background="?android:selectableItemBackground"
                 android:contentDescription="@string/photo_picker_wpmedia_desc"
-                app:srcCompat="@drawable/media_bar_button_library"/>
+                android:src="@drawable/media_bar_button_library"/>
         </LinearLayout>
 
     </LinearLayout>

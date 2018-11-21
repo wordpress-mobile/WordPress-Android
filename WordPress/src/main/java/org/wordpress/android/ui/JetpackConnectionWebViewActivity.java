@@ -35,6 +35,15 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     public static void startJetpackConnectionFlow(Context context, JetpackConnectionSource source, SiteModel site,
                                                   boolean authorized) {
+        if (site.isJetpackInstalled()) {
+            startManualFlow(context, source, site, authorized);
+        } else {
+            JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
+            ActivityLauncher.startJetpackInstall(context, source, site);
+        }
+    }
+
+    static void startManualFlow(Context context, JetpackConnectionSource source, SiteModel site, boolean authorized) {
         String url = "https://wordpress.com/jetpack/connect?"
                      + "url=" + site.getUrl()
                      + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
@@ -62,15 +71,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         }
         intent.putExtra(TRACKING_SOURCE_KEY, source);
         context.startActivity(intent);
-        trackJetpackConnectionFlowStart(site, source);
-    }
-
-    private static void trackJetpackConnectionFlowStart(SiteModel site, JetpackConnectionSource source) {
-        if (!site.isJetpackInstalled()) {
-            JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
-        } else {
-            JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
-        }
+        JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     public void onJetpackSuccessfullyConnected(Uri uri) {
         JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED,
                 (JetpackConnectionSource) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent intent = new Intent(this, JetpackConnectionResultActivity.class);
         intent.setData(uri);
         intent.putExtra(SITE, mSite);
         startActivity(intent);

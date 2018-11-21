@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.people;
 
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -26,7 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnUserRolesChanged;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.Person;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -128,7 +128,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
 
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
             // only delete cached people if there is a connection
@@ -255,20 +255,20 @@ public class PeopleManagementActivity extends AppCompatActivity
             confirmRemovePerson();
             return true;
         } else if (item.getItemId() == R.id.invite) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
 
             if (peopleInviteFragment == null) {
                 peopleInviteFragment = PeopleInviteFragment.newInstance(mSite);
             }
             if (peopleInviteFragment != null && !peopleInviteFragment.isAdded()) {
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, peopleInviteFragment, KEY_PEOPLE_INVITE_FRAGMENT);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
         } else if (item.getItemId() == R.id.send_invitation) {
-            FragmentManager fragmentManager = getFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment peopleInviteFragment = fragmentManager.findFragmentByTag(KEY_PEOPLE_INVITE_FRAGMENT);
             if (peopleInviteFragment != null) {
                 ((InvitationSender) peopleInviteFragment).send();
@@ -459,7 +459,7 @@ public class PeopleManagementActivity extends AppCompatActivity
         }
         if (!personDetailFragment.isAdded()) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PERSON, mSite);
-            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container, personDetailFragment, KEY_PERSON_DETAIL_FRAGMENT);
             fragmentTransaction.addToBackStack(null);
 
@@ -617,7 +617,7 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private boolean navigateBackToPeopleListFragment() {
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
 
@@ -673,11 +673,11 @@ public class PeopleManagementActivity extends AppCompatActivity
     }
 
     private PeopleListFragment getListFragment() {
-        return (PeopleListFragment) getFragmentManager().findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
+        return (PeopleListFragment) getSupportFragmentManager().findFragmentByTag(KEY_PEOPLE_LIST_FRAGMENT);
     }
 
     private PersonDetailFragment getDetailFragment() {
-        return (PersonDetailFragment) getFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
+        return (PersonDetailFragment) getSupportFragmentManager().findFragmentByTag(KEY_PERSON_DETAIL_FRAGMENT);
     }
 
     public interface InvitationSender {

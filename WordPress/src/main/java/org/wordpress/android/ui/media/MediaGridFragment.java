@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,6 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -268,7 +269,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 }
-                                                         );
+        );
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
@@ -692,6 +693,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             FetchMediaListPayload payload =
                     new FetchMediaListPayload(mSite, NUM_MEDIA_PER_FETCH, loadMore, mFilter.toMimeType());
             mDispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload));
+
+            if (!loadMore) {
+                // Fetch site to refresh space quota in activity.
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+            }
         }
     }
 

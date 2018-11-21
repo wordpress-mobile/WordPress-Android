@@ -52,9 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
             android:layout_marginEnd="@dimen/fab_margin"
-            app:srcCompat="@drawable/ic_plus_white_24dp"
+            android:src="@drawable/ic_plus_white_24dp"
             android:contentDescription="@string/add"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />

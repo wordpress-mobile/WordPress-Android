@@ -23,6 +23,9 @@ public class RequestCodes {
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
+    public static final int PAGE_PARENT = 1800;
+    public static final int QUICK_START = 1800;
+    public static final int HISTORY_DETAIL = 1900;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;

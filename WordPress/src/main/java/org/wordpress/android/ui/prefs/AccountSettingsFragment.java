@@ -1,14 +1,13 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,8 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -44,6 +45,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     private EditTextPreferenceWithValidation mEmailPreference;
     private DetailListPreference mPrimarySitePreference;
     private EditTextPreferenceWithValidation mWebAddressPreference;
+    private EditTextPreferenceWithValidation mChangePasswordPreference;
+    private ProgressDialog mChangePasswordProgressDialog;
     private Snackbar mEmailSnackbar;
 
     @Inject Dispatcher mDispatcher;
@@ -63,6 +66,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mPrimarySitePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_primary_site));
         mWebAddressPreference =
                 (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
+        mChangePasswordPreference =
+                (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_change_password));
 
         mEmailPreference.getEditText()
                         .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -70,13 +75,18 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mWebAddressPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
         mWebAddressPreference.setDialogMessage(R.string.web_address_dialog_hint);
+        mChangePasswordPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        mChangePasswordPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.PASSWORD);
+        mChangePasswordPreference.setDialogMessage(R.string.change_password_dialog_hint);
 
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
+        mChangePasswordPreference.setOnPreferenceChangeListener(this);
 
-        setTextAlignement(mEmailPreference.getEditText());
-        setTextAlignement(mWebAddressPreference.getEditText());
+        setTextAlignment(mEmailPreference.getEditText());
+        setTextAlignment(mWebAddressPreference.getEditText());
+        setTextAlignment(mChangePasswordPreference.getEditText());
 
         // load site list asynchronously
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -137,6 +147,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             mWebAddressPreference.setSummary(newValue.toString());
             updateWebAddress(newValue.toString());
             return false;
+        } else if (preference == mChangePasswordPreference) {
+            showChangePasswordProgressDialog(true);
+            updatePassword(newValue.toString());
         }
 
         return true;
@@ -150,11 +163,20 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         return super.onOptionsItemSelected(item);
     }
 
-    private void setTextAlignement(EditText editText) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        } else {
-            editText.setGravity(Gravity.START);
+    private void setTextAlignment(EditText editText) {
+        editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+    }
+
+    private void showChangePasswordProgressDialog(boolean show) {
+        if (show && mChangePasswordProgressDialog == null) {
+            mChangePasswordProgressDialog = new ProgressDialog(getActivity());
+            mChangePasswordProgressDialog.setCancelable(false);
+            mChangePasswordProgressDialog.setIndeterminate(true);
+            mChangePasswordProgressDialog.setMessage(getString(R.string.change_password_dialog_message));
+            mChangePasswordProgressDialog.show();
+        } else if (!show && mChangePasswordProgressDialog != null) {
+            mChangePasswordProgressDialog.dismiss();
+            mChangePasswordProgressDialog = null;
         }
     }
 
@@ -241,6 +263,13 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
     }
 
+    public void updatePassword(String newPassword) {
+        PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+        payload.params = new HashMap<>();
+        payload.params.put("password", newPassword);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
@@ -248,21 +277,35 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
             return;
         }
 
-        if (event.isError()) {
-            switch (event.error.type) {
-                case SETTINGS_FETCH_ERROR:
-                    ToastUtils
-                            .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
-                    break;
-                case SETTINGS_POST_ERROR:
-                    ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-                    // we optimistically show the email change snackbar, if that request fails, we should
-                    // remove the snackbar
-                    checkIfEmailChangeIsPending();
-                    break;
+        // When account change is caused by password change, progress dialog will be shown (i.e. not null).
+        if (mChangePasswordProgressDialog != null) {
+            showChangePasswordProgressDialog(false);
+
+            if (event.isError()) {
+                ToastUtils.showToast(getActivity(), event.error.message, ToastUtils.Duration.LONG);
+                AppLog.e(T.SETTINGS, event.error.message);
+            } else {
+                ToastUtils.showToast(getActivity(), R.string.change_password_confirmation, ToastUtils.Duration.LONG);
+                refreshAccountDetails();
             }
         } else {
-            refreshAccountDetails();
+            if (event.isError()) {
+                switch (event.error.type) {
+                    case SETTINGS_FETCH_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings,
+                                ToastUtils.Duration.LONG);
+                        break;
+                    case SETTINGS_POST_ERROR:
+                        ToastUtils.showToast(getActivity(), R.string.error_post_account_settings,
+                                ToastUtils.Duration.LONG);
+                        // we optimistically show the email change snackbar, if that request fails, we should
+                        // remove the snackbar
+                        checkIfEmailChangeIsPending();
+                        break;
+                }
+            } else {
+                refreshAccountDetails();
+            }
         }
     }
 

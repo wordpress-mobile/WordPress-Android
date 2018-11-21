@@ -30,6 +30,7 @@ class ActivityLogAdapter(
             is ProgressItemViewHolder -> holder.bind(list[position] as Progress)
             is HeaderItemViewHolder -> holder.bind(list[position] as Header)
             is FooterItemViewHolder -> {}
+            is LoadingItemViewHolder -> {}
             else -> throw IllegalArgumentException("Unexpected view holder in ActivityLog")
         }
     }
@@ -60,6 +61,7 @@ class ActivityLogAdapter(
             ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, rewindClickListener)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
+            ViewType.LOADING.id -> LoadingItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ActivityLog")
         }
     }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -52,7 +51,7 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ic_gridicons_audio"
+            android:src="@drawable/ic_gridicons_audio"
             android:contentDescription="@string/media_preview_audio_desc"/>
 
     </RelativeLayout>

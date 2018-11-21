@@ -61,15 +61,15 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
+    String getErrorMessageFromPostError(Context context, boolean isPage, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return post.isPage() ? context.getString(R.string.error_unknown_page)
+                return isPage ? context.getString(R.string.error_unknown_page)
                         : context.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages)
+                return isPage ? context.getString(R.string.error_refresh_unauthorized_pages)
                         : context.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
@@ -273,7 +273,7 @@ public class UploadUtils {
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher) {
-        boolean userCanPublish = SiteUtils.isAccessedViaWPComRest(site) ? site.getHasCapabilityPublishPosts() : true;
+        boolean userCanPublish = !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
@@ -296,31 +296,56 @@ public class UploadUtils {
             }
         } else {
             if (post != null) {
-                boolean isDraft = PostStatus.fromPost(post) == PostStatus.DRAFT;
-                if (isDraft) {
-                    if (userCanPublish) {
-                        View.OnClickListener publishPostListener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                UploadUtils.publishPost(activity, post, site, dispatcher);
-                            }
-                        };
-                        UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                                R.string.button_publish, publishPostListener);
-                    } else {
-                        UploadUtils.showSnackbar(snackbarAttachView, R.string.editor_draft_saved_online);
+                PostStatus status = PostStatus.fromPost(post);
+                int snackbarMessageRes;
+                int snackbarButtonRes = 0;
+                View.OnClickListener publishPostListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // jump to Editor Preview mode to show this Post
+                        ActivityLauncher.browsePostOrPage(activity, site, post);
                     }
-                } else {
-                    int messageRes = post.isPage() ? R.string.page_published
-                            : (userCanPublish ? R.string.post_published : R.string.post_submitted);
-                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
-                                                          R.string.button_view, new View.OnClickListener() {
+                };
+
+                switch (status) {
+                    case DRAFT:
+                        snackbarMessageRes = R.string.editor_draft_saved_online;
+                        if (userCanPublish) {
+                            publishPostListener = new View.OnClickListener() {
                                 @Override
-                                public void onClick(View view) {
-                                    // jump to Editor Preview mode to show this Post
-                                    ActivityLauncher.browsePostOrPage(activity, site, post);
+                                public void onClick(View v) {
+                                    UploadUtils.publishPost(activity, post, site, dispatcher);
                                 }
-                            });
+                            };
+                            snackbarButtonRes = R.string.button_publish;
+                        }
+                        break;
+                    case PUBLISHED:
+                        snackbarButtonRes = R.string.button_view;
+
+                        if (post.isPage()) {
+                            snackbarMessageRes = R.string.page_published;
+                        } else if (userCanPublish) {
+                            snackbarMessageRes = R.string.post_published;
+                        } else {
+                            snackbarMessageRes = R.string.post_submitted;
+                        }
+                        break;
+                    case SCHEDULED:
+                        snackbarButtonRes = R.string.button_view;
+                        snackbarMessageRes = post.isPage() ? R.string.page_scheduled : R.string.post_published;
+                        break;
+                    default:
+                        snackbarButtonRes = R.string.button_view;
+                        snackbarMessageRes = post.isPage() ? R.string.page_updated : R.string.post_updated;
+                        break;
+                }
+
+                if (snackbarButtonRes > 0) {
+                    UploadUtils.showSnackbarSuccessAction(snackbarAttachView, snackbarMessageRes, snackbarButtonRes,
+                            publishPostListener);
+                } else {
+                    UploadUtils.showSnackbar(snackbarAttachView, snackbarMessageRes);
                 }
             }
         }

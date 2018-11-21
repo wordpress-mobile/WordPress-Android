@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.themes;
 
-import android.app.AlertDialog;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -34,7 +34,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
-import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.LocaleManager;
@@ -96,7 +96,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             fetchWpComThemesIfSyncTimedOut(false);
         } else {
             mThemeBrowserFragment =
-                    (ThemeBrowserFragment) getFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
+                    (ThemeBrowserFragment) getSupportFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -135,7 +135,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         } else {
@@ -166,6 +166,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Override
     public void onTryAndCustomizeSelected(String themeId) {
+        if (mThemeBrowserFragment != null) {
+            mThemeBrowserFragment.completeQuickStartCustomizeTask();
+        }
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
@@ -342,7 +345,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void addBrowserFragment() {
         mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                             .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
                             .commit();
     }

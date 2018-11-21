@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -82,12 +80,8 @@ public class WPMediaUtils {
         return null;
     }
 
-    public static boolean isVideoOptimizationAvailable() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
-    }
-
     public static boolean isVideoOptimizationEnabled() {
-        return isVideoOptimizationAvailable() && AppPrefs.isVideoOptimize();
+        return AppPrefs.isVideoOptimize();
     }
 
     /**
@@ -221,7 +215,6 @@ public class WPMediaUtils {
     }
 
     public static void launchVideoLibrary(Activity activity, boolean multiSelect) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoLibraryIntent(activity, multiSelect),
                                         RequestCodes.VIDEO_LIBRARY);
     }
@@ -230,15 +223,12 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         if (multiSelect) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
 
     public static void launchVideoCamera(Activity activity) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
 
@@ -247,7 +237,6 @@ public class WPMediaUtils {
     }
 
     public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
-        AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(
                 preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
@@ -257,9 +246,7 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (multiSelect) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-            }
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, title);
     }
@@ -273,7 +260,6 @@ public class WPMediaUtils {
     public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
         Intent intent = prepareLaunchCamera(activity, applicationId, callback);
         if (intent != null) {
-            AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
     }

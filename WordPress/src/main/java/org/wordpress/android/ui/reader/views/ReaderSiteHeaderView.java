@@ -99,7 +99,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
                 @Override
                 public void onResult(ReaderBlog serverBlogInfo) {
-                    showBlogInfo(serverBlogInfo);
+                    if (isAttachedToWindow()) {
+                        showBlogInfo(serverBlogInfo);
+                    }
                 }
             };
             if (mFeedId != 0) {

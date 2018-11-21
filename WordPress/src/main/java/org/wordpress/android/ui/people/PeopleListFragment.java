@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -400,7 +400,7 @@ public class PeopleListFragment extends Fragment {
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
+                mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
                 peopleViewHolder.mTxtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.mTxtRole.setVisibility(View.VISIBLE);

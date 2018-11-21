@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.post;
 
-import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.os.PersistableBundle;
@@ -28,7 +27,6 @@ import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceSta
  * EventBus to alert of update status
  */
 
-@TargetApi(21)
 public class ReaderPostJobService extends JobService implements ServiceCompletionListener {
     private ReaderPostLogic mReaderPostLogic;
 

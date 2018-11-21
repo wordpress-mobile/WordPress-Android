@@ -386,27 +386,26 @@ public class StatsUtils {
             // If we don't know the type of the item, open it with the browser.
             AppLog.d(AppLog.T.UTILS, "Type of the item is null. Opening it in the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
-        } else if (itemType.equals(StatsConstants.ITEM_TYPE_POST)
-                   || itemType.equals(StatsConstants.ITEM_TYPE_PAGE)) {
+        } else if (itemType.equals(StatsConstants.ITEM_TYPE_POST)) {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
                         blogID
-                                                            );
+                );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
                         ctx,
                         blogID,
                         itemID
-                                                           );
+                );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
-                                                        );
+            );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
@@ -454,9 +453,7 @@ public class StatsUtils {
             Date date = from.parse(dataSubscribed);
 
             // See http://momentjs.com/docs/#/displaying/fromnow/
-            long currentDifference = Math.abs(
-                    StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
-                                             );
+            long currentDifference = Math.abs(StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS));
 
             if (currentDifference <= 45) {
                 return ctx.getString(R.string.stats_followers_seconds_ago);

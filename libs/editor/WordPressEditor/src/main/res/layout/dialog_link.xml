@@ -38,4 +38,13 @@
             android:hint="@string/link_enter_url_text"
             android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
+    <CheckBox
+        android:id="@+id/openInNewWindow"
+        android:text="@string/link_open_new_window"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/link_dialog_margin_outer"
+        android:layout_marginLeft="@dimen/link_dialog_margin_outer"
+        android:layout_marginRight="@dimen/link_dialog_margin_outer"
+        android:layout_marginTop="@dimen/link_dialog_margin_inner" />
 </LinearLayout>
