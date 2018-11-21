@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ER
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
@@ -48,7 +48,7 @@ class MostPopularUseCaseTest : BaseUnitTest() {
                 dateUtils
         )
         whenever(dateUtils.getWeekDay(day)).thenReturn(dayString)
-        whenever(dateUtils.getWeekDay(hour)).thenReturn(hourString)
+        whenever(dateUtils.getHour(hour)).thenReturn(hourString)
     }
 
     @Test
@@ -99,7 +99,7 @@ class MostPopularUseCaseTest : BaseUnitTest() {
 
     private fun assertDay(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(LIST_ITEM)
-        val item = blockListItem as Item
+        val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(dayString)
         assertThat(item.showDivider).isEqualTo(true)
         assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}%")
@@ -107,7 +107,7 @@ class MostPopularUseCaseTest : BaseUnitTest() {
 
     private fun assertHour(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(LIST_ITEM)
-        val item = blockListItem as Item
+        val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(hourString)
         assertThat(item.showDivider).isEqualTo(false)
         assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}%")
