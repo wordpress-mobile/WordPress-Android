@@ -17,9 +17,9 @@ module Fastlane
         downloader = Fastlane::Helpers::MetadataDownloader.new(Dir.pwd + "/fastlane/metadata/android", params[:target_files])
 
         params[:locales].each do | loc |
-          puts "Downloading language: #{loc[0]}"
-          complete_url = "#{params[:project_url]}#{loc[0]}/default/export-translations?filters[status]=current&format=json"
-          downloader.download(loc[1], complete_url)
+          puts "Downloading language: #{loc[:glotpress]}"
+          complete_url = "#{params[:project_url]}#{loc[:glotpress]}/default/export-translations?filters[status]=current&format=json"
+          downloader.download(loc[:google_play], complete_url)
         end
       end
 

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-25 19:55:10+0000
+Translation-Revision-Date: 2018-11-16 13:50:21+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="history_detail_title">Revízia</string>
+    <string name="history_detail_button_previous">Predchádzajúce</string>
+    <string name="history_detail_button_next">Ďalej</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Dozvedieť sa viac </string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Znovu nezobrazovať</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Späť</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Upraviť stránku</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Upraviť článok</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť túto stránku, no odporúčame vám zobraziť jej ukážku pred zverejnením. </string>
+    <string name="dialog_gutenberg_compatibility_message">Pracujeme na úplne novom editore WordPress. Stále môžete upraviť tento článok, no odporúčame vám zobraziť jeho ukážku pred zverejnením.</string>
+    <string name="dialog_gutenberg_compatibility_title">Skôr než budete pokračovať</string>
+    <string name="media_space_used">%1$s použité</string>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="history_loading_revision">Načítavanie verzie </string>
+    <string name="history_loaded_revision">Revízia načítaná</string>
+    <string name="history_load_dialog_button_positive">Načítať</string>
     <string name="async_promo_description_schedule_page">Môžete opustiť editor a vaša stránka sa uloží a naplánuje na pozadí! Vyskúšajte to!</string>
     <string name="async_promo_description_publish_post">Môžete opustiť editor a váš článok sa uloží a zverejní na pozadí! Vyskúšajte to!</string>
     <string name="async_promo_description_publish_page">Môžete opustiť editor a vaša stránka sa uloží a zverejní na pozadí! Vyskúšajte to!</string>

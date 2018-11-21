@@ -9,8 +9,6 @@ Language: pl
     <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
-    <string name="history_load_dialog_title">Wczytaj rewizję</string>
-    <string name="history_load_dialog_message">Czy chcesz wczytać rewizję z %1$s na %2$s?</string>
     <string name="history_load_dialog_button_positive">Wczytaj</string>
     <string name="history_footer_post">Utworzono wpis dnia %1$s na %2$s</string>
     <string name="history_footer_page">Utworzono stronę dnia  %1$s na %2$s</string>

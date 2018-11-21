@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-29 11:54:07+0000
+Translation-Revision-Date: 2018-11-14 08:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="history_detail_title">Revision</string>
+    <string name="history_detail_button_previous">Zurück</string>
+    <string name="history_detail_button_next">Weiter</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Nicht erneut anzeigen</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Zurück</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Seite bearbeiten</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Beitrag bearbeiten</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Wir arbeiten am komplett neuen WordPress-Editor. Du kannst diese Seite weiterhin bearbeiten, aber wir empfehlen dir, sie in der Vorschau anzuzeigen, bevor du sie veröffentlichst.</string>
+    <string name="dialog_gutenberg_compatibility_message">Wir arbeiten am komplett neuen WordPress-Editor. Du kannst diesen Beitrag weiterhin bearbeiten, aber wir empfehlen dir, ihn in der Vorschau anzuzeigen, bevor du ihn veröffentlichst.</string>
+    <string name="dialog_gutenberg_compatibility_title">Bevor du weitermachst</string>
+    <string name="media_space_used">%1$s belegt</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Bitte gib den Namen einer WordPress.com-Website oder einer selbst gehosteten, mit Jetpack verbundenen WordPress-Website ein</string>
     <string name="history_loading_revision">Revision wird geladen</string>
     <string name="history_loaded_revision">Revision geladen</string>
-    <string name="history_load_dialog_title">Revision laden</string>
-    <string name="history_load_dialog_message">Möchtest du die Revision vom %1$s um %2$s laden?</string>
     <string name="history_load_dialog_button_positive">Laden</string>
     <string name="history_footer_post">Beitrag erstellt am %1$s um %2$s</string>
     <string name="history_footer_page">Seite erstellt am %1$s um %2$s</string>
@@ -23,8 +32,10 @@ Language: de
     <string name="async_promo_description_publish_post">Du kannst den Editor jetzt schließen. Dein Beitrag wird im Hintergrund gespeichert und veröffentlicht! Probiere es aus!</string>
     <string name="async_promo_description_publish_page">Du kannst den Editor jetzt schließen. Deine Seite wird im Hintergrund gespeichert und veröffentlicht! Probiere es aus!</string>
     <string name="image_size_full_label">Vollbild</string>
+    <string name="image_size_large_label">Groß</string>
     <string name="image_size_medium_label">Mittelgroß</string>
     <string name="image_size_thumbnail_label">Vorschaubild</string>
+    <string name="menu_history">Verlauf</string>
     <string name="async_promo_schedule_now">Jetzt planen</string>
     <string name="async_promo_title_schedule">Mit Confidence planen</string>
     <string name="pages_pending">Ausstehender Review</string>
@@ -539,7 +550,7 @@ Language: de
     <string name="stats_jetpack_connection_setup">Jetpack installieren</string>
     <string name="plugin_chevron_icon_content_description">Text umschalten</string>
     <string name="plugin_info_your_version">Deine WordPress Version</string>
-    <string name="plugin_info_requires_version">Benötigt WordPress Version %</string>
+    <string name="plugin_info_requires_version">Benötigt WordPress Version </string>
     <string name="plugin_info_lastupdated">Zuletzt aktualisiert</string>
     <string name="plugin_info_version">Version</string>
     <string name="plugin_five_stars">5 Sterne</string>
@@ -725,6 +736,8 @@ Language: de
     <string name="error_upload_page_media_param">Es gab einen Fehler beim Hochladen der Medien auf dieser Seite: %s.</string>
     <string name="error_upload_page_param">Es gab einen Fehler beim Hochladen dieser Seite: %s.</string>
     <string name="async_promo_link">Funktioniert es?</string>
+    <string name="async_promo_description_schedule_post">Du kannst den Editor jetzt schließen. Dein Beitrag wird im Hintergrund gespeichert und die Veröffentlichung geplant! Probiere es aus!</string>
+    <string name="async_promo_title_publish">Veröffentlichen ohne Sorge</string>
     <string name="editor_uploading_post">Dein Beitrag wird hochgeladen</string>
     <string name="uploading_media">Medien werden hochgeladen …</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Bist du sicher? Durch das Löschen dieses Beitrags wird auch der Medien-Upload abgebrochen.</string>
@@ -955,6 +968,7 @@ Language: de
     <string name="media_upload_error">Fehler beim Medien-Upload aufgetreten</string>
     <string name="retry">Erneut versuchen</string>
     <string name="confirm">Bestätigen</string>
+    <string name="xmlrpc_endpoint_forbidden_error">Verbindung nicht möglich. Wir haben einen 403-Fehler erhalten, als wir versucht haben, den\n XMLRPC-Endpunkt deiner Website aufzurufen. Die App braucht diesen, um mit deiner Website zu kommunizieren. Kontaktiere deinen Host, um\n dieses Problem zu beheben.</string>
     <string name="xmlrpc_post_blocked_error">Konnte nicht verbinden. Dein Host blockiert POST-Anforderungen und die App benötigt\n diese, um mit deiner Website zu kommunizieren. Kontaktiere deinen Host, um dieses Problem zu beheben.</string>
     <string name="reader_hint_search_followed_sites">Abonnierte Websites durchsuchen</string>
     <string name="visual_editor_disabled">Visueller Editor deaktiviert</string>

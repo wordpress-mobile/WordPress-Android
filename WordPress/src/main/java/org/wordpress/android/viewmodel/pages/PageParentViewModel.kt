@@ -62,7 +62,12 @@ class PageParentViewModel
     }
 
     private fun loadPages(pageId: Long) = defaultScope.launch {
-        page = pageStore.getPageByRemoteId(pageId, site)
+        page = if (pageId < 0) {
+            // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
+            pageStore.getPageByLocalId(-pageId.toInt(), site)
+        } else {
+            pageStore.getPageByRemoteId(pageId, site)
+        }
 
         val parents = mutableListOf<PageItem>(
                 ParentPage(
@@ -72,13 +77,15 @@ class PageParentViewModel
                 )
         )
 
-        val choices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
-        val parentChoices = choices.filter { isNotChild(it, choices) }
-        if (parentChoices.isNotEmpty()) {
-            parents.add(Divider(resourceProvider.getString(R.string.pages)))
-            parents.addAll(parentChoices.map {
-                ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
-            })
+        if (page != null) {
+            val choices = pageStore.getPagesFromDb(site).filter { it.remoteId != pageId && it.status == PUBLISHED }
+            val parentChoices = choices.filter { isNotChild(it, choices) }
+            if (parentChoices.isNotEmpty()) {
+                parents.add(Divider(resourceProvider.getString(R.string.pages)))
+                parents.addAll(parentChoices.map {
+                    ParentPage(it.remoteId, it.title, page?.parent?.remoteId == it.remoteId, PARENT)
+                })
+            }
         }
 
         _currentParent = parents.firstOrNull { it is ParentPage && it.isSelected } as? ParentPage

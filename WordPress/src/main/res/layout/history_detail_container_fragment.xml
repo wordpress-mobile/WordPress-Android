@@ -2,104 +2,168 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aztec="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/bottom_bar"
-        android:background="@color/white"
-        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/history_detail_button_previous"
             android:focusable="true"
-            android:layout_alignParentStart="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:minHeight="@dimen/min_touch_target_sz"
             android:minWidth="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_extra_large"
-            android:src="@drawable/ic_chevron_left_grey_dark_24dp_selector" >
+            android:src="@drawable/ic_chevron_left_grey_dark_24dp_selector">
         </ImageView>
 
         <LinearLayout
             android:id="@+id/diff_layout"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toEndOf="@+id/previous"
             android:layout_toStartOf="@+id/next"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal"
-            android:padding="@dimen/margin_extra_large" >
+            android:padding="@dimen/margin_extra_large">
 
             <TextView
                 android:id="@+id/diff_additions"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_blue_wordpress_plus_white_16dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:layout_marginStart="@dimen/margin_small_medium"
-                android:layout_width="wrap_content"
+                android:drawablePadding="@dimen/margin_small"
+                android:drawableStart="@drawable/bg_oval_blue_wordpress_plus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_darken_10"
                 android:visibility="gone"
                 tools:text="3"
-                tools:visibility="visible" >
+                tools:visibility="visible">
             </TextView>
 
             <TextView
                 android:id="@+id/diff_deletions"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_alert_red_minus_white_16dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/margin_small_medium"
                 android:layout_marginStart="@dimen/margin_small_medium"
-                android:layout_width="wrap_content"
+                android:drawablePadding="@dimen/margin_small"
+                android:drawableStart="@drawable/bg_oval_alert_red_minus_white_16dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_darken_10"
                 android:visibility="gone"
                 tools:text="1"
-                tools:visibility="visible" >
+                tools:visibility="visible">
             </TextView>
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/history_detail_button_next"
             android:focusable="true"
-            android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:minHeight="@dimen/min_touch_target_sz"
             android:minWidth="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_extra_large"
-            android:src="@drawable/ic_chevron_right_grey_dark_24dp_selector" >
+            android:src="@drawable/ic_chevron_right_grey_dark_24dp_selector">
         </ImageView>
 
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/diff_pager"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:layout_above="@+id/bottom_bar">
     </org.wordpress.android.widgets.WPViewPager>
 
-    <View
-        android:background="@color/grey_lighten_30"
+    <ScrollView
+        android:id="@+id/visual_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:fillViewport="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/visual_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:fontFamily="serif"
+                android:freezesText="true"
+                android:lineSpacingExtra="@dimen/spacing_extra_title"
+                android:padding="@dimen/margin_extra_large"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/aztec_title_size"
+                android:textStyle="bold"/>
+
+            <View
+                style="@style/DividerSourceView"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/format_bar_horizontal_divider_height"
+                android:layout_marginLeft="@dimen/sourceview_side_margin"
+                android:layout_marginRight="@dimen/sourceview_side_margin"/>
+
+            <org.wordpress.aztec.AztecText
+                android:id="@+id/visual_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:inputType="none"
+                android:padding="16dp"
+                android:scrollbars="vertical"
+                aztec:bulletColor="@color/bullet"
+                aztec:bulletMargin="@dimen/bullet_margin"
+                aztec:bulletPadding="@dimen/bullet_padding"
+                aztec:bulletWidth="@dimen/bullet_width"
+                aztec:codeBackground="@color/code_background"
+                aztec:codeColor="@color/code"
+                aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
+                aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
+                aztec:linkColor="@color/link"
+                aztec:linkUnderline="true"
+                aztec:quoteBackground="@color/quote_background"
+                aztec:quoteColor="@color/quote"
+                aztec:quoteMargin="@dimen/quote_margin"
+                aztec:quotePadding="@dimen/quote_padding"
+                aztec:quoteWidth="@dimen/quote_width"
+                aztec:textColor="@color/text">
+            </org.wordpress.aztec.AztecText>
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" >
+        android:layout_above="@+id/bottom_bar"
+        android:background="@color/grey_lighten_30">
     </View>
 
 </RelativeLayout>
