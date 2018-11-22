@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.DateUtils
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.roundToInt
@@ -21,7 +22,8 @@ class MostPopularInsightsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val dateUtils: DateUtils
+    private val dateUtils: DateUtils,
+    private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val dbModel = insightsStore.getMostPopularInsights(site)
@@ -45,14 +47,20 @@ class MostPopularInsightsUseCase
         items.add(
                 ListItem(
                         dateUtils.getWeekDay(model.highestDayOfWeek),
-                        "${model.highestDayPercent.roundToInt()}%",
+                        resourceProvider.getString(
+                                R.string.stats_insights_percent_value,
+                                model.highestDayPercent.roundToInt()
+                        ),
                         true
                 )
         )
         items.add(
                 ListItem(
                         dateUtils.getHour(model.highestHour),
-                        "${model.highestHourPercent.roundToInt()}%",
+                        resourceProvider.getString(
+                                R.string.stats_insights_percent_value,
+                                model.highestHourPercent.roundToInt()
+                        ),
                         false
                 )
         )
