@@ -4,18 +4,18 @@ import org.wordpress.android.fluxc.model.PostModel;
 
 public class PostEvents {
     public static class PostUploadStarted {
-        public final int mLocalBlogId;
+        public final PostModel post;
 
-        PostUploadStarted(int localBlogId) {
-            mLocalBlogId = localBlogId;
+        PostUploadStarted(PostModel post) {
+            this.post = post;
         }
     }
 
     public static class PostUploadCanceled {
-        public final int localSiteId;
+        public final PostModel post;
 
-        public PostUploadCanceled(int localSiteId) {
-            this.localSiteId = localSiteId;
+        PostUploadCanceled(PostModel post) {
+            this.post = post;
         }
     }
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:fillViewport="true"
+    android:layout_alignParentTop="true"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" >
+
+            <org.wordpress.android.widgets.DiffView
+                android:id="@+id/title"
+                android:background="@null"
+                android:clickable="false"
+                android:fontFamily="serif"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:lineSpacingExtra="@dimen/spacing_extra_title"
+                android:padding="@dimen/margin_extra_large"
+                android:textColor="@color/grey_dark"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/aztec_title_size"
+                android:textStyle="bold" >
+            </org.wordpress.android.widgets.DiffView>
+
+        </RelativeLayout>
+
+        <View
+            android:layout_height="@dimen/format_bar_horizontal_divider_height"
+            android:layout_marginEnd="@dimen/sourceview_side_margin"
+            android:layout_marginStart="@dimen/sourceview_side_margin"
+            android:layout_width="fill_parent"
+            style="@style/DividerSourceView" >
+        </View>
+
+        <FrameLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" >
+
+            <org.wordpress.android.widgets.DiffView
+                android:id="@+id/content"
+                android:clickable="false"
+                android:fontFamily="serif"
+                android:gravity="top|start"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_extra_large"
+                android:scrollbars="vertical"
+                android:textColor="@color/grey_dark"
+                android:textIsSelectable="true"
+                android:textSize="@dimen/text_sz_post_content" >
+            </org.wordpress.android.widgets.DiffView>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>

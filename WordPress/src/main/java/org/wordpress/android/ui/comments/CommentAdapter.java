@@ -247,7 +247,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.mContainerView.setBackgroundColor(mSelectedColor);
         } else {
             checkmarkVisibility = View.GONE;
-            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR, getAvatarForDisplay(comment, mAvatarSz));
+            mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND,
+                    getAvatarForDisplay(comment, mAvatarSz));
             holder.mContainerView.setBackgroundColor(mUnselectedColor);
         }
 

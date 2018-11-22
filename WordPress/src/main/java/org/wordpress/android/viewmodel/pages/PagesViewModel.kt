@@ -13,10 +13,16 @@ import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.modules.DEFAULT_SCOPE
@@ -31,6 +37,8 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
@@ -41,16 +49,20 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val ACTION_DELAY = 100
 private const val SEARCH_DELAY = 200
+private const val SNACKBAR_DELAY = 500
 private const val SEARCH_COLLAPSE_DELAY = 500
+private const val PAGE_UPLOAD_TIMEOUT = 5000L
 
 class PagesViewModel
 @Inject constructor(
@@ -163,12 +175,12 @@ class PagesViewModel
         val result = pageStore.requestPagesFromServer(site)
         if (result.isError) {
             _listState.setOnUi(ERROR)
-            _showSnackbarMessage.postValue(SnackbarMessageHolder(string.error_refresh_pages))
+            showSnackbar(SnackbarMessageHolder(string.error_refresh_pages))
             AppLog.e(AppLog.T.PAGES, "An error occurred while fetching the Pages")
         } else {
             _listState.setOnUi(DONE)
-            refreshPages()
         }
+        refreshPages()
     }
 
     private suspend fun refreshPages() {
@@ -185,7 +197,7 @@ class PagesViewModel
 
     private suspend fun waitForPageUpdate(remotePageId: Long) {
         _arePageActionsEnabled = false
-        suspendCoroutine<Unit> { cont ->
+        suspendCoroutineWithTimeout<Unit>(PAGE_UPLOAD_TIMEOUT) { cont ->
             pageUpdateContinuations[remotePageId] = cont
         }
         _arePageActionsEnabled = true
@@ -200,8 +212,21 @@ class PagesViewModel
     }
 
     fun onPageTypeChanged(type: PageListType) {
+        trackTabChangeEvent(type)
+
         currentPageType = type
         checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun trackTabChangeEvent(type: PageListType) {
+        val tab = when (type) {
+            PUBLISHED -> "published"
+            DRAFTS -> "drafts"
+            SCHEDULED -> "scheduled"
+            PageListType.TRASHED -> "binned"
+        }
+        val properties = mutableMapOf("tab_name" to tab as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_TAB_PRESSED, site, properties)
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
@@ -261,18 +286,20 @@ class PagesViewModel
                 })
     }
 
-    fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
-        if (!restorePreviousSearch) {
-            clearSearch()
+    fun onSearchExpanded(restorePreviousSearch: Boolean) {
+        if (isSearchExpanded.value != true) {
+            AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+
+            if (!restorePreviousSearch) {
+                clearSearch()
+            }
+
+            _isSearchExpanded.value = true
+            _isNewPageButtonVisible.value = false
         }
-
-        _isSearchExpanded.value = true
-        _isNewPageButtonVisible.value = false
-
-        return true
     }
 
-    fun onSearchCollapsed(): Boolean {
+    fun onSearchCollapsed() {
         _isSearchExpanded.value = false
         clearSearch()
 
@@ -280,19 +307,46 @@ class PagesViewModel
             delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
-        return true
     }
 
     fun onMenuAction(action: Action, page: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
-            SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
+            VIEW_PAGE -> previewPage(page)
+            SET_PARENT -> setParent(page)
             MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
-            DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
+            DELETE_PERMANENTLY -> deletePage(page)
         }
         return true
+    }
+
+    private fun deletePage(page: Page) {
+        _displayDeleteDialog.postValue(page)
+    }
+
+    private fun setParent(page: Page) {
+        trackMenuSelectionEvent(SET_PARENT)
+
+        _setPageParent.postValue(pageMap[page.id])
+    }
+
+    private fun previewPage(page: Page) {
+        trackMenuSelectionEvent(VIEW_PAGE)
+
+        _previewPage.postValue(pageMap[page.id])
+    }
+
+    private fun trackMenuSelectionEvent(action: Action) {
+        val menu = when (action) {
+            VIEW_PAGE -> "view"
+            SET_PARENT -> "set_parent"
+            MOVE_TO_DRAFT -> "move_to_draft"
+            MOVE_TO_TRASH -> "move_to_bin"
+            else -> return
+        }
+        val properties = mutableMapOf("option_name" to menu as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
     }
 
     private fun publishPageNow(remoteId: Long) {
@@ -311,6 +365,8 @@ class PagesViewModel
     }
 
     fun onNewPageButtonTapped() {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PAGES_ADD_PAGE, site)
+
         _createNewPage.asyncCall()
     }
 
@@ -324,30 +380,33 @@ class PagesViewModel
         val oldParent = page.parent?.remoteId ?: 0
 
         val action = PageAction(page.remoteId, UPLOAD) {
-            defaultScope.launch {
-                if (page.parent?.remoteId != parentId) {
-                    val updatedPage = updateParent(page, parentId)
+            if (page.parent?.remoteId != parentId) {
+                val updatedPage = updateParent(page, parentId)
 
-                    pageStore.uploadPageToServer(updatedPage)
-                }
+                pageStore.uploadPageToServer(updatedPage)
             }
         }
+
         action.undo = {
             defaultScope.launch {
-                pageMap[page.remoteId]?.let { changed ->
+                pageMap[action.remoteId]?.let { changed ->
                     val updatedPage = updateParent(changed, oldParent)
 
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
         }
+
         action.onSuccess = {
             defaultScope.launch {
                 reloadPages()
 
-                delay(ACTION_DELAY)
-                _showSnackbarMessage.postValue(
-                        SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo)
+                showSnackbar(
+                        if (action.undo != null) {
+                            SnackbarMessageHolder(string.page_parent_changed, string.undo, action.undo!!)
+                        } else {
+                            SnackbarMessageHolder(string.page_parent_changed)
+                        }
                 )
             }
         }
@@ -355,7 +414,7 @@ class PagesViewModel
             defaultScope.launch {
                 refreshPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_parent_change_error))
+                showSnackbar(SnackbarMessageHolder(string.page_parent_change_error))
             }
         }
 
@@ -364,6 +423,11 @@ class PagesViewModel
             actionPerfomer.performAction(action)
             _arePageActionsEnabled = true
         }
+    }
+
+    private suspend fun showSnackbar(message: SnackbarMessageHolder) {
+        delay(SNACKBAR_DELAY)
+        _showSnackbarMessage.postValue(message)
     }
 
     private fun updateParent(page: PageModel, parentId: Long): PageModel {
@@ -376,11 +440,13 @@ class PagesViewModel
 
     private fun deletePage(page: PageModel) {
         val action = PageAction(page.remoteId, DELETE) {
-            defaultScope.launch {
-                pageMap = pageMap.filter { it.key != page.remoteId }
+            pageMap = pageMap.filter { it.key != page.remoteId }
 
-                checkIfNewPageButtonShouldBeVisible()
+            checkIfNewPageButtonShouldBeVisible()
 
+            if (page.remoteId < 0) {
+                pageStore.deletePageFromDb(page)
+            } else {
                 pageStore.deletePageFromServer(page)
             }
         }
@@ -389,14 +455,14 @@ class PagesViewModel
                 delay(ACTION_DELAY)
                 reloadPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_permanently_deleted))
+                showSnackbar(SnackbarMessageHolder(string.page_permanently_deleted))
             }
         }
         action.onError = {
             defaultScope.launch {
                 refreshPages()
 
-                _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_delete_error))
+                showSnackbar(SnackbarMessageHolder(string.page_delete_error))
             }
         }
 
@@ -406,19 +472,28 @@ class PagesViewModel
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
+        if (status == DRAFT) {
+            trackMenuSelectionEvent(MOVE_TO_DRAFT)
+        } else if (status == TRASHED) {
+            trackMenuSelectionEvent(MOVE_TO_TRASH)
+        }
+
         pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
             val action = PageAction(remoteId, UPLOAD) {
                 val updatedPage = updatePageStatus(page, status)
-                defaultScope.launch {
-                    pageStore.updatePageInDb(updatedPage)
-                    refreshPages()
+                pageStore.updatePageInDb(updatedPage)
 
+                refreshPages()
+
+                // Local pages can be trashed locally
+                if (status != TRASHED || remoteId > 0) {
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
+
             action.undo = {
-                val updatedPage = updatePageStatus(page, oldStatus)
+                val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
                 defaultScope.launch {
                     pageStore.updatePageInDb(updatedPage)
                     refreshPages()
@@ -426,20 +501,21 @@ class PagesViewModel
                     pageStore.uploadPageToServer(updatedPage)
                 }
             }
+
             action.onSuccess = {
                 defaultScope.launch {
                     delay(ACTION_DELAY)
                     reloadPages()
 
                     val message = prepareStatusChangeSnackbar(status, action.undo)
-                    _showSnackbarMessage.postValue(message)
+                    showSnackbar(message)
                 }
             }
             action.onError = {
                 defaultScope.launch {
-                    action.undo()
+                    action.undo?.let { it() }
 
-                    _showSnackbarMessage.postValue(SnackbarMessageHolder(string.page_status_change_error))
+                    showSnackbar(SnackbarMessageHolder(string.page_status_change_error))
                 }
             }
 

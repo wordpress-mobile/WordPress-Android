@@ -168,6 +168,7 @@
     <!-- Misc -->
     <color name="pressed_wordpress">@color/blue_light_translucent_80</color>
     <color name="background_grey">@color/grey_lighten_30</color>
+    <color name="dialog_button_text">@color/blue_medium</color>
 
     <!--Me-->
     <color name="me_divider">#D8E3EA</color>

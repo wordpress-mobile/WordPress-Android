@@ -334,7 +334,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR;
+                ImageType imageType = mNote.isFollowType() ? ImageType.BLAVATAR : ImageType.AVATAR_WITH_BACKGROUND;
                 HeaderNoteBlock headerNoteBlock = new HeaderNoteBlock(
                         getActivity(),
                         transformToFormattableContentList(mNote.getHeader()),
@@ -527,8 +527,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // The block will not have a type, and its id will match the comment reply id in the Note.
             return (blockObject.getType() == null
                     && mNote.getCommentReplyId() == commentReplyId);
-        } else if (mNote.isFollowType() || mNote.isLikeType()
-                   || mNote.isCommentLikeType() || mNote.isReblogType()) {
+        } else if (mNote.isFollowType() || mNote.isLikeType() || mNote.isReblogType()) {
             // User list notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
             return blockObject.getType() == null;

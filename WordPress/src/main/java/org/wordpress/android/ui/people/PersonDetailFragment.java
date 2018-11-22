@@ -143,7 +143,7 @@ public class PersonDetailFragment extends Fragment {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
             String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
 
-            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR, avatarUrl);
+            mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
             mDisplayNameTextView.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
             if (person.getRole() != null) {
                 mRoleTextView.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));

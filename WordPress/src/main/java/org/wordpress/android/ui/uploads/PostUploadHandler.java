@@ -254,7 +254,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 prepareUploadAnalytics(mPost.getContent());
             }
 
-            EventBus.getDefault().post(new PostUploadStarted(mPost.getLocalSiteId()));
+            EventBus.getDefault().post(new PostUploadStarted(mPost));
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
@@ -555,7 +555,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
             Context context = WordPress.getContext();
-            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
+            String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post.isPage(), event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
