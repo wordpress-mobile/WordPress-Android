@@ -36,7 +36,7 @@ class CommentsUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(
+            error != null -> createFailedItem(
                     string.stats_view_comments,
                     error.message ?: error.type.name
             )
@@ -58,7 +58,7 @@ class CommentsUseCase
                 navigateTo(ViewCommentsStats(site.siteId))
             })
         }
-        return dataItem(items)
+        return createDataItem(items)
     }
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): Tab {

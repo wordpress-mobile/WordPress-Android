@@ -38,7 +38,7 @@ class TagsAndCategoriesUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(
+            error != null -> createFailedItem(
                     string.stats_view_tags_and_categories,
                     error.message ?: error.type.name
             )
@@ -75,7 +75,7 @@ class TagsAndCategoriesUseCase
                 })
             }
         }
-        return dataItem(items)
+        return createDataItem(items)
     }
 
     private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {

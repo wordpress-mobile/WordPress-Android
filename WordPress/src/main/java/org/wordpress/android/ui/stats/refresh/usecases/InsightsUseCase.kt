@@ -30,6 +30,7 @@ class InsightsUseCase
     todayStatsUseCase: TodayStatsUseCase,
     followersUseCase: FollowersUseCase,
     commentsUseCase: CommentsUseCase,
+    mostPopularInsightsUseCase: MostPopularInsightsUseCase,
     tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
 ) {
     private val useCases = listOf(
@@ -38,6 +39,7 @@ class InsightsUseCase
             todayStatsUseCase,
             followersUseCase,
             commentsUseCase,
+            mostPopularInsightsUseCase,
             tagsAndCategoriesUseCase
     ).associateBy { it.type }
 

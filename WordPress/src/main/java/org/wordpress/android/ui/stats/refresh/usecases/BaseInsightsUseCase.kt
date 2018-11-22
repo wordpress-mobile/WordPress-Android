@@ -71,11 +71,11 @@ abstract class BaseInsightsUseCase(
      */
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem?
 
-    protected fun failedItem(@StringRes failingType: Int, message: String): Failed {
+    protected fun createFailedItem(@StringRes failingType: Int, message: String): Failed {
         return Failed(type, failingType, message)
     }
 
-    protected fun dataItem(data: List<BlockListItem>): ListInsightItem {
+    protected fun createDataItem(data: List<BlockListItem>): ListInsightItem {
         return ListInsightItem(type, data)
     }
 }
