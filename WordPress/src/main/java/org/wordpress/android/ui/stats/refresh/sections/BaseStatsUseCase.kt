@@ -7,11 +7,6 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.ui.stats.refresh.BlockListItem
-import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.StatsItem
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.Loading
 
 abstract class BaseStatsUseCase(
     val type: InsightsTypes,
@@ -31,7 +26,9 @@ abstract class BaseStatsUseCase(
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
             withContext(mainDispatcher) {
-                mutableLiveData.value = loadCachedData(site) ?: Loading(type)
+                mutableLiveData.value = loadCachedData(site) ?: Loading(
+                        type
+                )
             }
         }
         if (refresh) {

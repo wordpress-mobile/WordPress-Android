@@ -15,17 +15,17 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.BlockListItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.ListItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LIST_ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
-import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.StatsItem
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.LIST_INSIGHTS
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.sections.Failed
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 import kotlin.math.roundToInt
 
 class MostPopularInsightsUseCaseTest : BaseUnitTest() {

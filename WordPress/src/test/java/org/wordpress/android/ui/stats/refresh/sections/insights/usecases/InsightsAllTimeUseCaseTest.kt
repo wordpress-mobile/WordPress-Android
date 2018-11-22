@@ -16,13 +16,13 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.StatsItem
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.sections.Failed
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type
+import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 
 class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore

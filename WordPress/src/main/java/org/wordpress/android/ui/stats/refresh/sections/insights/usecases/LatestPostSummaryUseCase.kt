@@ -8,10 +8,10 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SUMMARY
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.BlockListItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost

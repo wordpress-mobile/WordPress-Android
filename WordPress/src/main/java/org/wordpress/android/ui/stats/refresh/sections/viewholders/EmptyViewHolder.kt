@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.stats.refresh.Empty
+import org.wordpress.android.ui.stats.refresh.sections.Empty
 
 class EmptyViewHolder(
     parent: ViewGroup,

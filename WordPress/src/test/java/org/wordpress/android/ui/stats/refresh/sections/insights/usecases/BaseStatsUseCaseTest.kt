@@ -10,8 +10,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.StatsItem
-import org.wordpress.android.ui.stats.refresh.Loading
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.Loading
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import javax.inject.Provider
 
@@ -60,7 +60,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         useCase.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(Loading(ALL_TIME_STATS))
+        assertThat(useCase.liveData.value).isEqualTo(
+                Loading(
+                        ALL_TIME_STATS
+                )
+        )
     }
 
     @Test

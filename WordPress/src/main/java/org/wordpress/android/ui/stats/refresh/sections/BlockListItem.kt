@@ -1,21 +1,21 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LIST_ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TABS
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TEXT
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
     enum class Type {

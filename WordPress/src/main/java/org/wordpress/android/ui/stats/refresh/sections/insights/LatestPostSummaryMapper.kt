@@ -5,10 +5,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Text.Clickable
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Text
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider

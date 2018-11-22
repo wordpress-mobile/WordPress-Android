@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
 
 class StatsDiffCallback(
     private val oldList: List<StatsItem>,

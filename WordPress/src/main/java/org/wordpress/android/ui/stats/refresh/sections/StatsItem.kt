@@ -1,11 +1,11 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.support.annotation.StringRes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.LIST_INSIGHTS
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.LOADING
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LOADING
 
 sealed class StatsItem(val type: Type, open val insightsType: InsightsTypes?) {
     enum class Type {

@@ -19,20 +19,20 @@ import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
 import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.BlockListItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.StatsItem
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.StatsItem.Type.LIST_INSIGHTS
-import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.sections.Failed
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class TagsAndCategoriesUseCaseTest : BaseUnitTest() {

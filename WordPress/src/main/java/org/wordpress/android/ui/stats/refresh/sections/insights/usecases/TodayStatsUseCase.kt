@@ -7,11 +7,11 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.BlockListItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
