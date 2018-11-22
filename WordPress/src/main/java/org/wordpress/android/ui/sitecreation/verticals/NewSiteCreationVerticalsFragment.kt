@@ -159,10 +159,10 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
-                contentLayout.visibility = if (state.contentState == CONTENT) View.VISIBLE else View.GONE
-                fullscreenErrorLayout.visibility = if (state.contentState == FULLSCREEN_ERROR) View.VISIBLE else View.GONE
-                fullscreenProgressLayout.visibility = if (state.contentState == FULLSCREEN_PROGRESS) View.VISIBLE else View.GONE
-                skipButton.visibility = if (state.showSkipButton) View.VISIBLE else View.GONE
+                updateVisibility(contentLayout, state.contentState == CONTENT)
+                updateVisibility(fullscreenErrorLayout, state.contentState == FULLSCREEN_ERROR)
+                updateVisibility(fullscreenProgressLayout, state.contentState == FULLSCREEN_PROGRESS)
+                updateVisibility(skipButton, state.showSkipButton)
                 updateHeader(state.headerUiState)
                 updateSearchInput(state.searchInputState)
                 updateSuggestions(state.items)
@@ -183,26 +183,29 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateHeader(uiState: VerticalsHeaderUiState) {
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
-            headerLayout.visibility = View.GONE
             headerLayout.animate()
                     .translationY(-headerLayout.height.toFloat())
         } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
-            headerLayout.visibility = View.VISIBLE
             headerLayout.animate()
                     .translationY(0f)
         }
+        updateVisibility(headerLayout, uiState.isVisible)
         headerTitle.text = uiState.title
         headerSubtitle.text = uiState.subtitle
     }
 
     private fun updateSearchInput(uiState: VerticalsSearchInputUiState) {
         searchEditText.hint = uiState.hint
-        searchEditTextProgressBar.visibility = if (uiState.showProgress) View.VISIBLE else View.GONE
-        clearAllButton.visibility = if (uiState.showClearButton) View.VISIBLE else View.GONE
+        updateVisibility(searchEditTextProgressBar, uiState.showProgress)
+        updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
         (recyclerView.adapter as NewSiteCreationVerticalsAdapter).update(suggestions)
+    }
+
+    private fun updateVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     companion object {
