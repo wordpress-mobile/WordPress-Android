@@ -27,11 +27,11 @@ class PublicizeUseCase
     private val mapper: ServiceMapper
 ) : BaseInsightsUseCase(PUBLICIZE, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
-        return insightsStore.getPublicizeData(site)?.let { buildPublicizeUiModel(site, it) }
+        return insightsStore.getPublicizeData(site, PAGE_SIZE)?.let { buildPublicizeUiModel(site, it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
-        val response = insightsStore.fetchPublicizeData(site, forced)
+        val response = insightsStore.fetchPublicizeData(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -51,8 +51,8 @@ class PublicizeUseCase
         if (model.services.isEmpty()) {
             items.add(Empty)
         } else {
-            items.addAll(model.services.take(PAGE_SIZE).let { mapper.map(it) })
-            if (model.services.size >= PAGE_SIZE) {
+            items.addAll(model.services.let { mapper.map(it) })
+            if (model.hasMore) {
                 items.add(Link(text = string.stats_insights_view_more) {
                     navigateTo(ViewPublicizeStats(site.siteId))
                 })

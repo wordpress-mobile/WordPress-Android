@@ -38,6 +38,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
     private lateinit var useCase: PublicizeUseCase
+    private val pageSize = 5
     @Before
     fun setUp() {
         useCase = PublicizeUseCase(
@@ -52,9 +53,9 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         val forced = false
         val followers = 100
         val services = listOf(Service("facebook", followers))
-        whenever(insightsStore.fetchPublicizeData(site, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        PublicizeModel(services)
+                        PublicizeModel(services, false)
                 )
         )
         val mockedItem = mock<Item>()
@@ -74,20 +75,15 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `trims services and adds view more link on more than 5 services`() = test {
+    fun `trims services and adds view more link when hasMore is true`() = test {
         val forced = false
         val followers = 100
         val services = listOf(
-                Service("service1", followers),
-                Service("service2", followers),
-                Service("service3", followers),
-                Service("service4", followers),
-                Service("service5", followers),
-                Service("service6", followers)
+                Service("service1", followers)
         )
-        whenever(insightsStore.fetchPublicizeData(site, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        PublicizeModel(services)
+                        PublicizeModel(services, true)
                 )
         )
         val mockedItem = mock<Item>()
@@ -110,8 +106,8 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty services to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchPublicizeData(site, forced)).thenReturn(
-                OnInsightsFetched(PublicizeModel(listOf()))
+        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
+                OnInsightsFetched(PublicizeModel(listOf(), false))
         )
 
         val result = loadPublicizeModel(true, forced)
@@ -131,7 +127,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchPublicizeData(site, forced)).thenReturn(
+        whenever(insightsStore.fetchPublicizeData(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
