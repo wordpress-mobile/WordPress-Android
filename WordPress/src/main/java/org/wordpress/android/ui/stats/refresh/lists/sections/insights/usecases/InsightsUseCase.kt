@@ -25,7 +25,7 @@ class InsightsUseCase
     private val statsStore: StatsStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    insightsAllTimeUseCase: InsightsAllTimeUseCase,
+    allTimeStatsUseCase: AllTimeStatsUseCase,
     latestPostSummaryUseCase: LatestPostSummaryUseCase,
     todayStatsUseCase: TodayStatsUseCase,
     followersUseCase: FollowersUseCase,
@@ -34,7 +34,7 @@ class InsightsUseCase
     tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
 ) {
     private val useCases = listOf(
-            insightsAllTimeUseCase,
+            allTimeStatsUseCase,
             latestPostSummaryUseCase,
             todayStatsUseCase,
             followersUseCase,
