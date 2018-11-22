@@ -135,7 +135,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private fun assertViews(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
         val item = blockListItem as Item
-        assertThat(item.text).isEqualTo(R.string.stats_views)
+        assertThat(item.textResource).isEqualTo(R.string.stats_views)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_visible_on_grey_dark_24dp)
         assertThat(item.value).isEqualTo(views.toString())
@@ -144,7 +144,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private fun assertVisitors(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
         val item = blockListItem as Item
-        assertThat(item.text).isEqualTo(R.string.stats_visitors)
+        assertThat(item.textResource).isEqualTo(R.string.stats_visitors)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_user_grey_dark_24dp)
         assertThat(item.value).isEqualTo(visitors.toString())
@@ -153,7 +153,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private fun assertLikes(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
         val item = blockListItem as Item
-        assertThat(item.text).isEqualTo(R.string.stats_likes)
+        assertThat(item.textResource).isEqualTo(R.string.stats_likes)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_star_grey_dark_24dp)
         assertThat(item.value).isEqualTo(likes.toString())
@@ -162,7 +162,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
     private fun assertComments(blockListItem: BlockListItem, showDivider: Boolean = false) {
         assertThat(blockListItem.type).isEqualTo(ITEM)
         val item = blockListItem as Item
-        assertThat(item.text).isEqualTo(R.string.stats_comments)
+        assertThat(item.textResource).isEqualTo(R.string.stats_comments)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_comment_grey_dark_24dp)
         assertThat(item.value).isEqualTo(comments.toString())

@@ -783,6 +783,7 @@
     <string name="stats_comments_author_label">Author</string>
     <string name="stats_comments_title_label">Title</string>
     <string name="stats_comments_label">Comments</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
 
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>

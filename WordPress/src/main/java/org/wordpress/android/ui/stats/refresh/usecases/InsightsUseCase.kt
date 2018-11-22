@@ -29,14 +29,16 @@ class InsightsUseCase
     latestPostSummaryUseCase: LatestPostSummaryUseCase,
     todayStatsUseCase: TodayStatsUseCase,
     followersUseCase: FollowersUseCase,
-    commentsUseCase: CommentsUseCase
+    commentsUseCase: CommentsUseCase,
+    tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
 ) {
     private val useCases = listOf(
             insightsAllTimeUseCase,
             latestPostSummaryUseCase,
             todayStatsUseCase,
             followersUseCase,
-            commentsUseCase
+            commentsUseCase,
+            tagsAndCategoriesUseCase
     ).associateBy { it.type }
 
     private val liveData = combineMap(

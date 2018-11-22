@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ExpandableItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.InformationViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LabelViewHolder
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolde
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.UserItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -27,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
@@ -50,7 +53,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockItemViewHolder {
         return when (values()[viewType]) {
             TITLE -> TitleViewHolder(parent)
-            ITEM -> ItemViewHolder(parent)
+            ITEM -> ItemViewHolder(parent, imageManager)
             USER_ITEM -> UserItemViewHolder(parent, imageManager)
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
@@ -61,6 +64,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             TABS -> TabsViewHolder(parent, imageManager)
             INFO -> InformationViewHolder(parent)
             LABEL -> LabelViewHolder(parent)
+            EXPANDABLE_ITEM -> ExpandableItemViewHolder(parent, imageManager)
         }
     }
 
@@ -84,6 +88,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             is TabsViewHolder -> holder.bind(item as TabsItem)
             is InformationViewHolder -> holder.bind(item as Information)
             is LabelViewHolder -> holder.bind(item as Label)
+            is ExpandableItemViewHolder -> holder.bind(item as ExpandableItem)
         }
     }
 }
