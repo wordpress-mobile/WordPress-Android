@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
-import org.wordpress.android.ui.stats.refresh.DaysTabViewModel;
+import org.wordpress.android.ui.stats.refresh.types.days.DaysTabViewModel;
 import org.wordpress.android.ui.stats.refresh.InsightsTabViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;

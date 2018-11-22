@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
-import org.wordpress.android.ui.stats.refresh.DaysTabViewModel
+import org.wordpress.android.ui.stats.refresh.types.days.DaysTabViewModel
 import org.wordpress.android.ui.stats.refresh.InsightsAdapter
 import org.wordpress.android.ui.stats.refresh.InsightsTabViewModel
 import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.AddNewPost
