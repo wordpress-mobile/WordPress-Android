@@ -11,7 +11,7 @@ import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
- * Transforms EventBus event to a coroutines.
+ * Transforms VerticalsHeaderInfoFetched EventBus event to a coroutine.
  */
 class FetchVerticalsHeaderInfoUseCase @Inject constructor(
     val dispatcher: Dispatcher,
@@ -39,7 +39,7 @@ class FetchVerticalsHeaderInfoUseCase @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onVerticalHeaderInfoFetched(event: DummyOnVerticalsHeaderInfoFetched) {
         checkNotNull(continuation) { "onVerticalHeaderInfoFetched received without a suspended coroutine." }
