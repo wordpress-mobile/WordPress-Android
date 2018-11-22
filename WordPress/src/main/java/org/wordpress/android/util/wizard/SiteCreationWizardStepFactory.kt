@@ -1,84 +1,52 @@
 package org.wordpress.android.util.wizard
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
+import java.util.Arrays
 import javax.inject.Inject
-import javax.inject.Singleton
 
-interface WizardStepFactory<T> {
-    fun getTarget(navigationTargetId: WizardStepIdentifier, state: T): WizardStep
-}
-
-@Singleton
-class SiteCreationWizardStepFactory : WizardStepFactory<SiteCreationState> {
-    override fun getTarget(navigationTargetId: WizardStepIdentifier, state: SiteCreationState): WizardStep {
-        return when (navigationTargetId.id) {
-            "site_creation_segments_screen" -> {
-                FragmentWizardStep(NewSiteCreationSegmentsFragment.newInstance())
-            }
-            "site_creation_verticals_screen" -> {
-                requireNotNull(state.segmentId)
-                FragmentWizardStep(NewSiteCreationVerticalsFragment.newInstance(state.segmentId!!))
-            }
-            else -> throw NotImplementedError("WizardStep with id: ${navigationTargetId.id} not implemented")
-        }
-    }
-}
-
+/**
+ * Marker interface representing a single step/screen in a wizard
+ */
 interface WizardStep
-class FragmentWizardStep(val fragment: Fragment) : WizardStep // TODO consider using a WeakReference
 
-data class WizardStepIdentifier(val id: String)
+/**
+ * Marker interface representing a state which contains all gathered data from the user input.
+ */
+interface WizardState
 
-interface WizardStepNavigator {
-    fun navigateTo(wizardStep: WizardStep)
-}
+/**
+ * Navigation target containing all the data needed for navigating the user to a next screen of the wizard.
+ */
+class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStepIdentifier: S, val wizardState: T)
 
-class FragmentWizardStepNavigator(private val activity: AppCompatActivity, private val contentId: Int) :
-        WizardStepNavigator { // TODO consider using a WeakReference
-    override fun navigateTo(wizardStep: WizardStep) {
-        if (wizardStep !is FragmentWizardStep) {
-            throw IllegalStateException("FragmentWizardStepNavigator.navigateTo invoked with an invalid step type.")
-        }
-        activity.supportFragmentManager
-                .beginTransaction()
-                .replace(contentId, wizardStep.fragment)
-                .commit()
-    }
-}
-
-class WizardManager<T : WizardState>(
-    private val stepFactory: WizardStepFactory<T>,
-    private val navigator: WizardStepNavigator,
-    private val steps: List<WizardStepIdentifier>
+class WizardManager<T>(
+    private val steps: List<T>
 ) {
+    private val _navigatorLiveData = MutableLiveData<T>()
+    val navigatorLiveData: LiveData<T> = _navigatorLiveData
     private var currentStepIndex: Int = -1
 
-    fun nextStep(state: T) {
-        ++currentStepIndex
-        if (isIndexValid(currentStepIndex)) {
-            val target = stepFactory.getTarget(steps[currentStepIndex], state)
-            navigator.navigateTo(target)
+    fun showNextStep() {
+        if (isIndexValid(++currentStepIndex)) {
+            _navigatorLiveData.value = steps[currentStepIndex]
         } else {
             throw IllegalStateException("Invalid index.")
         }
     }
 
-    fun previousStep(state: T) {
+    /**
+     * Fragments need to inflate the view in OnCreateView only when getView() != null, otherwise their state
+     * gets lost.
+     */
+    fun onBackPressed() {
         --currentStepIndex
-        if (isIndexValid(currentStepIndex)) {
-            val target = stepFactory.getTarget(steps[currentStepIndex], state)
-            navigator.navigateTo(target)
-        } else {
-            throw IllegalStateException("Invalid index.")
-        }
     }
 
-    fun hasPreviousStep(): Boolean {
-        return isIndexValid(currentStepIndex - 1)
+    fun hasNextStep(): Boolean {
+        return isIndexValid(currentStepIndex + 1)
     }
 
     private fun isIndexValid(currentStepIndex: Int): Boolean {
@@ -86,34 +54,62 @@ class WizardManager<T : WizardState>(
     }
 }
 
-interface WizardState
-// TODO create a state builder?
-data class SiteCreationState(val segmentId: Long? = null, val verticalId: Long? = null) : WizardState
+enum class SiteCreationStep : WizardStep {
+    SEGMENTS, VERTICALS;
 
-class SiteCreationMainVM @Inject constructor() : ViewModel() {
-    private lateinit var wizardManager: WizardManager<SiteCreationState>
-    private var siteCreationState = SiteCreationState()
-    fun start(
-        navigator: WizardStepNavigator,
-        wizardStepFactory: SiteCreationWizardStepFactory
-    ) {
-        wizardManager = WizardManager(
-                wizardStepFactory,
-                navigator,
-                listOf(
-                        WizardStepIdentifier("site_creation_segments_screen"),
-                        WizardStepIdentifier("site_creation_verticals_screen")
-                )
-        )
-        wizardManager.nextStep(siteCreationState)
-    }
-
-    fun onBackPressed(): Boolean {
-        if (wizardManager.hasPreviousStep()) {
-            wizardManager.previousStep(siteCreationState)
-            return true
-        } else {
-            return false
+    companion object {
+        fun fromString(input: String): SiteCreationStep {
+            return when (input) {
+                "site_creation_segments" -> SEGMENTS
+                "site_creation_verticals" -> VERTICALS
+                // TODO we should consider skipping the step when it's unknown
+                else -> throw NotImplementedError("SiteCreationStep not recognized: $input")
+            }
         }
     }
+}
+
+data class SiteCreationState(
+    val segmentId: Long? = null,
+    val verticalId: Long? = null,
+    val siteTitle: String? = null,
+    val siteTagline: String? = null
+) : WizardState
+
+//*****************************************************************************************************//
+
+class SiteCreationMainVM @Inject constructor() : ViewModel(), SegmentsScreenListener {
+    private val wizardManager: WizardManager<SiteCreationStep> = WizardManager(
+            // we'll receive this from a server/Firebase config
+            Arrays.asList(
+                    SiteCreationStep.fromString("site_creation_segments"),
+                    SiteCreationStep.fromString("site_creation_verticals")
+            )
+    )
+    private var isStarted = false
+    private var siteCreationState = SiteCreationState()
+
+    val navigationTargetObservable: LiveData<WizardNavigationTarget<SiteCreationStep, SiteCreationState>> = Transformations
+            .map(wizardManager.navigatorLiveData) { WizardNavigationTarget(it, siteCreationState) }
+
+    fun start() {
+        if (isStarted) return
+        isStarted = true
+        wizardManager.showNextStep()
+    }
+
+    fun onBackPressed() {
+        wizardManager.onBackPressed()
+    }
+
+    override fun onSegmentSelected(segmentId: Long) {
+        siteCreationState = siteCreationState.copy(segmentId = segmentId)
+        if (wizardManager.hasNextStep()) {
+            wizardManager.showNextStep()
+        }
+    }
+}
+
+interface SegmentsScreenListener {
+    fun onSegmentSelected(segmentId: Long)
 }
