@@ -23,6 +23,9 @@ import org.wordpress.android.ui.sitecreation.usecases.DummyOnVerticalsHeaderInfo
 import org.wordpress.android.ui.sitecreation.usecases.DummyVerticalsHeaderInfoModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.FULLSCREEN_ERROR
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.FULLSCREEN_PROGRESS
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
@@ -209,21 +212,22 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         )
     }
 
+    enum class ContentState {
+        FULLSCREEN_ERROR, FULLSCREEN_PROGRESS, CONTENT
+    }
     sealed class VerticalsUiState {
-        open val showFullscreenError: Boolean = false
-        open val showFullscreenProgress: Boolean = false
-        open val showContent: Boolean = false
+        open val contentState: ContentState = CONTENT
         open val showSkipButton: Boolean = false
         open val headerUiState: VerticalsHeaderUiState = VerticalsHeaderUiState.Hidden
         open val searchInputState: VerticalsSearchInputUiState = VerticalsSearchInputUiState.Hidden
         open val items: List<VerticalsListItemUiState> = emptyList()
 
         object VerticalsFullscreenErrorUiState : VerticalsUiState() {
-            override val showFullscreenError: Boolean = true
+            override val contentState: ContentState = FULLSCREEN_ERROR
         }
 
         object VerticalsFullscreenProgressUiState : VerticalsUiState() {
-            override val showFullscreenProgress: Boolean = true
+            override val contentState: ContentState = FULLSCREEN_PROGRESS
         }
 
         data class VerticalsContentUiState(
@@ -231,9 +235,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             override val headerUiState: VerticalsHeaderUiState,
             override val searchInputState: VerticalsSearchInputUiState,
             override val items: List<VerticalsListItemUiState>
-        ) : VerticalsUiState() {
-            override val showContent: Boolean = true
-        }
+        ) : VerticalsUiState()
     }
 
     sealed class VerticalsSearchInputUiState(val isVisible: Boolean) {
