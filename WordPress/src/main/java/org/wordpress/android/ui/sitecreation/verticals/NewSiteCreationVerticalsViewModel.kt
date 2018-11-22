@@ -23,9 +23,9 @@ import org.wordpress.android.ui.sitecreation.usecases.DummyOnVerticalsHeaderInfo
 import org.wordpress.android.ui.sitecreation.usecases.DummyVerticalsHeaderInfoModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.CONTENT
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.FULLSCREEN_ERROR
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.ContentState.FULLSCREEN_PROGRESS
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
@@ -212,22 +212,23 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         )
     }
 
-    enum class ContentState {
+    enum class VerticalsContentState {
         FULLSCREEN_ERROR, FULLSCREEN_PROGRESS, CONTENT
     }
+
     sealed class VerticalsUiState {
-        open val contentState: ContentState = CONTENT
+        open val contentState: VerticalsContentState = CONTENT
         open val showSkipButton: Boolean = false
         open val headerUiState: VerticalsHeaderUiState = VerticalsHeaderUiState.Hidden
         open val searchInputState: VerticalsSearchInputUiState = VerticalsSearchInputUiState.Hidden
         open val items: List<VerticalsListItemUiState> = emptyList()
 
         object VerticalsFullscreenErrorUiState : VerticalsUiState() {
-            override val contentState: ContentState = FULLSCREEN_ERROR
+            override val contentState: VerticalsContentState = FULLSCREEN_ERROR
         }
 
         object VerticalsFullscreenProgressUiState : VerticalsUiState() {
-            override val contentState: ContentState = FULLSCREEN_PROGRESS
+            override val contentState: VerticalsContentState = FULLSCREEN_PROGRESS
         }
 
         data class VerticalsContentUiState(
