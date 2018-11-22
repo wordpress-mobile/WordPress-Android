@@ -12,9 +12,10 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.Loading
+import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import javax.inject.Provider
 
-class BaseInsightsUseCaseTest : BaseUnitTest() {
+class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<InsightsItem?>
     @Mock lateinit var remoteDataProvider: Provider<InsightsItem>
     @Mock lateinit var localData: InsightsItem
@@ -90,7 +91,7 @@ class BaseInsightsUseCaseTest : BaseUnitTest() {
     class TestUseCase(
         private val localDataProvider: Provider<InsightsItem?>,
         private val remoteDataProvider: Provider<InsightsItem>
-    ) : BaseInsightsUseCase(
+    ) : BaseStatsUseCase(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {

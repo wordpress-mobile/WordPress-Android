@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.usecases
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.Loading
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 
-abstract class BaseInsightsUseCase(
+abstract class BaseStatsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {

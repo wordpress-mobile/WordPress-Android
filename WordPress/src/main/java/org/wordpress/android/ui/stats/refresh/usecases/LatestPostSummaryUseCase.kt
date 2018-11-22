@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
@@ -23,7 +24,7 @@ class LatestPostSummaryUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
-) : BaseInsightsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
+) : BaseStatsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val dbModel = insightsStore.getLatestPostInsights(site)
         return dbModel?.let { loadLatestPostSummaryItem(it) }

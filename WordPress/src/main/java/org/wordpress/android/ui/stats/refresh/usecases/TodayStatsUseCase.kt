@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,7 +21,7 @@ class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseInsightsUseCase(TODAY_STATS, mainDispatcher) {
+) : BaseStatsUseCase(TODAY_STATS, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val dbModel = insightsStore.getTodayInsights(site)
         return dbModel?.let { loadTodayStatsItem(it) }

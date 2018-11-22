@@ -17,6 +17,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -31,7 +32,7 @@ class TagsAndCategoriesUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
-) : BaseInsightsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
+) : BaseStatsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
