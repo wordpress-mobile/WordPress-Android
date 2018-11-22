@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks
+package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.Loading
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import javax.inject.Provider
 
 class BaseStatsBlockTest : BaseUnitTest() {
