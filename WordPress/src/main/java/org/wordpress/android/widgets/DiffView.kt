@@ -18,15 +18,14 @@ class DiffView : AppCompatTextView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    fun showDiffs(diffs: List<Diff>) {
+    fun showDiffs(diffs: List<Diff>, trimNewline: Boolean = false) {
         text = null
 
         diffs.forEachIndexed { index, diff ->
-            var diffValue = diff.value
-
-            // add tiny spacing before and after DEL and ADD diffs (will be included in the span)
-            if (diff.operation == ADD || diff.operation == DELETE) {
-                diffValue = "\u200A" + diffValue + "\u200A"
+            val diffValue = if (trimNewline && index == diffs.size - 1) {
+                diff.value?.trimEnd('\n')
+            } else {
+                diff.value
             }
 
             val diffContent = SpannableString(diffValue)
@@ -66,12 +65,6 @@ class DiffView : AppCompatTextView {
                                 )
                         ), 0, diffContent.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-            }
-
-            // if there is ADD or DEL diff before current ADD or DEL diff we add a little spacing between them
-            if (index > 0 && (diff.operation == ADD || diff.operation == DELETE) &&
-                    (diffs[index - 1].operation == ADD || diffs[index - 1].operation == DELETE)) {
-                append("\u200A")
             }
 
             append(diffContent)

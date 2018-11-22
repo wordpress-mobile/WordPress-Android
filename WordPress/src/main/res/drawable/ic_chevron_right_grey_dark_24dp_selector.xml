@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:drawable="@drawable/ic_chevron_right_grey_dark_24dp" android:state_enabled="true" />
+    <item android:drawable="@drawable/ic_chevron_right_grey_lighten_10_24dp" />
+
+</selector>

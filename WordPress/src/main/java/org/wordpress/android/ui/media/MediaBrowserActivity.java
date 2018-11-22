@@ -37,6 +37,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -46,6 +48,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -53,19 +56,22 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
+import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
@@ -74,6 +80,7 @@ import org.wordpress.android.util.PermissionUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +106,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
+    @Inject SiteStore mSiteStore;
 
     private SiteModel mSite;
 
@@ -107,6 +115,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private MenuItem mSearchMenuItem;
     private Menu mMenu;
     private TabLayout mTabLayout;
+    private RelativeLayout mQuotaBar;
+    private TextView mQuotaText;
 
     private MediaDeleteService.MediaDeleteBinder mDeleteService;
     private boolean mDeleteServiceBound;
@@ -194,6 +204,48 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     .commit();
         } else {
             setFilter(filter);
+        }
+
+        mQuotaBar = findViewById(R.id.quota_bar);
+        mQuotaText = findViewById(R.id.quota_text);
+
+        showQuota(true);
+    }
+
+    private void formatQuotaDiskSpace() {
+        String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
+
+        final String[] units = new String[] {
+                getString(R.string.file_size_in_bytes),
+                getString(R.string.file_size_in_kilobytes),
+                getString(R.string.file_size_in_megabytes),
+                getString(R.string.file_size_in_gigabytes),
+                getString(R.string.file_size_in_terabytes)
+        };
+
+        String quota;
+
+        if (mSite.getPlanId() == PlansConstants.BUSINESS_PLAN_ID) {
+            String space = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
+            quota = String.format(getString(R.string.site_settings_quota_space_unlimited), space);
+        } else {
+            String space = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
+            quota = String.format(getString(R.string.site_settings_quota_space_value), percentage, space);
+        }
+
+        mQuotaText.setText(getString(R.string.media_space_used, quota));
+        mQuotaText.setTextColor(
+                getResources().getColor(mSite.getSpacePercentUsed() > 90 ? R.color.alert_red : R.color.grey_text_min));
+    }
+
+    private void showQuota(boolean show) {
+        if (!mBrowserType.canFilter()) {
+            mQuotaBar.setVisibility(View.GONE);
+        } else if (show && mSite != null && mSite.hasDiskSpaceQuotaInformation()) {
+            mQuotaBar.setVisibility(View.VISIBLE);
+            formatQuotaDiskSpace();
+        } else if (!show) {
+            mQuotaBar.setVisibility(View.GONE);
         }
     }
 
@@ -517,6 +569,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         mMediaGridFragment.showActionableEmptyViewButton(false);
 
         enableTabs(false);
+        showQuota(false);
 
         // load last search query
         if (!TextUtils.isEmpty(mQuery)) {
@@ -533,6 +586,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         invalidateOptionsMenu();
 
         enableTabs(true);
+        showQuota(true);
 
         return true;
     }
@@ -666,6 +720,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMediaUploaded(OnMediaUploaded event) {
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+
         if (event.media != null) {
             updateMediaGridItem(event.media, event.isError());
         } else {
@@ -677,12 +733,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
         enableTabs(false);
+        showQuota(false);
     }
 
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
         enableTabs(true);
+        showQuota(true);
     }
 
     // TODO: in a future PR this and startMediaDeleteService() can be simplified since multiselect delete was dropped
@@ -995,6 +1053,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void reloadMediaGrid() {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reload();
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(mSite));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        SiteModel site = mSiteStore.getSiteByLocalId(mSite.getId());
+
+        if (site != null) {
+            mSite = site;
+            showQuota(true);
         }
     }
 

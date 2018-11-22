@@ -184,6 +184,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
@@ -211,12 +213,12 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
     public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
-    public static final String TAG_HISTORY_LOAD_DIALOG = "history_load_dialog_tag";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateIsDialogProgressShown";
+    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateKeyIsDialogProgressShown";
+    private static final String STATE_KEY_IS_DISCARDING_CHANGES = "stateKeyIsDiscardingChanges";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
@@ -414,6 +416,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mDroppedMediaUris = savedInstanceState.getParcelable(STATE_KEY_DROPPED_MEDIA_URIS);
             mIsNewPost = savedInstanceState.getBoolean(STATE_KEY_IS_NEW_POST, false);
             mIsDialogProgressShown = savedInstanceState.getBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, false);
+            mIsDiscardingChanges = savedInstanceState.getBoolean(STATE_KEY_IS_DISCARDING_CHANGES, false);
             mRevision = savedInstanceState.getParcelable(STATE_KEY_REVISION);
 
             showDialogProgress(mIsDialogProgressShown);
@@ -454,10 +457,14 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
+        if (savedInstanceState == null) {
+            // Bump the stat the first time the editor is opened.
+            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        }
+
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
             // if we are opening a Post for which an error notification exists, we need to remove
             // it from the dashboard to prevent the user from tapping RETRY on a Post that is
             // being currently edited
@@ -700,6 +707,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (!mPost.isLocalDraft()) {
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
+        outState.putBoolean(STATE_KEY_IS_DISCARDING_CHANGES, mIsDiscardingChanges);
         outState.putBoolean(STATE_KEY_IS_DIALOG_PROGRESS_SHOWN, mIsDialogProgressShown);
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
         outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
@@ -1005,9 +1013,9 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
-        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
+        MenuItem historyMenuItem = menu.findItem(R.id.menu_history);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem discardChanges = menu.findItem(R.id.menu_discard_changes);
 
@@ -1020,11 +1028,6 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
-        if (historyMenuItem != null) {
-            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
-            historyMenuItem.setVisible(BuildConfig.REVISIONS_ENABLED && showMenuItems && hasHistory);
-        }
-
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
         }
@@ -1032,6 +1035,11 @@ public class EditPostActivity extends AppCompatActivity implements
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
+        }
+
+        if (historyMenuItem != null) {
+            boolean hasHistory = !mIsNewPost && (mSite.isWPCom() || mSite.isJetpackConnected());
+            historyMenuItem.setVisible(showMenuItems && hasHistory);
         }
 
         if (settingsMenuItem != null) {
@@ -1100,12 +1108,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 ImageSettingsDialogFragment imFragment = (ImageSettingsDialogFragment) fragment;
                 imFragment.dismissFragment();
             }
+
             return false;
         }
+
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             if (mViewPager.getCurrentItem() == PAGE_SETTINGS) {
                 mEditorFragment.setFeaturedImageId(mPost.getFeaturedImageId());
             }
+
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else if (isPhotoPickerShowing()) {
@@ -1113,6 +1124,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             savePostAndOptionallyFinish(true);
         }
+
         return true;
     }
 
@@ -1144,6 +1156,7 @@ public class EditPostActivity extends AppCompatActivity implements
             }
 
             if (itemId == R.id.menu_history) {
+                AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED);
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_HISTORY);
             } else if (itemId == R.id.menu_preview_post) {
@@ -1479,8 +1492,6 @@ public class EditPostActivity extends AppCompatActivity implements
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
-            case TAG_HISTORY_LOAD_DIALOG:
-                // the dialog is automatically dismissed
                 break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
@@ -1498,11 +1509,6 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
-                break;
-            case TAG_HISTORY_LOAD_DIALOG:
-                // TODO: Add analytics tracking for load button.
-                mViewPager.setCurrentItem(PAGE_CONTENT);
-                loadRevision();
                 break;
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
@@ -1578,19 +1584,11 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onHistoryItemClicked(@NonNull Revision revision) {
-        // TODO: Add analytics tracking for history list item.
+    public void onHistoryItemClicked(@NonNull Revision revision, @NonNull ArrayList<Revision> revisions) {
+        AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
-        BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_HISTORY_LOAD_DIALOG,
-                getString(R.string.history_load_dialog_title),
-                getString(R.string.history_load_dialog_message, mRevision.getFormattedDate(),
-                        mRevision.getFormattedTime()),
-                getString(R.string.history_load_dialog_button_positive),
-                getString(R.string.cancel),
-                null);
-        dialog.show(getSupportFragmentManager(), TAG_HISTORY_LOAD_DIALOG);
+        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
     }
 
     private void loadRevision() {
@@ -1603,11 +1601,11 @@ public class EditPostActivity extends AppCompatActivity implements
         refreshEditorContent();
 
         Snackbar.make(mViewPager, getString(R.string.history_loaded_revision),
-                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, Snackbar.LENGTH_LONG))
+                AccessibilityUtils.getSnackbarDuration(EditPostActivity.this, 4000))
                 .setAction(getString(R.string.undo), new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO: Add analytics tracking for loaded revision undo.
+                        AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE);
                         RemotePostPayload payload = new RemotePostPayload(mPostForUndo, mSite);
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
                         mPost = mPostForUndo.clone();
@@ -2765,6 +2763,18 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
+                case RequestCodes.HISTORY_DETAIL:
+                    if (data.hasExtra(KEY_REVISION)) {
+                        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                loadRevision();
+                            }
+                        }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+                    }
+                    break;
             }
         }
     }
@@ -3596,5 +3606,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
+    }
+
+
+    // External Access to the Image Loader
+    public AztecImageLoader getAztecImageLoader() {
+        return mAztecImageLoader;
     }
 }

@@ -61,15 +61,15 @@ public class UploadUtils {
      * Returns an error message string for a failed post upload.
      */
     public static @NonNull
-    String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
+    String getErrorMessageFromPostError(Context context, boolean isPage, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return post.isPage() ? context.getString(R.string.error_unknown_page)
+                return isPage ? context.getString(R.string.error_unknown_page)
                         : context.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages)
+                return isPage ? context.getString(R.string.error_refresh_unauthorized_pages)
                         : context.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type

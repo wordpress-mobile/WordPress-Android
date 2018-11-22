@@ -400,7 +400,7 @@ public class PeopleListFragment extends Fragment {
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR, avatarUrl);
+                mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
                 peopleViewHolder.mTxtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
                     peopleViewHolder.mTxtRole.setVisibility(View.VISIBLE);

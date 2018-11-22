@@ -6,12 +6,6 @@
 
     <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:smallScreens="true" />
-
     <!-- Normal permissions, access automatically granted to app -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -81,6 +75,7 @@
                 <!-- Samsung multiwindow support -->
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
+
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
@@ -89,7 +84,7 @@
         <activity
             android:name=".ui.main.WPMainActivity"
             android:theme="@style/Calypso.NoActionBar"
-            android:label=""/>
+            android:label="" />
 
         <!-- Account activities -->
         <activity
@@ -253,6 +248,12 @@
             android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
+        <!-- History -->
+        <activity
+            android:name=".ui.history.HistoryDetailActivity"
+            android:label="@string/history_detail_title"
+            android:theme="@style/CalypsoTheme" />
+
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
@@ -350,6 +351,18 @@
 
                 <data
                     android:host="viewpost"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="stats"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="read"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="post"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="notifications"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>

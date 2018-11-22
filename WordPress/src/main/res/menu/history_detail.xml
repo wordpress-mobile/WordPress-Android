@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/history_load"
+        android:title="@string/history_load_dialog_button_positive"
+        app:showAsAction="ifRoom"/>
+
+     <item
+        android:id="@+id/history_toggle_view"
+        android:title="@string/history_preview_html"
+        app:showAsAction="never"/>
+
+</menu>

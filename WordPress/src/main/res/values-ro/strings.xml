@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-19 09:01:11+0000
+Translation-Revision-Date: 2018-11-08 08:02:18+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="history_detail_title">Revizie</string>
+    <string name="history_detail_button_previous">Anterioare</string>
+    <string name="history_detail_button_next">Următoare</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Află mai mult</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Nu mai arăta</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Înapoi</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editează pagina</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editează articolul</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Lucrăm la noul editor din WordPress. Încă poți să editezi această pagină, dar recomandăm să o previzualizezi înainte de publicare.</string>
+    <string name="dialog_gutenberg_compatibility_message">Lucrăm la noul editor din WordPress. Încă poți să editezi acest articol, dar recomandăm să-l previzualizezi înainte de publicare.</string>
+    <string name="dialog_gutenberg_compatibility_title">Înainte de a continua</string>
+    <string name="media_space_used">%1$s folosiți</string>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">Te rog introdu un sit WordPress.com sau unul auto-găzduit conectat cu Jetpack</string>
+    <string name="history_loading_revision">Încărcare revizie</string>
+    <string name="history_loaded_revision">Revizie încărcată</string>
+    <string name="history_load_dialog_button_positive">Încarcă</string>
+    <string name="history_footer_post">Articol creat în %1$s la %2$s</string>
+    <string name="history_footer_page">Pagină creată în %1$s la %2$s</string>
+    <string name="history_empty_title">Niciun istoric deocamdată</string>
+    <string name="history_empty_subtitle_post">Când faci modificări la articolul tău, vei putea vedea istoricul aici</string>
+    <string name="history_empty_subtitle_page">Când faci modificări la pagina ta, vei putea vedea istoricul aici</string>
+    <string name="description_user">Avatar utilizator</string>
     <string name="async_promo_description_schedule_page">Acum poți părăsi editorul și pagina ta se va salva și programa în spatele scenei! Încearcă!</string>
     <string name="async_promo_description_publish_post">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
     <string name="async_promo_description_publish_page">Acum poți părăsi editorul și pagina ta se va salva și publica în spatele scenei! Încearcă!</string>
-    <string name="image_size_full_class">dimensiune completă</string>
-    <string name="image_size_large_class">dimensiune mare</string>
-    <string name="image_size_medium_class">dimensiune medie</string>
-    <string name="image_size_thumbnail_class">dimensiune miniatură</string>
     <string name="image_size_full_label">Dimensiune completă</string>
     <string name="image_size_large_label">Mare</string>
     <string name="image_size_medium_label">Medie</string>
@@ -266,7 +285,6 @@ Language: ro
     <string name="content_description_person_reading_device_notification">Persoană care citește un dispozitiv cu notificări</string>
     <string name="content_description_people_looking_charts">Oameni care se uită la grafice și diagrame</string>
     <string name="comment_title">%s pe %s</string>
-    <string name="dialog_confirm_delete_permanently_page">Sigur vrei să ștergi definitiv această pagină?</string>
     <string name="dialog_confirm_delete_permanently_post">Sigur vrei să ștergi definitiv acest articol?</string>
     <string name="notification_site_creation_title_in_progress">Creez situl… Poate dura câteva minute.</string>
     <string name="notification_channel_important_title">Important</string>
@@ -415,7 +433,6 @@ Language: ro
     <string name="dialog_confirm_publish_message_page">Această pagină va fi publicată imediat.</string>
     <string name="dialog_confirm_publish_message_post">Acest articol va fi publicat imediat.</string>
     <string name="dialog_confirm_publish_title">Ești gata să publici?</string>
-    <string name="dialog_confirm_delete_page">Această pagină va fi ștearsă și trimisă la gunoi</string>
     <string name="dialog_confirm_delete_post">Acest articol va fi șters și trimis la gunoi</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d articole/pagini neîncărcate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagini neîncărcate</string>
@@ -536,7 +553,7 @@ Language: ro
     <string name="plugin_info_your_version">Versiunea ta WordPress</string>
     <string name="plugin_info_requires_version">Necesită versiunea WordPress</string>
     <string name="plugin_info_lastupdated">Ultima actualizare</string>
-    <string name="plugin_info_version">Vesiune</string>
+    <string name="plugin_info_version">Versiune</string>
     <string name="plugin_five_stars">5 stele</string>
     <string name="plugin_four_stars">4 stele</string>
     <string name="plugin_three_stars">3 stele</string>
@@ -617,7 +634,6 @@ Language: ro
     <string name="login_text_otp_another">Trimite-mi în schimb un mesaj text cu un alt cod.</string>
     <string name="enter_verification_code_sms">Am trimis un mesaj text către numărul de telefon care se termină cu %s. Te rog introdu codul de verificare în SMS.</string>
     <string name="error_generic_error">Nu am putut efectua operația</string>
-    <string name="error_media_recover_page">Nu pot încărca această pagină din media</string>
     <string name="error_media_recover_post">Nu pot încărca acest articol din media</string>
     <string name="image_size">Dimensiune</string>
     <string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
@@ -705,7 +721,6 @@ Language: ro
     <string name="notification_settings_master_status_on">Pornite</string>
     <string name="max_video_resolution">Dimensiune maximă video</string>
     <string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
-    <string name="error_page_does_not_exist">Această pagină nu mai există</string>
     <string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
     <string name="error_upload_post_param">A fost o eroare la încărcarea acestui articol: %s.</string>
     <string name="add_media_progress">Adaug media</string>
@@ -1387,8 +1402,6 @@ Language: ro
     <string name="notification_settings_item_other_account_emails_summary">Vom trimite întotdeauna emailuri importante cu privire la contul tău, dar poți primi și altele utile, în plus.</string>
     <string name="stats_insights_latest_post_trend">A trecut %1$s de când %2$s a fost publicat. Iată performanțele articolului  până în prezent …</string>
     <string name="stats_insights_latest_post_summary">Rezumatul ultimului articol</string>
-    <string name="yesterday">Ieri</string>
-    <string name="days_ago">%d zile în urmă</string>
     <string name="connectionbar_no_connection">Nicio conexiune</string>
     <string name="button_publish">Publică</string>
     <string name="button_edit">Editare</string>
@@ -1396,12 +1409,10 @@ Language: ro
     <string name="button_preview">Previzualizare</string>
     <string name="button_trash">Gunoi</string>
     <string name="button_stats">Statistici</string>
-    <string name="page_deleted">Pagină ștearsă</string>
     <string name="button_back">Înapoi</string>
     <string name="stats_no_activity_this_period">Nicio activitate în această perioadă</string>
     <string name="post_trashed">Articol trimis la gunoi</string>
     <string name="post_deleted">Articol șters</string>
-    <string name="page_trashed">Pagină trimisă la gunoi</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nu ești autorizat să accesezi acest sit</string>
     <string name="reader_toast_err_follow_blog_not_found">Acest sit nu a putut fi găsit</string>
     <string name="undo">Revin</string>
@@ -1536,7 +1547,6 @@ Language: ro
     <string name="ssl_certificate_details">Detalii</string>
     <string name="cab_selected">%d selectate</string>
     <string name="signing_out">Deautentificare….</string>
-    <string name="pages_empty_list">Nicio pagină încă. De ce să nu creezi una?</string>
     <string name="comment_reply_to_user">Răspunde la %s</string>
     <string name="posts_empty_list">Niciun articol încă. De ce să nu creezi unul?</string>
     <string name="comment_trashed">Comentariu aruncat la gunoi</string>
@@ -1614,7 +1624,6 @@ Language: ro
     <string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
     <string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
     <string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
-    <string name="error_deleting_page">A apărut o eroare în timpul ștergerii paginii</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Setări imagine</string>
     <string name="local_changes">Schimbări locale</string>
@@ -1768,7 +1777,6 @@ Language: ro
     <string name="immediately">Imediat</string>
     <string name="quickpress_add_alert_title">Setare nume scurtătură</string>
     <string name="settings">Setări</string>
-    <string name="today">Azi</string>
     <string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
     <string name="quickpress_window_title">Selecție blog pentru scurtătură QuickPress</string>
     <string name="pages_private">Private</string>

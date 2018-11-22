@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
+    <integer name="full_screen_dialog_animation_duration">@android:integer/config_mediumAnimTime</integer>
+
     <integer name="smallest_width_dp">320</integer>
 
     <!-- max #chars user can type when adding a new topic to the reader -->
