@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights
+package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R

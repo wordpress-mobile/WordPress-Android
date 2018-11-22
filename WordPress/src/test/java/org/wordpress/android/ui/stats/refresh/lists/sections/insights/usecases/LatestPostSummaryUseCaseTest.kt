@@ -27,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.LatestPostSummaryMapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
