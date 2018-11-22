@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.InsightsViewHolder
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.ListInsightsViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.LoadingInsightsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
 class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHolder>() {
@@ -42,7 +42,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
             )
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyInsightsViewHolder(parent)
-            LOADING -> LoadingInsightsViewHolder(parent)
+            LOADING -> LoadingViewHolder(parent)
         }
     }
 
