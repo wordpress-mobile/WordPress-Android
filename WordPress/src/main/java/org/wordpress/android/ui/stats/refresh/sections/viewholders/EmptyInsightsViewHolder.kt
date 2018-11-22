@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections.viewholders
 
 import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.stats.refresh.Empty
 
 class EmptyInsightsViewHolder(
     parent: ViewGroup,

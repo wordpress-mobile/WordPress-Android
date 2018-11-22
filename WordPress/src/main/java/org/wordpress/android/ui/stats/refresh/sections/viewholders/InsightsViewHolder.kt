@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections.viewholders
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView.ViewHolder

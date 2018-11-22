@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections.viewholders
 
 import android.view.ViewGroup
 import org.wordpress.android.R
