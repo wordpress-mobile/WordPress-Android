@@ -6,15 +6,13 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.VerticalActionBuilder
 import org.wordpress.android.fluxc.store.VerticalStore
-import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
-import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 
 /**
- * Transforms EventBus event to a coroutines.
+ * Transforms OnVerticalsFetched EventBus event to a coroutine.
  *
  * The client may dispatch multiple requests, but we want to accept only the latest one and ignore all others.
  * We can't rely just on job.cancel() as the FetchVerticalsPayload may have already been dispatched and FluxC will
@@ -41,7 +39,6 @@ class FetchVerticalsUseCase @Inject constructor(
     fun onVerticalsFetched(event: OnVerticalsFetched) {
         pair?.let {
             if (event.searchQuery == it.first) {
-                event.error = FetchVerticalsError(GENERIC_ERROR, "123msg")
                 checkNotNull(it.second) { "onVerticalsFetched received without a suspended coroutine." }
                         .resume(event)
                 pair = null
