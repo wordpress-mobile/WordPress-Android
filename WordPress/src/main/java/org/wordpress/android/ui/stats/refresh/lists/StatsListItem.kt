@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
+// TODO: this class will be used by timed sections, too => insightsTypes here should be changed for common parent class
 sealed class StatsListItem(val type: Type, open val insightsType: InsightsTypes?) {
     enum class Type {
         BLOCK_LIST,
