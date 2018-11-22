@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.usecases
+package org.wordpress.android.ui.stats.refresh.sections.insights.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R

@@ -7,7 +7,7 @@ import org.wordpress.android.ui.stats.refresh.sections.InsightsUiState
 import org.wordpress.android.ui.stats.refresh.sections.InsightsUiState.StatsListState.DONE
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.sections.StatsListViewModel
-import org.wordpress.android.ui.stats.refresh.usecases.InsightsUseCase
+import org.wordpress.android.ui.stats.refresh.sections.insights.usecases.InsightsUseCase
 import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Named

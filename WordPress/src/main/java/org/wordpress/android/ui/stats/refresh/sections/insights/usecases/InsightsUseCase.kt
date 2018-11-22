@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.usecases
+package org.wordpress.android.ui.stats.refresh.sections.insights.usecases
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData

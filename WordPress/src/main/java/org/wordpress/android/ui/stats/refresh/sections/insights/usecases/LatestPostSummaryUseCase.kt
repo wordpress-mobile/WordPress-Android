@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.usecases
+package org.wordpress.android.ui.stats.refresh.sections.insights.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.sections.insights.LatestPostSummaryMapper
 import javax.inject.Inject
 import javax.inject.Named
 

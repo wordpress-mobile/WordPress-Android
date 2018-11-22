@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.usecases
+package org.wordpress.android.ui.stats.refresh.sections.insights.usecases
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.sections.insights.LatestPostSummaryMapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
