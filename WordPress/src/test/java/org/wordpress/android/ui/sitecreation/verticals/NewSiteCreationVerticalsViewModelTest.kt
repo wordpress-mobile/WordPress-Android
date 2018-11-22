@@ -29,6 +29,8 @@ import org.wordpress.android.ui.sitecreation.usecases.DummyOnVerticalsHeaderInfo
 import org.wordpress.android.ui.sitecreation.usecases.DummyVerticalsHeaderInfoModel
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
@@ -65,32 +67,23 @@ class NewSiteCreationVerticalsViewModelTest {
     )
     val firstModel = VerticalModel("firstModel", "1")
     private val secondModel = VerticalModel("secondModel", "2")
-    private val headerAndEmptyInputState = VerticalsUiState(
-            showFullscreenError = false,
-            showFullscreenProgress = false,
-            showContent = true,
+    private val headerAndEmptyInputState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = true,
-            headerUiState = VerticalsHeaderUiState(true, dummySearchInputTitle, dummySearchInputSubtitle),
-            searchInputState = VerticalsSearchInputUiState(dummySearchInputHint, false, false),
+            headerUiState = VerticalsHeaderUiState.Visible(dummySearchInputTitle, dummySearchInputSubtitle),
+            searchInputState = VerticalsSearchInputUiState.Visible(dummySearchInputHint, false, false),
             items = listOf()
     )
-    private val fetchingSuggestionsState = VerticalsUiState(
-            showFullscreenError = false,
-            showFullscreenProgress = false,
-            showContent = true,
+    private val fetchingSuggestionsState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = false,
-            headerUiState = VerticalsHeaderUiState(false, dummySearchInputTitle, dummySearchInputSubtitle),
-            searchInputState = VerticalsSearchInputUiState(dummySearchInputHint, true, true),
+            headerUiState = VerticalsHeaderUiState.Hidden,
+            searchInputState = VerticalsSearchInputUiState.Visible(dummySearchInputHint, true, true),
             items = listOf()
     )
 
-    private val fetchingSuggestionsFailedState = VerticalsUiState(
-            showFullscreenError = false,
-            showFullscreenProgress = false,
-            showContent = true,
+    private val fetchingSuggestionsFailedState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = false,
-            headerUiState = VerticalsHeaderUiState(false, dummySearchInputTitle, dummySearchInputSubtitle),
-            searchInputState = VerticalsSearchInputUiState(dummySearchInputHint, false, true),
+            headerUiState = VerticalsHeaderUiState.Hidden,
+            searchInputState = VerticalsSearchInputUiState.Visible(dummySearchInputHint, false, true),
             items = listOf(
                     VerticalsFetchSuggestionsErrorUiState(
                             R.string.site_creation_fetch_suggestions_failed,
@@ -99,23 +92,17 @@ class NewSiteCreationVerticalsViewModelTest {
             )
     )
 
-    private val firstModelDisplayedState = VerticalsUiState(
-            showFullscreenError = false,
-            showFullscreenProgress = false,
-            showContent = true,
+    private val firstModelDisplayedState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = false,
-            headerUiState = VerticalsHeaderUiState(false, dummySearchInputTitle, dummySearchInputSubtitle),
-            searchInputState = VerticalsSearchInputUiState(dummySearchInputHint, false, true),
+            headerUiState = VerticalsHeaderUiState.Hidden,
+            searchInputState = VerticalsSearchInputUiState.Visible(dummySearchInputHint, false, true),
             items = listOf(VerticalsModelUiState(firstModel.verticalId, firstModel.name, false))
     )
 
-    private val secondModelDisplayedState = VerticalsUiState(
-            showFullscreenError = false,
-            showFullscreenProgress = false,
-            showContent = true,
+    private val secondModelDisplayedState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = false,
-            headerUiState = VerticalsHeaderUiState(false, dummySearchInputTitle, dummySearchInputSubtitle),
-            searchInputState = VerticalsSearchInputUiState(dummySearchInputHint, false, true),
+            headerUiState = VerticalsHeaderUiState.Hidden,
+            searchInputState = VerticalsSearchInputUiState.Visible(dummySearchInputHint, false, true),
             items = listOf(VerticalsModelUiState(secondModel.verticalId, secondModel.name, false))
     )
 
@@ -144,31 +131,28 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyHeaderInfoFetchedOnStart() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.start()
-        assertTrue(viewModel.uiState.value!!.showContent)
-        assertFalse(viewModel.uiState.value!!.showFullscreenError)
+        assertTrue(viewModel.uiState.value!!.contentState == CONTENT)
     }
 
     @Test
     fun verifyFullscreenErrorShownOnFailedHeaderInfoRequest() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(errorHeaderInfoEvent)
         viewModel.start()
-        assertFalse(viewModel.uiState.value!!.showContent)
-        assertTrue(viewModel.uiState.value!!.showFullscreenError)
+        assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
     }
 
     @Test
     fun verifyRetryWorksOnFullScreenError() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(errorHeaderInfoEvent)
         viewModel.start()
-        assertTrue(viewModel.uiState.value!!.showFullscreenError)
+        assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
 
         viewModel.onFetchHeaderInfoRetry()
-        assertTrue(viewModel.uiState.value!!.showFullscreenError)
+        assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
 
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.onFetchHeaderInfoRetry()
-        assertTrue(viewModel.uiState.value!!.showContent)
-        assertFalse(viewModel.uiState.value!!.showFullscreenError)
+        assertTrue(viewModel.uiState.value!!.contentState == CONTENT)
     }
 
     @Test
@@ -182,7 +166,7 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyHeaderShownOnEmptyQuery() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.start()
-        assertTrue(viewModel.uiState.value!!.headerUiState!!.isVisible)
+        assertTrue(viewModel.uiState.value!!.headerUiState.isVisible)
     }
 
     @Test
@@ -191,14 +175,14 @@ class NewSiteCreationVerticalsViewModelTest {
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
         viewModel.start()
         viewModel.updateQuery("a", 0)
-        assertFalse(viewModel.uiState.value!!.headerUiState!!.isVisible)
+        assertFalse(viewModel.uiState.value!!.headerUiState.isVisible)
     }
 
     @Test
     fun verifyInputShownOnHeaderInfoFetched() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.start()
-        val inputState = viewModel.uiState.value!!.searchInputState!!
+        val inputState = viewModel.uiState.value!!.searchInputState
         assertFalse(inputState.showProgress)
         assertFalse(inputState.showClearButton)
         assertEquals(dummySearchInputHint, inputState.hint)
@@ -208,7 +192,7 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyClearSearchNotShownOnEmptyQuery() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.start()
-        val searchState = viewModel.uiState.value!!.searchInputState!!
+        val searchState = viewModel.uiState.value!!.searchInputState
         assertFalse(searchState.showClearButton)
     }
 
@@ -218,7 +202,7 @@ class NewSiteCreationVerticalsViewModelTest {
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
         viewModel.start()
         viewModel.updateQuery("abc", 0)
-        val searchState = viewModel.uiState.value!!.searchInputState!!
+        val searchState = viewModel.uiState.value!!.searchInputState
         assertTrue(searchState.showClearButton)
     }
 
@@ -226,7 +210,7 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifySearchProgressNotShownOnHeaderInfoFetched() = test {
         whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
         viewModel.start()
-        val searchState = viewModel.uiState.value!!.searchInputState!!
+        val searchState = viewModel.uiState.value!!.searchInputState
         assertFalse(searchState.showProgress)
     }
 
