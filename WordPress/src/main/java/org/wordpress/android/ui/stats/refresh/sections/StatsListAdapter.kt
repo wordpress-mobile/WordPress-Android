@@ -4,7 +4,7 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.Empty
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.EmptyInsightsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.FailedViewHolder
 import org.wordpress.android.ui.stats.refresh.InsightsDiffCallback
@@ -41,7 +41,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
                     imageManager
             )
             FAILED -> FailedViewHolder(parent)
-            EMPTY -> EmptyInsightsViewHolder(parent)
+            EMPTY -> EmptyViewHolder(parent)
             LOADING -> LoadingViewHolder(parent)
         }
     }
@@ -57,7 +57,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)
-            is EmptyInsightsViewHolder -> holder.bind(item as Empty)
+            is EmptyViewHolder -> holder.bind(item as Empty)
         }
     }
 }

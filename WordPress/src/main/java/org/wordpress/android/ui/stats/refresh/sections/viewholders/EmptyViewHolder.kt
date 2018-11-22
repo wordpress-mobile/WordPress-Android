@@ -6,7 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.stats.refresh.Empty
 
-class EmptyInsightsViewHolder(
+class EmptyViewHolder(
     parent: ViewGroup,
     private val onActionButtonClicked: () -> Unit = {}
 ) : InsightsViewHolder(parent, R.layout.insight_empty_view) {
