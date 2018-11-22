@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.utils
 
 import java.text.DecimalFormat
 import java.util.TreeMap

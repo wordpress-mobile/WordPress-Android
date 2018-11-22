@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.utils
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
