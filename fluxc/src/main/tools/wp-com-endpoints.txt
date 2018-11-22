@@ -22,6 +22,8 @@
 /me/social-login/connect/
 /me/username/
 
+/notifications/
+
 /read/feed/
 /read/feed/$feed_url_or_id#long,String
 /read/following/mine
