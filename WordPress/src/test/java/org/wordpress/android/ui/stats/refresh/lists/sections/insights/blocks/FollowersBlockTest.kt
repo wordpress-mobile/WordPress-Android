@@ -211,7 +211,7 @@ class FollowersBlockTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
+            assertThat(this.errorType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }
@@ -240,7 +240,7 @@ class FollowersBlockTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
+            assertThat(this.errorType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

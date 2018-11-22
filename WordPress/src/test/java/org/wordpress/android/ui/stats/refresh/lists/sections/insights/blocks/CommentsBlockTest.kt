@@ -200,7 +200,7 @@ class CommentsBlockTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.failedType).isEqualTo(string.stats_view_comments)
+            assertThat(this.errorType).isEqualTo(string.stats_view_comments)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

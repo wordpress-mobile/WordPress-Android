@@ -122,7 +122,7 @@ class TodayStatsBlockTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.failedType).isEqualTo(R.string.stats_insights_today_stats)
+            assertThat(this.errorType).isEqualTo(R.string.stats_insights_today_stats)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

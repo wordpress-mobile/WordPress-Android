@@ -53,7 +53,7 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertTrue(result is Error)
         assertEquals(result.type, Type.ERROR)
         assertEquals((result as Error).errorMessage, message)
-        assertEquals(result.failedType, R.string.stats_insights_all_time_stats)
+        assertEquals(result.errorType, R.string.stats_insights_all_time_stats)
     }
 
     @Test

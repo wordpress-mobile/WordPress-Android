@@ -142,7 +142,7 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.failedType).isEqualTo(string.stats_view_tags_and_categories)
+            assertThat(this.errorType).isEqualTo(string.stats_view_tags_and_categories)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

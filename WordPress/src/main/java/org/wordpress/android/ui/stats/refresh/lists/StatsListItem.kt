@@ -22,7 +22,7 @@ data class BlockList(override val insightsType: InsightsTypes, val items: List<B
         insightsType
 )
 
-data class Error(override val insightsType: InsightsTypes, @StringRes val failedType: Int, val errorMessage: String) :
+data class Error(override val insightsType: InsightsTypes, @StringRes val errorType: Int, val errorMessage: String) :
         StatsListItem(ERROR, insightsType)
 
 data class Empty(val isButtonVisible: Boolean = true) : StatsListItem(EMPTY, null)

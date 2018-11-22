@@ -63,7 +63,7 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
 
         assertThat(result).isInstanceOf(Error::class.java)
         val failed = result as Error
-        assertThat(failed.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
+        assertThat(failed.errorType).isEqualTo(R.string.stats_insights_latest_post_summary)
         assertThat(failed.errorMessage).isEqualTo(message)
     }
 
