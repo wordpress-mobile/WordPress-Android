@@ -50,8 +50,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockListItemViewHolder {
-        return when (values()[viewType]) {
+    override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): BlockListItemViewHolder {
+        return when (values()[itemType]) {
             TITLE -> TitleViewHolder(parent)
             LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
             USER_ITEM -> UserItemViewHolder(parent, imageManager)
