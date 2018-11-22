@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@color/wp_grey_lighten_30"
+                android:background="@drawable/wp_grey_lighten_30_rounded_bg"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
