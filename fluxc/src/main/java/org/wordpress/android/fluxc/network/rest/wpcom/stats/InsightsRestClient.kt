@@ -178,7 +178,7 @@ constructor(
     suspend fun fetchFollowers(
         site: SiteModel,
         type: FollowerType,
-        pageSize: Int = 6,
+        pageSize: Int,
         forced: Boolean
     ): FetchInsightsPayload<FollowersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
@@ -207,7 +207,7 @@ constructor(
 
     suspend fun fetchTopComments(
         site: SiteModel,
-        pageSize: Int = 6,
+        pageSize: Int,
         forced: Boolean
     ): FetchInsightsPayload<CommentsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.comments.urlV1_1
@@ -235,7 +235,7 @@ constructor(
 
     suspend fun fetchTags(
         site: SiteModel,
-        pageSize: Int = 6,
+        pageSize: Int,
         forced: Boolean
     ): FetchInsightsPayload<TagsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.tags.urlV1_1

@@ -45,6 +45,8 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
+private const val PAGE_SIZE = 8
+
 @RunWith(MockitoJUnitRunner::class)
 class InsightsStoreTest {
     @Mock lateinit var site: SiteModel
@@ -282,13 +284,13 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, 6, forced)).thenReturn(
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM)).thenReturn(model)
+        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchWpComFollowers(site, forced)
+        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, WP_COM)
@@ -300,13 +302,13 @@ class InsightsStoreTest {
                 FOLLOWERS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL)).thenReturn(model)
+        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchEmailFollowers(site, forced)
+        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, FOLLOWERS_RESPONSE, EMAIL)
@@ -316,9 +318,9 @@ class InsightsStoreTest {
     fun `returns WPCOM followers from db`() {
         whenever(sqlUtils.selectFollowers(site, WP_COM)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM)).thenReturn(model)
+        whenever(mapper.map(FOLLOWERS_RESPONSE, WP_COM, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getWpComFollowers(site)
+        val result = store.getWpComFollowers(site, PAGE_SIZE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -327,9 +329,9 @@ class InsightsStoreTest {
     fun `returns email followers from db`() {
         whenever(sqlUtils.selectFollowers(site, EMAIL)).thenReturn(FOLLOWERS_RESPONSE)
         val model = mock<FollowersModel>()
-        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL)).thenReturn(model)
+        whenever(mapper.map(FOLLOWERS_RESPONSE, EMAIL, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getEmailFollowers(site)
+        val result = store.getEmailFollowers(site, PAGE_SIZE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -340,9 +342,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, WP_COM, 6, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchWpComFollowers(site, forced)
+        val responseModel = store.fetchWpComFollowers(site, PAGE_SIZE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -356,9 +358,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchFollowers(site, EMAIL, 6, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchEmailFollowers(site, forced)
+        val responseModel = store.fetchEmailFollowers(site, PAGE_SIZE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -372,13 +374,13 @@ class InsightsStoreTest {
                 TOP_COMMENTS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, 6, forced)).thenReturn(
+        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchComments(site, forced)
+        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, TOP_COMMENTS_RESPONSE)
@@ -388,9 +390,9 @@ class InsightsStoreTest {
     fun `returns top comments from db`() {
         whenever(sqlUtils.selectCommentInsights(site)).thenReturn(TOP_COMMENTS_RESPONSE)
         val model = mock<CommentsModel>()
-        whenever(mapper.map(TOP_COMMENTS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(TOP_COMMENTS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getComments(site)
+        val result = store.getComments(site, PAGE_SIZE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -401,9 +403,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, 6, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchComments(site, forced)
+        val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -417,13 +419,13 @@ class InsightsStoreTest {
                 TAGS_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchTags(site, forced = forced)).thenReturn(
+        whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchTags(site, forced)
+        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, TAGS_RESPONSE)
@@ -433,9 +435,9 @@ class InsightsStoreTest {
     fun `returns tags and categories from db`() {
         whenever(sqlUtils.selectTags(site)).thenReturn(TAGS_RESPONSE)
         val model = mock<TagsModel>()
-        whenever(mapper.map(TAGS_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(TAGS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getTags(site)
+        val result = store.getTags(site, PAGE_SIZE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -446,9 +448,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<TagsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTags(site, forced = forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchTags(site, forced)
+        val responseModel = store.fetchTags(site, PAGE_SIZE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!

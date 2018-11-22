@@ -97,8 +97,8 @@ class InsightsMapper
         )
     }
 
-    fun map(response: FollowersResponse, followerType: FollowerType): FollowersModel {
-        val followers = response.subscribers.map {
+    fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
+        val followers = response.subscribers.take(pageSize).map {
             FollowerModel(
                     it.avatar,
                     it.label,
@@ -110,11 +110,11 @@ class InsightsMapper
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }
-        return FollowersModel(total, followers)
+        return FollowersModel(total, followers, response.subscribers.size > pageSize)
     }
 
-    fun map(response: CommentsResponse): CommentsModel {
-        val authors = response.authors?.mapNotNull {
+    fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
+        val authors = response.authors?.take(pageSize)?.mapNotNull {
             if (it.name != null && it.comments != null && it.link != null && it.gravatar != null) {
                 CommentsModel.Author(it.name, it.comments, it.link, it.gravatar)
             } else {
@@ -122,7 +122,7 @@ class InsightsMapper
                 null
             }
         }
-        val posts = response.posts?.mapNotNull {
+        val posts = response.posts?.take(pageSize)?.mapNotNull {
             if (it.id != null && it.name != null && it.comments != null && it.link != null) {
                 CommentsModel.Post(it.id, it.name, it.comments, it.link)
             } else {
@@ -130,13 +130,15 @@ class InsightsMapper
                 null
             }
         }
-        return CommentsModel(posts ?: listOf(), authors ?: listOf())
+        val hasMoreAuthors = (response.authors != null && response.authors.size > pageSize)
+        val hasMorePosts = (response.posts != null && response.posts.size > pageSize)
+        return CommentsModel(posts ?: listOf(), authors ?: listOf(), hasMorePosts, hasMoreAuthors)
     }
 
-    fun map(response: TagsResponse): TagsModel {
-        return TagsModel(response.tags.map { tag ->
+    fun map(response: TagsResponse, pageSize: Int): TagsModel {
+        return TagsModel(response.tags.take(pageSize).map { tag ->
             TagModel(tag.tags.map { it.toItem() }, tag.views)
-        })
+        }, response.tags.size > pageSize)
     }
 
     private fun TagResponse.toItem(): TagModel.Item {
