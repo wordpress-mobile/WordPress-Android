@@ -17,7 +17,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
@@ -100,8 +100,8 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
-        assertTrue(items[1] is Item)
-        val item = items[1] as Item
+        assertTrue(items[1] is ListItemWithIcon)
+        val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_posts_grey_dark_24dp)
         assertEquals(item.textResource, R.string.posts)
         assertEquals(item.value, posts.toString())
@@ -128,8 +128,8 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
-        assertTrue(items[1] is Item)
-        val item = items[1] as Item
+        assertTrue(items[1] is ListItemWithIcon)
+        val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_visible_on_grey_dark_24dp)
         assertEquals(item.textResource, R.string.stats_views)
         assertEquals(item.value, views.toString())
@@ -156,8 +156,8 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
-        assertTrue(items[1] is Item)
-        val item = items[1] as Item
+        assertTrue(items[1] is ListItemWithIcon)
+        val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_user_grey_dark_24dp)
         assertEquals(item.textResource, R.string.stats_visitors)
         assertEquals(item.value, visitors.toString())
@@ -184,8 +184,8 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
         assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
-        assertTrue(items[1] is Item)
-        val item = items[1] as Item
+        assertTrue(items[1] is ListItemWithIcon)
+        val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
         assertEquals(item.textResource, R.string.stats_insights_best_ever)
         assertEquals(item.value, bestDayTotal.toString())
@@ -209,10 +209,10 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
         assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as BlockList).items
         assertEquals(items.size, 3)
-        assertTrue(items[1] is Item)
-        assertTrue(items[2] is Item)
-        assertEquals((items[1] as Item).showDivider, true)
-        assertEquals((items[2] as Item).showDivider, false)
+        assertTrue(items[1] is ListItemWithIcon)
+        assertTrue(items[2] is ListItemWithIcon)
+        assertEquals((items[1] as ListItemWithIcon).showDivider, true)
+        assertEquals((items[2] as ListItemWithIcon).showDivider, false)
     }
 
     private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): StatsListItem {

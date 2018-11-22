@@ -17,9 +17,9 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ER
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
@@ -133,8 +133,8 @@ class TodayStatsBlockTest : BaseUnitTest() {
     }
 
     private fun assertViews(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as Item
+        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(R.string.stats_views)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_visible_on_grey_dark_24dp)
@@ -142,8 +142,8 @@ class TodayStatsBlockTest : BaseUnitTest() {
     }
 
     private fun assertVisitors(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as Item
+        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(R.string.stats_visitors)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_user_grey_dark_24dp)
@@ -151,8 +151,8 @@ class TodayStatsBlockTest : BaseUnitTest() {
     }
 
     private fun assertLikes(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as Item
+        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(R.string.stats_likes)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_star_grey_dark_24dp)
@@ -160,8 +160,8 @@ class TodayStatsBlockTest : BaseUnitTest() {
     }
 
     private fun assertComments(blockListItem: BlockListItem, showDivider: Boolean = false) {
-        assertThat(blockListItem.type).isEqualTo(ITEM)
-        val item = blockListItem as Item
+        assertThat(blockListItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        val item = blockListItem as ListItemWithIcon
         assertThat(item.textResource).isEqualTo(R.string.stats_comments)
         assertThat(item.showDivider).isEqualTo(showDivider)
         assertThat(item.icon).isEqualTo(R.drawable.ic_comment_grey_dark_24dp)

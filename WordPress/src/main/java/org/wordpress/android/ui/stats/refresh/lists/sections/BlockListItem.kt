@@ -8,7 +8,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
@@ -20,9 +20,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 sealed class BlockListItem(val type: Type) {
     enum class Type {
         TITLE,
-        ITEM,
-        USER_ITEM,
         LIST_ITEM,
+        LIST_ITEM_WITH_ICON,
+        USER_ITEM,
         INFO,
         EMPTY,
         TEXT,
@@ -36,7 +36,13 @@ sealed class BlockListItem(val type: Type) {
 
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
 
-    data class Item(
+    data class ListItem(
+        val text: String,
+        val value: String,
+        val showDivider: Boolean = true
+    ) : BlockListItem(LIST_ITEM)
+
+    data class ListItemWithIcon(
         @DrawableRes val icon: Int? = null,
         val iconUrl: String? = null,
         @StringRes val textResource: Int? = null,
@@ -45,7 +51,7 @@ sealed class BlockListItem(val type: Type) {
         val value: String? = null,
         val showDivider: Boolean = true,
         val clickAction: (() -> Unit)? = null
-    ) : BlockListItem(ITEM)
+    ) : BlockListItem(LIST_ITEM_WITH_ICON)
 
     data class UserItem(
         val avatarUrl: String,
@@ -53,12 +59,6 @@ sealed class BlockListItem(val type: Type) {
         val value: String,
         val showDivider: Boolean = true
     ) : BlockListItem(USER_ITEM)
-
-    data class ListItem(
-        val text: String,
-        val value: String,
-        val showDivider: Boolean = true
-    ) : BlockListItem(LIST_ITEM)
 
     data class Information(val text: String) : BlockListItem(INFO)
 
@@ -80,7 +80,7 @@ sealed class BlockListItem(val type: Type) {
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
 
     data class ExpandableItem(
-        val header: Item,
+        val header: ListItemWithIcon,
         val expandedItems: List<BlockListItem>,
         var isExpanded: Boolean = false
     ) : BlockListItem(EXPANDABLE_ITEM)

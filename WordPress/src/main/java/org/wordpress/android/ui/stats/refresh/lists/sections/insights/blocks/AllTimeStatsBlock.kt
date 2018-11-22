@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
@@ -51,7 +51,7 @@ class AllTimeStatsBlock
         } else {
             if (hasPosts) {
                 items.add(
-                        Item(
+                        ListItemWithIcon(
                                 R.drawable.ic_posts_grey_dark_24dp,
                                 textResource = R.string.posts,
                                 value = model.posts.toFormattedString(),
@@ -61,7 +61,7 @@ class AllTimeStatsBlock
             }
             if (hasViews) {
                 items.add(
-                        Item(
+                        ListItemWithIcon(
                                 R.drawable.ic_visible_on_grey_dark_24dp,
                                 textResource = R.string.stats_views,
                                 value = model.views.toFormattedString(),
@@ -71,7 +71,7 @@ class AllTimeStatsBlock
             }
             if (hasVisitors) {
                 items.add(
-                        Item(
+                        ListItemWithIcon(
                                 R.drawable.ic_user_grey_dark_24dp,
                                 textResource = R.string.stats_visitors,
                                 value = model.visitors.toFormattedString(),
@@ -81,7 +81,7 @@ class AllTimeStatsBlock
             }
             if (hasViewsBestDayTotal) {
                 items.add(
-                        Item(
+                        ListItemWithIcon(
                                 R.drawable.ic_trophy_grey_dark_24dp,
                                 textResource = R.string.stats_insights_best_ever,
                                 value = model.viewsBestDayTotal.toFormattedString(),

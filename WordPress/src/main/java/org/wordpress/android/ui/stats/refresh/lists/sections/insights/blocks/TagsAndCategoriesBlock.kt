@@ -13,7 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
@@ -79,9 +79,9 @@ class TagsAndCategoriesBlock
         return createDataItem(items)
     }
 
-    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {
+    private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
         val item = tag.items.first()
-        return Item(
+        return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
                 value = tag.views.toFormattedString(),
@@ -90,14 +90,14 @@ class TagsAndCategoriesBlock
         )
     }
 
-    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {
+    private fun mapCategory(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
         val text = tag.items.foldIndexed("") { itemIndex, acc, item ->
             when (itemIndex) {
                 0 -> item.name
                 else -> resourceProvider.getString(R.string.stats_category_folded_name, acc, item.name)
             }
         }
-        return Item(
+        return ListItemWithIcon(
                 icon = R.drawable.ic_folder_multiple_grey_dark_24dp,
                 text = text,
                 value = tag.views.toFormattedString(),
@@ -105,8 +105,8 @@ class TagsAndCategoriesBlock
         )
     }
 
-    private fun mapItem(item: TagModel.Item): Item {
-        return Item(
+    private fun mapItem(item: TagModel.Item): ListItemWithIcon {
+        return ListItemWithIcon(
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,

@@ -21,11 +21,11 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ER
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.Error
@@ -157,8 +157,8 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
         key: String,
         label: String?
     ) {
-        assertThat(item.type).isEqualTo(ITEM)
-        assertThat((item as Item).text).isEqualTo(key)
+        assertThat(item.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        assertThat((item as ListItemWithIcon).text).isEqualTo(key)
         if (label != null) {
             assertThat(item.value).isEqualTo(label)
         } else {

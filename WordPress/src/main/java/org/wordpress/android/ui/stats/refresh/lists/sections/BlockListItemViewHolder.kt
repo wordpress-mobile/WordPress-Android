@@ -33,7 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -71,7 +71,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
+    class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -80,7 +80,7 @@ sealed class BlockListItemViewHolder(
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
-        fun bind(item: Item) {
+        fun bind(item: ListItemWithIcon) {
             icon.setImageOrLoad(item.icon, item.iconUrl) { imageView, url ->
                 imageManager.load(imageView, IMAGE, url)
             }
