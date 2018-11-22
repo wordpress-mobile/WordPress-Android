@@ -7,7 +7,7 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
-import org.wordpress.android.ui.stats.refresh.lists.Failed
+import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
@@ -72,8 +72,8 @@ abstract class BaseStatsBlock(
      */
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem?
 
-    protected fun createFailedItem(@StringRes failingType: Int, message: String): Failed {
-        return Failed(type, failingType, message)
+    protected fun createFailedItem(@StringRes failingType: Int, message: String): Error {
+        return Error(type, failingType, message)
     }
 
     protected fun createDataItem(data: List<BlockListItem>): BlockList {

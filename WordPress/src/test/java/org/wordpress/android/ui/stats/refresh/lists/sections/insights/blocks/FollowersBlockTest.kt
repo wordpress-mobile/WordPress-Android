@@ -32,9 +32,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.lists.Failed
+import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -209,8 +209,8 @@ class FollowersBlockTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        assertThat(result.type).isEqualTo(FAILED)
-        (result as Failed).apply {
+        assertThat(result.type).isEqualTo(ERROR)
+        (result as Error).apply {
             assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
@@ -238,8 +238,8 @@ class FollowersBlockTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        assertThat(result.type).isEqualTo(FAILED)
-        (result as Failed).apply {
+        assertThat(result.type).isEqualTo(ERROR)
+        (result as Error).apply {
             assertThat(this.failedType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }

@@ -21,7 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.Failed
+import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
@@ -61,8 +61,8 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(Failed::class.java)
-        val failed = result as Failed
+        assertThat(result).isInstanceOf(Error::class.java)
+        val failed = result as Error
         assertThat(failed.failedType).isEqualTo(R.string.stats_insights_latest_post_summary)
         assertThat(failed.errorMessage).isEqualTo(message)
     }

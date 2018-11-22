@@ -4,9 +4,9 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.viewholders.FailedViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.ErrorViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.values
@@ -32,7 +32,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHo
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
             BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
-            FAILED -> FailedViewHolder(parent)
+            ERROR -> ErrorViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             LOADING -> LoadingViewHolder(parent)
         }
@@ -48,7 +48,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHo
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as BlockList)
-            is FailedViewHolder -> holder.bind(item as Failed)
+            is ErrorViewHolder -> holder.bind(item as Error)
             is EmptyViewHolder -> holder.bind(item as Empty)
         }
     }

@@ -28,9 +28,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.Failed
+import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -140,8 +140,8 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
 
         val result = loadTags(true, forced)
 
-        assertThat(result.type).isEqualTo(FAILED)
-        (result as Failed).apply {
+        assertThat(result.type).isEqualTo(ERROR)
+        (result as Error).apply {
             assertThat(this.failedType).isEqualTo(string.stats_view_tags_and_categories)
             assertThat(this.errorMessage).isEqualTo(message)
         }

@@ -19,7 +19,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.Failed
+import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
@@ -50,9 +50,9 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
 
         val result = loadAllTimeInsights(refresh, forced)
 
-        assertTrue(result is Failed)
-        assertEquals(result.type, Type.FAILED)
-        assertEquals((result as Failed).errorMessage, message)
+        assertTrue(result is Error)
+        assertEquals(result.type, Type.ERROR)
+        assertEquals((result as Error).errorMessage, message)
         assertEquals(result.failedType, R.string.stats_insights_all_time_stats)
     }
 
