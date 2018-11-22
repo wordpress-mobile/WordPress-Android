@@ -2,19 +2,19 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ExpandableItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.InformationViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LabelViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.LinkViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ListItemViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TabsViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TextViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.TitleViewHolder
-import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.UserItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ExpandableItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.InformationViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.LabelViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ListItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TabsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TextViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.UserItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
@@ -41,6 +41,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder
 import org.wordpress.android.util.image.ImageManager
 
 class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHolder>() {

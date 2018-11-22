@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
-import org.wordpress.android.ui.stats.refresh.sections.days.DaysTabViewModel
-import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsTabViewModel
+import org.wordpress.android.ui.stats.refresh.sections.days.DaysListViewModel
+import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewCommentsStats
@@ -100,8 +100,8 @@ class StatsListFragment : DaggerFragment() {
         val statsType = arguments?.getSerializable(typeKey) as StatsListType
 
         val viewModelClass = when (statsType) {
-            INSIGHTS -> InsightsTabViewModel::class.java
-            else -> DaysTabViewModel::class.java
+            INSIGHTS -> InsightsListViewModel::class.java
+            else -> DaysListViewModel::class.java
         }
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)

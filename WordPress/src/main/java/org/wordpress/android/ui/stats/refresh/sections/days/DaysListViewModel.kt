@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.sections.StatsListViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class DaysTabViewModel @Inject constructor(
+class DaysListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher
 ) : StatsListViewModel(mainDispatcher) {
     private val _data = MutableLiveData<InsightsUiState>()

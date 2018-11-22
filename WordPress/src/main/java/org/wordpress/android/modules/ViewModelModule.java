@@ -5,8 +5,8 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
-import org.wordpress.android.ui.stats.refresh.sections.days.DaysTabViewModel;
-import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsTabViewModel;
+import org.wordpress.android.ui.stats.refresh.sections.days.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
@@ -79,13 +79,13 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(InsightsTabViewModel.class)
-    abstract ViewModel insightsTabViewModel(InsightsTabViewModel viewModel);
+    @ViewModelKey(InsightsListViewModel.class)
+    abstract ViewModel insightsTabViewModel(InsightsListViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(DaysTabViewModel.class)
-    abstract ViewModel daysTabViewModel(DaysTabViewModel viewModel);
+    @ViewModelKey(DaysListViewModel.class)
+    abstract ViewModel daysTabViewModel(DaysListViewModel viewModel);
 
     @Binds
     @IntoMap

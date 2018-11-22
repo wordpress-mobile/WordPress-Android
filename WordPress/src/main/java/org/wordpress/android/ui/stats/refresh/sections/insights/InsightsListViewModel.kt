@@ -12,7 +12,7 @@ import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Named
 
-class InsightsTabViewModel
+class InsightsListViewModel
 @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val insightsUseCase: InsightsUseCase

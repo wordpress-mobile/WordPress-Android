@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections.viewholders
 
 import android.content.Context
 import android.graphics.Typeface
@@ -29,6 +29,7 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
