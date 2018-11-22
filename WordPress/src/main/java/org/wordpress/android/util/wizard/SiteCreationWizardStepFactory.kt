@@ -54,21 +54,6 @@ class WizardManager<T>(
     }
 }
 
-enum class SiteCreationStep : WizardStep {
-    SEGMENTS, VERTICALS;
-
-    companion object {
-        fun fromString(input: String): SiteCreationStep {
-            return when (input) {
-                "site_creation_segments" -> SEGMENTS
-                "site_creation_verticals" -> VERTICALS
-                // TODO we should consider skipping the step when it's unknown
-                else -> throw NotImplementedError("SiteCreationStep not recognized: $input")
-            }
-        }
-    }
-}
-
 data class SiteCreationState(
     val segmentId: Long? = null,
     val verticalId: Long? = null,
