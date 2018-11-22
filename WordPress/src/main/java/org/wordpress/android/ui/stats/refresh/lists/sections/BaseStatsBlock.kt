@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 
-abstract class BaseStatsUseCase(
+abstract class BaseStatsBlock(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {

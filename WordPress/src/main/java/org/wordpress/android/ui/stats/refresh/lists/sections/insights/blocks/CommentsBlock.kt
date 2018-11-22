@@ -18,7 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -26,11 +26,11 @@ import javax.inject.Named
 
 private const val PAGE_SIZE = 6
 
-class CommentsUseCase
+class CommentsBlock
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsUseCase(COMMENTS, mainDispatcher) {
+) : BaseStatsBlock(COMMENTS, mainDispatcher) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model

@@ -30,14 +30,14 @@ import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: TodayStatsUseCase
+    private lateinit var useCase: TodayStatsBlock
     private val views = 10
     private val visitors = 15
     private val likes = 20
     private val comments = 30
     @Before
     fun setUp() {
-        useCase = TodayStatsUseCase(
+        useCase = TodayStatsBlock(
                 Dispatchers.Unconfined,
                 insightsStore
         )

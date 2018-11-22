@@ -45,7 +45,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: FollowersUseCase
+    private lateinit var useCase: FollowersBlock
     private val avatar = "avatar.jpg"
     private val user = "John Smith"
     private val url = "www.url.com"
@@ -57,7 +57,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersUseCase(
+        useCase = FollowersBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsUtilsWrapper,

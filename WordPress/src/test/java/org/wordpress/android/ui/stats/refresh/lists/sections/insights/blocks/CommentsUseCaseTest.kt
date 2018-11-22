@@ -37,7 +37,7 @@ import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: CommentsUseCase
+    private lateinit var useCase: CommentsBlock
     private val postId: Long = 10
     private val postTitle = "Post"
     private val avatar = "avatar.jpg"
@@ -47,7 +47,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val pageSize = 6
     @Before
     fun setUp() {
-        useCase = CommentsUseCase(
+        useCase = CommentsBlock(
                 Dispatchers.Unconfined,
                 insightsStore
         )

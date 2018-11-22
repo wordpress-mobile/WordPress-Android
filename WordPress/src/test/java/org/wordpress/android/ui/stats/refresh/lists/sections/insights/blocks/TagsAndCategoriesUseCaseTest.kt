@@ -39,11 +39,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
-    private lateinit var useCase: TagsAndCategoriesUseCase
+    private lateinit var useCase: TagsAndCategoriesBlock
     private val pageSize = 6
     @Before
     fun setUp() {
-        useCase = TagsAndCategoriesUseCase(
+        useCase = TagsAndCategoriesBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 resourceProvider

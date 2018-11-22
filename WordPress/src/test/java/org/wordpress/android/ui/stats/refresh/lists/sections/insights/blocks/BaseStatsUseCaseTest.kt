@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.Loading
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import javax.inject.Provider
 
 class BaseStatsUseCaseTest : BaseUnitTest() {
@@ -21,11 +21,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localData: StatsListItem
     @Mock lateinit var remoteData: StatsListItem
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: TestUseCase
+    private lateinit var useCase: TestBlock
 
     @Before
     fun setUp() {
-        useCase = TestUseCase(
+        useCase = TestBlock(
                 localDataProvider,
                 remoteDataProvider
         )
@@ -92,10 +92,10 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         assertThat(useCase.liveData.value).isNull()
     }
 
-    class TestUseCase(
+    class TestBlock(
         private val localDataProvider: Provider<StatsListItem?>,
         private val remoteDataProvider: Provider<StatsListItem>
-    ) : BaseStatsUseCase(
+    ) : BaseStatsBlock(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {

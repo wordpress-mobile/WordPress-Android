@@ -14,19 +14,19 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.roundToInt
 
-class MostPopularInsightsUseCase
+class MostPopularInsightsBlock
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
-) : BaseStatsUseCase(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
+) : BaseStatsBlock(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
         val dbModel = insightsStore.getMostPopularInsights(site)
         return dbModel?.let { loadMostPopularInsightsItem(dbModel) }

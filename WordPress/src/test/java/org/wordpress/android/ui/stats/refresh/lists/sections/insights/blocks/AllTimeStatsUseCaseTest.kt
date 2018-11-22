@@ -27,10 +27,10 @@ import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: AllTimeStatsUseCase
+    private lateinit var useCase: AllTimeStatsBlock
     @Before
     fun setUp() {
-        useCase = AllTimeStatsUseCase(
+        useCase = AllTimeStatsBlock(
                 Dispatchers.Unconfined,
                 insightsStore
         )

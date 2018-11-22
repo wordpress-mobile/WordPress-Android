@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -27,12 +27,12 @@ import javax.inject.Named
 
 private const val PAGE_SIZE = 6
 
-class TagsAndCategoriesUseCase
+class TagsAndCategoriesBlock
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
-) : BaseStatsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
+) : BaseStatsBlock(TAGS_AND_CATEGORIES, mainDispatcher) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model

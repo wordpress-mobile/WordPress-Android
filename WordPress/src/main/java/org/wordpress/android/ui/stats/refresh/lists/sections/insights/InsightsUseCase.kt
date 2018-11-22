@@ -12,13 +12,13 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.AllTimeStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.FollowersUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.LatestPostSummaryUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.MostPopularInsightsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TagsAndCategoriesUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.AllTimeStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.CommentsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.FollowersBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.LatestPostSummaryBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.MostPopularInsightsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TagsAndCategoriesBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TodayStatsBlock
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
 import javax.inject.Inject
@@ -32,13 +32,13 @@ class InsightsUseCase
     private val statsStore: StatsStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    allTimeStatsUseCase: AllTimeStatsUseCase,
-    latestPostSummaryUseCase: LatestPostSummaryUseCase,
-    todayStatsUseCase: TodayStatsUseCase,
-    followersUseCase: FollowersUseCase,
-    commentsUseCase: CommentsUseCase,
-    mostPopularInsightsUseCase: MostPopularInsightsUseCase,
-    tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
+    allTimeStatsUseCase: AllTimeStatsBlock,
+    latestPostSummaryUseCase: LatestPostSummaryBlock,
+    todayStatsUseCase: TodayStatsBlock,
+    followersUseCase: FollowersBlock,
+    commentsUseCase: CommentsBlock,
+    mostPopularInsightsUseCase: MostPopularInsightsBlock,
+    tagsAndCategoriesUseCase: TagsAndCategoriesBlock
 ) {
     private val useCases = listOf(
             allTimeStatsUseCase,

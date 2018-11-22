@@ -33,10 +33,10 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: LatestPostSummaryUseCase
+    private lateinit var useCase: LatestPostSummaryBlock
     @Before
     fun setUp() = test {
-        useCase = LatestPostSummaryUseCase(
+        useCase = LatestPostSummaryBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 latestPostSummaryMapper

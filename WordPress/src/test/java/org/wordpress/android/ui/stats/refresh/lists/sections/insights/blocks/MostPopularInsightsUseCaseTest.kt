@@ -32,7 +32,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
-    private lateinit var useCase: MostPopularInsightsUseCase
+    private lateinit var useCase: MostPopularInsightsBlock
     private val day = 2
     private val highestDayPercent = 15.0
     private val dayString = "Tuesday"
@@ -41,7 +41,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     private val hourString = "8:00 PM"
     @Before
     fun setUp() {
-        useCase = MostPopularInsightsUseCase(
+        useCase = MostPopularInsightsBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 dateUtils
