@@ -32,22 +32,22 @@ class InsightsUseCase
     private val statsStore: StatsStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    allTimeStatsUseCase: AllTimeStatsBlock,
-    latestPostSummaryUseCase: LatestPostSummaryBlock,
-    todayStatsUseCase: TodayStatsBlock,
-    followersUseCase: FollowersBlock,
-    commentsUseCase: CommentsBlock,
-    mostPopularInsightsUseCase: MostPopularInsightsBlock,
-    tagsAndCategoriesUseCase: TagsAndCategoriesBlock
+    allTimeStatsBlock: AllTimeStatsBlock,
+    latestPostSummaryBlock: LatestPostSummaryBlock,
+    todayStatsBlock: TodayStatsBlock,
+    followersBlock: FollowersBlock,
+    commentsBlock: CommentsBlock,
+    mostPopularInsightsBlock: MostPopularInsightsBlock,
+    tagsAndCategoriesBlock: TagsAndCategoriesBlock
 ) {
     private val useCases = listOf(
-            allTimeStatsUseCase,
-            latestPostSummaryUseCase,
-            todayStatsUseCase,
-            followersUseCase,
-            commentsUseCase,
-            mostPopularInsightsUseCase,
-            tagsAndCategoriesUseCase
+            allTimeStatsBlock,
+            latestPostSummaryBlock,
+            todayStatsBlock,
+            followersBlock,
+            commentsBlock,
+            mostPopularInsightsBlock,
+            tagsAndCategoriesBlock
     ).associateBy { it.type }
 
     private val liveData = combineMap(
