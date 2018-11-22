@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.insights
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -12,6 +12,13 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.AllTimeStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.CommentsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.FollowersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.LatestPostSummaryUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TagsAndCategoriesUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.TodayStatsUseCase
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
 import javax.inject.Inject
