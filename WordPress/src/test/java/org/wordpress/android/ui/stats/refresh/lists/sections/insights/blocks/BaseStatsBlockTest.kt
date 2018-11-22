@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import javax.inject.Provider
 
-class BaseStatsUseCaseTest : BaseUnitTest() {
+class BaseStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<StatsListItem?>
     @Mock lateinit var remoteDataProvider: Provider<StatsListItem>
     @Mock lateinit var localData: StatsListItem

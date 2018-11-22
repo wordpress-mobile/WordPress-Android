@@ -28,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIS
 import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 import kotlin.math.roundToInt
 
-class MostPopularInsightsUseCaseTest : BaseUnitTest() {
+class MostPopularInsightsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils

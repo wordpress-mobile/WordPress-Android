@@ -34,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 
-class CommentsUseCaseTest : BaseUnitTest() {
+class CommentsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: CommentsBlock

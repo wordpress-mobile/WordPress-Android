@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIS
 import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 
-class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
+class TagsAndCategoriesBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider

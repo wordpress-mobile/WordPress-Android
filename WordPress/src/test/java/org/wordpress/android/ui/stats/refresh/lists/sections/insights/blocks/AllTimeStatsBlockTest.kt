@@ -24,7 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type
 import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 
-class AllTimeStatsUseCaseTest : BaseUnitTest() {
+class AllTimeStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: AllTimeStatsBlock

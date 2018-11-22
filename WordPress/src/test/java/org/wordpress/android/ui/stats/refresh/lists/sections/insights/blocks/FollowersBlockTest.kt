@@ -40,7 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-class FollowersUseCaseTest : BaseUnitTest() {
+class FollowersBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
