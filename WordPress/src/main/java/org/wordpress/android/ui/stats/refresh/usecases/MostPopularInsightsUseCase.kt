@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.DateUtils
@@ -44,6 +45,10 @@ class MostPopularInsightsUseCase
     private fun loadMostPopularInsightsItem(model: InsightsMostPopularModel): ListInsightItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))
+        items.add(Label(
+                R.string.stats_insights_most_popular_day_and_hour_label,
+                R.string.stats_insights_most_popular_views_label)
+        )
         items.add(
                 ListItem(
                         dateUtils.getWeekDay(model.highestDayOfWeek),
