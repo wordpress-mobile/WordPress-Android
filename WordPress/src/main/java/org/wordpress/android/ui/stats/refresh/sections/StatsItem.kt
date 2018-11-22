@@ -4,12 +4,12 @@ import android.support.annotation.StringRes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LOADING
 
 sealed class StatsItem(val type: Type, open val insightsType: InsightsTypes?) {
     enum class Type {
-        LIST_INSIGHTS,
+        BLOCK_LIST,
         FAILED,
         EMPTY,
         LOADING
@@ -17,7 +17,7 @@ sealed class StatsItem(val type: Type, open val insightsType: InsightsTypes?) {
 }
 
 data class ListInsightItem(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : StatsItem(
-        LIST_INSIGHTS,
+        BLOCK_LIST,
         insightsType
 )
 

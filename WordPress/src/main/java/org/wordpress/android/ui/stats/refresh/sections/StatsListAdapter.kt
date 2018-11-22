@@ -8,7 +8,7 @@ import org.wordpress.android.ui.stats.refresh.sections.viewholders.FailedViewHol
 import org.wordpress.android.ui.stats.refresh.StatsDiffCallback
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.values
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.StatsViewHolder
@@ -32,7 +32,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsViewHolder {
         return when (values()[viewType]) {
-            LIST_INSIGHTS -> BlockListViewHolder(
+            BLOCK_LIST -> BlockListViewHolder(
                     parent,
                     imageManager
             )

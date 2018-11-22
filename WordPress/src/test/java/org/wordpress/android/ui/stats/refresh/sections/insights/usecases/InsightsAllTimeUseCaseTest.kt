@@ -71,7 +71,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -95,7 +95,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -123,7 +123,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -151,7 +151,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -179,7 +179,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
@@ -206,7 +206,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val result = loadAllTimeInsights(refresh, forced)
 
         assertTrue(result is ListInsightItem)
-        assertEquals(result.type, Type.LIST_INSIGHTS)
+        assertEquals(result.type, Type.BLOCK_LIST)
         val items = (result as ListInsightItem).items
         assertEquals(items.size, 3)
         assertTrue(items[1] is Item)

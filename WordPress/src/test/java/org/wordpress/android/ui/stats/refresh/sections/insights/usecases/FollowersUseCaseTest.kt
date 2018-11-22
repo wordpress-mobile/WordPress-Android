@@ -35,7 +35,7 @@ import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.sections.Failed
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -95,7 +95,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as ListInsightItem).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
@@ -134,7 +134,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as ListInsightItem).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
@@ -173,7 +173,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         val result = loadFollowers(refresh, forced)
 
-        Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as ListInsightItem).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
