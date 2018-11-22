@@ -14,7 +14,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem
@@ -50,30 +49,38 @@ class CommentsUseCase
         return dbModel?.let { loadComments(site, dbModel) }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel, uiState: CommentsUiState? = commentsUiState): InsightsItem {
+    private fun loadComments(
+        site: SiteModel,
+        model: CommentsModel,
+        uiState: CommentsUiState = commentsUiState
+    ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
-        val selectedTabPosition = uiState?.tabSelectedPosition ?: 0
-        items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts)), selectedTabPosition) {
-            val updatedUiState = commentsUiState?.copy(tabSelectedPosition = it)
-            reloadComments(site, model, updatedUiState)
-        })
+
+        val selectedTabPosition = uiState.tabSelectedPosition
+        items.add(
+                TabsItem(
+                        listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
+                        selectedTabPosition
+                ) {
+                    onDataChanged(loadComments(site, model, commentsUiState.copy(tabSelectedPosition = it)))
+                })
+
+        if (selectedTabPosition == 0) {
+            items.addAll(buildAuthorsTab(model.authors))
+        } else {
+            items.addAll(buildPostsTab(model.posts))
+        }
+
         if (model.hasMoreAuthors || model.hasMorePosts) {
             items.add(Link(text = string.stats_insights_view_more) {
                 navigateTo(ViewCommentsStats(site.siteId))
             })
         }
-        return dataItem(items, uiState ?: CommentsUiState(0))
+        return dataItem(items, uiState)
     }
 
-    private fun reloadComments(site: SiteModel, model: CommentsModel, uiState: CommentsUiState?) {
-        mutableLiveData.value = loadComments(site, model, uiState ?: commentsUiState)
-    }
-
-    private val commentsUiState
-        get() = uiState as? CommentsUiState
-
-    private fun buildAuthorsTab(authors: List<CommentsModel.Author>): Tab {
+    private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
             mutableItems.add(Label(R.string.stats_comments_author_label, R.string.stats_comments_label))
@@ -88,10 +95,10 @@ class CommentsUseCase
         } else {
             mutableItems.add(Empty)
         }
-        return Tab(R.string.stats_comments_authors, mutableItems)
+        return mutableItems
     }
 
-    private fun buildPostsTab(posts: List<CommentsModel.Post>): Tab {
+    private fun buildPostsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
             mutableItems.add(Label(R.string.stats_comments_title_label, R.string.stats_comments_label))
@@ -105,8 +112,11 @@ class CommentsUseCase
         } else {
             mutableItems.add(Empty)
         }
-        return Tab(R.string.stats_comments_posts_and_pages, mutableItems)
+        return mutableItems
     }
+
+    private val commentsUiState
+        get() = uiState as? CommentsUiState ?: CommentsUiState(0)
 
     data class CommentsUiState(val tabSelectedPosition: Int) : ListUiState
 }

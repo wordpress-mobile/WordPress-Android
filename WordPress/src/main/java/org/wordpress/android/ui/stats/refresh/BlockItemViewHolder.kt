@@ -9,8 +9,6 @@ import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.Spannable
 import android.text.SpannableString
@@ -256,23 +254,15 @@ sealed class BlockItemViewHolder(
             R.layout.stats_block_tabs_item
     ) {
         private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout)
-        private val list = itemView.findViewById<RecyclerView>(R.id.recycler_view)
 
         fun bind(item: TabsItem) {
             tabLayout.clearOnTabSelectedListeners()
             tabLayout.removeAllTabs()
             item.tabs.forEach { tabItem ->
-                tabLayout.addTab(tabLayout.newTab().setText(tabItem.title))
+                tabLayout.addTab(tabLayout.newTab().setText(tabItem))
             }
 
             tabLayout.getTabAt(item.selectedTabPosition)?.select()
-
-            list.isNestedScrollingEnabled = false
-            if (list.adapter == null) {
-                list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
-                list.adapter = BlockListAdapter(imageManager)
-            }
-            (list.adapter as BlockListAdapter).update(item.tabs[item.selectedTabPosition].items)
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }

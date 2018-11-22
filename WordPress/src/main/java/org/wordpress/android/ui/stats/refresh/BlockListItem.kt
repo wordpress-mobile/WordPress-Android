@@ -70,10 +70,8 @@ sealed class BlockListItem(val type: Type) {
             BlockListItem(LINK)
 
     data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
-    data class TabsItem(val tabs: List<Tab>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
-            BlockListItem(TABS) {
-        data class Tab(@StringRes val title: Int, val items: List<BlockListItem>)
-    }
+    data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
+            BlockListItem(TABS)
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
     data class ExpandableItem(

@@ -19,7 +19,7 @@ abstract class BaseInsightsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    protected val mutableLiveData = MutableLiveData<InsightsItem>()
+    private val mutableLiveData = MutableLiveData<InsightsItem>()
     val liveData: LiveData<InsightsItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
@@ -71,6 +71,10 @@ abstract class BaseInsightsUseCase(
      * @return the list item or null when we haven't received a correct response from the API
      */
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem?
+
+    protected fun onDataChanged(data: InsightsItem) {
+        mutableLiveData.value = data
+    }
 
     protected fun failedItem(@StringRes failingType: Int, message: String): Failed {
         return Failed(type, failingType, message)
