@@ -24,9 +24,9 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {

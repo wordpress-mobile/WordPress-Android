@@ -12,9 +12,9 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.AddNewPost
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
 import javax.inject.Inject
 import javax.inject.Named
 

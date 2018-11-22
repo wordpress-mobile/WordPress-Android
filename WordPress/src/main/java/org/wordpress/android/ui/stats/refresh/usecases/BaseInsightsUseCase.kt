@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.Loading
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 
 abstract class BaseInsightsUseCase(
     val type: InsightsTypes,

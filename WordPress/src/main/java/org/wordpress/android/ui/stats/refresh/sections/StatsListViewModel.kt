@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.types
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes

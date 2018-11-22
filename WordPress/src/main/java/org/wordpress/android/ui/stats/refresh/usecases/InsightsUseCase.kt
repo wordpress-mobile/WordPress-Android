@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
 import javax.inject.Inject

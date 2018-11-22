@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.types
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -19,18 +19,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
-import org.wordpress.android.ui.stats.refresh.types.days.DaysTabViewModel
+import org.wordpress.android.ui.stats.refresh.sections.days.DaysTabViewModel
 import org.wordpress.android.ui.stats.refresh.InsightsAdapter
 import org.wordpress.android.ui.stats.refresh.InsightsTabViewModel
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.AddNewPost
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewTag
-import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType
-import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewCommentsStats
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTag
+import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.sections.StatsListViewModel.StatsListType
+import org.wordpress.android.ui.stats.refresh.sections.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
