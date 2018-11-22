@@ -14,13 +14,13 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.InsightsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.StatsViewHolder
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHolder>() {
+class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder>() {
     private var items: List<InsightsItem> = listOf()
     fun update(newItems: List<InsightsItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -34,7 +34,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InsightsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsViewHolder {
         return when (values()[viewType]) {
             LIST_INSIGHTS -> BlockListViewHolder(
                     parent,
@@ -52,7 +52,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: InsightsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StatsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as ListInsightItem)

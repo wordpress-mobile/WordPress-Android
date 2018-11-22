@@ -9,7 +9,7 @@ import org.wordpress.android.ui.stats.refresh.Empty
 class EmptyViewHolder(
     parent: ViewGroup,
     private val onActionButtonClicked: () -> Unit = {}
-) : InsightsViewHolder(parent, R.layout.insight_empty_view) {
+) : StatsViewHolder(parent, R.layout.insight_empty_view) {
     private val emptyView = itemView.findViewById<ActionableEmptyView>(R.id.actionable_empty_view)
 
     fun bind(item: Empty) {
