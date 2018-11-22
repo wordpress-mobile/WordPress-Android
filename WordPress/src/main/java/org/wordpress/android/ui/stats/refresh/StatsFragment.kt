@@ -13,10 +13,11 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.pages_fragment.*
+import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -59,8 +60,8 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun initializeViews(activity: FragmentActivity) {
-        pagesPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
-        tabLayout.setupWithViewPager(pagesPager)
+        statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
+        tabLayout.setupWithViewPager(statsPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -77,6 +78,14 @@ class StatsFragment : DaggerFragment() {
         viewModel.start(nonNullSite)
         if (!isFirstStart) {
             restorePreviousSearch = true
+        }
+
+        statsPager.setOnTouchListener { _, event ->
+            swipeToRefreshHelper.setEnabled(false)
+            if (event.action == MotionEvent.ACTION_UP) {
+                swipeToRefreshHelper.setEnabled(true)
+            }
+            return@setOnTouchListener false
         }
     }
 
