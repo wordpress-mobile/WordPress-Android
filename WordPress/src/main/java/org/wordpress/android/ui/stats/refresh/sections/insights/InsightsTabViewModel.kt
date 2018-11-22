@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections.insights
 
 import android.arch.lifecycle.LiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher

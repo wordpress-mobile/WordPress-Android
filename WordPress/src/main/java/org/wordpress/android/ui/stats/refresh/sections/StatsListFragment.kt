@@ -21,7 +21,7 @@ import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.sections.days.DaysTabViewModel
 import org.wordpress.android.ui.stats.refresh.InsightsAdapter
-import org.wordpress.android.ui.stats.refresh.InsightsTabViewModel
+import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsTabViewModel
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewCommentsStats
