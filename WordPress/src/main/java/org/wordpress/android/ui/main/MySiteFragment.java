@@ -831,9 +831,8 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void setTitle(@NonNull final String title) {
         if (isAdded()) {
-            if (title != null) {
-                mToolbarTitle = title.isEmpty() ? getString(R.string.wordpress) : title;
-            }
+            mToolbarTitle = (title == null || title.isEmpty()) ? getString(R.string.wordpress) : title;
+
             if (mToolbar != null) {
                 mToolbar.setTitle(mToolbarTitle);
             }
