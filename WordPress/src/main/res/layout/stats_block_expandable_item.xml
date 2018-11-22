@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/stats_block_item"/>
+    <include layout="@layout/stats_block_list_item"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/expandable_items"

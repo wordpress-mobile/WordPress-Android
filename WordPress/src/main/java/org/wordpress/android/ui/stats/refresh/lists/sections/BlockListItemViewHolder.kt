@@ -53,7 +53,7 @@ sealed class BlockListItemViewHolder(
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     class TitleViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_title
+            R.layout.stats_block_title_item
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Title) {
@@ -63,7 +63,7 @@ sealed class BlockListItemViewHolder(
 
     class InformationViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_information
+            R.layout.stats_block_info_item
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Information) {
@@ -73,7 +73,7 @@ sealed class BlockListItemViewHolder(
 
     class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_item
+            R.layout.stats_block_list_item
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
@@ -109,7 +109,7 @@ sealed class BlockListItemViewHolder(
 
     class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_item
+            R.layout.stats_block_list_item
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
@@ -130,7 +130,7 @@ sealed class BlockListItemViewHolder(
 
     class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_item
+            R.layout.stats_block_list_item
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
@@ -284,7 +284,7 @@ sealed class BlockListItemViewHolder(
 
     class LabelViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_label
+            R.layout.stats_block_label_item
     ) {
         private val leftLabel = itemView.findViewById<TextView>(R.id.left_label)
         private val rightLabel = itemView.findViewById<TextView>(R.id.right_label)
