@@ -19,7 +19,7 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : Scop
     abstract val data: LiveData<InsightsUiState>
 }
 
-data class InsightsUiState(val data: List<StatsItem> = listOf(), val status: StatsListState) {
+data class InsightsUiState(val data: List<StatsListItem> = listOf(), val status: StatsListState) {
     enum class StatsListState {
         DONE,
         ERROR,

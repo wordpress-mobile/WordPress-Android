@@ -20,8 +20,8 @@ import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.sections.Failed
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type
 import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 
 class InsightsAllTimeUseCaseTest : BaseUnitTest() {
@@ -215,8 +215,8 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertEquals((items[2] as Item).showDivider, false)
     }
 
-    private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): StatsItem {
-        var result: StatsItem? = null
+    private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): StatsListItem {
+        var result: StatsListItem? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

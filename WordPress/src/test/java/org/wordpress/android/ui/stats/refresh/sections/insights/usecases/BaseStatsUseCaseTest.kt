@@ -10,16 +10,16 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem
 import org.wordpress.android.ui.stats.refresh.sections.Loading
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import javax.inject.Provider
 
 class BaseStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var localDataProvider: Provider<StatsItem?>
-    @Mock lateinit var remoteDataProvider: Provider<StatsItem>
-    @Mock lateinit var localData: StatsItem
-    @Mock lateinit var remoteData: StatsItem
+    @Mock lateinit var localDataProvider: Provider<StatsListItem?>
+    @Mock lateinit var remoteDataProvider: Provider<StatsListItem>
+    @Mock lateinit var localData: StatsListItem
+    @Mock lateinit var remoteData: StatsListItem
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: TestUseCase
 
@@ -69,7 +69,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
-        val result = mutableListOf<StatsItem?>()
+        val result = mutableListOf<StatsListItem?>()
         assertThat(useCase.liveData.value).isNull()
 
         useCase.liveData.observeForever { result.add(it) }
@@ -93,17 +93,17 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     class TestUseCase(
-        private val localDataProvider: Provider<StatsItem?>,
-        private val remoteDataProvider: Provider<StatsItem>
+        private val localDataProvider: Provider<StatsListItem?>,
+        private val remoteDataProvider: Provider<StatsListItem>
     ) : BaseStatsUseCase(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {
-        override suspend fun loadCachedData(site: SiteModel): StatsItem? {
+        override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
             return localDataProvider.get()
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem {
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem {
             return remoteDataProvider.get()
         }
     }

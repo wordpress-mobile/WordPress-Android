@@ -12,8 +12,8 @@ abstract class BaseStatsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val mutableLiveData = MutableLiveData<StatsItem>()
-    val liveData: LiveData<StatsItem> = mutableLiveData
+    private val mutableLiveData = MutableLiveData<StatsListItem>()
+    val liveData: LiveData<StatsListItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
@@ -57,7 +57,7 @@ abstract class BaseStatsUseCase(
      * @param site for which we load the data
      * @return the list item or null when the local value is empty
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel): StatsItem?
+    protected abstract suspend fun loadCachedData(site: SiteModel): StatsListItem?
 
     /**
      * Fetches remote data from the endpoint.
@@ -65,7 +65,7 @@ abstract class BaseStatsUseCase(
      * @param forced is true when we want to get the fresh data
      * @return the list item or null when we haven't received a correct response from the API
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem?
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem?
 
     protected fun createFailedItem(@StringRes failingType: Int, message: String): Failed {
         return Failed(type, failingType, message)

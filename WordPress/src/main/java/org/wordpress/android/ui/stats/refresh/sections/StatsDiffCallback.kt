@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.sections
 
 import android.support.v7.util.DiffUtil.Callback
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem
 
 class StatsDiffCallback(
-    private val oldList: List<StatsItem>,
-    private val newList: List<StatsItem>
+    private val oldList: List<StatsListItem>,
+    private val newList: List<StatsListItem>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]

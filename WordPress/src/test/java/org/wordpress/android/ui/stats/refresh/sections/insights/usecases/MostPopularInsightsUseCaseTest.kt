@@ -22,9 +22,9 @@ import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.LIST_I
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.sections.Failed
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.sections.ListInsightItem
 import kotlin.math.roundToInt
 
@@ -112,8 +112,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}%")
     }
 
-    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsItem {
-        var result: StatsItem? = null
+    private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsListItem {
+        var result: StatsListItem? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

@@ -11,7 +11,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.sections.StatsItem
+import org.wordpress.android.ui.stats.refresh.sections.StatsListItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
@@ -26,12 +26,12 @@ class LatestPostSummaryUseCase
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
 ) : BaseStatsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
         val dbModel = insightsStore.getLatestPostInsights(site)
         return dbModel?.let { loadLatestPostSummaryItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
@@ -45,7 +45,7 @@ class LatestPostSummaryUseCase
         }
     }
 
-    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): StatsItem {
+    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): StatsListItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(model))
