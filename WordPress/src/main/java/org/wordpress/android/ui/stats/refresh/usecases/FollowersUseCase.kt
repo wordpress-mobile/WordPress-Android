@@ -17,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
-import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
@@ -34,7 +33,8 @@ class FollowersUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val tabsItemBuilder: TabsItemBuilder
 ) : BaseInsightsUseCase(FOLLOWERS, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
@@ -73,7 +73,8 @@ class FollowersUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(
-                TabsItem(
+                tabsItemBuilder.buildTabsItem(
+                        mutableLiveData,
                         listOf(
                                 buildTab(wpComModel, R.string.stats_followers_wordpress_com),
                                 buildTab(emailModel, R.string.stats_followers_email)

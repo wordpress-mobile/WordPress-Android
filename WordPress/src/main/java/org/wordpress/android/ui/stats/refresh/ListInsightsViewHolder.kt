@@ -13,9 +13,9 @@ class ListInsightsViewHolder(parent: ViewGroup, val imageManager: ImageManager) 
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
     fun bind(item: ListInsightItem) {
-        list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
+            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
             list.adapter = BlockListAdapter(imageManager)
         }
         (list.adapter as BlockListAdapter).update(item.items)

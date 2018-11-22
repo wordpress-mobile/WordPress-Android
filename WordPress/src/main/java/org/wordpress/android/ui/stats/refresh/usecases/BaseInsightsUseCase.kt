@@ -11,6 +11,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem.ListUiState
 import org.wordpress.android.ui.stats.refresh.Loading
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 
@@ -18,7 +19,7 @@ abstract class BaseInsightsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val mutableLiveData = MutableLiveData<InsightsItem>()
+    protected val mutableLiveData = MutableLiveData<InsightsItem>()
     val liveData: LiveData<InsightsItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
@@ -75,7 +76,12 @@ abstract class BaseInsightsUseCase(
         return Failed(type, failingType, message)
     }
 
-    protected fun dataItem(data: List<BlockListItem>): ListInsightItem {
-        return ListInsightItem(type, data)
+    protected fun dataItem(data: List<BlockListItem>, uiState: ListUiState? = null): ListInsightItem {
+        return ListInsightItem(type, data, uiState ?: this.uiState)
     }
+
+    protected val uiState: ListUiState?
+        get() {
+            return (liveData.value as? ListInsightItem)?.uiState
+        }
 }

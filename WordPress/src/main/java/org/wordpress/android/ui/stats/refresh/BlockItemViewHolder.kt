@@ -248,7 +248,10 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class TabsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+    class TabsViewHolder(
+        parent: ViewGroup,
+        val imageManager: ImageManager
+    ) : BlockItemViewHolder(
             parent,
             R.layout.stats_block_tabs_item
     ) {
@@ -256,16 +259,20 @@ sealed class BlockItemViewHolder(
         private val list = itemView.findViewById<RecyclerView>(R.id.recycler_view)
 
         fun bind(item: TabsItem) {
-            if (tabLayout.tabCount == 0) {
-                item.tabs.forEach {
-                    tabLayout.addTab(tabLayout.newTab().setText(it.title))
-                }
+            tabLayout.clearOnTabSelectedListeners()
+            tabLayout.removeAllTabs()
+            item.tabs.forEach { tabItem ->
+                tabLayout.addTab(tabLayout.newTab().setText(tabItem.title))
             }
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+
+            tabLayout.getTabAt(item.selectedTabPosition)?.select()
+
+            list.isNestedScrollingEnabled = false
             if (list.adapter == null) {
+                list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
                 list.adapter = BlockListAdapter(imageManager)
             }
-            (list.adapter as BlockListAdapter).update(item.tabs[tabLayout.selectedTabPosition].items)
+            (list.adapter as BlockListAdapter).update(item.tabs[item.selectedTabPosition].items)
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }
@@ -274,7 +281,7 @@ sealed class BlockItemViewHolder(
                 }
 
                 override fun onTabSelected(tab: Tab) {
-                    (list.adapter as BlockListAdapter).update(item.tabs[tab.position].items)
+                    item.onTabSelected(tab.position)
                 }
             })
         }

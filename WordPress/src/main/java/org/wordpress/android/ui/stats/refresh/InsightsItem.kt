@@ -16,10 +16,16 @@ sealed class InsightsItem(val type: Type, open val insightsType: InsightsTypes?)
     }
 }
 
-data class ListInsightItem(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : InsightsItem(
+data class ListInsightItem(
+    override val insightsType: InsightsTypes,
+    val items: List<BlockListItem>,
+    val uiState: ListUiState? = null
+) : InsightsItem(
         LIST_INSIGHTS,
         insightsType
-)
+) {
+    interface ListUiState
+}
 
 data class Failed(override val insightsType: InsightsTypes, @StringRes val failedType: Int, val errorMessage: String) :
         InsightsItem(FAILED, insightsType)
