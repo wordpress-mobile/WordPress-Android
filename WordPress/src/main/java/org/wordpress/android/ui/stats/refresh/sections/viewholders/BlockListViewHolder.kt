@@ -9,7 +9,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.util.image.ImageManager
 
-class ListInsightsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : InsightsViewHolder(
+class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : InsightsViewHolder(
         parent,
         layout.stats_list_block
 ) {

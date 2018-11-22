@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.values
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.InsightsViewHolder
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.ListInsightsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
@@ -36,7 +36,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InsightsViewHolder {
         return when (values()[viewType]) {
-            LIST_INSIGHTS -> ListInsightsViewHolder(
+            LIST_INSIGHTS -> BlockListViewHolder(
                     parent,
                     imageManager
             )
@@ -55,7 +55,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHol
     override fun onBindViewHolder(holder: InsightsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
-            is ListInsightsViewHolder -> holder.bind(item as ListInsightItem)
+            is BlockListViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)
             is EmptyInsightsViewHolder -> holder.bind(item as Empty)
         }
