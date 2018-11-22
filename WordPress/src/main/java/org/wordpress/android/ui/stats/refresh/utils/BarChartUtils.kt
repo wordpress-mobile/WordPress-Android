@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.wordpress.android.R.color
-import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.util.DisplayUtils
 import kotlin.math.round
 
