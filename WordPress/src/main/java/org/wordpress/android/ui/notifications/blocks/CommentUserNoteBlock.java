@@ -118,7 +118,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
             noteBlockHolder.mAvatarImageView.setContentDescription(null);
         }
-        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR, imageUrl);
+        mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, imageUrl);
 
         noteBlockHolder.mCommentTextView
                 .setText(getCommentTextOfNotification(noteBlockHolder));

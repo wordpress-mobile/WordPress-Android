@@ -1,12 +1,15 @@
 package org.wordpress.android.modules;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
 import org.wordpress.android.ui.stats.refresh.StatsListFragment;
+import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
+import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
 import dagger.Binds;
 import dagger.Module;
@@ -29,4 +32,9 @@ public abstract class ApplicationModule {
 
     @ContributesAndroidInjector
     abstract StatsFragment contributeStatsFragment();
+
+    @Provides
+    public static LiveData<ConnectionStatus> provideConnectionStatusLiveData(Context context) {
+        return new ConnectionStatusLiveData(context);
+    }
 }

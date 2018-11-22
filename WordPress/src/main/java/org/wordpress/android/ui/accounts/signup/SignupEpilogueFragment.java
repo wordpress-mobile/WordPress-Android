@@ -273,7 +273,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
                 new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
-                mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR, mPhotoUrl);
+                mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
             }
         } else {
             mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
@@ -293,7 +293,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 mHeaderEmailAddress.setText(mEmailAddress);
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);
             }
-            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR, mPhotoUrl);
+            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND, mPhotoUrl);
         }
     }
 
@@ -545,7 +545,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         if (bitmap != null) {
             mImageManager.load(mHeaderAvatar, bitmap);
         } else {
-            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR,
+            mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND,
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {

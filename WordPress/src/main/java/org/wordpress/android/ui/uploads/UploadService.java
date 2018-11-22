@@ -693,7 +693,7 @@ public class UploadService extends Service {
         }
 
         mPostUploadHandler.unregisterPostForAnalyticsTracking(postToCancel);
-        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel.getLocalSiteId()));
+        EventBus.getDefault().post(new PostEvents.PostUploadCanceled(postToCancel));
 
         return true;
     }
@@ -904,7 +904,7 @@ public class UploadService extends Service {
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
                         EventBus.getDefault().post(
-                                new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
+                                new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
                         if (event != null && event.isError() && mUploadStore.isFailedPost(event.post)) {

@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 10:54:11+0000
+Translation-Revision-Date: 2018-11-14 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="history_detail_title">גרסה</string>
+    <string name="history_detail_button_previous">הקודם</string>
+    <string name="history_detail_button_next">לשלב הבא</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">למידע נוסף</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">לא להציג שוב</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">חזרה</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">עריכת עמוד</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">עריכת פוסט</string>
+    <string name="dialog_gutenberg_compatibility_message_page">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את העמוד הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
+    <string name="dialog_gutenberg_compatibility_message">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את הפוסט הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
+    <string name="dialog_gutenberg_compatibility_title">לפני ההמשך</string>
+    <string name="media_space_used">%1$s נוצלו</string>
+    <string name="login_notification_channel_id">‎@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">יש להזין אתר של WordPress באחסון עצמי שמחובר ל-WordPress.com או ל-Jetpack</string>
+    <string name="history_loading_revision">טוען גרסה עדכנית</string>
+    <string name="history_loaded_revision">הגרסה העדכנית הוטענה</string>
+    <string name="history_load_dialog_button_positive">טעינה</string>
+    <string name="history_footer_post">הפוסט נוצר בתאריך %1$s ב-%2$s</string>
+    <string name="history_footer_page">העמוד נוצר בתאריך %1$s ב-%2$s</string>
+    <string name="history_empty_title">אין היסטוריה עדיין</string>
+    <string name="history_empty_subtitle_post">בעת ביצוע שינויים בפוסט שלך, אפשר לראות את ההיסטוריה כאן</string>
+    <string name="history_empty_subtitle_page">בעת ביצוע שינויים בעמוד שלך, אפשר לראות את ההיסטוריה כאן</string>
+    <string name="description_user">תמונת הפרופיל של המשתמש</string>
     <string name="async_promo_description_schedule_page">כעת, אפשר לצאת מהעורך והעמוד שלך יישמר ויקבע לו מועד לפרסום מאחורי הקלעים! כדאי לנסות!</string>
     <string name="async_promo_description_publish_post">כעת, אפשר לצאת מהעורך והפוסט שלך יישמר ויפורסם מאחורי הקלעים! כדאי לנסות!</string>
     <string name="async_promo_description_publish_page">כעת, אפשר לצאת מהעורך והעמוד שלך יישמר ויפורסם מאחורי הקלעים! כדאי לנסות!</string>
-    <string name="image_size_full_class">גודל מלא</string>
-    <string name="image_size_large_class">גודל גדול</string>
-    <string name="image_size_medium_class">גודל בינוני</string>
-    <string name="image_size_thumbnail_class">גודל של תמונה ממוזערת</string>
     <string name="image_size_full_label">גודל מלא</string>
     <string name="image_size_large_label">גדול</string>
     <string name="image_size_medium_label">בינוני</string>
@@ -170,10 +189,14 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
+    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %1$s בשעה %2$s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
     <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
     <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
+    <string name="activity_log_currently_restoring_message">משחזר לתאריך  %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
+    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %1$s %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
@@ -262,7 +285,6 @@ Language: he_IL
     <string name="content_description_person_reading_device_notification">קריאת מכשיר עם הודעות</string>
     <string name="content_description_people_looking_charts">אנשים מסתכלים על גרפים ותרשימים</string>
     <string name="comment_title">%s ב-%s</string>
-    <string name="dialog_confirm_delete_permanently_page">האם ברצונך למחוק את העמוד לצמיתות?</string>
     <string name="dialog_confirm_delete_permanently_post">האם ברצונך למחוק את הפוסט לצמיתות?</string>
     <string name="notification_site_creation_title_in_progress">יוצר את האתר… הפעולה תימשך מספר דקות.</string>
     <string name="notification_channel_important_title">חשוב</string>
@@ -300,6 +322,7 @@ Language: he_IL
     <string name="stats_tab_tap_content_description">מציג %s</string>
     <string name="stats_legend">מקרא של גרף הנתונים הסטטיסטיים</string>
     <string name="fab_create_desc">יצירה</string>
+    <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="stats_bar_week_desc">שבוע מתוך %s</string>
     <string name="stats_bar_date_value_desc">%s, %d צפיות</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -335,7 +358,9 @@ Language: he_IL
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל-Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב-Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
+    <string name="menu_visual_mode_done_snackbar">הוחלף לעורך החזותי</string>
     <string name="menu_visual_mode">עורך חזותי</string>
+    <string name="menu_html_mode_done_snackbar">הוחלף לעורך HTML</string>
     <string name="menu_html_mode">עורך HTML</string>
     <string name="menu_preview">תצוגה מקדימה</string>
     <string name="menu_publish_now">לפרסם כעת</string>
@@ -408,7 +433,6 @@ Language: he_IL
     <string name="dialog_confirm_publish_message_page">עמוד זה יפורסם מייד.</string>
     <string name="dialog_confirm_publish_message_post">פוסט זה יפורסם מייד.</string>
     <string name="dialog_confirm_publish_title">הכול מוכן לפרסום?</string>
-    <string name="dialog_confirm_delete_page">עמוד זה יימחק ויועבר לפח</string>
     <string name="dialog_confirm_delete_post">פוסט זה יימחק ויועבר לפח</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d פוסטים / עמודים לא הועלו</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d עמודים לא הועלו</string>
@@ -524,6 +548,7 @@ Language: he_IL
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ימטב את התמונות שלך ויציג אותן ממיקום השרת הקרוב ביותר למבקרים שלך. שימוש ברשת שליחת התוכן העולמית שלנו ישפר את מהירות הטעינה של האתר שלך.</string>
     <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
     <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
+    <string name="stats_jetpack_connection_setup">התקנת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>
     <string name="plugin_info_requires_version">גרסת WordPress נדרשת</string>
@@ -553,6 +578,7 @@ Language: he_IL
     <string name="site_settings_tags_hint">ניהול התגיות באתר שלך</string>
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
+    <string name="dlg_confirm_delete_tag">האם למחוק את התגית \'%s\' לצמיתות?</string>
     <string name="error_tag_exists">כבר קיימת תגית עם שם זה</string>
     <string name="add_new_tag">הוספת תגית חדשה</string>
     <string name="tag_description_hint">תיאור</string>
@@ -608,7 +634,6 @@ Language: he_IL
     <string name="login_text_otp_another">שליחת קוד נוסף בהודעת טקסט במקום.</string>
     <string name="enter_verification_code_sms">שלחנו לך הודעת טקסט למספר הטלפון שמסתיים בספרות %s. יש להזין את קוד האימות שהתקבל בהודעת הטקסט.</string>
     <string name="error_generic_error">לא ניתן היה לבצע את הפעולה</string>
-    <string name="error_media_recover_page">אין אפשרות להעלות את פריטי המדיה של העמוד</string>
     <string name="error_media_recover_post">אין אפשרות להעלות את המדיה של הפוסט</string>
     <string name="image_size">גדולה</string>
     <string name="uploading_subtitle_media_only_one">נותר קובץ אחד</string>
@@ -696,7 +721,6 @@ Language: he_IL
     <string name="notification_settings_master_status_on">מופעל</string>
     <string name="max_video_resolution">גודל מקסימלי של קובץ וידאו</string>
     <string name="max_thumbnail_px_size">גודל מקסימלי של קובץ תמונה</string>
-    <string name="error_page_does_not_exist">הפוסט לא מייצר עוד יציאות</string>
     <string name="error_upload_post_media_param">אירעה שגיאה בטעינה של המדיה בפוסט הנוכחי: %s.</string>
     <string name="error_upload_post_param">אירעה שגיאה בטעינה של הפוסט הנוכחי: %s.</string>
     <string name="add_media_progress">מוסיף מדיה</string>
@@ -713,6 +737,8 @@ Language: he_IL
     <string name="error_upload_page_media_param">אירעה שגיאה בהעלאה של המדיה בעמוד זה: %s.</string>
     <string name="error_upload_page_param">אירעה שגיאה בעת העלאת העמוד: %s.</string>
     <string name="async_promo_link">כיצד זה עובד?</string>
+    <string name="async_promo_description_schedule_post">כעת, אפשר לצאת מהעורך והפוסט שלך יישמר ויפורסם מאחורי הקלעים! כדאי לנסות!</string>
+    <string name="async_promo_title_publish">לפרסם בלי לחץ</string>
     <string name="editor_uploading_post">הפוסט נטען</string>
     <string name="uploading_media">מעלה מדיה…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">האם ההחלטה סופית? מחיקת הפוסט תבטל גם את העלאת המדיה.</string>
@@ -741,7 +767,7 @@ Language: he_IL
     <string name="login_username_at">‎@‎%s‎</string>
     <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue">המשך</string>
-    <string name="connect_more">חיבור של אתר אחר</string>
+    <string name="connect_more">חיבור אתר נוסף</string>
     <string name="enter_wpcom_password">הזן את הסיסמה שלך ל-WordPress.com.</string>
     <string name="login_magic_link_email_requesting">שולח בקשה לאימייל להתחברות</string>
     <string name="login_magic_links_sent_label">הקישור המיוחד שלך בדרך! עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
@@ -757,7 +783,7 @@ Language: he_IL
     <string name="login_promo_text_notifications">ההודעות שלך אתך בכל מקום - אפשר לראות תגובות ולייקים בזמן אמת.</string>
     <string name="login_promo_text_anytime">אפשר לבדוק את העדכונים באתרים המועדפים עליך ולהצטרף לשיחה בכל מקום ובכל זמן.</string>
     <string name="login_promo_text_realtime">ניתן לראות את הפעולות של קוראים מכל העולם באתר שלך - בזמן אמת.</string>
-    <string name="login_promo_text_onthego">שליחה לפרסום כשנמצאים בפארק. כתיבת בלוג כשנוסעים באוטובוס. כתיבת תגובה כשיושבים בבית קפה. השירות של WordPress אתך בכל מקום.</string>
+    <string name="login_promo_text_onthego">עדכונים לאתר מהפארק. פרסום פוסט בבלוג מהאוטובוס. כתיבת תגובה מבית הקפה. השירות של WordPress אתך בכל מקום.</string>
     <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
     <string name="image_optimization_promo_title">להפעיל את מיטוב התמונות?</string>
     <string name="leave_off">להשאיר מכובה</string>
@@ -773,7 +799,7 @@ Language: he_IL
     <string name="editor_dropped_title_images_not_allowed">אין אפשרות להוסיף תמונות לכותרת</string>
     <string name="editor_dropped_text_error">אירעה שגיאה בעת הוספת הטקסט</string>
     <string name="editor_dropped_html_images_not_allowed">אין אפשרות להוסיף תמונות כשהעורך במצב של HTML</string>
-    <string name="editor_content_hint">מומלץ לשתף את הסיפור שלך כאן…</string>
+    <string name="editor_content_hint">כאן המקום לשתף את הסיפור שלך…</string>
     <string name="post_status_trashed">הועבר לפח</string>
     <string name="post_status_scheduled">מתוזמן לפרסום</string>
     <string name="post_status_post_private">פרטי</string>
@@ -943,6 +969,7 @@ Language: he_IL
     <string name="media_upload_error">אירעה שגיאה בהעלאת פריטי מדיה</string>
     <string name="retry">יש לנסות שנית</string>
     <string name="confirm">אישור</string>
+    <string name="xmlrpc_endpoint_forbidden_error">לא ניתן להתחבר. התקבלה שגיאת 403 בניסיון לגשת ל-\n נקודת הקצה XMLRPC של האתר שלך. כדי שהאפליקציה תוכל לבצע התקשרות עם האתר שלך, יש להפעיל אפשרות זו. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="xmlrpc_post_blocked_error">לא ניתן להתחבר. חברת האחסון שלך חוסמת בקשות POST, והאפליקציה דורשת את\n הפעלת האפשרות הזו כדי לבצע התקשרות עם האתר שלך. יש ליצור קשר עם חברת האחסון שלך כדי לפתור בעיה זו.</string>
     <string name="reader_hint_search_followed_sites">חיפוש באתרים תחת מעקב</string>
     <string name="visual_editor_disabled">עורך ויזואלי מושבת</string>
@@ -1080,7 +1107,7 @@ Language: he_IL
     <string name="checking_email">בודק אימייל</string>
     <string name="magic_link_unavailable_error_message">לא זמין כרגע. יש להזין סיסמה</string>
     <string name="logging_in">נכנס</string>
-    <string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
+    <string name="enter_your_password_instead">להזין סיסמה במקום</string>
     <string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
     <string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
     <string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
@@ -1101,6 +1128,7 @@ Language: he_IL
     <string name="delete_site_hint">מחיקת אתר</string>
     <string name="export_site_hint">יצוא האתר שלך לקובץ XML</string>
     <string name="primary_domain">דומיין ראשי</string>
+    <string name="error_deleting_site_summary">אירעה שגיאה בעת מחיקת האתר שלך. יש לפנות לתמיכה לסיוע.</string>
     <string name="error_deleting_site">שגיאה בעת מחיקת האתר</string>
     <string name="site_settings_export_content_title">יצוא תוכן</string>
     <string name="confirm_delete_site_prompt">יש להקליד את הכתובת %1$s בשדה להלן כדי לאשר. לאחר מכן, האתר שלך ייעלם לעד.</string>
@@ -1114,6 +1142,9 @@ Language: he_IL
     <string name="editor_remove_failed_uploads">הסרת העלאות שנכשלו</string>
     <string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. לא ניתן לשמור או לפרסם\n הפוסט שלך במצב זה. האם ברצונך להסיר את כל המדיה שלא הועלתה?</string>
     <string name="site_settings_advanced_header">אפשרויות מתקדמות</string>
+    <string name="comments_empty_list_filtered_trashed">אין תגובות שהועברו לפח</string>
+    <string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
+    <string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
     <string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
     <string name="alignment_center">מרכז</string>
     <string name="post_format_video">וידאו</string>
@@ -1162,7 +1193,7 @@ Language: he_IL
     <string name="post_settings_set_featured_image">בחירת תמונה ראשית</string>
     <string name="post_settings_featured_image">תמונה ראשית</string>
     <string name="visual_editor_enabled">עורך ויזואלי מופעל</string>
-    <string name="editor_content_placeholder">מומלץ לשתף את הסיפור שלך כאן…</string>
+    <string name="editor_content_placeholder">כאן המקום לשתף את הסיפור שלך…</string>
     <string name="editor_page_title_placeholder">כותרת עמוד</string>
     <string name="editor_post_title_placeholder">כותרת הפוסט</string>
     <string name="email_address">כתובת אימייל</string>
@@ -1172,6 +1203,7 @@ Language: he_IL
     <string name="mnu_comment_delete_permanently">מחיקה</string>
     <string name="mnu_comment_untrash">שחזור</string>
     <string name="comment_deleted_permanently">התגובה נמחקה</string>
+    <string name="comments_empty_list_filtered_spam">אין תגובות זבל</string>
     <string name="comment_status_all">הכול</string>
     <string name="could_not_load_page">לא ניתן היה לטעון את העמוד</string>
     <string name="off">כיבוי</string>
@@ -1319,12 +1351,18 @@ Language: he_IL
     <string name="page_updated">עמוד עודכן</string>
     <string name="post_updated">פוסט עודכן</string>
     <string name="page_published">עמוד פורסם</string>
-    <string name="post_published">פוסט פורסם</string>
+    <string name="post_published">הפוסט פורסם</string>
     <string name="theme_no_search_result_found">לא נמצאו תבניות.</string>
     <string name="reader_label_gap_marker">פוסטים נוספים</string>
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
+    <string name="notifications_empty_view_reader">מעבר אל Reader</string>
+    <string name="notifications_empty_action_followers_likes">לבלוט בשטח: הוספת תגובה על פוסטים שקראת</string>
+    <string name="notifications_empty_action_comments">הצטרפות לדיון: הוספת תגובה על פוסטים בבלוגים תחת מעקב שלך</string>
+    <string name="notifications_empty_action_unread">להכניס קצת עניין בדיון: כתיבת פוסט חדש</string>
     <string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
+    <string name="notifications_empty_comments">אין תגובות עדיין</string>
+    <string name="notifications_empty_unread">אין יותר חדש!</string>
     <string name="stats_widget_error_jetpack_no_blogid">נא לגשת לסטטיסטיקות באפליקציה ולהוסיף וידג\'ט</string>
     <string name="stats_widget_error_readd_widget">יש להסיר את הוידג\'ט ולהוסיף אותו שוב</string>
     <string name="stats_widget_error_no_visible_blog">לא ניתן לגשת לסטטיסטיקות ללא אתר גלוי</string>
@@ -1364,8 +1402,6 @@ Language: he_IL
     <string name="notification_settings_item_other_account_emails_summary">תמיד נשלח אימיילים חשובים הקשורים לאתר, אבל לפעמים תקבלו גם תוספות מועילות.</string>
     <string name="stats_insights_latest_post_trend">עברו %1$s מאז פרסום %2$s. קצת מידע על תפקוד הפוסט עד כה…</string>
     <string name="stats_insights_latest_post_summary">סיכום פוסטים אחרונים</string>
-    <string name="yesterday">אתמול</string>
-    <string name="days_ago">לפני %d ימים</string>
     <string name="connectionbar_no_connection">אין חיבור</string>
     <string name="button_publish">פרסום</string>
     <string name="button_edit">עריכה</string>
@@ -1373,12 +1409,10 @@ Language: he_IL
     <string name="button_preview">תצוגה מקדימה</string>
     <string name="button_trash">פח</string>
     <string name="button_stats">נתונים סטטיסטיים</string>
-    <string name="page_deleted">העמוד נמחק</string>
     <string name="button_back">חזרה</string>
     <string name="stats_no_activity_this_period">אין פעילות בפרק זמן זה</string>
     <string name="post_trashed">הפוסט הועבר לפח</string>
     <string name="post_deleted">הפוסט נמחק</string>
-    <string name="page_trashed">העמוד הועבר לפח</string>
     <string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לאתר זה</string>
     <string name="reader_toast_err_follow_blog_not_found">האתר לא נמצא</string>
     <string name="undo">ביטול פעולה אחרונה</string>
@@ -1513,7 +1547,6 @@ Language: he_IL
     <string name="ssl_certificate_details">פרטים</string>
     <string name="cab_selected">%d נבחרו</string>
     <string name="signing_out">יוצא מהמערכת…</string>
-    <string name="pages_empty_list">אין עמודים עדיין. למה לא ליצור אחד?</string>
     <string name="comment_reply_to_user">להגיב ל-%s</string>
     <string name="posts_empty_list">אין פוסטים עדיין. למה לא ליצור אחד?</string>
     <string name="comment_trashed">התגובה הועברה לפח</string>
@@ -1591,7 +1624,6 @@ Language: he_IL
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
     <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
     <string name="error_refresh_media">לא ניתן לרענן את פריטי המדיה כעת</string>
-    <string name="error_deleting_page">אירעה שגיאה בעת מחיקת העמוד</string>
     <string name="wordpress_blog">אתר ב-WordPress</string>
     <string name="image_settings">הגדרות תמונה</string>
     <string name="local_changes">שינויים מקומיים</string>
@@ -1713,7 +1745,7 @@ Language: he_IL
     <string name="new_notifications">%d התראות חדשות</string>
     <string name="follows">עוקבים</string>
     <string name="note_reply_successful">תגובה פורסמה</string>
-    <string name="sign_in">התחבר</string>
+    <string name="sign_in">להתחבר</string>
     <string name="loading">טוען…</string>
     <string name="httppassword">סיסמה</string>
     <string name="httpuser">שם משתמש</string>
@@ -1721,7 +1753,7 @@ Language: he_IL
     <string name="publish_date">פרסם</string>
     <string name="post_content">תוכן (הקליקו להוספת טקסט או קבצי מדיה)</string>
     <string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
-    <string name="log_in">התחבר</string>
+    <string name="log_in">להתחבר</string>
     <string name="username">שם משתמש</string>
     <string name="password">סיסמה</string>
     <string name="reader">קורא</string>
@@ -1745,9 +1777,9 @@ Language: he_IL
     <string name="immediately">מיד</string>
     <string name="quickpress_add_alert_title">קבע שם מקוצר</string>
     <string name="settings">הגדרות</string>
-    <string name="today">היום</string>
     <string name="quickpress_add_error">שם קיצור הדרך אינו יכול להיות ריק</string>
     <string name="quickpress_window_title">בחר אתר לקיצור דרך  קוויקפרס</string>
+    <string name="pages_private">פרטי</string>
     <string name="categories">קטגוריות</string>
     <string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
     <string name="title">כותרת</string>

@@ -40,6 +40,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var useCase: TagsAndCategoriesUseCase
+    private val pageSize = 6
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
@@ -65,9 +66,9 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                 listOf(firstTag, secondTag),
                 categoryViews
         )
-        whenever(insightsStore.fetchTags(site, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        TagsModel(listOf(singleTag, category))
+                        TagsModel(listOf(singleTag, category), hasMore = false)
                 )
         )
 
@@ -75,7 +76,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(4)
+            assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
             assertCategory(this.items[2], categoryName, categoryViews)
@@ -84,15 +85,37 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
                         assertSingleTag(this.expandedItems[0], firstTag.name, null)
                         assertSingleTag(this.expandedItems[1], secondTag.name, null)
                     }
-            assertLink(this.items[3])
+        }
+    }
+
+    @Test
+    fun `adds view more button when hasMore`() = test {
+        val forced = false
+        val singleTagViews: Long = 10
+        val tagItem = TagModel.Item("tag1", "tag", "url.com")
+        val tag = TagModel(listOf(tagItem), singleTagViews)
+        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+                OnInsightsFetched(
+                        TagsModel(listOf(tag), hasMore = true)
+                )
+        )
+
+        val result = loadTags(true, forced)
+
+        assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        (result as ListInsightItem).apply {
+            assertThat(this.items).hasSize(3)
+            assertTitle(this.items[0])
+            assertSingleTag(this.items[1], tagItem.name, singleTagViews.toString())
+            assertLink(this.items[2])
         }
     }
 
     @Test
     fun `maps empty tags to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchTags(site, forced)).thenReturn(
-                OnInsightsFetched(TagsModel(listOf()))
+        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
+                OnInsightsFetched(TagsModel(listOf(), hasMore = false))
         )
 
         val result = loadTags(true, forced)
@@ -109,7 +132,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchTags(site, forced)).thenReturn(
+        whenever(insightsStore.fetchTags(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

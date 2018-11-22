@@ -2,6 +2,7 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.support.v7.app.AlertDialog
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -35,7 +36,7 @@ class SupportHelper {
         val (layout, emailEditText, nameEditText) =
                 supportIdentityInputDialogLayout(context, isNameInputHidden, email, name)
 
-        val dialog = AlertDialog.Builder(context, R.style.Calypso_Dialog)
+        val dialog = AlertDialog.Builder(ContextThemeWrapper(context, R.style.Calypso_Dialog))
                 .setView(layout)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -104,7 +105,7 @@ private fun supportIdentityInputDialogLayout(
 
     val emailEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_email_edit_text)
     emailEditText.setText(emailSuggestion)
-    emailEditText.setSelection(0, emailSuggestion?.length ?: 0)
+    emailEditText.selectAll()
 
     val nameEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_name_edit_text)
     nameEditText.setText(nameSuggestion)

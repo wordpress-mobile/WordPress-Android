@@ -6,16 +6,20 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -38,10 +42,17 @@ public class FullScreenDialogFragment extends DialogFragment {
     private OnConfirmListener mOnConfirmListener;
     private OnDismissListener mOnDismissListener;
     private String mAction;
+    private String mSubtitle;
     private String mTitle;
+    private Toolbar mToolbar;
+    private boolean mHideActivityBar;
+    private int mToolbarColor;
 
     private static final String ARG_ACTION = "ARG_ACTION";
+    private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
+    private static final String ARG_SUBTITLE = "ARG_SUBTITLE";
     private static final String ARG_TITLE = "ARG_TITLE";
+    private static final String ARG_TOOLBAR_COLOR = "ARG_TOOLBAR_COLOR";
     private static final int ID_ACTION = 1;
 
     public static final String TAG = FullScreenDialogFragment.class.getSimpleName();
@@ -74,6 +85,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         dialog.setContent(Fragment.instantiate(builder.mContext, builder.mClass.getName(), builder.mArguments));
         dialog.setOnConfirmListener(builder.mOnConfirmListener);
         dialog.setOnDismissListener(builder.mOnDismissListener);
+        dialog.setHideActivityBar(builder.mHideActivityBar);
         return dialog;
     }
 
@@ -81,6 +93,9 @@ public class FullScreenDialogFragment extends DialogFragment {
         Bundle bundle = new Bundle();
         bundle.putString(ARG_ACTION, builder.mAction);
         bundle.putString(ARG_TITLE, builder.mTitle);
+        bundle.putString(ARG_SUBTITLE, builder.mSubtitle);
+        bundle.putInt(ARG_TOOLBAR_COLOR, builder.mToolbarColor);
+        bundle.putBoolean(ARG_HIDE_ACTIVITY_BAR, builder.mHideActivityBar);
         return bundle;
     }
 
@@ -137,9 +152,13 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         initBuilderArguments();
+
+        if (mHideActivityBar) {
+            hideActivityBar();
+        }
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.full_screen_dialog_fragment, container, false);
         initToolbar(view);
@@ -151,7 +170,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ((FullScreenDialogContent) getContent()).onViewCreated(mController);
     }
 
@@ -159,6 +178,10 @@ public class FullScreenDialogFragment extends DialogFragment {
     public void dismiss() {
         if (mOnDismissListener != null) {
             mOnDismissListener.onDismiss();
+        }
+
+        if (mHideActivityBar) {
+            showActivityBar();
         }
 
         getFragmentManager().popBackStackImmediate();
@@ -196,12 +219,30 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
+     * Hide {@link android.support.v7.app.AppCompatActivity} bar when showing fullscreen dialog.
+     */
+    public void hideActivityBar() {
+        FragmentActivity activity = getActivity();
+
+        if (activity instanceof AppCompatActivity) {
+            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+
+            if (actionBar != null && actionBar.isShowing()) {
+                actionBar.hide();
+            }
+        }
+    }
+
+    /**
      * Initialize arguments passed in {@link Builder}.
      */
     private void initBuilderArguments() {
         Bundle bundle = getArguments();
-        mTitle = bundle.getString(ARG_TITLE);
         mAction = bundle.getString(ARG_ACTION);
+        mTitle = bundle.getString(ARG_TITLE);
+        mSubtitle = bundle.getString(ARG_SUBTITLE);
+        mToolbarColor = bundle.getInt(ARG_TOOLBAR_COLOR);
+        mHideActivityBar = bundle.getBoolean(ARG_HIDE_ACTIVITY_BAR);
     }
 
     /**
@@ -210,17 +251,20 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param view {@link View}
      */
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
-        toolbar.setTitle(mTitle);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_close_white_24dp));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
+        mToolbar.setTitle(mTitle);
+        mToolbar.setSubtitle(mSubtitle);
+        mToolbar.setSubtitleTextAppearance(view.getContext(), R.style.Toolbar_Subtitle);
+        mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
+        mToolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_close_white_24dp));
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onDismissClicked();
             }
         });
 
-        Menu menu = toolbar.getMenu();
+        Menu menu = mToolbar.getMenu();
         MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
         action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         action.setOnMenuItemClickListener(
@@ -270,6 +314,15 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     /**
+     * Set flag to hide activity bar when showing fullscreen dialog.
+     *
+     * @param hide boolean to hide activity bar
+     */
+    public void setHideActivityBar(boolean hide) {
+        this.mHideActivityBar = hide;
+    }
+
+    /**
      * Set callback to call when dialog is closed due to confirm click.
      *
      * @param listener {@link OnConfirmListener} interface to call on confirm click
@@ -285,6 +338,28 @@ public class FullScreenDialogFragment extends DialogFragment {
      */
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
         this.mOnDismissListener = listener;
+    }
+
+    /**
+     * Set {@link FullScreenDialogFragment} subtitle text.
+     *
+     * @param text {@link String} to set as subtitle text
+     */
+    public void setSubtitle(@NonNull String text) {
+        mSubtitle = text;
+        mToolbar.setSubtitle(mSubtitle);
+    }
+
+    /**
+     * Set {@link FullScreenDialogFragment} subtitle text.
+     *
+     * @param textId resource ID to set as subtitle text
+     */
+    public void setSubtitle(@StringRes int textId) {
+        if (getContext() != null) {
+            mSubtitle = getContext().getString(textId);
+            mToolbar.setSubtitle(mSubtitle);
+        }
     }
 
     /**
@@ -308,14 +383,32 @@ public class FullScreenDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Show {@link android.support.v7.app.AppCompatActivity} bar when hiding fullscreen dialog.
+     */
+    public void showActivityBar() {
+        FragmentActivity activity = getActivity();
+
+        if (activity instanceof AppCompatActivity) {
+            ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+
+            if (actionBar != null && !actionBar.isShowing()) {
+                actionBar.show();
+            }
+        }
+    }
+
     public static class Builder {
         Bundle mArguments;
         Class<? extends Fragment> mClass;
         Context mContext;
         OnConfirmListener mOnConfirmListener;
         OnDismissListener mOnDismissListener;
-        String mAction;
-        String mTitle;
+        String mAction = "";
+        String mSubtitle = "";
+        String mTitle = "";
+        boolean mHideActivityBar = false;
+        int mToolbarColor = R.color.color_primary;
 
         /**
          * Builder to construct {@link FullScreenDialogFragment}.
@@ -339,6 +432,7 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set {@link FullScreenDialogFragment} action text.
          *
          * @param text {@link String} to set as action text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setAction(@NonNull String text) {
             this.mAction = text;
@@ -375,9 +469,43 @@ public class FullScreenDialogFragment extends DialogFragment {
         }
 
         /**
+         * Set flag to hide activity bar when showing fullscreen dialog.
+         *
+         * @param hide boolean to hide activity bar
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setHideActivityBar(boolean hide) {
+            this.mHideActivityBar = hide;
+            return this;
+        }
+
+        /**
+         * Set {@link FullScreenDialogFragment} subtitle text.
+         *
+         * @param text {@link String} to set as subtitle text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setSubtitle(@NonNull String text) {
+            this.mSubtitle = text;
+            return this;
+        }
+
+        /**
+         * Set {@link FullScreenDialogFragment} subtitle text.
+         *
+         * @param textId resource ID to set as subtitle text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setSubtitle(@StringRes int textId) {
+            this.mSubtitle = mContext.getString(textId);
+            return this;
+        }
+
+        /**
          * Set {@link FullScreenDialogFragment} title text.
          *
          * @param text {@link String} to set as title text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setTitle(@NonNull String text) {
             this.mTitle = text;
@@ -388,9 +516,21 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set {@link FullScreenDialogFragment} title text.
          *
          * @param textId resource ID to set as title text
+         * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setTitle(@StringRes int textId) {
             this.mTitle = mContext.getString(textId);
+            return this;
+        }
+
+        /**
+         * Set {@link FullScreenDialogFragment} toolbar color.
+         *
+         * @param colorId resource ID to set as toolbar color
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setToolbarColor(@ColorRes int colorId) {
+            this.mToolbarColor = colorId;
             return this;
         }
 
