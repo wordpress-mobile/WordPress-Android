@@ -31,10 +31,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
-            BLOCK_LIST -> BlockListViewHolder(
-                    parent,
-                    imageManager
-            )
+            BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             LOADING -> LoadingViewHolder(parent)
