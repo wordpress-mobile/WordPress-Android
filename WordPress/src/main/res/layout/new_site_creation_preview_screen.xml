@@ -50,7 +50,7 @@
                     android:id="@+id/sitePreviewWebUrlTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/wp_grey_dark"
+                    android:textColor="@color/wp_grey_darken_20"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="example.wordpress.com"/>
             </LinearLayout>
