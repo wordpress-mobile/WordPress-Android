@@ -3,16 +3,16 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.FailedViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.FailedViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.values
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BaseStatsViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LoadingViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.BaseStatsViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.BlockListViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
 class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
@@ -31,7 +31,10 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
-            BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
+            BLOCK_LIST -> BlockListViewHolder(
+                    parent,
+                    imageManager
+            )
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             LOADING -> LoadingViewHolder(parent)
