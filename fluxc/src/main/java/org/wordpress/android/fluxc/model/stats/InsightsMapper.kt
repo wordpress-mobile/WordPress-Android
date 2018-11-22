@@ -12,9 +12,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.MostPopularResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -145,7 +145,10 @@ class InsightsMapper
         return TagModel.Item(this.name, this.type, this.link)
     }
 
-    fun map(response: PublicizeResponse): PublicizeModel {
-        return PublicizeModel(response.services.map { PublicizeModel.Service(it.service, it.followers) })
+    fun map(response: PublicizeResponse, pageSize: Int): PublicizeModel {
+        return PublicizeModel(
+                response.services.take(pageSize).map { PublicizeModel.Service(it.service, it.followers) },
+                response.services.size > pageSize
+        )
     }
 }

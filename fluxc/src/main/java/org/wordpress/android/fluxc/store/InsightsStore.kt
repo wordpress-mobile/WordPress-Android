@@ -9,8 +9,8 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
+import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType
@@ -220,22 +220,23 @@ class InsightsStore
     }
 
     // Publicize stats
-    suspend fun fetchPublicizeData(siteModel: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
-        val response = restClient.fetchPublicizeData(siteModel, forced = forced)
-        return@withContext when {
-            response.isError -> {
-                OnInsightsFetched(response.error)
+    suspend fun fetchPublicizeData(siteModel: SiteModel, pageSize: Int, forced: Boolean = false) =
+            withContext(coroutineContext) {
+                val response = restClient.fetchPublicizeData(siteModel, pageSize = pageSize + 1, forced = forced)
+                return@withContext when {
+                    response.isError -> {
+                        OnInsightsFetched(response.error)
+                    }
+                    response.response != null -> {
+                        sqlUtils.insert(siteModel, response.response)
+                        OnInsightsFetched(insightsMapper.map(response.response, pageSize))
+                    }
+                    else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+                }
             }
-            response.response != null -> {
-                sqlUtils.insert(siteModel, response.response)
-                OnInsightsFetched(insightsMapper.map(response.response))
-            }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
-        }
-    }
 
-    fun getPublicizeData(site: SiteModel): PublicizeModel? {
-        return sqlUtils.selectPublicizeInsights(site)?.let { insightsMapper.map(it) }
+    fun getPublicizeData(site: SiteModel, pageSize: Int): PublicizeModel? {
+        return sqlUtils.selectPublicizeInsights(site)?.let { insightsMapper.map(it, pageSize) }
     }
 
     data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {

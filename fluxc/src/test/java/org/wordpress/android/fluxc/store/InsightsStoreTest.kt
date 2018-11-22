@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
-import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
+import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.AllTimeResponse
@@ -31,8 +31,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse.Discussion
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
@@ -464,13 +464,13 @@ class InsightsStoreTest {
                 PUBLICIZE_RESPONSE
         )
         val forced = true
-        whenever(insightsRestClient.fetchPublicizeData(site, 6, forced)).thenReturn(
+        whenever(insightsRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchPublicizeData(site, forced)
+        val responseModel = store.fetchPublicizeData(site, PAGE_SIZE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
         verify(sqlUtils).insert(site, PUBLICIZE_RESPONSE)
@@ -480,9 +480,9 @@ class InsightsStoreTest {
     fun `returns publicize data from db`() {
         whenever(sqlUtils.selectPublicizeInsights(site)).thenReturn(PUBLICIZE_RESPONSE)
         val model = mock<PublicizeModel>()
-        whenever(mapper.map(PUBLICIZE_RESPONSE)).thenReturn(model)
+        whenever(mapper.map(PUBLICIZE_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getPublicizeData(site)
+        val result = store.getPublicizeData(site, PAGE_SIZE)
 
         assertThat(result).isEqualTo(model)
     }
@@ -493,9 +493,9 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<PublicizeResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchPublicizeData(site, 6, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchPublicizeData(site, forced)
+        val responseModel = store.fetchPublicizeData(site, PAGE_SIZE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
