@@ -35,6 +35,7 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
+
     data class Item(
         @DrawableRes val icon: Int? = null,
         val iconUrl: String? = null,
@@ -66,22 +67,23 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
+
     data class Link(@DrawableRes val icon: Int? = null, @StringRes val text: Int, val action: () -> Unit) :
             BlockListItem(LINK)
 
     data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
+
     data class TabsItem(val tabs: List<Tab>) : BlockListItem(TABS) {
         data class Tab(@StringRes val title: Int, val items: List<BlockListItem>)
     }
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
+
     data class ExpandableItem(
         val header: Item,
         val expandedItems: List<BlockListItem>,
         var isExpanded: Boolean = false
-    ) : BlockListItem(
-            EXPANDABLE_ITEM
-    )
+    ) : BlockListItem(EXPANDABLE_ITEM)
 
     object Empty : BlockListItem(EMPTY)
 }
