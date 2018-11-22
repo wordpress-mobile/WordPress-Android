@@ -53,6 +53,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     private val sinceLabel = "4 days"
     private val totalCount = 50
     private val wordPressLabel = "wordpress"
+    private val pageSize = 6
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
@@ -73,16 +74,21 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps WPCOM followers to UI model`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        FollowersModel(totalCount, listOf(FollowerModel(avatar, user, url, dateSubscribed)))
+                        FollowersModel(
+                                totalCount,
+                                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+                                hasMore = false
+                        )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
@@ -91,7 +97,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -107,17 +113,22 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps email followers to UI model`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        FollowersModel(totalCount, listOf(FollowerModel(avatar, user, url, dateSubscribed)))
+                        FollowersModel(
+                                totalCount,
+                                listOf(FollowerModel(avatar, user, url, dateSubscribed)),
+                                hasMore = false
+                        )
                 )
         )
 
@@ -125,7 +136,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -141,19 +152,21 @@ class FollowersUseCaseTest : BaseUnitTest() {
     fun `maps empty followers to UI model`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
@@ -162,7 +175,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -179,16 +192,17 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
@@ -207,15 +221,16 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(insightsStore.fetchWpComFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         model = FollowersModel(
                                 0,
-                                listOf()
+                                listOf(),
+                                hasMore = false
                         )
                 )
         )
-        whenever(insightsStore.fetchEmailFollowers(site, forced)).thenReturn(
+        whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

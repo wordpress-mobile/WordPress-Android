@@ -31,7 +31,7 @@ class CommentsUseCase
     private val insightsStore: InsightsStore
 ) : BaseInsightsUseCase(COMMENTS, mainDispatcher) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
-        val response = insightsStore.fetchComments(site, forced)
+        val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
@@ -45,7 +45,7 @@ class CommentsUseCase
     }
 
     override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
-        val dbModel = insightsStore.getComments(site)
+        val dbModel = insightsStore.getComments(site, PAGE_SIZE)
         return dbModel?.let { loadComments(site, dbModel) }
     }
 
@@ -53,9 +53,11 @@ class CommentsUseCase
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
-        items.add(Link(text = string.stats_insights_view_more) {
-            navigateTo(ViewCommentsStats(site.siteId))
-        })
+        if (model.hasMoreAuthors || model.hasMorePosts) {
+            items.add(Link(text = string.stats_insights_view_more) {
+                navigateTo(ViewCommentsStats(site.siteId))
+            })
+        }
         return createDataItem(items)
     }
 

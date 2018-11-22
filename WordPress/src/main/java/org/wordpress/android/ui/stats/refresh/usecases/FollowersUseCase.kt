@@ -27,6 +27,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val PAGE_SIZE = 6
+
 class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -34,15 +36,19 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) : BaseInsightsUseCase(FOLLOWERS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem {
-        val wpComFollowers = insightsStore.getWpComFollowers(site)
-        val emailFollowers = insightsStore.getEmailFollowers(site)
-        return loadFollowers(site, wpComFollowers, emailFollowers)
+    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+        val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
+        val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
+        return if (wpComFollowers != null && emailFollowers != null) loadFollowers(
+                site,
+                wpComFollowers,
+                emailFollowers
+        ) else null
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
-        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, forced) }
-        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, forced) }
+        val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
+        val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
         val wpComModel = wpComResponse.model
@@ -54,15 +60,15 @@ class FollowersUseCase
                     string.stats_view_followers,
                     error.message ?: error.type.name
             )
-            wpComModel != null || emailModel != null -> loadFollowers(site, wpComModel, emailModel)
+            wpComModel != null && emailModel != null -> loadFollowers(site, wpComModel, emailModel)
             else -> null
         }
     }
 
     private fun loadFollowers(
         site: SiteModel,
-        wpComModel: FollowersModel?,
-        emailModel: FollowersModel?
+        wpComModel: FollowersModel,
+        emailModel: FollowersModel
     ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
@@ -74,16 +80,17 @@ class FollowersUseCase
                         )
                 )
         )
-
-        items.add(Link(text = string.stats_insights_view_more) {
-            navigateTo(ViewFollowersStats(site.siteId))
-        })
+        if (wpComModel.hasMore || emailModel.hasMore) {
+            items.add(Link(text = string.stats_insights_view_more) {
+                navigateTo(ViewFollowersStats(site.siteId))
+            })
+        }
         return createDataItem(items)
     }
 
-    private fun buildTab(model: FollowersModel?, label: Int): Tab {
+    private fun buildTab(model: FollowersModel, label: Int): Tab {
         val mutableItems = mutableListOf<BlockListItem>()
-        if (model != null && model.followers.isNotEmpty()) {
+        if (model.followers.isNotEmpty()) {
             mutableItems.add(
                     Information(
                             resourceProvider.getString(

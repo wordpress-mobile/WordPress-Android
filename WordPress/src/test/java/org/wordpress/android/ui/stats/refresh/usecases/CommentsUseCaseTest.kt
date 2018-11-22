@@ -19,6 +19,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
@@ -43,6 +44,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     private val user = "John Smith"
     private val url = "www.url.com"
     private val totalCount = 50
+    private val pageSize = 6
     @Before
     fun setUp() {
         useCase = CommentsUseCase(
@@ -54,9 +56,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps posts comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        CommentsModel(listOf(CommentsModel.Post(postId, postTitle, totalCount, url)), listOf())
+                        CommentsModel(
+                                listOf(CommentsModel.Post(postId, postTitle, totalCount, url)),
+                                listOf(),
+                                hasMorePosts = false,
+                                hasMoreAuthors = false
+                        )
                 )
         )
 
@@ -64,7 +71,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -77,11 +84,16 @@ class CommentsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps comment authors to UI model`() = test {
+    fun `adds link to UI model when has more posts`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        CommentsModel(listOf(), listOf(CommentsModel.Author(user, totalCount, url, avatar)))
+                        CommentsModel(
+                                listOf(),
+                                listOf(),
+                                hasMorePosts = true,
+                                hasMoreAuthors = false
+                        )
                 )
         )
 
@@ -90,6 +102,54 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
             assertThat(this.items).hasSize(3)
+            assertTitle(this.items[0])
+            assertThat(this.items[2] is Link).isTrue()
+        }
+    }
+
+    @Test
+    fun `adds link to UI model when has more authors`() = test {
+        val forced = false
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+                OnInsightsFetched(
+                        CommentsModel(
+                                listOf(),
+                                listOf(),
+                                hasMorePosts = false,
+                                hasMoreAuthors = true
+                        )
+                )
+        )
+
+        val result = loadComments(true, forced)
+
+        assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        (result as ListInsightItem).apply {
+            assertThat(this.items).hasSize(3)
+            assertTitle(this.items[0])
+            assertThat(this.items[2] is Link).isTrue()
+        }
+    }
+
+    @Test
+    fun `maps comment authors to UI model`() = test {
+        val forced = false
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
+                OnInsightsFetched(
+                        CommentsModel(
+                                listOf(),
+                                listOf(CommentsModel.Author(user, totalCount, url, avatar)),
+                                hasMorePosts = false,
+                                hasMoreAuthors = false
+                        )
+                )
+        )
+
+        val result = loadComments(true, forced)
+
+        assertThat(result.type).isEqualTo(LIST_INSIGHTS)
+        (result as ListInsightItem).apply {
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -104,9 +164,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty comments to UI model`() = test {
         val forced = false
-        whenever(insightsStore.fetchComments(site, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
-                        CommentsModel(listOf(), listOf())
+                        CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
                 )
         )
 
@@ -114,7 +174,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
         (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
 
@@ -130,7 +190,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(insightsStore.fetchComments(site, forced)).thenReturn(
+        whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnInsightsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

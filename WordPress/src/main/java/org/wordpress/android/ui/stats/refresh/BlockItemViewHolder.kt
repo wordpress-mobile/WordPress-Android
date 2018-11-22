@@ -2,7 +2,9 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.content.Context
 import android.graphics.Typeface
+import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
 import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
@@ -29,6 +31,7 @@ import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
@@ -40,6 +43,8 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.IMAGE
+import org.wordpress.android.util.setVisible
 
 sealed class BlockItemViewHolder(
     parent: ViewGroup,
@@ -65,7 +70,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class ItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -75,13 +80,28 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
-            icon.setImageResource(item.icon)
-            text.setText(item.text)
-            value.text = item.value
+            icon.setImageOrLoad(item.icon, item.iconUrl) { imageView, url ->
+                imageManager.load(imageView, IMAGE, url)
+            }
+            if (item.icon != null) {
+                icon.setImageResource(item.icon)
+            } else if (item.iconUrl != null) {
+                imageManager.load(icon, IMAGE, item.iconUrl)
+            }
+            text.setTextOrHide(item.textResource, item.text)
+            value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
             } else {
                 View.GONE
+            }
+            if (item.clickAction != null) {
+                itemView.isClickable = true
+                itemView.setOnClickListener { item.clickAction.invoke() }
+            } else {
+                itemView.isClickable = false
+                itemView.background = null
+                itemView.setOnClickListener(null)
             }
         }
     }
@@ -269,6 +289,79 @@ sealed class BlockItemViewHolder(
         fun bind(item: Label) {
             leftLabel.setText(item.leftLabel)
             rightLabel.setText(item.rightLabel)
+        }
+    }
+
+    class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_expandable_item
+    ) {
+        private val list = itemView.findViewById<RecyclerView>(R.id.expandable_items)
+        private val expandedListDivider = itemView.findViewById<View>(R.id.expanded_list_divider)
+
+        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val text = itemView.findViewById<TextView>(R.id.text)
+        private val value = itemView.findViewById<TextView>(R.id.value)
+        private val divider = itemView.findViewById<View>(R.id.divider)
+        private val expandButton = itemView.findViewById<View>(R.id.expand_button)
+
+        fun bind(expandableItem: ExpandableItem) {
+            val header = expandableItem.header
+            icon.setImageOrLoad(header.icon, header.iconUrl) { imageView, url ->
+                imageManager.load(
+                        imageView,
+                        IMAGE,
+                        url
+                )
+            }
+            text.setTextOrHide(header.textResource, header.text)
+            expandButton.visibility = View.VISIBLE
+            value.setTextOrHide(header.valueResource, header.value)
+            divider.setVisible(header.showDivider)
+
+            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
+            list.isNestedScrollingEnabled = false
+            if (list.adapter == null) {
+                list.adapter = BlockListAdapter(imageManager)
+            }
+            updateExpandedList(expandableItem)
+            itemView.isClickable = true
+            itemView.setOnClickListener {
+                expandableItem.isExpanded = !expandableItem.isExpanded
+                val rotationAngle = if (expandableItem.isExpanded) 180 else 0
+                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
+                updateExpandedList(expandableItem)
+            }
+        }
+
+        private fun updateExpandedList(expandableItem: ExpandableItem) {
+            if (expandableItem.isExpanded) {
+                (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
+            } else {
+                (list.adapter as BlockListAdapter).update(listOf())
+            }
+            divider.setVisible(!expandableItem.isExpanded && expandableItem.header.showDivider)
+            expandedListDivider.setVisible(expandableItem.isExpanded)
+        }
+    }
+
+    fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+        when {
+            resource != null -> this.setText(resource)
+            value != null -> this.text = value
+            else -> this.visibility = GONE
+        }
+    }
+
+    fun ImageView.setImageOrLoad(
+        @DrawableRes resource: Int?,
+        url: String?,
+        loadMethod: (imageView: ImageView, url: String) -> Unit
+    ) {
+        when {
+            resource != null -> this.setImageResource(resource)
+            url != null -> loadMethod(this, url)
+            else -> this.visibility = GONE
         }
     }
 }

@@ -6,6 +6,7 @@ import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
@@ -17,13 +18,32 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
-    enum class Type { TITLE, ITEM, USER_ITEM, LIST_ITEM, INFO, EMPTY, TEXT, COLUMNS, LINK, BAR_CHART, TABS, LABEL }
+    enum class Type {
+        TITLE,
+        ITEM,
+        USER_ITEM,
+        LIST_ITEM,
+        INFO,
+        EMPTY,
+        TEXT,
+        COLUMNS,
+        LINK,
+        BAR_CHART,
+        TABS,
+        LABEL,
+        EXPANDABLE_ITEM
+    }
+
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
     data class Item(
-        @DrawableRes val icon: Int,
-        @StringRes val text: Int,
-        val value: String,
-        val showDivider: Boolean = true
+        @DrawableRes val icon: Int? = null,
+        val iconUrl: String? = null,
+        @StringRes val textResource: Int? = null,
+        val text: String? = null,
+        @StringRes val valueResource: Int? = null,
+        val value: String? = null,
+        val showDivider: Boolean = true,
+        val clickAction: (() -> Unit)? = null
     ) : BlockListItem(ITEM)
 
     data class UserItem(
@@ -55,5 +75,13 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
+    data class ExpandableItem(
+        val header: Item,
+        val expandedItems: List<BlockListItem>,
+        var isExpanded: Boolean = false
+    ) : BlockListItem(
+            EXPANDABLE_ITEM
+    )
+
     object Empty : BlockListItem(EMPTY)
 }

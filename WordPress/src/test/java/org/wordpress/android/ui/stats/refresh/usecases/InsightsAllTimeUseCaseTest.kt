@@ -103,7 +103,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertTrue(items[1] is Item)
         val item = items[1] as Item
         assertEquals(item.icon, R.drawable.ic_posts_grey_dark_24dp)
-        assertEquals(item.text, R.string.posts)
+        assertEquals(item.textResource, R.string.posts)
         assertEquals(item.value, posts.toString())
     }
 
@@ -131,7 +131,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertTrue(items[1] is Item)
         val item = items[1] as Item
         assertEquals(item.icon, R.drawable.ic_visible_on_grey_dark_24dp)
-        assertEquals(item.text, R.string.stats_views)
+        assertEquals(item.textResource, R.string.stats_views)
         assertEquals(item.value, views.toString())
     }
 
@@ -159,7 +159,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertTrue(items[1] is Item)
         val item = items[1] as Item
         assertEquals(item.icon, R.drawable.ic_user_grey_dark_24dp)
-        assertEquals(item.text, R.string.stats_visitors)
+        assertEquals(item.textResource, R.string.stats_visitors)
         assertEquals(item.value, visitors.toString())
     }
 
@@ -187,7 +187,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertTrue(items[1] is Item)
         val item = items[1] as Item
         assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
-        assertEquals(item.text, R.string.stats_insights_best_ever)
+        assertEquals(item.textResource, R.string.stats_insights_best_ever)
         assertEquals(item.value, bestDayTotal.toString())
     }
 
