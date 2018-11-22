@@ -183,17 +183,13 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateHeader(uiState: VerticalsHeaderUiState) {
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
+            headerLayout.visibility = View.GONE
             headerLayout.animate()
                     .translationY(-headerLayout.height.toFloat())
-                    .withStartAction {
-                        headerLayout.visibility = View.GONE
-                    }
         } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
+            headerLayout.visibility = View.VISIBLE
             headerLayout.animate()
                     .translationY(0f)
-                    .withStartAction {
-                        headerLayout.visibility = View.VISIBLE
-                    }
         }
         headerTitle.text = uiState.title
         headerSubtitle.text = uiState.subtitle
