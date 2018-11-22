@@ -401,7 +401,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchInsightsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
-        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE, forced)).thenReturn(errorPayload)
+        whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchComments(site, PAGE_SIZE, forced)
 
