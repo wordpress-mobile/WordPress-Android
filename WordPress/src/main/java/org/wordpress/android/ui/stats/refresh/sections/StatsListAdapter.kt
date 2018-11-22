@@ -10,16 +10,16 @@ import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.sections.StatsListItem.Type.values
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.StatsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BaseStatsViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder>() {
+class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsListItem> = listOf()
     fun update(newItems: List<StatsListItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                StatsDiffCallback(
+                StatsListDiffCallback(
                         items,
                         newItems
                 )
@@ -29,7 +29,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
             BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
@@ -44,7 +44,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: StatsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as ListInsightItem)
