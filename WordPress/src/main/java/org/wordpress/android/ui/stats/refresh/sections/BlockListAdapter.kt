@@ -2,19 +2,19 @@ package org.wordpress.android.ui.stats.refresh.sections
 
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.BarChartViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ColumnsViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ExpandableItemViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.InformationViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ItemViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.LabelViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.LinkViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ListItemViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TabsViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TextViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.TitleViewHolder
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.UserItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.BarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.ExpandableItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.InformationViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.ItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.LabelViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.ListItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.TabsViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.TextViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.TitleViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder.UserItemViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.ExpandableItem
@@ -41,17 +41,17 @@ import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.sections.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder
+import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHolder>() {
+class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
         items = newItems
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockListItemViewHolder {
         return when (values()[viewType]) {
             TITLE -> TitleViewHolder(parent)
             ITEM -> ItemViewHolder(parent, imageManager)
@@ -75,7 +75,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BlockItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BlockListItemViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
             is TitleViewHolder -> holder.bind(item as Title)

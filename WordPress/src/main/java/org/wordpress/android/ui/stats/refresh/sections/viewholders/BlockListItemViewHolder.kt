@@ -48,11 +48,11 @@ import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.IMAGE
 import org.wordpress.android.util.setVisible
 
-sealed class BlockItemViewHolder(
+sealed class BlockListItemViewHolder(
     parent: ViewGroup,
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    class TitleViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class TitleViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_title
     ) {
@@ -62,7 +62,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class InformationViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class InformationViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_information
     ) {
@@ -72,7 +72,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+    class ItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -108,7 +108,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+    class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -129,7 +129,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ListItemViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class ListItemViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_item
     ) {
@@ -150,12 +150,12 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class EmptyViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class EmptyViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_empty_item
     )
 
-    class TextViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_text_item
     ) {
@@ -197,7 +197,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ColumnsViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class ColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_column_item
     ) {
@@ -217,7 +217,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class LinkViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_link_item
     ) {
@@ -235,7 +235,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class BarChartViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_bar_chart_item
     ) {
@@ -250,7 +250,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class TabsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+    class TabsViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_tabs_item
     ) {
@@ -283,7 +283,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class LabelViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+    class LabelViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_label
     ) {
@@ -295,7 +295,7 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
+    class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_expandable_item
     ) {

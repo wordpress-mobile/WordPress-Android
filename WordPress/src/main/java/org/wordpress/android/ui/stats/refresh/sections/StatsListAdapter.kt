@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.FailedViewHolder
-import org.wordpress.android.ui.stats.refresh.StatsDiffCallback
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.sections.StatsItem.Type.BLOCK_LIST
@@ -32,10 +31,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatsViewHolder {
         return when (values()[viewType]) {
-            BLOCK_LIST -> BlockListViewHolder(
-                    parent,
-                    imageManager
-            )
+            BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
             FAILED -> FailedViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             LOADING -> LoadingViewHolder(parent)
