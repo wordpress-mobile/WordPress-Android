@@ -21,11 +21,11 @@ class BaseStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var localData: StatsListItem
     @Mock lateinit var remoteData: StatsListItem
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: TestBlock
+    private lateinit var block: TestBlock
 
     @Before
     fun setUp() {
-        useCase = TestBlock(
+        block = TestBlock(
                 localDataProvider,
                 remoteDataProvider
         )
@@ -46,21 +46,21 @@ class BaseStatsBlockTest : BaseUnitTest() {
 
     @Test
     fun `on fetch loads data from DB when current value is null`() = test {
-        assertThat(useCase.liveData.value).isNull()
+        assertThat(block.liveData.value).isNull()
 
-        useCase.fetch(site, false, false)
+        block.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(localData)
+        assertThat(block.liveData.value).isEqualTo(localData)
     }
 
     @Test
     fun `on fetch returns loading item when DB is empty`() = test {
-        assertThat(useCase.liveData.value).isNull()
+        assertThat(block.liveData.value).isNull()
         whenever(localDataProvider.get()).thenReturn(null)
 
-        useCase.fetch(site, false, false)
+        block.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(
+        assertThat(block.liveData.value).isEqualTo(
                 Loading(
                         ALL_TIME_STATS
                 )
@@ -70,11 +70,11 @@ class BaseStatsBlockTest : BaseUnitTest() {
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
         val result = mutableListOf<StatsListItem?>()
-        assertThat(useCase.liveData.value).isNull()
+        assertThat(block.liveData.value).isNull()
 
-        useCase.liveData.observeForever { result.add(it) }
+        block.liveData.observeForever { result.add(it) }
 
-        useCase.fetch(site, true, false)
+        block.fetch(site, true, false)
 
         assertThat(result.size).isEqualTo(2)
         assertThat(result[0]).isEqualTo(localData)
@@ -83,13 +83,13 @@ class BaseStatsBlockTest : BaseUnitTest() {
 
     @Test
     fun `live data value is cleared`() = test {
-        useCase.fetch(site, false, false)
+        block.fetch(site, false, false)
 
-        assertThat(useCase.liveData.value).isEqualTo(localData)
+        assertThat(block.liveData.value).isEqualTo(localData)
 
-        useCase.clear()
+        block.clear()
 
-        assertThat(useCase.liveData.value).isNull()
+        assertThat(block.liveData.value).isNull()
     }
 
     class TestBlock(

@@ -45,7 +45,7 @@ class FollowersBlockTest : BaseUnitTest() {
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: FollowersBlock
+    private lateinit var block: FollowersBlock
     private val avatar = "avatar.jpg"
     private val user = "John Smith"
     private val url = "www.url.com"
@@ -57,7 +57,7 @@ class FollowersBlockTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        useCase = FollowersBlock(
+        block = FollowersBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsUtilsWrapper,
@@ -247,8 +247,8 @@ class FollowersBlockTest : BaseUnitTest() {
 
     private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 

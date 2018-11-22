@@ -39,11 +39,11 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
-    private lateinit var useCase: TagsAndCategoriesBlock
+    private lateinit var block: TagsAndCategoriesBlock
     private val pageSize = 6
     @Before
     fun setUp() {
-        useCase = TagsAndCategoriesBlock(
+        block = TagsAndCategoriesBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 resourceProvider
@@ -186,8 +186,8 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
 
     private suspend fun loadTags(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

@@ -27,10 +27,10 @@ import org.wordpress.android.ui.stats.refresh.lists.BlockList
 class AllTimeStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: AllTimeStatsBlock
+    private lateinit var block: AllTimeStatsBlock
     @Before
     fun setUp() {
-        useCase = AllTimeStatsBlock(
+        block = AllTimeStatsBlock(
                 Dispatchers.Unconfined,
                 insightsStore
         )
@@ -217,8 +217,8 @@ class AllTimeStatsBlockTest : BaseUnitTest() {
 
     private suspend fun loadAllTimeInsights(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

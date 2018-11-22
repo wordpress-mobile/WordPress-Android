@@ -30,14 +30,14 @@ import org.wordpress.android.ui.stats.refresh.lists.BlockList
 class TodayStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: TodayStatsBlock
+    private lateinit var block: TodayStatsBlock
     private val views = 10
     private val visitors = 15
     private val likes = 20
     private val comments = 30
     @Before
     fun setUp() {
-        useCase = TodayStatsBlock(
+        block = TodayStatsBlock(
                 Dispatchers.Unconfined,
                 insightsStore
         )
@@ -170,8 +170,8 @@ class TodayStatsBlockTest : BaseUnitTest() {
 
     private suspend fun loadTodayStats(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

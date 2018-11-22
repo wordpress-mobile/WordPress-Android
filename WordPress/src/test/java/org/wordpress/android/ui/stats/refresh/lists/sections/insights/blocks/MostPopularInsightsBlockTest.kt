@@ -36,7 +36,7 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
-    private lateinit var useCase: MostPopularInsightsBlock
+    private lateinit var block: MostPopularInsightsBlock
     private val day = 2
     private val highestDayPercent = 15.0
     private val dayString = "Tuesday"
@@ -45,7 +45,7 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
     private val hourString = "8:00 PM"
     @Before
     fun setUp() {
-        useCase = MostPopularInsightsBlock(
+        block = MostPopularInsightsBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 dateUtils,
@@ -138,8 +138,8 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

@@ -33,15 +33,15 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var useCase: LatestPostSummaryBlock
+    private lateinit var block: LatestPostSummaryBlock
     @Before
     fun setUp() = test {
-        useCase = LatestPostSummaryBlock(
+        block = LatestPostSummaryBlock(
                 Dispatchers.Unconfined,
                 insightsStore,
                 latestPostSummaryMapper
         )
-        useCase.navigationTarget.observeForever {}
+        block.navigationTarget.observeForever {}
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
@@ -160,14 +160,14 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
         forced: Boolean
     ): StatsListItem? {
         var result: StatsListItem? = null
-        useCase.liveData.observeForever { result = it }
-        useCase.fetch(site, refresh, forced)
+        block.liveData.observeForever { result = it }
+        block.fetch(site, refresh, forced)
         return result
     }
 
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
-        useCase.navigationTarget.observeForever { navigationTarget = it }
+        block.navigationTarget.observeForever { navigationTarget = it }
         this.action()
         return navigationTarget
     }
