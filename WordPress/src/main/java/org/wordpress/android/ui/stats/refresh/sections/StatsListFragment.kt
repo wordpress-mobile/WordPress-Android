@@ -20,7 +20,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.sections.days.DaysTabViewModel
-import org.wordpress.android.ui.stats.refresh.InsightsAdapter
 import org.wordpress.android.ui.stats.refresh.sections.insights.InsightsTabViewModel
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.SharePost
@@ -167,12 +166,12 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun updateInsights(insightsState: InsightsUiState) {
-        val adapter: InsightsAdapter
+        val adapter: StatsListAdapter
         if (recyclerView.adapter == null) {
-            adapter = InsightsAdapter(imageManager)
+            adapter = StatsListAdapter(imageManager)
             recyclerView.adapter = adapter
         } else {
-            adapter = recyclerView.adapter as InsightsAdapter
+            adapter = recyclerView.adapter as StatsListAdapter
         }
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
