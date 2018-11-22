@@ -1,7 +1,8 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.sections
 
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.ColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.BlockItemViewHolder.EmptyViewHolder

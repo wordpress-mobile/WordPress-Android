@@ -7,7 +7,7 @@ import org.wordpress.android.ui.stats.refresh.Empty
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.sections.viewholders.FailedViewHolder
-import org.wordpress.android.ui.stats.refresh.InsightsDiffCallback
+import org.wordpress.android.ui.stats.refresh.StatsDiffCallback
 import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.StatsItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.StatsItem.Type.FAILED
@@ -24,7 +24,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<StatsViewHolder
     private var items: List<StatsItem> = listOf()
     fun update(newItems: List<StatsItem>) {
         val diffResult = DiffUtil.calculateDiff(
-                InsightsDiffCallback(
+                StatsDiffCallback(
                         items,
                         newItems
                 )

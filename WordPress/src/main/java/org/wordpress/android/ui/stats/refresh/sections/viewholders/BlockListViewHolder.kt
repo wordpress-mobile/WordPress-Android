@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
-import org.wordpress.android.ui.stats.refresh.BlockListAdapter
+import org.wordpress.android.ui.stats.refresh.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.util.image.ImageManager
 
