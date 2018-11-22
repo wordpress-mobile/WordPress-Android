@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.types
 
 import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : ScopedViewModel(defaultDispatcher) {

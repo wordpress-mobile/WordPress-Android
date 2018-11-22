@@ -20,10 +20,11 @@ import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.WEEKS
+import org.wordpress.android.ui.stats.refresh.types.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.DAYS
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.MONTHS
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.WEEKS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject

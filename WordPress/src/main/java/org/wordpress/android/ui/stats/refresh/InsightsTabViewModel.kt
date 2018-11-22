@@ -3,7 +3,10 @@ package org.wordpress.android.ui.stats.refresh
 import android.arch.lifecycle.LiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.InsightsUiState.StatsListState.DONE
+import org.wordpress.android.ui.stats.refresh.types.InsightsUiState
+import org.wordpress.android.ui.stats.refresh.types.InsightsUiState.StatsListState.DONE
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel
 import org.wordpress.android.ui.stats.refresh.usecases.InsightsUseCase
 import org.wordpress.android.util.map
 import javax.inject.Inject

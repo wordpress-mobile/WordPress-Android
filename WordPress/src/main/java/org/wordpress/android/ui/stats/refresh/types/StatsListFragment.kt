@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.types
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -19,15 +19,18 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.AddNewPost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
-import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.DaysTabViewModel
+import org.wordpress.android.ui.stats.refresh.InsightsAdapter
+import org.wordpress.android.ui.stats.refresh.InsightsTabViewModel
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.AddNewPost
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewCommentsStats
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewTag
+import org.wordpress.android.ui.stats.refresh.types.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType
+import org.wordpress.android.ui.stats.refresh.types.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils

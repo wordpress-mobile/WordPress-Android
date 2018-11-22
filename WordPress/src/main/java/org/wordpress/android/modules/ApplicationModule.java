@@ -7,7 +7,7 @@ import android.content.Context;
 import org.wordpress.android.ui.news.LocalNewsService;
 import org.wordpress.android.ui.news.NewsService;
 import org.wordpress.android.ui.stats.refresh.StatsFragment;
-import org.wordpress.android.ui.stats.refresh.StatsListFragment;
+import org.wordpress.android.ui.stats.refresh.types.StatsListFragment;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
