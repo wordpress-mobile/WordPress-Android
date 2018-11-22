@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -22,12 +22,12 @@ class InsightsAllTimeUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseStatsUseCase(ALL_TIME_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val dbModel = insightsStore.getAllTimeInsights(site)
         return dbModel?.let { loadAllTimeInsightsItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
@@ -38,7 +38,7 @@ class InsightsAllTimeUseCase
         }
     }
 
-    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): InsightsItem {
+    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): StatsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
 

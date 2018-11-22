@@ -29,9 +29,9 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.InsightsItem
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.FAILED
-import org.wordpress.android.ui.stats.refresh.InsightsItem.Type.LIST_INSIGHTS
+import org.wordpress.android.ui.stats.refresh.StatsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem.Type.FAILED
+import org.wordpress.android.ui.stats.refresh.StatsItem.Type.LIST_INSIGHTS
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -184,8 +184,8 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
     }
 
-    private suspend fun loadTags(refresh: Boolean, forced: Boolean): InsightsItem {
-        var result: InsightsItem? = null
+    private suspend fun loadTags(refresh: Boolean, forced: Boolean): StatsItem {
+        var result: StatsItem? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

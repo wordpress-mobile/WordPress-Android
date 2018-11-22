@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -27,12 +27,12 @@ class MostPopularInsightsUseCase
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val dbModel = insightsStore.getMostPopularInsights(site)
         return dbModel?.let { loadMostPopularInsightsItem(dbModel) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val response = insightsStore.fetchMostPopularInsights(site, forced)
         val model = response.model
         val error = response.error

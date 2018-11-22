@@ -9,17 +9,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.Failed
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
 import org.wordpress.android.ui.stats.refresh.Loading
-import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget
 
 abstract class BaseStatsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val mutableLiveData = MutableLiveData<InsightsItem>()
-    val liveData: LiveData<InsightsItem> = mutableLiveData
+    private val mutableLiveData = MutableLiveData<StatsItem>()
+    val liveData: LiveData<StatsItem> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
@@ -61,7 +60,7 @@ abstract class BaseStatsUseCase(
      * @param site for which we load the data
      * @return the list item or null when the local value is empty
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel): InsightsItem?
+    protected abstract suspend fun loadCachedData(site: SiteModel): StatsItem?
 
     /**
      * Fetches remote data from the endpoint.
@@ -69,7 +68,7 @@ abstract class BaseStatsUseCase(
      * @param forced is true when we want to get the fresh data
      * @return the list item or null when we haven't received a correct response from the API
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem?
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem?
 
     protected fun createFailedItem(@StringRes failingType: Int, message: String): Failed {
         return Failed(type, failingType, message)

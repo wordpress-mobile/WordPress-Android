@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewTagsAndCategoriesStats
@@ -33,7 +33,7 @@ class TagsAndCategoriesUseCase
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
@@ -47,7 +47,7 @@ class TagsAndCategoriesUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val model = insightsStore.getTags(site, PAGE_SIZE)
         return model?.let { loadTagsAndCategories(site, model) }
     }
@@ -55,7 +55,7 @@ class TagsAndCategoriesUseCase
     private fun loadTagsAndCategories(
         site: SiteModel,
         model: TagsModel
-    ): InsightsItem {
+    ): StatsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))
         if (model.tags.isEmpty()) {

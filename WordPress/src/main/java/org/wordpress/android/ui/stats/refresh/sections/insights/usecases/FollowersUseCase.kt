@@ -21,7 +21,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -37,7 +37,7 @@ class FollowersUseCase
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase(FOLLOWERS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
         return if (wpComFollowers != null && emailFollowers != null) loadFollowers(
@@ -47,7 +47,7 @@ class FollowersUseCase
         ) else null
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
         val wpComResponse = deferredWpComResponse.await()
@@ -70,7 +70,7 @@ class FollowersUseCase
         site: SiteModel,
         wpComModel: FollowersModel,
         emailModel: FollowersModel
-    ): InsightsItem {
+    ): StatsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(

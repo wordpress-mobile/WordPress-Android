@@ -11,7 +11,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -22,12 +22,12 @@ class TodayStatsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseStatsUseCase(TODAY_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val dbModel = insightsStore.getTodayInsights(site)
         return dbModel?.let { loadTodayStatsItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val response = insightsStore.fetchTodayInsights(site, forced)
         val model = response.model
         val error = response.error
@@ -38,7 +38,7 @@ class TodayStatsUseCase
         }
     }
 
-    private fun loadTodayStatsItem(model: VisitsModel): InsightsItem {
+    private fun loadTodayStatsItem(model: VisitsModel): StatsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
 

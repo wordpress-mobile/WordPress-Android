@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem.Tab
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.ui.stats.refresh.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.sections.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -31,7 +31,7 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : BaseStatsUseCase(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): InsightsItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsItem? {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
@@ -45,12 +45,12 @@ class CommentsUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): InsightsItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsItem? {
         val dbModel = insightsStore.getComments(site, PAGE_SIZE)
         return dbModel?.let { loadComments(site, dbModel) }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel): InsightsItem {
+    private fun loadComments(site: SiteModel, model: CommentsModel): StatsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))

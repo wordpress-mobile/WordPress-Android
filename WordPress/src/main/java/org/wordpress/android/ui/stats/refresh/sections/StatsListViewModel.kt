@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.StatsItem
 import org.wordpress.android.viewmodel.ScopedViewModel
 
 abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : ScopedViewModel(defaultDispatcher) {
@@ -20,7 +20,7 @@ abstract class StatsListViewModel(defaultDispatcher: CoroutineDispatcher) : Scop
     abstract val data: LiveData<InsightsUiState>
 }
 
-data class InsightsUiState(val data: List<InsightsItem> = listOf(), val status: StatsListState) {
+data class InsightsUiState(val data: List<StatsItem> = listOf(), val status: StatsListState) {
     enum class StatsListState {
         DONE,
         ERROR,
