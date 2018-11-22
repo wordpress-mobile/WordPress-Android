@@ -39,8 +39,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
-import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.TAGS_RESPONSE
+import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
 import java.text.SimpleDateFormat
@@ -59,6 +59,7 @@ class InsightsRestClientTest {
     private lateinit var insightsRestClient: InsightsRestClient
     private val siteId: Long = 12
     private val postId: Long = 1
+    private val pageSize = 5
 
     @Before
     fun setUp() {
@@ -334,7 +335,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTopComments(site, forced = false)
+        val responseModel = insightsRestClient.fetchTopComments(site, pageSize = pageSize, forced = false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
@@ -345,12 +346,12 @@ class InsightsRestClientTest {
     fun `returns tags and categories`() = test {
         initTagsResponse(TAGS_RESPONSE)
 
-        val responseModel = insightsRestClient.fetchTags(site, forced = false)
+        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(TAGS_RESPONSE)
         assertThat(urlCaptor.lastValue).isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/tags/")
-        assertThat(paramsCaptor.lastValue).isEqualTo(mapOf("max" to "6"))
+        assertThat(paramsCaptor.lastValue).isEqualTo(mapOf("max" to "$pageSize"))
     }
 
     @Test
@@ -366,7 +367,7 @@ class InsightsRestClientTest {
                 )
         )
 
-        val responseModel = insightsRestClient.fetchTags(site, forced = false)
+        val responseModel = insightsRestClient.fetchTags(site, pageSize = pageSize, forced = false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
