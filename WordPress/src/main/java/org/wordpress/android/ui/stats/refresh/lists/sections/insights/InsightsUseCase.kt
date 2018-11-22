@@ -40,7 +40,7 @@ class InsightsUseCase
     mostPopularInsightsBlock: MostPopularInsightsBlock,
     tagsAndCategoriesBlock: TagsAndCategoriesBlock
 ) {
-    private val useCases = listOf(
+    private val blocks = listOf(
             allTimeStatsBlock,
             latestPostSummaryBlock,
             todayStatsBlock,
@@ -51,14 +51,14 @@ class InsightsUseCase
     ).associateBy { it.type }
 
     private val liveData = combineMap(
-            useCases.mapValues { entry -> entry.value.liveData }
+            blocks.mapValues { entry -> entry.value.liveData }
     )
     private val insights = MutableLiveData<List<InsightsTypes>>()
     val data: LiveData<List<StatsListItem>> = merge(insights, liveData) { insights, map ->
         insights.mapNotNull { map[it] }
     }
 
-    val navigationTarget: LiveData<NavigationTarget> = merge(useCases.map { it.value.navigationTarget })
+    val navigationTarget: LiveData<NavigationTarget> = merge(blocks.map { it.value.navigationTarget })
 
     suspend fun loadInsightItems(site: SiteModel) {
         loadItems(site, false)
@@ -70,7 +70,7 @@ class InsightsUseCase
 
     private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
         withContext(bgDispatcher) {
-            useCases.values.forEach { useCase -> launch { useCase.fetch(site, refresh, forced) } }
+            blocks.values.forEach { block -> launch { block.fetch(site, refresh, forced) } }
             val items = statsStore.getInsights()
             withContext(mainDispatcher) {
                 insights.value = items
@@ -79,6 +79,6 @@ class InsightsUseCase
     }
 
     fun onCleared() {
-        useCases.values.forEach { it.clear() }
+        blocks.values.forEach { it.clear() }
     }
 }
