@@ -25,6 +25,9 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUs
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -74,7 +77,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private fun fetchHeaderInfo() {
         launch {
             withContext(MAIN) {
-                updateUiStateToFullScreenProgress()
+                updateUiState(VerticalsFullscreenProgressUiState)
             }
             val headerInfoEvent = fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()
             withContext(MAIN) {
@@ -85,7 +88,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun onHeaderInfoFetched(event: DummyOnVerticalsHeaderInfoFetched) {
         if (event.isError) {
-            updateUiStateToFullScreenError()
+            updateUiState(VerticalsFullscreenErrorUiState)
         } else {
             headerInfo = event.headerInfo!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
@@ -130,45 +133,31 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         }
     }
 
-    private fun updateUiStateToFullScreenProgress() {
-        _uiState.value = VerticalsUiState(
-                showFullscreenError = false,
-                showFullscreenProgress = true,
-                showContent = false,
-                showSkipButton = false,
-                items = emptyList()
-        )
-    }
-
-    private fun updateUiStateToFullScreenError() {
-        _uiState.value = VerticalsUiState(
-                showFullscreenError = true,
-                showFullscreenProgress = false,
-                showContent = false,
-                showSkipButton = false,
-                items = emptyList()
-        )
-    }
-
     private fun updateUiStateToContent(query: String, state: ListState<VerticalModel>) {
         listState = state
-        _uiState.value = VerticalsUiState(
-                showFullscreenError = false,
-                showFullscreenProgress = false,
-                showContent = true,
-                showSkipButton = StringUtils.isEmpty(query),
-                headerUiState = createHeaderUiState(shouldShowHeader(query), headerInfo),
-                searchInputState = createSearchInputUiState(
-                        query,
-                        showProgress = state is Loading,
-                        hint = headerInfo.inputHint
-                ),
-                items = createSuggestionsUiStates(
-                        onRetry = { updateQuery(query) },
-                        data = state.data,
-                        errorFetchingSuggestions = state is Error
+        updateUiState(
+                VerticalsContentUiState(
+                        showSkipButton = StringUtils.isEmpty(query),
+                        headerUiState = createHeaderUiState(
+                                shouldShowHeader(query),
+                                headerInfo
+                        ),
+                        searchInputState = createSearchInputUiState(
+                                query,
+                                showProgress = state is Loading,
+                                hint = headerInfo.inputHint
+                        ),
+                        items = createSuggestionsUiStates(
+                                onRetry = { updateQuery(query) },
+                                data = state.data,
+                                errorFetchingSuggestions = state is Error
+                        )
                 )
         )
+    }
+
+    private fun updateUiState(uiState: VerticalsUiState) {
+        _uiState.value = uiState
     }
 
     private fun createSuggestionsUiStates(
@@ -201,7 +190,11 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         isVisible: Boolean,
         headerInfo: DummyVerticalsHeaderInfoModel
     ): VerticalsHeaderUiState {
-        return VerticalsHeaderUiState(isVisible, headerInfo.title, headerInfo.subtitle)
+        return if (isVisible)
+            VerticalsHeaderUiState.Visible(
+                    headerInfo.title,
+                    headerInfo.subtitle
+            ) else VerticalsHeaderUiState.Hidden
     }
 
     private fun createSearchInputUiState(
@@ -209,34 +202,63 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         showProgress: Boolean,
         hint: String
     ): VerticalsSearchInputUiState {
-        return VerticalsSearchInputUiState(
+        return VerticalsSearchInputUiState.Visible(
                 hint,
                 showProgress,
                 showClearButton = !StringUtils.isEmpty(query)
         )
     }
 
-    data class VerticalsUiState(
-        val showFullscreenError: Boolean,
-        val showFullscreenProgress: Boolean,
-        val showSkipButton: Boolean,
-        val showContent: Boolean,
-        val headerUiState: VerticalsHeaderUiState? = null,
-        val searchInputState: VerticalsSearchInputUiState? = null,
-        val items: List<VerticalsListItemUiState>
-    )
+    sealed class VerticalsUiState {
+        open val showFullscreenError: Boolean = false
+        open val showFullscreenProgress: Boolean = false
+        open val showContent: Boolean = false
+        open val showSkipButton: Boolean = false
+        open val headerUiState: VerticalsHeaderUiState = VerticalsHeaderUiState.Hidden
+        open val searchInputState: VerticalsSearchInputUiState = VerticalsSearchInputUiState.Hidden
+        open val items: List<VerticalsListItemUiState> = emptyList()
 
-    data class VerticalsSearchInputUiState(
-        val hint: String,
-        val showProgress: Boolean,
-        val showClearButton: Boolean
-    )
+        object VerticalsFullscreenErrorUiState : VerticalsUiState() {
+            override val showFullscreenError: Boolean = true
+        }
 
-    data class VerticalsHeaderUiState(
-        val isVisible: Boolean,
-        val title: String,
-        val subtitle: String
-    )
+        object VerticalsFullscreenProgressUiState : VerticalsUiState() {
+            override val showFullscreenProgress: Boolean = true
+        }
+
+        data class VerticalsContentUiState(
+            override val showSkipButton: Boolean,
+            override val headerUiState: VerticalsHeaderUiState,
+            override val searchInputState: VerticalsSearchInputUiState,
+            override val items: List<VerticalsListItemUiState>
+        ) : VerticalsUiState() {
+            override val showContent: Boolean = true
+        }
+    }
+
+    sealed class VerticalsSearchInputUiState(val isVisible: Boolean) {
+        open val hint: String = ""
+        open val showProgress: Boolean = false
+        open val showClearButton: Boolean = false
+
+        object Hidden : VerticalsSearchInputUiState(false)
+        data class Visible(
+            override val hint: String,
+            override val showProgress: Boolean,
+            override val showClearButton: Boolean
+        ) : VerticalsSearchInputUiState(true)
+    }
+
+    sealed class VerticalsHeaderUiState(val isVisible: Boolean) {
+        open val title: String = ""
+        open val subtitle: String = ""
+
+        object Hidden : VerticalsHeaderUiState(false)
+        data class Visible(
+            override val title: String,
+            override val subtitle: String
+        ) : VerticalsHeaderUiState(true)
+    }
 
     sealed class VerticalsListItemUiState {
         data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
