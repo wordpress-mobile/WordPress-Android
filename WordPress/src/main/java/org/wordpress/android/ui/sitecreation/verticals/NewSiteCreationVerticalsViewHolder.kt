@@ -51,7 +51,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
         override fun onBind(uiState: VerticalsListItemUiState) {
             uiState as VerticalsFetchSuggestionsErrorUiState
             text.text = itemView.context.getText(uiState.messageResId)
-            retry.text = itemView.context.getText(uiState.retryButonResId)
+            retry.text = itemView.context.getText(uiState.retryButtonResId)
             itemView.setOnClickListener {
                 uiState.onItemTapped.invoke()
             }

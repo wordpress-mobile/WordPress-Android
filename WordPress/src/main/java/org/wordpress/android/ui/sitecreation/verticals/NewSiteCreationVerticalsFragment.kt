@@ -22,6 +22,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
@@ -156,12 +159,12 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
-                contentLayout.visibility = if (state.showContent) View.VISIBLE else View.GONE
-                fullscreenErrorLayout.visibility = if (state.showFullscreenError) View.VISIBLE else View.GONE
-                fullscreenProgressLayout.visibility = if (state.showFullscreenProgress) View.VISIBLE else View.GONE
+                contentLayout.visibility = if (state.contentState == CONTENT) View.VISIBLE else View.GONE
+                fullscreenErrorLayout.visibility = if (state.contentState == FULLSCREEN_ERROR) View.VISIBLE else View.GONE
+                fullscreenProgressLayout.visibility = if (state.contentState == FULLSCREEN_PROGRESS) View.VISIBLE else View.GONE
                 skipButton.visibility = if (state.showSkipButton) View.VISIBLE else View.GONE
-                state.headerUiState?.let { headerState -> updateHeader(headerState) }
-                state.searchInputState?.let { inputState -> updateSearchInput(inputState) }
+                updateHeader(state.headerUiState)
+                updateSearchInput(state.searchInputState)
                 updateSuggestions(state.items)
             }
         })
