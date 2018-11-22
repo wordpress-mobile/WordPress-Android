@@ -10,8 +10,8 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.AllTimeStatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.CommentsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks.FollowersBlock

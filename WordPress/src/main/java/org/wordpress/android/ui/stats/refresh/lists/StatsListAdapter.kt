@@ -3,15 +3,15 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.lists.viewholders.EmptyViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.viewholders.ErrorViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BaseStatsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BlockListViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.EmptyViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.viewholders.ErrorViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 

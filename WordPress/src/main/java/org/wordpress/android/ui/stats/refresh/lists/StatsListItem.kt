@@ -2,9 +2,9 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.annotation.StringRes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
+import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 

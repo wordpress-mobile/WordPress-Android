@@ -19,8 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.models.StatsPostModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.days.DaysListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
@@ -30,6 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.sections.days.DaysListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
@@ -165,7 +165,7 @@ class StatsListFragment : DaggerFragment() {
         }
     }
 
-    private fun updateInsights(insightsState: InsightsUiState) {
+    private fun updateInsights(statsState: StatsUiState) {
         val adapter: StatsListAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsListAdapter(imageManager)
@@ -175,7 +175,7 @@ class StatsListFragment : DaggerFragment() {
         }
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
-        adapter.update(insightsState.data)
+        adapter.update(statsState.data)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
