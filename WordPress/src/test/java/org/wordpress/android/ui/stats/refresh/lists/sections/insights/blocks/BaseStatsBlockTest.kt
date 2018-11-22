@@ -36,7 +36,7 @@ class BaseStatsBlockTest : BaseUnitTest() {
     /**
      * suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
     if (liveData.value == null) {
-    mutableLiveData.postValue(loadCachedData(site) ?: ListInsightItem(listOf(Empty)))
+    mutableLiveData.postValue(loadCachedData(site) ?: BlockList(listOf(Empty)))
     }
     if (refresh) {
     mutableLiveData.postValue(fetchRemoteData(site, refresh, forced))

@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.Failed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
@@ -95,8 +95,8 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(ListInsightItem::class.java)
-        (result as ListInsightItem).items.apply {
+        assertThat(result).isInstanceOf(BlockList::class.java)
+        (result as BlockList).items.apply {
             val title = this[0] as Title
             assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
@@ -134,8 +134,8 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isInstanceOf(ListInsightItem::class.java)
-        (result as ListInsightItem).items.apply {
+        assertThat(result).isInstanceOf(BlockList::class.java)
+        (result as BlockList).items.apply {
             val title = this[0] as Title
             assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)

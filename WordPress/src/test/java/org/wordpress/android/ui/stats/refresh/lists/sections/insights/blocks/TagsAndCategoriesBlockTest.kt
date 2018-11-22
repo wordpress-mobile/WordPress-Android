@@ -32,7 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Failed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class TagsAndCategoriesBlockTest : BaseUnitTest() {
@@ -75,7 +75,7 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
         val result = loadTags(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
@@ -103,7 +103,7 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
         val result = loadTags(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertSingleTag(this.items[1], tagItem.name, singleTagViews.toString())
@@ -121,7 +121,7 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
         val result = loadTags(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             assertThat(this.items[1]).isEqualTo(BlockListItem.Empty)

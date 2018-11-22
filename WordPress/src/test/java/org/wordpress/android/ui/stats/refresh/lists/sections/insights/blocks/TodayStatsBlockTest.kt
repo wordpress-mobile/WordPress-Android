@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Failed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 
 class TodayStatsBlockTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
@@ -56,7 +56,7 @@ class TodayStatsBlockTest : BaseUnitTest() {
         val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(5)
             assertTitle(this.items[0])
             assertViews(this.items[1], showDivider = true)
@@ -79,7 +79,7 @@ class TodayStatsBlockTest : BaseUnitTest() {
         val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertVisitors(this.items[1], showDivider = true)
@@ -100,7 +100,7 @@ class TodayStatsBlockTest : BaseUnitTest() {
         val result = loadTodayStats(refresh, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             assertThat(this.items[1]).isEqualTo(Empty)

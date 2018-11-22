@@ -47,7 +47,7 @@ class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHo
     override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int) {
         val item = items[position]
         when (holder) {
-            is BlockListViewHolder -> holder.bind(item as ListInsightItem)
+            is BlockListViewHolder -> holder.bind(item as BlockList)
             is FailedViewHolder -> holder.bind(item as Failed)
             is EmptyViewHolder -> holder.bind(item as Empty)
         }

@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Failed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import kotlin.math.roundToInt
 
 class MostPopularInsightsBlockTest : BaseUnitTest() {
@@ -63,7 +63,7 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
         val result = loadMostPopularInsights(refresh, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
             assertDay(this.items[1])

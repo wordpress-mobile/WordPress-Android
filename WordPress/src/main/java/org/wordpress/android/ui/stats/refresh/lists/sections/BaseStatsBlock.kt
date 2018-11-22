@@ -8,7 +8,7 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.lists.Failed
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
@@ -76,7 +76,7 @@ abstract class BaseStatsBlock(
         return Failed(type, failingType, message)
     }
 
-    protected fun createDataItem(data: List<BlockListItem>): ListInsightItem {
-        return ListInsightItem(type, data)
+    protected fun createDataItem(data: List<BlockListItem>): BlockList {
+        return BlockList(type, data)
     }
 }

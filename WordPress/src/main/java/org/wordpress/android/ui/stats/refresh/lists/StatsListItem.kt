@@ -17,7 +17,7 @@ sealed class StatsListItem(val type: Type, open val insightsType: InsightsTypes?
     }
 }
 
-data class ListInsightItem(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : StatsListItem(
+data class BlockList(override val insightsType: InsightsTypes, val items: List<BlockListItem>) : StatsListItem(
         BLOCK_LIST,
         insightsType
 )

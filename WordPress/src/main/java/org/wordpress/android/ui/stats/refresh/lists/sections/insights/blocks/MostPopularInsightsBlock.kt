@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class MostPopularInsightsBlock
         }
     }
 
-    private fun loadMostPopularInsightsItem(model: InsightsMostPopularModel): ListInsightItem {
+    private fun loadMostPopularInsightsItem(model: InsightsMostPopularModel): BlockList {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))
         items.add(Label(

@@ -36,7 +36,7 @@ import org.wordpress.android.ui.stats.refresh.lists.Failed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.FAILED
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -96,7 +96,7 @@ class FollowersBlockTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
@@ -135,7 +135,7 @@ class FollowersBlockTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
@@ -174,7 +174,7 @@ class FollowersBlockTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as ListInsightItem).apply {
+        (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
             val tabsItem = this.items[1] as TabsItem
