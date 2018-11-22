@@ -1,4 +1,3 @@
-* Jump directly from WordPress.com in your browser to the same content in your WordPress for Android app via the banner at the bottom of WordPress.com pages!
-* Post revision history is now available in the app via the History entry in the editor menu.
-* The media library now displays the space you’ve used.
-* Bug fixes.
+* The Post Revision screen now shows a visual preview of each revision, so you can see exactly what the older versions looked like and find the one you need quicker.
+* If you used the mobile (i.e., browser) version of WordPress.com and clicked on a banner suggesting that you view something in the app, but then didn’t actually end up on the right page in the app? Those links are a lot more accurate now.
+* Found and squashed some bugs around changing your password and media storage limits.

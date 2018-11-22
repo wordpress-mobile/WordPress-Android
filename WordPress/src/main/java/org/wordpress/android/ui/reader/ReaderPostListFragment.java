@@ -876,12 +876,7 @@ public class ReaderPostListFragment extends Fragment
         mPostAdapter.setCurrentTag(searchTag);
         mCurrentSearchQuery = trimQuery;
         updatePostsInCurrentSearch(0);
-
-        // only submit a site search if the sites tab is active - otherwise we'll delay the site search
-        // until the user taps the sites tab
-        if (getSearchTabsPosition() == TAB_SITES) {
-            updateSitesInCurrentSearch(0);
-        }
+        updateSitesInCurrentSearch(0);
 
         // track that the user performed a search
         if (!trimQuery.equals("")) {
@@ -898,7 +893,9 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        mRecyclerView.setRefreshing(false);
+        if (!isUpdating()) {
+            mRecyclerView.setRefreshing(false);
+        }
         showLoadingProgress(false);
 
         ReaderSiteSearchAdapter adapter = getSiteSearchAdapter();
@@ -982,16 +979,22 @@ public class ReaderPostListFragment extends Fragment
                         if (mPostSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mPostSearchAdapterPos);
                         }
+                        if (getPostAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
+                        }
                     } else if (tab.getPosition() == TAB_SITES) {
                         mRecyclerView.setAdapter(getSiteSearchAdapter());
                         if (mSiteSearchAdapterPos > 0) {
                             mRecyclerView.scrollRecycleViewToPosition(mSiteSearchAdapterPos);
                         }
-                        // perform a site search if the user switched to the site tab and results aren't already showing
-                        if (getSiteSearchAdapter().isEmpty()
-                            && !TextUtils.isEmpty(mCurrentSearchQuery)
-                            && !isEmptyViewShowing()) {
-                            updateSitesInCurrentSearch(0);
+                        if (getSiteSearchAdapter().isEmpty()) {
+                            setEmptyTitleDescriptionAndButton(false);
+                            showEmptyView();
+                        } else {
+                            hideEmptyView();
                         }
                     }
                 }
@@ -1402,8 +1405,12 @@ public class ReaderPostListFragment extends Fragment
                 return;
             }
             if (isEmpty) {
-                setEmptyTitleDescriptionAndButton(false);
-                showEmptyView();
+                if (getPostListType() != ReaderPostListType.SEARCH_RESULTS
+                    || getSearchTabsPosition() == TAB_SITES && getSiteSearchAdapter().isEmpty()
+                    || getSearchTabsPosition() == TAB_POSTS && getPostAdapter().isEmpty()) {
+                    setEmptyTitleDescriptionAndButton(false);
+                    showEmptyView();
+                }
             } else {
                 hideEmptyView();
                 if (mRestorePosition > 0) {

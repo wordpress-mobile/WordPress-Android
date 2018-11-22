@@ -970,7 +970,6 @@
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
-    <string name="invalid_url_message">Check that the URL entered is valid</string>
 
     <!-- QuickPress -->
     <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
@@ -1218,6 +1217,9 @@
     <string name="history_loaded_revision">Revision loaded</string>
     <string name="history_loading_revision">Loading revision</string>
     <string name="history_title" translatable="false">@string/menu_history</string>
+    <string name="history_preview_visual">Visual preview</string>
+    <string name="history_preview_html">HTML preview</string>
+    <string name="history_no_title">(no title)</string>
 
     <!-- Post Formats -->
     <string name="post_format_aside">Aside</string>
@@ -1633,6 +1635,7 @@
     <string name="support_identity_input_dialog_enter_email_and_name">To continue please enter your email address and name</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
+    <string name="support_identity_input_dialog_name_label">Name</string>
 
     <!--Me-->
     <string name="me_profile_photo">Profile Photo</string>
@@ -1907,8 +1910,12 @@
     <string name="account_settings">Account Settings</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="primary_site">Primary site</string>
-    <string name="web_address">Web Address</string>
+    <string name="web_address">Web address</string>
     <string name="web_address_dialog_hint">Shown publicly when you comment.</string>
+    <string name="change_password">Change password</string>
+    <string name="change_password_confirmation">Password changed successfully</string>
+    <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_dialog_message">Changing password&#8230;</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -16,13 +17,18 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface;
+import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity implements GutenbergWarningDialogClickInterface {
+public class PostsListActivity extends AppCompatActivity implements BasicDialogPositiveClickInterface,
+        BasicDialogNegativeClickInterface, BasicDialogOnDismissByOutsideTouchInterface,
+        GutenbergWarningDialogClickInterface {
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
     private PostListFragment mPostList;
@@ -140,7 +146,31 @@ public class PostsListActivity extends AppCompatActivity implements GutenbergWar
         outState.putSerializable(WordPress.SITE, mSite);
     }
 
-    // used for Gutenberg compatibility dialog
+    // BasicDialogFragment Callbacks
+
+    @Override
+    public void onPositiveClicked(@NotNull String instanceTag) {
+        if (mPostList != null) {
+            mPostList.onPositiveClickedForBasicDialog(instanceTag);
+        }
+    }
+
+    @Override
+    public void onNegativeClicked(@NotNull String instanceTag) {
+        if (mPostList != null) {
+            mPostList.onNegativeClickedForBasicDialog(instanceTag);
+        }
+    }
+
+    @Override
+    public void onDismissByOutsideTouch(@NotNull String instanceTag) {
+        if (mPostList != null) {
+            mPostList.onDismissByOutsideTouchForBasicDialog(instanceTag);
+        }
+    }
+
+    // GutenbergWarningDialogClickInterface Callbacks
+
     @Override
     public void onGutenbergWarningDialogEditPostClicked(long gutenbergRemotePostId) {
         if (mPostList != null) {
@@ -163,8 +193,7 @@ public class PostsListActivity extends AppCompatActivity implements GutenbergWar
     }
 
     @Override
-    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId,
-                                                             boolean checked) {
+    public void onGutenbergWarningDialogDontShowAgainClicked(long gutenbergRemotePostId, boolean checked) {
         if (mPostList != null) {
             mPostList.onGutenbergWarningDialogDontShowAgainClicked(gutenbergRemotePostId, checked);
         }

@@ -46,6 +46,7 @@ import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
+import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -90,7 +91,6 @@ import org.wordpress.android.ui.posts.PostPreviewFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
-import org.wordpress.android.ui.posts.adapters.PostListAdapter;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -333,11 +333,11 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PostListFragment object);
 
-    void inject(PostListAdapter object);
-
     void inject(HistoryListFragment object);
 
     void inject(HistoryAdapter object);
+
+    void inject(HistoryDetailContainerFragment object);
 
     void inject(NotificationsListFragment object);
 

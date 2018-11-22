@@ -58,6 +58,7 @@ public class AnalyticsUtils {
     private static final String FEED_ITEM_ID_KEY = "feed_item_id";
     private static final String IS_JETPACK_KEY = "is_jetpack";
     private static final String INTENT_ACTION = "intent_action";
+    private static final String INTENT_HOST = "intent_host";
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTED_URI = "intercepted_uri";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
@@ -318,11 +319,13 @@ public class AnalyticsUtils {
      *
      * @param stat The Stat to bump
      * @param action The Intent action the app was started with
+     * @param host The host if applicable
      * @param data The data URI the app was started with
      */
-    public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, Uri data) {
+    public static void trackWithDeepLinkData(AnalyticsTracker.Stat stat, String action, String host, Uri data) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(INTENT_ACTION, action);
+        properties.put(INTENT_HOST, host);
         properties.put(INTENT_DATA, data != null ? data.toString() : null);
 
         AnalyticsTracker.track(stat, properties);

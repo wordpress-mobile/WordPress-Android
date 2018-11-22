@@ -107,11 +107,9 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -186,7 +184,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment.KEY_REVISION;
+import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -203,9 +201,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface,
-        FullScreenDialogFragment.OnConfirmListener,
-        FullScreenDialogFragment.OnDismissListener {
+        HistoryListFragment.HistoryItemClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -280,7 +276,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
-    private FullScreenDialogFragment mFullScreenDialogFragment;
     private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -352,13 +347,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mFullScreenDialogFragment = (FullScreenDialogFragment)
-                    getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
-
-            if (mFullScreenDialogFragment != null) {
-                mFullScreenDialogFragment.setOnConfirmListener(EditPostActivity.this);
-                mFullScreenDialogFragment.setOnDismissListener(EditPostActivity.this);
-            }
         }
 
         // Check whether to show the visual editor
@@ -469,10 +457,14 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
+        if (savedInstanceState == null) {
+            // Bump the stat the first time the editor is opened.
+            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        }
+
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
             // if we are opening a Post for which an error notification exists, we need to remove
             // it from the dashboard to prevent the user from tapping RETRY on a Post that is
             // being currently edited
@@ -1109,15 +1101,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
-        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
-            Fragment contentFragment = mFullScreenDialogFragment.getContent();
-            if (contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
-                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
-            }
-            mFullScreenDialogFragment.dismiss();
-            return false;
-        }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
@@ -1605,39 +1588,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
-        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
-
-        mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
-                .setTitle(R.string.history_detail_title)
-                .setSubtitle(revision.getTimeSpan())
-                .setToolbarColor(R.color.status_bar_tint)
-                .setAction(R.string.history_load_dialog_button_positive)
-                .setOnConfirmListener(EditPostActivity.this)
-                .setOnDismissListener(EditPostActivity.this)
-                .setContent(HistoryDetailFullScreenDialogFragment.class, bundle)
-                .setHideActivityBar(true)
-                .build();
-
-        mFullScreenDialogFragment.show(getSupportFragmentManager(), FullScreenDialogFragment.TAG);
-    }
-
-    @Override
-    public void onConfirm(@Nullable Bundle result) {
-        mViewPager.setCurrentItem(PAGE_CONTENT);
-
-        if (result != null && result.getParcelable(KEY_REVISION) != null) {
-            mRevision = result.getParcelable(KEY_REVISION);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override public void run() {
-                    loadRevision();
-                }
-            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
-        }
-    }
-
-    @Override
-    public void onDismiss() {
+        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
     }
 
     private void loadRevision() {
@@ -2812,6 +2763,18 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
+                case RequestCodes.HISTORY_DETAIL:
+                    if (data.hasExtra(KEY_REVISION)) {
+                        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                loadRevision();
+                            }
+                        }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
+                    }
+                    break;
             }
         }
     }
@@ -3643,5 +3606,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
+    }
+
+
+    // External Access to the Image Loader
+    public AztecImageLoader getAztecImageLoader() {
+        return mAztecImageLoader;
     }
 }

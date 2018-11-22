@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-31 05:54:07+0000
+Translation-Revision-Date: 2018-11-14 09:54:13+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="history_detail_title">리비전</string>
+    <string name="history_detail_button_previous">이전</string>
+    <string name="history_detail_button_next">다음</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">더 알아보기</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">다시 보지 않음</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">뒤로 가기</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">페이지 편집</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">글 편집</string>
+    <string name="dialog_gutenberg_compatibility_message_page">워드프레스는 완전히 새로운 워드프레스 편집기를 개발하기 위해 노력하고 있습니다. 이 페이지를 계속 편집할 수 있으나 공개하기 전에 페이지를 미리 보는 것이 좋습니다.</string>
+    <string name="dialog_gutenberg_compatibility_message">워드프레스는 완전히 새로운 워드프레스 편집기를 개발하기 위해 노력하고 있습니다. 이 글을 계속 편집할 수 있으나 공개하기 전에 글을 미리 보는 것이 좋습니다.</string>
+    <string name="dialog_gutenberg_compatibility_title">계속하기 전에</string>
+    <string name="media_space_used">%1$s 사용</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">워드프레스닷컴 또는 젯팩에 연결된 독립 호스트 워드프레스 사이트를 입력하세요.</string>
     <string name="history_loading_revision">리비전 로드하는 중</string>
     <string name="history_loaded_revision">리비전 로드됨</string>
-    <string name="history_load_dialog_title">리비전 로드</string>
-    <string name="history_load_dialog_message">%2$s에 %1$s에서 리비전을 로드하시겠습니까?</string>
     <string name="history_load_dialog_button_positive">로드</string>
     <string name="history_footer_post">%2$s에 %1$s에서 작성된 글</string>
     <string name="history_footer_page">%2$s에 %1$s에서 작성된 페이지</string>
@@ -727,6 +737,8 @@ Language: ko_KR
     <string name="error_upload_page_media_param">이 페이지에서 미디어를 업로드하는 동안 오류가 발생했습니다. %s.</string>
     <string name="error_upload_page_param">이 페이지를 업로드하는 동안 오류가 발생했습니다. %s.</string>
     <string name="async_promo_link">어떻게 작동하나요?</string>
+    <string name="async_promo_description_schedule_post">이제 에디터에서 나가면 글이 저장되고 미공개로 예약됩니다! 사용해 보세요!</string>
+    <string name="async_promo_title_publish">자신 있게 공개하세요.</string>
     <string name="editor_uploading_post">글을 업로드 중입니다</string>
     <string name="uploading_media">미디어 업로드 중…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">계속할까요? 이 글을 삭제하면 미디어 업로드도 취소됩니다.</string>
@@ -957,6 +969,7 @@ Language: ko_KR
     <string name="media_upload_error">미디어 업로드 오류가 발생했습니다.</string>
     <string name="retry">다시 시도</string>
     <string name="confirm">확인</string>
+    <string name="xmlrpc_endpoint_forbidden_error">연결할 수 없습니다. 사이트\n XMLRPC 엔드포인트에 액세스를 시도할 때 403 오류가 발생했습니다. 사이트와 통신하려면 이 앱에 필요합니다. 호스트에 문의하여\n 이 문제를 해결하세요.</string>
     <string name="xmlrpc_post_blocked_error">연결할 수 없습니다. 호스트가 POST 요청을 차단하고 있으므로, 사이트와 통신하려면 이 앱에\n 필요합니다. 호스트에 문의하여 이 문제를 해결하세요.</string>
     <string name="reader_hint_search_followed_sites">팔로우된 사이트 검색</string>
     <string name="visual_editor_disabled">비주얼 편집기 사용 안 함</string>
@@ -1766,6 +1779,7 @@ Language: ko_KR
     <string name="settings">설정</string>
     <string name="quickpress_add_error">바로가기 이름을 입력하세요</string>
     <string name="quickpress_window_title">QuickPress 바로가기에 대한 블로그를 선택</string>
+    <string name="pages_private">비공개</string>
     <string name="categories">카테고리</string>
     <string name="tags_separate_with_commas">태그(쉼표로 구분)</string>
     <string name="title">제목</string>

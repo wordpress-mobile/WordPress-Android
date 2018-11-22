@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-24 11:33:11+0000
+Translation-Revision-Date: 2018-11-11 23:42:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="history_detail_title">Revision</string>
     <string name="pages_search_suggestion">Buscar páxinas</string>
     <string name="pages_move_to_trash">Mover ao lixo</string>
     <string name="pages_publish_now">Publicar agora</string>
@@ -821,6 +822,7 @@ Language: gl_ES
     <string name="settings">Configuración</string>
     <string name="quickpress_window_title">Seleccionar un blogue para o atallo de QuickPress</string>
     <string name="quickpress_add_error">O nome do atallo non pode estar baleiro</string>
+    <string name="pages_private">Privado</string>
     <string name="title">Título</string>
     <string name="tags_separate_with_commas">Etiquetas (separadas por comas)</string>
     <string name="categories">Categorías</string>
