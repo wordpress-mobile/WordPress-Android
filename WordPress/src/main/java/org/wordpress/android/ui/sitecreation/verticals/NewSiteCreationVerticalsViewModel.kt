@@ -12,16 +12,16 @@ import kotlinx.coroutines.experimental.withContext
 import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.model.vertical.VerticalModel
+import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.usecases.DummyOnVerticalsHeaderInfoFetched
-import org.wordpress.android.ui.sitecreation.usecases.DummyVerticalsHeaderInfoModel
-import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUseCase
+import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
@@ -40,7 +40,7 @@ private const val throttleDelay: Int = 500
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val fetchVerticalsHeaderInfoUseCase: FetchVerticalsHeaderInfoUseCase,
+    private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
@@ -55,7 +55,9 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     val uiState: LiveData<VerticalsUiState> = _uiState
 
     private var listState: ListState<VerticalModel> = ListState.Init()
-    private lateinit var headerInfo: DummyVerticalsHeaderInfoModel
+    private lateinit var segmentPrompt: SegmentPromptModel
+
+    private var segmentId: Long? = null
 
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
@@ -69,37 +71,38 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         dispatcher.unregister(fetchVerticalsUseCase)
     }
 
-    fun start() {
+    fun start(segmentId: Long) {
         if (isStarted) {
             return
         }
+        this.segmentId = segmentId
         isStarted = true
-        fetchHeaderInfo()
+        fetchSegmentsPrompt()
     }
 
-    private fun fetchHeaderInfo() {
+    private fun fetchSegmentsPrompt() {
         launch {
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenProgressUiState)
             }
-            val headerInfoEvent = fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()
+            val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
             withContext(MAIN) {
-                onHeaderInfoFetched(headerInfoEvent)
+                onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
             }
         }
     }
 
-    private fun onHeaderInfoFetched(event: DummyOnVerticalsHeaderInfoFetched) {
+    private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
             updateUiState(VerticalsFullscreenErrorUiState)
         } else {
-            headerInfo = event.headerInfo!!
+            segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
         }
     }
 
-    fun onFetchHeaderInfoRetry() {
-        fetchHeaderInfo()
+    fun onFetchSegmentsPromptRetry() {
+        fetchSegmentsPrompt()
     }
 
     fun onClearTextBtnClicked() {
@@ -143,12 +146,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         showSkipButton = StringUtils.isEmpty(query),
                         headerUiState = createHeaderUiState(
                                 shouldShowHeader(query),
-                                headerInfo
+                                segmentPrompt
                         ),
                         searchInputState = createSearchInputUiState(
                                 query,
                                 showProgress = state is Loading,
-                                hint = headerInfo.inputHint
+                                hint = segmentPrompt.hint
                         ),
                         items = createSuggestionsUiStates(
                                 onRetry = { updateQuery(query) },
@@ -191,12 +194,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private fun createHeaderUiState(
         isVisible: Boolean,
-        headerInfo: DummyVerticalsHeaderInfoModel
+        segmentsPrompt: SegmentPromptModel
     ): VerticalsHeaderUiState {
         return if (isVisible)
             VerticalsHeaderUiState.Visible(
-                    headerInfo.title,
-                    headerInfo.subtitle
+                    segmentsPrompt.title,
+                    segmentsPrompt.subtitle
             ) else VerticalsHeaderUiState.Hidden
     }
 
