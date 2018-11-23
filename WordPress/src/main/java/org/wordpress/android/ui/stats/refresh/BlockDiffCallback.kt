@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.COLLAPSE_ITEM
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.EXPAND_ITEM
+import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.DIVIDER
@@ -20,6 +23,9 @@ class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
     private val newList: List<BlockListItem>
 ) : Callback() {
+    enum class ExpandPayload {
+        EXPAND_ITEM, COLLAPSE_ITEM
+    }
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
@@ -52,5 +58,18 @@ class BlockDiffCallback(
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        val newItem = newList[newItemPosition]
+        val oldItem = oldList[oldItemPosition]
+        if (newItem is ExpandableItem && oldItem is ExpandableItem) {
+            if (!oldItem.isExpanded && newItem.isExpanded) {
+                return EXPAND_ITEM
+            } else if (oldItem.isExpanded && !newItem.isExpanded) {
+                return COLLAPSE_ITEM
+            }
+        }
+        return null
     }
 }

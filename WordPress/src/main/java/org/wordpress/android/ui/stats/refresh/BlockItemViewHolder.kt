@@ -26,6 +26,8 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.EXPAND_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
@@ -39,7 +41,6 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.util.image.ImageType.IMAGE
 import org.wordpress.android.util.setVisible
@@ -78,11 +79,7 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
-            if (item.icon != null) {
-                imageManager.load(icon, item.icon)
-            } else if (item.iconUrl != null) {
-                imageManager.load(icon, IMAGE, item.iconUrl)
-            }
+            icon.showIcon(imageManager, item)
             text.setTextOrHide(item.textResource, item.text)
             value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
@@ -299,22 +296,25 @@ sealed class BlockItemViewHolder(
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
-        private val expandButton = itemView.findViewById<View>(R.id.expand_button)
+        private val expandButton = itemView.findViewById<ImageView>(R.id.expand_button)
 
-        fun bind(expandableItem: ExpandableItem) {
+        fun bind(
+            expandableItem: ExpandableItem,
+            expandablePayload: ExpandPayload?
+        ) {
             val header = expandableItem.header
-            if (header.icon != null) {
-                imageManager.load(icon, header.icon)
-            } else if (header.iconUrl != null) {
-                imageManager.load(icon, IMAGE, header.iconUrl)
-            }
+            icon.showIcon(imageManager, header)
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
             divider.setVisible(header.showDivider)
 
-            val rotationAngle = if (expandableItem.isExpanded) 180 else 0
-            expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
+            if (expandablePayload != null) {
+                val rotationAngle = if (expandablePayload == EXPAND_ITEM) 180 else 0
+                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
+            } else {
+                expandButton.rotation = if (expandableItem.isExpanded) 180F else 0F
+            }
             itemView.isClickable = true
             itemView.setOnClickListener {
                 expandableItem.onExpandClicked(!expandableItem.isExpanded)
@@ -322,12 +322,24 @@ sealed class BlockItemViewHolder(
         }
     }
 
+    internal fun ImageView.showIcon(
+        imageManager: ImageManager,
+        header: Item
+    ) {
+        this.visibility = View.VISIBLE
+        when {
+            header.icon != null -> imageManager.load(this, header.icon)
+            header.iconUrl != null -> imageManager.load(this, IMAGE, header.iconUrl)
+            else -> this.visibility = GONE
+        }
+    }
+
     fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+        this.visibility = View.VISIBLE
         when {
             resource != null -> this.setText(resource)
             value != null -> this.text = value
             else -> this.visibility = GONE
         }
     }
-
 }

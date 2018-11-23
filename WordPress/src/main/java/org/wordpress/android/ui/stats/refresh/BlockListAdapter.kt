@@ -2,8 +2,8 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
-import android.util.Log
 import android.view.ViewGroup
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.DividerViewHolder
@@ -89,9 +89,9 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
     }
 
     override fun getItemCount() = items.size
-
-    override fun onBindViewHolder(holder: BlockItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BlockItemViewHolder, position: Int, payloads: List<Any>) {
         val item = items[position]
+        val expandablePayload = payloads.find { it is ExpandPayload } as? ExpandPayload
         when (holder) {
             is TitleViewHolder -> holder.bind(item as Title)
             is ItemViewHolder -> holder.bind(item as Item)
@@ -104,7 +104,11 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             is TabsViewHolder -> holder.bind(item as TabsItem)
             is InformationViewHolder -> holder.bind(item as Information)
             is LabelViewHolder -> holder.bind(item as Label)
-            is ExpandableItemViewHolder -> holder.bind(item as ExpandableItem)
+            is ExpandableItemViewHolder -> holder.bind(item as ExpandableItem, expandablePayload)
         }
+    }
+
+    override fun onBindViewHolder(holder: BlockItemViewHolder, position: Int) {
+        onBindViewHolder(holder, position, listOf())
     }
 }
