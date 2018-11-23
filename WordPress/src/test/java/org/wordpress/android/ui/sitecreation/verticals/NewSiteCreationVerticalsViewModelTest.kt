@@ -18,16 +18,16 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.model.vertical.VerticalModel
+import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentPromptError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsError
+import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.usecases.DummyFetchVerticalHeaderInfoError
-import org.wordpress.android.ui.sitecreation.usecases.DummyOnVerticalsHeaderInfoFetched
-import org.wordpress.android.ui.sitecreation.usecases.DummyVerticalsHeaderInfoModel
-import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsHeaderInfoUseCase
+import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
@@ -44,7 +44,7 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchVerticalsUseCase: FetchVerticalsUseCase
-    @Mock lateinit var fetchVerticalsHeaderInfoUseCase: FetchVerticalsHeaderInfoUseCase
+    @Mock lateinit var fetchSegmentsPromptUseCase: FetchSegmentPromptUseCase
 
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
 
@@ -54,16 +54,18 @@ class NewSiteCreationVerticalsViewModelTest {
     private val dummySearchInputHint = "dummyHint"
     private val dummySearchInputTitle = "dummyTitle"
     private val dummySearchInputSubtitle = "dummySubtitle"
-    private val successHeaderInfoEvent = DummyOnVerticalsHeaderInfoFetched(
-            DummyVerticalsHeaderInfoModel(
+    private val successHeaderInfoEvent = OnSegmentPromptFetched(
+            1L,
+            SegmentPromptModel(
                     dummySearchInputTitle,
                     dummySearchInputSubtitle,
                     dummySearchInputHint
             ), null
     )
-    private val errorHeaderInfoEvent = DummyOnVerticalsHeaderInfoFetched(
+    private val errorHeaderInfoEvent = OnSegmentPromptFetched(
+            1L,
             null,
-            DummyFetchVerticalHeaderInfoError(GENERIC_ERROR, null)
+            FetchSegmentPromptError(GENERIC_ERROR, null)
     )
     val firstModel = VerticalModel("firstModel", "1")
     private val secondModel = VerticalModel("secondModel", "2")
@@ -118,7 +120,7 @@ class NewSiteCreationVerticalsViewModelTest {
     fun setUp() {
         viewModel = NewSiteCreationVerticalsViewModel(
                 dispatcher,
-                fetchVerticalsHeaderInfoUseCase,
+                fetchSegmentsPromptUseCase,
                 fetchVerticalsUseCase,
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
@@ -129,29 +131,29 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifyHeaderInfoFetchedOnStart() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.start(1L)
         assertTrue(viewModel.uiState.value!!.contentState == CONTENT)
     }
 
     @Test
     fun verifyFullscreenErrorShownOnFailedHeaderInfoRequest() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(errorHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(errorHeaderInfoEvent)
+        viewModel.start(1L)
         assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
     }
 
     @Test
     fun verifyRetryWorksOnFullScreenError() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(errorHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(errorHeaderInfoEvent)
+        viewModel.start(1L)
         assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
 
-        viewModel.onFetchHeaderInfoRetry()
+        viewModel.onFetchSegmentsPromptRetry()
         assertTrue(viewModel.uiState.value!!.contentState == FULLSCREEN_ERROR)
 
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.onFetchHeaderInfoRetry()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.onFetchSegmentsPromptRetry()
         assertTrue(viewModel.uiState.value!!.contentState == CONTENT)
     }
 
@@ -164,24 +166,24 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifyHeaderShownOnEmptyQuery() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.start(1L)
         assertTrue(viewModel.uiState.value!!.headerUiState.isVisible)
     }
 
     @Test
     fun verifyHeaderNotShownOnNonEmptyQuery() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
-        viewModel.start()
+        viewModel.start(1L)
         viewModel.updateQuery("a", 0)
         assertFalse(viewModel.uiState.value!!.headerUiState.isVisible)
     }
 
     @Test
     fun verifyInputShownOnHeaderInfoFetched() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.start(1L)
         val inputState = viewModel.uiState.value!!.searchInputState
         assertFalse(inputState.showProgress)
         assertFalse(inputState.showClearButton)
@@ -190,17 +192,17 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifyClearSearchNotShownOnEmptyQuery() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.start(1L)
         val searchState = viewModel.uiState.value!!.searchInputState
         assertFalse(searchState.showClearButton)
     }
 
     @Test
     fun verifyClearSearchShownOnNoneEmptyQuery() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
-        viewModel.start()
+        viewModel.start(1L)
         viewModel.updateQuery("abc", 0)
         val searchState = viewModel.uiState.value!!.searchInputState
         assertTrue(searchState.showClearButton)
@@ -208,17 +210,17 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifySearchProgressNotShownOnHeaderInfoFetched() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
-        viewModel.start()
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        viewModel.start(1L)
         val searchState = viewModel.uiState.value!!.searchInputState
         assertFalse(searchState.showProgress)
     }
 
     @Test
     fun verifyStatesAfterUpdatingQuery() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
-        viewModel.start()
+        viewModel.start(1L)
         viewModel.updateQuery("a", delay = 0)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(secondModelEvent)
         viewModel.updateQuery("ab", delay = 0)
@@ -235,9 +237,9 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifyRetryItemShownOnFailedSuggestionsRequest() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(fetchSuggestionsFailedEvent)
-        viewModel.start()
+        viewModel.start(1L)
         viewModel.updateQuery("a", delay = 0)
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(headerAndEmptyInputState)
@@ -249,9 +251,9 @@ class NewSiteCreationVerticalsViewModelTest {
 
     @Test
     fun verifyRetryItemRefetchesSuggestions() = test {
-        whenever(fetchVerticalsHeaderInfoUseCase.fetchVerticalHeaderInfo()).thenReturn(successHeaderInfoEvent)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(fetchSuggestionsFailedEvent)
-        viewModel.start()
+        viewModel.start(1L)
         viewModel.updateQuery("a", delay = 0)
 
         val errorUiState = viewModel.uiState.value!!.items[0] as VerticalsFetchSuggestionsErrorUiState
