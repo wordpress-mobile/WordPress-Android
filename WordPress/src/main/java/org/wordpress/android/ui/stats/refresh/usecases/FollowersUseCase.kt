@@ -56,7 +56,7 @@ class FollowersUseCase
         val error = wpComResponse.error ?: emailResponse.error
 
         return when {
-            error != null -> failedItem(
+            error != null -> createFailedItem(
                     string.stats_view_followers,
                     error.message ?: error.type.name
             )
@@ -98,7 +98,7 @@ class FollowersUseCase
                 navigateTo(ViewFollowersStats(site.siteId))
             })
         }
-        return dataItem(items, uiState)
+        return createDataItem(items, uiState)
     }
 
     private fun buildTab(model: FollowersModel, label: Int): List<BlockListItem> {

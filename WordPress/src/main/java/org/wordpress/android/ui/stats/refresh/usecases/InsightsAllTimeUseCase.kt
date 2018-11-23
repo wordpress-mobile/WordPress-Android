@@ -32,7 +32,7 @@ class InsightsAllTimeUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+            error != null -> createFailedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
             else -> model?.let { loadAllTimeInsightsItem(model) }
         }
     }
@@ -89,6 +89,6 @@ class InsightsAllTimeUseCase
                 )
             }
         }
-        return dataItem(items)
+        return createDataItem(items)
     }
 }

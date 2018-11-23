@@ -40,7 +40,7 @@ class TagsAndCategoriesUseCase
         val error = response.error
 
         return when {
-            error != null -> failedItem(
+            error != null -> createFailedItem(
                     string.stats_view_tags_and_categories,
                     error.message ?: error.type.name
             )
@@ -98,7 +98,7 @@ class TagsAndCategoriesUseCase
                 })
             }
         }
-        return dataItem(items, uiState)
+        return createDataItem(items, uiState)
     }
 
     private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {

@@ -76,11 +76,11 @@ abstract class BaseInsightsUseCase(
         mutableLiveData.value = data
     }
 
-    protected fun failedItem(@StringRes failingType: Int, message: String): Failed {
+    protected fun createFailedItem(@StringRes failingType: Int, message: String): Failed {
         return Failed(type, failingType, message)
     }
 
-    protected fun dataItem(data: List<BlockListItem>, uiState: ListUiState? = null): ListInsightItem {
+    protected fun createDataItem(data: List<BlockListItem>, uiState: ListUiState? = null): ListInsightItem {
         return ListInsightItem(type, data, uiState ?: this.uiState)
     }
 
