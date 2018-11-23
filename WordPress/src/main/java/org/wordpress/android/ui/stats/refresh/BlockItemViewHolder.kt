@@ -151,6 +151,11 @@ sealed class BlockItemViewHolder(
             R.layout.stats_block_empty_item
     )
 
+    class DividerViewHolder(parent: ViewGroup) : BlockItemViewHolder(
+            parent,
+            R.layout.stats_block_divider_item
+    )
+
     class TextViewHolder(parent: ViewGroup) : BlockItemViewHolder(
             parent,
             R.layout.stats_block_text_item
@@ -291,11 +296,8 @@ sealed class BlockItemViewHolder(
 
     class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockItemViewHolder(
             parent,
-            R.layout.stats_block_expandable_item
+            R.layout.stats_block_item
     ) {
-        private val list = itemView.findViewById<RecyclerView>(R.id.expandable_items)
-        private val expandedListDivider = itemView.findViewById<View>(R.id.expanded_list_divider)
-
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
@@ -316,29 +318,12 @@ sealed class BlockItemViewHolder(
             value.setTextOrHide(header.valueResource, header.value)
             divider.setVisible(header.showDivider)
 
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
-            list.isNestedScrollingEnabled = false
-            if (list.adapter == null) {
-                list.adapter = BlockListAdapter(imageManager)
-            }
-            updateExpandedList(expandableItem)
+            val rotationAngle = if (expandableItem.isExpanded) 180 else 0
+            expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
             itemView.isClickable = true
             itemView.setOnClickListener {
-                expandableItem.isExpanded = !expandableItem.isExpanded
-                val rotationAngle = if (expandableItem.isExpanded) 180 else 0
-                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
-                updateExpandedList(expandableItem)
+                expandableItem.onExpandClicked(!expandableItem.isExpanded)
             }
-        }
-
-        private fun updateExpandedList(expandableItem: ExpandableItem) {
-            if (expandableItem.isExpanded) {
-                (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
-            } else {
-                (list.adapter as BlockListAdapter).update(listOf())
-            }
-            divider.setVisible(!expandableItem.isExpanded && expandableItem.header.showDivider)
-            expandedListDivider.setVisible(expandableItem.isExpanded)
         }
     }
 

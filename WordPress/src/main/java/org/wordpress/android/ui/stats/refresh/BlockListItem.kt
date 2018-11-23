@@ -5,6 +5,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
@@ -31,7 +32,8 @@ sealed class BlockListItem(val type: Type) {
         BAR_CHART,
         TABS,
         LABEL,
-        EXPANDABLE_ITEM
+        EXPANDABLE_ITEM,
+        DIVIDER
     }
 
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
@@ -76,11 +78,13 @@ sealed class BlockListItem(val type: Type) {
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
     data class ExpandableItem(
         val header: Item,
-        val expandedItems: List<BlockListItem>,
-        var isExpanded: Boolean = false
+        val isExpanded: Boolean,
+        val onExpandClicked: (isExpanded: Boolean) -> Unit
     ) : BlockListItem(
             EXPANDABLE_ITEM
     )
 
     object Empty : BlockListItem(EMPTY)
+
+    object Divider : BlockListItem(DIVIDER)
 }

@@ -11,12 +11,14 @@ import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEGORIES
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.InsightsItem
+import org.wordpress.android.ui.stats.refresh.ListInsightItem.ListUiState
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.toFormattedString
@@ -53,29 +55,54 @@ class TagsAndCategoriesUseCase
 
     private fun loadTagsAndCategories(
         site: SiteModel,
-        model: TagsModel
+        model: TagsModel,
+        uiState: TagsAndCategoriesUiState = tagsAndCategoriesUiState
     ): InsightsItem {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))
         if (model.tags.isEmpty()) {
             items.add(Empty)
         } else {
-            items.addAll(model.tags.take(PAGE_SIZE).mapIndexed { index, tag ->
+            val tagsList = mutableListOf<BlockListItem>()
+            model.tags.forEachIndexed { index, tag ->
                 when {
-                    tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
-                    else -> ExpandableItem(
-                            mapCategory(tag, index, model.tags.size),
-                            tag.items.map { subTag -> mapItem(subTag) }
-                    )
+                    tag.items.size == 1 -> {
+                        tagsList.add(mapTag(tag, index, model.tags.size))
+                    }
+                    else -> {
+                        val isExpanded = areTagsEqual(tag, uiState.expandedTag)
+                        tagsList.add(ExpandableItem(
+                                mapCategory(tag, index, model.tags.size),
+                                isExpanded
+                        ) { changedExpandedState ->
+                            onDataChanged(
+                                    loadTagsAndCategories(
+                                            site,
+                                            model,
+                                            uiState.copy(expandedTag = if (changedExpandedState) tag else null)
+                                    )
+                            )
+                        })
+                        if (isExpanded) {
+                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag) })
+                            tagsList.add(Divider)
+                        }
+                    }
                 }
-            })
+            }
+
+            items.addAll(tagsList)
             if (model.hasMore) {
                 items.add(Link(text = R.string.stats_insights_view_more) {
                     navigateTo(ViewTagsAndCategoriesStats(site.siteId))
                 })
             }
         }
-        return dataItem(items)
+        return dataItem(items, uiState)
+    }
+
+    private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
+        return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
     private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): Item {
@@ -119,4 +146,9 @@ class TagsAndCategoriesUseCase
     private fun clickTag(link: String) {
         navigateTo(ViewTag(link))
     }
+
+    private val tagsAndCategoriesUiState
+        get() = uiState as? TagsAndCategoriesUiState ?: TagsAndCategoriesUiState(null)
+
+    data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null) : ListUiState
 }

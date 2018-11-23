@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.DividerViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ExpandableItemViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.InformationViewHolder
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
@@ -57,6 +59,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHo
             USER_ITEM -> UserItemViewHolder(parent, imageManager)
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
+            DIVIDER -> DividerViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> ColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
