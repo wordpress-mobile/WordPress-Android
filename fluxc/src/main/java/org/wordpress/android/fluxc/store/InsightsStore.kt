@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store
 
 import kotlinx.coroutines.experimental.withContext
-import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
@@ -17,7 +16,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.StatsStore.OnInsightsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -217,28 +218,4 @@ class InsightsStore
     fun getTags(site: SiteModel, pageSize: Int): TagsModel? {
         return sqlUtils.selectTags(site)?.let { insightsMapper.map(it, pageSize) }
     }
-
-    data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
-        constructor(error: StatsError) : this() {
-            this.error = error
-        }
-    }
-
-    data class FetchInsightsPayload<T>(
-        val response: T? = null
-    ) : Payload<StatsError>() {
-        constructor(error: StatsError) : this() {
-            this.error = error
-        }
-    }
-
-    enum class StatsErrorType {
-        GENERIC_ERROR,
-        TIMEOUT,
-        API_ERROR,
-        AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE
-    }
-
-    class StatsError(var type: StatsErrorType, var message: String? = null) : Store.OnChangedError
 }
