@@ -64,6 +64,8 @@
     <issue id="ContentDescription" severity="error" />
     <issue id="ClickableViewAccessibility" severity="error" />
     <issue id="KeyboardInaccessibleWidget" severity="error" />
+    <issue id="ExportedReceiver" severity="error" />
+    <issue id="ExportedService" severity="error" />
 
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />
