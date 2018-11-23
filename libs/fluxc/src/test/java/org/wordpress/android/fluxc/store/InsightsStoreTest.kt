@@ -34,9 +34,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.T
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
@@ -62,7 +62,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns all time insights per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 ALL_TIME_RESPONSE
         )
         val forced = true
@@ -80,7 +80,7 @@ class InsightsStoreTest {
     fun `returns error when all time insights call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<AllTimeResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<AllTimeResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchAllTimeInsights(site, forced)).thenReturn(errorPayload)
 
@@ -105,7 +105,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns most popular insights per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 MOST_POPULAR_RESPONSE
         )
         val forced = true
@@ -123,7 +123,7 @@ class InsightsStoreTest {
     fun `returns error when most popular insights call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<MostPopularResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<MostPopularResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchMostPopularInsights(site, forced)).thenReturn(errorPayload)
 
@@ -151,14 +151,14 @@ class InsightsStoreTest {
         val postsResponse = PostsResponse(
                 POSTS_FOUND, listOf(LATEST_POST)
         )
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 postsResponse
         )
         val forced = true
         whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(fetchInsightsPayload)
         val viewsResponse = POST_STATS_RESPONSE
         whenever(insightsRestClient.fetchPostStats(site, ID, forced)).thenReturn(
-                FetchInsightsPayload(
+                FetchStatsPayload(
                         viewsResponse
                 )
         )
@@ -188,7 +188,7 @@ class InsightsStoreTest {
     fun `returns error when latest post insights call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<PostsResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<PostsResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchLatestPostForInsights(site, forced)).thenReturn(errorPayload)
 
@@ -210,7 +210,7 @@ class InsightsStoreTest {
         val likeCount = 5
         val commentCount = 10
         val latestPost = PostResponse(id, title, date, url, likeCount, Discussion(commentCount))
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 PostsResponse(
                         postsFound, listOf(latestPost)
                 )
@@ -220,7 +220,7 @@ class InsightsStoreTest {
 
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<PostStatsResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<PostStatsResponse>(StatsError(type, message))
         whenever(insightsRestClient.fetchPostStats(site, id, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchLatestPostInsights(site, forced)
@@ -233,7 +233,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns today stats per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 VISITS_RESPONSE
         )
         val forced = true
@@ -264,7 +264,7 @@ class InsightsStoreTest {
     fun `returns error when today stats call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<VisitResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<VisitResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
 
@@ -278,7 +278,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns WPCOM followers per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 FOLLOWERS_RESPONSE
         )
         val forced = true
@@ -296,7 +296,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns email followers per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 FOLLOWERS_RESPONSE
         )
         val forced = true
@@ -338,7 +338,7 @@ class InsightsStoreTest {
     fun `returns error when WPCOM followers call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchFollowers(site, WP_COM, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
@@ -354,7 +354,7 @@ class InsightsStoreTest {
     fun `returns error when email followers call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<FollowersResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<FollowersResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchFollowers(site, EMAIL, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
@@ -368,7 +368,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns top comments per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 TOP_COMMENTS_RESPONSE
         )
         val forced = true
@@ -399,7 +399,7 @@ class InsightsStoreTest {
     fun `returns error when top comments call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<CommentsResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<CommentsResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchTopComments(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
@@ -413,7 +413,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns tags and categories per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 TAGS_RESPONSE
         )
         val forced = true
@@ -444,7 +444,7 @@ class InsightsStoreTest {
     fun `returns error when tags and categories call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<TagsResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<TagsResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchTags(site, PAGE_SIZE + 1, forced = forced)).thenReturn(errorPayload)
 
