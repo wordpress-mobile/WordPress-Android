@@ -64,11 +64,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     init {
         dispatcher.register(fetchVerticalsUseCase)
+        dispatcher.register(fetchSegmentPromptUseCase)
     }
 
     override fun onCleared() {
         super.onCleared()
         dispatcher.unregister(fetchVerticalsUseCase)
+        dispatcher.unregister(fetchSegmentPromptUseCase)
     }
 
     fun start(segmentId: Long) {
