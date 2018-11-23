@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.design.widget.TabLayout
@@ -41,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.util.image.ImageType.IMAGE
 import org.wordpress.android.util.setVisible
 
@@ -78,11 +78,8 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: Item) {
-            icon.setImageOrLoad(item.icon, item.iconUrl) { imageView, url ->
-                imageManager.load(imageView, IMAGE, url)
-            }
             if (item.icon != null) {
-                icon.setImageResource(item.icon)
+                imageManager.load(icon, item.icon)
             } else if (item.iconUrl != null) {
                 imageManager.load(icon, IMAGE, item.iconUrl)
             }
@@ -114,7 +111,7 @@ sealed class BlockItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: UserItem) {
-            imageManager.loadIntoCircle(icon, AVATAR, item.avatarUrl)
+            imageManager.loadIntoCircle(icon, AVATAR_WITHOUT_BACKGROUND, item.avatarUrl)
             text.text = item.text
             value.text = item.value
             divider.visibility = if (item.showDivider) {
@@ -306,12 +303,10 @@ sealed class BlockItemViewHolder(
 
         fun bind(expandableItem: ExpandableItem) {
             val header = expandableItem.header
-            icon.setImageOrLoad(header.icon, header.iconUrl) { imageView, url ->
-                imageManager.load(
-                        imageView,
-                        IMAGE,
-                        url
-                )
+            if (header.icon != null) {
+                imageManager.load(icon, header.icon)
+            } else if (header.iconUrl != null) {
+                imageManager.load(icon, IMAGE, header.iconUrl)
             }
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
@@ -335,15 +330,4 @@ sealed class BlockItemViewHolder(
         }
     }
 
-    fun ImageView.setImageOrLoad(
-        @DrawableRes resource: Int?,
-        url: String?,
-        loadMethod: (imageView: ImageView, url: String) -> Unit
-    ) {
-        when {
-            resource != null -> this.setImageResource(resource)
-            url != null -> loadMethod(this, url)
-            else -> this.visibility = GONE
-        }
-    }
 }
