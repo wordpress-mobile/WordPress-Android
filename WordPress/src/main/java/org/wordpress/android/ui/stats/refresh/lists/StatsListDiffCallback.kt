@@ -9,8 +9,8 @@ class StatsListDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        return if (oldItem.insightsType != null && newItem.insightsType != null) {
-            oldItem.insightsType == newItem.insightsType
+        return if (oldItem.statsTypes != null && newItem.statsTypes != null) {
+            oldItem.statsTypes == newItem.statsTypes
         } else {
             oldItem.type == newItem.type
         }
