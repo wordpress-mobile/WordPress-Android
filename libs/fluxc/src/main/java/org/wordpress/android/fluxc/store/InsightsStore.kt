@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.F
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.StatsStore.OnInsightsFetched
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
@@ -37,12 +37,12 @@ class InsightsStore
     suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
         val payload = restClient.fetchAllTimeInsights(site, forced)
         return@withContext when {
-            payload.isError -> OnInsightsFetched(payload.error)
+            payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response)
-                OnInsightsFetched(insightsMapper.map(payload.response, site))
+                OnStatsFetched(insightsMapper.map(payload.response, site))
             }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+            else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
@@ -54,15 +54,15 @@ class InsightsStore
     suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean = false) = withContext(coroutineContext) {
         val payload = restClient.fetchMostPopularInsights(site, forced)
         return@withContext when {
-            payload.isError -> OnInsightsFetched(payload.error)
+            payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 val data = payload.response
                 sqlUtils.insert(site, data)
-                OnInsightsFetched(
+                OnStatsFetched(
                         insightsMapper.map(data, site)
                 )
             }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+            else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
@@ -83,15 +83,15 @@ class InsightsStore
                 postStats.response != null -> {
                     sqlUtils.insert(site, latestPost)
                     sqlUtils.insert(site, postStats.response)
-                    OnInsightsFetched(insightsMapper.map(latestPost, postStats.response, site))
+                    OnStatsFetched(insightsMapper.map(latestPost, postStats.response, site))
                 }
-                postStats.isError -> OnInsightsFetched(postStats.error)
-                else -> OnInsightsFetched()
+                postStats.isError -> OnStatsFetched(postStats.error)
+                else -> OnStatsFetched()
             }
         } else if (latestPost.isError) {
-            OnInsightsFetched(latestPost.error)
+            OnStatsFetched(latestPost.error)
         } else {
-            OnInsightsFetched()
+            OnStatsFetched()
         }
     }
 
@@ -110,13 +110,13 @@ class InsightsStore
         val response = restClient.fetchTimePeriodStats(siteModel, DAYS, timeProvider.currentDate, forced)
         return@withContext when {
             response.isError -> {
-                OnInsightsFetched(response.error)
+                OnStatsFetched(response.error)
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response)
-                OnInsightsFetched(insightsMapper.map(response.response))
+                OnStatsFetched(insightsMapper.map(response.response))
             }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+            else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
@@ -129,7 +129,7 @@ class InsightsStore
         siteModel: SiteModel,
         pageSize: Int,
         forced: Boolean = false
-    ): OnInsightsFetched<FollowersModel> {
+    ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, pageSize, forced, WP_COM)
     }
 
@@ -137,7 +137,7 @@ class InsightsStore
         siteModel: SiteModel,
         pageSize: Int,
         forced: Boolean = false
-    ): OnInsightsFetched<FollowersModel> {
+    ): OnStatsFetched<FollowersModel> {
         return fetchFollowers(siteModel, pageSize, forced, EMAIL)
     }
 
@@ -150,13 +150,13 @@ class InsightsStore
         val response = restClient.fetchFollowers(siteModel, followerType, pageSize = pageSize + 1, forced = forced)
         return@withContext when {
             response.isError -> {
-                OnInsightsFetched(response.error)
+                OnStatsFetched(response.error)
             }
             response.response != null -> {
                 sqlUtils.insert(siteModel, response.response, followerType)
-                OnInsightsFetched(insightsMapper.map(response.response, followerType, pageSize))
+                OnStatsFetched(insightsMapper.map(response.response, followerType, pageSize))
             }
-            else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+            else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
@@ -183,13 +183,13 @@ class InsightsStore
                 val response = restClient.fetchTopComments(siteModel, pageSize = pageSize + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
-                        OnInsightsFetched(response.error)
+                        OnStatsFetched(response.error)
                     }
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
-                        OnInsightsFetched(insightsMapper.map(response.response, pageSize))
+                        OnStatsFetched(insightsMapper.map(response.response, pageSize))
                     }
-                    else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+                    else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
@@ -203,15 +203,15 @@ class InsightsStore
                 val response = restClient.fetchTags(siteModel, pageSize = pageSize + 1, forced = forced)
                 return@withContext when {
                     response.isError -> {
-                        OnInsightsFetched(response.error)
+                        OnStatsFetched(response.error)
                     }
                     response.response != null -> {
                         sqlUtils.insert(siteModel, response.response)
-                        OnInsightsFetched(
+                        OnStatsFetched(
                                 insightsMapper.map(response.response, pageSize)
                         )
                     }
-                    else -> OnInsightsFetched(StatsError(INVALID_RESPONSE))
+                    else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
                 }
             }
 
