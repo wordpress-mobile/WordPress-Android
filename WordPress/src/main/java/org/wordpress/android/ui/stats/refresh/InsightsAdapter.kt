@@ -29,7 +29,6 @@ class InsightsAdapter(val imageManager: ImageManager) : Adapter<InsightsViewHold
 
     override fun onBindViewHolder(holder: InsightsViewHolder, position: Int, payloads: List<Any>) {
         val item = items[position]
-        val payload = payloads.getOrNull(position)
         when (holder) {
             is ListInsightsViewHolder -> holder.bind(item as ListInsightItem)
             is FailedViewHolder -> holder.bind(item as Failed)

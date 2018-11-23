@@ -50,17 +50,19 @@ import org.wordpress.android.util.image.ImageManager
 class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
-        Log.d("list_insights", "Old title: ${(items.getOrNull(0) as? Title)?.text} - new count: ${(newItems.getOrNull(0) as? Title)?.text}")
-        Log.d("list_insights", "Old items count: ${items.size} - new count: ${newItems.size}")
-        val diffResult = DiffUtil.calculateDiff(
-                BlockDiffCallback(
-                        items,
-                        newItems
-                )
-        )
-        items = newItems
-
-        diffResult.dispatchUpdatesTo(this)
+        if (newItems.size >= items.size) {
+            val diffResult = DiffUtil.calculateDiff(
+                    BlockDiffCallback(
+                            items,
+                            newItems
+                    )
+            )
+            items = newItems
+            diffResult.dispatchUpdatesTo(this)
+        } else {
+            items = newItems
+            notifyDataSetChanged()
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockItemViewHolder {
