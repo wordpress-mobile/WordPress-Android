@@ -29,11 +29,13 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 private const val keyListState = "list_state"
 
 class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private lateinit var nonNullActivity: FragmentActivity
+    private var segmentId by Delegates.notNull<Long>()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
@@ -76,6 +78,10 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         super.onCreate(savedInstanceState)
         nonNullActivity = activity!!
         (nonNullActivity.application as WordPress).component().inject(this)
+        segmentId = arguments?.getLong(EXTRA_SEGMENT_ID, -1L) ?: -1L
+        if (segmentId == -1L) {
+            throw IllegalStateException("SegmentId is required.")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -133,7 +139,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun initRetryButton(rootView: ViewGroup) {
         val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { _ -> viewModel.onFetchHeaderInfoRetry() }
+        retryBtn.setOnClickListener { _ -> viewModel.onFetchSegmentsPromptRetry() }
     }
 
     private fun initSkipButton(rootView: ViewGroup) {
@@ -172,7 +178,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             searchEditText.setText("")
         })
 
-        viewModel.start()
+        viewModel.start(segmentId)
     }
 
     override fun onHelp() {
@@ -210,5 +216,14 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     companion object {
         val TAG = "site_creation_verticals_fragment_tag"
+        private val EXTRA_SEGMENT_ID = "extra_segment_id"
+
+        fun newInstance(segmentId: Long): NewSiteCreationVerticalsFragment {
+            val fragment = NewSiteCreationVerticalsFragment()
+            val bundle = Bundle()
+            bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }
