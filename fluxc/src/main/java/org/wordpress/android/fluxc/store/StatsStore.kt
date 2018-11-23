@@ -100,7 +100,7 @@ class StatsStore
         }
     }
 
-    data class FetchInsightsPayload<T>(
+    data class FetchStatsPayload<T>(
         val response: T? = null
     ) : Payload<StatsError>() {
         constructor(error: StatsError) : this() {
