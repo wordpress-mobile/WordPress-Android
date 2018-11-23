@@ -33,6 +33,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -131,7 +132,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
         ITEM_CHOOSE_VIDEO,
-        ITEM_CHOOSE_STOCK_MEDIA
+        ITEM_CHOOSE_STOCK_MEDIA,
+        ITEM_CHOOSE_GIPHY
     }
 
     @Override
@@ -899,6 +901,16 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     });
         }
 
+        if (mBrowserType.isBrowser()) {
+            popup.getMenu().add(R.string.photo_picker_giphy).setOnMenuItemClickListener(
+                    new OnMenuItemClickListener() {
+                        @Override public boolean onMenuItemClick(MenuItem item) {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIPHY);
+                            return true;
+                        }
+                    });
+        }
+
         popup.show();
     }
 
@@ -935,6 +947,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                break;
+            case ITEM_CHOOSE_GIPHY:
+                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
                 break;
         }
     }

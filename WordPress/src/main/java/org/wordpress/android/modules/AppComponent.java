@@ -45,6 +45,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
+import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -436,6 +437,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeServiceAdapter object);
 
     void inject(JetpackRemoteInstallFragment jetpackRemoteInstallFragment);
+
+    void inject(GiphyPickerActivity object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
