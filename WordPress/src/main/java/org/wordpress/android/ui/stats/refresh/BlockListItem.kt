@@ -19,6 +19,10 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
+    fun id(): Int {
+        return type.ordinal + Type.values().size * this.itemId
+    }
+    open val itemId: Int = 0
     enum class Type {
         TITLE,
         ITEM,
@@ -37,6 +41,7 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
+
     data class Item(
         @DrawableRes val icon: Int? = null,
         val iconUrl: String? = null,
@@ -46,20 +51,29 @@ sealed class BlockListItem(val type: Type) {
         val value: String? = null,
         val showDivider: Boolean = true,
         val clickAction: (() -> Unit)? = null
-    ) : BlockListItem(ITEM)
+    ) : BlockListItem(ITEM) {
+        override val itemId: Int
+            get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
+    }
 
     data class UserItem(
         val avatarUrl: String,
         val text: String,
         val value: String,
         val showDivider: Boolean = true
-    ) : BlockListItem(USER_ITEM)
+    ) : BlockListItem(USER_ITEM) {
+        override val itemId: Int
+            get() = avatarUrl.hashCode() + text.hashCode()
+    }
 
     data class ListItem(
         val text: String,
         val value: String,
         val showDivider: Boolean = true
-    ) : BlockListItem(LIST_ITEM)
+    ) : BlockListItem(LIST_ITEM) {
+        override val itemId: Int
+            get() = text.hashCode()
+    }
 
     data class Information(val text: String) : BlockListItem(INFO)
 
@@ -82,7 +96,10 @@ sealed class BlockListItem(val type: Type) {
         val onExpandClicked: (isExpanded: Boolean) -> Unit
     ) : BlockListItem(
             EXPANDABLE_ITEM
-    )
+    ) {
+        override val itemId: Int
+            get() = header.itemId
+    }
 
     object Empty : BlockListItem(EMPTY)
 

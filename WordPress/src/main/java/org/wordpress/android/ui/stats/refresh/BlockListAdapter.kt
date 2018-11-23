@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
+import android.util.Log
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.BarChartViewHolder
 import org.wordpress.android.ui.stats.refresh.BlockItemViewHolder.ColumnsViewHolder
@@ -48,8 +50,17 @@ import org.wordpress.android.util.image.ImageManager
 class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
+        Log.d("list_insights", "Old title: ${(items.getOrNull(0) as? Title)?.text} - new count: ${(newItems.getOrNull(0) as? Title)?.text}")
+        Log.d("list_insights", "Old items count: ${items.size} - new count: ${newItems.size}")
+        val diffResult = DiffUtil.calculateDiff(
+                BlockDiffCallback(
+                        items,
+                        newItems
+                )
+        )
         items = newItems
-        notifyDataSetChanged()
+
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockItemViewHolder {
