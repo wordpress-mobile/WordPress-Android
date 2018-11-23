@@ -68,7 +68,9 @@ class StatsStore
         )
     }
 
-    enum class InsightsTypes {
+    interface StatsTypes
+
+    enum class InsightsTypes : StatsTypes {
         LATEST_POST_SUMMARY,
         MOST_POPULAR_DAY_AND_HOUR,
         ALL_TIME_STATS,
@@ -82,7 +84,7 @@ class StatsStore
         PUBLICIZE
     }
 
-    enum class TimeStatsTypes {
+    enum class TimeStatsTypes : StatsTypes {
         OVERVIEW,
         POSTS_AND_PAGES,
         REFERRERS,
