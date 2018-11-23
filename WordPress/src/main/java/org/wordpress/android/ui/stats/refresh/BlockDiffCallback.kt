@@ -26,12 +26,13 @@ class BlockDiffCallback(
     enum class ExpandPayload {
         EXPAND_ITEM, COLLAPSE_ITEM
     }
+
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
         return if (oldItem.type == newItem.type) {
             val type = oldItem.type
-            when(type) {
+            when (type) {
                 ITEM,
                 USER_ITEM,
                 EXPANDABLE_ITEM,
