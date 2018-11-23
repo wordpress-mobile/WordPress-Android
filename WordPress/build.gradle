@@ -68,11 +68,6 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
-
-            def requestedTask = getGradle().getStartParameter().getTaskRequests().toString()
-            if (requestedTask.contains("Vanilla")) {
-                includeReactNativeGradle()
-            }
         }
 
         zalpha { // alpha version - enable experimental features
