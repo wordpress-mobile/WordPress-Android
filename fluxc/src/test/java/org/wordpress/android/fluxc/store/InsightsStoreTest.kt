@@ -34,9 +34,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.T
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
-import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.FetchInsightsPayload
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
