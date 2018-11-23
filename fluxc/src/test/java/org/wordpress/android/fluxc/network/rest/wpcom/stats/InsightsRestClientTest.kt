@@ -37,8 +37,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.T
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.store.TAGS_RESPONSE
 import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
 import org.wordpress.android.fluxc.store.VISITS_RESPONSE
