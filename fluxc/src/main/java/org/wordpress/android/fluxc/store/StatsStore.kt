@@ -94,7 +94,7 @@ class StatsStore
         VIDEOS
     }
 
-    data class OnInsightsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
+    data class OnStatsFetched<T>(val model: T? = null) : Store.OnChanged<StatsError>() {
         constructor(error: StatsError) : this() {
             this.error = error
         }
