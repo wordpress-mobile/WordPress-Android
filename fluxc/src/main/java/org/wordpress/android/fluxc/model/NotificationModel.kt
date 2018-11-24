@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.model
 
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.tools.FormattableMeta
 import java.util.Locale
 
 data class NotificationModel(
@@ -18,7 +19,7 @@ data class NotificationModel(
     val title: String?,
     val body: List<FormattableContent>?,
     val subject: List<FormattableContent>?,
-    val meta: FormattableContent?
+    val meta: FormattableMeta?
 ) {
     enum class Kind {
         AUTOMATTCHER,
