@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
+import org.wordpress.android.fluxc.tools.FormattableMeta
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -107,7 +108,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 title = this.title,
                 formattableBody = this.body?.let { formattableContentMapper.mapFormattableContentListToJson(it) },
                 formattableSubject = this.subject?.let { formattableContentMapper.mapFormattableContentListToJson(it) },
-                formattableMeta = this.meta?.let { formattableContentMapper.mapFormattableContentToJson(it) }
+                formattableMeta = this.meta?.let { formattableContentMapper.mapFormattableMetaToJson(it) }
         )
     }
 
@@ -137,7 +138,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         override fun getId() = this.mId
 
         fun build(formattableContentMapper: FormattableContentMapper): NotificationModel {
-            val subkind: NotificationModel.Subkind? = subtype?.let { NotificationModel.Subkind.valueOf(it) }
+            val subkind: NotificationModel.Subkind? = subtype?.let { NotificationModel.Subkind.fromString(it) }
 
             val body: List<FormattableContent>? = formattableBody?.let {
                 formattableContentMapper.mapToFormattableContentList(it)
@@ -145,15 +146,15 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             val subject: List<FormattableContent>? = formattableSubject?.let {
                 formattableContentMapper.mapToFormattableContentList(it)
             }
-            val meta: FormattableContent? = formattableMeta?.let {
-                formattableContentMapper.mapToFormattableContent(it)
+            val meta: FormattableMeta? = formattableMeta?.let {
+                formattableContentMapper.mapToFormattableMeta(it)
             }
             return NotificationModel(
                     mId,
                     remoteNoteId,
                     localSiteId,
                     noteHash,
-                    NotificationModel.Kind.valueOf(type),
+                    NotificationModel.Kind.fromString(type),
                     subkind,
                     read,
                     icon,
