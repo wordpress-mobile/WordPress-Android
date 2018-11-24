@@ -11,10 +11,14 @@ class FormattableContentMapper @Inject constructor(val gson: Gson) {
     fun mapToFormattableContentList(json: String): List<FormattableContent>
             = gson.fromJson(json, object : TypeToken<List<FormattableContent>>() {}.type)
 
+    fun mapToFormattableMeta(json: String): FormattableMeta = gson.fromJson(json, FormattableMeta::class.java)
+
     fun mapFormattableContentToJson(formattableContent: FormattableContent): String = gson.toJson(formattableContent)
 
     fun mapFormattableContentListToJson(formattableList: List<FormattableContent>): String
             = gson.toJson(formattableList)
+
+    fun mapFormattableMetaToJson(formattableMeta: FormattableMeta): String = gson.toJson(formattableMeta)
 }
 
 data class FormattableContent(
@@ -44,7 +48,8 @@ data class FormattableMeta(
         @SerializedName("site") val site: Long? = null,
         @SerializedName("user") val user: Long? = null,
         @SerializedName("comment") val comment: Long? = null,
-        @SerializedName("post") val post: Long? = null
+        @SerializedName("post") val post: Long? = null,
+        @SerializedName("order") val order: Long? = null
     )
 
     data class Links(
@@ -53,7 +58,8 @@ data class FormattableMeta(
         @SerializedName("comment") val comment: String? = null,
         @SerializedName("post") val post: String? = null,
         @SerializedName("email") val email: String? = null,
-        @SerializedName("home") val home: String? = null
+        @SerializedName("home") val home: String? = null,
+        @SerializedName("order") val order: String? = null
     )
 
     data class Titles(
