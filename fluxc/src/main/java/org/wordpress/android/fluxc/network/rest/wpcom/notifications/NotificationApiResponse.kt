@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.model.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.tools.FormattableMeta
 
 class NotificationApiResponse : Response {
     val id: Long? = null
@@ -18,7 +19,7 @@ class NotificationApiResponse : Response {
     val title: String? = null
     val subject: List<FormattableContent>? = null
     val body: List<FormattableContent>? = null
-    val meta: FormattableContent? = null
+    val meta: FormattableMeta? = null
 
     companion object {
         fun notificationResponseToNotificationModel(
