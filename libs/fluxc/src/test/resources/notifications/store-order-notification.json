@@ -1,0 +1,76 @@
+{
+  "id": 3604874081,
+  "type": "store_order",
+  "read": 1,
+  "noticon": "\uf447",
+  "timestamp": "2018-10-22T21:08:11+00:00",
+  "icon": "https:\/\/s.wp.com\/wp-content\/mu-plugins\/notes\/images\/update-payment-2x.png",
+  "url": "https:\/\/wordpress.com\/store\/order\/droidtester2018.shop\/88",
+  "subject": [
+    {
+      "text": "\ud83c\udf89 You have a new order!"
+    },
+    {
+      "text": "Someone placed a $18.00 order from Woo Test Store",
+      "ranges": [
+        {
+          "type": "site",
+          "indices": [
+            35,
+            49
+          ],
+          "url": "https:\/\/droidtester2018.shop",
+          "id": 141286411
+        }
+      ]
+    }
+  ],
+  "body": [
+    {
+      "text": "",
+      "media": [
+        {
+          "type": "image",
+          "indices": [
+            0,
+            0
+          ],
+          "height": "48",
+          "width": "48",
+          "url": "https:\/\/s.wp.com\/wp-content\/mu-plugins\/notes\/images\/store-cart-icon.png"
+        }
+      ]
+    },
+    {
+      "text": "Order Number: 88\nDate: October 22, 2018\nTotal: $18.00\nPayment Method: Credit Card (Stripe)"
+    },
+    {
+      "text": "Products:\n\nBeanie \u00d7 1\n"
+    },
+    {
+      "text": "\u2139\ufe0f View Order",
+      "ranges": [
+        {
+          "url": "https:\/\/wordpress.com\/store\/order\/droidtester2018.shop\/88",
+          "indices": [
+            0,
+            13
+          ],
+          "type": "link"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "ids": {
+      "site": 141286411,
+      "order": 88
+    },
+    "links": {
+      "site": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/141286411",
+      "order": "https:\/\/public-api.wordpress.com\/rest\/v1\/orders\/88"
+    }
+  },
+  "title": "New Order",
+  "note_hash": 2064099309
+}
