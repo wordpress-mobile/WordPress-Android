@@ -2,12 +2,12 @@ package org.wordpress.android.modules
 
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.android.Main
 import javax.inject.Named
+import kotlin.coroutines.experimental.CoroutineContext
 
 const val UI_SCOPE = "UI_SCOPE"
 const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
@@ -30,13 +30,13 @@ class ThreadModule {
 
     @Provides
     @Named(MAIN_DISPATCHER)
-    fun provideMainDispatcher(): CoroutineDispatcher {
+    fun provideMainDispatcher(): CoroutineContext {
         return Dispatchers.Main
     }
 
     @Provides
     @Named(IO_DISPATCHER)
-    fun provideIODispatcher(): CoroutineDispatcher {
+    fun provideIODispatcher(): CoroutineContext {
         return Dispatchers.IO
     }
 }
