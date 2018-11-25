@@ -23,6 +23,7 @@
 /me/username/
 
 /notifications/
+/notifications/seen/
 
 /read/feed/
 /read/feed/$feed_url_or_id#long,String
