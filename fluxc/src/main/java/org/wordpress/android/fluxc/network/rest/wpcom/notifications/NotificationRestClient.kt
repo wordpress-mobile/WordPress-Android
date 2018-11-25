@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErr
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload
+import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationAppKey
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationError
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationErrorType
@@ -97,6 +98,11 @@ class NotificationRestClient constructor(
         add(request)
     }
 
+    /**
+     * Fetch the latest list of notifications.
+     *
+     * https://developer.wordpress.com/docs/api/1/get/notifications/
+     */
     fun fetchNotifications(site: SiteModel) {
         val url = WPCOMREST.notifications.urlV1_1
         val params = mapOf(
@@ -121,6 +127,32 @@ class NotificationRestClient constructor(
                                 networkError.message)
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotesAction(payload))
+                })
+        add(request)
+    }
+
+    /**
+     * Send the timestamp of the last notification seen to update the last set of notifications seen
+     * on the server.
+     *
+     * https://developer.wordpress.com/docs/api/1/post/notifications/seen
+     */
+    fun markNotificationsSeen(site: SiteModel, timestamp: Long) {
+        val url = WPCOMREST.notifications.seen.urlV1_1
+        val params = mapOf("time" to timestamp.toString())
+        val request = WPComGsonRequest.buildPostRequest(url, params, NotificationSeenApiResponse::class.java,
+                { response ->
+                    val payload = MarkNotificationSeenResponsePayload(site, response.success, response.last_seen_time)
+                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNoteSeenAction(payload))
+                },
+                { networkError ->
+                    val payload = MarkNotificationSeenResponsePayload(site).apply {
+                        error = NotificationError(
+                                NotificationErrorType.fromString(networkError.apiError),
+                                networkError.message
+                        )
+                    }
+                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNoteSeenAction(payload))
                 })
         add(request)
     }

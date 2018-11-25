@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTES
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTES_SEEN
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -93,6 +94,19 @@ constructor(
         constructor(error: NotificationError, site: SiteModel) : this(site) { this.error = error }
     }
 
+    class MarkNotificationsSeenPayload(
+        val site: SiteModel,
+        val lastSeenTime: Long
+    ) : Payload<BaseNetworkError>()
+
+    class MarkNotificationSeenResponsePayload(
+        val site: SiteModel,
+        val success: Boolean = false,
+        val lastSeenTime: Long? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError, site: SiteModel) : this(site) { this.error = error }
+    }
+
     class NotificationError(val type: NotificationErrorType, val message: String = "") : OnChangedError
 
     enum class NotificationErrorType {
@@ -114,6 +128,8 @@ constructor(
 
     class OnNotificationChanged(var rowsAffected: Int): OnChanged<NotificationError>() {
         var causeOfChange: NotificationAction? = null
+        var lastSeenTime: Long? = null
+        var success: Boolean = true
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -124,6 +140,7 @@ constructor(
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
             NotificationAction.FETCH_NOTES -> fetchNotifications(action.payload as FetchNotificationsPayload)
+            NotificationAction.MARK_NOTES_SEEN -> markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
 
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
@@ -132,6 +149,8 @@ constructor(
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
             NotificationAction.FETCHED_NOTES ->
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
+            NotificationAction.MARKED_NOTE_SEEN ->
+                handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
         }
     }
 
@@ -235,6 +254,29 @@ constructor(
             OnNotificationChanged(rowsAffected)
         }.apply {
             causeOfChange = FETCH_NOTES
+        }
+
+        emitChange(onNotificationChanged)
+    }
+
+    private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
+        notificationRestClient.markNotificationsSeen(payload.site, payload.lastSeenTime)
+    }
+
+    private fun handleMarkedNotificationSeen(payload: MarkNotificationSeenResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+            // Notification error
+            OnNotificationChanged(0).apply {
+                error = payload.error
+                success = false
+            }
+        } else {
+            OnNotificationChanged(0).apply {
+                success = payload.success
+                lastSeenTime = payload.lastSeenTime
+            }
+        }.apply {
+            causeOfChange = MARK_NOTES_SEEN
         }
 
         emitChange(onNotificationChanged)
