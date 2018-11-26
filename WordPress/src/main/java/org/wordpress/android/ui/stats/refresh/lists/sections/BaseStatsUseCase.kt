@@ -11,14 +11,14 @@ import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 
-abstract class BaseStatsBlock(
+abstract class BaseStatsUseCase(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val mutableLiveData = MutableLiveData<StatsListItem>()
-    val liveData: LiveData<StatsListItem> = mutableLiveData
+    private val mutableLiveData = MutableLiveData<StatsBlock>()
+    val liveData: LiveData<StatsBlock> = mutableLiveData
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
@@ -62,7 +62,7 @@ abstract class BaseStatsBlock(
      * @param site for which we load the data
      * @return the list item or null when the local value is empty
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel): StatsListItem?
+    protected abstract suspend fun loadCachedData(site: SiteModel): StatsBlock?
 
     /**
      * Fetches remote data from the endpoint.
@@ -70,7 +70,7 @@ abstract class BaseStatsBlock(
      * @param forced is true when we want to get the fresh data
      * @return the list item or null when we haven't received a correct response from the API
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem?
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock?
 
     protected fun createFailedItem(@StringRes failingType: Int, message: String): Error {
         return Error(type, failingType, message)

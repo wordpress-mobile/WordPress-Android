@@ -8,8 +8,8 @@ import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -26,13 +26,13 @@ class MostPopularInsightsUseCase
     private val insightsStore: InsightsStore,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
-) : BaseStatsBlock(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+) : BaseStatsUseCase(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getMostPopularInsights(site)
         return dbModel?.let { loadMostPopularInsightsItem(dbModel) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val response = insightsStore.fetchMostPopularInsights(site, forced)
         val model = response.model
         val error = response.error

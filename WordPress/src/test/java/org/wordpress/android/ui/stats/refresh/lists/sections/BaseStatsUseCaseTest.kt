@@ -10,21 +10,21 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import javax.inject.Provider
 
-class BaseStatsBlockTest : BaseUnitTest() {
-    @Mock lateinit var localDataProvider: Provider<StatsListItem?>
-    @Mock lateinit var remoteDataProvider: Provider<StatsListItem>
-    @Mock lateinit var localData: StatsListItem
-    @Mock lateinit var remoteData: StatsListItem
+class BaseStatsUseCaseTest : BaseUnitTest() {
+    @Mock lateinit var localDataProvider: Provider<StatsBlock?>
+    @Mock lateinit var remoteDataProvider: Provider<StatsBlock>
+    @Mock lateinit var localData: StatsBlock
+    @Mock lateinit var remoteData: StatsBlock
     @Mock lateinit var site: SiteModel
-    private lateinit var block: TestBlock
+    private lateinit var block: TestUseCase
 
     @Before
     fun setUp() {
-        block = TestBlock(
+        block = TestUseCase(
                 localDataProvider,
                 remoteDataProvider
         )
@@ -68,7 +68,7 @@ class BaseStatsBlockTest : BaseUnitTest() {
 
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
-        val result = mutableListOf<StatsListItem?>()
+        val result = mutableListOf<StatsBlock?>()
         assertThat(block.liveData.value).isNull()
 
         block.liveData.observeForever { result.add(it) }
@@ -91,18 +91,18 @@ class BaseStatsBlockTest : BaseUnitTest() {
         assertThat(block.liveData.value).isNull()
     }
 
-    class TestBlock(
-        private val localDataProvider: Provider<StatsListItem?>,
-        private val remoteDataProvider: Provider<StatsListItem>
-    ) : BaseStatsBlock(
+    class TestUseCase(
+        private val localDataProvider: Provider<StatsBlock?>,
+        private val remoteDataProvider: Provider<StatsBlock>
+    ) : BaseStatsUseCase(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {
-        override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+        override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
             return localDataProvider.get()
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem {
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock {
             return remoteDataProvider.get()
         }
     }

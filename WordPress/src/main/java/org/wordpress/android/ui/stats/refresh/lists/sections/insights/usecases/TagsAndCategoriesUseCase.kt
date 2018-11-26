@@ -12,8 +12,8 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEG
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -32,8 +32,8 @@ class TagsAndCategoriesUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
-) : BaseStatsBlock(TAGS_AND_CATEGORIES, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+) : BaseStatsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
@@ -47,7 +47,7 @@ class TagsAndCategoriesUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val model = insightsStore.getTags(site, PAGE_SIZE)
         return model?.let { loadTagsAndCategories(site, model) }
     }
@@ -55,7 +55,7 @@ class TagsAndCategoriesUseCase
     private fun loadTagsAndCategories(
         site: SiteModel,
         model: TagsModel
-    ): StatsListItem {
+    ): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))
         if (model.tags.isEmpty()) {

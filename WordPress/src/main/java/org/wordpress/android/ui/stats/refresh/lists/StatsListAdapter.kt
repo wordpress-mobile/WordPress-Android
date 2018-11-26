@@ -3,11 +3,11 @@ package org.wordpress.android.ui.stats.refresh.lists
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.LOADING
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.values
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BaseStatsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.BlockListViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.EmptyViewHolder
@@ -16,8 +16,8 @@ import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolde
 import org.wordpress.android.util.image.ImageManager
 
 class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
-    private var items: List<StatsListItem> = listOf()
-    fun update(newItems: List<StatsListItem>) {
+    private var items: List<StatsBlock> = listOf()
+    fun update(newItems: List<StatsBlock>) {
         val diffResult = DiffUtil.calculateDiff(
                 StatsListDiffCallback(
                         items,

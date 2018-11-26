@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
@@ -54,7 +54,7 @@ class InsightsUseCase
             useCases.mapValues { entry -> entry.value.liveData }
     )
     private val insights = MutableLiveData<List<InsightsTypes>>()
-    val data: LiveData<List<StatsListItem>> = merge(insights, liveData) { insights, map ->
+    val data: LiveData<List<StatsBlock>> = merge(insights, liveData) { insights, map ->
         insights.mapNotNull { map[it] }
     }
 

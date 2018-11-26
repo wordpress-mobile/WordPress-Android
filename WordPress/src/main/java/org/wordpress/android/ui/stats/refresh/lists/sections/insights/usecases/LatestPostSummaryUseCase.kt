@@ -11,8 +11,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -24,13 +24,13 @@ class LatestPostSummaryUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
-) : BaseStatsBlock(LATEST_POST_SUMMARY, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+) : BaseStatsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getLatestPostInsights(site)
         return dbModel?.let { loadLatestPostSummaryItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
@@ -44,7 +44,7 @@ class LatestPostSummaryUseCase
         }
     }
 
-    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): StatsListItem {
+    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(model))

@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
@@ -158,8 +158,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private suspend fun loadLatestPostSummary(
         refresh: Boolean,
         forced: Boolean
-    ): StatsListItem? {
-        var result: StatsListItem? = null
+    ): StatsBlock? {
+        var result: StatsBlock? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return result

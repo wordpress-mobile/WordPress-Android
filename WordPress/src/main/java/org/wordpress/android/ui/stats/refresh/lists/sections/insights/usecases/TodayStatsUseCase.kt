@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -21,13 +21,13 @@ class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsBlock(TODAY_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+) : BaseStatsUseCase(TODAY_STATS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getTodayInsights(site)
         return dbModel?.let { loadTodayStatsItem(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val response = insightsStore.fetchTodayInsights(site, forced)
         val model = response.model
         val error = response.error
@@ -38,7 +38,7 @@ class TodayStatsUseCase
         }
     }
 
-    private fun loadTodayStatsItem(model: VisitsModel): StatsListItem {
+    private fun loadTodayStatsItem(model: VisitsModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
 

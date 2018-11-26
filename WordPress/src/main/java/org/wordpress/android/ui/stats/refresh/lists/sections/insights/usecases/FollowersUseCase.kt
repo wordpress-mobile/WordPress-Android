@@ -13,8 +13,8 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -36,8 +36,8 @@ class FollowersUseCase
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
-) : BaseStatsBlock(FOLLOWERS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+) : BaseStatsUseCase(FOLLOWERS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
         return if (wpComFollowers != null && emailFollowers != null) loadFollowers(
@@ -47,7 +47,7 @@ class FollowersUseCase
         ) else null
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
         val wpComResponse = deferredWpComResponse.await()
@@ -70,7 +70,7 @@ class FollowersUseCase
         site: SiteModel,
         wpComModel: FollowersModel,
         emailModel: FollowersModel
-    ): StatsListItem {
+    ): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
         items.add(

@@ -33,9 +33,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -245,8 +245,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
         }
     }
 
-    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsListItem {
-        var result: StatsListItem? = null
+    private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsBlock {
+        var result: StatsBlock? = null
         useCase.liveData.observeForever { result = it }
         useCase.fetch(site, refresh, forced)
         return checkNotNull(result)

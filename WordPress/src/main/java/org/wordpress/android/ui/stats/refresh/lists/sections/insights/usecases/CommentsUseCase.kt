@@ -9,8 +9,8 @@ import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
@@ -30,8 +30,8 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsBlock(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsListItem? {
+) : BaseStatsUseCase(COMMENTS, mainDispatcher) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
@@ -45,12 +45,12 @@ class CommentsUseCase
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): StatsListItem? {
+    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getComments(site, PAGE_SIZE)
         return dbModel?.let { loadComments(site, dbModel) }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel): StatsListItem {
+    private fun loadComments(site: SiteModel, model: CommentsModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
