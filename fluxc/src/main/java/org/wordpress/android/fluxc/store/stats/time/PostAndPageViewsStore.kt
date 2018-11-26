@@ -33,13 +33,13 @@ class PostAndPageViewsStore
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, period)
-                OnStatsFetched(timeStatsMapper.map(payload.response, site, pageSize))
+                OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
     fun getPostAndPageViews(site: SiteModel, period: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, site, pageSize) }
+        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }
