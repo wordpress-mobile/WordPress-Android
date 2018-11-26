@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.anyOrNull
+import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertFalse
@@ -67,7 +68,7 @@ class NewSiteCreationVerticalsViewModelTest {
             null,
             FetchSegmentPromptError(GENERIC_ERROR, null)
     )
-    val firstModel = VerticalModel("firstModel", "1")
+    private val firstModel = VerticalModel("firstModel", "1")
     private val secondModel = VerticalModel("secondModel", "2")
     private val headerAndEmptyInputState = VerticalsUiState.VerticalsContentUiState(
             showSkipButton = true,
@@ -165,16 +166,28 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifyHeaderShownOnEmptyQuery() = test {
+    fun verifyHeaderShownInInitialState() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         viewModel.start(1L)
+        assertTrue(viewModel.uiState.value!!.headerUiState.isVisible)
+    }
+
+
+    @Test
+    fun verifyHeaderShownOnEmptyQuery() = test {
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
+        whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
+        viewModel.start(1L)
+        viewModel.updateQuery("a", 0)
+        viewModel.updateQuery("", 0)
         assertTrue(viewModel.uiState.value!!.headerUiState.isVisible)
     }
 
     @Test
     fun verifyHeaderNotShownOnNonEmptyQuery() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
-        whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
+        whenever(fetchVerticalsUseCase.fetchVerticals(argThat { isNotEmpty() })).thenReturn(firstModelEvent)
+        whenever(fetchVerticalsUseCase.fetchVerticals(argThat { isEmpty() })).thenThrow(IllegalArgumentException())
         viewModel.start(1L)
         viewModel.updateQuery("a", 0)
         assertFalse(viewModel.uiState.value!!.headerUiState.isVisible)
@@ -199,9 +212,10 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifyClearSearchShownOnNoneEmptyQuery() = test {
+    fun verifyClearSearchShownOnNonEmptyQuery() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
-        whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(firstModelEvent)
+        whenever(fetchVerticalsUseCase.fetchVerticals(argThat { isNotEmpty() })).thenReturn(firstModelEvent)
+        whenever(fetchVerticalsUseCase.fetchVerticals(argThat { isEmpty() })).thenThrow(IllegalArgumentException())
         viewModel.start(1L)
         viewModel.updateQuery("abc", 0)
         val searchState = viewModel.uiState.value!!.searchInputState
@@ -250,7 +264,7 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifyRetryItemRefetchesSuggestions() = test {
+    fun verifyRetryItemReFetchesSuggestions() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(1L)).thenReturn(successHeaderInfoEvent)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(fetchSuggestionsFailedEvent)
         viewModel.start(1L)
