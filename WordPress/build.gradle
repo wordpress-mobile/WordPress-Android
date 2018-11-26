@@ -196,10 +196,7 @@ dependencies {
     implementation project(path:':libs:utils:WordPressUtils')
     implementation project(path:':libs:networking:WordPressNetworking')
     implementation project(path:':libs:analytics:WordPressAnalytics')
-
-
     implementation project(path:':libs:editor:WordPressEditor')
-
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'

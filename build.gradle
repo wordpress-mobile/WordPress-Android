@@ -47,7 +47,7 @@ allprojects {
         }
     }
 
-    configurations.all { conf ->
+    configurations.all {
         resolutionStrategy {
             force 'org.webkit:android-jsc:r224109'
         }
