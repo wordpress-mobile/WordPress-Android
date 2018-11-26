@@ -166,12 +166,12 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun updateInsights(statsState: StatsUiState) {
-        val adapter: StatsListAdapter
+        val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsListAdapter(imageManager)
+            adapter = StatsBlockAdapter(imageManager)
             recyclerView.adapter = adapter
         } else {
-            adapter = recyclerView.adapter as StatsListAdapter
+            adapter = recyclerView.adapter as StatsBlockAdapter
         }
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()

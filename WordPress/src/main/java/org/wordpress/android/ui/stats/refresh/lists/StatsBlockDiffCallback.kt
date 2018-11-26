@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.support.v7.util.DiffUtil.Callback
 
-class StatsListDiffCallback(
+class StatsBlockDiffCallback(
     private val oldList: List<StatsBlock>,
     private val newList: List<StatsBlock>
 ) : Callback() {

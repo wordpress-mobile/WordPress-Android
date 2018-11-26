@@ -15,11 +15,11 @@ import org.wordpress.android.ui.stats.refresh.lists.viewholders.ErrorViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class StatsListAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
+class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsBlock> = listOf()
     fun update(newItems: List<StatsBlock>) {
         val diffResult = DiffUtil.calculateDiff(
-                StatsListDiffCallback(
+                StatsBlockDiffCallback(
                         items,
                         newItems
                 )
