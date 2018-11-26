@@ -28,6 +28,7 @@
         android:layout_below="@id/sitePreviewTitle"
         android:layout_marginLeft="@dimen/new_site_creation_preview_web_view_side_margin"
         android:layout_marginRight="@dimen/new_site_creation_preview_web_view_side_margin"
+        android:layout_marginBottom="@dimen/negative_margin_medium"
         app:cardBackgroundColor="@color/white"
         app:cardElevation="@dimen/card_elevation">
 
@@ -59,6 +60,7 @@
                 android:id="@+id/sitePreviewWebView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:scrollbarStyle="insideInset"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
