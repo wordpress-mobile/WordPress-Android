@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
-import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 

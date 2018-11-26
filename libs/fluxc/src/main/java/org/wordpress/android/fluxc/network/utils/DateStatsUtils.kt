@@ -21,7 +21,8 @@ enum class StatsGranularity(private val value: String) {
 
     override fun toString(): String {
         return value
-    }}
+    }
+}
 
 fun getFormattedDate(site: SiteModel, date: Date, granularity: StatsGranularity): String {
     return when (granularity) {
