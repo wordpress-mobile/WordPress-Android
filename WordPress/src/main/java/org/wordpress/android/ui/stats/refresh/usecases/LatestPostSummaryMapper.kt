@@ -9,19 +9,16 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Text.Clickable
+import org.wordpress.android.ui.stats.refresh.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.toFormattedString
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.text.DateFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 class LatestPostSummaryMapper
 @Inject constructor(
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider,
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val statsDateFormatter: StatsDateFormatter
 ) {
     fun buildMessageItem(model: InsightsLatestPostModel?): Text {
         if (model == null) {
@@ -63,18 +60,8 @@ class LatestPostSummaryMapper
     }
 
     fun buildBarChartItem(dayViews: List<Pair<String, Int>>): BarChartItem {
-        val parseFormat = SimpleDateFormat("yyyy-MM-dd", localeManagerWrapper.getLocale())
-        val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, localeManagerWrapper.getLocale())
         val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
-                .map { pair -> parseDate(parseFormat, dateFormat, pair.first) to pair.second }
+                .map { pair -> statsDateFormatter.parseDate(pair.first) to pair.second }
         return BarChartItem(barEntries)
-    }
-
-    private fun parseDate(parseFormat: DateFormat, resultFormat: DateFormat, text: String): String {
-        try {
-            return resultFormat.format(parseFormat.parse(text))
-        } catch (e: ParseException) {
-            throw RuntimeException("Unexpected date format")
-        }
     }
 }

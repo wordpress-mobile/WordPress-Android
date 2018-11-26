@@ -76,6 +76,7 @@ sealed class BlockItemViewHolder(
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
+        private val subtext = itemView.findViewById<TextView>(R.id.subtext)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
@@ -89,6 +90,7 @@ sealed class BlockItemViewHolder(
                 imageManager.load(icon, IMAGE, item.iconUrl)
             }
             text.setTextOrHide(item.textResource, item.text)
+            subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
