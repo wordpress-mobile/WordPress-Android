@@ -237,7 +237,8 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyRetryWorksOnFullScreenError() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID)).thenReturn(FAILED_HEADER_PROMPT_FETCHED)
         viewModel.start(SEGMENT_ID)
-        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID)).thenReturn(SUCCESSFUL_HEADER_PROMPT_FETCHED)
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID))
+                .thenReturn(SUCCESSFUL_HEADER_PROMPT_FETCHED)
         viewModel.onFetchSegmentsPromptRetry()
 
         verifyHeaderAndSkipButtonVisible(viewModel.uiState)
