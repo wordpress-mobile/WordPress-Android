@@ -164,9 +164,6 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.github.bumptech.glide:volley-integration:4.6.1@aar'
 
-    // React Native
-    implementation "com.facebook.react:react-native:+" // From node_modules or directly from npmjs.com
-
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'

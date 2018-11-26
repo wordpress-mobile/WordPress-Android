@@ -72,9 +72,6 @@ dependencies {
         implementation ('com.github.wordpress-mobile:gutenberg-mobile:7143f495fc5073c5a0faa7ad74150dbe7670c24d')
     }
 
-    // React Native
-    implementation "com.facebook.react:react-native:+" // From node_modules or directly from npmjs.com
-
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
     implementation "org.jsoup:jsoup:1.10.3"
