@@ -53,7 +53,7 @@ class StatsSqlUtils
         override fun getId() = mId
     }
 
-    enum class Key {
+    enum class BlockType {
         ALL_TIME_INSIGHTS,
         MOST_POPULAR_INSIGHTS,
         LATEST_POST_DETAIL_INSIGHTS,
