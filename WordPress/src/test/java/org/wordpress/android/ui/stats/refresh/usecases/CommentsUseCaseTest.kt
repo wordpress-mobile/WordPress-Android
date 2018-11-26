@@ -143,7 +143,6 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         val result = loadComments(true, forced)
 
-
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
 
         val tabsItem = (result as ListInsightItem).assertTabWithUsers(0)
