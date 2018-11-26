@@ -444,7 +444,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         updateFailedAndUploadingMedia();
 
         if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostResume(getActivity(), (DefaultHardwareBackBtnHandler) getActivity());
+            mReactInstanceManager.onHostResume(getActivity(),
+                    new DefaultHardwareBackBtnHandler() {
+                        @Override public void invokeDefaultOnBackPressed() {
+                            if (isAdded()) {
+                                getActivity().onBackPressed();
+                            }
+                        }
+                    });
         }
     }
 
