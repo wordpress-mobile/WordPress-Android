@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights.blocks
+package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.content.Context
 import com.nhaarman.mockito_kotlin.mock
