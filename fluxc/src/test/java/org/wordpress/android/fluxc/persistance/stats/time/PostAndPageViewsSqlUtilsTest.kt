@@ -20,10 +20,10 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.DAY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.MONTH
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
-import org.wordpress.android.fluxc.store.DAY_POST_AND_PAGE_VIEWS_RESPONSE
-import org.wordpress.android.fluxc.store.MONTH_POST_AND_PAGE_VIEWS_RESPONSE
-import org.wordpress.android.fluxc.store.WEEK_POST_AND_PAGE_VIEWS_RESPONSE
-import org.wordpress.android.fluxc.store.YEAR_POST_AND_PAGE_VIEWS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.DAY_POST_AND_PAGE_VIEWS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.MONTH_POST_AND_PAGE_VIEWS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.WEEK_POST_AND_PAGE_VIEWS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.YEAR_POST_AND_PAGE_VIEWS_RESPONSE
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,9 +51,12 @@ class PostAndPageViewsSqlUtilsTest {
 
     @Test
     fun `inserts post and page day views to stats utils`() {
-        timeStatsSqlUtils.insert(site, DAY_POST_AND_PAGE_VIEWS_RESPONSE, DAYS)
+        timeStatsSqlUtils.insert(site,
+                DAY_POST_AND_PAGE_VIEWS_RESPONSE, DAYS)
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, DAY, DAY_POST_AND_PAGE_VIEWS_RESPONSE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, DAY,
+                DAY_POST_AND_PAGE_VIEWS_RESPONSE
+        )
     }
 
     @Test
@@ -70,9 +73,12 @@ class PostAndPageViewsSqlUtilsTest {
 
     @Test
     fun `inserts post and page week views to stats utils`() {
-        timeStatsSqlUtils.insert(site, WEEK_POST_AND_PAGE_VIEWS_RESPONSE, WEEKS)
+        timeStatsSqlUtils.insert(site,
+                WEEK_POST_AND_PAGE_VIEWS_RESPONSE, WEEKS)
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, WEEK, WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, WEEK,
+                WEEK_POST_AND_PAGE_VIEWS_RESPONSE
+        )
     }
 
     @Test
@@ -89,9 +95,12 @@ class PostAndPageViewsSqlUtilsTest {
 
     @Test
     fun `inserts post and page month views to stats utils`() {
-        timeStatsSqlUtils.insert(site, MONTH_POST_AND_PAGE_VIEWS_RESPONSE, MONTHS)
+        timeStatsSqlUtils.insert(site,
+                MONTH_POST_AND_PAGE_VIEWS_RESPONSE, MONTHS)
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, MONTH, MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, MONTH,
+                MONTH_POST_AND_PAGE_VIEWS_RESPONSE
+        )
     }
 
     @Test
@@ -108,8 +117,11 @@ class PostAndPageViewsSqlUtilsTest {
 
     @Test
     fun `inserts post and page year views to stats utils`() {
-        timeStatsSqlUtils.insert(site, YEAR_POST_AND_PAGE_VIEWS_RESPONSE, YEARS)
+        timeStatsSqlUtils.insert(site,
+                YEAR_POST_AND_PAGE_VIEWS_RESPONSE, YEARS)
 
-        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, YEAR, YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
+        verify(statsSqlUtils).insert(site, POSTS_AND_PAGES_VIEWS, YEAR,
+                YEAR_POST_AND_PAGE_VIEWS_RESPONSE
+        )
     }
 }
