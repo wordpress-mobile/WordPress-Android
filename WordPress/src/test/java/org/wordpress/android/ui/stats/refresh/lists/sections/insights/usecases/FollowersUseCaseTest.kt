@@ -40,12 +40,12 @@ import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-class FollowersBlockTest : BaseUnitTest() {
+class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
-    private lateinit var block: FollowersBlock
+    private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
     private val user = "John Smith"
     private val url = "www.url.com"
@@ -57,7 +57,7 @@ class FollowersBlockTest : BaseUnitTest() {
     val message = "Total followers count is 50"
     @Before
     fun setUp() {
-        block = FollowersBlock(
+        useCase = FollowersUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsUtilsWrapper,
@@ -247,8 +247,8 @@ class FollowersBlockTest : BaseUnitTest() {
 
     private suspend fun loadFollowers(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        block.liveData.observeForever { result = it }
-        block.fetch(site, refresh, forced)
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 

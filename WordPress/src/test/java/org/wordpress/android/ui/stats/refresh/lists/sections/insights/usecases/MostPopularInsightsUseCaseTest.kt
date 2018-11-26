@@ -31,12 +31,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
-class MostPopularInsightsBlockTest : BaseUnitTest() {
+class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dateUtils: DateUtils
     @Mock lateinit var resourceProvider: ResourceProvider
-    private lateinit var block: MostPopularInsightsBlock
+    private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
     private val highestDayPercent = 15.0
     private val dayString = "Tuesday"
@@ -45,7 +45,7 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
     private val hourString = "8:00 PM"
     @Before
     fun setUp() {
-        block = MostPopularInsightsBlock(
+        useCase = MostPopularInsightsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 dateUtils,
@@ -138,8 +138,8 @@ class MostPopularInsightsBlockTest : BaseUnitTest() {
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        block.liveData.observeForever { result = it }
-        block.fetch(site, refresh, forced)
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

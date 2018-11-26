@@ -30,7 +30,7 @@ import javax.inject.Named
 
 private const val PAGE_SIZE = 6
 
-class FollowersBlock
+class FollowersUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,

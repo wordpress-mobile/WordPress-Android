@@ -35,15 +35,15 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIS
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.viewmodel.ResourceProvider
 
-class TagsAndCategoriesBlockTest : BaseUnitTest() {
+class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var resourceProvider: ResourceProvider
-    private lateinit var block: TagsAndCategoriesBlock
+    private lateinit var useCase: TagsAndCategoriesUseCase
     private val pageSize = 6
     @Before
     fun setUp() {
-        block = TagsAndCategoriesBlock(
+        useCase = TagsAndCategoriesUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 resourceProvider
@@ -186,8 +186,8 @@ class TagsAndCategoriesBlockTest : BaseUnitTest() {
 
     private suspend fun loadTags(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        block.liveData.observeForever { result = it }
-        block.fetch(site, refresh, forced)
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

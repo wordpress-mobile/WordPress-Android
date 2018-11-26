@@ -29,19 +29,19 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
-class LatestPostSummaryBlockTest : BaseUnitTest() {
+class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
-    private lateinit var block: LatestPostSummaryBlock
+    private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() = test {
-        block = LatestPostSummaryBlock(
+        useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
                 latestPostSummaryMapper
         )
-        block.navigationTarget.observeForever {}
+        useCase.navigationTarget.observeForever {}
         whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
@@ -160,14 +160,14 @@ class LatestPostSummaryBlockTest : BaseUnitTest() {
         forced: Boolean
     ): StatsListItem? {
         var result: StatsListItem? = null
-        block.liveData.observeForever { result = it }
-        block.fetch(site, refresh, forced)
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
         return result
     }
 
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
-        block.navigationTarget.observeForever { navigationTarget = it }
+        useCase.navigationTarget.observeForever { navigationTarget = it }
         this.action()
         return navigationTarget
     }

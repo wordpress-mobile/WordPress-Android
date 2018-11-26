@@ -27,7 +27,7 @@ import javax.inject.Named
 
 private const val PAGE_SIZE = 6
 
-class TagsAndCategoriesBlock
+class TagsAndCategoriesUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,

@@ -34,10 +34,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.StatsListItem.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
 
-class CommentsBlockTest : BaseUnitTest() {
+class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
-    private lateinit var block: CommentsBlock
+    private lateinit var useCase: CommentsUseCase
     private val postId: Long = 10
     private val postTitle = "Post"
     private val avatar = "avatar.jpg"
@@ -47,7 +47,7 @@ class CommentsBlockTest : BaseUnitTest() {
     private val pageSize = 6
     @Before
     fun setUp() {
-        block = CommentsBlock(
+        useCase = CommentsUseCase(
                 Dispatchers.Unconfined,
                 insightsStore
         )
@@ -239,8 +239,8 @@ class CommentsBlockTest : BaseUnitTest() {
 
     private suspend fun loadComments(refresh: Boolean, forced: Boolean): StatsListItem {
         var result: StatsListItem? = null
-        block.liveData.observeForever { result = it }
-        block.fetch(site, refresh, forced)
+        useCase.liveData.observeForever { result = it }
+        useCase.fetch(site, refresh, forced)
         return checkNotNull(result)
     }
 }

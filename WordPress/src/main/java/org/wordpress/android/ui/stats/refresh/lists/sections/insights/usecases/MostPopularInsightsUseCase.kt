@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.roundToInt
 
-class MostPopularInsightsBlock
+class MostPopularInsightsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
