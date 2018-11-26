@@ -30,9 +30,9 @@ constructor(
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
-        forced: Boolean,
+        period: StatsGranularity,
         pageSize: Int,
-        period: StatsGranularity
+        forced: Boolean
     ): FetchStatsPayload<PostAndPageViewsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.top_posts.urlV1_1
         val params = mapOf(
