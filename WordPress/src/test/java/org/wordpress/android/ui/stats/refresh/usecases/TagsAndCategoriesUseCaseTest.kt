@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.InsightsStore.StatsError
 import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.BlockListItem
+import org.wordpress.android.ui.stats.refresh.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Item
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Link
@@ -41,6 +42,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var useCase: TagsAndCategoriesUseCase
     private val pageSize = 6
+    private val singleTagViews: Long = 10
+    private val firstTag = TagModel.Item("tag1", "tag", "url.com")
+    private val secondTag = TagModel.Item("tag2", "tag", "url2.com")
+    private val singleTag = TagModel(listOf(firstTag), singleTagViews)
+    private val categoryViews: Long = 15
     @Before
     fun setUp() {
         useCase = TagsAndCategoriesUseCase(
@@ -57,11 +63,6 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         whenever(resourceProvider.getString(eq(R.string.stats_category_folded_name), any(), any())).thenReturn(
                 categoryName
         )
-        val singleTagViews: Long = 10
-        val firstTag = TagModel.Item("tag1", "tag", "url.com")
-        val secondTag = TagModel.Item("tag2", "tag", "url2.com")
-        val singleTag = TagModel(listOf(firstTag), singleTagViews)
-        val categoryViews: Long = 15
         val category = TagModel(
                 listOf(firstTag, secondTag),
                 categoryViews
@@ -75,17 +76,35 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         val result = loadTags(true, forced)
 
         assertThat(result.type).isEqualTo(LIST_INSIGHTS)
-        (result as ListInsightItem).apply {
-            assertThat(this.items).hasSize(3)
-            assertTitle(this.items[0])
-            assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
-            assertCategory(this.items[2], categoryName, categoryViews)
-                    .apply {
-                        assertThat(this.expandedItems).hasSize(2)
-                        assertSingleTag(this.expandedItems[0], firstTag.name, null)
-                        assertSingleTag(this.expandedItems[1], secondTag.name, null)
-                    }
-        }
+        val expandableItem = (result as ListInsightItem).assertNonExpandedList(categoryName)
+
+        expandableItem.onExpandClicked(true)
+
+        val updatedResult = loadTags(true, forced)
+
+        (updatedResult as ListInsightItem).assertExpandedList(categoryName)
+    }
+
+    private fun ListInsightItem.assertNonExpandedList(
+        categoryName: String
+    ): ExpandableItem {
+        assertThat(this.items).hasSize(3)
+        assertTitle(this.items[0])
+        assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
+        return assertCategory(this.items[2], categoryName, categoryViews)
+    }
+
+    private fun ListInsightItem.assertExpandedList(
+        categoryName: String
+    ): ExpandableItem {
+        assertThat(this.items).hasSize(6)
+        assertTitle(this.items[0])
+        assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
+        val expandableItem = assertCategory(this.items[2], categoryName, categoryViews)
+        assertSingleTag(this.items[3], firstTag.name, null)
+        assertSingleTag(this.items[4], secondTag.name, null)
+        assertThat(this.items[5]).isEqualTo(Divider)
+        return expandableItem
     }
 
     @Test

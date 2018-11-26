@@ -27,10 +27,7 @@ import org.wordpress.android.ui.stats.refresh.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
@@ -71,7 +68,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `maps WPCOM followers to UI model`() = test {
+    fun `maps followers from selected tab to UI model and select empty tab`() = test {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
@@ -96,17 +93,13 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
-        (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
+        val tabsItem = (result as ListInsightItem).assertSelectedFollowers(position = 0)
 
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_followers_wordpress_com)
-            assertTabWithFollower(tabsItem.tabs[0])
+        tabsItem.onTabSelected(1)
 
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_followers_email)
-            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
-        }
+        val updatedResult = loadFollowers(refresh, forced)
+
+        (updatedResult as ListInsightItem).assertEmptyTabSelected(1)
     }
 
     @Test
@@ -135,17 +128,11 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
-        (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
+        val tabsItem = (result as ListInsightItem).assertEmptyTabSelected(0)
 
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_followers_wordpress_com)
-            assertThat(tabsItem.tabs[0].items).containsOnly(Empty)
-
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_followers_email)
-            assertTabWithFollower(tabsItem.tabs[1])
-        }
+        tabsItem.onTabSelected(1)
+        val updatedResult = loadFollowers(refresh, forced)
+        (updatedResult as ListInsightItem).assertSelectedFollowers(position = 1)
     }
 
     @Test
@@ -174,17 +161,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(LIST_INSIGHTS)
-        (result as ListInsightItem).apply {
-            Assertions.assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
-
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_followers_wordpress_com)
-            assertThat(tabsItem.tabs[0].items).containsOnly(Empty)
-
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_followers_email)
-            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
-        }
+        (result as ListInsightItem).assertEmptyTabSelected(0)
     }
 
     @Test
@@ -252,26 +229,41 @@ class FollowersUseCaseTest : BaseUnitTest() {
         return checkNotNull(result)
     }
 
-    private fun assertTabWithFollower(tab: TabsItem.Tab) {
-        val infoItem = tab.items[0]
-        assertThat(infoItem.type).isEqualTo(INFO)
-        assertThat((infoItem as Information).text).isEqualTo(message)
-
-        val labelItem = tab.items[1]
-        assertThat(labelItem.type).isEqualTo(LABEL)
-        assertThat((labelItem as Label).leftLabel).isEqualTo(R.string.stats_follower_label)
-        assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_follower_since_label)
-
-        val userItem = tab.items[2]
-        assertThat(userItem.type).isEqualTo(USER_ITEM)
-        assertThat((userItem as UserItem).avatarUrl).isEqualTo(avatar)
-        assertThat(userItem.showDivider).isEqualTo(false)
-        assertThat(userItem.text).isEqualTo(user)
-        assertThat(userItem.value).isEqualTo(sinceLabel)
-    }
-
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).text).isEqualTo(R.string.stats_view_followers)
+    }
+
+    private fun ListInsightItem.assertSelectedFollowers(position: Int): TabsItem {
+        assertThat(this.items).hasSize(5)
+        assertTitle(this.items[0])
+        val tabsItem = this.items[1] as TabsItem
+        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
+        assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
+        assertThat(this.items[2]).isEqualTo(Information("Total followers count is 50"))
+        assertThat(this.items[3]).isEqualTo(
+                Label(
+                        string.stats_follower_label,
+                        string.stats_follower_since_label
+                )
+        )
+        val follower = this.items[4] as UserItem
+        assertThat(follower.avatarUrl).isEqualTo(avatar)
+        assertThat(follower.text).isEqualTo(user)
+        assertThat(follower.value).isEqualTo(sinceLabel)
+        assertThat(follower.showDivider).isEqualTo(false)
+        return tabsItem
+    }
+
+    private fun ListInsightItem.assertEmptyTabSelected(position: Int): TabsItem {
+        assertThat(this.items).hasSize(3)
+        assertTitle(this.items[0])
+        val tabsItem = this.items[1] as TabsItem
+        assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
+        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_followers_wordpress_com)
+        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
+        assertThat(this.items[2]).isEqualTo(Empty)
+        return tabsItem
     }
 }
