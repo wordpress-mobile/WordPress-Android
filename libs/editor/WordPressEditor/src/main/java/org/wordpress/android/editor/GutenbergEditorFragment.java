@@ -31,7 +31,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -48,18 +47,8 @@ import android.widget.Toast;
 
 
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactInstanceManagerBuilder;
-import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.common.LifecycleState;
-import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
-import com.github.godness84.RNRecyclerViewList.RNRecyclerviewListPackage;
 import com.google.gson.Gson;
-import com.horcrux.svg.SvgPackage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,10 +82,9 @@ import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
-import org.wordpress.mobile.ReactNativeAztec.ReactAztecPackage;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.MediaSelectedCallback;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.RNReactNativeGutenbergBridgePackage;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -106,8 +94,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
@@ -171,17 +157,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
-    private ReactRootView mReactRootView;
-    private ReactInstanceManager mReactInstanceManager;
-    private ReactContext mReactContext;
-    private RNReactNativeGutenbergBridgePackage mRnReactNativeGutenbergBridgePackage;
-    private MediaSelectedCallback mPendingMediaSelectedCallback;
+    private WPAndroidGlueCode mWPAndroidGlueCode;
 
-    private String mContentHtml = "";
-    private boolean mContentChanged;
-    private CountDownLatch mGetContentCountDownLatch;
-
-    private static final String PROP_NAME_INITIAL_DATA = "initialData";
+    public GutenbergEditorFragment() {
+        mWPAndroidGlueCode = new WPAndroidGlueCode();
+    }
 
     public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
@@ -197,7 +177,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SoLoader.init(getContext(), /* native exopackage */ false);
+        mWPAndroidGlueCode.onCreate(getContext());
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
@@ -207,63 +187,22 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    protected List<ReactPackage> getPackages() {
-        mRnReactNativeGutenbergBridgePackage = new RNReactNativeGutenbergBridgePackage(new GutenbergBridgeJS2Parent() {
-            @Override
-            public void responseHtml(String html, boolean changed) {
-                mContentHtml = html;
-                mContentChanged = changed;
-                mGetContentCountDownLatch.countDown();
-            }
-
-            @Override public void onMediaLibraryPress(MediaSelectedCallback mediaSelectedCallback) {
-                mPendingMediaSelectedCallback = mediaSelectedCallback;
-                onToolbarMediaButtonClicked();
-            }
-        });
-        return Arrays.asList(
-                new MainReactPackage(),
-                new SvgPackage(),
-                new ReactAztecPackage(),
-                new RNRecyclerviewListPackage(),
-                mRnReactNativeGutenbergBridgePackage);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         mTitle = view.findViewById(R.id.title);
-        mReactRootView = view.findViewById(R.id.gutenberg);
+        mWPAndroidGlueCode.onCreateView(
+                (ReactRootView) view.findViewById(R.id.gutenberg),
+                new OnMediaLibraryButtonListener() {
+                    @Override public void onMediaLibraryButtonClick() {
+                        onToolbarMediaButtonClicked();
+                    }
+                },
+                getActivity().getApplication(),
+                BuildConfig.DEBUG,
+                BuildConfig.BUILD_GUTENBERG_FROM_SOURCE);
         mSource = view.findViewById(R.id.source);
-
-        ReactInstanceManagerBuilder builder =
-                ReactInstanceManager.builder()
-                                    .setApplication(getActivity().getApplication())
-                                    .setJSMainModulePath("index")
-                                    .addPackages(getPackages())
-                                    .setUseDeveloperSupport(BuildConfig.DEBUG)
-                                    .setInitialLifecycleState(LifecycleState.RESUMED);
-        if (!BuildConfig.BUILD_GUTENBERG_FROM_SOURCE) {
-            builder.setBundleAssetName("index.android.bundle");
-        }
-        mReactInstanceManager = builder.build();
-        mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
-            @Override
-            public void onReactContextInitialized(ReactContext context) {
-                mReactContext = context;
-            }
-        });
-        Bundle initialProps = mReactRootView.getAppProperties();
-        if (initialProps == null) {
-            initialProps = new Bundle();
-        }
-        initialProps.putString(PROP_NAME_INITIAL_DATA, "");
-
-
-        // The string here (e.g. "MyReactNativeApp") has to match
-        // the string in AppRegistry.registerComponent() in index.js
-        mReactRootView.startReactApplication(mReactInstanceManager, "gutenberg", initialProps);
 
         mTitle.addTextChangedListener(mTextWatcher);
 //        mContent.addTextChangedListener(mTextWatcher);
@@ -422,9 +361,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onPause();
         mEditorWasPaused = true;
 
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostPause(getActivity());
-        }
+        mWPAndroidGlueCode.onPause(getActivity());
     }
 
     @Override
@@ -443,16 +380,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
 
-        if (mReactInstanceManager != null) {
-            mReactInstanceManager.onHostResume(getActivity(),
-                    new DefaultHardwareBackBtnHandler() {
-                        @Override public void invokeDefaultOnBackPressed() {
-                            if (isAdded()) {
-                                getActivity().onBackPressed();
-                            }
-                        }
-                    });
-        }
+        mWPAndroidGlueCode.onResume(this, getActivity());
     }
 
     @Override
@@ -469,18 +397,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mReactRootView != null) {
-            mReactRootView.unmountReactApplication();
-            mReactRootView = null;
-        }
-        if (mReactInstanceManager != null) {
-            // onDestroy may be called on a ReactFragment after another ReactFragment has been
-            // created and resumed with the same React Instance Manager. Make sure we only clean up
-            // host's React Instance Manager if no other React Fragment is actively using it.
-            if (mReactInstanceManager.getLifecycleState() != LifecycleState.RESUMED) {
-                mReactInstanceManager.onHostDestroy(getActivity());
-            }
-        }
+        mWPAndroidGlueCode.onDestroy(getActivity());
     }
 
     @Override
@@ -555,7 +472,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 //        }
 
         if (item.getItemId() == R.id.debugmenu) {
-            mReactInstanceManager.showDevOptionsDialog();
+            mWPAndroidGlueCode.showDevOptionsDialog();
             return true;
         }
 
@@ -622,7 +539,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             text = "";
         }
 
-        if (mReactRootView == null || mSource == null) {
+        if (!mWPAndroidGlueCode.hasReactRootView() || mSource == null) {
             return;
         }
 
@@ -640,12 +557,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mSource.displayStyledAndFormattedHtml(postContent);
 //        mContent.fromHtml(postContent, true);
 
-        Bundle appProps = mReactRootView.getAppProperties();
-        if (appProps == null) {
-            appProps = new Bundle();
-        }
-        appProps.putString(PROP_NAME_INITIAL_DATA, postContent);
-        mReactRootView.setAppProperties(appProps);
+        mWPAndroidGlueCode.setContent(postContent);
 
         updateFailedAndUploadingMedia();
 
@@ -995,34 +907,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public CharSequence getContent(CharSequence originalContent) {
-        if (mReactContext != null) {
-            mGetContentCountDownLatch = new CountDownLatch(1);
-
-            mRnReactNativeGutenbergBridgePackage.getRNReactNativeGutenbergBridgeModule().getHtmlFromJS();
-
-            try {
-                mGetContentCountDownLatch.await(10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                AppLog.e(T.EDITOR, e);
+        return mWPAndroidGlueCode.getContent(originalContent, new OnGetContentTimeout() {
+            @Override public void onGetContentTimeout(InterruptedException ie) {
+                AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
-
-            return mContentChanged ? StringUtils.notNullStr(mContentHtml) : originalContent;
-        } else {
-            Log.d("QWER", "context is null");
-        }
-
-        return originalContent;
-
-//        if (!isAdded()) {
-//            return "";
-//        }
-
-//        if (mContent.getVisibility() == View.VISIBLE) {
-//            return mContent.hasChanges() == EditorHasChanges.NO_CHANGES ? originalContent : mContent.toHtml(false);
-//        } else {
-//            return mSource.hasChanges() == EditorHasChanges.NO_CHANGES ? originalContent : mSource.getPureHtml(false);
-//        }
+        });
     }
 
     @Override
@@ -1040,10 +930,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return;
         }
 
-        if (mPendingMediaSelectedCallback != null) {
-            mPendingMediaSelectedCallback.onMediaSelected(mediaUrl);
-            mPendingMediaSelectedCallback = null;
-        }
+        mWPAndroidGlueCode.appendMediaFile(mediaUrl);
 
 //        if (URLUtil.isNetworkUrl(mediaUrl)) {
 //            final AztecAttributes attributes = new AztecAttributes();
