@@ -43,7 +43,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 44;
+        return 45;
     }
 
     @Override
@@ -371,6 +371,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                            + "UNIQUE(LIST_ID, REMOTE_ITEM_ID) ON CONFLICT IGNORE)");
                 db.execSQL("ALTER TABLE PostModel ADD LAST_MODIFIED TEXT");
                 oldVersion++;
+            case 44:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                migrateAddOn(ADDON_WOOCOMMERCE, db, oldVersion);
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -434,6 +438,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                     AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
                     db.execSQL("CREATE TABLE WCOrderStatsModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                                + "LOCAL_SITE_ID INTEGER,UNIT TEXT NOT NULL,FIELDS TEXT NOT NULL,DATA TEXT NOT NULL)");
+                    break;
+                case 44:
+                    AppLog.d(T.DB, "Migrating addon " + addOnName + " to version " + (oldDbVersion + 1));
+                    db.execSQL("ALTER TABLE WCOrderNoteModel ADD IS_SYSTEM_NOTE INTEGER");
                     break;
             }
         }
