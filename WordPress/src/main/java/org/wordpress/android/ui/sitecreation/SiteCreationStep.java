@@ -1,7 +1,9 @@
-package org.wordpress.android.util.wizard;
+package org.wordpress.android.ui.sitecreation;
+
+import org.wordpress.android.util.wizard.WizardStep;
 
 public enum SiteCreationStep implements WizardStep {
-    SEGMENTS, VERTICALS;
+    SEGMENTS, VERTICALS, DOMAINS;
 
     public static SiteCreationStep fromString(String input) {
         switch (input) {
@@ -9,6 +11,8 @@ public enum SiteCreationStep implements WizardStep {
                 return SEGMENTS;
             case "site_creation_verticals":
                 return VERTICALS;
+            case "site_creation_domains":
+                return DOMAINS;
             // TODO we should consider skipping the step when it's unknown
             default:
                 throw new IllegalArgumentException("SiteCreationStep not recognized: $input");
