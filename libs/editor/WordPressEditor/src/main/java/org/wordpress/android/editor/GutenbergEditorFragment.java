@@ -49,6 +49,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactInstanceManagerBuilder;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
 import com.facebook.react.bridge.ReactContext;
@@ -236,14 +237,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mReactRootView = view.findViewById(R.id.gutenberg);
         mSource = view.findViewById(R.id.source);
 
-        mReactInstanceManager = ReactInstanceManager.builder()
-                                                    .setApplication(getActivity().getApplication())
-                                                    .setBundleAssetName("index.android.bundle")
-                                                    .setJSMainModulePath("index")
-                                                    .addPackages(getPackages())
-                                                    .setUseDeveloperSupport(BuildConfig.DEBUG)
-                                                    .setInitialLifecycleState(LifecycleState.RESUMED)
-                                                    .build();
+        ReactInstanceManagerBuilder builder =
+                ReactInstanceManager.builder()
+                                    .setApplication(getActivity().getApplication())
+                                    .setJSMainModulePath("index")
+                                    .addPackages(getPackages())
+                                    .setUseDeveloperSupport(BuildConfig.DEBUG)
+                                    .setInitialLifecycleState(LifecycleState.RESUMED);
+        if (!BuildConfig.BUILD_GUTENBERG_FROM_SOURCE) {
+            builder.setBundleAssetName("index.android.bundle");
+        }
+        mReactInstanceManager = builder.build();
         mReactInstanceManager.addReactInstanceEventListener(new ReactInstanceManager.ReactInstanceEventListener() {
             @Override
             public void onReactContextInitialized(ReactContext context) {

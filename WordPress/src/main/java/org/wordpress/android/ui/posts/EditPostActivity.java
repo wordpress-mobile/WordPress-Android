@@ -362,12 +362,9 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
-        if (BuildConfig.FLAVOR == "vanilla" || BuildConfig.FLAVOR == "gutenberg") {
-            mShowGutenbergEditor = true;
-        } else {
-            mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-            mShowNewEditor = AppPrefs.isVisualEditorEnabled();
-        }
+        mShowGutenbergEditor = true;
+//        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
+//        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
