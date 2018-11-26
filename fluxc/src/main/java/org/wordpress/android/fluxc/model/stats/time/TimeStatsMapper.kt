@@ -8,10 +8,11 @@ import javax.inject.Inject
 
 class TimeStatsMapper
 @Inject constructor() {
-    fun map(response: PostAndPageViewsResponse, site: SiteModel): PostAndPageViewsModel {
-        val stats = response.days.entries.first().value.postViews.map {
+    fun map(response: PostAndPageViewsResponse, site: SiteModel, pageSize: Int): PostAndPageViewsModel {
+        val postViews = response.days.entries.first().value.postViews
+        val stats = postViews.take(pageSize).map {
             ViewsModel(it.title, it.views, ViewsType.valueOf(it.type))
         }
-        return PostAndPageViewsModel(stats)
+        return PostAndPageViewsModel(stats, postViews.size > pageSize )
     }
 }
