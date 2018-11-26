@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.persistence
 
+import android.annotation.SuppressLint
 import com.google.gson.Gson
 import com.wellsql.generated.NotificationModelTable
 import com.yarolegovich.wellsql.SelectQuery
+import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
@@ -49,9 +51,10 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         return updateQueries.asSequence().map { it.execute() }.sum() + new.count()
     }
 
+    @SuppressLint("WrongConstant")
     fun getNotificationsForSite(
         site: SiteModel,
-        @SelectQuery.Order order: Int,
+        @SelectQuery.Order order: Int = ORDER_DESCENDING,
         filterByType: List<String>? = null,
         filterBySubtype: List<String>? = null
     ): List<NotificationModel> {
