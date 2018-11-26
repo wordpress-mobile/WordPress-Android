@@ -36,12 +36,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
-import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.FOLLOWERS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
-import org.wordpress.android.fluxc.store.TAGS_RESPONSE
-import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
-import org.wordpress.android.fluxc.store.VISITS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.TAGS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.VISITS_RESPONSE
 import org.wordpress.android.fluxc.test
 import java.text.SimpleDateFormat
 import java.util.Date
