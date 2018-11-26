@@ -105,7 +105,7 @@ class PostAndPageViewsRestClientTest {
         val response = mock<PostAndPageViewsResponse>()
         initAllTimeResponse(response)
 
-        val responseModel = restClient.fetchPostAndPageViews(site, false, pageSize, period)
+        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -131,7 +131,7 @@ class PostAndPageViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostAndPageViews(site, false, pageSize, period)
+        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
