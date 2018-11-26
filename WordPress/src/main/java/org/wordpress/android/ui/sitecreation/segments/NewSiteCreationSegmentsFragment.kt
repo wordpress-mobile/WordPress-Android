@@ -25,11 +25,17 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
+    private lateinit var segmentSelectedListener: NewSiteCreationSegmentsListener
 
     private lateinit var errorLayout: ViewGroup
 
     @Inject protected lateinit var imageManager: ImageManager
     @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        segmentSelectedListener = activity as NewSiteCreationSegmentsListener
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -59,7 +65,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { state ->
@@ -70,6 +76,11 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
             }
         })
 
+        viewModel.selectedSegmentId.observe(this, Observer {
+            it?.let { segmentId ->
+                segmentSelectedListener.onSegmentSelected(segmentId)
+            }
+        })
         viewModel.start()
     }
 
