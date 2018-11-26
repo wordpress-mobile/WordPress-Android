@@ -29,8 +29,8 @@
         errorLine1="        mTitle.setOnTouchListener(this);"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/gutenberg/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="278"
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="282"
             column="9"/>
     </issue>
 
@@ -40,8 +40,8 @@
         errorLine1="        mSource.setOnTouchListener(this);"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/gutenberg/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="280"
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="284"
             column="9"/>
     </issue>
 
@@ -51,8 +51,8 @@
         errorLine1="    public boolean onTouch(View view, MotionEvent event) {"
         errorLine2="                   ~~~~~~~">
         <location
-            file="src/gutenberg/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="1467"
+            file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
+            line="1478"
             column="20"/>
     </issue>
 
