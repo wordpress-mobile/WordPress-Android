@@ -28,7 +28,7 @@ class PostAndPageViewsStore
         period: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, forced, pageSize, period)
+        val payload = restClient.fetchPostAndPageViews(site, period, pageSize, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
