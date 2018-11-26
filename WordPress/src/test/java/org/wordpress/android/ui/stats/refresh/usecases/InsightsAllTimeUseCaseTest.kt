@@ -180,6 +180,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
                         forced
                 )
         ).thenReturn(OnInsightsFetched(model))
+        whenever(statsDateFormatter.parseDate(bestDay)).thenReturn(bestDayTransformed)
 
         val result = loadAllTimeInsights(refresh, forced)
 
