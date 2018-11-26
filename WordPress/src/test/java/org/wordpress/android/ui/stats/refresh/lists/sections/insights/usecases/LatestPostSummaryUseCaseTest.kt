@@ -12,9 +12,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
@@ -51,7 +51,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "message"
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         StatsError(
                                 GENERIC_ERROR,
                                 message
@@ -71,7 +71,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     fun `returns null item when model is missing`() = test {
         val forced = false
         val refresh = true
-        whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnInsightsFetched())
+        whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(OnStatsFetched())
 
         val result = loadLatestPostSummary(refresh, forced)
 
@@ -86,7 +86,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val postTitle = "title"
         val model = buildLatestPostModel(postTitle, viewsCount, listOf())
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model
                 )
         )
@@ -121,7 +121,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         val dayViews = listOf("2018-01-01" to 10)
         val model = buildLatestPostModel(postTitle, viewsCount, dayViews)
         whenever(insightsStore.fetchLatestPostInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model
                 )
         )

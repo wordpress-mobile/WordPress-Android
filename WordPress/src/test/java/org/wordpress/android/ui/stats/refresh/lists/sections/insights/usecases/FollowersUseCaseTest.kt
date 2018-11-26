@@ -16,9 +16,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -75,7 +75,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         FollowersModel(
                                 totalCount,
                                 listOf(FollowerModel(avatar, user, url, dateSubscribed)),
@@ -84,7 +84,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -114,7 +114,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -123,7 +123,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         FollowersModel(
                                 totalCount,
                                 listOf(FollowerModel(avatar, user, url, dateSubscribed)),
@@ -153,7 +153,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -162,7 +162,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -193,12 +193,12 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
         whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -222,7 +222,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchWpComFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         model = FollowersModel(
                                 0,
                                 listOf(),
@@ -231,7 +231,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 )
         )
         whenever(insightsStore.fetchEmailFollowers(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )

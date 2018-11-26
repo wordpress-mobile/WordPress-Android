@@ -12,9 +12,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -46,7 +46,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(StatsError(GENERIC_ERROR, message)))
+        ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -66,7 +66,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(emptyModel))
+        ).thenReturn(OnStatsFetched(emptyModel))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -90,7 +90,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(model))
+        ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -118,7 +118,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(model))
+        ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -146,7 +146,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(model))
+        ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -174,7 +174,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(model))
+        ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
 
@@ -201,7 +201,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         site,
                         forced
                 )
-        ).thenReturn(OnInsightsFetched(model))
+        ).thenReturn(OnStatsFetched(model))
 
         val result = loadAllTimeInsights(refresh, forced)
 

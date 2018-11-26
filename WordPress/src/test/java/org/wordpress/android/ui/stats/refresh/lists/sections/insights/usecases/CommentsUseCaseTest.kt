@@ -11,10 +11,11 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
+import org.wordpress.android.fluxc.model.stats.CommentsModel.Post
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -57,9 +58,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps posts comments to UI model`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         CommentsModel(
-                                listOf(CommentsModel.Post(postId, postTitle, totalCount, url)),
+                                listOf(Post(postId, postTitle, totalCount, url)),
                                 listOf(),
                                 hasMorePosts = false,
                                 hasMoreAuthors = false
@@ -87,7 +88,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `adds link to UI model when has more posts`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         CommentsModel(
                                 listOf(),
                                 listOf(),
@@ -111,7 +112,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `adds link to UI model when has more authors`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         CommentsModel(
                                 listOf(),
                                 listOf(),
@@ -135,7 +136,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps comment authors to UI model`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         CommentsModel(
                                 listOf(),
                                 listOf(CommentsModel.Author(user, totalCount, url, avatar)),
@@ -165,7 +166,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
     fun `maps empty comments to UI model`() = test {
         val forced = false
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         CommentsModel(listOf(), listOf(), hasMorePosts = false, hasMoreAuthors = false)
                 )
         )
@@ -191,7 +192,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val forced = false
         val message = "Generic error"
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )

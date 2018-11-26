@@ -11,9 +11,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
-import org.wordpress.android.fluxc.store.InsightsStore.OnInsightsFetched
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
+import org.wordpress.android.fluxc.store.StatsStore.StatsError
+import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -48,7 +48,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         VisitsModel("2018-10-02", views, visitors, likes, 0, comments, 0)
                 )
         )
@@ -71,7 +71,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         VisitsModel("2018-10-02", 0, visitors, likes, 0, 0, 0)
                 )
         )
@@ -92,7 +92,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         VisitsModel("2018-10-02", 0, 0, 0, 0, 0, 0)
                 )
         )
@@ -113,7 +113,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         val refresh = true
         val message = "Generic error"
         whenever(insightsStore.fetchTodayInsights(site, forced)).thenReturn(
-                OnInsightsFetched(
+                OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
         )
