@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,18 +20,18 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment;
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsListener;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsListener;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.wizard.SiteCreationMainVM;
-import org.wordpress.android.util.wizard.SiteCreationState;
-import org.wordpress.android.util.wizard.SiteCreationStep;
 import org.wordpress.android.util.wizard.WizardNavigationTarget;
 
 import javax.inject.Inject;
 
-public class NewSiteCreationActivity extends AppCompatActivity implements NewSiteCreationListener {
+public class NewSiteCreationActivity extends AppCompatActivity implements NewSiteCreationListener,
+        NewSiteCreationSegmentsListener, NewSiteCreationVerticalsListener {
     public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";
 
     private static final String KEY_CATERGORY = "KEY_CATERGORY";
@@ -44,7 +45,7 @@ public class NewSiteCreationActivity extends AppCompatActivity implements NewSit
     private String mSiteTagline;
 
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
-    private SiteCreationMainVM mMainViewModel;
+    private NewSiteCreationMainVM mMainViewModel;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -57,40 +58,61 @@ public class NewSiteCreationActivity extends AppCompatActivity implements NewSit
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_creation_activity);
-        mMainViewModel = ViewModelProviders.of(this, mViewModelFactory).get(SiteCreationMainVM.class);
+        mMainViewModel = ViewModelProviders.of(this, mViewModelFactory).get(NewSiteCreationMainVM.class);
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
-
             earlyLoadThemeLoaderFragment();
             mMainViewModel.start();
-            mMainViewModel.getNavigationTargetObservable()
-                          .observe(this, new Observer<WizardNavigationTarget<SiteCreationStep, SiteCreationState>>() {
-                              @Override
-                              public void onChanged(
-                                      @Nullable WizardNavigationTarget<SiteCreationStep, SiteCreationState> step) {
-                                  Fragment fragment = null;
-                                  if (step != null) {
-                                      SiteCreationStep wizardStepIdentifier = step.getWizardStepIdentifier();
-                                      switch (wizardStepIdentifier) {
-                                          case SEGMENTS:
-                                              fragment = NewSiteCreationSegmentsFragment.Companion.newInstance();
-                                              break;
-                                          case VERTICALS:
-                                              fragment = NewSiteCreationVerticalsFragment.Companion
-                                                      .newInstance(step.getWizardState().getSegmentId());
-                                              break;
-                                      }
-                                      showFragment(fragment, step.getWizardStepIdentifier().toString());
-                                  }
-                              }
-                          });
         } else {
             mCategory = savedInstanceState.getString(KEY_CATERGORY);
             mThemeId = savedInstanceState.getString(KEY_THEME_ID);
             mSiteTitle = savedInstanceState.getString(KEY_SITE_TITLE);
             mSiteTagline = savedInstanceState.getString(KEY_SITE_TAGLINE);
         }
+        observeVMState(mMainViewModel);
+    }
+
+    private void observeVMState(NewSiteCreationMainVM mainViewModel) {
+        mMainViewModel.getNavigationTargetObservable()
+                      .observe(this, new Observer<WizardNavigationTarget<SiteCreationStep, SiteCreationState>>() {
+                          @Override
+                          public void onChanged(
+                                  @Nullable WizardNavigationTarget<SiteCreationStep, SiteCreationState> step) {
+                              Fragment fragment = null;
+                              if (step != null) {
+                                  SiteCreationStep wizardStepIdentifier = step.getWizardStepIdentifier();
+                                  switch (wizardStepIdentifier) {
+                                      case SEGMENTS:
+                                          fragment = NewSiteCreationSegmentsFragment.Companion.newInstance();
+                                          break;
+                                      case VERTICALS:
+                                          Long segmentId = step.getWizardState().getSegmentId();
+                                          if (segmentId != null) {
+                                              fragment = NewSiteCreationVerticalsFragment.Companion
+                                                      .newInstance(segmentId);
+                                          } else {
+                                              throw new IllegalStateException("segmentId is required.");
+                                          }
+                                          break;
+                                      case DOMAINS:
+                                          fragment = NewSiteCreationDomainFragment.newInstance("Test title");
+                                          break;
+                                  }
+                                  slideInFragment(fragment, step.getWizardStepIdentifier().toString());
+                              }
+                          }
+                      });
+    }
+
+    @Override
+    public void onSegmentSelected(long segmentId) {
+        mMainViewModel.onSegmentSelected(segmentId);
+    }
+
+    @Override
+    public void onVerticalSelected(@NonNull String verticalId) {
+        mMainViewModel.onVerticalSelected(verticalId);
     }
 
     @Override
@@ -103,28 +125,15 @@ public class NewSiteCreationActivity extends AppCompatActivity implements NewSit
         outState.putString(KEY_SITE_TAGLINE, mSiteTagline);
     }
 
-    private void showFragment(Fragment fragment, String tag) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
-        fragmentTransaction.commit();
-    }
-
-    private void slideInFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     private void slideInFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
                 R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commitAllowingStateLoss();
+        if (getSupportFragmentManager().findFragmentById(R.id.fragment_container) != null) {
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
     }
 
     private void earlyLoadThemeLoaderFragment() {
