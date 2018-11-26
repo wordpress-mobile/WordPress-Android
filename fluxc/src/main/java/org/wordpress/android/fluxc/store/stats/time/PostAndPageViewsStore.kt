@@ -28,18 +28,18 @@ class PostAndPageViewsStore
         period: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, period, pageSize, forced)
+        val payload = restClient.fetchPostAndPageViews(site, period, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
                 sqlUtils.insert(site, payload.response, period)
-                OnStatsFetched(timeStatsMapper.map(payload.response, site))
+                OnStatsFetched(timeStatsMapper.map(payload.response, site, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getPostAndPageViews(site: SiteModel, period: StatsGranularity): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, site) }
+    fun getPostAndPageViews(site: SiteModel, period: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
+        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, site, pageSize) }
     }
 }
