@@ -47,7 +47,6 @@ import android.widget.Toast;
 
 
 import com.android.volley.toolbox.ImageLoader;
-import com.facebook.react.ReactRootView;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -193,7 +192,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mTitle = view.findViewById(R.id.title);
         mWPAndroidGlueCode.onCreateView(
-                (ReactRootView) view.findViewById(R.id.gutenberg),
+                view.findViewById(R.id.gutenberg),
                 new OnMediaLibraryButtonListener() {
                     @Override public void onMediaLibraryButtonClick() {
                         onToolbarMediaButtonClicked();

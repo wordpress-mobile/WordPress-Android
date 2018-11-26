@@ -69,7 +69,7 @@ dependencies {
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation project(':react-native-gutenberg-bridge')
     } else {
-        implementation ('com.github.wordpress-mobile:gutenberg-mobile:7143f495fc5073c5a0faa7ad74150dbe7670c24d')
+        implementation ('com.github.wordpress-mobile:gutenberg-mobile:0ba0c29245910922692e5de6fc42494632b2a617')
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
