@@ -245,7 +245,9 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifyRetrySuggestionsItemShownOnFailedSuggestionsRequest() = testWithSuccessResponses {
+    fun verifyRetrySuggestionsItemShownOnFailedSuggestionsRequest() = test {
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID))
+                .thenReturn(SUCCESSFUL_HEADER_PROMPT_FETCHED)
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(ERROR_ON_VERTICALS_FETCHED)
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
@@ -264,7 +266,7 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifyFullscreenProgressShownOnRetry() = testWithSuccessResponses {
+    fun verifyFullscreenProgressShownOnRetry() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID)).thenReturn(FAILED_HEADER_PROMPT_FETCHED)
         viewModel.start(SEGMENT_ID)
         viewModel.onFetchSegmentsPromptRetry()
@@ -293,7 +295,9 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     @Test
-    fun verifySearchInputProgressShownOnSuggestionsRetry() = testWithSuccessResponses {
+    fun verifySearchInputProgressShownOnSuggestionsRetry() = test {
+        whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID))
+                .thenReturn(SUCCESSFUL_HEADER_PROMPT_FETCHED)
         whenever(fetchVerticalsUseCase.fetchVerticals(ERROR_ON_VERTICALS_FETCHED.searchQuery))
                 .thenReturn(ERROR_ON_VERTICALS_FETCHED)
         viewModel.start(SEGMENT_ID)
