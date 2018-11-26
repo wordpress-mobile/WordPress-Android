@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -20,11 +21,8 @@ import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.pages.PageListFragment
-import org.wordpress.android.ui.pages.PageListFragment.Companion
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
@@ -51,6 +49,13 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var clearAllButton: View
 
     @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var verticalsListener: NewSiteCreationVerticalsListener
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        this.verticalsListener = activity as NewSiteCreationVerticalsListener
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -154,9 +159,14 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationVerticalsViewModel::class.java)
 
+        viewModel.selectedVertical.observe(this, Observer {
+            it?.let {
+                verticalsListener.onVerticalSelected(it)
+            }
+        })
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
                 contentLayout.visibility = if (state.showContent) View.VISIBLE else View.GONE
@@ -183,6 +193,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateHeader(uiState: VerticalsHeaderUiState) {
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
+            if(contentLayout.layoutTransition == null) {
+                contentLayout.layoutTransition = LayoutTransition() // animate layout changes
+            }
             headerLayout.animate()
                     .translationY(-headerLayout.height.toFloat())
                     .withStartAction {

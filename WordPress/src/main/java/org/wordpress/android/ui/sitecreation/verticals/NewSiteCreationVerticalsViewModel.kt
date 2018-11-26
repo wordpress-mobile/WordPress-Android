@@ -54,6 +54,9 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
 
+    private val _selectedVertical = SingleLiveEvent<String>()
+    val selectedVertical = _selectedVertical
+
     init {
         dispatcher.register(fetchVerticalsUseCase)
     }
@@ -187,7 +190,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                items.add(VerticalsModelUiState(model.verticalId, model.name, showDivider = index != lastItemIndex))
+                val itemUiState = VerticalsModelUiState(
+                        model.verticalId,
+                        model.name,
+                        showDivider = index != lastItemIndex
+                )
+                itemUiState.onItemTapped = {_selectedVertical.value = itemUiState.id}
+                items.add(itemUiState)
             }
         }
         return items
@@ -239,6 +248,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     )
 
     sealed class VerticalsListItemUiState {
+        lateinit var onItemTapped: () -> Unit
+
         data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
                 VerticalsListItemUiState()
 
@@ -246,7 +257,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             @StringRes val messageResId: Int,
             @StringRes val retryButonResId: Int
         ) : VerticalsListItemUiState() {
-            lateinit var onItemTapped: () -> Unit
         }
     }
 }

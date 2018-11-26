@@ -21,6 +21,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
     class VerticalsSuggestionItemViewHolder(
         parentView: ViewGroup
     ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_suggestion_item) {
+        private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<TextView>(R.id.suggestion)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
@@ -28,7 +29,9 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsModelUiState
             suggestion.text = uiState.title
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
-            // TODO add onClick listener
+            container.setOnClickListener {
+                uiState.onItemTapped.invoke()
+            }
         }
     }
 
