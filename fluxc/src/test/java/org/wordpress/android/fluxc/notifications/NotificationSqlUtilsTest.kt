@@ -180,4 +180,38 @@ class NotificationSqlUtilsTest {
         assertEquals(note.subject!!.size, 2)
         assertEquals(note.body!!.size, 3)
     }
+
+    @Test
+    fun testGetNotificationsForSite_filterBy() {
+        // Insert notifications
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val site = SiteModel().apply { id = 6 }
+        val notesList = apiResponse.notes?.map {
+            NotificationApiResponse.notificationResponseToNotificationModel(site, it)
+        } ?: emptyList()
+        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
+        assertEquals(52, inserted)
+
+        // Get notifications of type "store_order"
+        val newOrderNotifications = notificationSqlUtils.getNotificationsForSite(
+                site,
+                filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()))
+        assertEquals(7, newOrderNotifications.size)
+
+        // Get notifications of subtype "store_review"
+        val storeReviewNotifications = notificationSqlUtils.getNotificationsForSite(
+                site,
+                filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
+        assertEquals(1, storeReviewNotifications.size)
+
+        // Get notifications of type "store_order" or subtype "store_review"
+        val combinedNotifications = notificationSqlUtils.getNotificationsForSite(
+                site,
+                filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()),
+                filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
+        assertEquals(8, combinedNotifications.size)
+    }
 }
