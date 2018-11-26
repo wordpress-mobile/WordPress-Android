@@ -23,16 +23,21 @@ import org.wordpress.android.ui.stats.refresh.Failed
 import org.wordpress.android.ui.stats.refresh.InsightsItem
 import org.wordpress.android.ui.stats.refresh.InsightsItem.Type
 import org.wordpress.android.ui.stats.refresh.ListInsightItem
+import org.wordpress.android.ui.stats.refresh.StatsDateFormatter
 
 class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
+    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var site: SiteModel
     private lateinit var useCase: InsightsAllTimeUseCase
+    private val bestDay = "2018-11-25"
+    private val bestDayTransformed = "Nov 25, 2018"
     @Before
     fun setUp() {
         useCase = InsightsAllTimeUseCase(
                 Dispatchers.Unconfined,
-                insightsStore
+                insightsStore,
+                statsDateFormatter
         )
     }
 
@@ -60,7 +65,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
     fun `result contains only empty item when response is empty`() = test {
         val forced = false
         val refresh = true
-        val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", 0)
+        val emptyModel = InsightsAllTimeModel(1L, null, 0, 0, 0, bestDay, 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,
@@ -84,7 +89,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val posts = 10
-        val model = InsightsAllTimeModel(1L, null, 0, 0, posts, "MONDAY", 0)
+        val model = InsightsAllTimeModel(1L, null, 0, 0, posts, bestDay, 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,
@@ -112,7 +117,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val views = 15
-        val model = InsightsAllTimeModel(1L, null, 0, views, 0, "MONDAY", 0)
+        val model = InsightsAllTimeModel(1L, null, 0, views, 0, bestDay, 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,
@@ -140,7 +145,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val visitors = 20
-        val model = InsightsAllTimeModel(1L, null, visitors, 0, 0, "MONDAY", 0)
+        val model = InsightsAllTimeModel(1L, null, visitors, 0, 0, bestDay, 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,
@@ -168,7 +173,7 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val bestDayTotal = 20
-        val model = InsightsAllTimeModel(1L, null, 0, 0, 0, "MONDAY", bestDayTotal)
+        val model = InsightsAllTimeModel(1L, null, 0, 0, 0, bestDay, bestDayTotal)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,
@@ -189,13 +194,14 @@ class InsightsAllTimeUseCaseTest : BaseUnitTest() {
         assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
         assertEquals(item.textResource, R.string.stats_insights_best_ever)
         assertEquals(item.value, bestDayTotal.toString())
+        assertEquals(item.subText, bestDayTransformed)
     }
 
     @Test
     fun `shows divider between items`() = test {
         val forced = false
         val refresh = true
-        val model = InsightsAllTimeModel(1L, null, 10, 15, 0, "MONDAY", 0)
+        val model = InsightsAllTimeModel(1L, null, 10, 15, 0, bestDay, 0)
         whenever(
                 insightsStore.fetchAllTimeInsights(
                         site,

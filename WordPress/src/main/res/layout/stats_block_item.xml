@@ -81,6 +81,7 @@
         android:layout_marginBottom="12dp"
         android:minHeight="16dp"
         android:text="@string/unknown"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintStart_toStartOf="@+id/text"

@@ -350,8 +350,14 @@ sealed class BlockItemViewHolder(
 
     fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
         when {
-            resource != null -> this.setText(resource)
-            value != null -> this.text = value
+            resource != null -> {
+                this.visibility = View.VISIBLE
+                this.setText(resource)
+            }
+            value != null -> {
+                this.visibility = View.VISIBLE
+                this.text = value
+            }
             else -> this.visibility = GONE
         }
     }
@@ -362,8 +368,14 @@ sealed class BlockItemViewHolder(
         loadMethod: (imageView: ImageView, url: String) -> Unit
     ) {
         when {
-            resource != null -> this.setImageResource(resource)
-            url != null -> loadMethod(this, url)
+            resource != null -> {
+                this.visibility = View.VISIBLE
+                this.setImageResource(resource)
+            }
+            url != null -> {
+                this.visibility = View.VISIBLE
+                loadMethod(this, url)
+            }
             else -> this.visibility = GONE
         }
     }
