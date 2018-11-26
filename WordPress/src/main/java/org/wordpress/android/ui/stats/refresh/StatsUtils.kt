@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.stats.refresh
 
-import org.wordpress.android.util.LocaleManagerWrapper
-import java.text.DateFormat
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.TreeMap
 
 private val SUFFIXES = TreeMap(mapOf(
