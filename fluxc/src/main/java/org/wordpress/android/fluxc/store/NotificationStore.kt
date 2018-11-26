@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.yarolegovich.wellsql.SelectQuery
 import org.greenrobot.eventbus.Subscribe
@@ -168,10 +169,11 @@ constructor(
      * @param filterByType Optional. A list of notification type strings to filter by
      * @param filterBySubtype Optional. A list of notification subtype strings to filter by
      */
+    @SuppressLint("WrongConstant")
     fun getNotificationsForSite(
         site: SiteModel,
-        filterByType: List<String>,
-        filterBySubtype: List<String>
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
     ): List<NotificationModel> =
             notificationSqlUtils.getNotificationsForSite(site, SelectQuery.ORDER_DESCENDING, filterByType, filterBySubtype)
 
