@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistance
+package org.wordpress.android.fluxc.persistance.stats
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
