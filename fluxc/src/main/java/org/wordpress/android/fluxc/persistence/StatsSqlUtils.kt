@@ -14,22 +14,31 @@ import javax.inject.Singleton
 @Singleton
 class StatsSqlUtils
 @Inject constructor(private val gson: Gson) {
-    fun <T> insert(site: SiteModel, type: Key, item: T) {
+    fun <T> insert(site: SiteModel, blockType: BlockType, statsType: StatsType, item: T) {
         val json = gson.toJson(item)
         WellSql.delete(StatsBlockBuilder::class.java)
                 .where()
-                .equals(StatsBlockTable.TYPE, type.name)
+                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
+                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
                 .endWhere()
                 .execute()
-        WellSql.insert(StatsBlockBuilder(localSiteId = site.id, type = type.name, json = json))
+        WellSql.insert(
+                    StatsBlockBuilder(
+                            localSiteId = site.id,
+                            blockType = blockType.name,
+                            statsType = statsType.name,
+                            json = json
+                    )
+                )
                 .execute()
     }
 
-    fun <T> select(site: SiteModel, type: Key, classOfT: Class<T>): T? {
+    fun <T> select(site: SiteModel, blockType: BlockType, statsType: StatsType, classOfT: Class<T>): T? {
         val model = WellSql.select(StatsBlockBuilder::class.java)
                 .where()
                 .equals(StatsBlockTable.LOCAL_SITE_ID, site.id)
-                .equals(StatsBlockTable.TYPE, type.name)
+                .equals(StatsBlockTable.BLOCK_TYPE, blockType.name)
+                .equals(StatsBlockTable.STATS_TYPE, statsType.name)
                 .endWhere().asModel.firstOrNull()
         if (model != null) {
             return gson.fromJson(model.json, classOfT)
@@ -41,10 +50,11 @@ class StatsSqlUtils
     data class StatsBlockBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var localSiteId: Int,
-        @Column var type: String,
+        @Column var blockType: String,
+        @Column var statsType: String,
         @Column var json: String
     ) : Identifiable {
-        constructor() : this(-1, -1, "", "")
+        constructor() : this(-1, -1, "", "", "")
 
         override fun setId(id: Int) {
             this.mId = id
@@ -53,7 +63,15 @@ class StatsSqlUtils
         override fun getId() = mId
     }
 
-    enum class Key {
+    enum class StatsType {
+        INSIGHTS,
+        DAY,
+        WEEK,
+        MONTH,
+        YEAR
+    }
+
+    enum class BlockType {
         ALL_TIME_INSIGHTS,
         MOST_POPULAR_INSIGHTS,
         LATEST_POST_DETAIL_INSIGHTS,
@@ -63,6 +81,7 @@ class StatsSqlUtils
         EMAIL_FOLLOWERS,
         COMMENTS_INSIGHTS,
         TAGS_AND_CATEGORIES_INSIGHTS,
+        POSTS_AND_PAGES_VIEWS,
         PUBLICIZE_INSIGHTS
     }
 }
