@@ -14,13 +14,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
 class AllTimeStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore
+    private val insightsStore: InsightsStore,
+    private val statsDateFormatter: StatsDateFormatter
 ) : BaseStatsUseCase(ALL_TIME_STATS, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getAllTimeInsights(site)
@@ -84,6 +86,7 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_trophy_grey_dark_24dp,
                                 textResource = R.string.stats_insights_best_ever,
+                                subText = statsDateFormatter.parseDate(model.viewsBestDay),
                                 value = model.viewsBestDayTotal.toFormattedString(),
                                 showDivider = false
                         )
