@@ -560,7 +560,7 @@ public class PostStore extends Store {
             mPostRestClient.restorePost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.restorePost(payload.post, payload.site);
+            mPostXMLRPCClient.pushPost(payload.post, payload.site);
         }
     }
 
