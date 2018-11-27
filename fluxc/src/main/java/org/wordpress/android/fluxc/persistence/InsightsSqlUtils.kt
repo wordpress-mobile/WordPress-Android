@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTS_INSIGHTS
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DET
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TAGS_AND_CATEGORIES_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.PUBLICIZE_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TODAYS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.WP_COM_FOLLOWERS
 import javax.inject.Inject
@@ -59,6 +61,10 @@ class InsightsSqlUtils
         statsSqlUtils.insert(site, TAGS_AND_CATEGORIES_INSIGHTS, data)
     }
 
+    fun insert(site: SiteModel, data: PublicizeResponse) {
+        statsSqlUtils.insert(site, PUBLICIZE_INSIGHTS, data)
+    }
+
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
         return statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
@@ -96,5 +102,9 @@ class InsightsSqlUtils
 
     fun selectTags(site: SiteModel): TagsResponse? {
         return statsSqlUtils.select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
+    }
+
+    fun selectPublicizeInsights(site: SiteModel): PublicizeResponse? {
+        return statsSqlUtils.select(site, PUBLICIZE_INSIGHTS, PublicizeResponse::class.java)
     }
 }
