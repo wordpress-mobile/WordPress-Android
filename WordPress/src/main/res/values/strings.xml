@@ -2353,7 +2353,7 @@
     <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating</string>
     <string name="new_site_creation_business_name_hint">Business Name</string>
     <string name="new_site_creation_optional_tag_line_hint">Optional Tagline</string>
-    <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right ar below the title.</string>
+    <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right below the title.</string>
     <string name="new_site_creation_button_skip">Skip</string>
     <string name="new_site_creation_button_next">@string/next</string>
 </resources>
