@@ -801,6 +801,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
+            if (sAppIsInTheBackground) {
+                return;
+            }
             sAppIsInTheBackground = true;
             String lastActivityString = AppPrefs.getLastActivityStr();
             ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
