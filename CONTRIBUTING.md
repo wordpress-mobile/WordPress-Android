@@ -103,7 +103,7 @@ Some vector drawables may come from a SVG file and they are not the easiest file
 Please use the following naming convention for naming drawables:
 
 * Use `ic_` for icons (i.e. simple, usually single color, usually square shape) and `img_` for images (i.e. complex, usually multiple colors).
-* Use the [gridicon](https://github.com/Automattic/gridicons/tree/master/svg) name if applicable (examples: `ic_my_sites` or `ic_reply`).
+* Use the [gridicon](http://automattic.github.io/gridicons/) name if applicable (examples: `ic_my_sites` or `ic_reply`).
 * Use the color to icons (example: `ic_reply_grey`).
 * Use the width in dp (example: `ic_reply_grey_32dp`).
 
