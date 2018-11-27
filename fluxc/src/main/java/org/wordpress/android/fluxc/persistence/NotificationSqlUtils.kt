@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
 import android.annotation.SuppressLint
-import com.google.gson.Gson
 import com.wellsql.generated.NotificationModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
@@ -20,10 +19,6 @@ import javax.inject.Singleton
 
 @Singleton
 class NotificationSqlUtils @Inject constructor(private val formattableContentMapper: FormattableContentMapper) {
-    companion object {
-        private val gson by lazy { Gson() }
-    }
-
     fun insertOrUpdateNotification(notification: NotificationModel): Int {
         val notificationResult = WellSql.select(NotificationModelBuilder::class.java)
                 .where().beginGroup()
@@ -48,6 +43,40 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                     UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java)
             ).execute()
         }
+    }
+
+    @SuppressLint("WrongConstant")
+    fun getNotifications(
+        @SelectQuery.Order order: Int = ORDER_DESCENDING,
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): List<NotificationModel> {
+        val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
+                .where()
+
+        if (filterByType != null || filterBySubtype != null) {
+            conditionClauseBuilder.beginGroup()
+
+            filterByType?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.TYPE, it)
+            }
+
+            if (filterByType != null && filterBySubtype != null) {
+                conditionClauseBuilder.or()
+            }
+
+            filterBySubtype?.let {
+                conditionClauseBuilder.isIn(NotificationModelTable.SUBTYPE, it)
+            }
+
+            conditionClauseBuilder.endGroup()
+        }
+
+        return conditionClauseBuilder.endWhere()
+                .orderBy(NotificationModelTable.TIMESTAMP, order)
+                .asModel
+                .map { it.build(formattableContentMapper) }
+        return emptyList()
     }
 
     @SuppressLint("WrongConstant")
