@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.P
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse.TagsGroup.TagResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse.Service
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import java.util.Date
 
@@ -118,6 +120,8 @@ val TOP_COMMENTS_RESPONSE = CommentsResponse(
         listOf(AUTHOR),
         listOf(POST)
 )
+val SERVICE_RESPONSE = Service("facebook", 100)
+val PUBLICIZE_RESPONSE = PublicizeResponse(listOf(SERVICE_RESPONSE))
 
 const val FIRST_TAG_NAME = "Tag 1"
 const val SECOND_TAG_NAME = "Tag 2"
