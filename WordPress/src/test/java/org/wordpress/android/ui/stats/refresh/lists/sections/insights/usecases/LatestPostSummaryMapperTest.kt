@@ -14,16 +14,15 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
-import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
-    @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
+    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var mapper: LatestPostSummaryMapper
     private val date = Date(10)
     private val postTitle = "post title"
@@ -35,9 +34,8 @@ class LatestPostSummaryMapperTest {
         mapper = LatestPostSummaryMapper(
                 statsUtilsWrapper,
                 resourceProvider,
-                localeManagerWrapper
+                statsDateFormatter
         )
-        whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
     }
 
     @Test
@@ -140,13 +138,16 @@ class LatestPostSummaryMapperTest {
 
     @Test
     fun `builds chart item with parsed date`() {
-        val dayViews = listOf("2018-01-01" to 50)
+        val unparsedDate = "2018-01-01"
+        val parsedDate = "Jan 1, 2018"
+        val dayViews = listOf(unparsedDate to 50)
+        whenever(statsDateFormatter.parseDate(unparsedDate)).thenReturn(parsedDate)
 
         val barChartItem = mapper.buildBarChartItem(dayViews)
 
         barChartItem.entries.apply {
             assertThat(this).hasSize(1)
-            assertThat(this[0].first).isEqualTo("Jan 1, 2018")
+            assertThat(this[0].first).isEqualTo(parsedDate)
             assertThat(this[0].second).isEqualTo(50)
         }
     }
@@ -165,10 +166,6 @@ class LatestPostSummaryMapperTest {
 
         barChartItem.entries.apply {
             assertThat(this).hasSize(30)
-            assertThat(this.first().first).isEqualTo("Nov 22, 2018")
-            assertThat(this.first().second).isEqualTo(33)
-            assertThat(this.last().first).isEqualTo("Dec 30, 2018")
-            assertThat(this.last().second).isEqualTo(42)
         }
     }
 }

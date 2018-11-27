@@ -47,6 +47,8 @@ sealed class BlockListItem(val type: Type) {
         val iconUrl: String? = null,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
+        @StringRes val subTextResource: Int? = null,
+        val subText: String? = null,
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
