@@ -19,9 +19,9 @@ public enum NotificationAction implements IAction {
     @Action
     UNREGISTER_DEVICE, // Unregister device for push notifications with WordPress.com
     @Action(payloadType = FetchNotificationsPayload.class)
-    FETCH_NOTES, // Fetch notifications
+    FETCH_NOTIFICATIONS, // Fetch notifications
     @Action(payloadType = MarkNotificationsSeenPayload.class)
-    MARK_NOTES_SEEN, // Mark last notification time seen
+    MARK_NOTIFICATIONS_SEEN, // Mark last notification time seen
 
     // Remote responses
     @Action(payloadType = RegisterDeviceResponsePayload.class)
@@ -29,9 +29,9 @@ public enum NotificationAction implements IAction {
     @Action(payloadType = UnregisterDeviceResponsePayload.class)
     UNREGISTERED_DEVICE, // Response to device unregistration
     @Action(payloadType = FetchNotificationsResponsePayload.class)
-    FETCHED_NOTES, // Response to fetching notifications
+    FETCHED_NOTIFICATIONS, // Response to fetching notifications
     @Action(payloadType = MarkNotificationSeenResponsePayload.class)
-    MARKED_NOTE_SEEN // Response to marking a notification as seen
+    MARKED_NOTIFICATIONS_SEEN // Response to marking a notification as seen
 
     // Local actions
 }

@@ -118,7 +118,7 @@ class NotificationRestClient constructor(
                         NotificationApiResponse.notificationResponseToNotificationModel(site, it)
                     } ?: listOf()
                     val payload = FetchNotificationsResponsePayload(site, notifications, lastSeenTime)
-                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotesAction(payload))
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
                 },
                 { networkError ->
                     val payload = FetchNotificationsResponsePayload(site).apply {
@@ -126,7 +126,7 @@ class NotificationRestClient constructor(
                                 NotificationErrorType.fromString(networkError.apiError),
                                 networkError.message)
                     }
-                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotesAction(payload))
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
                 })
         add(request)
     }
@@ -143,7 +143,7 @@ class NotificationRestClient constructor(
         val request = WPComGsonRequest.buildPostRequest(url, params, NotificationSeenApiResponse::class.java,
                 { response ->
                     val payload = MarkNotificationSeenResponsePayload(site, response.success, response.last_seen_time)
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNoteSeenAction(payload))
+                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsSeenAction(payload))
                 },
                 { networkError ->
                     val payload = MarkNotificationSeenResponsePayload(site).apply {
@@ -152,7 +152,7 @@ class NotificationRestClient constructor(
                                 networkError.message
                         )
                     }
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNoteSeenAction(payload))
+                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsSeenAction(payload))
                 })
         add(request)
     }
