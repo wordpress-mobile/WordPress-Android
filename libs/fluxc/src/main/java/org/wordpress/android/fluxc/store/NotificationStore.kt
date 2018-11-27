@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.store
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.yarolegovich.wellsql.SelectQuery
+import com.yarolegovich.wellsql.SelectQuery.ORDER_DESCENDING
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -127,7 +127,7 @@ constructor(
 
     class OnDeviceUnregistered : OnChanged<DeviceUnregistrationError>()
 
-    class OnNotificationChanged(var rowsAffected: Int): OnChanged<NotificationError>() {
+    class OnNotificationChanged(var rowsAffected: Int) : OnChanged<NotificationError>() {
         var causeOfChange: NotificationAction? = null
         var lastSeenTime: Long? = null
         var success: Boolean = true
@@ -175,7 +175,7 @@ constructor(
         filterByType: List<String>? = null,
         filterBySubtype: List<String>? = null
     ): List<NotificationModel> =
-            notificationSqlUtils.getNotificationsForSite(site, SelectQuery.ORDER_DESCENDING, filterByType, filterBySubtype)
+            notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
 
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()

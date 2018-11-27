@@ -4,6 +4,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule
 import kotlin.test.assertEquals
 
@@ -88,8 +89,6 @@ class FormattableContentMapperTest {
             "          ]\n" +
             "        }"
 
-    private val jsonContentArray = "[{\"media\":[{\"height\":\"256\",\"width\":\"256\",\"type\":\"image\",\"url\":\"https://2.gravatar.com/avatar/ebab642c3eb6022e6986f9dcf3147c1e?s\\u003d256\\u0026d\\u003dhttps%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256\\u0026r\\u003dG\",\"indices\":[0,0]}],\"meta\":{\"links\":{\"email\":\"jshultz@test.com\"}},\"text\":\"Jennifer Shultz\",\"type\":\"user\",\"ranges\":[{\"type\":\"user\",\"indices\":[0,15]}]},{\"actions\":{\"spam-comment\":false,\"trash-comment\":false,\"approve-comment\":false,\"edit-comment\":true,\"replyto-comment\":true},\"meta\":{\"ids\":{\"site\":153482281,\"comment\":2716,\"post\":2231},\"links\":{\"site\":\"https://public-api.wordpress.com/rest/v1/sites/153482281\",\"comment\":\"https://public-api.wordpress.com/rest/v1/comments/2716\",\"post\":\"https://public-api.wordpress.com/rest/v1/posts/2231\"}},\"text\":\"I bought this for my daughter and it fits beautifully!\",\"type\":\"comment\",\"nest_level\":0},{\"text\":\"Review for Ninja Hoodie\",\"ranges\":[{\"type\":\"link\",\"url\":\"https://testwooshop.mystagingwebsite.com/product/ninja-hoodie/\",\"indices\":[11,23]}]}]"
-
     @Before
     fun setUp() {
         val gson = ReleaseNetworkModule().provideGson()
@@ -143,6 +142,8 @@ class FormattableContentMapperTest {
 
     @Test
     fun mapsJsonArrayToFormattableContentList() {
+        val jsonContentArray = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/formattable-content-array.json")
         val formattableList = formattableContentMapper.mapToFormattableContentList(jsonContentArray)
         assertEquals(3, formattableList.size)
         assertEquals("Jennifer Shultz", formattableList[0].text)
@@ -152,6 +153,8 @@ class FormattableContentMapperTest {
 
     @Test
     fun mapsFormattableContentListToJsonString() {
+        val jsonContentArray = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/formattable-content-array.json")
         val formattableList = formattableContentMapper.mapToFormattableContentList(jsonContentArray)
         val formattableJson = formattableContentMapper.mapFormattableContentListToJson(formattableList)
         assertEquals(jsonContentArray, formattableJson)
