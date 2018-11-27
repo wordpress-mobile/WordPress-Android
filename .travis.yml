@@ -3,6 +3,10 @@ jdk: oraclejdk8
 sudo: required
 rvm: 2.0.0
 
+# disable the default submodule logic so the gutenberg-mobile submodule is not pulled. No need to pull it.
+git:
+  submodules: false
+
 notifications:
   # Slack notification on failure (secured token).
   slack:
