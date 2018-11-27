@@ -101,7 +101,7 @@ class InsightsSqlUtils
     }
 
     private fun <T> insert(site: SiteModel, blockType: BlockType, data: T) {
-        statsSqlUtils.insert(site, TAGS_AND_CATEGORIES_INSIGHTS, INSIGHTS, data)
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data)
     }
 
     private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
