@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 
 class BlockListDiffCallback(
     private val oldList: List<BlockListItem>,

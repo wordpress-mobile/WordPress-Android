@@ -280,7 +280,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.stats.refresh.StatsListActivity"
+            android:name=".ui.stats.refresh.StatsActivity"
             android:launchMode="singleTop"
             android:theme="@style/Calypso.NoActionBar" />
         <activity

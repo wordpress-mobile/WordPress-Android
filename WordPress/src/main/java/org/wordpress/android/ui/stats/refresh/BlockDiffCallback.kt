@@ -3,21 +3,22 @@ package org.wordpress.android.ui.stats.refresh
 import android.support.v7.util.DiffUtil.Callback
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.COLLAPSE_ITEM
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.EXPAND_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.COLUMNS
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.DIVIDER
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EMPTY
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LABEL
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.LIST_ITEM
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TABS
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TEXT
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.BlockListItem.Type.USER_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 
 class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
@@ -33,7 +34,7 @@ class BlockDiffCallback(
         return if (oldItem.type == newItem.type) {
             val type = oldItem.type
             when (type) {
-                ITEM,
+                LIST_ITEM_WITH_ICON,
                 USER_ITEM,
                 EXPANDABLE_ITEM,
                 LIST_ITEM -> oldItem.itemId == newItem.itemId
