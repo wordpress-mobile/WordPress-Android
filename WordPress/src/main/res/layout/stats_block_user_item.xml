@@ -3,6 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/item_container"
               style="@style/StatsBlockLine"
+              android:layout_height="wrap_content"
               android:layout_width="match_parent"
               android:background="?android:attr/selectableItemBackground"
               android:orientation="horizontal">
@@ -32,7 +33,7 @@
                 android:id="@+id/text"
                 style="@style/StatsBlockItem"
                 android:layout_width="0dp"
-                android:layout_height="47dp"
+                android:layout_height="@dimen/one_line_list_item_height"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
@@ -43,14 +44,14 @@
                 android:id="@+id/value"
                 style="@style/StatsBlockValue"
                 android:layout_width="wrap_content"
-                android:layout_height="47dp"
+                android:layout_height="@dimen/one_line_list_item_height"
                 android:gravity="center_vertical"
                 android:text="@string/unknown"/>
 
             <ImageView
                 android:id="@+id/expand_button"
                 android:layout_width="wrap_content"
-                android:layout_height="47dp"
+                android:layout_height="@dimen/one_line_list_item_height"
                 android:layout_gravity="center"
                 android:layout_marginStart="6dp"
                 android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
