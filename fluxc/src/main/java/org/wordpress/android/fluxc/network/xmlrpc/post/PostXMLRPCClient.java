@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.PostAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -213,7 +214,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void pushPost(final PostModel post, final SiteModel site) {
-        if (TextUtils.isEmpty(post.getStatus())) {
+        final boolean isRestoringPost = PostStatus.fromPost(post) == PostStatus.TRASHED;
+
+        if (TextUtils.isEmpty(post.getStatus()) || isRestoringPost) {
             post.setStatus(PostStatus.PUBLISHED.toString());
         }
 
@@ -247,7 +250,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         post.setIsLocallyChanged(false);
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload) :
+                                UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 },
                 new BaseErrorListener() {
@@ -270,7 +276,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
                         payload.error = postError;
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload) :
+                                UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 });
 
@@ -311,51 +320,6 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                         payload.error = postError;
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
-                    }
-                });
-
-        request.disableRetries();
-        add(request);
-    }
-
-    public void restorePost(final PostModel post, final SiteModel site) {
-        post.setStatus(PostStatus.PUBLISHED.toString());
-
-        Map<String, Object> contentStruct = postModelToContentStruct(post);
-
-        List<Object> params = new ArrayList<>(5);
-        params.add(site.getSelfHostedSiteId());
-        params.add(site.getUsername());
-        params.add(site.getPassword());
-        params.add(post.getRemotePostId());
-        params.add(contentStruct);
-
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.EDIT_POST, params,
-                new Listener<Object>() {
-                    @Override
-                    public void onResponse(Object response) {
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 404 - "Invalid post ID." (editing only)
-                        RemotePostPayload payload = new RemotePostPayload(post, site);
-                        // TODO: Check the error message and flag this as one of the above specific errors if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = postError;
-                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
                     }
                 });
 
