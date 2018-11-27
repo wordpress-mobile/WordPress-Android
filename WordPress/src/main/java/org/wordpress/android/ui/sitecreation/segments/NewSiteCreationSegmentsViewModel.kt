@@ -22,7 +22,6 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsVie
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
@@ -31,6 +30,7 @@ class NewSiteCreationSegmentsViewModel
 @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
+    private val resultObservable: NewSiteCreationSegmentsResultObservable,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -44,9 +44,6 @@ class NewSiteCreationSegmentsViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
-
-    private val _selectedSegmentId: MutableLiveData<Long> = SingleLiveEvent()
-    val selectedSegmentId: LiveData<Long> = _selectedSegmentId
 
     fun start() {
         if (isStarted) return
@@ -97,7 +94,7 @@ class NewSiteCreationSegmentsViewModel
     }
 
     fun onSegmentSelected(segmentId: Long) {
-        _selectedSegmentId.value = segmentId
+        resultObservable.selectedSegment.value = segmentId
     }
 
     // TODO analytics

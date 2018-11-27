@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
@@ -10,14 +11,16 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsListener
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsResultObservable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsListener
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsResultObservable
 import org.wordpress.android.util.observeEvent
 import javax.inject.Inject
 
-class NewSiteCreationActivity : AppCompatActivity(), NewSiteCreationSegmentsListener, NewSiteCreationVerticalsListener {
+class NewSiteCreationActivity : AppCompatActivity() {
     @Inject protected lateinit var mViewModelFactory: ViewModelProvider.Factory
+    @Inject protected lateinit var segmentsResultObservable: NewSiteCreationSegmentsResultObservable
+    @Inject protected lateinit var verticalsResultObservable: NewSiteCreationVerticalsResultObservable
     private lateinit var mMainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,14 +50,15 @@ class NewSiteCreationActivity : AppCompatActivity(), NewSiteCreationSegmentsList
                     slideInFragment(fragment, target.wizardStepIdentifier.toString())
                     true
                 }
-    }
+        segmentsResultObservable.selectedSegment.observe(
+                this,
+                Observer { segmentId -> segmentId?.let { mMainViewModel.onSegmentSelected(segmentId) } }
+        )
 
-    override fun onSegmentSelected(segmentId: Long) {
-        mMainViewModel.onSegmentSelected(segmentId)
-    }
-
-    override fun onVerticalSelected(verticalId: String) {
-        mMainViewModel.onVerticalSelected(verticalId)
+        verticalsResultObservable.selectedVertical.observe(
+                this,
+                Observer { verticalId -> verticalId?.let { mMainViewModel.onVerticalSelected(verticalId) } }
+        )
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {

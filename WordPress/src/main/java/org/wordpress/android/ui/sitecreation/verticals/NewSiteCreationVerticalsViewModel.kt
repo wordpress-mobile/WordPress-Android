@@ -36,6 +36,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchVerticalsHeaderInfoUseCase: FetchVerticalsHeaderInfoUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
+    private val resultObservable: NewSiteCreationVerticalsResultObservable,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -53,9 +54,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
-
-    private val _selectedVertical = SingleLiveEvent<String>()
-    val selectedVertical = _selectedVertical
 
     init {
         dispatcher.register(fetchVerticalsUseCase)
@@ -195,7 +193,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         model.name,
                         showDivider = index != lastItemIndex
                 )
-                itemUiState.onItemTapped = {_selectedVertical.value = itemUiState.id}
+                itemUiState.onItemTapped = { resultObservable.selectedVertical.value = itemUiState.id }
                 items.add(itemUiState)
             }
         }

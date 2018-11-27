@@ -50,13 +50,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var verticalsListener: NewSiteCreationVerticalsListener
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        this.verticalsListener = activity as NewSiteCreationVerticalsListener
-    }
-
     @LayoutRes
     override fun getContentLayout(): Int {
         return R.layout.new_site_creation_verticals_screen
@@ -162,11 +155,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationVerticalsViewModel::class.java)
 
-        viewModel.selectedVertical.observe(this, Observer {
-            it?.let {
-                verticalsListener.onVerticalSelected(it)
-            }
-        })
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
                 contentLayout.visibility = if (state.showContent) View.VISIBLE else View.GONE
