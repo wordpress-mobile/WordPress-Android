@@ -96,8 +96,6 @@ import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -725,7 +723,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Turns out that when your app has no more visible UI, a callback is triggered.
      * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
      * <p>
-     * This class also uses ActivityLifecycleCallbacks and a timer used as guard,
+     * This class also uses ActivityLifecycleCallbacks
      * to make sure to detect the send to background event and not other events.
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
