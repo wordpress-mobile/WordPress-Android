@@ -2248,8 +2248,6 @@
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
 
-    <string name="new_site_creation_preview_title">Your site has been created!</string>
-
     <string name="content_description_done">Done</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
@@ -2346,8 +2344,15 @@
     <!-- END (News Card) -->
 
     <!-- Site Creation -->
+    <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="new_site_creation_segments_title">Create Site</string>
     <string name="site_creation_fetch_suggestions_failed">No connection</string>
+    <string name="new_site_creation_site_info_header_title">Basic Information</string>
+    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating</string>
+    <string name="new_site_creation_business_name_hint">Business Name</string>
+    <string name="new_site_creation_optional_tag_line_hint">Optional Tagline</string>
+    <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right ar below the title.</string>
+    <string name="new_site_creation_button_skip">Skip</string>
 </resources>
