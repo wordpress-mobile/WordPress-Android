@@ -2290,6 +2290,8 @@
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
+    <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
+    <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
     <string name="quick_start_dialog_need_help_button_negative">No</string>
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
     <string name="quick_start_dialog_need_help_button_positive">Yes</string>

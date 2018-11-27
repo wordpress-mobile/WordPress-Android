@@ -51,6 +51,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -76,9 +77,9 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
-import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.File;
@@ -105,6 +106,7 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG";
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
+    public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
     public static final String KEY_QUICK_START_SNACKBAR_WAS_SHOWN = "KEY_QUICK_START_SNACKBAR_WAS_SHOWN";
     public static final int MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG = 1;
     public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
@@ -201,6 +203,10 @@ public class MySiteFragment extends Fragment implements
 
         updateQuickStartContainer();
         showQuickStartTaskPromptIfNecessary();
+
+        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
+            showQuickStartDialogMigration();
+        }
     }
 
     private void showQuickStartTaskPromptIfNecessary() {
@@ -915,6 +921,9 @@ public class MySiteFragment extends Fragment implements
                 startQuickStart();
                 AnalyticsTracker.track(Stat.QUICK_START_REQUEST_DIALOG_POSITIVE_TAPPED);
                 break;
+            case TAG_QUICK_START_MIGRATION_DIALOG:
+                // TODO: Quick Start - Add analytics for migration dialog positive tapped.
+                break;
             default:
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
@@ -1094,6 +1103,25 @@ public class MySiteFragment extends Fragment implements
                 mActiveTutorialPrompt.getIconId());
 
         ((WPMainActivity) getActivity()).showQuickStartSnackBar(shortQuickStartMessage);
+    }
+
+    private void showQuickStartDialogMigration() {
+        PromoDialog promoDialog = new PromoDialog();
+        promoDialog.initialize(
+                TAG_QUICK_START_MIGRATION_DIALOG,
+                getString(R.string.quick_start_dialog_migration_title),
+                getString(R.string.quick_start_dialog_migration_message),
+                getString(android.R.string.ok),
+                R.drawable.img_illustration_checklist_280dp,
+                "",
+                "",
+                ""
+        );
+
+        if (getFragmentManager() != null) {
+            promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
+            // TODO: Quick Start - Add analytics for migration dialog viewed.
+        }
     }
 
     private void showQuickStartDialogTaskPrompt() {
