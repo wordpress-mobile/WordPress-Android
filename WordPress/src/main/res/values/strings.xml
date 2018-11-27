@@ -2248,6 +2248,8 @@
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
 
+    <string name="new_site_creation_preview_title">Your site has been created!</string>
+
     <string name="content_description_done">Done</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
