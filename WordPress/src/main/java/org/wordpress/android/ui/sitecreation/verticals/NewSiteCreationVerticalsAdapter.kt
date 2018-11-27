@@ -9,8 +9,6 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
-private const val headerViewType: Int = 1
-private const val searchInputViewType: Int = 2
 private const val suggestionItemViewType: Int = 3
 private const val suggestionErrorViewType: Int = 4
 
