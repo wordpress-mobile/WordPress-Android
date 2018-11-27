@@ -103,7 +103,7 @@ class NotificationRestClient constructor(
      *
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
-    fun fetchNotifications(site: SiteModel) {
+    fun fetchNotifications() {
         val url = WPCOMREST.notifications.urlV1_1
         val params = mapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
@@ -115,13 +115,13 @@ class NotificationRestClient constructor(
                         Date(it)
                     }
                     val notifications = response?.notes?.map {
-                        NotificationApiResponse.notificationResponseToNotificationModel(site, it)
+                        NotificationApiResponse.notificationResponseToNotificationModel(it)
                     } ?: listOf()
-                    val payload = FetchNotificationsResponsePayload(site, notifications, lastSeenTime)
+                    val payload = FetchNotificationsResponsePayload(notifications, lastSeenTime)
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
                 },
                 { networkError ->
-                    val payload = FetchNotificationsResponsePayload(site).apply {
+                    val payload = FetchNotificationsResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
                                 networkError.message)
@@ -137,16 +137,16 @@ class NotificationRestClient constructor(
      *
      * https://developer.wordpress.com/docs/api/1/post/notifications/seen
      */
-    fun markNotificationsSeen(site: SiteModel, timestamp: Long) {
+    fun markNotificationsSeen(timestamp: Long) {
         val url = WPCOMREST.notifications.seen.urlV1_1
         val params = mapOf("time" to timestamp.toString())
         val request = WPComGsonRequest.buildPostRequest(url, params, NotificationSeenApiResponse::class.java,
                 { response ->
-                    val payload = MarkNotificationSeenResponsePayload(site, response.success, response.last_seen_time)
+                    val payload = MarkNotificationSeenResponsePayload(response.success, response.last_seen_time)
                     dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsSeenAction(payload))
                 },
                 { networkError ->
-                    val payload = MarkNotificationSeenResponsePayload(site).apply {
+                    val payload = MarkNotificationSeenResponsePayload().apply {
                         error = NotificationError(
                                 NotificationErrorType.fromString(networkError.apiError),
                                 networkError.message
