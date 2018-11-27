@@ -241,40 +241,66 @@ constructor(
         }
     }
 
+    suspend fun fetchPublicizeData(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchStatsPayload<PublicizeResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.publicize.urlV1_1
+
+        val params = mapOf("max" to pageSize.toString())
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PublicizeResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchStatsPayload(response.data)
+            }
+            is Error -> {
+                FetchStatsPayload(response.error.toStatsError())
+            }
+        }
+    }
+
     data class AllTimeResponse(
         @SerializedName("date") var date: Date? = null,
-        @SerializedName("stats") val stats: StatsResponse
+        @SerializedName("stats") val stats: StatsResponse?
     ) {
         data class StatsResponse(
-            @SerializedName("visitors") val visitors: Int,
-            @SerializedName("views") val views: Int,
-            @SerializedName("posts") val posts: Int,
-            @SerializedName("views_best_day") val viewsBestDay: String,
-            @SerializedName("views_best_day_total") val viewsBestDayTotal: Int
+            @SerializedName("visitors") val visitors: Int?,
+            @SerializedName("views") val views: Int?,
+            @SerializedName("posts") val posts: Int?,
+            @SerializedName("views_best_day") val viewsBestDay: String?,
+            @SerializedName("views_best_day_total") val viewsBestDayTotal: Int?
         )
     }
 
     data class MostPopularResponse(
-        @SerializedName("highest_day_of_week") val highestDayOfWeek: Int,
-        @SerializedName("highest_hour") val highestHour: Int,
-        @SerializedName("highest_day_percent") val highestDayPercent: Double,
-        @SerializedName("highest_hour_percent") val highestHourPercent: Double
+        @SerializedName("highest_day_of_week") val highestDayOfWeek: Int?,
+        @SerializedName("highest_hour") val highestHour: Int?,
+        @SerializedName("highest_day_percent") val highestDayPercent: Double?,
+        @SerializedName("highest_hour_percent") val highestHourPercent: Double?
     )
 
     data class PostsResponse(
-        @SerializedName("found") val postsFound: Int = 0,
+        @SerializedName("found") val postsFound: Int? = 0,
         @SerializedName("posts") val posts: List<PostResponse> = listOf()
     ) {
         data class PostResponse(
             @SerializedName("ID") val id: Long,
-            @SerializedName("title") val title: String,
-            @SerializedName("date") val date: Date,
-            @SerializedName("URL") val url: String,
-            @SerializedName("like_count") val likeCount: Int,
+            @SerializedName("title") val title: String?,
+            @SerializedName("date") val date: Date?,
+            @SerializedName("URL") val url: String?,
+            @SerializedName("like_count") val likeCount: Int?,
             @SerializedName("discussion") val discussion: Discussion?
         ) {
             data class Discussion(
-                @SerializedName("comment_count") val commentCount: Int
+                @SerializedName("comment_count") val commentCount: Int?
             )
         }
     }
@@ -283,7 +309,7 @@ constructor(
         @SerializedName("highest_month") val highestMonth: Int = 0,
         @SerializedName("highest_day_average") val highestDayAverage: Int = 0,
         @SerializedName("highest_week_average") val highestWeekAverage: Int = 0,
-        @SerializedName("views") val views: Int,
+        @SerializedName("views") val views: Int?,
         @SerializedName("date") val date: String? = null,
         @SerializedName("data") val data: List<List<String>>?,
         @SerializedName("fields") val fields: List<String>?,
@@ -294,29 +320,29 @@ constructor(
     ) {
         data class Year(
             @SerializedName("months") val months: Map<Int, Int>,
-            @SerializedName("total") val total: Int
+            @SerializedName("total") val total: Int?
         )
 
         data class Week(
-            @SerializedName("average") val average: Int,
-            @SerializedName("total") val total: Int,
+            @SerializedName("average") val average: Int?,
+            @SerializedName("total") val total: Int?,
             @SerializedName("days") val days: List<Day>
         )
 
         data class Day(
             @SerializedName("day") val day: String,
-            @SerializedName("count") val count: Int
+            @SerializedName("count") val count: Int?
         )
 
         data class Average(
             @SerializedName("months") val months: Map<Int, Int>,
-            @SerializedName("overall") val overall: Int
+            @SerializedName("overall") val overall: Int?
         )
     }
 
     data class VisitResponse(
-        @SerializedName("date") val date: String,
-        @SerializedName("unit") val unit: String,
+        @SerializedName("date") val date: String?,
+        @SerializedName("unit") val unit: String?,
         @SerializedName("fields") val fields: List<String>,
         @SerializedName("data") val data: List<List<String>>
     )
@@ -349,52 +375,61 @@ constructor(
     }
 
     data class FollowersResponse(
-        @SerializedName("page") val page: Int,
-        @SerializedName("pages") val pages: Int,
-        @SerializedName("total") val total: Int,
-        @SerializedName("total_email") val totalEmail: Int,
-        @SerializedName("total_wpcom") val totalWpCom: Int,
+        @SerializedName("page") val page: Int?,
+        @SerializedName("pages") val pages: Int?,
+        @SerializedName("total") val total: Int?,
+        @SerializedName("total_email") val totalEmail: Int?,
+        @SerializedName("total_wpcom") val totalWpCom: Int?,
         @SerializedName("subscribers") val subscribers: List<FollowerResponse>
 
     ) {
         data class FollowerResponse(
-            @SerializedName("label") val label: String,
-            @SerializedName("avatar") val avatar: String,
-            @SerializedName("url") val url: String,
-            @SerializedName("date_subscribed") val dateSubscribed: Date,
-            @SerializedName("follow_data") val followData: FollowData
+            @SerializedName("label") val label: String?,
+            @SerializedName("avatar") val avatar: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("date_subscribed") val dateSubscribed: Date?,
+            @SerializedName("follow_data") val followData: FollowData?
         )
     }
 
     data class FollowData(
-        @SerializedName("type") val type: String,
-        @SerializedName("params") val params: FollowParams
+        @SerializedName("type") val type: String?,
+        @SerializedName("params") val params: FollowParams?
     ) {
         data class FollowParams(
-            @SerializedName("follow-text") val followText: String,
-            @SerializedName("following-text") val followingText: String,
-            @SerializedName("following-hover-text") val followingHoverText: String,
-            @SerializedName("is_following") val isFollowing: Boolean,
-            @SerializedName("blog_id") val blogId: String,
-            @SerializedName("site_id") val siteId: String,
-            @SerializedName("stats-source") val statsSource: String,
-            @SerializedName("blog_domain") val blogDomain: String
+            @SerializedName("follow-text") val followText: String?,
+            @SerializedName("following-text") val followingText: String?,
+            @SerializedName("following-hover-text") val followingHoverText: String?,
+            @SerializedName("is_following") val isFollowing: Boolean?,
+            @SerializedName("blog_id") val blogId: String?,
+            @SerializedName("site_id") val siteId: String?,
+            @SerializedName("stats-source") val statsSource: String?,
+            @SerializedName("blog_domain") val blogDomain: String?
         )
     }
 
     data class TagsResponse(
-        @SerializedName("date") val date: String,
+        @SerializedName("date") val date: String?,
         @SerializedName("tags") val tags: List<TagsGroup>
     ) {
         data class TagsGroup(
-            @SerializedName("views") val views: Long,
+            @SerializedName("views") val views: Long?,
             @SerializedName("tags") val tags: List<TagResponse>
         ) {
             data class TagResponse(
-                @SerializedName("name") val name: String,
-                @SerializedName("type") val type: String,
-                @SerializedName("link") val link: String
+                @SerializedName("name") val name: String?,
+                @SerializedName("type") val type: String?,
+                @SerializedName("link") val link: String?
             )
         }
+    }
+
+    data class PublicizeResponse(
+        @SerializedName("services") val services: List<Service>
+    ) {
+        data class Service(
+            @SerializedName("service") val service: String,
+            @SerializedName("followers") val followers: Int
+        )
     }
 }

@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
@@ -29,6 +30,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_PO
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
 import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
 import org.wordpress.android.fluxc.store.stats.FOLLOWERS_RESPONSE
@@ -36,6 +38,7 @@ import org.wordpress.android.fluxc.store.stats.LATEST_POST
 import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
 import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
 import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.PUBLICIZE_RESPONSE
 import org.wordpress.android.fluxc.store.stats.TAGS_RESPONSE
 import kotlin.test.assertEquals
 
@@ -223,5 +226,30 @@ class InsightsSqlUtilsTest {
         insightsSqlUtils.insert(site, TAGS_RESPONSE)
 
         verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, INSIGHTS, TAGS_RESPONSE)
+    }
+
+    @Test
+    fun `returns publicize response from stats utils`() {
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        PUBLICIZE_INSIGHTS,
+                        INSIGHTS,
+                        PublicizeResponse::class.java
+                )
+        ).thenReturn(
+                PUBLICIZE_RESPONSE
+        )
+
+        val result = insightsSqlUtils.selectPublicizeInsights(site)
+
+        assertEquals(result, PUBLICIZE_RESPONSE)
+    }
+
+    @Test
+    fun `inserts publicize response to stats utils`() {
+        insightsSqlUtils.insert(site, PUBLICIZE_RESPONSE)
+
+        verify(statsSqlUtils).insert(site, PUBLICIZE_INSIGHTS, INSIGHTS, PUBLICIZE_RESPONSE)
     }
 }
