@@ -460,7 +460,7 @@ class InsightsStoreTest {
 
     @Test
     fun `returns publicize data per site`() = test {
-        val fetchInsightsPayload = FetchInsightsPayload(
+        val fetchInsightsPayload = FetchStatsPayload(
                 PUBLICIZE_RESPONSE
         )
         val forced = true
@@ -491,7 +491,7 @@ class InsightsStoreTest {
     fun `returns error when publicize data call fail`() = test {
         val type = API_ERROR
         val message = "message"
-        val errorPayload = FetchInsightsPayload<PublicizeResponse>(StatsError(type, message))
+        val errorPayload = FetchStatsPayload<PublicizeResponse>(StatsError(type, message))
         val forced = true
         whenever(insightsRestClient.fetchPublicizeData(site, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
