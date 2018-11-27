@@ -171,7 +171,6 @@ constructor(
     ): List<NotificationModel> =
             notificationSqlUtils.getNotifications(ORDER_DESCENDING, filterByType, filterBySubtype)
 
-
     /**
      * Fetch all notifications for the given site.
      *
