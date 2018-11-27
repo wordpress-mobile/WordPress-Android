@@ -13,17 +13,19 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.pages_fragment.*
+import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.DAYS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.MONTHS
-import org.wordpress.android.ui.stats.refresh.StatsListViewModel.StatsListType.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.WEEKS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -58,8 +60,8 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun initializeViews(activity: FragmentActivity) {
-        pagesPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
-        tabLayout.setupWithViewPager(pagesPager)
+        statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
+        tabLayout.setupWithViewPager(statsPager)
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -76,6 +78,14 @@ class StatsFragment : DaggerFragment() {
         viewModel.start(nonNullSite)
         if (!isFirstStart) {
             restorePreviousSearch = true
+        }
+
+        statsPager.setOnTouchListener { _, event ->
+            swipeToRefreshHelper.setEnabled(false)
+            if (event.action == MotionEvent.ACTION_UP) {
+                swipeToRefreshHelper.setEnabled(true)
+            }
+            return@setOnTouchListener false
         }
     }
 
