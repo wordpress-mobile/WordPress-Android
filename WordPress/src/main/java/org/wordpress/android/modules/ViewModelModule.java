@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
@@ -89,6 +90,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NewSiteCreationVerticalsViewModel.class)
     abstract ViewModel siteCreationVerticalsViewModel(NewSiteCreationVerticalsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewSiteCreationSiteInfoViewModel.class)
+    abstract ViewModel siteCreationSiteInfoViewModel(NewSiteCreationSiteInfoViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
