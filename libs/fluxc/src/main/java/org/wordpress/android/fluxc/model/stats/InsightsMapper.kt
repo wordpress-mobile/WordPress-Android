@@ -73,7 +73,7 @@ class InsightsMapper
                 site.siteId,
                 postResponse.title ?: "",
                 postResponse.url ?: "",
-                postResponse.date ?: Date(),
+                postResponse.date ?: Date(0),
                 postResponse.id ?: 0,
                 viewsCount ?: 0,
                 commentCount,
@@ -150,6 +150,7 @@ class InsightsMapper
         return if (this.name != null && this.type != null && this.link != null) {
             TagModel.Item(this.name, this.type, this.link)
         } else {
+            AppLog.e(STATS, "TagResponse: Mandatory fields are null so the Tag can't be mapped to Model")
             null
         }
     }
