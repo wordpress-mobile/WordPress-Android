@@ -245,6 +245,32 @@ constructor(
         }
     }
 
+    suspend fun fetchPublicizeData(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchStatsPayload<PublicizeResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.publicize.urlV1_1
+
+        val params = mapOf("max" to pageSize.toString())
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PublicizeResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchStatsPayload(response.data)
+            }
+            is Error -> {
+                FetchStatsPayload(response.error.toStatsError())
+            }
+        }
+    }
+
     data class AllTimeResponse(
         @SerializedName("date") var date: Date? = null,
         @SerializedName("stats") val stats: StatsResponse
@@ -409,5 +435,14 @@ constructor(
                 @SerializedName("link") val link: String
             )
         }
+    }
+
+    data class PublicizeResponse(
+        @SerializedName("services") val services: List<Service>
+    ) {
+        data class Service(
+            @SerializedName("service") val service: String,
+            @SerializedName("followers") val followers: Int
+        )
     }
 }
