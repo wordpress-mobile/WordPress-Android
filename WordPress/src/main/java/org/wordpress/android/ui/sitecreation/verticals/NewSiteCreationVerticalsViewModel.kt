@@ -101,6 +101,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         _clearBtnClicked.call()
     }
 
+    fun onSkipStepBtnClicked() {
+        resultObservable.selectedVertical.value = null
+    }
+
     fun updateQuery(query: String, delay: Int = throttleDelay) {
         fetchVerticalsJob?.cancel() // cancel any previous requests
         if (query.isNotEmpty()) {

@@ -137,7 +137,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private fun initSkipButton(rootView: ViewGroup) {
         skipButton = rootView.findViewById(R.id.btn_skip)
         skipButton.setOnClickListener { _ ->
-            // TODO add skip action
+            viewModel.onSkipStepBtnClicked()
         }
     }
 

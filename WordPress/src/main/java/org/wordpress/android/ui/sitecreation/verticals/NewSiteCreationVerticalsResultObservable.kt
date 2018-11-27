@@ -9,5 +9,5 @@ import javax.inject.Singleton
  */
 @Singleton
 class NewSiteCreationVerticalsResultObservable @Inject constructor() {
-    val selectedVertical = SingleLiveEvent<String>()
+    val selectedVertical = SingleLiveEvent<String?>()
 }

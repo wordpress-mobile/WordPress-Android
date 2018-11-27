@@ -10,11 +10,15 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsResultObservable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsResultObservable
 import org.wordpress.android.util.observeEvent
+import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
 class NewSiteCreationActivity : AppCompatActivity() {
@@ -32,7 +36,6 @@ class NewSiteCreationActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
-            earlyLoadThemeLoaderFragment()
             mMainViewModel.start()
         }
         observeVMState()
@@ -41,14 +44,7 @@ class NewSiteCreationActivity : AppCompatActivity() {
     private fun observeVMState() {
         mMainViewModel.navigationTargetObservable
                 .observeEvent(this) { target ->
-                    val fragment = when (target.wizardStepIdentifier) {
-                        SiteCreationStep.SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
-                        SiteCreationStep.VERTICALS ->
-                            NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
-                        SiteCreationStep.DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
-                    }
-                    slideInFragment(fragment, target.wizardStepIdentifier.toString())
-                    true
+                    showStep(target)
                 }
         segmentsResultObservable.selectedSegment.observe(
                 this,
@@ -57,8 +53,19 @@ class NewSiteCreationActivity : AppCompatActivity() {
 
         verticalsResultObservable.selectedVertical.observe(
                 this,
-                Observer { verticalId -> verticalId?.let { mMainViewModel.onVerticalSelected(verticalId) } }
+                Observer { verticalId -> mMainViewModel.onVerticalsScreenFinished(verticalId) }
         )
+    }
+
+    private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>): Boolean {
+        val fragment = when (target.wizardStepIdentifier) {
+            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
+            VERTICALS ->
+                NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
+            DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
+        }
+        slideInFragment(fragment, target.wizardStepIdentifier.toString())
+        return true
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {
@@ -71,14 +78,6 @@ class NewSiteCreationActivity : AppCompatActivity() {
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
             fragmentTransaction.addToBackStack(null)
         }
-        fragmentTransaction.commit()
-    }
-
-    private fun earlyLoadThemeLoaderFragment() {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        val themeLoaderFragment = NewSiteCreationThemeLoaderFragment()
-        themeLoaderFragment.retainInstance = true
-        fragmentTransaction.add(themeLoaderFragment, NewSiteCreationThemeLoaderFragment.TAG)
         fragmentTransaction.commit()
     }
 

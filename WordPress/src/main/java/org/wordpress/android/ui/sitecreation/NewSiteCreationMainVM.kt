@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import org.wordpress.android.util.Event
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -49,8 +50,10 @@ class NewSiteCreationMainVM @Inject constructor() :
         wizardManager.onBackPressed()
     }
 
-    fun onVerticalSelected(verticalId: String) {
-        siteCreationState = siteCreationState.copy(verticalId = verticalId)
+    fun onVerticalsScreenFinished(verticalId: String?) {
+        verticalId?.let {
+            siteCreationState = siteCreationState.copy(verticalId = verticalId)
+        }
         wizardManager.showNextStep()
     }
 }
