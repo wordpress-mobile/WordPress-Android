@@ -31,7 +31,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-private const val keyListState = "list_state"
+private const val KEY_LIST_STATE = "list_state"
 
 class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private lateinit var nonNullActivity: FragmentActivity
@@ -86,12 +86,12 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(keyListState, linearLayoutManager.onSaveInstanceState())
+        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(keyListState)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
         initTextWatcher()
