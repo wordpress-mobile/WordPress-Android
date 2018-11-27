@@ -34,8 +34,6 @@ install:
   # Setup gradle.properties
   - cp gradle.properties-example gradle.properties
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
-  - nvm install 8
-  - pushd libs/gutenberg-mobile && yarn && yarn install && popd
 
 script:
   - ./tools/validate-login-strings.sh
