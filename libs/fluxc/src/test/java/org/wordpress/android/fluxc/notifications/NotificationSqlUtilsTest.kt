@@ -37,14 +37,13 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 6 }
         val notesList = apiResponse.notes?.map {
-            NotificationApiResponse.notificationResponseToNotificationModel(site, it)
+            NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
 
         // Test inserting notifications
-        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
-        assertEquals(52, inserted)
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(5, inserted)
     }
 
     @Test
@@ -54,16 +53,16 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 6 }
+        val site = SiteModel().apply { id = 153482281 }
         val notesList = apiResponse.notes?.map {
-            NotificationApiResponse.notificationResponseToNotificationModel(site, it)
+            NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
-        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
-        assertEquals(52, inserted)
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(5, inserted)
 
         // Get notifications
         val notifications = notificationSqlUtils.getNotificationsForSite(site, SelectQuery.ORDER_DESCENDING)
-        assertEquals(52, notifications.size)
+        assertEquals(2, notifications.size)
     }
 
     @Test
@@ -73,9 +72,9 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/store-order-notification.json")
         val apiResponse = NotificationTestUtils.parseNotificationApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 6 }
-        val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(site, apiResponse))
-        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
+        val site = SiteModel().apply { id = 141286411 }
+        val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(apiResponse))
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
         assertEquals(1, inserted)
 
         // Get notification from database
@@ -86,6 +85,7 @@ class NotificationSqlUtilsTest {
         val note = notifications[0]
         assertEquals(note.title, "New Order")
         assertEquals(note.noteHash, 2064099309)
+        assertEquals(note.remoteSiteId, 141286411)
         assertEquals(note.remoteNoteId, 3604874081)
         assertEquals(note.type, NotificationModel.Kind.STORE_ORDER)
         assertEquals(note.read, true)
@@ -152,9 +152,9 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/store-review-notification.json")
         val apiResponse = NotificationTestUtils.parseNotificationApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 6 }
-        val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(site, apiResponse))
-        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
+        val site = SiteModel().apply { id = 153482281 }
+        val notesList = listOf(NotificationApiResponse.notificationResponseToNotificationModel(apiResponse))
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
         assertEquals(1, inserted)
 
         // Get notification from database
@@ -167,6 +167,7 @@ class NotificationSqlUtilsTest {
         val note = notifications[0]
         assertEquals(note.noteHash, 1543255567)
         assertEquals(note.title, "Product Review")
+        assertEquals(note.remoteSiteId, 153482281)
         assertEquals(note.remoteNoteId, 3617558725)
         assertEquals(note.type, NotificationModel.Kind.COMMENT)
         assertEquals(note.read, true)
@@ -188,18 +189,18 @@ class NotificationSqlUtilsTest {
         val jsonString = UnitTestUtils
                 .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
         val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
-        val site = SiteModel().apply { id = 6 }
+        val site = SiteModel().apply { id = 153482281 }
         val notesList = apiResponse.notes?.map {
-            NotificationApiResponse.notificationResponseToNotificationModel(site, it)
+            NotificationApiResponse.notificationResponseToNotificationModel(it)
         } ?: emptyList()
-        val inserted = notificationSqlUtils.insertOrUpdateNotifications(site, notesList)
-        assertEquals(52, inserted)
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(5, inserted)
 
         // Get notifications of type "store_order"
         val newOrderNotifications = notificationSqlUtils.getNotificationsForSite(
                 site,
                 filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()))
-        assertEquals(7, newOrderNotifications.size)
+        assertEquals(1, newOrderNotifications.size)
 
         // Get notifications of subtype "store_review"
         val storeReviewNotifications = notificationSqlUtils.getNotificationsForSite(
@@ -212,6 +213,6 @@ class NotificationSqlUtilsTest {
                 site,
                 filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()),
                 filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
-        assertEquals(8, combinedNotifications.size)
+        assertEquals(2, combinedNotifications.size)
     }
 }

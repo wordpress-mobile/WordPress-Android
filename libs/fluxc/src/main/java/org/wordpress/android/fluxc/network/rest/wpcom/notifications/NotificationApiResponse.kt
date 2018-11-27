@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.notifications
 
 import org.wordpress.android.fluxc.model.NotificationModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMeta
@@ -23,7 +22,6 @@ class NotificationApiResponse : Response {
 
     companion object {
         fun notificationResponseToNotificationModel(
-            siteModel: SiteModel,
             response: NotificationApiResponse
         ): NotificationModel {
             val noteType = response.type?.let {
@@ -37,7 +35,7 @@ class NotificationApiResponse : Response {
             return NotificationModel(
                     noteId = 0,
                     remoteNoteId = response.id ?: 0,
-                    localSiteId = siteModel.id,
+                    remoteSiteId = response.meta?.ids?.site,
                     noteHash = response.note_hash ?: 0L,
                     type = noteType,
                     subtype = noteSubType,
