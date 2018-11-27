@@ -41,11 +41,11 @@ class InsightsMapperTest {
 
         assertThat(model.siteId).isEqualTo(siteId)
         assertThat(model.date).isEqualTo(ALL_TIME_RESPONSE.date)
-        assertThat(model.visitors).isEqualTo(ALL_TIME_RESPONSE.stats.visitors)
-        assertThat(model.views).isEqualTo(ALL_TIME_RESPONSE.stats.views)
-        assertThat(model.posts).isEqualTo(ALL_TIME_RESPONSE.stats.posts)
-        assertThat(model.viewsBestDay).isEqualTo(ALL_TIME_RESPONSE.stats.viewsBestDay)
-        assertThat(model.viewsBestDayTotal).isEqualTo(ALL_TIME_RESPONSE.stats.viewsBestDayTotal)
+        assertThat(model.visitors).isEqualTo(ALL_TIME_RESPONSE.stats?.visitors)
+        assertThat(model.views).isEqualTo(ALL_TIME_RESPONSE.stats?.views)
+        assertThat(model.posts).isEqualTo(ALL_TIME_RESPONSE.stats?.posts)
+        assertThat(model.viewsBestDay).isEqualTo(ALL_TIME_RESPONSE.stats?.viewsBestDay)
+        assertThat(model.viewsBestDayTotal).isEqualTo(ALL_TIME_RESPONSE.stats?.viewsBestDayTotal)
     }
 
     @Test

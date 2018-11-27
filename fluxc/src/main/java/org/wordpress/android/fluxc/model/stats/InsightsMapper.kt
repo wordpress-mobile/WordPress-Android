@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.T
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
+import java.util.Date
 import javax.inject.Inject
 
 private const val PERIOD = "period"
@@ -35,21 +36,21 @@ class InsightsMapper
         return InsightsAllTimeModel(
                 site.siteId,
                 response.date,
-                stats.visitors,
-                stats.views,
-                stats.posts,
-                stats.viewsBestDay,
-                stats.viewsBestDayTotal
+                stats?.visitors ?: 0,
+                stats?.views ?: 0,
+                stats?.posts ?: 0,
+                stats?.viewsBestDay ?: "",
+                stats?.viewsBestDayTotal ?: 0
         )
     }
 
     fun map(response: MostPopularResponse, site: SiteModel): InsightsMostPopularModel {
         return InsightsMostPopularModel(
                 site.siteId,
-                response.highestDayOfWeek,
-                response.highestHour,
-                response.highestDayPercent,
-                response.highestHourPercent
+                response.highestDayOfWeek ?: 0,
+                response.highestHour ?: 0,
+                response.highestDayPercent ?: 0.0,
+                response.highestHourPercent ?: 0.0
         )
     }
 
@@ -71,13 +72,13 @@ class InsightsMapper
         val commentCount = postResponse.discussion?.commentCount ?: 0
         return InsightsLatestPostModel(
                 site.siteId,
-                postResponse.title,
-                postResponse.url,
-                postResponse.date,
-                postResponse.id,
-                viewsCount,
+                postResponse.title ?: "",
+                postResponse.url ?: "",
+                postResponse.date ?: Date(0),
+                postResponse.id ?: 0,
+                viewsCount ?: 0,
                 commentCount,
-                postResponse.likeCount,
+                postResponse.likeCount ?: 0,
                 daysViews
         )
     }
@@ -98,19 +99,24 @@ class InsightsMapper
     }
 
     fun map(response: FollowersResponse, followerType: FollowerType, pageSize: Int): FollowersModel {
-        val followers = response.subscribers.take(pageSize).map {
-            FollowerModel(
-                    it.avatar,
-                    it.label,
-                    it.url,
-                    it.dateSubscribed
-            )
-        }
+        val followers = response.subscribers.mapNotNull {
+            if (it.avatar != null && it.label != null && it.dateSubscribed != null) {
+                FollowerModel(
+                        it.avatar,
+                        it.label,
+                        it.url,
+                        it.dateSubscribed
+                )
+            } else {
+                AppLog.e(STATS, "CommentsResponse.posts: Non-null field is coming as null from API")
+                null
+            }
+        }.take(pageSize)
         val total = when (followerType) {
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }
-        return FollowersModel(total, followers, response.subscribers.size > pageSize)
+        return FollowersModel(total ?: 0, followers, response.subscribers.size > pageSize)
     }
 
     fun map(response: CommentsResponse, pageSize: Int): CommentsModel {
@@ -137,12 +143,17 @@ class InsightsMapper
 
     fun map(response: TagsResponse, pageSize: Int): TagsModel {
         return TagsModel(response.tags.take(pageSize).map { tag ->
-            TagModel(tag.tags.map { it.toItem() }, tag.views)
+            TagModel(tag.tags.mapNotNull { it.toItem() }.take(pageSize), tag.views ?: 0)
         }, response.tags.size > pageSize)
     }
 
-    private fun TagResponse.toItem(): TagModel.Item {
-        return TagModel.Item(this.name, this.type, this.link)
+    private fun TagResponse.toItem(): TagModel.Item? {
+        return if (this.name != null && this.type != null && this.link != null) {
+            TagModel.Item(this.name, this.type, this.link)
+        } else {
+            AppLog.e(STATS, "TagResponse: Mandatory fields are null so the Tag can't be mapped to Model")
+            null
+        }
     }
 
     fun map(response: PublicizeResponse, pageSize: Int): PublicizeModel {
