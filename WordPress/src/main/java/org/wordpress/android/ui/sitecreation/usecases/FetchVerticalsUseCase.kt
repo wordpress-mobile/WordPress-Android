@@ -12,7 +12,7 @@ import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 
 /**
- * Transforms EventBus event to a coroutines.
+ * Transforms OnVerticalsFetched EventBus event to a coroutine.
  *
  * The client may dispatch multiple requests, but we want to accept only the latest one and ignore all others.
  * We can't rely just on job.cancel() as the FetchVerticalsPayload may have already been dispatched and FluxC will

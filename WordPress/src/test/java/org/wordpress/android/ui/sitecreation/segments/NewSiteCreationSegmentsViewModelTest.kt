@@ -31,7 +31,7 @@ class NewSiteCreationSegmentsViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var dispatcher: Dispatcher
-    @Mock lateinit var mFetchSegmentsUseCase: FetchSegmentsUseCase
+    @Mock lateinit var fetchSegmentsUseCase: FetchSegmentsUseCase
     private val firstModel =
             VerticalSegmentModel(
                     "dummyTitle",
@@ -91,7 +91,7 @@ class NewSiteCreationSegmentsViewModelTest {
     fun setUp() {
         viewModel = NewSiteCreationSegmentsViewModel(
                 dispatcher,
-                mFetchSegmentsUseCase,
+                fetchSegmentsUseCase,
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
         )
@@ -101,7 +101,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun onStartFetchesCategories() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
         assertTrue(viewModel.uiState.value!! == headerAndFirstItemState)
@@ -109,12 +109,12 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun onRetryFetchesCategories() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
         assertTrue(viewModel.uiState.value!! == headerAndFirstItemState)
 
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
         viewModel.onRetryClicked()
 
         assertTrue(viewModel.uiState.value!! == headerAndSecondItemState)
@@ -122,7 +122,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun fetchCategoriesChangesStateToProgress() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
         viewModel.start()
 
         inOrder(uiStateObserver).apply {
@@ -134,7 +134,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun onErrorEventChangesStateToError() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
 
         inOrder(uiStateObserver).apply {
@@ -146,9 +146,9 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun onSuccessfulRetryRemovesErrorState() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(errorEvent)
         viewModel.start()
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(secondModelEvent)
         viewModel.onRetryClicked()
 
         inOrder(uiStateObserver).apply {
@@ -162,7 +162,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Test
     fun verifyLastItemDoesntShowDivider() = test {
-        whenever(mFetchSegmentsUseCase.fetchCategories()).thenReturn(firstAndSecondModelEvent)
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(firstAndSecondModelEvent)
         viewModel.start()
 
         val items = viewModel.uiState.value!!.items

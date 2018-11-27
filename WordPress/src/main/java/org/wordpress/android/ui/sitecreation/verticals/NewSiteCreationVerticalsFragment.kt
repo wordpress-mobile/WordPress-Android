@@ -23,15 +23,20 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
-private const val keyListState = "list_state"
+private const val KEY_LIST_STATE = "list_state"
 
 class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private lateinit var nonNullActivity: FragmentActivity
+    private var segmentId by Delegates.notNull<Long>()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
@@ -48,7 +53,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var searchEditTextProgressBar: View
     private lateinit var clearAllButton: View
 
-    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -74,16 +79,20 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         super.onCreate(savedInstanceState)
         nonNullActivity = activity!!
         (nonNullActivity.application as WordPress).component().inject(this)
+        segmentId = arguments?.getLong(EXTRA_SEGMENT_ID, -1L) ?: -1L
+        if (segmentId == -1L) {
+            throw IllegalStateException("SegmentId is required.")
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(keyListState, linearLayoutManager.onSaveInstanceState())
+        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(keyListState)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
         initTextWatcher()
@@ -131,7 +140,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun initRetryButton(rootView: ViewGroup) {
         val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { _ -> viewModel.onFetchHeaderInfoRetry() }
+        retryBtn.setOnClickListener { _ -> viewModel.onFetchSegmentsPromptRetry() }
     }
 
     private fun initSkipButton(rootView: ViewGroup) {
@@ -157,12 +166,12 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { state ->
             state?.let {
-                contentLayout.visibility = if (state.showContent) View.VISIBLE else View.GONE
-                fullscreenErrorLayout.visibility = if (state.showFullscreenError) View.VISIBLE else View.GONE
-                fullscreenProgressLayout.visibility = if (state.showFullscreenProgress) View.VISIBLE else View.GONE
-                skipButton.visibility = if (state.showSkipButton) View.VISIBLE else View.GONE
-                state.headerUiState?.let { headerState -> updateHeader(headerState) }
-                state.searchInputState?.let { inputState -> updateSearchInput(inputState) }
+                updateVisibility(contentLayout, state.contentState == CONTENT)
+                updateVisibility(fullscreenErrorLayout, state.contentState == FULLSCREEN_ERROR)
+                updateVisibility(fullscreenProgressLayout, state.contentState == FULLSCREEN_PROGRESS)
+                updateVisibility(skipButton, state.showSkipButton)
+                updateHeader(state.headerUiState)
+                updateSearchInput(state.searchInputState)
                 updateSuggestions(state.items)
             }
         })
@@ -170,7 +179,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             searchEditText.setText("")
         })
 
-        viewModel.start()
+        viewModel.start(segmentId)
     }
 
     override fun onHelp() {
@@ -186,28 +195,27 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             }
             headerLayout.animate()
                     .translationY(-headerLayout.height.toFloat())
-                    .withStartAction {
-                        headerLayout.visibility = View.GONE
-                    }
         } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
             headerLayout.animate()
                     .translationY(0f)
-                    .withStartAction {
-                        headerLayout.visibility = View.VISIBLE
-                    }
         }
+        updateVisibility(headerLayout, uiState.isVisible)
         headerTitle.text = uiState.title
         headerSubtitle.text = uiState.subtitle
     }
 
     private fun updateSearchInput(uiState: VerticalsSearchInputUiState) {
         searchEditText.hint = uiState.hint
-        searchEditTextProgressBar.visibility = if (uiState.showProgress) View.VISIBLE else View.GONE
-        clearAllButton.visibility = if (uiState.showClearButton) View.VISIBLE else View.GONE
+        updateVisibility(searchEditTextProgressBar, uiState.showProgress)
+        updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
         (recyclerView.adapter as NewSiteCreationVerticalsAdapter).update(suggestions)
+    }
+
+    private fun updateVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     companion object {

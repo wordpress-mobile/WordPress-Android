@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/clear_all_layout"
         android:background="@color/white"
-        android:drawablePadding="@dimen/margin_extra_large"
+        android:drawablePadding="@dimen/new_site_creation_verticals_search_input_text_padding"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:paddingBottom="@dimen/margin_large"

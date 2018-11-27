@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/suggestion"
-        android:layout_width="272dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
@@ -25,8 +25,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9"/>
-
+        tools:text="1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4"
+        tools:ignore="RtlSymmetry"/>
 
     <View
         android:id="@+id/divider"
