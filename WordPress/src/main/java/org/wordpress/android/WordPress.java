@@ -758,11 +758,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 case TRIM_MEMORY_RUNNING_LOW:
                     evictBitmaps = true;
                     break;
-                case TRIM_MEMORY_BACKGROUND:
                 case TRIM_MEMORY_UI_HIDDEN:
                     // See https://android.jlelse.eu/how-to-detect-android-application-open-and-close-background-and-foreground-events-1b4713784b57
                     onAppGoesToBackground();
                     break;
+                case TRIM_MEMORY_BACKGROUND:
                 default:
                     break;
             }
