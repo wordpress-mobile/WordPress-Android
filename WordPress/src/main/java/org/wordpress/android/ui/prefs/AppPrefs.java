@@ -179,6 +179,9 @@ public class AppPrefs {
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
+        // quick start migration dialog is shown only once for all sites
+        HAS_QUICK_START_MIGRATION_SHOWN,
+
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
@@ -770,6 +773,14 @@ public class AppPrefs {
 
     public static boolean isQuickStartDisabled() {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
+    }
+
+    public static void setQuickStartMigrationDialogShown(Boolean shown) {
+        setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
+    }
+
+    public static boolean hasQuickStartMigrationDialogShown() {
+        return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
     }
 
     public static int getNumberOfTimesQuickStartDialogShown() {
