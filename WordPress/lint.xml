@@ -68,7 +68,6 @@
     <issue id="UnusedAttribute" severity="error" />
     <issue id="IconXmlAndPng" severity="error" />
     <issue id="RtlSymmetry" severity="error" />
-    <issue id="VectorPath" severity="error" />
 
 
     <!-- IGNORE -->
