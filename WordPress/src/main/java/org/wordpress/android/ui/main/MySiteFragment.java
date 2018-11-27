@@ -204,7 +204,7 @@ public class MySiteFragment extends Fragment implements
         updateQuickStartContainer();
         showQuickStartTaskPromptIfNecessary();
 
-        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
+        if (!AppPrefs.hasQuickStartMigrationDialogShown() && QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
             showQuickStartDialogMigration();
         }
     }
@@ -1120,6 +1120,7 @@ public class MySiteFragment extends Fragment implements
 
         if (getFragmentManager() != null) {
             promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
+            AppPrefs.setQuickStartMigrationDialogShown(true);
             // TODO: Quick Start - Add analytics for migration dialog viewed.
         }
     }
