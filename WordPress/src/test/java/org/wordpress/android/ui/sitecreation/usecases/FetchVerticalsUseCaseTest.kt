@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.test
 
+private const val SEARCH_QUERY = "test"
+
 @RunWith(MockitoJUnitRunner::class)
 class FetchVerticalsUseCaseTest {
     @Rule
@@ -29,7 +31,7 @@ class FetchVerticalsUseCaseTest {
     @Mock lateinit var store: VerticalStore
     private lateinit var useCase: FetchVerticalsUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<FetchVerticalsPayload>>
-    private val event = OnVerticalsFetched("test", emptyList(), null)
+    private val event = OnVerticalsFetched(SEARCH_QUERY, emptyList(), null)
 
     @Before
     fun setUp() {
@@ -41,10 +43,10 @@ class FetchVerticalsUseCaseTest {
     fun coroutineResumedWhenResultEventDispatched() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onVerticalsFetched(event) }
 
-        val resultEvent = useCase.fetchVerticals("test")
+        val resultEvent = useCase.fetchVerticals(SEARCH_QUERY)
 
         verify(dispatcher).dispatch(dispatchCaptor.capture())
-        assertEquals(dispatchCaptor.lastValue.payload.searchQuery, "test")
+        assertEquals(dispatchCaptor.lastValue.payload.searchQuery, SEARCH_QUERY)
         assertEquals(event, resultEvent)
     }
 }
