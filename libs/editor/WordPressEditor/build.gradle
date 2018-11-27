@@ -69,7 +69,8 @@ dependencies {
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation project(':react-native-gutenberg-bridge')
     } else {
-        implementation ('com.github.wordpress-mobile:gutenberg-mobile:fd155b0869ea9d207e940721bc0c2170a25886de')
+        def bridgeSubmoduleGitHash = getBridgeSubmoduleGitHash('libs/gutenberg-mobile')
+        implementation ('com.github.wordpress-mobile:gutenberg-mobile:' + bridgeSubmoduleGitHash)
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
@@ -79,6 +80,29 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+}
+
+def getBridgeSubmoduleGitHash(gitSubmodulePath) {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        workingDir '../../../'
+        commandLine 'git', 'submodule', 'status', gitSubmodulePath
+        standardOutput = stdout
+    }
+    def submoduleStatus = stdout.toString().trim()
+    def match = (submoduleStatus =~ /^([-+]?)([a-z\d]*) ${gitSubmodulePath}/)
+    switch (match[0][1]) {
+        case '+':
+            logger.quiet('Important info: building against a gutenerg-mobile hash that is not matching the submodule.')
+            break;
+        case '-':
+            // submodule is not initialized yet, but that's not a problem, we'll use the referenced hash
+            break;
+        default:
+            // submodule is up-to-date. Nothing special here
+            break;
+    }
+    return match[0][2]
 }
 
 signing {
