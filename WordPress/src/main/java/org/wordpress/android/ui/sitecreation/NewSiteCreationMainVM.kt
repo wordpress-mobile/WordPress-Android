@@ -3,7 +3,6 @@ package org.wordpress.android.ui.sitecreation
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import org.wordpress.android.util.Event
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -16,6 +15,8 @@ data class SiteCreationState(
     val siteTitle: String? = null,
     val siteTagline: String? = null
 ) : WizardState
+
+typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
 class NewSiteCreationMainVM @Inject constructor() :
         ViewModel() {
@@ -30,10 +31,9 @@ class NewSiteCreationMainVM @Inject constructor() :
     private var isStarted = false
     private var siteCreationState = SiteCreationState()
 
-   val navigationTargetObservable: LiveData<WizardNavigationTarget<SiteCreationStep, SiteCreationState>> =
-            Transformations.map(wizardManager.navigatorLiveData) {
-                WizardNavigationTarget(it, siteCreationState)
-            }
+    val navigationTargetObservable: LiveData<NavigationTarget> = Transformations.map(wizardManager.navigatorLiveData) {
+        WizardNavigationTarget(it, siteCreationState)
+    }
 
     fun start() {
         if (isStarted) return

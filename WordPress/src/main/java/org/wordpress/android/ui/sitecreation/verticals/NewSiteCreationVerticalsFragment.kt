@@ -190,7 +190,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateHeader(uiState: VerticalsHeaderUiState) {
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
-            if(contentLayout.layoutTransition == null) {
+            if (contentLayout.layoutTransition == null) {
                 contentLayout.layoutTransition = LayoutTransition() // animate layout changes
             }
             headerLayout.animate()

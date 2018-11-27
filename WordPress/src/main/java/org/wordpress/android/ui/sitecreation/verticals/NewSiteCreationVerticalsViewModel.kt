@@ -288,7 +288,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         data class VerticalsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int
-        ) : VerticalsListItemUiState() {
-        }
+        ) : VerticalsListItemUiState()
     }
 }

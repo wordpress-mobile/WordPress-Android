@@ -36,7 +36,6 @@ class WizardManager<T>(
     }
 }
 
-
 /**
  * Marker interface representing a single step/screen in a wizard
  */
@@ -50,4 +49,4 @@ interface WizardState
 /**
  * Navigation target containing all the data needed for navigating the user to a next screen of the wizard.
  */
-class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStepIdentifier: S, val wizardState: T): Event()
+class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStepIdentifier: S, val wizardState: T) : Event()
