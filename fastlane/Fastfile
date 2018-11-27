@@ -220,6 +220,16 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       locales: SUPPORTED_LOCALES)
   end 
 
+#####################################################################################
+# release_preflight
+# -----------------------------------------------------------------------------------
+# Run pre-build checks to ensure we're ready for release!
+#####################################################################################
+desc "Run release preflight checks"
+ lane :release_preflight do | options |
+     configure_validate()
+ end
+
 ########################################################################
 # Helper Lanes
 ########################################################################  
