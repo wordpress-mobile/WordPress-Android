@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.store
+package org.wordpress.android.fluxc.store.stats
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -36,6 +36,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.T
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
+import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
@@ -58,7 +59,13 @@ class InsightsStoreTest {
     private val currentDate = Date(10)
     @Before
     fun setUp() {
-        store = InsightsStore(insightsRestClient, sqlUtils, mapper, timeProvider, Unconfined)
+        store = InsightsStore(
+                insightsRestClient,
+                sqlUtils,
+                mapper,
+                timeProvider,
+                Unconfined
+        )
         whenever(timeProvider.currentDate).thenReturn(currentDate)
     }
 
@@ -165,7 +172,9 @@ class InsightsStoreTest {
                 )
         )
         val model = mock<InsightsLatestPostModel>()
-        whenever(mapper.map(LATEST_POST, POST_STATS_RESPONSE, site)).thenReturn(model)
+        whenever(mapper.map(
+                LATEST_POST,
+                POST_STATS_RESPONSE, site)).thenReturn(model)
 
         val responseModel = store.fetchLatestPostInsights(site, forced)
 
@@ -179,7 +188,9 @@ class InsightsStoreTest {
         whenever(sqlUtils.selectLatestPostDetail(site)).thenReturn(LATEST_POST)
         whenever(sqlUtils.selectLatestPostStats(site)).thenReturn(POST_STATS_RESPONSE)
         val model = mock<InsightsLatestPostModel>()
-        whenever(mapper.map(LATEST_POST, POST_STATS_RESPONSE, site)).thenReturn(model)
+        whenever(mapper.map(
+                LATEST_POST,
+                POST_STATS_RESPONSE, site)).thenReturn(model)
 
         val result = store.getLatestPostInsights(site)
 

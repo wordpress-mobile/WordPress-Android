@@ -13,10 +13,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.network.utils.getFormattedDate
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
@@ -137,7 +133,7 @@ constructor(
         val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
 
         val params = mapOf(
-                "unit" to period.toPath(),
+                "unit" to period.toString(),
                 "quantity" to "1",
                 "date" to getFormattedDate(site, date, period)
         )
@@ -372,15 +368,6 @@ constructor(
             @SerializedName("id") val id: Long?,
             @SerializedName("comments") val comments: Int?
         )
-    }
-
-    private fun StatsGranularity.toPath(): String {
-        return when (this) {
-            DAYS -> "day"
-            WEEKS -> "week"
-            MONTHS -> "month"
-            YEARS -> "year"
-        }
     }
 
     enum class FollowerType(val path: String) {

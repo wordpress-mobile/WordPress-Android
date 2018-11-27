@@ -8,21 +8,21 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.ALL_TIME_RESPONSE
-import org.wordpress.android.fluxc.store.COMMENT_COUNT
-import org.wordpress.android.fluxc.store.FIRST_DAY
-import org.wordpress.android.fluxc.store.FIRST_DAY_VIEWS
-import org.wordpress.android.fluxc.store.LATEST_POST
-import org.wordpress.android.fluxc.store.LIKE_COUNT
-import org.wordpress.android.fluxc.store.MOST_POPULAR_RESPONSE
-import org.wordpress.android.fluxc.store.POST_COUNT
-import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
-import org.wordpress.android.fluxc.store.REBLOG_COUNT
-import org.wordpress.android.fluxc.store.SECOND_DAY
-import org.wordpress.android.fluxc.store.SECOND_DAY_VIEWS
-import org.wordpress.android.fluxc.store.VIEWS
-import org.wordpress.android.fluxc.store.VISITS_DATE
-import org.wordpress.android.fluxc.store.VISITS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
+import org.wordpress.android.fluxc.store.stats.COMMENT_COUNT
+import org.wordpress.android.fluxc.store.stats.FIRST_DAY
+import org.wordpress.android.fluxc.store.stats.FIRST_DAY_VIEWS
+import org.wordpress.android.fluxc.store.stats.LATEST_POST
+import org.wordpress.android.fluxc.store.stats.LIKE_COUNT
+import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
+import org.wordpress.android.fluxc.store.stats.POST_COUNT
+import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.REBLOG_COUNT
+import org.wordpress.android.fluxc.store.stats.SECOND_DAY
+import org.wordpress.android.fluxc.store.stats.SECOND_DAY_VIEWS
+import org.wordpress.android.fluxc.store.stats.VIEWS
+import org.wordpress.android.fluxc.store.stats.VISITS_DATE
+import org.wordpress.android.fluxc.store.stats.VISITS_RESPONSE
 
 @RunWith(MockitoJUnitRunner::class)
 class InsightsMapperTest {
@@ -61,7 +61,9 @@ class InsightsMapperTest {
 
     @Test
     fun `maps latest posts response`() {
-        val model = mapper.map(LATEST_POST, POST_STATS_RESPONSE, site)
+        val model = mapper.map(
+                LATEST_POST,
+                POST_STATS_RESPONSE, site)
 
         assertThat(model.siteId).isEqualTo(siteId)
         assertThat(model.postTitle).isEqualTo(LATEST_POST.title)
@@ -84,6 +86,6 @@ class InsightsMapperTest {
         assertThat(model.posts).isEqualTo(POST_COUNT)
         assertThat(model.reblogs).isEqualTo(REBLOG_COUNT)
         assertThat(model.views).isEqualTo(VIEWS)
-        assertThat(model.visitors).isEqualTo(org.wordpress.android.fluxc.store.VISITORS)
+        assertThat(model.visitors).isEqualTo(org.wordpress.android.fluxc.store.stats.VISITORS)
     }
 }
