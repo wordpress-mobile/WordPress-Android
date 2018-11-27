@@ -156,6 +156,23 @@ constructor(
     }
 
     /**
+     * Fetch all notifications from the database.
+     *
+     * Filtering. Filtering is done by fetching all records that match the strings in [filterByType] OR
+     * [filterBySubtype].
+     *
+     * @param filterByType Optional. A list of notification type strings to filter by
+     * @param filterBySubtype Optional. A list of notification subtype strings to filter by
+     */
+    @SuppressLint("WrongConstant")
+    fun getNotifications(
+        filterByType: List<String>? = null,
+        filterBySubtype: List<String>? = null
+    ): List<NotificationModel> =
+            notificationSqlUtils.getNotifications(ORDER_DESCENDING, filterByType, filterBySubtype)
+
+
+    /**
      * Fetch all notifications for the given site.
      *
      * Filtering. Filtering is done by fetching all records that match the strings in [filterByType] OR
