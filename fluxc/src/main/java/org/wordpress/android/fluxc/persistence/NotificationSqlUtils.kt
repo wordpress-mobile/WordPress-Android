@@ -24,33 +24,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         private val gson by lazy { Gson() }
     }
 
-    fun insertOrUpdateNotifications(siteModel: SiteModel, noteModels: List<NotificationModel>): Int {
-//        val noteIds = noteModels.map { it.noteId }
-//        val notesToUpdate = WellSql.select(NotificationModelBuilder::class.java).where().beginGroup()
-//                .isIn(NotificationModelTable.ID, noteIds)
-//                .endGroup()
-//                .endWhere()
-//                .asModel
-//                .map { it.id }
-//        val (existing, new) = noteModels
-//                .map { it.toBuilder(siteModel) }
-//                .partition { notesToUpdate.contains(it.id) }
-//        val insertQuery = WellSql.insert(new)
-//        val updateQueries = existing.map {
-//            WellSql.update(NotificationModelBuilder::class.java)
-//                    .where()
-//                    .equals(NotificationModelTable.ID, it.id)
-//                    .equals(NotificationModelTable.LOCAL_SITE_ID, it.localSiteId)
-//                    .endWhere()
-//                    .put(it, UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java))
-//        }
-//
-//        // Execute queries and return total inserted + updated
-//        insertQuery.execute()
-//        return updateQueries.asSequence().map { it.execute() }.sum() + new.count()
-        return 1
-    }
-
     fun insertOrUpdateNotification(notification: NotificationModel): Int {
         val notificationResult = WellSql.select(NotificationModelBuilder::class.java)
                 .where().beginGroup()
