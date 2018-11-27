@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh
+package org.wordpress.android.ui.stats.refresh.utils
 
 import org.wordpress.android.util.LocaleManagerWrapper
 import java.text.DateFormat

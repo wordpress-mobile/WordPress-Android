@@ -14,7 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
-import org.wordpress.android.ui.stats.refresh.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import javax.inject.Inject
 import javax.inject.Named
 

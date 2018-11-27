@@ -10,7 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
-import org.wordpress.android.ui.stats.refresh.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
