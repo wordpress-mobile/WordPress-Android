@@ -143,6 +143,7 @@ class NewSiteCreationSegmentsViewModel
                     model.title,
                     model.subtitle,
                     model.iconUrl,
+                    model.iconColor,
                     showDivider = !isLastItem
             )
             segment.onItemTapped = { onSegmentSelected(model.segmentId) }
@@ -169,6 +170,7 @@ class NewSiteCreationSegmentsViewModel
             val title: String,
             val subtitle: String,
             val iconUrl: String,
+            val iconColor: String,
             val showDivider: Boolean
         ) : ItemUiState() {
             lateinit var onItemTapped: (Long) -> Unit

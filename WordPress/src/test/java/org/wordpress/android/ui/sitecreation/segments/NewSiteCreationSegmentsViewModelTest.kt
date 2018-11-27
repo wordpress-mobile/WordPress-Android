@@ -60,6 +60,7 @@ class NewSiteCreationSegmentsViewModelTest {
                             firstModel.title,
                             firstModel.subtitle,
                             firstModel.iconUrl,
+                            firstModel.iconColor,
                             false
                     )
             )
@@ -73,6 +74,7 @@ class NewSiteCreationSegmentsViewModelTest {
                             secondModel.title,
                             secondModel.subtitle,
                             secondModel.iconUrl,
+                            secondModel.iconColor,
                             false
                     )
             )
