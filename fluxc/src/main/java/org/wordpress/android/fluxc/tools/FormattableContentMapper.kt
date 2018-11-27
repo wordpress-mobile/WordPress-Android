@@ -8,15 +8,15 @@ import javax.inject.Inject
 class FormattableContentMapper @Inject constructor(val gson: Gson) {
     fun mapToFormattableContent(json: String): FormattableContent = gson.fromJson(json, FormattableContent::class.java)
 
-    fun mapToFormattableContentList(json: String): List<FormattableContent>
-            = gson.fromJson(json, object : TypeToken<List<FormattableContent>>() {}.type)
+    fun mapToFormattableContentList(json: String): List<FormattableContent> =
+            gson.fromJson(json, object : TypeToken<List<FormattableContent>>() {}.type)
 
     fun mapToFormattableMeta(json: String): FormattableMeta = gson.fromJson(json, FormattableMeta::class.java)
 
     fun mapFormattableContentToJson(formattableContent: FormattableContent): String = gson.toJson(formattableContent)
 
-    fun mapFormattableContentListToJson(formattableList: List<FormattableContent>): String
-            = gson.toJson(formattableList)
+    fun mapFormattableContentListToJson(formattableList: List<FormattableContent>): String =
+            gson.toJson(formattableList)
 
     fun mapFormattableMetaToJson(formattableMeta: FormattableMeta): String = gson.toJson(formattableMeta)
 }
