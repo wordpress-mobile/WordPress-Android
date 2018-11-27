@@ -109,7 +109,7 @@ sealed class BlockListItemViewHolder(
 
     class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_list_item
+            R.layout.stats_block_user_item
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
