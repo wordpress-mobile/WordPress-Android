@@ -8,8 +8,8 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
-import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTES
-import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTES_SEEN
+import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -140,17 +140,17 @@ constructor(
             // remote actions
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
-            NotificationAction.FETCH_NOTES -> fetchNotifications(action.payload as FetchNotificationsPayload)
-            NotificationAction.MARK_NOTES_SEEN -> markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
+            NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications(action.payload as FetchNotificationsPayload)
+            NotificationAction.MARK_NOTIFICATIONS_SEEN -> markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
 
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
                 handleRegisteredDevice(action.payload as RegisterDeviceResponsePayload)
             NotificationAction.UNREGISTERED_DEVICE ->
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
-            NotificationAction.FETCHED_NOTES ->
+            NotificationAction.FETCHED_NOTIFICATIONS ->
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
-            NotificationAction.MARKED_NOTE_SEEN ->
+            NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
         }
     }
@@ -255,7 +255,7 @@ constructor(
 
             OnNotificationChanged(rowsAffected)
         }.apply {
-            causeOfChange = FETCH_NOTES
+            causeOfChange = FETCH_NOTIFICATIONS
         }
 
         emitChange(onNotificationChanged)
@@ -278,7 +278,7 @@ constructor(
                 lastSeenTime = payload.lastSeenTime
             }
         }.apply {
-            causeOfChange = MARK_NOTES_SEEN
+            causeOfChange = MARK_NOTIFICATIONS_SEEN
         }
 
         emitChange(onNotificationChanged)
