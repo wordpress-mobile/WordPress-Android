@@ -89,6 +89,7 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchVerticalsUseCase: FetchVerticalsUseCase
     @Mock lateinit var fetchSegmentsPromptUseCase: FetchSegmentPromptUseCase
+    @Mock lateinit var verticalsResultObservable: NewSiteCreationVerticalsResultObservable
     @Mock private lateinit var uiStateObserver: Observer<VerticalsUiState>
     @Mock private lateinit var clearBtnObserver: Observer<Void>
 
@@ -100,6 +101,7 @@ class NewSiteCreationVerticalsViewModelTest {
                 dispatcher,
                 fetchSegmentsPromptUseCase,
                 fetchVerticalsUseCase,
+                verticalsResultObservable,
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
         )

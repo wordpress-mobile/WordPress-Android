@@ -32,6 +32,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchSegmentsUseCase: FetchSegmentsUseCase
+    @Mock lateinit var segmentsResultObservable: NewSiteCreationSegmentsResultObservable
     private val firstModel =
             VerticalSegmentModel(
                     "dummyTitle",
@@ -92,6 +93,7 @@ class NewSiteCreationSegmentsViewModelTest {
         viewModel = NewSiteCreationSegmentsViewModel(
                 dispatcher,
                 fetchSegmentsUseCase,
+                segmentsResultObservable,
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
         )
