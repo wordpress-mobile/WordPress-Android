@@ -56,7 +56,7 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val responseModel = store.fetchPostAndPageViews(site, PAGE_SIZE, DAYS, forced)
 
@@ -84,7 +84,7 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page day views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, DAYS)).thenReturn(DAY_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(DAY_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val result = store.getPostAndPageViews(site, DAYS, PAGE_SIZE)
 
@@ -101,7 +101,7 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val responseModel = store.fetchPostAndPageViews(site, PAGE_SIZE, WEEKS, forced)
 
@@ -129,7 +129,7 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page week views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, WEEKS)).thenReturn(WEEK_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(WEEK_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val result = store.getPostAndPageViews(site, WEEKS, PAGE_SIZE)
 
@@ -146,7 +146,7 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val responseModel = store.fetchPostAndPageViews(site, PAGE_SIZE, MONTHS, forced)
 
@@ -174,7 +174,7 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page month views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, MONTHS)).thenReturn(MONTH_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(MONTH_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val result = store.getPostAndPageViews(site, MONTHS, PAGE_SIZE)
 
@@ -191,7 +191,7 @@ class PostAndPageViewsStoreTest {
                 fetchInsightsPayload
         )
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val responseModel = store.fetchPostAndPageViews(site, PAGE_SIZE, YEARS, forced)
 
@@ -219,7 +219,7 @@ class PostAndPageViewsStoreTest {
     fun `returns post and page year views from db`() {
         whenever(sqlUtils.selectPostAndPageViews(site, YEARS)).thenReturn(YEAR_POST_AND_PAGE_VIEWS_RESPONSE)
         val model = mock<PostAndPageViewsModel>()
-        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, site, PAGE_SIZE)).thenReturn(model)
+        whenever(mapper.map(YEAR_POST_AND_PAGE_VIEWS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
         val result = store.getPostAndPageViews(site, YEARS, PAGE_SIZE)
 
