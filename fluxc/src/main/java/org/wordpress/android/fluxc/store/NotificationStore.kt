@@ -83,29 +83,24 @@ constructor(
 
     enum class DeviceUnregistrationErrorType { GENERIC_ERROR; }
 
-    class FetchNotificationsPayload(
-        val site: SiteModel
-    ) : Payload<BaseNetworkError>()
+    class FetchNotificationsPayload : Payload<BaseNetworkError>()
 
     class FetchNotificationsResponsePayload(
-        val site: SiteModel,
         val notifs: List<NotificationModel> = emptyList(),
         val lastSeen: Date? = null
     ) : Payload<NotificationError>() {
-        constructor(error: NotificationError, site: SiteModel) : this(site) { this.error = error }
+        constructor(error: NotificationError) : this() { this.error = error }
     }
 
     class MarkNotificationsSeenPayload(
-        val site: SiteModel,
         val lastSeenTime: Long
     ) : Payload<BaseNetworkError>()
 
     class MarkNotificationSeenResponsePayload(
-        val site: SiteModel,
         val success: Boolean = false,
         val lastSeenTime: Long? = null
     ) : Payload<NotificationError>() {
-        constructor(error: NotificationError, site: SiteModel) : this(site) { this.error = error }
+        constructor(error: NotificationError) : this() { this.error = error }
     }
 
     class NotificationError(val type: NotificationErrorType, val message: String = "") : OnChangedError
@@ -140,7 +135,7 @@ constructor(
             // remote actions
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
-            NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications(action.payload as FetchNotificationsPayload)
+            NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications()
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
 
@@ -239,8 +234,8 @@ constructor(
         }
     }
 
-    private fun fetchNotifications(payload: FetchNotificationsPayload) {
-        notificationRestClient.fetchNotifications(payload.site)
+    private fun fetchNotifications() {
+        notificationRestClient.fetchNotifications()
     }
 
     private fun handleFetchNotificationsCompleted(payload: FetchNotificationsResponsePayload) {
@@ -249,10 +244,10 @@ constructor(
             OnNotificationChanged(0).also { it.error = payload.error }
         } else {
             // Clear out existing notifications on fetch.
-            notificationSqlUtils.deleteNotificationsForSite(payload.site)
+            notificationSqlUtils.deleteNotifications()
 
             // Save notifications to the database
-            val rowsAffected = notificationSqlUtils.insertOrUpdateNotifications(payload.site, payload.notifs)
+            val rowsAffected = payload.notifs.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
 
             OnNotificationChanged(rowsAffected)
         }.apply {
@@ -263,7 +258,7 @@ constructor(
     }
 
     private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
-        notificationRestClient.markNotificationsSeen(payload.site, payload.lastSeenTime)
+        notificationRestClient.markNotificationsSeen(payload.lastSeenTime)
     }
 
     private fun handleMarkedNotificationSeen(payload: MarkNotificationSeenResponsePayload) {

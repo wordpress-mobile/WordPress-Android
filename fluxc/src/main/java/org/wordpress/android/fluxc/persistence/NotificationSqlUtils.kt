@@ -25,30 +25,56 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     }
 
     fun insertOrUpdateNotifications(siteModel: SiteModel, noteModels: List<NotificationModel>): Int {
-        val noteIds = noteModels.map { it.noteId }
-        val notesToUpdate = WellSql.select(NotificationModelBuilder::class.java).where().beginGroup()
-                .isIn(NotificationModelTable.ID, noteIds)
-                .equals(NotificationModelTable.LOCAL_SITE_ID, siteModel.id)
-                .endGroup()
-                .endWhere()
-                .asModel
-                .map { it.id }
-        val (existing, new) = noteModels
-                .map { it.toBuilder(siteModel) }
-                .partition { notesToUpdate.contains(it.id) }
-        val insertQuery = WellSql.insert(new)
-        val updateQueries = existing.map {
-            WellSql.update(NotificationModelBuilder::class.java)
-                    .where()
-                    .equals(NotificationModelTable.ID, it.id)
-                    .equals(NotificationModelTable.LOCAL_SITE_ID, it.localSiteId)
-                    .endWhere()
-                    .put(it, UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java))
-        }
+//        val noteIds = noteModels.map { it.noteId }
+//        val notesToUpdate = WellSql.select(NotificationModelBuilder::class.java).where().beginGroup()
+//                .isIn(NotificationModelTable.ID, noteIds)
+//                .endGroup()
+//                .endWhere()
+//                .asModel
+//                .map { it.id }
+//        val (existing, new) = noteModels
+//                .map { it.toBuilder(siteModel) }
+//                .partition { notesToUpdate.contains(it.id) }
+//        val insertQuery = WellSql.insert(new)
+//        val updateQueries = existing.map {
+//            WellSql.update(NotificationModelBuilder::class.java)
+//                    .where()
+//                    .equals(NotificationModelTable.ID, it.id)
+//                    .equals(NotificationModelTable.LOCAL_SITE_ID, it.localSiteId)
+//                    .endWhere()
+//                    .put(it, UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java))
+//        }
+//
+//        // Execute queries and return total inserted + updated
+//        insertQuery.execute()
+//        return updateQueries.asSequence().map { it.execute() }.sum() + new.count()
+        return 1
+    }
 
-        // Execute queries and return total inserted + updated
-        insertQuery.execute()
-        return updateQueries.asSequence().map { it.execute() }.sum() + new.count()
+    fun insertOrUpdateNotification(notification: NotificationModel): Int {
+        val notificationResult = WellSql.select(NotificationModelBuilder::class.java)
+                .where().beginGroup()
+                .equals(NotificationModelTable.ID, notification.noteId)
+                .or()
+                .beginGroup()
+                .equals(NotificationModelTable.REMOTE_SITE_ID, notification.remoteSiteId)
+                .equals(NotificationModelTable.REMOTE_NOTE_ID, notification.remoteNoteId)
+                .endGroup()
+                .endGroup().endWhere()
+                .asModel
+
+        return if (notificationResult.isEmpty()) {
+            // insert
+            WellSql.insert(notification.toBuilder()).asSingleTransaction(true).execute()
+            1
+        } else {
+            // update
+            val oldId = notificationResult[0].id
+            WellSql.update(NotificationModelBuilder::class.java).whereId(oldId).put(
+                    notification.toBuilder(),
+                    UpdateAllExceptId<NotificationModelBuilder>(NotificationModelBuilder::class.java)
+            ).execute()
+        }
     }
 
     @SuppressLint("WrongConstant")
@@ -60,7 +86,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     ): List<NotificationModel> {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
                 .where()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
+                .equals(NotificationModelTable.REMOTE_SITE_ID, site.id)
 
         if (filterByType != null || filterBySubtype != null) {
             conditionClauseBuilder.beginGroup()
@@ -84,22 +110,18 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
+        return emptyList()
     }
 
-    fun deleteNotificationsForSite(site: SiteModel): Int {
-        return WellSql.delete(NotificationModelBuilder::class.java)
-                .where().beginGroup()
-                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
-                .endGroup()
-                .endWhere()
-                .execute()
+    fun deleteNotifications(): Int {
+        return WellSql.delete(NotificationModelBuilder::class.java).execute()
     }
 
-    private fun NotificationModel.toBuilder(site: SiteModel): NotificationModelBuilder {
+    private fun NotificationModel.toBuilder(): NotificationModelBuilder {
         return NotificationModelBuilder(
                 mId = this.noteId,
                 remoteNoteId = this.remoteNoteId,
-                localSiteId = site.id,
+                remoteSiteId = this.remoteSiteId,
                 noteHash = this.noteHash,
                 type = this.type.toString(),
                 subtype = this.subtype.toString(),
@@ -119,7 +141,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
-        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long?,
         @Column var noteHash: Long,
         @Column var type: String,
         @Column var subtype: String? = null,
@@ -155,7 +177,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             return NotificationModel(
                     mId,
                     remoteNoteId,
-                    localSiteId,
+                    remoteSiteId,
                     noteHash,
                     NotificationModel.Kind.fromString(type),
                     subkind,
