@@ -141,7 +141,8 @@ constructor(
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
             NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications(action.payload as FetchNotificationsPayload)
-            NotificationAction.MARK_NOTIFICATIONS_SEEN -> markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
+            NotificationAction.MARK_NOTIFICATIONS_SEEN ->
+                markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
 
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
