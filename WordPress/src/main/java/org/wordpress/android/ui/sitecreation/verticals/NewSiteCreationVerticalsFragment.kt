@@ -52,7 +52,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var searchEditTextProgressBar: View
     private lateinit var clearAllButton: View
 
-    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     override fun getContentLayout(): Int {

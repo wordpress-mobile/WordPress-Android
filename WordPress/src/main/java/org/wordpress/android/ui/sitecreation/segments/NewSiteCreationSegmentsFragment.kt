@@ -28,8 +28,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     private lateinit var errorLayout: ViewGroup
 
-    @Inject protected lateinit var imageManager: ImageManager
-    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var imageManager: ImageManager
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     override fun getContentLayout(): Int {
