@@ -2350,4 +2350,6 @@
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="new_site_creation_segments_title">Create Site</string>
     <string name="site_creation_fetch_suggestions_failed">No connection</string>
+    <string name="new_site_creation_verticals_title">TODO</string>
+    <string name="new_site_creation_button_skip">Skip</string>
 </resources>

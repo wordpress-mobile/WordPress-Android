@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical"
+    android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
+    android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
+    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="What's the focus of your business?"/>
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        android:textColor="@color/wp_grey_darken_20"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="We’ll use your answer to add sections to your website."/>
+</LinearLayout>

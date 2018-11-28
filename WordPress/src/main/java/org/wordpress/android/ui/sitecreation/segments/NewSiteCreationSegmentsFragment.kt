@@ -19,7 +19,7 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsVie
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-private const val keyListState = "list_state"
+private const val KEY_LIST_STATE = "list_state"
 
 class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private lateinit var linearLayoutManager: LinearLayoutManager
@@ -28,8 +28,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     private lateinit var errorLayout: ViewGroup
 
-    @Inject protected lateinit var imageManager: ImageManager
-    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var imageManager: ImageManager
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -91,12 +91,12 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putParcelable(keyListState, linearLayoutManager.onSaveInstanceState())
+        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(keyListState)?.let {
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
     }

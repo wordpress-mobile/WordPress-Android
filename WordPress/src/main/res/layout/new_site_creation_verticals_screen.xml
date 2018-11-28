@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/site_creation_screen_horizontal_padding"
+    android:paddingStart="@dimen/site_creation_screen_horizontal_padding">
+
+    <include
+        layout="@layout/site_creation_error_with_retry"
+        tools:visibility="gone"/>
+
+    <include
+        layout="@layout/new_site_creation_progress"
+        tools:visibility="gone"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+
+        <include
+            android:id="@+id/header_layout"
+            layout="@layout/new_site_creation_verticals_header_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/search_input_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"/>
+
+        <include
+            android:id="@+id/search_input_layout"
+            layout="@layout/new_site_creation_verticals_search_input_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header_layout"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_goneMarginTop="@dimen/margin_extra_medium_large"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/btn_skip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_skip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_extra_large"
+            android:text="@string/new_site_creation_button_skip"
+            android:theme="@style/WordPress.Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"/>
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>
