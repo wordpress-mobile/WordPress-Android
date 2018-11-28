@@ -705,7 +705,6 @@ public class PostStore extends Store {
             return;
         }
 
-
         if (payload.isError()) {
             OnPostChanged event = new OnPostChanged(
                     new CauseOfOnPostChanged.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
