@@ -9,7 +9,8 @@ import android.arch.paging.PagedList
 /**
  * Holds the data for [GiphyPickerActivity]
  *
- * This creates a [PagedList] which can be bound to by a [PagedListAdapter].
+ * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
+ * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
  */
 class GiphyPickerViewModel(
     /**
@@ -35,8 +36,11 @@ class GiphyPickerViewModel(
     }
 
     fun search(searchQuery: String) = dataSourceFactory.setSearchQuery(searchQuery)
+
     /**
      * Toggles a [GiphyMediaViewModel]'s `isSelected` property between true and false
+     *
+     * This also updates the [GiphyMediaViewModel.selectionNumber] of all the objects in [selectedMediaViewModelList].
      */
     fun toggleSelected(mediaViewModel: GiphyMediaViewModel) {
         assert(mediaViewModel is MutableGiphyMediaViewModel)
@@ -54,8 +58,22 @@ class GiphyPickerViewModel(
                 mediaViewModel.postSelectionNumber(null)
                 remove(mediaViewModel.id)
             }
+
+            rebuildSelectionNumbers(this)
         }
 
         _selectedMediaViewModelList.postValue(selectedList)
+    }
+
+    /**
+     * Update the [GiphyMediaViewModel.selectionNumber] values so that they are continuous
+     *
+     * For example, if the selection numbers are [1, 2, 3, 4, 5] and the 2nd [GiphyMediaViewModel] was removed, we
+     * want the selection numbers to be updated to [1, 2, 3, 4] instead of leaving it as [1, 3, 4, 5].
+     */
+    private fun rebuildSelectionNumbers(mediaList: LinkedHashMap<String, GiphyMediaViewModel>) {
+        mediaList.values.forEachIndexed { index, mediaViewModel ->
+            (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
+        }
     }
 }

@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
+import android.widget.TextView
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
+import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
@@ -41,6 +44,7 @@ class GiphyMediaViewHolder(
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
     private val thumbnailView: ImageView = itemView.image_thumbnail
+    private val selectionNumberTextView: TextView = itemView.text_selection_count
 
     private var mediaViewModel: GiphyMediaViewModel? = null
 
@@ -66,17 +70,34 @@ class GiphyMediaViewHolder(
 
         // Immediately update the selection number and scale the thumbnail when a bind happens
         val isSelected = mediaViewModel?.isSelected?.value ?: false
+        updateNumberTextOnSelectionChange(isSelected = isSelected, animated = false)
         updateThumbnailOnSelectionChange(isSelected = isSelected, animated = false)
 
         // When the [isSelected] property changes later, update the selection number and scale the thumbnail
         mediaViewModel?.isSelected?.observe(this, Observer {
             val selected = it ?: false
 
+            updateNumberTextOnSelectionChange(isSelected = selected, animated = true)
             updateThumbnailOnSelectionChange(isSelected = selected, animated = true)
+        })
+
+        // Update selection number text and observe later changes
+        selectionNumberTextView.text = mediaViewModel?.selectionNumber?.value?.toString() ?: ""
+        mediaViewModel?.selectionNumber?.getDistinct()?.observe(this, Observer {
+            selectionNumberTextView.text = it?.toString() ?: ""
         })
 
         thumbnailView.contentDescription = mediaViewModel?.title
         imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
+    }
+
+    private fun updateNumberTextOnSelectionChange(isSelected: Boolean, animated: Boolean) {
+        // The `isSelected` here changes the color of the text. It will be blue when selected.
+        selectionNumberTextView.isSelected = isSelected
+
+        if (animated) {
+            AniUtils.startAnimation(selectionNumberTextView, R.anim.pop)
+        }
     }
 
     /**
