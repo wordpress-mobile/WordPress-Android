@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.giphy
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import android.arch.lifecycle.Observer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R.layout
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
@@ -35,7 +36,7 @@ class GiphyMediaViewHolder(
      * The dimensions used for the ImageView
      */
     thumbnailViewDimensions: ThumbnailViewDimensions
-) : ViewHolder(itemView) {
+) : LifecycleOwnerViewHolder<GiphyMediaViewModel>(itemView) {
 
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
@@ -58,14 +59,47 @@ class GiphyMediaViewHolder(
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
      * [GiphyPickerViewModel]. This causes null values to be bound to [GiphyMediaViewHolder] instances.
      */
-    fun bind(mediaViewModel: GiphyMediaViewModel?) {
-        this.mediaViewModel = mediaViewModel
+    override fun bind(item: GiphyMediaViewModel?) {
+        super.bind(item)
+
+        this.mediaViewModel = item
+
+        // Immediately update the selection number and scale the thumbnail when a bind happens
+        val isSelected = mediaViewModel?.isSelected?.value ?: false
+        updateThumbnailOnSelectionChange(isSelected = isSelected, animated = false)
+
+        // When the [isSelected] property changes later, update the selection number and scale the thumbnail
+        mediaViewModel?.isSelected?.observe(this, Observer {
+            val selected = it ?: false
+
+            updateThumbnailOnSelectionChange(isSelected = selected, animated = true)
+        })
 
         thumbnailView.contentDescription = mediaViewModel?.title
         imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
     }
 
+    /**
+     * Scale the thumbnail depending on the value of [isSelected]
+     */
+    private fun updateThumbnailOnSelectionChange(isSelected: Boolean, animated: Boolean) {
+        val scaleStart = if (isSelected) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
+        val scaleEnd = if (scaleStart == THUMBNAIL_SCALE_SELECTED) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
+
+        with(thumbnailView) {
+            if (animated) {
+                AniUtils.scale(this, scaleStart, scaleEnd, AniUtils.Duration.SHORT)
+            } else {
+                scaleX = scaleEnd
+                scaleY = scaleEnd
+            }
+        }
+    }
+
     companion object {
+        private const val THUMBNAIL_SCALE_NORMAL: Float = 1.0f
+        private const val THUMBNAIL_SCALE_SELECTED: Float = 0.8f
+
         /**
          * Create the layout and a new instance of [GiphyMediaViewHolder]
          */
