@@ -76,12 +76,14 @@ sealed class BlockListItemViewHolder(
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
+        private val subtext = itemView.findViewById<TextView>(R.id.subtext)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: ListItemWithIcon) {
-            icon.showIcon(imageManager, item)
+            icon.setImageOrLoad(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
+            subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
             divider.visibility = if (item.showDivider) {
                 View.VISIBLE
@@ -301,7 +303,7 @@ sealed class BlockListItemViewHolder(
             expandablePayload: ExpandPayload?
         ) {
             val header = expandableItem.header
-            icon.showIcon(imageManager, header)
+            icon.setImageOrLoad(header, imageManager)
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
@@ -320,24 +322,35 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    internal fun ImageView.showIcon(
-        imageManager: ImageManager,
-        header: ListItemWithIcon
-    ) {
+    private fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
         this.visibility = View.VISIBLE
         when {
-            header.icon != null -> imageManager.load(this, header.icon)
-            header.iconUrl != null -> imageManager.load(this, IMAGE, header.iconUrl)
+            resource != null -> {
+                this.visibility = View.VISIBLE
+                this.setText(resource)
+            }
+            value != null -> {
+                this.visibility = View.VISIBLE
+                this.text = value
+            }
             else -> this.visibility = GONE
         }
     }
 
-    fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
-        this.visibility = View.VISIBLE
+    private fun ImageView.setImageOrLoad(
+        item: ListItemWithIcon,
+        imageManager: ImageManager
+    ) {
         when {
-            resource != null -> this.setText(resource)
-            value != null -> this.text = value
-            else -> this.visibility = GONE
+            item.icon != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.load(this, item.icon)
+            }
+            item.iconUrl != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.load(this, IMAGE, item.iconUrl)
+            }
+            else -> this.visibility = View.GONE
         }
     }
 }
