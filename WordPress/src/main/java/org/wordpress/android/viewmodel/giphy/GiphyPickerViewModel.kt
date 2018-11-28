@@ -2,9 +2,11 @@ package org.wordpress.android.viewmodel.giphy
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import org.wordpress.android.util.getDistinct
 
 /**
  * Holds the data for [GiphyPickerActivity]
@@ -29,6 +31,14 @@ class GiphyPickerViewModel(
      * This map is sorted in the order that the user picked them. The [String] is the value of [GiphyMediaViewModel.id].
      */
     val selectedMediaViewModelList: LiveData<LinkedHashMap<String, GiphyMediaViewModel>> = _selectedMediaViewModelList
+
+    /**
+     * Returns `true` if the selection bar (UI) should be shown
+     *
+     * This changes when the number of items change from 0 to 1 or 1 to 0.
+     */
+    val selectionBarIsVisible: LiveData<Boolean> =
+            Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
 
     val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
         val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
