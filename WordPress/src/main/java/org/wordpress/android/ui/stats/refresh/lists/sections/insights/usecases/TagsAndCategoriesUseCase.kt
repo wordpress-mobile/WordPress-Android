@@ -43,17 +43,16 @@ class TagsAndCategoriesUseCase
                     string.stats_view_tags_and_categories,
                     error.message ?: error.type.name
             )
-            else -> model?.let { loadTagsAndCategories(site, model) }
+            else -> model?.let { loadTagsAndCategories(model) }
         }
     }
 
     override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val model = insightsStore.getTags(site, PAGE_SIZE)
-        return model?.let { loadTagsAndCategories(site, model) }
+        return model?.let { loadTagsAndCategories(model) }
     }
 
     private fun loadTagsAndCategories(
-        site: SiteModel,
         model: TagsModel
     ): StatsBlock {
         val items = mutableListOf<BlockListItem>()
@@ -72,7 +71,7 @@ class TagsAndCategoriesUseCase
             })
             if (model.hasMore) {
                 items.add(Link(text = R.string.stats_insights_view_more) {
-                    navigateTo(ViewTagsAndCategoriesStats(site.siteId))
+                    navigateTo(ViewTagsAndCategoriesStats)
                 })
             }
         }

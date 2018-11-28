@@ -41,7 +41,6 @@ class FollowersUseCase
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
         return if (wpComFollowers != null && emailFollowers != null) loadFollowers(
-                site,
                 wpComFollowers,
                 emailFollowers
         ) else null
@@ -61,13 +60,12 @@ class FollowersUseCase
                     string.stats_view_followers,
                     error.message ?: error.type.name
             )
-            wpComModel != null && emailModel != null -> loadFollowers(site, wpComModel, emailModel)
+            wpComModel != null && emailModel != null -> loadFollowers(wpComModel, emailModel)
             else -> null
         }
     }
 
     private fun loadFollowers(
-        site: SiteModel,
         wpComModel: FollowersModel,
         emailModel: FollowersModel
     ): StatsBlock {
@@ -83,7 +81,7 @@ class FollowersUseCase
         )
         if (wpComModel.hasMore || emailModel.hasMore) {
             items.add(Link(text = string.stats_insights_view_more) {
-                navigateTo(ViewFollowersStats(site.siteId))
+                navigateTo(ViewFollowersStats)
             })
         }
         return createDataItem(items)

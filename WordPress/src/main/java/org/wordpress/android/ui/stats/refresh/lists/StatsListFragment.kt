@@ -16,19 +16,26 @@ import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.sections.days.DaysListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
@@ -160,6 +167,9 @@ class StatsListFragment : DaggerFragment() {
                 is ViewTag -> {
                     ActivityLauncher.openStatsUrl(activity, it.link)
                 }
+                is ViewPostsAndPages -> {
+                    ActivityLauncher.viewPostsAndPagesStats(activity, site, it.statsGranularity.toStatsTimeFrame())
+                }
             }
             true
         }
@@ -190,8 +200,18 @@ sealed class NavigationTarget : Event() {
         val postUrl: String
     ) : NavigationTarget()
 
-    data class ViewFollowersStats(val siteID: Long) : NavigationTarget()
-    data class ViewCommentsStats(val siteID: Long) : NavigationTarget()
-    data class ViewTagsAndCategoriesStats(val siteID: Long) : NavigationTarget()
+    object ViewFollowersStats : NavigationTarget()
+    object ViewCommentsStats : NavigationTarget()
+    object ViewTagsAndCategoriesStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
+    data class ViewPostsAndPages(val statsGranularity: StatsGranularity) : NavigationTarget()
+}
+
+fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
+    return when(this) {
+        DAYS -> StatsTimeframe.DAY
+        WEEKS -> StatsTimeframe.WEEK
+        MONTHS -> StatsTimeframe.MONTH
+        YEARS -> StatsTimeframe.YEAR
+    }
 }

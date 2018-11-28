@@ -41,22 +41,22 @@ class CommentsUseCase
                     string.stats_view_comments,
                     error.message ?: error.type.name
             )
-            else -> model?.let { loadComments(site, model) }
+            else -> model?.let { loadComments(model) }
         }
     }
 
     override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = insightsStore.getComments(site, PAGE_SIZE)
-        return dbModel?.let { loadComments(site, dbModel) }
+        return dbModel?.let { loadComments(dbModel) }
     }
 
-    private fun loadComments(site: SiteModel, model: CommentsModel): StatsBlock {
+    private fun loadComments(model: CommentsModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
         items.add(TabsItem(listOf(buildAuthorsTab(model.authors), buildPostsTab(model.posts))))
         if (model.hasMoreAuthors || model.hasMorePosts) {
             items.add(Link(text = string.stats_insights_view_more) {
-                navigateTo(ViewCommentsStats(site.siteId))
+                navigateTo(ViewCommentsStats)
             })
         }
         return createDataItem(items)
