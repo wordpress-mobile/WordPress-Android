@@ -1112,7 +1112,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.quick_start_dialog_migration_title),
                 getString(R.string.quick_start_dialog_migration_message),
                 getString(android.R.string.ok),
-                R.drawable.img_illustration_checklist_280dp,
+                R.drawable.img_illustration_checkmark_280dp,
                 "",
                 "",
                 ""
