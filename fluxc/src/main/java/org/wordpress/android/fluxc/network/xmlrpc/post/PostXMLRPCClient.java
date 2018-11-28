@@ -251,8 +251,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
 
-                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload) :
-                                UploadActionBuilder.newPushedPostAction(payload);
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
                         mDispatcher.dispatch(resultAction);
                     }
                 },
@@ -277,8 +277,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                         payload.error = postError;
 
-                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload) :
-                                UploadActionBuilder.newPushedPostAction(payload);
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
                         mDispatcher.dispatch(resultAction);
                     }
                 });
