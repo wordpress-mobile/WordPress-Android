@@ -6,7 +6,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 
 /**
- * Holds the data for [GiphyPickerViewModel]
+ * Holds the data for [GiphyPickerActivity]
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter].
  */

@@ -54,5 +54,5 @@ class GiphyPickerDataSource(
         }
     }
 
-    private fun List<Media>.toGiphyMediaViewModels(): List<GiphyMediaViewModel> = map { GiphyMediaViewModel(it) }
+    private fun List<Media>.toGiphyMediaViewModels(): List<GiphyMediaViewModel> = map { MutableGiphyMediaViewModel(it) }
 }
