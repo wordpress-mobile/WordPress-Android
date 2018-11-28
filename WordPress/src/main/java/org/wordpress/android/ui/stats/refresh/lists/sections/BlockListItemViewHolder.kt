@@ -322,7 +322,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    private fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+    internal fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
         this.visibility = View.VISIBLE
         when {
             resource != null -> {
@@ -337,7 +337,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    private fun ImageView.setImageOrLoad(
+    internal fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {
