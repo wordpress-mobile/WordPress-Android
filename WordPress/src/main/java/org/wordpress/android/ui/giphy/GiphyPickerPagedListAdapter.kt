@@ -15,7 +15,6 @@ class GiphyPickerPagedListAdapter(
     private val thumbnailViewDimensions: ThumbnailViewDimensions,
     private val onMediaViewClickListener: (GiphyMediaViewModel) -> Unit
 ) : PagedListAdapter<GiphyMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GiphyMediaViewHolder {
         return GiphyMediaViewHolder.create(
                 imageManager = imageManager,

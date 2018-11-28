@@ -15,7 +15,6 @@ class GiphyPickerDataSource(
     private val apiClient: GPHApiClient,
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
-
     /**
      * Always the load the first page (startingPosition = 0) from the Giphy API
      *

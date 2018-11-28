@@ -47,7 +47,6 @@ import android.view.ViewGroup
  * ```
  */
 abstract class LifecycleOwnerViewHolder<T>(itemView: View) : ViewHolder(itemView), LifecycleOwner {
-
     /**
      * Investigated the leak warning, the [LifecycleRegistry] constructor does not seem to be doing anything with
      * the current object apart from setting a weak reference to it.

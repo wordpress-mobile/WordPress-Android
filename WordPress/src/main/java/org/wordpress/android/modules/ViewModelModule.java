@@ -9,7 +9,6 @@ import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;

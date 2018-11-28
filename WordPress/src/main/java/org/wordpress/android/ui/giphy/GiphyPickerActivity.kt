@@ -115,8 +115,8 @@ class GiphyPickerActivity : AppCompatActivity() {
             val selectionBar: ViewGroup = container_selection_bar
 
             // Do nothing if the selection bar is already in the visibility state that we want it to be
-            if (isVisible && selectionBar.visibility == View.VISIBLE
-                    || !isVisible && selectionBar.visibility != View.VISIBLE) {
+            if (isVisible && selectionBar.visibility == View.VISIBLE ||
+                    !isVisible && selectionBar.visibility != View.VISIBLE) {
                 return@Observer
             }
 
@@ -160,4 +160,3 @@ class GiphyPickerActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
-

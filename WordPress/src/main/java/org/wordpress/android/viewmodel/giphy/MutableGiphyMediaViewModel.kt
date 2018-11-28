@@ -20,7 +20,6 @@ class MutableGiphyMediaViewModel(
     override val thumbnailUri: Uri,
     override val title: String
 ) : GiphyMediaViewModel {
-
     /**
      * Using [SingleLiveEvent] will prevent calls like this from running immediately when a ViewHolder is bound:
      *

@@ -40,7 +40,6 @@ class GiphyMediaViewHolder(
      */
     thumbnailViewDimensions: ThumbnailViewDimensions
 ) : LifecycleOwnerViewHolder<GiphyMediaViewModel>(itemView) {
-
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
     private val thumbnailView: ImageView = itemView.image_thumbnail
@@ -142,4 +141,3 @@ class GiphyMediaViewHolder(
         }
     }
 }
-

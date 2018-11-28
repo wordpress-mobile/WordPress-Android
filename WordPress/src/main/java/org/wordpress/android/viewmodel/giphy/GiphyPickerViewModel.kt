@@ -23,7 +23,6 @@ class GiphyPickerViewModel(
      */
     private val dataSourceFactory: GiphyPickerDataSourceFactory = GiphyPickerDataSourceFactory()
 ) : ViewModel() {
-
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
      * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
