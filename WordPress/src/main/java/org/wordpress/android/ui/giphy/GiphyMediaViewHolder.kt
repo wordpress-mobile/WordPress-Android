@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R.layout
@@ -15,6 +16,10 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
  * Represents a single item in the [GiphyPickerActivity]'s grid (RecyclerView).
  *
  * This is meant to show a single animated gif.
+ *
+ * This ViewHolder references a readonly [GiphyMediaViewModel]. It should never update the [GiphyMediaViewModel]. That
+ * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
+ * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
 class GiphyMediaViewHolder(
     /**
@@ -30,8 +35,10 @@ class GiphyMediaViewHolder(
 
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
+    private val thumbnailView: ImageView = itemView.image_thumbnail
+
     init {
-        itemView.image_thumbnail.apply {
+        thumbnailView.apply {
             layoutParams.width = thumbnailViewDimensions.width
             layoutParams.height = thumbnailViewDimensions.height
         }
@@ -44,8 +51,8 @@ class GiphyMediaViewHolder(
      * [GiphyPickerViewModel]. This causes null values to be bound to [GiphyMediaViewHolder] instances.
      */
     fun bind(mediaViewModel: GiphyMediaViewModel?) {
-        itemView.image_thumbnail.contentDescription = mediaViewModel?.title
-        imageManager.load(itemView.image_thumbnail, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
+        thumbnailView.contentDescription = mediaViewModel?.title
+        imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
     }
 
     companion object {
