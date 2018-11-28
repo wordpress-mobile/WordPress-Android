@@ -96,6 +96,24 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       source_files: files, 
       release_version: options[:version])
   end 
+  
+  #####################################################################################
+  # finalize_release
+  # -----------------------------------------------------------------------------------
+  # This lane finalize a release: updates store metadata and runs the release checks
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane finalize_release [skip_confirm:<skip confirm>] 
+  #
+  # Example:
+  # bundle exec fastlane finalize_release 
+  # bundle exec fastlane finalize_release skip_confirm:true 
+  #####################################################################################
+  desc "Updates store metadata and runs the release checks"
+  lane :finalize_release do | options |
+    android_finalize_prechecks(options)
+    android_update_metadata(options) unless android_current_branch_is_hotfix
+  end
 
   #####################################################################################
   # download_metadata_string 
