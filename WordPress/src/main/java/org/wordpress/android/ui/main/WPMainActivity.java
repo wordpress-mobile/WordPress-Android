@@ -786,11 +786,11 @@ public class WPMainActivity extends AppCompatActivity implements
                 getString(R.string.quick_start_dialog_need_help_title),
                 getString(R.string.quick_start_dialog_need_help_message),
                 getString(R.string.quick_start_dialog_need_help_button_positive),
-                R.drawable.img_promo_quick_start,
+                R.drawable.img_illustration_site_about_280dp,
                 getString(R.string.quick_start_dialog_need_help_button_negative),
                 "",
                 getString(R.string.quick_start_dialog_need_help_button_neutral)
-                              );
+        );
 
         promoDialog.show(getSupportFragmentManager(), tag);
         AnalyticsTracker.track(Stat.QUICK_START_REQUEST_VIEWED);
