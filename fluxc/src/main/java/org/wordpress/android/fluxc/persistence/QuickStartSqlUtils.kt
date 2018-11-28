@@ -6,6 +6,7 @@ import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.QuickStartStatusModel
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,11 +22,31 @@ class QuickStartSqlUtils
                 .asModel.size
     }
 
+    fun getDoneCountByType(siteId: Long, taskType: QuickStartTaskType): Int {
+        return WellSql.select(QuickStartTaskModel::class.java)
+                .where().beginGroup()
+                .equals(QuickStartTaskModelTable.SITE_ID, siteId)
+                .equals(QuickStartTaskModelTable.IS_DONE, true)
+                .equals(QuickStartTaskModelTable.TASK_TYPE, taskType.toString())
+                .endGroup().endWhere()
+                .asModel.size
+    }
+
     fun getShownCount(siteId: Long): Int {
         return WellSql.select(QuickStartTaskModel::class.java)
                 .where().beginGroup()
                 .equals(QuickStartTaskModelTable.SITE_ID, siteId)
                 .equals(QuickStartTaskModelTable.IS_SHOWN, true)
+                .endGroup().endWhere()
+                .asModel.size
+    }
+
+    fun getShownCountByType(siteId: Long, taskType: QuickStartTaskType): Int {
+        return WellSql.select(QuickStartTaskModel::class.java)
+                .where().beginGroup()
+                .equals(QuickStartTaskModelTable.SITE_ID, siteId)
+                .equals(QuickStartTaskModelTable.IS_SHOWN, true)
+                .equals(QuickStartTaskModelTable.TASK_TYPE, taskType.toString())
                 .endGroup().endWhere()
                 .asModel.size
     }
