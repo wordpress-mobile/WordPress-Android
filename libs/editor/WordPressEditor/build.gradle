@@ -21,12 +21,6 @@ repositories {
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/38557f55d0a3be9605c82b1df9ced4c846fd3aea/submoduleGitHash.gradle'
 
-//project.ext.react = [
-//    entryFile: "index.js"
-//]
-//
-//apply from: "../../gutenberg-mobile/node_modules/react-native/react.gradle"
-//
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
