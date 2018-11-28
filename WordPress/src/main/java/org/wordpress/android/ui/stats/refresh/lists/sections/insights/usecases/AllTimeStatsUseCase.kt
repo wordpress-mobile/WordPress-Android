@@ -7,14 +7,13 @@ import org.wordpress.android.fluxc.model.stats.InsightsAllTimeModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,24 +22,24 @@ class AllTimeStatsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val statsDateFormatter: StatsDateFormatter
-) : BaseStatsUseCase(ALL_TIME_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getAllTimeInsights(site)
-        return dbModel?.let { loadAllTimeInsightsItem(it) }
+        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchAllTimeInsights(site, forced)
         val model = response.model
         val error = response.error
 
         return when {
-            error != null -> createFailedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
-            else -> model?.let { loadAllTimeInsightsItem(model) }
+            error != null -> onError(error.message ?: error.type.name)
+            else -> onModel(model)
         }
     }
 
-    private fun loadAllTimeInsightsItem(model: InsightsAllTimeModel): StatsBlock {
+    override fun buildModel(model: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
 
@@ -93,6 +92,6 @@ class AllTimeStatsUseCase
                 )
             }
         }
-        return createDataItem(items)
+        return items
     }
 }

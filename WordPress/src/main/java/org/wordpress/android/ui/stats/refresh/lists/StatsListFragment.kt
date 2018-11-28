@@ -190,8 +190,8 @@ sealed class NavigationTarget : Event() {
         val postUrl: String
     ) : NavigationTarget()
 
-    data class ViewFollowersStats(val siteID: Long) : NavigationTarget()
-    data class ViewCommentsStats(val siteID: Long) : NavigationTarget()
-    data class ViewTagsAndCategoriesStats(val siteID: Long) : NavigationTarget()
+    object ViewFollowersStats : NavigationTarget()
+    object ViewCommentsStats : NavigationTarget()
+    object ViewTagsAndCategoriesStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
 }

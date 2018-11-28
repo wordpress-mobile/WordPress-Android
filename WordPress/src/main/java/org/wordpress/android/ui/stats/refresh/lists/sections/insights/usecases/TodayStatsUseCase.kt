@@ -7,8 +7,7 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -21,24 +20,24 @@ class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsUseCase(TODAY_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getTodayInsights(site)
-        return dbModel?.let { loadTodayStatsItem(it) }
+        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTodayInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(R.string.stats_insights_today_stats, error.message ?: error.type.name)
-            else -> model?.let { loadTodayStatsItem(model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            else -> onModel(model)
         }
     }
 
-    private fun loadTodayStatsItem(model: VisitsModel): StatsBlock {
+    override fun buildModel(model: VisitsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
 
@@ -90,6 +89,6 @@ class TodayStatsUseCase
                 )
             }
         }
-        return createDataItem(items)
+        return items
     }
 }

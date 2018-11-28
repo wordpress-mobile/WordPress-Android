@@ -188,7 +188,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.errorType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }
@@ -217,7 +216,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.errorType).isEqualTo(R.string.stats_view_followers)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

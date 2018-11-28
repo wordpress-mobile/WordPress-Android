@@ -15,19 +15,19 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Error
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.viewmodel.ResourceProvider
 import kotlin.math.roundToInt
 
@@ -103,7 +103,6 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.errorType).isEqualTo(R.string.stats_insights_popular)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

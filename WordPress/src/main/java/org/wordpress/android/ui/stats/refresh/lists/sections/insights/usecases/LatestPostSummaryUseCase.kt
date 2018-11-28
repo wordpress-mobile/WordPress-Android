@@ -11,8 +11,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -24,27 +23,26 @@ class LatestPostSummaryUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val latestPostSummaryMapper: LatestPostSummaryMapper
-) : BaseStatsUseCase(LATEST_POST_SUMMARY, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getLatestPostInsights(site)
-        return dbModel?.let { loadLatestPostSummaryItem(it) }
+        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchLatestPostInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(
-                    R.string.stats_insights_latest_post_summary,
+        when {
+            error != null -> onError(
                     error.message ?: error.type.name
             )
-            else -> model?.let { loadLatestPostSummaryItem(model) }
+            else -> onModel(model)
         }
     }
 
-    private fun loadLatestPostSummaryItem(model: InsightsLatestPostModel): StatsBlock {
+    override fun buildModel(model: InsightsLatestPostModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
         items.add(latestPostSummaryMapper.buildMessageItem(model))
@@ -61,7 +59,7 @@ class LatestPostSummaryUseCase
             }
         }
         items.add(buildLink(model))
-        return createDataItem(items)
+        return items
     }
 
     private fun InsightsLatestPostModel.hasData() =

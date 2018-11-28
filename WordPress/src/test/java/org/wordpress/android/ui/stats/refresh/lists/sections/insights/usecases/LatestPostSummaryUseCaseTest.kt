@@ -16,17 +16,17 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Error
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
@@ -63,7 +63,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         assertThat(result).isInstanceOf(Error::class.java)
         val failed = result as Error
-        assertThat(failed.errorType).isEqualTo(R.string.stats_insights_latest_post_summary)
         assertThat(failed.errorMessage).isEqualTo(message)
     }
 

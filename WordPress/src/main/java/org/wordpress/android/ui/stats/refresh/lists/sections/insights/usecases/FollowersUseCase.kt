@@ -12,10 +12,8 @@ import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.FOLLOWERS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.BlockList.ListUiState
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -36,18 +34,20 @@ class FollowersUseCase
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
     private val resourceProvider: ResourceProvider
-) : BaseStatsUseCase(FOLLOWERS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, Int>(
+        FOLLOWERS,
+        mainDispatcher,
+        0
+) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
-        return if (wpComFollowers != null && emailFollowers != null) loadFollowers(
-                site,
-                wpComFollowers,
-                emailFollowers
-        ) else null
+        if (wpComFollowers != null && emailFollowers != null) {
+            onModel(wpComFollowers to emailFollowers)
+        }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val deferredWpComResponse = GlobalScope.async { insightsStore.fetchWpComFollowers(site, PAGE_SIZE, forced) }
         val deferredEmailResponse = GlobalScope.async { insightsStore.fetchEmailFollowers(site, PAGE_SIZE, forced) }
         val wpComResponse = deferredWpComResponse.await()
@@ -56,39 +56,32 @@ class FollowersUseCase
         val emailModel = emailResponse.model
         val error = wpComResponse.error ?: emailResponse.error
 
-        return when {
-            error != null -> createFailedItem(
-                    string.stats_view_followers,
-                    error.message ?: error.type.name
-            )
-            wpComModel != null && emailModel != null -> loadFollowers(site, wpComModel, emailModel)
-            else -> null
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
         }
     }
 
-    private fun loadFollowers(
-        site: SiteModel,
-        wpComModel: FollowersModel,
-        emailModel: FollowersModel,
-        uiState: FollowersUiState = followersUiState
-    ): StatsBlock {
+    override fun buildStatefulModel(
+        model: Pair<FollowersModel, FollowersModel>,
+        uiState: Int
+    ): List<BlockListItem> {
+        val wpComModel = model.first
+        val emailModel = model.second
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
-        val selectedTabPosition = uiState.selectedTabPosition
         items.add(
                 TabsItem(
                         listOf(
                                 R.string.stats_followers_wordpress_com,
                                 R.string.stats_followers_email
                         ),
-                        selectedTabPosition
+                        uiState
                 ) {
-                    onDataChanged(loadFollowers(site, wpComModel, emailModel,
-                            followersUiState.copy(selectedTabPosition = it)
-                    ))
+                    onUiState(it)
                 }
         )
-        if (selectedTabPosition == 0) {
+        if (uiState == 0) {
             items.addAll(buildTab(wpComModel, R.string.stats_followers_wordpress_com))
         } else {
             items.addAll(buildTab(emailModel, R.string.stats_followers_email))
@@ -96,10 +89,10 @@ class FollowersUseCase
 
         if (wpComModel.hasMore || emailModel.hasMore) {
             items.add(Link(text = string.stats_insights_view_more) {
-                navigateTo(ViewFollowersStats(site.siteId))
+                navigateTo(ViewFollowersStats)
             })
         }
-        return createDataItem(items, uiState)
+        return items
     }
 
     private fun buildTab(model: FollowersModel, label: Int): List<BlockListItem> {
@@ -132,9 +125,4 @@ class FollowersUseCase
             )
         }
     }
-
-    private val followersUiState
-        get() = uiState as? FollowersUiState ?: FollowersUiState(0)
-
-    data class FollowersUiState(val selectedTabPosition: Int) : ListUiState
 }

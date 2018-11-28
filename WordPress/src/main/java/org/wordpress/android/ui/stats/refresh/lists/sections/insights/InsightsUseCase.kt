@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.M
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.util.combineMap
-import org.wordpress.android.util.merge
+import org.wordpress.android.util.mergeNotNull
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -54,11 +54,11 @@ class InsightsUseCase
             useCases.mapValues { entry -> entry.value.liveData }
     )
     private val insights = MutableLiveData<List<InsightsTypes>>()
-    val data: LiveData<List<StatsBlock>> = merge(insights, liveData) { insights, map ->
+    val data: LiveData<List<StatsBlock>> = mergeNotNull(insights, liveData) { insights, map ->
         insights.mapNotNull { map[it] }
     }
 
-    val navigationTarget: LiveData<NavigationTarget> = merge(useCases.map { it.value.navigationTarget })
+    val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.value.navigationTarget })
 
     suspend fun loadInsightItems(site: SiteModel) {
         loadItems(site, false)

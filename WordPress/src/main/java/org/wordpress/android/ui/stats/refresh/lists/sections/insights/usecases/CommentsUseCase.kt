@@ -8,10 +8,8 @@ import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.COMMENTS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.BlockList.ListUiState
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
@@ -30,44 +28,36 @@ class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsUseCase(COMMENTS, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+) : StatefulUseCase<CommentsModel, Int>(COMMENTS, mainDispatcher, 0) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(
-                    string.stats_view_comments,
-                    error.message ?: error.type.name
-            )
-            else -> model?.let { loadComments(site, model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            else -> onModel(model)
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getComments(site, PAGE_SIZE)
-        return dbModel?.let { loadComments(site, dbModel) }
+        dbModel?.let { onModel(dbModel) }
     }
 
-    private fun loadComments(
-        site: SiteModel,
-        model: CommentsModel,
-        uiState: CommentsUiState = commentsUiState
-    ): StatsBlock {
+    override fun buildStatefulModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
 
-        val selectedTabPosition = uiState.tabSelectedPosition
         items.add(
                 TabsItem(
                         listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
-                        selectedTabPosition
+                        uiState
                 ) {
-                    onDataChanged(loadComments(site, model, commentsUiState.copy(tabSelectedPosition = it)))
+                    onUiState(it)
                 })
 
-        if (selectedTabPosition == 0) {
+        if (uiState == 0) {
             items.addAll(buildAuthorsTab(model.authors))
         } else {
             items.addAll(buildPostsTab(model.posts))
@@ -75,10 +65,10 @@ class CommentsUseCase
 
         if (model.hasMoreAuthors || model.hasMorePosts) {
             items.add(Link(text = string.stats_insights_view_more) {
-                navigateTo(ViewCommentsStats(site.siteId))
+                navigateTo(ViewCommentsStats)
             })
         }
-        return createDataItem(items, uiState)
+        return items
     }
 
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
@@ -115,9 +105,4 @@ class CommentsUseCase
         }
         return mutableItems
     }
-
-    private val commentsUiState
-        get() = uiState as? CommentsUiState ?: CommentsUiState(0)
-
-    data class CommentsUiState(val tabSelectedPosition: Int) : ListUiState
 }

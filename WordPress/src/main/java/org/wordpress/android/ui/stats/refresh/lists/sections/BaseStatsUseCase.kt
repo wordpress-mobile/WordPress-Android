@@ -2,24 +2,34 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.support.annotation.StringRes
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.BlockList.ListUiState
+import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
+import org.wordpress.android.util.merge
 
-abstract class BaseStatsUseCase(
+abstract class BaseStatsUseCase<Model, UiState>(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val mutableLiveData = MutableLiveData<StatsBlock>()
-    val liveData: LiveData<StatsBlock> = mutableLiveData
+    private val domainModel = MutableLiveData<DomainModel<Model>>()
+    private val uiState = MutableLiveData<UiState>()
+    val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { domainModel, uiState ->
+        when {
+            domainModel == null -> Empty(false)
+            domainModel.error != null -> createFailedItem(domainModel.error)
+            domainModel.model != null -> createDataItem(buildModel(domainModel.model, uiState))
+            else -> Loading(type)
+        }
+    }
+
     private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
@@ -31,24 +41,35 @@ abstract class BaseStatsUseCase(
      */
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
-            withContext(mainDispatcher) {
-                mutableLiveData.value = loadCachedData(site) ?: Loading(
-                        type
-                )
-            }
+            loadCachedData(site)
         }
         if (refresh) {
-            withContext(mainDispatcher) {
-                mutableLiveData.value = fetchRemoteData(site, forced)
-            }
+            fetchRemoteData(site, forced)
         }
+    }
+
+    suspend fun onModel(model: Model?) {
+        withContext(mainDispatcher) {
+            domainModel.value = DomainModel(model = model)
+        }
+    }
+
+    suspend fun onError(message: String) {
+        withContext(mainDispatcher) {
+            domainModel.value = DomainModel(error = message)
+        }
+    }
+
+    fun onUiState(newState: UiState?) {
+        uiState.value = newState
     }
 
     /**
      * Clears the LiveData value when we switch the current Site so we don't show the old data for a new site
      */
     fun clear() {
-        mutableLiveData.postValue(null)
+        domainModel.postValue(null)
+        uiState.postValue(null)
     }
 
     /**
@@ -63,7 +84,7 @@ abstract class BaseStatsUseCase(
      * @param site for which we load the data
      * @return the list item or null when the local value is empty
      */
-    protected abstract suspend fun loadCachedData(site: SiteModel): StatsBlock?
+    protected abstract suspend fun loadCachedData(site: SiteModel)
 
     /**
      * Fetches remote data from the endpoint.
@@ -71,22 +92,42 @@ abstract class BaseStatsUseCase(
      * @param forced is true when we want to get the fresh data
      * @return the list item or null when we haven't received a correct response from the API
      */
-    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock?
+    protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
 
-    protected fun onDataChanged(data: StatsBlock) {
-        mutableLiveData.value = data
+    protected abstract fun buildModel(model: Model, nullableUiState: UiState?): List<BlockListItem>
+
+    private fun createFailedItem(message: String): Error {
+        return Error(type, message)
     }
 
-    protected fun createFailedItem(@StringRes failingType: Int, message: String): Error {
-        return Error(type, failingType, message)
+    private fun createDataItem(data: List<BlockListItem>): BlockList {
+        return BlockList(type, data)
     }
 
-    protected fun createDataItem(data: List<BlockListItem>, uiState: ListUiState? = null): BlockList {
-        return BlockList(type, data, uiState ?: this.uiState)
-    }
+    data class DomainModel<Model>(val model: Model? = null, val error: String? = null)
 
-    protected val uiState: ListUiState?
-        get() {
-            return (liveData.value as? BlockList)?.uiState
+    abstract class StatefulUseCase<Model, UiState>(
+        type: InsightsTypes,
+        mainDispatcher: CoroutineDispatcher,
+        private val defaultUiState: UiState
+    ) : BaseStatsUseCase<Model, UiState>(type, mainDispatcher) {
+        final override fun buildModel(model: Model, nullableUiState: UiState?): List<BlockListItem> {
+            return buildStatefulModel(model, nullableUiState ?: defaultUiState)
         }
+
+        protected abstract fun buildStatefulModel(model: Model, uiState: UiState): List<BlockListItem>
+    }
+
+    abstract class StatelessUseCase<Model>(
+        type: InsightsTypes,
+        mainDispatcher: CoroutineDispatcher
+    ) : BaseStatsUseCase<Model, NotUsedUiState>(type, mainDispatcher) {
+        abstract fun buildModel(model: Model): List<BlockListItem>
+
+        final override fun buildModel(model: Model, nullableUiState: NotUsedUiState?): List<BlockListItem> {
+            return buildModel(model)
+        }
+
+        object NotUsedUiState
+    }
 }

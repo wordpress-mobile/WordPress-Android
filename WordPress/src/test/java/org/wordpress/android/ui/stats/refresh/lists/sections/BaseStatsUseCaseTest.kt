@@ -10,17 +10,21 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.Loading
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import javax.inject.Provider
 
 class BaseStatsUseCaseTest : BaseUnitTest() {
-    @Mock lateinit var localDataProvider: Provider<StatsBlock?>
-    @Mock lateinit var remoteDataProvider: Provider<StatsBlock>
-    @Mock lateinit var localData: StatsBlock
-    @Mock lateinit var remoteData: StatsBlock
+    @Mock lateinit var localDataProvider: Provider<String?>
+    @Mock lateinit var remoteDataProvider: Provider<String>
+    private val localData = "local data"
+    private val remoteData = "remote data"
     @Mock lateinit var site: SiteModel
     private lateinit var block: TestUseCase
+    private val result = mutableListOf<StatsBlock?>()
 
     @Before
     fun setUp() {
@@ -30,31 +34,22 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         )
         whenever(localDataProvider.get()).thenReturn(localData)
         whenever(remoteDataProvider.get()).thenReturn(remoteData)
+        result.clear()
+        block.liveData.observeForever { result.add(it) }
     }
-
-    /**
-     * suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
-    if (liveData.value == null) {
-    mutableLiveData.postValue(loadCachedData(site) ?: BlockList(listOf(Empty)))
-    }
-    if (refresh) {
-    mutableLiveData.postValue(fetchRemoteData(site, refresh, forced))
-    }
-    }
-     */
 
     @Test
     fun `on fetch loads data from DB when current value is null`() = test {
-        assertThat(block.liveData.value).isNull()
+        assertThat(result).isEmpty()
 
         block.fetch(site, false, false)
 
-        assertThat(block.liveData.value).isEqualTo(localData)
+        assertData(0, localData)
     }
 
     @Test
     fun `on fetch returns loading item when DB is empty`() = test {
-        assertThat(block.liveData.value).isNull()
+        assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(site, false, false)
@@ -68,42 +63,49 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `on refresh calls loads data from DB and later from API`() = test {
-        val result = mutableListOf<StatsBlock?>()
-        assertThat(block.liveData.value).isNull()
-
-        block.liveData.observeForever { result.add(it) }
+        assertThat(result).isEmpty()
 
         block.fetch(site, true, false)
 
         assertThat(result.size).isEqualTo(2)
-        assertThat(result[0]).isEqualTo(localData)
-        assertThat(result[1]).isEqualTo(remoteData)
+        assertData(0, localData)
+        assertData(1, remoteData)
     }
 
     @Test
     fun `live data value is cleared`() = test {
         block.fetch(site, false, false)
 
-        assertThat(block.liveData.value).isEqualTo(localData)
+        assertData(0, localData)
 
         block.clear()
 
-        assertThat(block.liveData.value).isNull()
+        assertThat(result.last()).isEqualTo(Empty(false))
+    }
+
+    private fun assertData(position: Int, data: String) {
+        val blockList = result[position] as BlockList
+        val firstItem = blockList.items[0] as Text
+        assertThat(firstItem.text).isEqualTo(data)
     }
 
     class TestUseCase(
-        private val localDataProvider: Provider<StatsBlock?>,
-        private val remoteDataProvider: Provider<StatsBlock>
-    ) : BaseStatsUseCase(
+        private val localDataProvider: Provider<String?>,
+        private val remoteDataProvider: Provider<String>
+    ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {
-        override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
-            return localDataProvider.get()
+        override fun buildModel(model: String, nullableUiState: Int?): List<BlockListItem> {
+            return listOf(Text(model))
         }
 
-        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock {
-            return remoteDataProvider.get()
+        override suspend fun loadCachedData(site: SiteModel) {
+            onModel(localDataProvider.get())
+        }
+
+        override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+            onModel(remoteDataProvider.get())
         }
     }
 }
