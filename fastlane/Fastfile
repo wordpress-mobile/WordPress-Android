@@ -2,32 +2,36 @@ default_platform(:android)
 fastlane_require 'dotenv'
 
 SUPPORTED_LOCALES = [
-  { glotpress: "ar", google_play: "ar" },
-  { glotpress: "de", google_play: "de-DE" },
-  { glotpress: "en-gb", google_play: "en-US" },
-  { glotpress: "es", google_play: "es-ES" },
-  { glotpress: "fr", google_play: "fr-CA" },
-  { glotpress: "fr", google_play: "fr-FR" },
-  { glotpress: "he", google_play: "iw-IL" },
-  { glotpress: "id", google_play: "id" },
-  { glotpress: "it", google_play: "it-IT" },
-  { glotpress: "ja", google_play: "ja-JP" },
-  { glotpress: "ko", google_play: "ko-KR" },
-  { glotpress: "nl", google_play: "nl-NL" },
-  { glotpress: "pl", google_play: "pl-PL" },
-  { glotpress: "pt-br", google_play: "pt-BR" },
-  { glotpress: "ru", google_play: "ru-RU" },
-  { glotpress: "sr", google_play:  "sr" },
-  { glotpress: "sv", google_play: "sv-SE" },
-  { glotpress: "th", google_play: "th" },
-  { glotpress: "tr", google_play: "tr-TR" },
-  { glotpress: "vi", google_play: "vi" },
-  { glotpress: "zh-cn", google_play: "zh-CN" },
-  { glotpress: "zh-tw", google_play: "zh-TW" },
+  { glotpress: "ar", google_play: "ar",  promo_config: {}},
+  { glotpress: "de", google_play: "de-DE",  promo_config: {} },
+  { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
+  { glotpress: "es", google_play: "es-ES",  promo_config: {} },
+  { glotpress: "fr", google_play: "fr-CA",  promo_config: {} },
+  { glotpress: "fr", google_play: "fr-FR",  promo_config: {} },
+  { glotpress: "he", google_play: "iw-IL",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "id", google_play: "id",  promo_config: {} },
+  { glotpress: "it", google_play: "it-IT",  promo_config: {} },
+  { glotpress: "ja", google_play: "ja-JP",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "ko", google_play: "ko-KR",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "nl", google_play: "nl-NL",  promo_config: {} },
+  { glotpress: "pl", google_play: "pl-PL",  promo_config: {text_size: 70} },
+  { glotpress: "pt-br", google_play: "pt-BR",  promo_config: {} },
+  { glotpress: "ru", google_play: "ru-RU",  promo_config: {text_size: 70} },
+  { glotpress: "sr", google_play:  "sr",  promo_config: {} },
+  { glotpress: "sv", google_play: "sv-SE",  promo_config: {} },
+  { glotpress: "th", google_play: "th",  promo_config: {} },
+  { glotpress: "tr", google_play: "tr-TR",  promo_config: {} },
+  { glotpress: "vi", google_play: "vi",  promo_config: {} },
+  { glotpress: "zh-cn", google_play: "zh-CN",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
 ].freeze
 
 platform :android do
 ########################################################################
+# Includes
+########################################################################
+import "./ScreenshotFastfile"
+
 # Environment
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
@@ -59,106 +63,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
 
-########################################################################
-# Screenshot Lanes
-########################################################################
-  #####################################################################################
-  # screenshots
-  # -----------------------------------------------------------------------------------
-  # This lane takes screenshots for the WordPress app across the three device types:
-  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
-  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
-  # fastlane_screenshots_ten_inch
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
-  #
-  # Example:
-  # fastlane screenshots
-  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
-  # bundle exec fastlane code_freeze codefreeze_version:11.2 skip_confirm:true
-  #####################################################################################
-  desc "Build and capture screenshots"
-  lane :screenshots do |options|
-    gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
-    take_screenshots(options)
-  end
 
-  desc "Capture screenshots"
-  lane :take_screenshots do |options|
-    screenshot_devices = [
-      {
-        screenshot_type: 'phone',
-        device_name: 'fastlane_screenshots_phone',
-        device_serial: options[:phone_serial],
-      },
-      {
-        screenshot_type: 'sevenInch',
-        device_name: 'fastlane_screenshots_seven_inch',
-        device_serial: options[:sevenInch_serial],
-      },
-      {
-        screenshot_type: 'tenInch',
-        device_name: 'fastlane_screenshots_ten_inch',
-        device_serial: options[:tenInch_serial],
-      }
-    ]
-
-    screenshot_options = {
-      output_directory: "fastlane/metadata/android",
-      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
-      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
-      reinstall_app: false,
-      clear_previous_screenshots: true,
-      locales: SUPPORTED_LOCALES.map { |hsh| hsh[:google_play] }
-    }
-
-    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
-  end
-
-  #####################################################################################
-  # rebuild_screenshot_devices
-  # -----------------------------------------------------------------------------------
-  # This lane rebuilds all of the emulators used for generating screenshots. Beware – running
-  # this action will overwrite the following emulators:
-  #     - fastlane_screenshots_phone
-  #     - fastlane_screenshots_seven_inch
-  #     - fastlane_screenshots_ten_inch
-  # It will not overwrite any other devices.
-  #
-  # It will also create hardware profiles that match the screenshot sizes used.  Running
-  # this script will overwrite those hardware profiles if they already exist.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # fastlane rebuild_screenshot_devices
-  #
-  # Example:
-  # fastlane rebuild_screenshot_devices
-  #####################################################################################
-  desc "Rebuild screenshot devices"
-  lane :rebuild_screenshot_devices do |options|
-
-    devices = [
-        Dir.pwd + "/devices/phone.xml",
-        Dir.pwd + "/devices/tablet-7.xml",
-        Dir.pwd + "/devices/tablet-10.xml",
-    ]
-
-    emulators = [
-        Dir.pwd + "/emulators/fastlane_screenshots_phone.ini",
-        Dir.pwd + "/emulators/fastlane_screenshots_seven_inch.ini",
-        Dir.pwd + "/emulators/fastlane_screenshots_ten_inch.ini",
-    ]
-
-    devices.each do |device_configuration|
-        sh("helpers/register-hardware-profile.sh '#{device_configuration}'")
-    end
-
-    emulators.each do |emulator_configuration|
-        sh("helpers/copy-device.sh '#{emulator_configuration}'")
-    end
-  end
 #####################################################################################
 # update_ps_strings 
 # -----------------------------------------------------------------------------------
@@ -192,18 +97,18 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       release_version: options[:version])
   end 
 
-#####################################################################################
-# download_metadata_string 
-# -----------------------------------------------------------------------------------
-# This lane downloads the translated metadata (release notes,
-# app store strings, title, etc.) from GlotPress and updates the local files
-# -----------------------------------------------------------------------------------
-# Usage:
-# fastlane download_metadata_string build_number:<build_number> version:<version>
-#
-# Example:
-# fastlane download_metadata_string build_number:573 version:10.3
-#####################################################################################
+  #####################################################################################
+  # download_metadata_string 
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the translated metadata (release notes,
+  # app store strings, title, etc.) from GlotPress and updates the local files
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane download_metadata_string build_number:<build_number> version:<version>
+  #
+  # Example:
+  # fastlane download_metadata_string build_number:573 version:10.3
+  #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options| 
     values = options[:version].split('.')
@@ -217,7 +122,8 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     delete_old_changelogs(build: options[:build_number])
     download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
-      locales: SUPPORTED_LOCALES)
+      locales: SUPPORTED_LOCALES,
+      download_path: Dir.pwd + "/fastlane/metadata/android")
   end 
 
 ########################################################################
