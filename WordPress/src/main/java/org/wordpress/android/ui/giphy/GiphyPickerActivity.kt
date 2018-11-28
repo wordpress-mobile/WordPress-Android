@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.stock_media_picker_activity.*
+import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
@@ -44,7 +44,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this).get(GiphyPickerViewModel::class.java)
 
         // We are intentionally reusing this layout since the UI is very similar.
-        setContentView(R.layout.stock_media_picker_activity)
+        setContentView(R.layout.media_picker_activity)
 
         initializeToolbar()
         initializeRecyclerView()

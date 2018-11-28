@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView.ScaleType.CENTER_CROP
-import kotlinx.android.synthetic.main.stock_media_picker_thumbnail.view.*
+import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R.layout
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -59,7 +59,7 @@ class GiphyMediaViewHolder(
         ): GiphyMediaViewHolder {
             // We are intentionally reusing this layout since the UI is very similar.
             val view = LayoutInflater.from(parent.context)
-                    .inflate(layout.stock_media_picker_thumbnail, parent, false)
+                    .inflate(layout.media_picker_thumbnail, parent, false)
             return GiphyMediaViewHolder(
                     imageManager = imageManager,
                     itemView = view,
