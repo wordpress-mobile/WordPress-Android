@@ -26,6 +26,10 @@ class GiphyMediaViewHolder(
      * The [ImageManager] to use for loading an image in to the ImageView
      */
     private val imageManager: ImageManager,
+    /**
+     * A function that is called when the thumbnail is clicked.
+     */
+    private val onClickListener: (GiphyMediaViewModel) -> Unit,
     itemView: View,
     /**
      * The dimensions used for the ImageView
@@ -37,10 +41,14 @@ class GiphyMediaViewHolder(
 
     private val thumbnailView: ImageView = itemView.image_thumbnail
 
+    private var mediaViewModel: GiphyMediaViewModel? = null
+
     init {
         thumbnailView.apply {
             layoutParams.width = thumbnailViewDimensions.width
             layoutParams.height = thumbnailViewDimensions.height
+
+            setOnClickListener { mediaViewModel?.let(onClickListener) }
         }
     }
 
@@ -51,6 +59,8 @@ class GiphyMediaViewHolder(
      * [GiphyPickerViewModel]. This causes null values to be bound to [GiphyMediaViewHolder] instances.
      */
     fun bind(mediaViewModel: GiphyMediaViewModel?) {
+        this.mediaViewModel = mediaViewModel
+
         thumbnailView.contentDescription = mediaViewModel?.title
         imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
     }
@@ -61,6 +71,7 @@ class GiphyMediaViewHolder(
          */
         fun create(
             imageManager: ImageManager,
+            onClickListener: (GiphyMediaViewModel) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
         ): GiphyMediaViewHolder {
@@ -69,9 +80,11 @@ class GiphyMediaViewHolder(
                     .inflate(layout.media_picker_thumbnail, parent, false)
             return GiphyMediaViewHolder(
                     imageManager = imageManager,
+                    onClickListener = onClickListener,
                     itemView = view,
                     thumbnailViewDimensions = thumbnailViewDimensions
             )
         }
     }
 }
+

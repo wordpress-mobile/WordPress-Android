@@ -63,7 +63,11 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the items in a grid
      */
     private fun initializeRecyclerView() {
-        val pagedListAdapter = GiphyPickerPagedListAdapter(imageManager, thumbnailViewDimensions)
+        val pagedListAdapter = GiphyPickerPagedListAdapter(
+                imageManager = imageManager,
+                thumbnailViewDimensions = thumbnailViewDimensions,
+                onMediaViewClickListener = viewModel::toggleSelected
+        )
 
         recycler.apply {
             layoutManager = GridLayoutManager(this@GiphyPickerActivity, gridColumnCount)
