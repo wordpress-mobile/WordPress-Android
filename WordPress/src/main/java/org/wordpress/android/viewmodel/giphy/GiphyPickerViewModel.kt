@@ -45,7 +45,16 @@ class GiphyPickerViewModel(
         LivePagedListBuilder(dataSourceFactory, pagedListConfig).build()
     }
 
-    fun search(searchQuery: String) = dataSourceFactory.setSearchQuery(searchQuery)
+    /**
+     * Set the current search query
+     *
+     * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
+     * currently selected [GiphyMediaViewModel] if the new search query results are different.
+     */
+    fun search(searchQuery: String) {
+        _selectedMediaViewModelList.postValue(LinkedHashMap())
+        dataSourceFactory.setSearchQuery(searchQuery)
+    }
 
     /**
      * Toggles a [GiphyMediaViewModel]'s `isSelected` property between true and false

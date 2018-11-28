@@ -79,4 +79,17 @@ class GiphyPickerViewModelTest {
         assertThat(charlie.selectionNumber.value).isEqualTo(2)
         assertThat(delta.selectionNumber.value).isEqualTo(3)
     }
+
+    @Test
+    fun `when the searchQuery is changed, it clears the selected mediaViewModel list`() {
+        // Arrange
+        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        viewModel.toggleSelected(mediaViewModel)
+
+        // Act
+        viewModel.search("dummy")
+
+        // Assert
+        assertThat(viewModel.selectedMediaViewModelList.value).isEmpty()
+    }
 }
