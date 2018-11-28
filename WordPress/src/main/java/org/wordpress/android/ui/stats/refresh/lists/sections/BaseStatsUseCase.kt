@@ -15,6 +15,9 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
 import org.wordpress.android.util.merge
 
+/**
+ * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
+ */
 abstract class BaseStatsUseCase<Model, UiState>(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
@@ -48,18 +51,31 @@ abstract class BaseStatsUseCase<Model, UiState>(
         }
     }
 
+    /**
+     * Trigger this method when there is a new (updated) model available.
+     * When it's null, the current model is cleared.
+     * @param model new data
+     */
     suspend fun onModel(model: Model?) {
         withContext(mainDispatcher) {
             domainModel.value = DomainModel(model = model)
         }
     }
 
+    /**
+     * Trigger this method when you want to display an error on the UI
+     * @param message that should be displayed
+     */
     suspend fun onError(message: String) {
         withContext(mainDispatcher) {
             domainModel.value = DomainModel(error = message)
         }
     }
 
+    /**
+     * Trigger this method when the UI state has changed.
+     * @param newState
+     */
     fun onUiState(newState: UiState?) {
         uiState.value = newState
     }
@@ -82,7 +98,6 @@ abstract class BaseStatsUseCase<Model, UiState>(
     /**
      * Loads data from a local cache. Returns a null value when the cache is empty.
      * @param site for which we load the data
-     * @return the list item or null when the local value is empty
      */
     protected abstract suspend fun loadCachedData(site: SiteModel)
 
@@ -90,10 +105,15 @@ abstract class BaseStatsUseCase<Model, UiState>(
      * Fetches remote data from the endpoint.
      * @param site for which we fetch the data
      * @param forced is true when we want to get the fresh data
-     * @return the list item or null when we haven't received a correct response from the API
      */
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
 
+    /**
+     * Transforms given model and ui state into the UI model
+     * @param model domain model coming from FluxC
+     * @param nullableUiState contains UI specific data
+     * @return a list of block list items
+     */
     protected abstract fun buildModel(model: Model, nullableUiState: UiState?): List<BlockListItem>
 
     private fun createFailedItem(message: String): Error {
@@ -104,8 +124,13 @@ abstract class BaseStatsUseCase<Model, UiState>(
         return BlockList(type, data)
     }
 
-    data class DomainModel<Model>(val model: Model? = null, val error: String? = null)
+    private data class DomainModel<Model>(val model: Model? = null, val error: String? = null)
 
+    /**
+     * Stateful use case should be used when we have a block that has a UI state that needs to be preserved
+     * over rotation pull to refresh. It is for example a block with Tabs or with expandable item.
+     * @param defaultUiState default value the UI state should have when the screen first loads
+     */
     abstract class StatefulUseCase<Model, UiState>(
         type: InsightsTypes,
         mainDispatcher: CoroutineDispatcher,
@@ -115,13 +140,29 @@ abstract class BaseStatsUseCase<Model, UiState>(
             return buildStatefulModel(model, nullableUiState ?: defaultUiState)
         }
 
+        /**
+         * Transforms given model and ui state into the UI model
+         * @param model domain model coming from FluxC
+         * @param uiState contains UI specific data
+         * @return a list of block list items
+         */
         protected abstract fun buildStatefulModel(model: Model, uiState: UiState): List<BlockListItem>
     }
 
+    /**
+     * Stateless use case should be used for the blocks that display just plain data.
+     * These blocks don't have only one UI state and it doesn't change.
+     */
     abstract class StatelessUseCase<Model>(
         type: InsightsTypes,
         mainDispatcher: CoroutineDispatcher
     ) : BaseStatsUseCase<Model, NotUsedUiState>(type, mainDispatcher) {
+
+        /**
+         * Transforms given model into the UI model
+         * @param model domain model coming from FluxC
+         * @return a list of block list items
+         */
         abstract fun buildModel(model: Model): List<BlockListItem>
 
         final override fun buildModel(model: Model, nullableUiState: NotUsedUiState?): List<BlockListItem> {
