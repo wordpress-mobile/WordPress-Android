@@ -30,9 +30,6 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 26
-        ndk {
-            abiFilters 'armeabi-v7a', 'x86'
-        }
         buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", rootProject.ext.buildGutenbergFromSource.toString()
     }
     buildTypes {
