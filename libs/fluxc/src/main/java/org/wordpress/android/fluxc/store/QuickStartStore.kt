@@ -17,7 +17,7 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
     enum class QuickStartTask constructor(
         private val string: String,
         val taskType: QuickStartTaskType,
-        private val order: Int
+        val order: Int
     ) {
         CREATE_SITE("create_site", CUSTOMIZE, 0),
         UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 1),
@@ -44,6 +44,10 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
                 }
 
                 return CHOOSE_THEME
+            }
+
+            fun getTasksByType(taskType: QuickStartTaskType): List<QuickStartTask> {
+                return QuickStartTask.values().filter { it.taskType == taskType }
             }
         }
     }
@@ -100,6 +104,26 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
 
     fun setShownTask(siteId: Long, task: QuickStartTask, isShown: Boolean) {
         quickStartSqlUtils.setShownTask(siteId, task, isShown)
+    }
+
+    fun getCompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
+        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasDoneTask(siteId, it) }
+                .sortedBy { it.order }
+    }
+
+    fun getUncompletedTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
+        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasDoneTask(siteId, it) }
+                .sortedBy { it.order }
+    }
+
+    fun getShownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
+        return QuickStartTask.getTasksByType(taskType).filter { quickStartSqlUtils.hasShownTask(siteId, it) }
+                .sortedBy { it.order }
+    }
+
+    fun getUnshownTasksByType(siteId: Long, taskType: QuickStartTaskType): List<QuickStartTask> {
+        return QuickStartTask.getTasksByType(taskType).filter { !quickStartSqlUtils.hasShownTask(siteId, it) }
+                .sortedBy { it.order }
     }
 
     fun setQuickStartCompleted(siteId: Long, isCompleted: Boolean) {
