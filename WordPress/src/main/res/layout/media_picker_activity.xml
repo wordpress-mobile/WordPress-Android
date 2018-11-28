@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
-            tools:listitem="@layout/stock_media_picker_thumbnail"/>
+            tools:listitem="@layout/media_picker_thumbnail"/>
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionable_empty_view"

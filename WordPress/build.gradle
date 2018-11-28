@@ -17,6 +17,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+    maven { url "https://giphy.bintray.com/giphy-sdk" }
 }
 
 apply plugin: 'com.android.application'
@@ -215,6 +216,10 @@ dependencies {
 
     implementation (group: 'com.zendesk', name: 'support', version: '2.0.0') {
         exclude group: 'com.google.dagger'
+    }
+
+    implementation('com.giphy.sdk:core:1.0.2@aar') {
+        transitive = true
     }
 
     lintChecks 'org.wordpress:lint:1.0.1'
