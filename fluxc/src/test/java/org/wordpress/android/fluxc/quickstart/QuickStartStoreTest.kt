@@ -46,7 +46,7 @@ class QuickStartStoreTest {
     }
 
     @Test
-    fun orderOfTasks() = test {
+    fun orderOfDoneTasks() = test {
         // marking tasks as done in random order
         quickStartStore.setDoneTask(testLocalSiteId, CHOOSE_THEME, true)
         quickStartStore.setDoneTask(testLocalSiteId, EXPLORE_PLANS, true)
@@ -77,6 +77,39 @@ class QuickStartStoreTest {
         assertEquals(ENABLE_POST_SHARING, uncompletedGrowthTasks[0])
         assertEquals(PUBLISH_POST, uncompletedGrowthTasks[1])
         assertEquals(CHECK_STATS, uncompletedGrowthTasks[2])
+    }
 
+    @Test
+    fun orderOfShownTasks() = test {
+        // marking tasks as done in random order
+        quickStartStore.setShownTask(testLocalSiteId, UPLOAD_SITE_ICON, true)
+        quickStartStore.setShownTask(testLocalSiteId, CHECK_STATS, true)
+        quickStartStore.setShownTask(testLocalSiteId, ENABLE_POST_SHARING, true)
+        quickStartStore.setShownTask(testLocalSiteId, CREATE_NEW_PAGE, true)
+        quickStartStore.setShownTask(testLocalSiteId, PUBLISH_POST, true)
+
+        // making sure tasks are retrieved in a correct order
+        val shownCustomizeTasks = quickStartStore.getShownTasksByType(testLocalSiteId, CUSTOMIZE)
+        assertEquals(2, shownCustomizeTasks.size)
+        assertEquals(UPLOAD_SITE_ICON, shownCustomizeTasks[0])
+        assertEquals(CREATE_NEW_PAGE, shownCustomizeTasks[1])
+
+        val shownGrowthTasks = quickStartStore.getShownTasksByType(testLocalSiteId, GROWTH)
+        assertEquals(3, shownGrowthTasks.size)
+        assertEquals(ENABLE_POST_SHARING, shownGrowthTasks[0])
+        assertEquals(PUBLISH_POST, shownGrowthTasks[1])
+        assertEquals(CHECK_STATS, shownGrowthTasks[2])
+
+        val unshownCustomizeTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, CUSTOMIZE)
+        assertEquals(4, unshownCustomizeTasks.size)
+        assertEquals(CREATE_SITE, unshownCustomizeTasks[0])
+        assertEquals(CHOOSE_THEME, unshownCustomizeTasks[1])
+        assertEquals(CUSTOMIZE_SITE, unshownCustomizeTasks[2])
+        assertEquals(VIEW_SITE, unshownCustomizeTasks[3])
+
+        val unshownGrowthTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, GROWTH)
+        assertEquals(2, unshownGrowthTasks.size)
+        assertEquals(FOLLOW_SITE, unshownGrowthTasks[0])
+        assertEquals(EXPLORE_PLANS, unshownGrowthTasks[1])
     }
 }
