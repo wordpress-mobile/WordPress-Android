@@ -12,7 +12,7 @@ class TimeStatsMapper
     fun map(response: PostAndPageViewsResponse, pageSize: Int): PostAndPageViewsModel {
         val postViews = response.days.entries.first().value.postViews
         val stats = postViews.take(pageSize).mapNotNull { item ->
-            val type = when(item.type) {
+            val type = when (item.type) {
                 "post" -> ViewsType.POST
                 "page" -> ViewsType.PAGE
                 else -> {
