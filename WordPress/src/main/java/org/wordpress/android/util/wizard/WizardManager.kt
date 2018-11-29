@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import org.wordpress.android.util.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
-class WizardManager<T>(
+class WizardManager<T: WizardStep>(
     private val steps: List<T>
 ) {
     private val _navigatorLiveData = SingleLiveEvent<T>()
@@ -19,16 +19,8 @@ class WizardManager<T>(
         }
     }
 
-    /**
-     * Fragments need to inflate the view in OnCreateView only when getView() != null, otherwise their state
-     * gets lost.
-     */
     fun onBackPressed() {
         --currentStepIndex
-    }
-
-    fun hasNextStep(): Boolean {
-        return isIndexValid(currentStepIndex + 1)
     }
 
     private fun isIndexValid(currentStepIndex: Int): Boolean {
@@ -49,4 +41,4 @@ interface WizardState
 /**
  * Navigation target containing all the data needed for navigating the user to a next screen of the wizard.
  */
-class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStepIdentifier: S, val wizardState: T) : Event()
+class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStep: S, val wizardState: T) : Event()

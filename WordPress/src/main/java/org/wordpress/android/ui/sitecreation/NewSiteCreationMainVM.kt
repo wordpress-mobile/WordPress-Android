@@ -13,7 +13,7 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val verticalId: String? = null,
     val siteTitle: String? = null,
-    val siteTagline: String? = null
+    val siteTagLine: String? = null
 ) : WizardState
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>

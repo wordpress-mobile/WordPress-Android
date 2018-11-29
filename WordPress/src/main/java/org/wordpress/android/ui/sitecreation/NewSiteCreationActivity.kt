@@ -58,13 +58,13 @@ class NewSiteCreationActivity : AppCompatActivity() {
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>): Boolean {
-        val fragment = when (target.wizardStepIdentifier) {
+        val fragment = when (target.wizardStep) {
             SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
             VERTICALS ->
                 NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
             DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
         }
-        slideInFragment(fragment, target.wizardStepIdentifier.toString())
+        slideInFragment(fragment, target.wizardStep.toString())
         return true
     }
 
