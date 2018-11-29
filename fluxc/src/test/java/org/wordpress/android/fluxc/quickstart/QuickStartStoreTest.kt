@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROWTH
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.test
 
 @RunWith(RobolectricTestRunner::class)
@@ -61,10 +61,10 @@ class QuickStartStoreTest {
         assertEquals(CHOOSE_THEME, completedCustomizeTasks[1])
         assertEquals(VIEW_SITE, completedCustomizeTasks[2])
 
-        val completedGrowthTasks = quickStartStore.getCompletedTasksByType(testLocalSiteId, GROWTH)
-        assertEquals(2, completedGrowthTasks.size)
-        assertEquals(FOLLOW_SITE, completedGrowthTasks[0])
-        assertEquals(EXPLORE_PLANS, completedGrowthTasks[1])
+        val completedGrowTasks = quickStartStore.getCompletedTasksByType(testLocalSiteId, GROW)
+        assertEquals(2, completedGrowTasks.size)
+        assertEquals(FOLLOW_SITE, completedGrowTasks[0])
+        assertEquals(EXPLORE_PLANS, completedGrowTasks[1])
 
         // making sure undone tasks are retrieved in a correct order
         val uncompletedCustomizeTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, CUSTOMIZE)
@@ -73,11 +73,11 @@ class QuickStartStoreTest {
         assertEquals(CUSTOMIZE_SITE, uncompletedCustomizeTasks[1])
         assertEquals(CREATE_NEW_PAGE, uncompletedCustomizeTasks[2])
 
-        val uncompletedGrowthTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, GROWTH)
-        assertEquals(3, uncompletedGrowthTasks.size)
-        assertEquals(ENABLE_POST_SHARING, uncompletedGrowthTasks[0])
-        assertEquals(PUBLISH_POST, uncompletedGrowthTasks[1])
-        assertEquals(CHECK_STATS, uncompletedGrowthTasks[2])
+        val uncompletedGrowTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, GROW)
+        assertEquals(3, uncompletedGrowTasks.size)
+        assertEquals(ENABLE_POST_SHARING, uncompletedGrowTasks[0])
+        assertEquals(PUBLISH_POST, uncompletedGrowTasks[1])
+        assertEquals(CHECK_STATS, uncompletedGrowTasks[2])
     }
 
     @Test
@@ -95,11 +95,11 @@ class QuickStartStoreTest {
         assertEquals(UPLOAD_SITE_ICON, shownCustomizeTasks[0])
         assertEquals(CREATE_NEW_PAGE, shownCustomizeTasks[1])
 
-        val shownGrowthTasks = quickStartStore.getShownTasksByType(testLocalSiteId, GROWTH)
-        assertEquals(3, shownGrowthTasks.size)
-        assertEquals(ENABLE_POST_SHARING, shownGrowthTasks[0])
-        assertEquals(PUBLISH_POST, shownGrowthTasks[1])
-        assertEquals(CHECK_STATS, shownGrowthTasks[2])
+        val shownGrowTasks = quickStartStore.getShownTasksByType(testLocalSiteId, GROW)
+        assertEquals(3, shownGrowTasks.size)
+        assertEquals(ENABLE_POST_SHARING, shownGrowTasks[0])
+        assertEquals(PUBLISH_POST, shownGrowTasks[1])
+        assertEquals(CHECK_STATS, shownGrowTasks[2])
 
         // making sure unshown tasks are retrieved in a correct order
         val unshownCustomizeTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, CUSTOMIZE)
@@ -109,9 +109,9 @@ class QuickStartStoreTest {
         assertEquals(CUSTOMIZE_SITE, unshownCustomizeTasks[2])
         assertEquals(VIEW_SITE, unshownCustomizeTasks[3])
 
-        val unshownGrowthTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, GROWTH)
-        assertEquals(2, unshownGrowthTasks.size)
-        assertEquals(FOLLOW_SITE, unshownGrowthTasks[0])
-        assertEquals(EXPLORE_PLANS, unshownGrowthTasks[1])
+        val unshownGrowTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, GROW)
+        assertEquals(2, unshownGrowTasks.size)
+        assertEquals(FOLLOW_SITE, unshownGrowTasks[0])
+        assertEquals(EXPLORE_PLANS, unshownGrowTasks[1])
     }
 }

@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROWTH
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -49,22 +49,22 @@ class QuickStartSqlUtilsTest {
     @Test
     fun testDoneCountByType() {
         assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, true)
         assertEquals(1, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CREATE_SITE, false)
         assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.PUBLISH_POST, true)
-        assertEquals(1, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROWTH))
+        assertEquals(1, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROW))
         assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, CUSTOMIZE))
 
         quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.PUBLISH_POST, false)
-        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, GROW))
         assertEquals(0, quickStartSqlUtils.getDoneCountByType(testLocalSiteId, CUSTOMIZE))
     }
 
@@ -82,22 +82,22 @@ class QuickStartSqlUtilsTest {
     @Test
     fun testShownCountByType() {
         assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.UPLOAD_SITE_ICON, true)
         assertEquals(1, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.UPLOAD_SITE_ICON, false)
         assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
 
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CHECK_STATS, true)
-        assertEquals(1, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROWTH))
+        assertEquals(1, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
         assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
 
         quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CHECK_STATS, false)
-        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROWTH))
+        assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, GROW))
         assertEquals(0, quickStartSqlUtils.getShownCountByType(testLocalSiteId, CUSTOMIZE))
     }
 

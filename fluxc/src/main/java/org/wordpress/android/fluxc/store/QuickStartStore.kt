@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROWTH
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,11 +25,11 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         CUSTOMIZE_SITE("customize_site", CUSTOMIZE, 3),
         CREATE_NEW_PAGE("create_new_page", CUSTOMIZE, 4),
         VIEW_SITE("view_site", CUSTOMIZE, 5),
-        ENABLE_POST_SHARING("enable_post_sharing", GROWTH, 6),
-        PUBLISH_POST("publish_post", GROWTH, 7),
-        FOLLOW_SITE("follow_site", GROWTH, 8),
-        CHECK_STATS("check_stats", GROWTH, 9),
-        EXPLORE_PLANS("explore_plans", GROWTH, 10);
+        ENABLE_POST_SHARING("enable_post_sharing", GROW, 6),
+        PUBLISH_POST("publish_post", GROW, 7),
+        FOLLOW_SITE("follow_site", GROW, 8),
+        CHECK_STATS("check_stats", GROW, 9),
+        EXPLORE_PLANS("explore_plans", GROW, 10);
 
         override fun toString(): String {
             return string
@@ -54,7 +54,7 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
 
     enum class QuickStartTaskType(private val string: String) {
         CUSTOMIZE("customize"),
-        GROWTH("growth"),
+        GROW("grow"),
         UNKNOWN("unknown");
 
         override fun toString(): String {
