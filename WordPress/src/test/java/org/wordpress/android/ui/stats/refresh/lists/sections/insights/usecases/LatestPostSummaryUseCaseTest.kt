@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
@@ -74,7 +75,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         val result = loadLatestPostSummary(refresh, forced)
 
-        assertThat(result).isNull()
+        assertThat(result).isEqualTo(Empty(false))
     }
 
     @Test

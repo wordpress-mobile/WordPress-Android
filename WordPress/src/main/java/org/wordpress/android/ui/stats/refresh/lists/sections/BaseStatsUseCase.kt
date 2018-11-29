@@ -26,10 +26,10 @@ abstract class BaseStatsUseCase<Model, UiState>(
     private val uiState = MutableLiveData<UiState>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { domainModel, uiState ->
         when {
-            domainModel == null -> Empty(false)
+            domainModel == null -> Loading(type)
             domainModel.error != null -> createFailedItem(domainModel.error)
             domainModel.model != null -> createDataItem(buildModel(domainModel.model, uiState))
-            else -> Loading(type)
+            else -> Empty(false)
         }
     }
 
