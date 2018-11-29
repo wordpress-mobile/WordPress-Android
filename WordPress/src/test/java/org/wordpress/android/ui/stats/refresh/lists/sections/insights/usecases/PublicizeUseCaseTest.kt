@@ -115,12 +115,9 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            Assertions.assertThat(this.items).hasSize(3)
+            Assertions.assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            val label = this.items[1] as Label
-            assertThat(label.leftLabel).isEqualTo(R.string.stats_publicize_service_label)
-            assertThat(label.rightLabel).isEqualTo(R.string.stats_publicize_followers_label)
-            Assertions.assertThat(this.items[2]).isEqualTo(Empty)
+            Assertions.assertThat(this.items[1]).isEqualTo(Empty)
         }
     }
 

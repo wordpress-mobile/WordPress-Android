@@ -51,10 +51,10 @@ class PublicizeUseCase
     private fun buildPublicizeUiModel(site: SiteModel, model: PublicizeModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_publicize))
-        items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
         if (model.services.isEmpty()) {
             items.add(Empty)
         } else {
+            items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
             items.addAll(model.services.let { mapper.map(it) })
             if (model.hasMore) {
                 items.add(Link(text = string.stats_insights_view_more) {
