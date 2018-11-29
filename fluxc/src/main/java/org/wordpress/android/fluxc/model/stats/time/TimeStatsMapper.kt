@@ -14,7 +14,7 @@ class TimeStatsMapper
         val stats = postViews.take(pageSize).mapNotNull { item ->
             val type = when (item.type) {
                 "post" -> ViewsType.POST
-                "page" -> ViewsType.PAGE
+                "homepage" -> ViewsType.PAGE
                 else -> {
                     AppLog.e(STATS, "PostAndPageViewsResponse.type: Unexpected view type: ${item.type}")
                     null
