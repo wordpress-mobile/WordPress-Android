@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
@@ -560,7 +561,11 @@ public class PostStore extends Store {
             mPostRestClient.restorePost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.pushPost(payload.post, payload.site);
+            PostModel postToRestore = payload.post;
+            if (PostStatus.fromPost(postToRestore) == PostStatus.TRASHED) {
+                postToRestore.setStatus(PostStatus.PUBLISHED.toString());
+            }
+            mPostXMLRPCClient.restorePost(postToRestore, payload.site);
         }
     }
 
@@ -760,7 +765,11 @@ public class PostStore extends Store {
             mPostRestClient.pushPost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.pushPost(payload.post, payload.site);
+            PostModel postToPush = payload.post;
+            if (TextUtils.isEmpty(postToPush.getStatus())) {
+                postToPush.setStatus(PostStatus.PUBLISHED.toString());
+            }
+            mPostXMLRPCClient.pushPost(postToPush, payload.site);
         }
     }
 
