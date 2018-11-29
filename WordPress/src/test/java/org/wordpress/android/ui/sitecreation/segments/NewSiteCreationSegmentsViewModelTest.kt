@@ -99,8 +99,6 @@ class NewSiteCreationSegmentsViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchSegmentsUseCase: FetchSegmentsUseCase
 
-
-
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     @Mock private lateinit var uiStateObserver: Observer<UiState>
