@@ -13,6 +13,7 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
+import org.wordpress.android.util.AppLog
 
 sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -30,7 +31,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             suggestion.text = uiState.title
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             container.setOnClickListener {
-                uiState.onItemTapped.invoke()
+                uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
             }
         }
     }
@@ -56,7 +57,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             text.text = itemView.context.getText(uiState.messageResId)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
             itemView.setOnClickListener {
-                uiState.onItemTapped.invoke()
+                uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
             }
         }
     }

@@ -280,7 +280,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     sealed class VerticalsListItemUiState {
-        lateinit var onItemTapped: () -> Unit
+        var onItemTapped: (() -> Unit)? = null
 
         data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
                 VerticalsListItemUiState()

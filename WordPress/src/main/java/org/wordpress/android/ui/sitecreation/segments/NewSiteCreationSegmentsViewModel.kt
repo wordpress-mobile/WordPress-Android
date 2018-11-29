@@ -172,7 +172,7 @@ class NewSiteCreationSegmentsViewModel
             val iconUrl: String,
             val showDivider: Boolean
         ) : ItemUiState() {
-            lateinit var onItemTapped: () -> Unit
+            var onItemTapped: (() -> Unit)? = null
         }
     }
 }

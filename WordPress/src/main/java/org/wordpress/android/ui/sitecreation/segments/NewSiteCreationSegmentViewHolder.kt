@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.IMAGE
 
@@ -33,7 +34,9 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             title.text = uiState.title
             subtitle.text = uiState.subtitle
             imageManager.load(icon, IMAGE, uiState.iconUrl)
-            container.setOnClickListener { uiState.onItemTapped.invoke() }
+            container.setOnClickListener {
+                uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
+            }
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
         }
     }
