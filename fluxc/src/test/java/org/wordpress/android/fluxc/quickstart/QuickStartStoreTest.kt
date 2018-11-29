@@ -12,8 +12,19 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.*
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.*
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROWTH
 import org.wordpress.android.fluxc.test
 
 @RunWith(RobolectricTestRunner::class)
