@@ -1,8 +1,37 @@
 default_platform(:android)
 fastlane_require 'dotenv'
 
+SUPPORTED_LOCALES = [
+  { glotpress: "ar", google_play: "ar",  promo_config: {}},
+  { glotpress: "de", google_play: "de-DE",  promo_config: {} },
+  { glotpress: "en-gb", google_play: "en-US",  promo_config: {} },
+  { glotpress: "es", google_play: "es-ES",  promo_config: {} },
+  { glotpress: "fr", google_play: "fr-CA",  promo_config: {} },
+  { glotpress: "fr", google_play: "fr-FR",  promo_config: {} },
+  { glotpress: "he", google_play: "iw-IL",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "id", google_play: "id",  promo_config: {} },
+  { glotpress: "it", google_play: "it-IT",  promo_config: {} },
+  { glotpress: "ja", google_play: "ja-JP",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "ko", google_play: "ko-KR",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "nl", google_play: "nl-NL",  promo_config: {} },
+  { glotpress: "pl", google_play: "pl-PL",  promo_config: {text_size: 70} },
+  { glotpress: "pt-br", google_play: "pt-BR",  promo_config: {} },
+  { glotpress: "ru", google_play: "ru-RU",  promo_config: {text_size: 70} },
+  { glotpress: "sr", google_play:  "sr",  promo_config: {} },
+  { glotpress: "sv", google_play: "sv-SE",  promo_config: {} },
+  { glotpress: "th", google_play: "th",  promo_config: {} },
+  { glotpress: "tr", google_play: "tr-TR",  promo_config: {} },
+  { glotpress: "vi", google_play: "vi",  promo_config: {} },
+  { glotpress: "zh-cn", google_play: "zh-CN",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+  { glotpress: "zh-tw", google_play: "zh-TW",  promo_config: {font: "/Library/Fonts/Arial Unicode.ttf", text_size: 60} },
+].freeze
+
 platform :android do
 ########################################################################
+# Includes
+########################################################################
+import "./ScreenshotFastfile"
+
 # Environment
 ########################################################################
 Dotenv.load('~/.wpandroid-env.default')
@@ -33,6 +62,7 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
 
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
+
 
 #####################################################################################
 # update_ps_strings 
@@ -67,18 +97,18 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       release_version: options[:version])
   end 
 
-#####################################################################################
-# download_metadata_string 
-# -----------------------------------------------------------------------------------
-# This lane downloads the translated metadata (release notes,
-# app store strings, title, etc.) from GlotPress and updates the local files
-# -----------------------------------------------------------------------------------
-# Usage:
-# fastlane download_metadata_string build_number:<build_number> version:<version>
-#
-# Example:
-# fastlane download_metadata_string build_number:573 version:10.3
-#####################################################################################
+  #####################################################################################
+  # download_metadata_string 
+  # -----------------------------------------------------------------------------------
+  # This lane downloads the translated metadata (release notes,
+  # app store strings, title, etc.) from GlotPress and updates the local files
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane download_metadata_string build_number:<build_number> version:<version>
+  #
+  # Example:
+  # fastlane download_metadata_string build_number:573 version:10.3
+  #####################################################################################
   desc "Downloads translated metadata from GlotPress"
   lane :download_metadata_strings do |options| 
     values = options[:version].split('.')
@@ -89,35 +119,11 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       play_store_app_title: {desc:"title.txt", max_size: 50}
     }
 
-    metadata_locales = [
-      ["en-gb", "en-US"],
-      ["pl", "pl-PL"],
-      ["id", "id"],
-      ["ja", "ja-JP"],
-      ["fr", "fr-FR"],
-      ["fr", "fr-CA"],
-      ["ko", "ko-KR"],
-      ["zh-cn", "zh-CN"],
-      ["sv", "sv-SE"],
-      ["it", "it-IT"],
-      ["ru", "ru-RU"],
-      ["tr", "tr-TR"],
-      ["de", "de-DE"],
-      ["nl", "nl-NL"],
-      ["es", "es-ES"],
-      ["pt-br", "pt-BR"],
-      ["zh-tw", "zh-TW"],
-      ["he", "iw-IL"],
-      ["ar", "ar"],
-      ["sr",  "sr"],
-      ["th", "th"],
-      ["vi", "vi"]
-    ]
-
     delete_old_changelogs(build: options[:build_number])
     download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
       target_files: files, 
-      locales: metadata_locales)
+      locales: SUPPORTED_LOCALES,
+      download_path: Dir.pwd + "/fastlane/metadata/android")
   end 
 
 ########################################################################

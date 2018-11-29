@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 20:32:18+0000
+Translation-Revision-Date: 2018-11-18 21:29:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="history_detail_title">Revisione</string>
+    <string name="history_detail_button_previous">Precedente</string>
+    <string name="history_detail_button_next">Prossimo</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Per saperne di più</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Non mostrare più</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Torna indietro</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Modifica pagina</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Modifica articolo</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Stiamo lavorando al nuovissimo editor di WordPress. Puoi ancora modificare questa pagina, ma ti consigliamo di visualizzarla in anteprima prima della sua pubblicazione.</string>
+    <string name="dialog_gutenberg_compatibility_message">Stiamo lavorando al nuovissimo editor di WordPress. Puoi ancora modificare questo articolo, ma ti consigliamo di visualizzare l\'anteprima prima della pubblicazione.</string>
+    <string name="dialog_gutenberg_compatibility_title">Prima di continuare</string>
+    <string name="media_space_used">%1$s usato</string>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
+    <string name="enter_wpcom_or_jetpack_site">Inserisci un sito WordPress ospitato su WordPress.com o auto gestito connesso con Jetpack</string>
+    <string name="history_loading_revision">Caricamento della revisione</string>
+    <string name="history_loaded_revision">Revisione caricata</string>
+    <string name="history_load_dialog_button_positive">Carica</string>
+    <string name="history_footer_post">Articolo creato su %1$s a %2$s</string>
+    <string name="history_footer_page">Pagina creata su %1$s a %2$s</string>
+    <string name="history_empty_title">Ancora nessuna storia</string>
+    <string name="history_empty_subtitle_post">Quando fai delle modifiche al tuo articolo, sarai in grado di vedere qui la cronologia.</string>
+    <string name="history_empty_subtitle_page">Quando fai delle modifiche alla tiua pagina, sarai in grado di vedere qui la cronologia.</string>
+    <string name="description_user">Avatar utente</string>
     <string name="async_promo_description_schedule_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e programmata dietro le quinte! Prova!</string>
     <string name="async_promo_description_publish_post">Ora puoi abbandonare l’editor e il post verrà salvato e pubblicato dietro le quinte! Prova!</string>
     <string name="async_promo_description_publish_page">Ora puoi abbandonare l’editor e la pagina verrà salvata e pubblicata dietro le quinte! Prova!</string>
@@ -125,7 +148,7 @@ Language: it
     <string name="sign_out_wpcom_confirm_with_no_changes">Desideri disconnetterti da WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Sono presenti modifiche agli articoli che non sono state caricate sul sito. Se ti disconnetti ora, tutte le modifiche saranno eliminate dal tuo dispositivo. Desideri comunque disconnetterti?</string>
     <string name="people_empty_list_filtered_viewers">Ancora nessun visualizzatore</string>
-    <string name="people_empty_list_filtered_email_followers">Ancora nessun follower tramite e-mail</string>
+    <string name="people_empty_list_filtered_email_followers">Ancora nessun follower tramite email</string>
     <string name="people_empty_list_filtered_followers">Ancora nessun follower</string>
     <string name="people_empty_list_filtered_users">Ancora nessun utente</string>
     <string name="connection_service_facebook_notice">A partire dal 1 agosto 2018, Facebook non consente più la condivisione diretta degli articoli sui profili di Facebook. Le connessioni alle pagine di Facebook restano invariate.</string>
@@ -163,7 +186,7 @@ Language: it
     <string name="support_push_notification_message">Nuovo messaggio da \'Aiuto &amp; Supporto\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Non impostato</string>
-    <string name="support_contact_email">E-mail di contatto</string>
+    <string name="support_contact_email">Email di contatto</string>
     <string name="application_log_button">Registro applicazione</string>
     <string name="my_tickets">I miei ticket</string>
     <string name="activity_log_rewind_dialog_message">Sei sicuro di voler riportare il tuo sito al %1$s alle %2$s? Questo rimuoverà tutti i contenuti e le opzioni create o modificate dopo di allora.</string>
@@ -183,13 +206,13 @@ Language: it
     <string name="comment_read_source_post">Leggi l\'articolo sorgente</string>
     <string name="sites">Siti</string>
     <string name="signup_magic_link_title">Link inviato</string>
-    <string name="signup_email_screen_title">Registrazione via e-mail</string>
+    <string name="signup_email_screen_title">Registrazione via email</string>
     <string name="verification_2fa_screen_title">Verifica del codice</string>
     <string name="selfhosted_site_login_title">Credenziali di accesso</string>
     <string name="magic_link_sent_login_title">Link inviato</string>
     <string name="magic_link_login_title">Accesso tramite link</string>
     <string name="site_address_login_title">Accesso tramite indirizzo sito</string>
-    <string name="email_address_login_title">Accesso tramite indirizzo e-mail</string>
+    <string name="email_address_login_title">Accesso tramite indirizzo email</string>
     <string name="alternatively">In alternativa:</string>
     <string name="reader_empty_saved_posts_description">Tocca %s per salvare un articolo nel tuo elenco.</string>
     <string name="reader_empty_saved_posts_title">Non è stato ancora salvato nessun articolo.</string>
@@ -239,7 +262,7 @@ Language: it
     <string name="plugin_install_site_ineligible_non_admin_user">La funzionalità di plugin richiede privilegi di amministratore.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">Il plugin non può essere installato su siti VIP.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">Il plugin non può essere installato a causa di limitazioni di spazio del disco.</string>
-    <string name="plugin_install_site_ineligible_email_unverified">La funzionalità di plugin richiede un indirizzo e-mail verificato.</string>
+    <string name="plugin_install_site_ineligible_email_unverified">La funzionalità di plugin richiede un indirizzo email verificato.</string>
     <string name="plugin_install_site_ineligible_site_private">La funzionalità di plugin richiede che il sito sia pubblico.</string>
     <string name="plugin_install_site_ineligible_no_business_plan">La funzionalità di plugin richiede un piano Business.</string>
     <string name="plugin_install_site_ineligible_not_using_custom_domain">La funzionalità di plugin richiede un dominio personalizzato.</string>
@@ -250,13 +273,13 @@ Language: it
     <string name="plugin_install_first_plugin_confirmation_dialog_message">L\'installazione del primo plugin sul tuo sito può richiedere fino a 1 minuto. In questo periodo di tempo non potrai apportare modifiche al sito.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Installa plugin</string>
     <string name="notification_settings_followed_dialog_title">Notifiche</string>
-    <string name="notification_settings_followed_dialog_email_comments">Inviami i nuovi commenti per e-mail</string>
+    <string name="notification_settings_followed_dialog_email_comments">Inviami i nuovi commenti per email</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">Settimanalmente</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">Immediatamente</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Giornalmente</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Nuovi articoli</string>
     <string name="notification_settings_followed_dialog_notification_posts_description">Ricevi notifiche per i nuovi articoli da questo sito</string>
-    <string name="notification_settings_followed_dialog_email_posts_switch">Inviami i nuovi articoli per e-mail</string>
+    <string name="notification_settings_followed_dialog_email_posts_switch">Inviami i nuovi articoli per email</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Tutti i miei siti seguiti</string>
     <string name="notification_settings_category_followed_sites">Siti seguiti</string>
     <string name="content_description_person_reading_device_notification">Persona che legge dispositivo con notifiche</string>
@@ -379,7 +402,7 @@ Language: it
     <string name="release_notes_screen_title">Note di rilascio</string>
     <string name="site_creation_creating_failed_extended">Ci siamo imbattuti in un problema imprevisto. Che ne dici di un altro scatto?</string>
     <string name="signup_epilogue_error_avatar_view">Il tuo avatar è stato caricato e sarà disponibile a breve.</string>
-    <string name="email_not_registered_wpcom">Hmm, non siamo in grado di trovare un account WordPress.com connesso a questo indirizzo e-mail. Prova ad accedere con il seguente link usando l’indirizzo del tuo sito.</string>
+    <string name="email_not_registered_wpcom">Hmm, non siamo in grado di trovare un account WordPress.com connesso a questo indirizzo email. Prova ad accedere con il seguente link usando l’indirizzo del tuo sito.</string>
     <string name="permissions_denied_message">Sembra che tu abbia disattivato le autorizzazioni necessarie per questa funzionalità.&lt;br/>&lt;br/>Per cambiare, modifica le tue autorizzazioni e assicurati che sia attivo &lt;strong>%s&lt;/strong>.</string>
     <string name="permissions_denied_title">Autorizzazioni</string>
     <string name="plugin_caption_featured">In evidenza</string>
@@ -482,12 +505,12 @@ Language: it
     <string name="username_changer_action">Salva</string>
     <string name="content_description_add_avatar">Aggiungi avatar</string>
     <string name="signup_with_google_button">Registrati con Google</string>
-    <string name="signup_with_email_button">Registrati con l\'e-mail</string>
-    <string name="signup_user_exists">L\'e-mail esiste già su WordPress.com.\nContinuare con l\'accesso.</string>
+    <string name="signup_with_email_button">Registrati con l\'email</string>
+    <string name="signup_user_exists">L\'email esiste già su WordPress.com.\nContinuare con l\'accesso.</string>
     <string name="signup_updating_account">Aggiornamento dell\'account…</string>
     <string name="signup_terms_of_service_text">Registrandoti, accetti i nostri %1$sTermini di servizio%2$s.</string>
-    <string name="signup_magic_link_progress">Invio e-mail in corso</string>
-    <string name="signup_magic_link_message">Ti abbiamo inviato un link per l\'accesso. Controlla la tua e-mail su questo dispositivo e premi il link per terminare l\'iscrizione.</string>
+    <string name="signup_magic_link_progress">Invio email in corso</string>
+    <string name="signup_magic_link_message">Ti abbiamo inviato un link per l\'accesso. Controlla la tua email su questo dispositivo e premi il link per terminare l\'iscrizione.</string>
     <string name="signup_magic_link_error_button_positive">Riprova</string>
     <string name="signup_magic_link_error_button_negative">Chiudi</string>
     <string name="signup_magic_link_error">Si è verificato un errore durante l\'invio dell\'email. Puoi riprovare ora o chiudere e riprovare più tardi.</string>
@@ -500,8 +523,8 @@ Language: it
     <string name="signup_epilogue_error_button_negative">Riconverti</string>
     <string name="signup_epilogue_error_generic">Si è verificato un errore durante l\'aggiornamento del tuo account. Puoi riprovare o annullare le modifiche per continuare.</string>
     <string name="signup_epilogue_error_avatar">Si è verificato un errore durante l\'aggiornamento del tuo avatar.</string>
-    <string name="signup_email_header">Per creare il tuo nuovo account WordPress.com, inserisci l\'indirizzo e-mail.</string>
-    <string name="signup_email_error_generic">Si è verificato un errore durante il controllo dell\'indirizzo e-mail.</string>
+    <string name="signup_email_header">Per creare il tuo nuovo account WordPress.com, inserisci l\'indirizzo email.</string>
+    <string name="signup_email_error_generic">Si è verificato un errore durante il controllo dell\'indirizzo email.</string>
     <string name="sign_up">Registrati a WordPress.com</string>
     <string name="enter_username_instead">Accedi con il tuo nome utente.</string>
     <string name="enter_site_address_instead">Accedi inserendo l\'indirizzo del tuo sito.</string>
@@ -645,14 +668,14 @@ Language: it
     <string name="jetpack_disconnect_pref_title">\"Esegui la disconnessione da WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">Puoi includere nella lista bianca un indirizzo IP o serie di indirizzi per evitare che vengano bloccati da Jetpack. Sono accettati indirizzi IPv4 e IPv6. Per specificare un intervallo, inserisci il valore minimo e il valore massimo separati da un trattino. Esempio: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Richiede l\'Autenticazione a due passaggi</string>
-    <string name="jetpack_match_wpcom_via_email_title">Confronta gli account tramite e-mail</string>
+    <string name="jetpack_match_wpcom_via_email_title">Confronta gli account tramite email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Consenti l\'accesso a WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Accesso a WordPress.com</string>
     <string name="jetpack_brute_force_whitelist_title">Indirizzi IP inclusi nella lista bianca</string>
     <string name="jetpack_prevent_brute_force_title">Blocca i tentativi di accesso dannosi</string>
     <string name="jetpack_prevent_brute_force_category_title">Protezione dagli attacchi di forza bruta</string>
     <string name="jetpack_send_wp_notifications_title">Invia notifiche push</string>
-    <string name="jetpack_send_email_notifications_title">Invia notifiche via e-mail</string>
+    <string name="jetpack_send_email_notifications_title">Invia notifiche via email</string>
     <string name="jetpack_monitor_uptime_title">Monitora i tempi di disponibilità del tuo sito</string>
     <string name="jetpack_security_setting_title">Sicurezza</string>
     <string name="jetpack_site_settings_category_title">Impostazioni di Jetpack</string>
@@ -684,7 +707,7 @@ Language: it
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrazione dispositivo</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Scegli un suono</string>
     <string name="notification_settings_category_sights_and_sounds">Immagini e suoni</string>
-    <string name="notification_settings_item_other_account_emails">E-mail da WordPress.com</string>
+    <string name="notification_settings_item_other_account_emails">Email da WordPress.com</string>
     <string name="notification_settings_item_other_pending_drafts">Avvisami quando presenti articoli in bozza</string>
     <string name="notification_settings_item_other_comments_other_blogs">Commenti su altri siti</string>
     <string name="notification_settings_category_other">Altro</string>
@@ -746,16 +769,16 @@ Language: it
     <string name="login_continue">Continua</string>
     <string name="connect_more">Connetti un altro sito</string>
     <string name="enter_wpcom_password">Inserisci la tua password WordPress.com.</string>
-    <string name="login_magic_link_email_requesting">Richiesta e-mail di accesso</string>
-    <string name="login_magic_links_sent_label">Il tuo link sta arrivando! Controlla la tua e-mail su questo dispositivo e premi il link nell\'e-mail ricevuta da WordPress.com.</string>
-    <string name="login_magic_links_label">Ti invieremo per e-mail un link per accedere subito, senza password. Non ci sarà più bisogno di digitare la password!</string>
+    <string name="login_magic_link_email_requesting">Richiesta email di accesso</string>
+    <string name="login_magic_links_sent_label">Il tuo link sta arrivando! Controlla la tua email su questo dispositivo e premi il link nell\'email ricevuta da WordPress.com.</string>
+    <string name="login_magic_links_label">Ti invieremo per email un link per accedere subito, senza password. Non ci sarà più bisogno di digitare la password!</string>
     <string name="password_incorrect">Sembra che la password non sia corretta. Verifica attentamente le informazioni e riprova.</string>
     <string name="requesting_otp">Richiesta codice di verifica tramite SMS.</string>
     <string name="login_text_otp">Inviami un codice.</string>
     <string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
-    <string name="open_mail">Apri mail</string>
+    <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
-    <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo e-mail per gestire tutti i tuoi siti WordPress.com.</string>
+    <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
     <string name="login_promo_text_jetpack">Gestisci il tuo sito con Jetpack mentre sei in movimento: hai WordPress in tasca.</string>
     <string name="login_promo_text_notifications">Le tue notifiche viaggiano con te: vedi i commenti e i Mi piace in tempo reale.</string>
     <string name="login_promo_text_anytime">Tieni il passo con i tuoi siti preferiti e partecipa a una conversazione ovunque e in qualsiasi momento.</string>
@@ -794,7 +817,7 @@ Language: it
     <string name="post_settings_post_format">Formato articoli</string>
     <string name="post_settings_tags">tag</string>
     <string name="post_settings_slug">Abbreviazione</string>
-    <string name="post_settings_excerpt">Estratto</string>
+    <string name="post_settings_excerpt">Riassunto</string>
     <string name="post_settings_not_set">Non impostato</string>
     <string name="post_settings_more_options">Altre opzioni</string>
     <string name="post_settings_categories_and_tags">Categorie e tag</string>
@@ -893,19 +916,19 @@ Language: it
     <string name="media_insert_title">Aggiungi più fotografie insieme</string>
     <string name="media_gallery_column_count_multi">%d colonne</string>
     <string name="media_gallery_column_count_single">1 colonna</string>
-    <string name="editor_confirm_email_prompt_negative">Invia di nuovo l\'e-mail</string>
-    <string name="editor_confirm_email_prompt_message_with_email">Ti abbiamo inviato un\'e-mail a %s la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
-    <string name="editor_confirm_email_prompt_message">Ti abbiamo inviato un\'e-mail la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
-    <string name="editor_confirm_email_prompt_title">Conferma il tuo indirizzo e-mail</string>
-    <string name="toast_verification_email_send_error">Errore durante l\'invio dell\'e-mail di verifica. Hai già ricevuto l\'e-mail di verifica?</string>
-    <string name="toast_verification_email_sent">E-mail di verifica inviata, controlla la posta in arrivo</string>
+    <string name="editor_confirm_email_prompt_negative">Invia di nuovo l\'email</string>
+    <string name="editor_confirm_email_prompt_message_with_email">Ti abbiamo inviato un\'email a %s la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+    <string name="editor_confirm_email_prompt_message">Ti abbiamo inviato un\'email la prima volta che ti sei registrato. Apri il messaggio e fai clic sul pulsante blu per attivare la pubblicazione.</string>
+    <string name="editor_confirm_email_prompt_title">Conferma il tuo indirizzo email</string>
+    <string name="toast_verification_email_send_error">Errore durante l\'invio dell\'email di verifica. Hai già ricevuto l\'email di verifica?</string>
+    <string name="toast_verification_email_sent">Email di verifica inviata, controlla la posta in arrivo</string>
     <string name="toast_saving_post_as_draft">Salvataggio dell\'articolo come bozza</string>
     <string name="photo_picker_capture_video">Fai un video</string>
     <string name="photo_picker_capture_photo">Fai una foto</string>
     <string name="delete_site_warning_subtitle">Attenzione! Una volta eliminato, un sito non potrà essere recuperato. Verifica prima di procedere.</string>
     <string name="delete_site_warning">Tutti i tuoi articoli, le immagini e i dati saranno eliminati. L\'indirizzo del sito (%s) andrà perso.</string>
     <string name="delete_site_warning_title">Eliminare sito?</string>
-    <string name="start_over_email_intent_error">Impossibile inviare un\'e-mail</string>
+    <string name="start_over_email_intent_error">Impossibile inviare un\'email</string>
     <string name="start_over_email_body">Voglio ricominciare con il sito %s</string>
     <string name="start_over_email_subject">Ricomincia con il sito %s</string>
     <string name="site_picker_remove_site_error">Errore durante la rimozione del sito. Riprova più tardi</string>
@@ -1092,7 +1115,7 @@ Language: it
     <string name="plans_loading_error">Non è stato possibile caricare i piani</string>
     <string name="plans">Piani</string>
     <string name="plan">Piano</string>
-    <string name="export_your_content_message">I tuoi articoli, pagine e impostazioni ti saranno inviate via e-mail all\'indirizzo %s.</string>
+    <string name="export_your_content_message">I tuoi articoli, pagine e impostazioni ti saranno inviate via email all\'indirizzo %s.</string>
     <string name="export_your_content">Esporta i contenuti</string>
     <string name="export_email_sent">Email di esportazione inviata!</string>
     <string name="exporting_content_progress">Esportazione dei contenuti in corso …</string>
@@ -1164,7 +1187,7 @@ Language: it
     <string name="days_quantity_one">1 giorno</string>
     <string name="web_address">Indirizzo web</string>
     <string name="primary_site">Sito principale</string>
-    <string name="pending_email_change_snackbar">Fai clic sul link di verifica nell\'e-mail inviata a %1$s per confermare il tuo nuovo indirizzo</string>
+    <string name="pending_email_change_snackbar">Fai clic sul link di verifica nell\'email inviata a %1$s per confermare il tuo nuovo indirizzo</string>
     <string name="editor_toast_uploading_please_wait">Al momento stai caricando file multimediali. Attendi il termine dell\'operazione.</string>
     <string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
     <string name="post_settings_set_featured_image">Imposta Immagine in Evidenza</string>
@@ -1173,7 +1196,7 @@ Language: it
     <string name="editor_content_placeholder">Condividi la tua storia qui…</string>
     <string name="editor_page_title_placeholder">Titolo della pagina</string>
     <string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
-    <string name="email_address">Indirizzo e-mail</string>
+    <string name="email_address">Indirizzo email</string>
     <string name="preference_editor">Editor</string>
     <string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>
     <string name="dlg_sure_to_delete_comment">Eliminare in modo permanente questo commento?</string>
@@ -1218,7 +1241,7 @@ Language: it
     <string name="site_settings_paging_dialog_description">Suddividi il flusso dei commenti in più pagine.</string>
     <string name="site_settings_paging_dialog_header">Commenti per pagina</string>
     <string name="site_settings_close_after_dialog_title">Chiudi commenti</string>
-    <string name="site_settings_blacklist_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'e-mail o nell\'IP, verrà contrassegnato come spam. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
+    <string name="site_settings_blacklist_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'email o nell\'IP, verrà contrassegnato come spam. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
     <string name="site_settings_hold_for_moderation_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'e-mail o nell\'IP, verrà inserito nella coda di moderazione. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Inserisci una parola o una frase</string>
     <string name="site_settings_list_editor_no_items_text">Nessun elemento</string>
@@ -1238,7 +1261,7 @@ Language: it
     <string name="site_settings_multiple_links_hint">Ignora limite di link da utenti conosciuti</string>
     <string name="site_settings_whitelist_hint">L\'autore del commento deve avere un commento già approvato in precedenza</string>
     <string name="site_settings_user_account_required_hint">Gli utenti devono essere registrati ed aver effettuato l\'accesso per poter inviare commenti</string>
-    <string name="site_settings_identity_required_hint">L\'autore del commento deve inserire nome e indirizzo e-mail</string>
+    <string name="site_settings_identity_required_hint">L\'autore del commento deve inserire nome e indirizzo email</string>
     <string name="site_settings_paging_hint">Visualizza commenti in parti di dimensioni specifiche</string>
     <string name="site_settings_threading_hint">Consenti commenti nidificati per una data profondità</string>
     <string name="site_settings_sort_by_hint">Determina l\'ordine in cui i commenti vengono visualizzati</string>
@@ -1274,7 +1297,7 @@ Language: it
     <string name="site_settings_threading_title">Flusso</string>
     <string name="site_settings_sort_by_title">Ordina per</string>
     <string name="site_settings_account_required_title">Gli utenti devono essere registrati</string>
-    <string name="site_settings_identity_required_title">Devono includere nome ed e-mail</string>
+    <string name="site_settings_identity_required_title">Devono includere nome ed email</string>
     <string name="site_settings_receive_pingbacks_title">Ricevi pingback</string>
     <string name="site_settings_send_pingbacks_title">Invia pingback</string>
     <string name="site_settings_allow_comments_title">Consenti commenti</string>
@@ -1367,13 +1390,13 @@ Language: it
     <string name="local_draft_explainer">Questo articolo è una bozza locale che non è stata pubblicata</string>
     <string name="local_changes_explainer">Questo articolo contiene modifiche locali che non sono state pubblicate</string>
     <string name="notifications_push_summary">Impostazioni per le notifiche visualizzate sul dispositivo.</string>
-    <string name="notifications_email_summary">Impostazioni per le notifiche inviate all\'e-mail associata al tuo account.</string>
+    <string name="notifications_email_summary">Impostazioni per le notifiche inviate all\'email associata al tuo account.</string>
     <string name="notifications_tab_summary">Impostazioni per le notifiche visualizzate nella scheda Notifiche.</string>
     <string name="notifications_disabled">Le notifiche della app sono state disattivate. Tocca qui per attivarle in Impostazioni.</string>
     <string name="notification_types">Tipi di notifiche</string>
     <string name="error_loading_notifications">Impossibile caricare le impostazioni delle notifiche</string>
     <string name="comment_likes">Mi piace dei commenti</string>
-    <string name="email">E-mail</string>
+    <string name="email">Email</string>
     <string name="notifications_tab">Scheda Notifiche</string>
     <string name="app_notifications">Notifiche della app</string>
     <string name="notification_settings_item_other_account_emails_summary">Invieremo sempre email importanti riguardanti il tuo account, ma potresti ricevere anche altre utili informazioni.</string>
@@ -1447,7 +1470,7 @@ Language: it
     <string name="stats_empty_search_terms_desc">Ottieni maggiori informazioni sul tuo traffico di ricerca scoprendo i termini utilizzati dai visitatori per trovare il tuo sito.</string>
     <string name="stats_followers_total_wpcom_paged">Mostra %1$d - %2$d di %3$s follower WordPress.com</string>
     <string name="stats_search_terms_unknown_search_terms">Termini di ricerca sconosciuti</string>
-    <string name="stats_followers_total_email_paged">Mostra %1$d - %2$d di %3$s follower e-mail</string>
+    <string name="stats_followers_total_email_paged">Mostra %1$d - %2$d di %3$s follower email</string>
     <string name="error_notification_open">Impossibile aprire la notifica</string>
     <string name="publisher">Editore:</string>
     <string name="reader_empty_posts_request_failed">Impossibile recuperare gli articoli</string>
@@ -1502,9 +1525,9 @@ Language: it
     <string name="stats_comments_by_authors">Per autori</string>
     <string name="stats_comments_total_comments_followers">Totale articoli con commento dei follower: %1$s</string>
     <string name="stats_followers_total_wpcom">Follower WordPress.com totali: %1$s</string>
-    <string name="stats_followers_email_selector">E-mail</string>
+    <string name="stats_followers_email_selector">Email</string>
     <string name="stats_followers_wpcom_selector">wordpress.com</string>
-    <string name="stats_followers_total_email">Follower e-mail totali: %1$s</string>
+    <string name="stats_followers_total_email">Follower email totali: %1$s</string>
     <string name="stats_followers_seconds_ago">pochi secondi fa</string>
     <string name="stats_followers_a_minute_ago">un minuto fa</string>
     <string name="stats_followers_days">%1$d giorni</string>
@@ -1570,8 +1593,8 @@ Language: it
     <string name="forgot_password">Password dimenticata?</string>
     <string name="help">Aiuto</string>
     <string name="username_or_password_incorrect">Il nome utente o la password immessi non sono corretti</string>
-    <string name="email_invalid">Inserisci un indirizzo e-mail valido</string>
-    <string name="invalid_email_message">Il tuo indirizzo e-mail non è valido</string>
+    <string name="email_invalid">Inserisci un indirizzo email valido</string>
+    <string name="invalid_email_message">Il tuo indirizzo email non è valido</string>
     <string name="error_downloading_image">Errore durante il download dell\'immagine</string>
     <string name="error_load_comment">Impossibile caricare il commento</string>
     <string name="error_edit_comment">Si è verificato un errore durante la modifica del commento</string>
@@ -1725,7 +1748,7 @@ Language: it
     <string name="sign_in">Accedi</string>
     <string name="loading">Caricamento in corso…</string>
     <string name="httppassword">Password HTTP</string>
-    <string name="httpuser">HTTP nome utente</string>
+    <string name="httpuser">Nome utente HTTP</string>
     <string name="error_media_upload">Si è verificato un errore durante il caricamento</string>
     <string name="publish_date">Pubblica</string>
     <string name="post_content">Contenuto (tocca per aggiungere testo e file multimediali)</string>

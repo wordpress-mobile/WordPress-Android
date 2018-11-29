@@ -10,8 +10,6 @@ Language: pt_BR
     <string name="enter_wpcom_or_jetpack_site">Informe um site feito no WordPress.com ou do feito com o WordPress.org e conectado ao Jetpack.</string>
     <string name="history_loading_revision">Carregando revisão</string>
     <string name="history_loaded_revision">Revisão carregada</string>
-    <string name="history_load_dialog_title">Carregar revisão</string>
-    <string name="history_load_dialog_message">Você deseja carregar a revisão de %1$s as %2$s?</string>
     <string name="history_load_dialog_button_positive">Carregar</string>
     <string name="history_footer_post">Post criado em %1$s as %2$s</string>
     <string name="history_footer_page">Página criada em %1$s as %2$s</string>

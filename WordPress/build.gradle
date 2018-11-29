@@ -41,8 +41,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-136"
-        versionCode 639
+        versionName "alpha-138"
+        versionCode 644
         minSdkVersion 21
         targetSdkVersion 26
 
@@ -51,6 +51,11 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'x86'
         }
+
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+
+        buildConfigField "boolean", "REVISIONS_ENABLED", "false"
     }
 
     flavorDimensions "buildType"
@@ -176,6 +181,20 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestCompile 'tools.fastlane:screengrab:1.2.0',  {
+        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
+    }
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
@@ -309,7 +328,7 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android {
         signingConfigs {
             release {
-                storeFile = file(project.storeFile)
+                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
                 storePassword = project.storePassword
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword
