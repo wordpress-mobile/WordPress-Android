@@ -30,7 +30,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="315"
+            line="282"
             column="9"/>
     </issue>
 
@@ -41,7 +41,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="317"
+            line="284"
             column="9"/>
     </issue>
 
@@ -52,7 +52,7 @@
         errorLine2="                   ~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/GutenbergEditorFragment.java"
-            line="1499"
+            line="1478"
             column="20"/>
     </issue>
 
