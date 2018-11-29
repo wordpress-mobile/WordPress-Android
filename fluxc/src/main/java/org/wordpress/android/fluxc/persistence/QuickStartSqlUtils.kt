@@ -104,6 +104,7 @@ class QuickStartSqlUtils
         val model = getTask(siteId, task) ?: QuickStartTaskModel()
         model.siteId = siteId
         model.taskName = task.toString()
+        model.taskType = task.taskType.toString()
         model.isDone = isDone
         insertOrUpdateQuickStartTaskModel(model)
     }
@@ -112,6 +113,7 @@ class QuickStartSqlUtils
         val model = getTask(siteId, task) ?: QuickStartTaskModel()
         model.siteId = siteId
         model.taskName = task.toString()
+        model.taskType = task.taskType.toString()
         model.isShown = isShown
         insertOrUpdateQuickStartTaskModel(model)
     }
