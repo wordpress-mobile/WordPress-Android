@@ -11,16 +11,20 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.VisitResponse
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TAGS_AND_CATEGORIES_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TODAYS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.WP_COM_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TODAYS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,62 +32,70 @@ import javax.inject.Singleton
 class InsightsSqlUtils
 @Inject constructor(private val statsSqlUtils: StatsSqlUtils) {
     fun insert(site: SiteModel, data: AllTimeResponse) {
-        statsSqlUtils.insert(site, ALL_TIME_INSIGHTS, data)
+        insert(site, ALL_TIME_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: MostPopularResponse) {
-        statsSqlUtils.insert(site, MOST_POPULAR_INSIGHTS, data)
+        insert(site, MOST_POPULAR_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: PostResponse) {
-        statsSqlUtils.insert(site, LATEST_POST_DETAIL_INSIGHTS, data)
+        insert(site, LATEST_POST_DETAIL_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: PostStatsResponse) {
-        statsSqlUtils.insert(site, LATEST_POST_STATS_INSIGHTS, data)
+        insert(site, LATEST_POST_STATS_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: VisitResponse) {
-        statsSqlUtils.insert(site, TODAYS_INSIGHTS, data)
+        insert(site, TODAYS_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: FollowersResponse, followerType: FollowerType) {
-        statsSqlUtils.insert(site, followerType.toDbKey(), data)
+        insert(site, followerType.toDbKey(), data)
     }
 
     fun insert(site: SiteModel, data: CommentsResponse) {
-        statsSqlUtils.insert(site, COMMENTS_INSIGHTS, data)
+        insert(site, COMMENTS_INSIGHTS, data)
     }
 
     fun insert(site: SiteModel, data: TagsResponse) {
-        statsSqlUtils.insert(site, TAGS_AND_CATEGORIES_INSIGHTS, data)
+        insert(site, TAGS_AND_CATEGORIES_INSIGHTS, data)
+    }
+
+    fun insert(site: SiteModel, data: PublicizeResponse) {
+        insert(site, PUBLICIZE_INSIGHTS, data)
     }
 
     fun selectAllTimeInsights(site: SiteModel): AllTimeResponse? {
-        return statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
+        return select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)
     }
 
     fun selectMostPopularInsights(site: SiteModel): MostPopularResponse? {
-        return statsSqlUtils.select(site, MOST_POPULAR_INSIGHTS, MostPopularResponse::class.java)
+        return select(site, MOST_POPULAR_INSIGHTS, MostPopularResponse::class.java)
     }
 
     fun selectLatestPostDetail(site: SiteModel): PostResponse? {
-        return statsSqlUtils.select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
+        return select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)
     }
 
     fun selectLatestPostStats(site: SiteModel): PostStatsResponse? {
-        return statsSqlUtils.select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java)
+        return select(site, LATEST_POST_STATS_INSIGHTS, PostStatsResponse::class.java)
     }
 
     fun selectTodayInsights(site: SiteModel): VisitResponse? {
-        return statsSqlUtils.select(site, TODAYS_INSIGHTS, VisitResponse::class.java)
+        return select(site, TODAYS_INSIGHTS, VisitResponse::class.java)
     }
 
     fun selectFollowers(site: SiteModel, followerType: FollowerType): FollowersResponse? {
-        return statsSqlUtils.select(site, followerType.toDbKey(), FollowersResponse::class.java)
+        return select(site, followerType.toDbKey(), FollowersResponse::class.java)
     }
 
-    private fun FollowerType.toDbKey(): StatsSqlUtils.Key {
+    fun selectPublicizeInsights(site: SiteModel): PublicizeResponse? {
+        return select(site, PUBLICIZE_INSIGHTS, PublicizeResponse::class.java)
+    }
+
+    private fun FollowerType.toDbKey(): StatsSqlUtils.BlockType {
         return when (this) {
             WP_COM -> WP_COM_FOLLOWERS
             EMAIL -> EMAIL_FOLLOWERS
@@ -91,10 +103,18 @@ class InsightsSqlUtils
     }
 
     fun selectCommentInsights(site: SiteModel): CommentsResponse? {
-        return statsSqlUtils.select(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
+        return select(site, COMMENTS_INSIGHTS, CommentsResponse::class.java)
     }
 
     fun selectTags(site: SiteModel): TagsResponse? {
-        return statsSqlUtils.select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
+        return select(site, TAGS_AND_CATEGORIES_INSIGHTS, TagsResponse::class.java)
+    }
+
+    private fun <T> insert(site: SiteModel, blockType: BlockType, data: T) {
+        statsSqlUtils.insert(site, blockType, INSIGHTS, data)
+    }
+
+    private fun <T> select(site: SiteModel, blockType: BlockType, classOfT: Class<T>): T? {
+        return statsSqlUtils.select(site, blockType, INSIGHTS, classOfT)
     }
 }
