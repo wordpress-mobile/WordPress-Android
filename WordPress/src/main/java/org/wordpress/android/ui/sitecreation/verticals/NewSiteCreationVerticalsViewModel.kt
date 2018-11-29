@@ -42,7 +42,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
-    private val resultObservable: NewSiteCreationVerticalsResultObservable,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -62,6 +61,9 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
+
+    private val _verticalSelected = SingleLiveEvent<String?>()
+    val verticalSelected: LiveData<String?> = _verticalSelected
 
     init {
         dispatcher.register(fetchVerticalsUseCase)
@@ -113,7 +115,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
-        resultObservable.selectedVertical.value = null
+        _verticalSelected.value = null
     }
 
     fun updateQuery(query: String, delay: Int = throttleDelay) {
@@ -194,7 +196,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         model.name,
                         showDivider = index != lastItemIndex
                 )
-                itemUiState.onItemTapped = { resultObservable.selectedVertical.value = itemUiState.id }
+                itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
                 items.add(itemUiState)
             }
         }

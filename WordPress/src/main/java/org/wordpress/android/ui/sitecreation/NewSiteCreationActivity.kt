@@ -14,25 +14,23 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsResultObservable
+import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsResultObservable
+import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-class NewSiteCreationActivity : AppCompatActivity() {
-    @Inject protected lateinit var mViewModelFactory: ViewModelProvider.Factory
-    @Inject protected lateinit var segmentsResultObservable: NewSiteCreationSegmentsResultObservable
-    @Inject protected lateinit var verticalsResultObservable: NewSiteCreationVerticalsResultObservable
-    private lateinit var mMainViewModel: NewSiteCreationMainVM
+class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, VerticalsScreenListener {
+    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
         setContentView(R.layout.site_creation_activity)
-        mMainViewModel = ViewModelProviders.of(this, mViewModelFactory).get(NewSiteCreationMainVM::class.java)
-        mMainViewModel.start()
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
+        mainViewModel.start()
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)
@@ -41,17 +39,16 @@ class NewSiteCreationActivity : AppCompatActivity() {
     }
 
     private fun observeVMState() {
-        mMainViewModel.navigationTargetObservable
+        mainViewModel.navigationTargetObservable
                 .observe(this, Observer { target -> target?.let { showStep(target) } })
-        segmentsResultObservable.selectedSegment.observe(
-                this,
-                Observer { segmentId -> segmentId?.let { mMainViewModel.onSegmentSelected(segmentId) } }
-        )
+    }
 
-        verticalsResultObservable.selectedVertical.observe(
-                this,
-                Observer { verticalId -> mMainViewModel.onVerticalsScreenFinished(verticalId) }
-        )
+    override fun onSegmentSelected(segmentId: Long) {
+        mainViewModel.onSegmentSelected(segmentId)
+    }
+
+    override fun onVerticalSelected(verticalId: String?) {
+        mainViewModel.onVerticalsScreenFinished(verticalId)
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
@@ -87,7 +84,7 @@ class NewSiteCreationActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        mMainViewModel.onBackPressed()
+        mainViewModel.onBackPressed()
         super.onBackPressed()
     }
 }

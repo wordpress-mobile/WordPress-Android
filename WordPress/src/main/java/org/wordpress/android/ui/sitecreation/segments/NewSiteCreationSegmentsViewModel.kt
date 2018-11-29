@@ -30,7 +30,6 @@ class NewSiteCreationSegmentsViewModel
 @Inject constructor(
     private val dispatcher: Dispatcher,
     private val fetchSegmentsUseCase: FetchSegmentsUseCase,
-    private val resultObservable: NewSiteCreationSegmentsResultObservable,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext
 ) : ViewModel(), CoroutineScope {
@@ -44,6 +43,9 @@ class NewSiteCreationSegmentsViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _segmentSelected = MutableLiveData<Long>()
+    val segmentSelected: LiveData<Long> = _segmentSelected
 
     fun start() {
         if (isStarted) return
@@ -94,7 +96,7 @@ class NewSiteCreationSegmentsViewModel
     }
 
     fun onSegmentSelected(segmentId: Long) {
-        resultObservable.selectedSegment.value = segmentId
+        _segmentSelected.value = segmentId
     }
 
     // TODO analytics

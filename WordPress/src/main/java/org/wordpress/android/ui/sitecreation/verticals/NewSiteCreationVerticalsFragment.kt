@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
@@ -53,7 +54,17 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var searchEditTextProgressBar: View
     private lateinit var clearAllButton: View
 
+    private lateinit var verticalsScreenListener: VerticalsScreenListener
+
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is VerticalsScreenListener) {
+            throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
+        }
+        verticalsScreenListener = context
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -179,6 +190,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             searchEditText.setText("")
         })
 
+        viewModel.verticalSelected.observe(this, Observer {
+            verticalsScreenListener.onVerticalSelected(it)
+        })
         viewModel.start(segmentId)
     }
 
