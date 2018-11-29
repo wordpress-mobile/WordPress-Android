@@ -36,6 +36,9 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAnd
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.DaysListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.MonthsListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.WeeksListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
@@ -108,7 +111,10 @@ class StatsListFragment : DaggerFragment() {
 
         val viewModelClass = when (statsType) {
             INSIGHTS -> InsightsListViewModel::class.java
-            else -> DaysListViewModel::class.java
+            StatsListType.DAYS -> DaysListViewModel::class.java
+            StatsListType.WEEKS -> WeeksListViewModel::class.java
+            StatsListType.MONTHS -> MonthsListViewModel::class.java
+            StatsListType.YEARS -> YearsListViewModel::class.java
         }
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)

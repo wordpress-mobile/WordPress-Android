@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
@@ -30,7 +31,7 @@ constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore
-) : BaseStatsUseCase(ALL_TIME_STATS, mainDispatcher) {
+) : BaseStatsUseCase(POSTS_AND_PAGES, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(site, statsGranularity, PAGE_SIZE)
         return dbModel?.let { loadPostsAndPages(it) }
@@ -79,8 +80,8 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore
-    ) {
-        fun build(statsGranularity: StatsGranularity) =
-                PostsAndPagesUseCase(statsGranularity, mainDispatcher, postsAndPageViewsStore)
+    ): UseCaseFactory {
+        override fun build(granularity: StatsGranularity) =
+                PostsAndPagesUseCase(granularity, mainDispatcher, postsAndPageViewsStore)
     }
 }

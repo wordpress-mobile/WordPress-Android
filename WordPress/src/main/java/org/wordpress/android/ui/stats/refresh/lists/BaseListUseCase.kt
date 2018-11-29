@@ -15,8 +15,8 @@ class BaseListUseCase
 constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher,
-    private val getStatsTypes: suspend (() -> List<StatsTypes>),
-    private val useCases: List<BaseStatsUseCase>
+    private val useCases: List<BaseStatsUseCase>,
+    private val getStatsTypes: suspend (() -> List<StatsTypes>)
 ) {
     private val liveData = combineMap(
             useCases.associateBy { it.type }.mapValues { entry -> entry.value.liveData }
@@ -36,7 +36,7 @@ constructor(
         loadItems(site, true, forced)
     }
 
-    suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
+    private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean = false) {
         withContext(bgDispatcher) {
             useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
             val items = getStatsTypes()

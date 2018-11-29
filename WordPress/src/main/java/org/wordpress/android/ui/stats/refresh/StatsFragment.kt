@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsList
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.MONTHS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.YEARS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -113,7 +114,7 @@ class StatsFragment : DaggerFragment() {
 
 class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        val statsTypes = listOf(INSIGHTS, DAYS, WEEKS, MONTHS)
+        val statsTypes = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
     }
 
     override fun getCount(): Int = statsTypes.size

@@ -20,6 +20,9 @@ class StatsViewModel
 @Inject constructor(
     @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
     @Named(DAY_STATS_USE_CASE) private val dayStatsUseCase: BaseListUseCase,
+    @Named(WEEK_STATS_USE_CASE) private val weekStatsUseCase: BaseListUseCase,
+    @Named(MONTH_STATS_USE_CASE) private val monthStatsUseCase: BaseListUseCase,
+    @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
@@ -45,8 +48,11 @@ class StatsViewModel
 
     private fun loadStats() {
         loadData {
-            insightsUseCase.loadInsightItems(site)
-            dayStatsUseCase.loadInsightItems(site)
+            insightsUseCase.refreshInsightItems(site)
+            dayStatsUseCase.refreshInsightItems(site)
+            weekStatsUseCase.refreshInsightItems(site)
+            monthStatsUseCase.refreshInsightItems(site)
+            yearStatsUseCase.refreshInsightItems(site)
         }
     }
 
@@ -73,6 +79,9 @@ class StatsViewModel
         loadData {
             insightsUseCase.refreshInsightItems(site, true)
             dayStatsUseCase.refreshInsightItems(site, true)
+            weekStatsUseCase.refreshInsightItems(site, true)
+            monthStatsUseCase.refreshInsightItems(site, true)
+            yearStatsUseCase.refreshInsightItems(site, true)
         }
     }
 }
