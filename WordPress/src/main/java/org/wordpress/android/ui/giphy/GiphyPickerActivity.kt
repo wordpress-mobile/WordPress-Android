@@ -17,17 +17,19 @@ import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensio
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
 import javax.inject.Inject
 
 /**
  * Allows searching of gifs from Giphy
  */
-class GiphyPickerActivity : AppCompatActivity() {
+class GiphyPickerActivity: AppCompatActivity() {
     /**
      * Used for loading images in [GiphyMediaViewHolder]
      */
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var viewModel: GiphyPickerViewModel
 
@@ -45,7 +47,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
-        viewModel = ViewModelProviders.of(this).get(GiphyPickerViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GiphyPickerViewModel::class.java)
 
         // We are intentionally reusing this layout since the UI is very similar.
         setContentView(R.layout.media_picker_activity)

@@ -5,7 +5,14 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import android.content.Context
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.IO
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.getDistinct
+import javax.inject.Inject
 
 /**
  * Holds the data for [GiphyPickerActivity]
@@ -13,14 +20,14 @@ import org.wordpress.android.util.getDistinct
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
  */
-class GiphyPickerViewModel(
+class GiphyPickerViewModel @Inject constructor(
+    private val mediaFetcher: MediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
      *
-     * This is only available in the constructor to allow for mocking with testing. The default value is generally
-     * what we want.
+     * This is only available in the constructor to allow mocking in tests.
      */
-    private val dataSourceFactory: GiphyPickerDataSourceFactory = GiphyPickerDataSourceFactory()
+    private val dataSourceFactory: GiphyPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
