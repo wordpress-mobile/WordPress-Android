@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -64,6 +65,7 @@ public class AppSettingsFragment extends PreferenceFragment
     private DetailListPreference mImageMaxSizePref;
     private DetailListPreference mImageQualityPref;
     private WPSwitchPreference mOptimizedVideo;
+    private WPSwitchPreference mEnableGutenberg;
     private DetailListPreference mVideoWidthPref;
     private DetailListPreference mVideoEncorderBitratePref;
     private PreferenceScreen mPrivacySettings;
@@ -131,6 +133,10 @@ public class AppSettingsFragment extends PreferenceFragment
         mOptimizedVideo =
                 (WPSwitchPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+
+        mEnableGutenberg =
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_enable_gutenberg, this);
         mVideoWidthPref =
                 (DetailListPreference) WPPrefUtils
                         .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
@@ -157,7 +163,19 @@ public class AppSettingsFragment extends PreferenceFragment
                                      String.valueOf(AppPrefs.getVideoOptimizeQuality()),
                                      getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
 
+        mEnableGutenberg.setChecked(AppPrefs.isGutenbergEditorEnabled());
+
+        if (BuildConfig.FLAVOR.equals("vanilla")) {
+            removeExperimentalCategory();
+        }
+
         updateEditorSettings();
+    }
+
+    private void removeExperimentalCategory() {
+        PreferenceCategory experimentalPreferenceCategory = (PreferenceCategory) findPreference(getString(R.string.pref_key_experimental_section));
+        PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
+        preferenceScreen.removePreference(experimentalPreferenceCategory);
     }
 
     @Override
@@ -281,6 +299,8 @@ public class AppSettingsFragment extends PreferenceFragment
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
                                          newValue.toString(),
                                          getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+        } else if (preference == mEnableGutenberg) {
+            AppPrefs.enableGutenbergEditor((Boolean) newValue);
         }
         return true;
     }

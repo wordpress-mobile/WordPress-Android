@@ -138,4 +138,18 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="@string/pref_key_experimental_section"
+        android:layout="@layout/wp_preference_category"
+        android:title="@string/preference_experimental">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_enable_gutenberg"
+            android:key="@string/pref_key_enable_gutenberg"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/site_settings_enable_gutenberg_summary"
+            android:title="@string/site_settings_enable_gutenberg"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -24,7 +24,9 @@ import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -162,6 +164,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.util.image.ImageManager;
+import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.util.AztecLog;
@@ -249,8 +252,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
-    private boolean mShowGutenbergEditor;
     private boolean mShowAztecEditor;
+    private boolean mForceAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
 
@@ -322,7 +325,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private ArrayList<Uri> mDroppedMediaUris;
 
     private boolean isModernEditor() {
-        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
+        return mShowNewEditor || mShowAztecEditor || shouldShowGutenbergEditor();
     }
 
     private Runnable mFetchMediaRunnable = new Runnable() {
@@ -359,9 +362,8 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
-        mShowGutenbergEditor = true; // AppPrefs.isGutenbergEditorEnabled();
-//        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
-//        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
+        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
+        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
         if (mShowAztecEditor) {
@@ -1019,6 +1021,7 @@ public class EditPostActivity extends AppCompatActivity implements
             showMenuItems = false;
         }
 
+
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
@@ -1157,7 +1160,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if (!(mShowAztecEditor || mShowGutenbergEditor)
+            if (!(mShowAztecEditor || shouldShowGutenbergEditor())
                         && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
@@ -1231,6 +1234,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+            } else if (itemId == R.id.aztecmenu) {
+                mForceAztecEditor = true;
+                ActivityUtils.hideKeyboard(this);
+                mSectionsPagerAdapter.notifyDataSetChanged();
             }
         }
         return false;
@@ -1974,7 +1981,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -1983,11 +1990,12 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
+
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
                     // TODO: Remove editor options after testing.
-                    if (mShowGutenbergEditor) {
+                    if (shouldShowGutenbergEditor()) {
                         return GutenbergEditorFragment.newInstance("", "",
                                 AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowAztecEditor) {
@@ -2006,6 +2014,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 default:
                     return EditPostPreviewFragment.newInstance(mPost);
             }
+        }
+
+        @Override public int getItemPosition(@NonNull Object object) {
+            return PagerAdapter.POSITION_NONE;
         }
 
         @Override
@@ -2053,6 +2065,13 @@ public class EditPostActivity extends AppCompatActivity implements
         public int getCount() {
             return NUM_PAGES_EDITOR;
         }
+    }
+
+    private boolean shouldShowGutenbergEditor() {
+        return !mForceAztecEditor &&
+               AppPrefs.isGutenbergEditorEnabled() &&
+               (mIsNewPost || TextUtils.isEmpty(mPost.getContent()) ||
+                GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
     }
 
     // Moved from EditPostContentFragment
@@ -3082,7 +3101,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (mShowGutenbergEditor) {
+        } else if (shouldShowGutenbergEditor()) {
             // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {

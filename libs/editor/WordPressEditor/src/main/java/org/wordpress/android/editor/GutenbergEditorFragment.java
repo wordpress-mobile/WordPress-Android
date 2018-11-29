@@ -603,7 +603,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             return false !== strpos( $content, '<!-- wp:' );
         }
      */
-    private boolean contentContainsGutenbergBlocks(String postContent) {
+    public static boolean contentContainsGutenbergBlocks(String postContent) {
         return (postContent != null && postContent.contains(GUTENBERG_BLOCK_START));
     }
 
