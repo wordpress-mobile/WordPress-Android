@@ -12,19 +12,8 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.QuickStartTaskModel
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROWTH
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.*
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.*
 import org.wordpress.android.fluxc.test
 
 @RunWith(RobolectricTestRunner::class)
@@ -54,7 +43,7 @@ class QuickStartStoreTest {
         quickStartStore.setDoneTask(testLocalSiteId, FOLLOW_SITE, true)
         quickStartStore.setDoneTask(testLocalSiteId, CREATE_SITE, true)
 
-        // making sure tasks are retrieved in a correct order
+        // making sure done tasks are retrieved in a correct order
         val completedCustomizeTasks = quickStartStore.getCompletedTasksByType(testLocalSiteId, CUSTOMIZE)
         assertEquals(3, completedCustomizeTasks.size)
         assertEquals(CREATE_SITE, completedCustomizeTasks[0])
@@ -66,6 +55,7 @@ class QuickStartStoreTest {
         assertEquals(FOLLOW_SITE, completedGrowthTasks[0])
         assertEquals(EXPLORE_PLANS, completedGrowthTasks[1])
 
+        // making sure undone tasks are retrieved in a correct order
         val uncompletedCustomizeTasks = quickStartStore.getUncompletedTasksByType(testLocalSiteId, CUSTOMIZE)
         assertEquals(3, uncompletedCustomizeTasks.size)
         assertEquals(UPLOAD_SITE_ICON, uncompletedCustomizeTasks[0])
@@ -81,14 +71,14 @@ class QuickStartStoreTest {
 
     @Test
     fun orderOfShownTasks() = test {
-        // marking tasks as done in random order
+        // marking tasks as shown in random order
         quickStartStore.setShownTask(testLocalSiteId, UPLOAD_SITE_ICON, true)
         quickStartStore.setShownTask(testLocalSiteId, CHECK_STATS, true)
         quickStartStore.setShownTask(testLocalSiteId, ENABLE_POST_SHARING, true)
         quickStartStore.setShownTask(testLocalSiteId, CREATE_NEW_PAGE, true)
         quickStartStore.setShownTask(testLocalSiteId, PUBLISH_POST, true)
 
-        // making sure tasks are retrieved in a correct order
+        // making sure shown tasks are retrieved in a correct order
         val shownCustomizeTasks = quickStartStore.getShownTasksByType(testLocalSiteId, CUSTOMIZE)
         assertEquals(2, shownCustomizeTasks.size)
         assertEquals(UPLOAD_SITE_ICON, shownCustomizeTasks[0])
@@ -100,6 +90,7 @@ class QuickStartStoreTest {
         assertEquals(PUBLISH_POST, shownGrowthTasks[1])
         assertEquals(CHECK_STATS, shownGrowthTasks[2])
 
+        // making sure unshown tasks are retrieved in a correct order
         val unshownCustomizeTasks = quickStartStore.getUnshownTasksByType(testLocalSiteId, CUSTOMIZE)
         assertEquals(4, unshownCustomizeTasks.size)
         assertEquals(CREATE_SITE, unshownCustomizeTasks[0])
