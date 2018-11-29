@@ -149,7 +149,7 @@ class PostAndPageViewsRestClientTest {
         kclass: Class<T>,
         data: T,
         error: WPComGsonNetworkError? = null,
-        cachingEnabled: Boolean = true
+        cachingEnabled: Boolean = false
     ): Response<T> {
         val response = if (error != null) Response.Error<T>(error) else Success(data)
         whenever(
