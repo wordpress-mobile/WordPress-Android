@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.giphy
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import org.wordpress.android.util.getDistinct
@@ -22,7 +21,7 @@ class GiphyPickerViewModel(
      * what we want.
      */
     private val dataSourceFactory: GiphyPickerDataSourceFactory = GiphyPickerDataSourceFactory()
-) : ViewModel() {
+) : CoroutineScopedViewModel() {
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
      * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
