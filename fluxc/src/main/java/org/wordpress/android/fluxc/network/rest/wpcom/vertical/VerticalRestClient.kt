@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedSegmentPromptPayload
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedSegmentsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedVerticalsPayload
+import java.util.Random
 import javax.inject.Singleton
 
 @Singleton
@@ -55,7 +56,13 @@ constructor(
     suspend fun fetchVerticals(searchQuery: String): FetchedVerticalsPayload {
         // TODO: Implement the actual call
         delay(1000)
-        val verticalList = (1..100).map { VerticalModel(name = "name-$it", verticalId = "vertical-id-$it") }
+        val verticalList = (1..100).map {
+            VerticalModel(
+                    name = "name-$it",
+                    verticalId = "vertical-id-$it",
+                    isNewUserVertical = it == 1
+            )
+        }
         return FetchedVerticalsPayload(verticalList)
     }
 }
