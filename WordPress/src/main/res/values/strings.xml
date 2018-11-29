@@ -2292,10 +2292,10 @@
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
-    <string name="quick_start_dialog_need_help_button_negative">No</string>
+    <string name="quick_start_dialog_need_help_button_negative">No Thanks</string>
     <string name="quick_start_dialog_need_help_button_neutral">Never</string>
-    <string name="quick_start_dialog_need_help_button_positive">Yes</string>
-    <string name="quick_start_dialog_need_help_message">Our Quick Start checklist walks you through the basics of setting up a new website.</string>
+    <string name="quick_start_dialog_need_help_button_positive">Accept</string>
+    <string name="quick_start_dialog_need_help_message">We\'ll walk you through the basics of building and growing your site.</string>
     <string name="quick_start_dialog_need_help_title">Want a little help getting started?</string>
     <string name="quick_start_dialog_publish_post_message">It\'s time!  Draft and publish your very first post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
