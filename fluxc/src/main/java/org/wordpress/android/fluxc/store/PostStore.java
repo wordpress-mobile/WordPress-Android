@@ -766,6 +766,7 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             PostModel postToPush = payload.post;
+            // empty status indicates that the post is new
             if (TextUtils.isEmpty(postToPush.getStatus())) {
                 postToPush.setStatus(PostStatus.PUBLISHED.toString());
             }
