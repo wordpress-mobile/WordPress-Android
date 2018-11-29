@@ -3,6 +3,15 @@ jdk: oraclejdk8
 sudo: required
 rvm: 2.0.0
 
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
 notifications:
   # Slack notification on failure (secured token).
   slack:
