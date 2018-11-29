@@ -9,8 +9,8 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
-private const val suggestionItemViewType: Int = 3
-private const val suggestionErrorViewType: Int = 4
+private const val suggestionItemViewType: Int = 1
+private const val suggestionErrorViewType: Int = 2
 
 class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHolder>() {
     private val items = mutableListOf<VerticalsListItemUiState>()

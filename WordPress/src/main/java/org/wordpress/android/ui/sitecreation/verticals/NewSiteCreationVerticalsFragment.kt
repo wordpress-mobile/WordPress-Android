@@ -79,6 +79,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
         initSearchEditText(rootView)
+        initClearTextButton(rootView)
         initHeader(rootView)
         initRecyclerView(rootView)
         initRetryButton(rootView)
@@ -106,6 +107,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
+        // we need to init the text watcher after the viewState has been restored otherwise the viewModel.updateQuery
+        // is called when the system sets the restored value to the EditText which results in an unnecessary request
         initTextWatcher()
     }
 
@@ -121,7 +124,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         val drawable = AppCompatResources.getDrawable(nonNullActivity, R.drawable.ic_search_white_24dp)
         drawable?.setTint(ContextCompat.getColor(nonNullActivity, R.color.grey))
         searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
-        initClearTextButton(rootView)
     }
 
     private fun initClearTextButton(rootView: ViewGroup) {
@@ -151,7 +153,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun initRetryButton(rootView: ViewGroup) {
         val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { _ -> viewModel.onFetchSegmentsPromptRetry() }
+        retryBtn.setOnClickListener { viewModel.onFetchSegmentsPromptRetry() }
     }
 
     private fun initSkipButton(rootView: ViewGroup) {
@@ -207,11 +209,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             if (contentLayout.layoutTransition == null) {
                 contentLayout.layoutTransition = LayoutTransition() // animate layout changes
             }
-            headerLayout.animate()
-                    .translationY(-headerLayout.height.toFloat())
+            headerLayout.animate().translationY(-headerLayout.height.toFloat())
         } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
-            headerLayout.animate()
-                    .translationY(0f)
+            headerLayout.animate().translationY(0f)
         }
         updateVisibility(headerLayout, uiState.isVisible)
         headerTitle.text = uiState.title

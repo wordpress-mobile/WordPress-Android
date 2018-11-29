@@ -38,44 +38,44 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState
 
-const val SEGMENT_ID = 1L
-const val ZERO_DELAY = 0
-const val EMPTY_STRING = ""
+private const val SEGMENT_ID = 1L
+private const val ZERO_DELAY = 0
+private const val EMPTY_STRING = ""
 
-const val DUMMY_HINT = "dummyHint"
-const val DUMMY_TITLE = "dummyTitle"
-const val DUMMY_SUBTITLE = "dummySubtitle"
+private const val DUMMY_HINT = "dummyHint"
+private const val DUMMY_TITLE = "dummyTitle"
+private const val DUMMY_SUBTITLE = "dummySubtitle"
 
-const val FIRST_MODEL_QUERY = "success_1"
-const val SECOND_MODEL_QUERY = "success_2"
-const val ERROR_MODEL_QUERY = "error"
+private const val FIRST_MODEL_QUERY = "success_1"
+private const val SECOND_MODEL_QUERY = "success_2"
+private const val ERROR_MODEL_QUERY = "error"
 
-const val FIRST_MODEL_NAME = "firstModel"
-const val FIRST_MODEL_ID = "1"
-const val SECOND_MODEL_NAME = "secondModel"
-const val SECOND_MODEL_ID = "2"
+private const val FIRST_MODEL_NAME = "firstModel"
+private const val FIRST_MODEL_ID = "1"
+private const val SECOND_MODEL_NAME = "secondModel"
+private const val SECOND_MODEL_ID = "2"
 
-val SUCCESSFUL_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
+private val SUCCESSFUL_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
         SEGMENT_ID,
         SegmentPromptModel(DUMMY_TITLE, DUMMY_SUBTITLE, DUMMY_HINT), null
 )
-val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
+private val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
         SEGMENT_ID,
         null,
         FetchSegmentPromptError(GENERIC_ERROR, null)
 )
 
-val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
+private val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FIRST_MODEL_QUERY,
         listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID)),
         null
 )
-val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
+private val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         SECOND_MODEL_QUERY,
         listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID)),
         null
 )
-val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
+private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         ERROR_MODEL_QUERY,
         emptyList(),
         FetchVerticalsError(GENERIC_ERROR, null)
