@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.persistance
+package org.wordpress.android.fluxc.persistance.stats
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -18,24 +18,28 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.M
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostStatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PostsResponse.PostResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.TagsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient.PublicizeResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.ALL_TIME_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.COMMENTS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.EMAIL_FOLLOWERS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_DETAIL_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.LATEST_POST_STATS_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.MOST_POPULAR_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.TAGS_AND_CATEGORIES_INSIGHTS
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.Key.WP_COM_FOLLOWERS
-import org.wordpress.android.fluxc.store.ALL_TIME_RESPONSE
-import org.wordpress.android.fluxc.store.FOLLOWERS_RESPONSE
-import org.wordpress.android.fluxc.store.LATEST_POST
-import org.wordpress.android.fluxc.store.MOST_POPULAR_RESPONSE
-import org.wordpress.android.fluxc.store.POST_STATS_RESPONSE
-import org.wordpress.android.fluxc.store.TOP_COMMENTS_RESPONSE
-import org.wordpress.android.fluxc.store.TAGS_RESPONSE
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_STATS_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.TAGS_AND_CATEGORIES_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.WP_COM_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.PUBLICIZE_INSIGHTS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.INSIGHTS
+import org.wordpress.android.fluxc.store.stats.ALL_TIME_RESPONSE
+import org.wordpress.android.fluxc.store.stats.FOLLOWERS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.LATEST_POST
+import org.wordpress.android.fluxc.store.stats.MOST_POPULAR_RESPONSE
+import org.wordpress.android.fluxc.store.stats.POST_STATS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.TOP_COMMENTS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.PUBLICIZE_RESPONSE
+import org.wordpress.android.fluxc.store.stats.TAGS_RESPONSE
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,7 +55,7 @@ class InsightsSqlUtilsTest {
 
     @Test
     fun `returns all time response from stats utils`() {
-        whenever(statsSqlUtils.select(site, ALL_TIME_INSIGHTS, AllTimeResponse::class.java)).thenReturn(
+        whenever(statsSqlUtils.select(site, ALL_TIME_INSIGHTS, INSIGHTS, AllTimeResponse::class.java)).thenReturn(
                 ALL_TIME_RESPONSE
         )
 
@@ -64,14 +68,15 @@ class InsightsSqlUtilsTest {
     fun `inserts all time response to stats utils`() {
         insightsSqlUtils.insert(site, ALL_TIME_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, ALL_TIME_INSIGHTS, ALL_TIME_RESPONSE)
+        verify(statsSqlUtils).insert(site, ALL_TIME_INSIGHTS, INSIGHTS, ALL_TIME_RESPONSE)
     }
 
     @Test
     fun `returns most popular response from stats utils`() {
-        whenever(statsSqlUtils.select(site, MOST_POPULAR_INSIGHTS, MostPopularResponse::class.java)).thenReturn(
-                MOST_POPULAR_RESPONSE
-        )
+        whenever(statsSqlUtils.select(site, MOST_POPULAR_INSIGHTS, INSIGHTS, MostPopularResponse::class.java))
+                .thenReturn(
+                        MOST_POPULAR_RESPONSE
+                )
 
         val result = insightsSqlUtils.selectMostPopularInsights(site)
 
@@ -82,14 +87,15 @@ class InsightsSqlUtilsTest {
     fun `inserts most popular response to stats utils`() {
         insightsSqlUtils.insert(site, MOST_POPULAR_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, MOST_POPULAR_INSIGHTS, MOST_POPULAR_RESPONSE)
+        verify(statsSqlUtils).insert(site, MOST_POPULAR_INSIGHTS, INSIGHTS, MOST_POPULAR_RESPONSE)
     }
 
     @Test
     fun `returns latest post detail response from stats utils`() {
-        whenever(statsSqlUtils.select(site, LATEST_POST_DETAIL_INSIGHTS, PostResponse::class.java)).thenReturn(
-                LATEST_POST
-        )
+        whenever(statsSqlUtils.select(site, LATEST_POST_DETAIL_INSIGHTS, INSIGHTS, PostResponse::class.java))
+                .thenReturn(
+                        LATEST_POST
+                )
 
         val result = insightsSqlUtils.selectLatestPostDetail(site)
 
@@ -100,7 +106,7 @@ class InsightsSqlUtilsTest {
     fun `inserts latest post detail response to stats utils`() {
         insightsSqlUtils.insert(site, LATEST_POST)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_INSIGHTS, LATEST_POST)
+        verify(statsSqlUtils).insert(site, LATEST_POST_DETAIL_INSIGHTS, INSIGHTS, LATEST_POST)
     }
 
     @Test
@@ -109,6 +115,7 @@ class InsightsSqlUtilsTest {
                 statsSqlUtils.select(
                         site,
                         LATEST_POST_STATS_INSIGHTS,
+                        INSIGHTS,
                         PostStatsResponse::class.java
                 )
         ).thenReturn(
@@ -124,7 +131,7 @@ class InsightsSqlUtilsTest {
     fun `inserts latest post views response to stats utils`() {
         insightsSqlUtils.insert(site, POST_STATS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, POST_STATS_RESPONSE)
+        verify(statsSqlUtils).insert(site, LATEST_POST_STATS_INSIGHTS, INSIGHTS, POST_STATS_RESPONSE)
     }
 
     @Test
@@ -139,12 +146,13 @@ class InsightsSqlUtilsTest {
 
     private fun assertReturnsFollowers(
         followerType: FollowerType,
-        key: Key
+        blockType: BlockType
     ) {
         whenever(
                 statsSqlUtils.select(
                         site,
-                        key,
+                        blockType,
+                        INSIGHTS,
                         FollowersResponse::class.java
                 )
         ).thenReturn(
@@ -160,14 +168,14 @@ class InsightsSqlUtilsTest {
     fun `inserts WPCOM followers response to stats utils`() {
         insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, WP_COM)
 
-        verify(statsSqlUtils).insert(site, WP_COM_FOLLOWERS, FOLLOWERS_RESPONSE)
+        verify(statsSqlUtils).insert(site, WP_COM_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE)
     }
 
     @Test
     fun `inserts email followers response to stats utils`() {
         insightsSqlUtils.insert(site, FOLLOWERS_RESPONSE, EMAIL)
 
-        verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, FOLLOWERS_RESPONSE)
+        verify(statsSqlUtils).insert(site, EMAIL_FOLLOWERS, INSIGHTS, FOLLOWERS_RESPONSE)
     }
 
     @Test
@@ -176,6 +184,7 @@ class InsightsSqlUtilsTest {
                 statsSqlUtils.select(
                         site,
                         COMMENTS_INSIGHTS,
+                        INSIGHTS,
                         CommentsResponse::class.java
                 )
         ).thenReturn(
@@ -191,7 +200,7 @@ class InsightsSqlUtilsTest {
     fun `inserts comments response to stats utils`() {
         insightsSqlUtils.insert(site, TOP_COMMENTS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, TOP_COMMENTS_RESPONSE)
+        verify(statsSqlUtils).insert(site, COMMENTS_INSIGHTS, INSIGHTS, TOP_COMMENTS_RESPONSE)
     }
 
     @Test
@@ -200,6 +209,7 @@ class InsightsSqlUtilsTest {
                 statsSqlUtils.select(
                         site,
                         TAGS_AND_CATEGORIES_INSIGHTS,
+                        INSIGHTS,
                         TagsResponse::class.java
                 )
         ).thenReturn(
@@ -215,6 +225,31 @@ class InsightsSqlUtilsTest {
     fun `inserts tags response to stats utils`() {
         insightsSqlUtils.insert(site, TAGS_RESPONSE)
 
-        verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, TAGS_RESPONSE)
+        verify(statsSqlUtils).insert(site, TAGS_AND_CATEGORIES_INSIGHTS, INSIGHTS, TAGS_RESPONSE)
+    }
+
+    @Test
+    fun `returns publicize response from stats utils`() {
+        whenever(
+                statsSqlUtils.select(
+                        site,
+                        PUBLICIZE_INSIGHTS,
+                        INSIGHTS,
+                        PublicizeResponse::class.java
+                )
+        ).thenReturn(
+                PUBLICIZE_RESPONSE
+        )
+
+        val result = insightsSqlUtils.selectPublicizeInsights(site)
+
+        assertEquals(result, PUBLICIZE_RESPONSE)
+    }
+
+    @Test
+    fun `inserts publicize response to stats utils`() {
+        insightsSqlUtils.insert(site, PUBLICIZE_RESPONSE)
+
+        verify(statsSqlUtils).insert(site, PUBLICIZE_INSIGHTS, INSIGHTS, PUBLICIZE_RESPONSE)
     }
 }

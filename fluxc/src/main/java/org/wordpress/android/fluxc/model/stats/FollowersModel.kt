@@ -10,7 +10,7 @@ data class FollowersModel(
     data class FollowerModel(
         val avatar: String,
         val label: String,
-        val url: String,
+        val url: String?,
         val dateSubscribed: Date
     )
 }
