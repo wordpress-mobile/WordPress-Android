@@ -1,7 +1,6 @@
 language: android
 jdk: oraclejdk8
 sudo: required
-rvm: 2.0.0
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -34,8 +33,25 @@ env:
   global:
     - MALLOC_ARENA_MAX=2
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
-    - ANDROID_SDKS=android-14
-    - ANDROID_TARGET=android-14
+
+matrix:
+  include:
+    - name: "Lint"
+      env: GRADLE_TASKS="checkstyle ktlint lintVanillaRelease"
+    - name: "Build & Test"
+      env: GRADLE_TASKS="assembleVanillaRelease testVanillaRelease"
+    - name: "Danger & Check Login Strings"
+      env: GRADLE_TASKS=""
+      language: ruby
+      rvm: 2.3.4
+      cache:
+        directories:
+          - vendor/bundle/
+      install:
+        - bundle install
+      script:
+        - ./tools/validate-login-strings.sh
+        - bundle exec danger --fail-on-errors=true
 
 install:
   # Setup gradle.properties
@@ -43,7 +59,4 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
-  - ./tools/validate-login-strings.sh
-  - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-  - bundle install
-  - bundle exec danger --fail-on-errors=true  
+  - ./gradlew -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
