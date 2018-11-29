@@ -30,7 +30,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     @Retention(SOURCE)
     @StringDef({ADDON_WOOCOMMERCE})
     @Target(ElementType.PARAMETER)
-    public @interface AddOn { }
+    public @interface AddOn {}
 
     public static final String ADDON_WOOCOMMERCE = "WC";
 
