@@ -17,7 +17,6 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFra
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsResultObservable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsResultObservable
-import org.wordpress.android.util.observeEvent
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
@@ -43,9 +42,7 @@ class NewSiteCreationActivity : AppCompatActivity() {
 
     private fun observeVMState() {
         mMainViewModel.navigationTargetObservable
-                .observeEvent(this) { target ->
-                    showStep(target)
-                }
+                .observe(this, Observer { target -> target?.let { showStep(target) } })
         segmentsResultObservable.selectedSegment.observe(
                 this,
                 Observer { segmentId -> segmentId?.let { mMainViewModel.onSegmentSelected(segmentId) } }
@@ -57,7 +54,7 @@ class NewSiteCreationActivity : AppCompatActivity() {
         )
     }
 
-    private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>): Boolean {
+    private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val fragment = when (target.wizardStep) {
             SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
             VERTICALS ->
@@ -65,7 +62,6 @@ class NewSiteCreationActivity : AppCompatActivity() {
             DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
         }
         slideInFragment(fragment, target.wizardStep.toString())
-        return true
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {

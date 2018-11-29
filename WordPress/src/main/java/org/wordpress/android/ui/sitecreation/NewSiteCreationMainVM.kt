@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.sitecreation
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
+import org.wordpress.android.viewmodel.SingleEventObservable
 import java.util.Arrays
 import javax.inject.Inject
 
@@ -31,9 +31,11 @@ class NewSiteCreationMainVM @Inject constructor() :
     private var isStarted = false
     private var siteCreationState = SiteCreationState()
 
-    val navigationTargetObservable: LiveData<NavigationTarget> = Transformations.map(wizardManager.navigatorLiveData) {
-        WizardNavigationTarget(it, siteCreationState)
-    }
+    val navigationTargetObservable: SingleEventObservable<NavigationTarget> = SingleEventObservable(
+            Transformations.map(wizardManager.navigatorLiveData) {
+                WizardNavigationTarget(it, siteCreationState)
+            }
+    )
 
     fun start() {
         if (isStarted) return

@@ -1,7 +1,6 @@
 package org.wordpress.android.util.wizard
 
 import android.arch.lifecycle.LiveData
-import org.wordpress.android.util.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
 class WizardManager<T: WizardStep>(
@@ -41,4 +40,4 @@ interface WizardState
 /**
  * Navigation target containing all the data needed for navigating the user to a next screen of the wizard.
  */
-class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStep: S, val wizardState: T) : Event()
+class WizardNavigationTarget<S : WizardStep, T : WizardState>(val wizardStep: S, val wizardState: T)
