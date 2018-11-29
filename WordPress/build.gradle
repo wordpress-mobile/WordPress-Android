@@ -25,6 +25,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+apply from: 'gutenberg-tasks.gradle'
+
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
