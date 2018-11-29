@@ -214,12 +214,14 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void pushPost(final PostModel post, final SiteModel site) {
-        final boolean isRestoringPost = PostStatus.fromPost(post) == PostStatus.TRASHED;
+        pushPostInternal(post, site, false);
+    }
 
-        if (TextUtils.isEmpty(post.getStatus()) || isRestoringPost) {
-            post.setStatus(PostStatus.PUBLISHED.toString());
-        }
+    public void restorePost(final PostModel post, final SiteModel site) {
+        pushPostInternal(post, site, true);
+    }
 
+    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost) {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         if (post.isLocalDraft()) {
