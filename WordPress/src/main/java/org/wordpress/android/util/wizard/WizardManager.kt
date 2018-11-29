@@ -3,7 +3,7 @@ package org.wordpress.android.util.wizard
 import android.arch.lifecycle.LiveData
 import org.wordpress.android.viewmodel.SingleLiveEvent
 
-class WizardManager<T: WizardStep>(
+class WizardManager<T : WizardStep>(
     private val steps: List<T>
 ) {
     private val _navigatorLiveData = SingleLiveEvent<T>()
