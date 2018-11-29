@@ -25,6 +25,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+apply from: 'gutenberg-tasks.gradle'
+
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
@@ -47,6 +49,11 @@ android {
         targetSdkVersion 26
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 

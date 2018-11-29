@@ -68,6 +68,7 @@ import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
+import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
@@ -248,6 +249,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
+    private boolean mShowGutenbergEditor;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
@@ -319,6 +321,10 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
+    private boolean isModernEditor() {
+        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
+    }
+
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -353,6 +359,8 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
+        mShowGutenbergEditor = false; // hardcode to disabled for now.
+                                      // Manually set it to true (and the flags below to false) to force Gutenberg
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -996,7 +1004,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor || mShowAztecEditor) {
+        if (isModernEditor()) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
@@ -1150,7 +1158,8 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if (!mShowAztecEditor && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
+            if (!(mShowAztecEditor || mShowGutenbergEditor)
+                        && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
             }
@@ -1380,7 +1389,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Update post object from fragment fields
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
-            if (mShowNewEditor || mShowAztecEditor) {
+            if (isModernEditor()) {
                 postTitleOrContentChanged =
                         updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                                 (String) mEditorFragment.getContent(mPost.getContent()));
@@ -1655,7 +1664,7 @@ public class EditPostActivity extends AppCompatActivity implements
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
+            UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
                 UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
@@ -1694,7 +1703,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor || mShowAztecEditor) {
+                if (isModernEditor()) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                 }
@@ -1979,7 +1988,10 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (position) {
                 case 0:
                     // TODO: Remove editor options after testing.
-                    if (mShowAztecEditor) {
+                    if (mShowGutenbergEditor) {
+                        return GutenbergEditorFragment.newInstance("", "",
+                                AppPrefs.isAztecEditorToolbarExpanded());
+                    } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
@@ -2150,7 +2162,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (mPost.isLocalDraft() && !mShowNewEditor && !mShowAztecEditor) {
+                if (mPost.isLocalDraft() && !isModernEditor()) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -2580,7 +2592,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
-            } else if (mShowNewEditor || mShowAztecEditor) {
+            } else if (isModernEditor()) {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
@@ -2615,7 +2627,7 @@ public class EditPostActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mShowNewEditor || mShowAztecEditor) {
+                    if (isModernEditor()) {
                         addMediaVisualEditor(mediaUri, path);
                     } else {
                         addMediaLegacyEditor(mediaUri, isVideo);
@@ -3071,6 +3083,9 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
+        } else if (mShowGutenbergEditor) {
+            // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
