@@ -83,7 +83,12 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
  * @param sourceC third source
  * @return new data source
  */
-fun <S, T, U, V> merge(sourceA: LiveData<S>, sourceB: LiveData<T>, sourceC: LiveData<U>, merger: (S?, T?, U?) -> V): LiveData<V> {
+fun <S, T, U, V> merge(
+    sourceA: LiveData<S>,
+    sourceB: LiveData<T>,
+    sourceC: LiveData<U>,
+    merger: (S?, T?, U?) -> V
+): LiveData<V> {
     val mediator = MediatorLiveData<Triple<S?, T?, U?>>()
     mediator.addSource(sourceA) {
         mediator.value = Triple(it, mediator.value?.second, mediator.value?.third)
@@ -96,7 +101,6 @@ fun <S, T, U, V> merge(sourceA: LiveData<S>, sourceB: LiveData<T>, sourceC: Live
     }
     return mediator.map { (dataA, dataB, dataC) -> merger(dataA, dataB, dataC) }
 }
-
 
 /**
  * Combines all the LiveData values in the given Map into one LiveData with the map of values.

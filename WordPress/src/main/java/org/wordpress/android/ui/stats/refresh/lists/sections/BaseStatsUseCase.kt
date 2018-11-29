@@ -157,7 +157,6 @@ abstract class BaseStatsUseCase<Model, UiState>(
         type: InsightsTypes,
         mainDispatcher: CoroutineDispatcher
     ) : BaseStatsUseCase<Model, NotUsedUiState>(type, mainDispatcher) {
-
         /**
          * Transforms given model into the UI model
          * @param model domain model coming from FluxC
