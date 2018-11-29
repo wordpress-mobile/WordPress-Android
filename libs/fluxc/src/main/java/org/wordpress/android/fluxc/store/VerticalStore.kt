@@ -19,6 +19,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
 
+private const val DEFAULT_FETCH_VERTICAL_LIMIT = 5
+
 @Singleton
 class VerticalStore @Inject constructor(
     private val verticalRestClient: VerticalRestClient,
@@ -58,7 +60,7 @@ class VerticalStore @Inject constructor(
     }
 
     private suspend fun fetchVerticals(payload: FetchVerticalsPayload): OnVerticalsFetched {
-        val fetchedVerticalsPayload = verticalRestClient.fetchVerticals(payload.searchQuery)
+        val fetchedVerticalsPayload = verticalRestClient.fetchVerticals(payload.searchQuery, payload.limit)
         return OnVerticalsFetched(
                 searchQuery = payload.searchQuery,
                 verticalList = fetchedVerticalsPayload.verticalList,
@@ -95,7 +97,7 @@ class VerticalStore @Inject constructor(
         }
     }
 
-    class FetchVerticalsPayload(val searchQuery: String)
+    class FetchVerticalsPayload(val searchQuery: String, val limit: Int = DEFAULT_FETCH_VERTICAL_LIMIT)
     class FetchSegmentPromptPayload(val segmentId: Long)
 
     class FetchedSegmentsPayload(val segmentList: List<VerticalSegmentModel>) : Payload<FetchSegmentsError>()
