@@ -1,12 +1,17 @@
 package org.wordpress.android.ui.giphy
 
-import android.support.v7.widget.RecyclerView.ViewHolder
+import android.arch.lifecycle.Observer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ImageView.ScaleType.CENTER_CROP
+import android.widget.TextView
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
+import org.wordpress.android.R
 import org.wordpress.android.R.layout
+import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
@@ -15,25 +20,39 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
  * Represents a single item in the [GiphyPickerActivity]'s grid (RecyclerView).
  *
  * This is meant to show a single animated gif.
+ *
+ * This ViewHolder references a readonly [GiphyMediaViewModel]. It should never update the [GiphyMediaViewModel]. That
+ * behavior is handled by the [GiphyPickerViewModel]. This is designed this way so that [GiphyPickerViewModel]
+ * encapsulates all the logic of managing selected items as well as keeping their selection numbers continuous.
  */
 class GiphyMediaViewHolder(
     /**
      * The [ImageManager] to use for loading an image in to the ImageView
      */
     private val imageManager: ImageManager,
+    /**
+     * A function that is called when the thumbnail is clicked.
+     */
+    private val onClickListener: (GiphyMediaViewModel) -> Unit,
     itemView: View,
     /**
      * The dimensions used for the ImageView
      */
     thumbnailViewDimensions: ThumbnailViewDimensions
-) : ViewHolder(itemView) {
-
+) : LifecycleOwnerViewHolder<GiphyMediaViewModel>(itemView) {
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
+    private val thumbnailView: ImageView = itemView.image_thumbnail
+    private val selectionNumberTextView: TextView = itemView.text_selection_count
+
+    private var mediaViewModel: GiphyMediaViewModel? = null
+
     init {
-        itemView.image_thumbnail.apply {
+        thumbnailView.apply {
             layoutParams.width = thumbnailViewDimensions.width
             layoutParams.height = thumbnailViewDimensions.height
+
+            setOnClickListener { mediaViewModel?.let(onClickListener) }
         }
     }
 
@@ -43,17 +62,70 @@ class GiphyMediaViewHolder(
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
      * [GiphyPickerViewModel]. This causes null values to be bound to [GiphyMediaViewHolder] instances.
      */
-    fun bind(mediaViewModel: GiphyMediaViewModel?) {
-        itemView.image_thumbnail.contentDescription = mediaViewModel?.title
-        imageManager.load(itemView.image_thumbnail, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
+    override fun bind(item: GiphyMediaViewModel?) {
+        super.bind(item)
+
+        this.mediaViewModel = item
+
+        // Immediately update the selection number and scale the thumbnail when a bind happens
+        val isSelected = mediaViewModel?.isSelected?.value ?: false
+        updateNumberTextOnSelectionChange(isSelected = isSelected, animated = false)
+        updateThumbnailOnSelectionChange(isSelected = isSelected, animated = false)
+
+        // When the [isSelected] property changes later, update the selection number and scale the thumbnail
+        mediaViewModel?.isSelected?.observe(this, Observer {
+            val selected = it ?: false
+
+            updateNumberTextOnSelectionChange(isSelected = selected, animated = true)
+            updateThumbnailOnSelectionChange(isSelected = selected, animated = true)
+        })
+
+        // Update selection number text and observe later changes
+        selectionNumberTextView.text = mediaViewModel?.selectionNumber?.value?.toString() ?: ""
+        mediaViewModel?.selectionNumber?.getDistinct()?.observe(this, Observer {
+            selectionNumberTextView.text = it?.toString() ?: ""
+        })
+
+        thumbnailView.contentDescription = mediaViewModel?.title
+        imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
+    }
+
+    private fun updateNumberTextOnSelectionChange(isSelected: Boolean, animated: Boolean) {
+        // The `isSelected` here changes the color of the text. It will be blue when selected.
+        selectionNumberTextView.isSelected = isSelected
+
+        if (animated) {
+            AniUtils.startAnimation(selectionNumberTextView, R.anim.pop)
+        }
+    }
+
+    /**
+     * Scale the thumbnail depending on the value of [isSelected]
+     */
+    private fun updateThumbnailOnSelectionChange(isSelected: Boolean, animated: Boolean) {
+        val scaleStart = if (isSelected) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
+        val scaleEnd = if (scaleStart == THUMBNAIL_SCALE_SELECTED) THUMBNAIL_SCALE_NORMAL else THUMBNAIL_SCALE_SELECTED
+
+        with(thumbnailView) {
+            if (animated) {
+                AniUtils.scale(this, scaleStart, scaleEnd, AniUtils.Duration.SHORT)
+            } else {
+                scaleX = scaleEnd
+                scaleY = scaleEnd
+            }
+        }
     }
 
     companion object {
+        private const val THUMBNAIL_SCALE_NORMAL: Float = 1.0f
+        private const val THUMBNAIL_SCALE_SELECTED: Float = 0.8f
+
         /**
          * Create the layout and a new instance of [GiphyMediaViewHolder]
          */
         fun create(
             imageManager: ImageManager,
+            onClickListener: (GiphyMediaViewModel) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
         ): GiphyMediaViewHolder {
@@ -62,6 +134,7 @@ class GiphyMediaViewHolder(
                     .inflate(layout.media_picker_thumbnail, parent, false)
             return GiphyMediaViewHolder(
                     imageManager = imageManager,
+                    onClickListener = onClickListener,
                     itemView = view,
                     thumbnailViewDimensions = thumbnailViewDimensions
             )

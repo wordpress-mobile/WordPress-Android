@@ -3,7 +3,6 @@ package org.wordpress.android.ui.giphy
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil.ItemCallback
 import android.view.ViewGroup
-import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.Companion
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
@@ -13,12 +12,13 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
  */
 class GiphyPickerPagedListAdapter(
     private val imageManager: ImageManager,
-    private val thumbnailViewDimensions: ThumbnailViewDimensions
+    private val thumbnailViewDimensions: ThumbnailViewDimensions,
+    private val onMediaViewClickListener: (GiphyMediaViewModel) -> Unit
 ) : PagedListAdapter<GiphyMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GiphyMediaViewHolder {
         return GiphyMediaViewHolder.create(
                 imageManager = imageManager,
+                onClickListener = onMediaViewClickListener,
                 parent = parent,
                 thumbnailViewDimensions = thumbnailViewDimensions
         )

@@ -64,6 +64,11 @@
     <issue id="ContentDescription" severity="error" />
     <issue id="ClickableViewAccessibility" severity="error" />
     <issue id="KeyboardInaccessibleWidget" severity="error" />
+    <issue id="UnusedAttribute" severity="error" />
+    <issue id="UnusedAttribute" severity="error" />
+    <issue id="IconXmlAndPng" severity="error" />
+    <issue id="RtlSymmetry" severity="error" />
+
 
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />

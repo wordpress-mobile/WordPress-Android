@@ -7,10 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
@@ -49,6 +53,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeToolbar()
         initializeRecyclerView()
         initializeSearchView()
+        initializeSelectionBar()
     }
 
     /**
@@ -63,7 +68,11 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Configure the RecyclerView to use [GiphyPickerPagedListAdapter] and display the items in a grid
      */
     private fun initializeRecyclerView() {
-        val pagedListAdapter = GiphyPickerPagedListAdapter(imageManager, thumbnailViewDimensions)
+        val pagedListAdapter = GiphyPickerPagedListAdapter(
+                imageManager = imageManager,
+                thumbnailViewDimensions = thumbnailViewDimensions,
+                onMediaViewClickListener = viewModel::toggleSelected
+        )
 
         recycler.apply {
             layoutManager = GridLayoutManager(this@GiphyPickerActivity, gridColumnCount)
@@ -96,6 +105,50 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     /**
+     * Configure the selection bar and its labels when the [GiphyPickerViewModel] selected items change
+     */
+    private fun initializeSelectionBar() {
+        viewModel.selectionBarIsVisible.observe(this, Observer {
+            // Do nothing if the [viewModel.selectionBarIsVisible] has not been initialized with a value yet. The
+            // selection bar is hidden by default anyway so we don't need to worry in this case.
+            val isVisible = it ?: return@Observer
+            val selectionBar: ViewGroup = container_selection_bar
+
+            // Do nothing if the selection bar is already in the visibility state that we want it to be
+            if (isVisible && selectionBar.visibility == View.VISIBLE ||
+                    !isVisible && selectionBar.visibility != View.VISIBLE) {
+                return@Observer
+            }
+
+            // Animate show/hide and adjust the RecyclerView layout so it is not covered by the selection bar. We
+            // probably could have used a ConstraintLayout to do the layout for us.
+            val recyclerViewLayoutParams = recycler.layoutParams as RelativeLayout.LayoutParams
+            if (isVisible) {
+                AniUtils.animateBottomBar(selectionBar, true)
+
+                recyclerViewLayoutParams.addRule(RelativeLayout.ABOVE, R.id.container_selection_bar)
+            } else {
+                AniUtils.animateBottomBar(selectionBar, false)
+
+                recyclerViewLayoutParams.addRule(RelativeLayout.ABOVE, 0)
+            }
+        })
+
+        // Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".
+        //
+        // We do not change to labels back to the original text if the number of items go back to zero because that
+        // causes a weird UX. The selection bar is animated to disappear at that time and it looks weird if the labels
+        // change to just "Add" and "Preview" too.
+        viewModel.selectedMediaViewModelList.observe(this, Observer {
+            val selectedCount = it?.size ?: 0
+            if (selectedCount > 0) {
+                text_preview.text = getString(R.string.preview_count, selectedCount)
+                text_add.text = getString(R.string.add_count, selectedCount)
+            }
+        })
+    }
+
+    /**
      * Close this Activity when the up button is pressed
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -107,4 +160,3 @@ class GiphyPickerActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
-
