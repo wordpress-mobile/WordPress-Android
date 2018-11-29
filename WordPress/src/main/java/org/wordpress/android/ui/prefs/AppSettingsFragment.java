@@ -165,7 +165,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mEnableGutenberg.setChecked(AppPrefs.isGutenbergEditorEnabled());
 
-        if (BuildConfig.FLAVOR.equals("vanilla")) {
+        if (!BuildConfig.EXPERIMENTAL_CATEGORY_AVAILABLE) {
             removeExperimentalCategory();
         }
 
