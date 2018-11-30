@@ -332,7 +332,7 @@ class NewSiteCreationVerticalsViewModelTest {
         val selectedVerticalCaptor = ArgumentCaptor.forClass(String::class.java)
         verify(verticalSelectedObserver).onChanged(selectedVerticalCaptor.capture())
 
-        assertThat(selectedVerticalCaptor.allValues.size == 1).isTrue()
+        assertThat(selectedVerticalCaptor.allValues.size).isEqualTo(1)
         assertThat(selectedVerticalCaptor.lastValue).isEqualTo(FIRST_MODEL_ID)
     }
 
@@ -343,7 +343,7 @@ class NewSiteCreationVerticalsViewModelTest {
         val captor = ArgumentCaptor.forClass(String::class.java)
         verify(verticalSelectedObserver).onChanged(captor.capture())
 
-        assertThat(captor.allValues.size == 1).isTrue()
+        assertThat(captor.allValues.size).isEqualTo(1)
         assertThat(captor.lastValue).isNull()
     }
 
