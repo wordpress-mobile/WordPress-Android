@@ -68,6 +68,7 @@ private val HEADER_AND_FIRST_ITEM_STATE = UiState(
                         FIRST_MODEL.title,
                         FIRST_MODEL.subtitle,
                         FIRST_MODEL.iconUrl,
+                        FIRST_MODEL_ICON_COLOR,
                         false
                 )
         )
@@ -81,6 +82,7 @@ private val HEADER_AND_SECOND_ITEM_STATE = UiState(
                         SECOND_MODEL.title,
                         SECOND_MODEL.subtitle,
                         SECOND_MODEL.iconUrl,
+                        SECOND_MODEL.iconColor,
                         false
                 )
         )
