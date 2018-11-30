@@ -336,9 +336,9 @@ class PostListViewModel @Inject constructor(
 
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
-        if (!isGutenbergEnabled()
-                && PostUtils.contentContainsGutenbergBlocks(post.content)
-                && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+        if (!isGutenbergEnabled() &&
+                PostUtils.contentContainsGutenbergBlocks(post.content) &&
+                !AppPrefs.isGutenbergWarningDialogDisabled()) {
             _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
         } else {
             editPost(site, post)
