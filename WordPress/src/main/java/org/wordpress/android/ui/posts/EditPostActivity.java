@@ -457,7 +457,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.setImageLoader(mImageLoader);
         }
 
-        //Ensure that this check happens when mPost is set
+        // Ensure that this check happens when mPost is set
         mShowGutenbergEditor = shouldShowGutenbergEditor();
 
         // Ensure we have a valid post
