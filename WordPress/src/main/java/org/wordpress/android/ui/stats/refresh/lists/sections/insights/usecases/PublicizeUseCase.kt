@@ -13,6 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
 import javax.inject.Inject
@@ -27,14 +28,17 @@ class PublicizeUseCase
     private val mapper: ServiceMapper
 ) : StatelessUseCase<org.wordpress.android.fluxc.model.stats.PublicizeModel>(PUBLICIZE, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
-        insightsStore.getPublicizeData(site,
+        insightsStore.getPublicizeData(
+                site,
                 PAGE_SIZE
         )?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = insightsStore.fetchPublicizeData(site,
-                PAGE_SIZE, forced)
+        val response = insightsStore.fetchPublicizeData(
+                site,
+                PAGE_SIZE, forced
+        )
         val model = response.model
         val error = response.error
 
@@ -55,9 +59,12 @@ class PublicizeUseCase
             items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
             items.addAll(domainModel.services.let { mapper.map(it) })
             if (domainModel.hasMore) {
-                items.add(Link(text = string.stats_insights_view_more) {
-                    navigateTo(ViewPublicizeStats)
-                })
+                items.add(
+                        Link(
+                                text = string.stats_insights_view_more,
+                                navigationAction = NavigationAction(ViewPublicizeStats, mutableNavigationTarget)
+                        )
+                )
             }
         }
         return items

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import android.content.Context
-import com.nhaarman.mockito_kotlin.mock
+import android.arch.lifecycle.MutableLiveData
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -14,6 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -23,6 +24,7 @@ class LatestPostSummaryMapperTest {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var navigationTarget: MutableLiveData<NavigationTarget>
     private lateinit var mapper: LatestPostSummaryMapper
     private val date = Date(10)
     private val postTitle = "post title"
@@ -43,7 +45,7 @@ class LatestPostSummaryMapperTest {
         val emptyMessage = "empty message"
         whenever(resourceProvider.getString(R.string.stats_insights_latest_post_empty)).thenReturn(emptyMessage)
 
-        val result = mapper.buildMessageItem(null)
+        val result = mapper.buildMessageItem(null, navigationTarget)
 
         assertThat(result.text).isEqualTo(emptyMessage)
         assertThat(result.links).isNull()
@@ -65,20 +67,15 @@ class LatestPostSummaryMapperTest {
                 )
         ).thenReturn(messageWithNoEngagement)
 
-        val result = mapper.buildMessageItem(model)
+        var clicked = false
+        val result = mapper.buildMessageItem(model, navigationTarget)
 
         assertThat(result.text).isEqualTo(messageWithNoEngagement)
         assertThat(result.links).hasSize(1)
 
-        val context = mock<Context>()
-        result.links!![0].action(context)
+        result.links!![0].navigationAction.click()
 
-        verify(statsUtilsWrapper).openPostInReaderOrInAppWebview(
-                context,
-                siteId,
-                postId.toString(),
-                postURL
-        )
+        verify(navigationTarget).value = ViewPost(model.postId, model.postURL)
     }
 
     @Test
@@ -97,20 +94,10 @@ class LatestPostSummaryMapperTest {
                 )
         ).thenReturn(messageWithEngagement)
 
-        val result = mapper.buildMessageItem(model)
+        val result = mapper.buildMessageItem(model, navigationTarget)
 
         assertThat(result.text).isEqualTo(messageWithEngagement)
         assertThat(result.links).hasSize(1)
-
-        val context = mock<Context>()
-        result.links!![0].action(context)
-
-        verify(statsUtilsWrapper).openPostInReaderOrInAppWebview(
-                context,
-                siteId,
-                postId.toString(),
-                postURL
-        )
     }
 
     @Test

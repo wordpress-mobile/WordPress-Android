@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDet
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import javax.inject.Inject
 import javax.inject.Named
@@ -45,7 +46,7 @@ class LatestPostSummaryUseCase
     override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
-        items.add(latestPostSummaryMapper.buildMessageItem(domainModel))
+        items.add(latestPostSummaryMapper.buildMessageItem(domainModel, mutableNavigationTarget))
         if (domainModel.hasData()) {
             items.add(
                     latestPostSummaryMapper.buildColumnItem(
@@ -67,22 +68,30 @@ class LatestPostSummaryUseCase
 
     private fun buildLink(model: InsightsLatestPostModel?): Link {
         return when {
-            model == null -> Link(R.drawable.ic_create_blue_medium_24dp, R.string.stats_insights_create_post) {
-                navigateTo(AddNewPost)
-            }
-            model.hasData() -> Link(text = R.string.stats_insights_view_more) {
-                navigateTo(
-                        ViewPostDetailStats(
-                                model.siteId,
-                                model.postId.toString(),
-                                model.postTitle,
-                                model.postURL
-                        )
-                )
-            }
-            else -> Link(R.drawable.ic_share_blue_medium_24dp, R.string.stats_insights_share_post) {
-                navigateTo(SharePost(model.postURL, model.postTitle))
-            }
+            model == null -> Link(
+                    R.drawable.ic_create_blue_medium_24dp,
+                    R.string.stats_insights_create_post,
+                    navigationAction = NavigationAction(AddNewPost, mutableNavigationTarget)
+            )
+            model.hasData() -> Link(
+                    text = R.string.stats_insights_view_more,
+                    navigationAction = NavigationAction(
+                            ViewPostDetailStats(
+                                    model.postId,
+                                    model.postTitle,
+                                    model.postURL
+                            ),
+                            mutableNavigationTarget
+                    )
+            )
+            else -> Link(
+                    R.drawable.ic_share_blue_medium_24dp,
+                    R.string.stats_insights_share_post,
+                    navigationAction = NavigationAction(
+                            SharePost(model.postURL, model.postTitle),
+                            mutableNavigationTarget
+                    )
+            )
         }
     }
 }

@@ -32,7 +32,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
-    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    protected val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
     /**

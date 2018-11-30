@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import android.arch.lifecycle.MutableLiveData
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -20,7 +24,7 @@ class LatestPostSummaryMapper
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    fun buildMessageItem(model: InsightsLatestPostModel?): Text {
+    fun buildMessageItem(model: InsightsLatestPostModel?, navigationLiveData: MutableLiveData<NavigationTarget>): Text {
         if (model == null) {
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
         }
@@ -39,14 +43,18 @@ class LatestPostSummaryMapper
                     postTitle
             )
         }
-        return Text(message, listOf(Clickable(postTitle) {
-            statsUtilsWrapper.openPostInReaderOrInAppWebview(
-                    it,
-                    model.siteId,
-                    model.postId.toString(),
-                    model.postURL
-            )
-        }))
+        return Text(
+                message,
+                listOf(
+                        Clickable(
+                                postTitle,
+                                navigationAction = NavigationAction(
+                                        ViewPost(model.postId, model.postURL),
+                                        navigationLiveData
+                                )
+                        )
+                )
+        )
     }
 
     fun buildColumnItem(postViewsCount: Int, postLikeCount: Int, postCommentCount: Int): Columns {

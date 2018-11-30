@@ -88,9 +88,10 @@ sealed class BlockListItemViewHolder(
             } else {
                 View.GONE
             }
-            if (item.clickAction != null) {
+            val clickAction = item.navigationAction
+            if (clickAction != null) {
                 itemView.isClickable = true
-                itemView.setOnClickListener { item.clickAction.invoke() }
+                itemView.setOnClickListener { clickAction.click() }
             } else {
                 itemView.isClickable = false
                 itemView.background = null
@@ -159,7 +160,9 @@ sealed class BlockListItemViewHolder(
         fun bind(textItem: Text) {
             val spannableString = SpannableString(textItem.text)
             textItem.links?.forEach { link ->
-                spannableString.withClickableSpan(text.context, link.link) { link.action(text.context) }
+                spannableString.withClickableSpan(text.context, link.link) {
+                    link.navigationAction.click()
+                }
             }
             text.text = spannableString
             text.linksClickable = true
@@ -227,7 +230,7 @@ sealed class BlockListItemViewHolder(
                 text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
             text.setText(item.text)
-            link.setOnClickListener { item.action() }
+            link.setOnClickListener { item.navigationAction.click() }
         }
     }
 

@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import android.content.Context
+import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -22,7 +23,9 @@ sealed class BlockListItem(val type: Type) {
     fun id(): Int {
         return type.ordinal + Type.values().size * this.itemId
     }
+
     open val itemId: Int = 0
+
     enum class Type {
         TITLE,
         LIST_ITEM,
@@ -61,7 +64,7 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val valueResource: Int? = null,
         val value: String? = null,
         val showDivider: Boolean = true,
-        val clickAction: (() -> Unit)? = null
+        val navigationAction: NavigationAction? = null
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
@@ -80,12 +83,19 @@ sealed class BlockListItem(val type: Type) {
     data class Information(val text: String) : BlockListItem(INFO)
 
     data class Text(val text: String, val links: List<Clickable>? = null) : BlockListItem(TEXT) {
-        data class Clickable(val link: String, val action: (Context) -> Unit)
+        data class Clickable(
+            val link: String,
+            val navigationAction: NavigationAction
+        )
     }
 
     data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
 
-    data class Link(@DrawableRes val icon: Int? = null, @StringRes val text: Int, val action: () -> Unit) :
+    data class Link(
+        @DrawableRes val icon: Int? = null,
+        @StringRes val text: Int,
+        val navigationAction: NavigationAction
+    ) :
             BlockListItem(LINK)
 
     data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
@@ -109,4 +119,10 @@ sealed class BlockListItem(val type: Type) {
     object Empty : BlockListItem(EMPTY)
 
     object Divider : BlockListItem(DIVIDER)
+
+    data class NavigationAction(val navigationTarget: NavigationTarget, val navigationLiveData: MutableLiveData<NavigationTarget>) {
+        fun click() {
+            navigationLiveData.value = navigationTarget
+        }
+    }
 }

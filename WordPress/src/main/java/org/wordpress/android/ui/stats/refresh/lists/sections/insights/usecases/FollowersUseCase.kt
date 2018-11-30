@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
@@ -91,9 +92,12 @@ class FollowersUseCase
         }
 
         if (wpComModel.hasMore || emailModel.hasMore) {
-            items.add(Link(text = string.stats_insights_view_more) {
-                navigateTo(ViewFollowersStats)
-            })
+            items.add(
+                    Link(
+                            text = string.stats_insights_view_more,
+                            navigationAction = NavigationAction(ViewFollowersStats, mutableNavigationTarget)
+                    )
+            )
         }
         return items
     }

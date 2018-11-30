@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -83,9 +84,12 @@ class TagsAndCategoriesUseCase
 
             items.addAll(tagsList)
             if (domainModel.hasMore) {
-                items.add(Link(text = R.string.stats_insights_view_more) {
-                    navigateTo(ViewTagsAndCategoriesStats)
-                })
+                items.add(
+                        Link(
+                                text = R.string.stats_insights_view_more,
+                                navigationAction = NavigationAction(ViewTagsAndCategoriesStats, mutableNavigationTarget)
+                        )
+                )
             }
         }
         return items
@@ -102,7 +106,7 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
-                clickAction = { clickTag(item.link) }
+                navigationAction = NavigationAction(ViewTag(item.link), mutableNavigationTarget)
         )
     }
 
@@ -126,16 +130,12 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,
-                clickAction = { clickTag(item.link) }
+                navigationAction = NavigationAction(ViewTag(item.link), mutableNavigationTarget)
         )
     }
 
     private fun getIcon(type: String) =
             if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
-
-    private fun clickTag(link: String) {
-        navigateTo(ViewTag(link))
-    }
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 }
