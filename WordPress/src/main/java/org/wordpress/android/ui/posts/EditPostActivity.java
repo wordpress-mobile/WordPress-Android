@@ -251,6 +251,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
@@ -321,7 +322,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private ArrayList<Uri> mDroppedMediaUris;
 
     private boolean isModernEditor() {
-        return mShowNewEditor || mShowAztecEditor || shouldShowGutenbergEditor();
+        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
     }
 
     private Runnable mFetchMediaRunnable = new Runnable() {
@@ -455,6 +456,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
         }
+
+        //Ensure that this check happens when mPost is set
+        mShowGutenbergEditor = shouldShowGutenbergEditor();
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -1156,7 +1160,7 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if (!(mShowAztecEditor || shouldShowGutenbergEditor())
+            if (!(mShowAztecEditor || mShowGutenbergEditor)
                         && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
@@ -1986,7 +1990,7 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (position) {
                 case 0:
                     // TODO: Remove editor options after testing.
-                    if (shouldShowGutenbergEditor()) {
+                    if (mShowGutenbergEditor) {
                         return GutenbergEditorFragment.newInstance("", "",
                                 AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowAztecEditor) {
@@ -2056,8 +2060,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private boolean shouldShowGutenbergEditor() {
         return AppPrefs.isGutenbergEditorEnabled()
-               && (mIsNewPost || TextUtils.isEmpty(mPost.getContent())
-               || GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
+               && (mIsNewPost || GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
     }
 
     // Moved from EditPostContentFragment
@@ -3087,7 +3090,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
-        } else if (shouldShowGutenbergEditor()) {
+        } else if (mShowGutenbergEditor) {
             // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
             ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
