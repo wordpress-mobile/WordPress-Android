@@ -249,9 +249,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
-    private boolean mShowGutenbergEditor;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
@@ -359,8 +359,6 @@ public class EditPostActivity extends AppCompatActivity implements
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
         // AppPrefs.setAztecEditorAvailable(true);
         // AppPrefs.setAztecEditorEnabled(true);
-        mShowGutenbergEditor = false; // hardcode to disabled for now.
-                                      // Manually set it to true (and the flags below to false) to force Gutenberg
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
@@ -458,6 +456,9 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mHasSetPostContent = mEditorFragment != null) {
             mEditorFragment.setImageLoader(mImageLoader);
         }
+
+        // Ensure that this check happens when mPost is set
+        mShowGutenbergEditor = shouldShowGutenbergEditor();
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -1019,6 +1020,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
         }
+
 
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
@@ -2054,6 +2056,11 @@ public class EditPostActivity extends AppCompatActivity implements
         public int getCount() {
             return NUM_PAGES_EDITOR;
         }
+    }
+
+    private boolean shouldShowGutenbergEditor() {
+        return AppPrefs.isGutenbergEditorEnabled()
+               && (mIsNewPost || GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
     }
 
     // Moved from EditPostContentFragment
