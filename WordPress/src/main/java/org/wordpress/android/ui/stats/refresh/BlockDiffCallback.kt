@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil.Callback
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.Payload.EXPAND_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.EXPAND_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -23,7 +23,7 @@ class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
     private val newList: List<BlockListItem>
 ) : Callback() {
-    enum class Payload {
+    enum class BlockListPayload {
         EXPAND_CHANGED
     }
 
@@ -64,9 +64,7 @@ class BlockDiffCallback(
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (newItem is ExpandableItem && oldItem is ExpandableItem &&
-                ((!oldItem.isExpanded && newItem.isExpanded) ||
-                        (oldItem.isExpanded && !newItem.isExpanded))) {
+        if (newItem is ExpandableItem && oldItem is ExpandableItem && oldItem.isExpanded != newItem.isExpanded) {
             return EXPAND_CHANGED
         }
         return null

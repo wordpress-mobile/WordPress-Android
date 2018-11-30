@@ -4,8 +4,6 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.Payload
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.Payload.EXPAND_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -105,7 +103,6 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
 
     override fun onBindViewHolder(holder: BlockListItemViewHolder, position: Int, payloads: List<Any>) {
         val item = items[position]
-        val mappedPayload = payloads.mapNotNull { it as? Payload }
         when (holder) {
             is TitleViewHolder -> holder.bind(item as Title)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
@@ -120,7 +117,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is LabelViewHolder -> holder.bind(item as Label)
             is ExpandableItemViewHolder -> holder.bind(
                     item as ExpandableItem,
-                    mappedPayload.any { it == EXPAND_CHANGED })
+                    payloads.isNotEmpty())
         }
     }
 
