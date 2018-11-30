@@ -218,7 +218,8 @@ public class MySiteFragment extends Fragment implements
             if (shouldShowQuickStartTaskPrompt()) {
                 mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
                 mQuickStartSnackBarHandler.postDelayed(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         showQuickStartDialogTaskPrompt();
                     }
                 }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
@@ -226,7 +227,8 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, mQuickStartSnackBarWasShown);
@@ -239,7 +241,8 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         if (getActivity() != null && !getActivity().isChangingConfigurations()) {
             mQuickStartSnackBarWasShown = false;
@@ -470,7 +473,8 @@ public class MySiteFragment extends Fragment implements
         });
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (mActiveTutorialPrompt != null) {
@@ -989,7 +993,8 @@ public class MySiteFragment extends Fragment implements
     }
 
     private Runnable mAddQuickStartFocusPointTask = new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
             // technically there is no situation (yet) where fragment is not added but we need to show focus point
             if (!isAdded()) {
                 return;
@@ -1022,7 +1027,8 @@ public class MySiteFragment extends Fragment implements
             // highlighting MySite row and scrolling to it
             if (!QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 mScrollView.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getBottom());
                         quickStartTarget.setPressed(true);
                     }
@@ -1126,7 +1132,8 @@ public class MySiteFragment extends Fragment implements
 
         mQuickStartTaskPromptSnackBar.setPositiveButton(
                 getString(R.string.quick_start_button_positive), new OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
                         if (shouldDirectUserToContinueQuickStart) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -1139,7 +1146,8 @@ public class MySiteFragment extends Fragment implements
 
         mQuickStartTaskPromptSnackBar
                 .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
                     }
                 });
