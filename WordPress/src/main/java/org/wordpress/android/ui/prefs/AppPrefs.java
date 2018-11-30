@@ -114,7 +114,6 @@ public class AppPrefs {
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
         AVATAR_VERSION,
-        //Gutenberg editor enabled
         GUTENBERG_EDITOR_ENABLED
     }
 
