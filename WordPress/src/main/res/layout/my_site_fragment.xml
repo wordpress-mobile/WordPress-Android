@@ -141,6 +141,131 @@
             </android.support.v7.widget.CardView>
 
             <!--Quick Start-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/quick_start"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_width="match_parent"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardElevation="@dimen/card_elevation">
+
+                <RelativeLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent" >
+
+                    <RelativeLayout
+                        android:id="@+id/quick_start_toolbar"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingEnd="@dimen/margin_large"
+                        android:paddingStart="@dimen/margin_large"
+                        android:minHeight="?attr/listPreferredItemHeightSmall" >
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/quick_start_title"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-light"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/quick_start_more"
+                            android:layout_width="wrap_content"
+                            android:maxLines="1"
+                            android:text="@string/quick_start_sites"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="@dimen/text_sz_large"
+                            android:textStyle="bold" >
+                        </org.wordpress.android.widgets.WPTextView>
+
+                        <ImageView
+                            android:id="@+id/quick_start_more"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:clickable="true"
+                            android:contentDescription="@string/content_description_more"
+                            android:focusable="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:src="@drawable/ic_more_vert_white_24dp"
+                            android:tint="@color/grey_darken_20" >
+                        </ImageView>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/quick_start_customize"
+                        android:layout_below="@+id/quick_start_toolbar"
+                        style="@style/QuickStartTypeRow" >
+
+                        <ImageView
+                            android:id="@+id/quick_start_customize_icon"
+                            android:importantForAccessibility="no"
+                            tools:background="@drawable/bg_oval_blue_medium_customize_white_40dp"
+                            style="@style/QuickStartTypeIcon" >
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/quick_start_customize_title"
+                            android:layout_toEndOf="@+id/quick_start_customize_icon"
+                            android:text="@string/quick_start_sites_type_customize"
+                            style="@style/QuickStartTypeTitle" >
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/quick_start_customize_subtitle"
+                            android:layout_below="@+id/quick_start_customize_title"
+                            android:layout_toEndOf="@+id/quick_start_customize_icon"
+                            tools:text="1 of 6 complete"
+                            style="@style/QuickStartTypeSubtitle" >
+                        </TextView>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:background="@color/grey_lighten_30"
+                        android:layout_below="@+id/quick_start_customize"
+                        android:layout_height="@dimen/list_divider_height"
+                        android:layout_marginStart="@dimen/quick_start_type_divider_margin_start"
+                        android:layout_width="match_parent" >
+                    </View>
+
+                    <RelativeLayout
+                        android:id="@+id/quick_start_grow"
+                        android:layout_below="@+id/quick_start_customize"
+                        style="@style/QuickStartTypeRow" >
+
+                        <ImageView
+                            android:id="@+id/quick_start_grow_icon"
+                            android:importantForAccessibility="no"
+                            tools:background="@drawable/bg_oval_pink_500_multiple_users_white_40dp"
+                            style="@style/QuickStartTypeIcon" >
+                        </ImageView>
+
+                        <TextView
+                            android:id="@+id/quick_start_grow_title"
+                            android:layout_toEndOf="@+id/quick_start_grow_icon"
+                            android:text="@string/quick_start_sites_type_grow"
+                            style="@style/QuickStartTypeTitle" >
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/quick_start_grow_subtitle"
+                            android:layout_below="@+id/quick_start_grow_title"
+                            android:layout_toEndOf="@+id/quick_start_grow_icon"
+                            tools:text="0 of 5 complete"
+                            style="@style/QuickStartTypeSubtitle" >
+                        </TextView>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
             <LinearLayout
                 android:id="@+id/row_quick_start"
                 style="@style/MySiteListRowLayout"
