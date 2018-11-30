@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -507,7 +506,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.yes),
                 getString(R.string.no),
                 null);
-        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showChangeSiteIconDialog() {
@@ -518,7 +517,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.my_site_icon_dialog_change_button),
                 getString(R.string.my_site_icon_dialog_remove_button),
                 getString(R.string.my_site_icon_dialog_cancel_button));
-        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showEditingSiteIconRequiresPermissionDialog(@NonNull String message) {
@@ -529,7 +528,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.dialog_button_ok),
                 null,
                 null);
-        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void startWPComLoginForJetpackStats() {
