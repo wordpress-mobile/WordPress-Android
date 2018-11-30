@@ -2352,4 +2352,5 @@
     <string name="site_creation_fetch_suggestions_failed">No connection</string>
     <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Use this category.</string>
 </resources>

@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:foreground="?selectableItemBackground"
-    android:minHeight="@dimen/site_creation_segments_list_min_item_height">
+    android:minHeight="@dimen/two_line_list_item_height">
 
     <ImageView
         android:id="@+id/icon"

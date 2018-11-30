@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.util.AppLog
@@ -32,6 +33,24 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             container.setOnClickListener {
                 uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
+            }
+        }
+    }
+
+    class VerticalsSuggestionCustomItemViewHolder(
+        parentView: ViewGroup
+    ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_custom_suggestion_item) {
+        private val container = itemView.findViewById<ViewGroup>(R.id.container)
+        private val title = itemView.findViewById<TextView>(R.id.title)
+        private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
+
+        override fun onBind(uiState: VerticalsListItemUiState) {
+            uiState as VerticalsCustomModelUiState
+            title.text = uiState.title
+            subtitle.text = parent.resources.getString(uiState.subTitleResId)
+            requireNotNull(uiState.onItemTapped)
+            container.setOnClickListener {
+                uiState.onItemTapped!!.invoke()
             }
         }
     }

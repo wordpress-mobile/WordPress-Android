@@ -26,6 +26,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
@@ -191,13 +192,24 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                val itemUiState = VerticalsModelUiState(
-                        model.verticalId,
-                        model.name,
-                        showDivider = index != lastItemIndex
-                )
-                itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
-                items.add(itemUiState)
+
+                if (model.isNewUserVertical) {
+                    val itemUiState = VerticalsCustomModelUiState(
+                            model.verticalId,
+                            model.name,
+                            R.string.new_site_creation_verticals_custom_subtitle
+                    )
+                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                    items.add(itemUiState)
+                } else {
+                    val itemUiState = VerticalsModelUiState(
+                            model.verticalId,
+                            model.name,
+                            showDivider = index != lastItemIndex
+                    )
+                    itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                    items.add(itemUiState)
+                }
             }
         }
         return items
@@ -285,6 +297,9 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         var onItemTapped: (() -> Unit)? = null
 
         data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
+                VerticalsListItemUiState()
+
+        data class VerticalsCustomModelUiState(val id: String, val title: String, @StringRes val subTitleResId: Int) :
                 VerticalsListItemUiState()
 
         data class VerticalsFetchSuggestionsErrorUiState(
