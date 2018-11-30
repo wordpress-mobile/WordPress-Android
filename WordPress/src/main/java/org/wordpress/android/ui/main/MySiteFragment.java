@@ -37,7 +37,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
@@ -76,9 +75,9 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.WPDialogSnackbar;
-import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.File;
@@ -141,7 +140,6 @@ public class MySiteFragment extends Fragment implements
     private int mBlavatarSz;
 
     @Inject AccountStore mAccountStore;
-    @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
