@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.usecases
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.VerticalActionBuilder
 import org.wordpress.android.fluxc.store.VerticalStore
@@ -37,8 +38,11 @@ class FetchSegmentPromptUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onSegmentPromptFetched(event: OnSegmentPromptFetched) {
-        checkNotNull(continuation) { "onSegmentPromptFetched received without a suspended coroutine." }
-                .resume(event)
-        continuation = null
+        if (continuation != null) {
+            continuation?.resume(event)
+            continuation = null
+        } else if (BuildConfig.DEBUG) {
+            throw java.lang.IllegalStateException("onSiteCategoriesFetched received without a suspended coroutine.")
+        }
     }
 }

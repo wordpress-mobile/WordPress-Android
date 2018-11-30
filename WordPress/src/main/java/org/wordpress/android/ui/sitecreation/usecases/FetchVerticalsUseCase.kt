@@ -39,8 +39,7 @@ class FetchVerticalsUseCase @Inject constructor(
     fun onVerticalsFetched(event: OnVerticalsFetched) {
         pair?.let {
             if (event.searchQuery == it.first) {
-                checkNotNull(it.second) { "onVerticalsFetched received without a suspended coroutine." }
-                        .resume(event)
+                it.second.resume(event)
                 pair = null
             }
         }
