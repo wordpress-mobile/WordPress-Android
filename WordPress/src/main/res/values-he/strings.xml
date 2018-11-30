@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-29 15:54:07+0000
+Translation-Revision-Date: 2018-11-14 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="history_detail_title">גרסה</string>
+    <string name="history_detail_button_previous">הקודם</string>
+    <string name="history_detail_button_next">לשלב הבא</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">למידע נוסף</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">לא להציג שוב</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">חזרה</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">עריכת עמוד</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">עריכת פוסט</string>
+    <string name="dialog_gutenberg_compatibility_message_page">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את העמוד הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
+    <string name="dialog_gutenberg_compatibility_message">אנחנו עובדים על העורך החדש של WordPress. עדיין אפשר לערוך את הפוסט הנוכחי אבל אנחנו ממליצים להציג אותו בתצוגה מקדימה לפני שיפורסם.</string>
+    <string name="dialog_gutenberg_compatibility_title">לפני ההמשך</string>
+    <string name="media_space_used">%1$s נוצלו</string>
     <string name="login_notification_channel_id">‎@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">יש להזין אתר של WordPress באחסון עצמי שמחובר ל-WordPress.com או ל-Jetpack</string>
     <string name="history_loading_revision">טוען גרסה עדכנית</string>
     <string name="history_loaded_revision">הגרסה העדכנית הוטענה</string>
-    <string name="history_load_dialog_title">טעינה של הגרסה העדכנית</string>
-    <string name="history_load_dialog_message">האם לטעון את הגרסה העדכנית ממועד %1$s ב%2$s?</string>
     <string name="history_load_dialog_button_positive">טעינה</string>
     <string name="history_footer_post">הפוסט נוצר בתאריך %1$s ב-%2$s</string>
     <string name="history_footer_page">העמוד נוצר בתאריך %1$s ב-%2$s</string>
@@ -179,11 +189,14 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
+    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %1$s בשעה %2$s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
     <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
     <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
     <string name="activity_log_currently_restoring_message">משחזר לתאריך  %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
+    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %1$s %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים. (עדיין! אנחנו עובדים על זה).</string>
@@ -309,6 +322,7 @@ Language: he_IL
     <string name="stats_tab_tap_content_description">מציג %s</string>
     <string name="stats_legend">מקרא של גרף הנתונים הסטטיסטיים</string>
     <string name="fab_create_desc">יצירה</string>
+    <string name="fab_add_tag_desc">יצירת תגית</string>
     <string name="stats_bar_week_desc">שבוע מתוך %s</string>
     <string name="stats_bar_date_value_desc">%s, %d צפיות</string>
     <string name="stats_bar_date_value_type_desc">%s, %d %s</string>
@@ -344,7 +358,9 @@ Language: he_IL
     <string name="jetpack_connection_failed_with_reason">ההתחברות ל-Jetpack נכשלה: %s</string>
     <string name="jetpack_already_connected_toast">החשבון שלך ב-Jetpack כבר מחובר</string>
     <string name="menu_undo_snackbar_action">ביטול פעולה אחרונה</string>
+    <string name="menu_visual_mode_done_snackbar">הוחלף לעורך החזותי</string>
     <string name="menu_visual_mode">עורך חזותי</string>
+    <string name="menu_html_mode_done_snackbar">הוחלף לעורך HTML</string>
     <string name="menu_html_mode">עורך HTML</string>
     <string name="menu_preview">תצוגה מקדימה</string>
     <string name="menu_publish_now">לפרסם כעת</string>
@@ -532,6 +548,7 @@ Language: he_IL
     <string name="site_settings_serve_images_from_our_servers_summary">Jetpack ימטב את התמונות שלך ויציג אותן ממיקום השרת הקרוב ביותר למבקרים שלך. שימוש ברשת שליחת התוכן העולמית שלנו ישפר את מהירות הטעינה של האתר שלך.</string>
     <string name="site_settings_serve_images_from_our_servers">הצגת תמונות מהשרתים שלנו</string>
     <string name="site_settings_speed_up_your_site">הגברת המהירות של האתר שלך</string>
+    <string name="stats_jetpack_connection_setup">התקנת Jetpack</string>
     <string name="plugin_chevron_icon_content_description">החלפה בין המלל</string>
     <string name="plugin_info_your_version">הגרסה של WordPress שמותקנת אצלך</string>
     <string name="plugin_info_requires_version">גרסת WordPress נדרשת</string>
@@ -561,6 +578,7 @@ Language: he_IL
     <string name="site_settings_tags_hint">ניהול התגיות באתר שלך</string>
     <string name="dlg_saving_tag">שומר</string>
     <string name="dlg_deleting_tag">מוחק</string>
+    <string name="dlg_confirm_delete_tag">האם למחוק את התגית \'%s\' לצמיתות?</string>
     <string name="error_tag_exists">כבר קיימת תגית עם שם זה</string>
     <string name="add_new_tag">הוספת תגית חדשה</string>
     <string name="tag_description_hint">תיאור</string>
@@ -1110,6 +1128,7 @@ Language: he_IL
     <string name="delete_site_hint">מחיקת אתר</string>
     <string name="export_site_hint">יצוא האתר שלך לקובץ XML</string>
     <string name="primary_domain">דומיין ראשי</string>
+    <string name="error_deleting_site_summary">אירעה שגיאה בעת מחיקת האתר שלך. יש לפנות לתמיכה לסיוע.</string>
     <string name="error_deleting_site">שגיאה בעת מחיקת האתר</string>
     <string name="site_settings_export_content_title">יצוא תוכן</string>
     <string name="confirm_delete_site_prompt">יש להקליד את הכתובת %1$s בשדה להלן כדי לאשר. לאחר מכן, האתר שלך ייעלם לעד.</string>
@@ -1123,6 +1142,9 @@ Language: he_IL
     <string name="editor_remove_failed_uploads">הסרת העלאות שנכשלו</string>
     <string name="editor_toast_failed_uploads">מספר העלאות מדיה נכשלו. לא ניתן לשמור או לפרסם\n הפוסט שלך במצב זה. האם ברצונך להסיר את כל המדיה שלא הועלתה?</string>
     <string name="site_settings_advanced_header">אפשרויות מתקדמות</string>
+    <string name="comments_empty_list_filtered_trashed">אין תגובות שהועברו לפח</string>
+    <string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
+    <string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
     <string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
     <string name="alignment_center">מרכז</string>
     <string name="post_format_video">וידאו</string>
@@ -1181,6 +1203,7 @@ Language: he_IL
     <string name="mnu_comment_delete_permanently">מחיקה</string>
     <string name="mnu_comment_untrash">שחזור</string>
     <string name="comment_deleted_permanently">התגובה נמחקה</string>
+    <string name="comments_empty_list_filtered_spam">אין תגובות זבל</string>
     <string name="comment_status_all">הכול</string>
     <string name="could_not_load_page">לא ניתן היה לטעון את העמוד</string>
     <string name="off">כיבוי</string>
@@ -1333,6 +1356,10 @@ Language: he_IL
     <string name="reader_label_gap_marker">פוסטים נוספים</string>
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
+    <string name="notifications_empty_view_reader">מעבר אל Reader</string>
+    <string name="notifications_empty_action_followers_likes">לבלוט בשטח: הוספת תגובה על פוסטים שקראת</string>
+    <string name="notifications_empty_action_comments">הצטרפות לדיון: הוספת תגובה על פוסטים בבלוגים תחת מעקב שלך</string>
+    <string name="notifications_empty_action_unread">להכניס קצת עניין בדיון: כתיבת פוסט חדש</string>
     <string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
     <string name="notifications_empty_comments">אין תגובות עדיין</string>
     <string name="notifications_empty_unread">אין יותר חדש!</string>

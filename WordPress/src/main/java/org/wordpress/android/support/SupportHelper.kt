@@ -105,7 +105,7 @@ private fun supportIdentityInputDialogLayout(
 
     val emailEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_email_edit_text)
     emailEditText.setText(emailSuggestion)
-    emailEditText.setSelection(0, emailSuggestion?.length ?: 0)
+    emailEditText.selectAll()
 
     val nameEditText = layout.findViewById<EditText>(R.id.support_identity_input_dialog_name_edit_text)
     nameEditText.setText(nameSuggestion)

@@ -3627,4 +3627,10 @@ public class EditPostActivity extends AppCompatActivity implements
     public SiteModel getSite() {
         return mSite;
     }
+
+
+    // External Access to the Image Loader
+    public AztecImageLoader getAztecImageLoader() {
+        return mAztecImageLoader;
+    }
 }

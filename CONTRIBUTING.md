@@ -100,10 +100,10 @@ Adding a vector drawable (to `WordPress/src/main/res/drawable/`) should be the f
 
 Some vector drawables may come from a SVG file and they are not the easiest file type to edit. If the SVG file is specific to the WPAndroid project (like a banner image or unlike a gridicon), then add the SVG source in `WordPress/src/future/svg/`. This will make sure we can find and edit the SVG file and then export it in vector drawable format.
 
-Please use the following naming convention for naming drawables:
+Please use the following naming convention for drawables:
 
 * Use `ic_` for icons (i.e. simple, usually single color, usually square shape) and `img_` for images (i.e. complex, usually multiple colors).
-* Use the [gridicon](https://github.com/Automattic/gridicons/tree/master/svg) name if applicable (examples: `ic_my_sites` or `ic_reply`).
+* Use the [gridicon](http://automattic.github.io/gridicons/) name if applicable (examples: `ic_my_sites` or `ic_reply`).
 * Use the color to icons (example: `ic_reply_grey`).
 * Use the width in dp (example: `ic_reply_grey_32dp`).
 

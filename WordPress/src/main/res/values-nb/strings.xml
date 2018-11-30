@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-03 22:40:49+0000
+Translation-Revision-Date: 2018-11-18 19:50:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="history_detail_title">Revisjon</string>
+    <string name="history_detail_button_previous">Forrige</string>
+    <string name="history_detail_button_next">Neste</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Lær mer</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Ikke vis igjen</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Gå tilbake</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Rediger side</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Rediger innlegg</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Vi arbeider med et helt nytt redigeringsverktøy for WordPress. Du kan fortsatt redigere denne siden, men vi anbefaler å forhåndsvise den før publisering.</string>
+    <string name="dialog_gutenberg_compatibility_message">Vi arbeider med et helt nytt redigeringsverktøy for WordPress. Du kan fortsatt redigere dette innlegget, men vi anbefaler å forhåndsvise det før publisering.</string>
+    <string name="dialog_gutenberg_compatibility_title">Før du fortsetter</string>
+    <string name="media_space_used">%1$s er brukt</string>
     <string name="enter_wpcom_or_jetpack_site">Vennligst opp et nettsted på WordPress.com eller et Jetpack-tilkoblet WordPress-nettsted</string>
+    <string name="history_loading_revision">Laster revisjon</string>
+    <string name="history_loaded_revision">Revisjon lastet</string>
     <string name="history_load_dialog_button_positive">Last inn</string>
     <string name="history_footer_post">Innlegg opprettet %1$s kl %2$s</string>
     <string name="history_footer_page">Side opprettet %1$s kl %2$s</string>
     <string name="history_empty_title">Ingen historikk ennå</string>
     <string name="description_user">Bruker-avatar</string>
+    <string name="async_promo_description_schedule_page">Du kan nå forlate redigeringsverktøyet og din side vil bli lagret og planlagt i bakgrunnen! Prøv det ut!</string>
+    <string name="async_promo_description_publish_post">Du kan nå forlate redigeringsverktøyet og ditt innlegg vil bli lagret og publisert i bakgrunnen! Prøv det ut! </string>
+    <string name="async_promo_description_publish_page">Du kan nå forlate redigeringsverktøyet og din side vil bli lagret og publisert i bakgrunnen! Prøv det ut! </string>
     <string name="image_size_full_label">Full størrelse</string>
     <string name="image_size_large_label">Stor</string>
     <string name="image_size_medium_label">Middels</string>
@@ -21,6 +38,10 @@ Language: nb_NO
     <string name="async_promo_title_schedule">Planlegg med tillit</string>
     <string name="pages_pending">Venter på gennomgang</string>
     <string name="news_card_announcement_action_sample_announcement">[Les mer]</string>
+    <string name="news_card_announcement_content_sample_announcement">[Ikke tid til å lese akkurat nå? Ikke noe problem: Lagre innlegg til når du har tid.]</string>
+    <string name="news_card_announcement_title_sample_announcement">[Ny egenskap/funksjon tilgjengelig]</string>
+    <string name="pages_empty_trashed">Du har ingen sider i papirkurven</string>
+    <string name="pages_empty_scheduled">Du har ingen planlagte sider</string>
     <string name="pages_empty_drafts">Du har ingen side-kladder</string>
     <string name="pages_empty_published">Du har ingen publiserte sider ennå</string>
     <string name="pages_search_suggestion">Søk sider</string>
@@ -35,6 +56,7 @@ Language: nb_NO
     <string name="pages_scheduled">Planlagt</string>
     <string name="pages_drafts">Kladder</string>
     <string name="pages_published">Publisert</string>
+    <string name="login_error_email_not_found_v2">Det er ingen WordPress.com-konto som passer til denne Google-kontoen.</string>
     <string name="site_picker_remove_site_empty">Ingen nettsteder passer med ditt søk</string>
     <string name="reader_empty_followed_blogs_search_title">Ingen nettsteder passer med ditt søk</string>
     <string name="page_parent_changed">Siden forelder har blitt endret</string>
@@ -59,10 +81,19 @@ Language: nb_NO
     <string name="quick_start_dialog_share_site_title">Del ditt netsted</string>
     <string name="quick_start_dialog_share_site_message_short_sharing">Trykk %1$s Deling %2$s for å fortsette</string>
     <string name="quick_start_dialog_publish_post_title">Publiser et innlegg</string>
+    <string name="quick_start_dialog_publish_post_message_short">Trykk %1$s Lag nytt innlegg %2$s for å lage et nytt innlegg</string>
+    <string name="quick_start_dialog_publish_post_message">Tiden er inne! Kladd og publiser ditt første innlegg.</string>
+    <string name="quick_start_dialog_need_help_title">Vil du ha litt hjelp for å komme i gang?</string>
     <string name="quick_start_dialog_need_help_button_positive">Ja</string>
     <string name="quick_start_dialog_need_help_button_neutral">Aldri</string>
     <string name="quick_start_dialog_need_help_button_negative">Nei</string>
     <string name="quick_start_dialog_follow_sites_title">Følg andre nettsteder</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende interesser</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
+    <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som snakker til deg og følg dem for å få oppdateringer når de publiserer.</string>
+    <string name="quick_start_dialog_customize_site_title">Tilpass ditt nettsted</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Trykk %1$s Tema %2$s for å fortsette</string>
+    <string name="quick_start_dialog_choose_theme_title">Velg et tema</string>
     <string name="quick_start_button_skip_positive">Hopp over</string>
     <string name="quick_start_button_skip_negative">Avbryt</string>
     <string name="quick_start_button_skip">Hopp over alt</string>
@@ -70,11 +101,16 @@ Language: nb_NO
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Ikke nå</string>
     <string name="content_description_done">Gjort</string>
+    <string name="my_site_create_new_site_title">Du har ingen nettsteder</string>
+    <string name="reader_empty_followed_tags_title">Ingen fulgte emner</string>
+    <string name="reader_empty_followed_tags_subtitle">Legg til emneord for å finne innlegg om dine favoritt-emner</string>
+    <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="install_jetpack_retry">Prøv på nytt</string>
     <string name="install_jetpack_continue">Fortsett</string>
     <string name="install_jetpack">Installer Jetpack</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
+    <string name="themes_empty_list">Intet tema passet til ditt søk</string>
     <string name="reader_label_post_search_explainer">Hva vil du finne?</string>
     <string name="site_settings_tags_empty_title_search">Ingen stikkord passet ditt søk</string>
     <string name="site_settings_tags_empty_title">Du har ingen stikkord</string>
@@ -115,16 +151,28 @@ Language: nb_NO
     <string name="support_identity_input_dialog_email_label">Epost</string>
     <string name="support_identity_input_dialog_enter_email">Vennligst oppgi din epost-adresse</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Vennligst oppgi din epost-adresse og navn for å fortsete</string>
+    <string name="support_push_notification_message">Ny melding fra \'Hjelp og brukersøtte\'</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">Ikke angitt</string>
     <string name="support_contact_email">Epost for kontakt</string>
     <string name="my_tickets">Mine saker</string>
     <string name="activity_log_rewind_site">Tilbakestill nettsted</string>
     <string name="plugin_auto_managed">Automatisk behandlet</string>
+    <string name="reader_save_posts_locally_dialog_message">Lagre dette innlegget og kom tilbake for å lese det når som helst. Det vil bare bli lagret på denne enheten — lagrede innlegg synkroniseres ikke til andre enheter. (Ennå! Vi arbeider med det.)</string>
     <string name="reader_save_posts_locally_dialog_title">Lagre innlegg for senere</string>
+    <string name="reader_empty_search_request_failed">Kan ikke utføre søk</string>
     <string name="reader_empty_search_title">Ingen resultater funnet</string>
+    <string name="comment_read_source_post">Les kildeinnlegget</string>
     <string name="sites">Nettsteder</string>
+    <string name="signup_magic_link_title">Magisk lenke sendt</string>
     <string name="signup_email_screen_title">Registrering via epost</string>
+    <string name="verification_2fa_screen_title">Kodebekreftelse</string>
+    <string name="selfhosted_site_login_title">Legitimasjoner for innlogging</string>
+    <string name="magic_link_sent_login_title">Magisk lenke sendt</string>
+    <string name="magic_link_login_title">Innlogging med magisk lenke</string>
+    <string name="site_address_login_title">Innlogging på nettstedsadresse</string>
+    <string name="email_address_login_title">Innlogging med epost</string>
+    <string name="alternatively">Alternativt:</string>
     <string name="reader_empty_saved_posts_description">Trykk %s for å lagre innlegget på din liste.</string>
     <string name="reader_empty_saved_posts_title">Ingen innlegg lagret — ennå!</string>
     <string name="reader_bookmark_snack_title">Innlegg lagret</string>
@@ -180,6 +228,9 @@ Language: nb_NO
     <string name="stats_comments_many_desc">%d kommentarer</string>
     <string name="stats_comments_one_desc">én kommentar</string>
     <string name="stats_comments_zero_desc">ingen kommentarer</string>
+    <string name="stats_clicks_many_desc">%d klikk</string>
+    <string name="stats_clicks_one_desc">ett klikk</string>
+    <string name="stats_clicks_zero_desc">ingen klikk</string>
     <string name="stats_views_many_desc">%d visninger</string>
     <string name="stats_views_one_desc">én visning</string>
     <string name="stats_views_zero_desc">ingen visninger</string>
@@ -214,6 +265,7 @@ Language: nb_NO
     <string name="media_grid_item_trash_desc">søppel</string>
     <string name="media_grid_item_retry_desc">prøv igjen</string>
     <string name="invite_user_delete_desc">fjern %s</string>
+    <string name="profile_picture">%s sitt profilbilde</string>
     <string name="menu_undo_snackbar_action">ANGRE</string>
     <string name="menu_visual_mode_done_snackbar">Byttet til visuell modus</string>
     <string name="menu_visual_mode">Visuell modus</string>
@@ -228,13 +280,25 @@ Language: nb_NO
     <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s av %2$s</string>
+    <string name="site_settings_quota_space_title">Plass brukt</string>
     <string name="site_settings_quota_header">Media</string>
+    <string name="comment_unspam_talkback">Kommentar merket som ikke spam.</string>
+    <string name="comment_spam_talkback">Kommentar merket som spam.</string>
+    <string name="comment_delete_talkback">Kommentar slettet</string>
+    <string name="comment_untrash_talkback">Kommentar gjenoprettet</string>
+    <string name="comment_trash_talkback">Kommentar sendt til papirkurven</string>
+    <string name="comment_unliked_talkback">Kommentar ikke lenger likt</string>
+    <string name="comment_liked_talkback">Kommentar likt</string>
+    <string name="comment_unapproved_talkback">Kommentar satt ikke godkjent</string>
     <string name="comment_approved_talkback">Kommentar godkjent</string>
+    <string name="notif_detail_screen_title">Varslingsdetalj %s</string>
     <string name="edit_photo_screen_title">Rediger bilde</string>
     <string name="share_intent_screen_title">Velg nettsted</string>
     <string name="signup_epilogue_screen_title">Ny konto</string>
     <string name="login_prologue_screen_title">Logg inn</string>
     <string name="login_epilogue_screen_title">Logget inn som</string>
+    <string name="person_detail_screen_title">Persondetalj</string>
+    <string name="media_settings_screen_title">Fildetaljer</string>
     <string name="publicize_buttons_screen_title">Delingsknapper</string>
     <string name="notifications_screen_title">Varslinger</string>
     <string name="reader_screen_title">Leser</string>
@@ -283,8 +347,12 @@ Language: nb_NO
     <string name="username_changer_dismiss_button_positive">Forkast</string>
     <string name="username_changer_action">Lagre</string>
     <string name="content_description_add_avatar">Legg til avatar</string>
+    <string name="signup_with_google_button">Registrer deg med Google</string>
+    <string name="signup_with_email_button">Registrer deg med epost</string>
     <string name="signup_user_exists">Epost-adressen finnes allerede påWordPress.com.\nFortsett med innlogging.</string>
     <string name="signup_updating_account">Oppdaterer konto…</string>
+    <string name="signup_magic_link_progress">Sender epost</string>
+    <string name="signup_magic_link_message">Vi sendte deg en magisk registreringslenke! Sjekk din e-post på denne enheten og trykk på lenken i e-posten for å avslutte registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Prøv igjen</string>
     <string name="signup_magic_link_error_button_negative">Lukk</string>
     <string name="signup_epilogue_hint_username">Brukernavn</string>
@@ -307,6 +375,7 @@ Language: nb_NO
     <string name="plugin_install">Installer</string>
     <string name="site_settings_like_header">Lik</string>
     <string name="my_site_add_new_site">Legg til nytt nettsted</string>
+    <string name="site_settings_lazy_load_images">\"Lat lasting\" av bilder</string>
     <string name="stats_jetpack_connection_setup">Installer Jetpack</string>
     <string name="plugin_chevron_icon_content_description">Veksle tekst</string>
     <string name="plugin_info_your_version">Din WordPress-versjon</string>
@@ -339,6 +408,7 @@ Language: nb_NO
     <string name="tag_description_hint">Beskrivelse</string>
     <string name="tag_name_hint">Stikkord</string>
     <string name="site_settings_timezones_error">Kunne ikke laste inn tidssoner</string>
+    <string name="site_settings_format_help">Lær om formatering av dato og tid</string>
     <string name="site_settings_format_hint_custom">Tilpasset format</string>
     <string name="site_settings_format_entry_custom">Egendefinert</string>
     <string name="site_settings_posts_per_page_title">Innlegg pr side</string>
@@ -381,8 +451,13 @@ Language: nb_NO
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
     <string name="uploading_subtitle_posts_only_one">1 innlegg igjen</string>
+    <string name="uploading_title">Laster opp…</string>
     <string name="media_files_uploaded_write_post">Skriv innlegg</string>
+    <string name="media_all_files_uploaded_successfully">%d filer lastet opp</string>
+    <string name="media_files_uploaded_successfully">, %d vellykket lastet opp</string>
     <string name="media_file_uploaded">1 fil er lastet opp</string>
+    <string name="remove_image_from_post">Fjern fra innlegg</string>
+    <string name="confirm_remove_media_image">Fjern dette bildet fra innlegget?</string>
     <string name="media_edit_customize_card_caption">Tilpass</string>
     <string name="login_error_button">Lukk</string>
     <string name="login_google_button_suffix">Logg inn med Google.</string>

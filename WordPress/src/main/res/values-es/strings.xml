@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-23 21:28:38+0000
+Translation-Revision-Date: 2018-11-07 16:27:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="history_detail_title">Revisión</string>
+    <string name="history_detail_button_previous">Anterior</string>
+    <string name="history_detail_button_next">Siguiente</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Saber más</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">No mostrar de nuevo</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Volver</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editar página</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editar entrada</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Estamos trabajando en un editor WordPress totalmente nuevo. Aún puedes editar esta página pero te recomendamos previsualizarla antes de publicar.</string>
+    <string name="dialog_gutenberg_compatibility_message">Estamos trabajando en un editor WordPress totalmente nuevo. Aún puedes editar esta entrada pero te recomendamos previsualizarla antes de publicar.</string>
+    <string name="dialog_gutenberg_compatibility_title">Antes de seguir</string>
+    <string name="media_space_used">%1$s utilizado</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Por favor, introduce un sitio WordPress WordPress.com o alojado conectado a Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
     <string name="history_loaded_revision">Revisión cargada</string>
-    <string name="history_load_dialog_title">Cargar revisión</string>
-    <string name="history_load_dialog_message">¿Quieres cargar la revisión de %1$s a las %2$s?</string>
     <string name="history_load_dialog_button_positive">Cargar</string>
     <string name="history_footer_post">Entrada creada el %1$s a las %2$s</string>
     <string name="history_footer_page">Página creada el %1$s a las %2$s</string>

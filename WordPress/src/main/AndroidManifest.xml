@@ -76,26 +76,6 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
 
-            <intent-filter>
-                <data
-                    android:host="stats"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="read"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="post"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="notifications"
-                    android:scheme="wordpress" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
@@ -367,6 +347,18 @@
 
                 <data
                     android:host="viewpost"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="stats"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="read"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="post"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="notifications"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>

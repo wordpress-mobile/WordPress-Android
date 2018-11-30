@@ -277,7 +277,12 @@ public class ReaderPostPagerActivity extends AppCompatActivity
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, uri);
+        String host = "";
+        if (uri != null) {
+            host = uri.getHost();
+        }
+
+        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, host, uri);
 
         if (uri == null) {
             // invalid uri so, just show the entry screen
