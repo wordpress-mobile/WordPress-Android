@@ -23,7 +23,6 @@ class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
     private val newList: List<BlockListItem>
 ) : Callback() {
-
     enum class Payload {
         EXPAND_CHANGED
     }
