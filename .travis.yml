@@ -63,4 +63,4 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
-  - ./gradlew -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+  - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
