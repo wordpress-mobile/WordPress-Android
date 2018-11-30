@@ -77,7 +77,7 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
 }
 
 /**
- * Merges two LiveData sources using a given function. The function returns an object of a new type.
+ * Merges three LiveData sources using a given function. The function returns an object of a new type.
  * @param sourceA first source
  * @param sourceB second source
  * @param sourceC third source

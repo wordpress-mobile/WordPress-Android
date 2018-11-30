@@ -46,15 +46,15 @@ class PublicizeUseCase
         }
     }
 
-    override fun buildModel(model: PublicizeModel): List<BlockListItem> {
+    override fun buildUiModel(domainModel: PublicizeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_publicize))
-        if (model.services.isEmpty()) {
+        if (domainModel.services.isEmpty()) {
             items.add(Empty)
         } else {
             items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
-            items.addAll(model.services.let { mapper.map(it) })
-            if (model.hasMore) {
+            items.addAll(domainModel.services.let { mapper.map(it) })
+            if (domainModel.hasMore) {
                 items.add(Link(text = string.stats_insights_view_more) {
                     navigateTo(ViewPublicizeStats)
                 })

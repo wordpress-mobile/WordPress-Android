@@ -17,17 +17,17 @@ import org.wordpress.android.util.merge
 /**
  * Do not override this class directly. Use StatefulUseCase or StatelessUseCase instead.
  */
-abstract class BaseStatsUseCase<Model, UiState>(
+abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val domainModel = MutableLiveData<DomainModel<Model>>()
-    private val uiState = MutableLiveData<UiState>()
-    val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { domainModel, uiState ->
+    private val domainModel = MutableLiveData<Data<DOMAIN_MODEL>>()
+    private val uiState = MutableLiveData<UI_STATE>()
+    val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         when {
-            domainModel == null -> Loading(type)
-            domainModel.error != null -> createFailedItem(domainModel.error)
-            domainModel.model != null -> createDataItem(buildModel(domainModel.model, uiState))
+            data == null -> Loading(type)
+            data.error != null -> createFailedItem(data.error)
+            data.model != null -> createDataItem(buildUiModel(data.model, uiState))
             else -> null
         }
     }
@@ -53,11 +53,11 @@ abstract class BaseStatsUseCase<Model, UiState>(
     /**
      * Trigger this method when there is a new (updated) model available.
      * When it's null, the current model is cleared.
-     * @param model new data
+     * @param domainModel new data
      */
-    suspend fun onModel(model: Model?) {
+    suspend fun onModel(domainModel: DOMAIN_MODEL?) {
         withContext(mainDispatcher) {
-            domainModel.value = DomainModel(model = model)
+            this@BaseStatsUseCase.domainModel.value = Data(model = domainModel)
         }
     }
 
@@ -67,7 +67,7 @@ abstract class BaseStatsUseCase<Model, UiState>(
      */
     suspend fun onError(message: String) {
         withContext(mainDispatcher) {
-            domainModel.value = DomainModel(error = message)
+            domainModel.value = Data(error = message)
         }
     }
 
@@ -75,7 +75,7 @@ abstract class BaseStatsUseCase<Model, UiState>(
      * Trigger this method when the UI state has changed.
      * @param newState
      */
-    fun onUiState(newState: UiState?) {
+    fun onUiState(newState: UI_STATE?) {
         uiState.value = newState
     }
 
@@ -108,12 +108,12 @@ abstract class BaseStatsUseCase<Model, UiState>(
     protected abstract suspend fun fetchRemoteData(site: SiteModel, forced: Boolean)
 
     /**
-     * Transforms given model and ui state into the UI model
-     * @param model domain model coming from FluxC
+     * Transforms given domain model and ui state into the UI model
+     * @param domainModel domain model coming from FluxC
      * @param nullableUiState contains UI specific data
      * @return a list of block list items
      */
-    protected abstract fun buildModel(model: Model, nullableUiState: UiState?): List<BlockListItem>
+    protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: UI_STATE?): List<BlockListItem>
 
     private fun createFailedItem(message: String): Error {
         return Error(type, message)
@@ -123,48 +123,48 @@ abstract class BaseStatsUseCase<Model, UiState>(
         return BlockList(type, data)
     }
 
-    private data class DomainModel<Model>(val model: Model? = null, val error: String? = null)
+    private data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL? = null, val error: String? = null)
 
     /**
      * Stateful use case should be used when we have a block that has a UI state that needs to be preserved
      * over rotation pull to refresh. It is for example a block with Tabs or with expandable item.
      * @param defaultUiState default value the UI state should have when the screen first loads
      */
-    abstract class StatefulUseCase<Model, UiState>(
+    abstract class StatefulUseCase<DOMAIN_MODEL, UI_STATE>(
         type: InsightsTypes,
         mainDispatcher: CoroutineDispatcher,
-        private val defaultUiState: UiState
-    ) : BaseStatsUseCase<Model, UiState>(type, mainDispatcher) {
-        final override fun buildModel(model: Model, nullableUiState: UiState?): List<BlockListItem> {
-            return buildStatefulModel(model, nullableUiState ?: defaultUiState)
+        private val defaultUiState: UI_STATE
+    ) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher) {
+        final override fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: UI_STATE?): List<BlockListItem> {
+            return buildStatefulUiModel(domainModel, nullableUiState ?: defaultUiState)
         }
 
         /**
-         * Transforms given model and ui state into the UI model
-         * @param model domain model coming from FluxC
+         * Transforms given domain model and ui state into the UI model
+         * @param domainModel domain model coming from FluxC
          * @param uiState contains UI specific data
          * @return a list of block list items
          */
-        protected abstract fun buildStatefulModel(model: Model, uiState: UiState): List<BlockListItem>
+        protected abstract fun buildStatefulUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
     }
 
     /**
      * Stateless use case should be used for the blocks that display just plain data.
      * These blocks don't have only one UI state and it doesn't change.
      */
-    abstract class StatelessUseCase<Model>(
+    abstract class StatelessUseCase<DOMAIN_MODEL>(
         type: InsightsTypes,
         mainDispatcher: CoroutineDispatcher
-    ) : BaseStatsUseCase<Model, NotUsedUiState>(type, mainDispatcher) {
+    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher) {
         /**
-         * Transforms given model into the UI model
-         * @param model domain model coming from FluxC
+         * Transforms given domain model into the UI model
+         * @param domainModel domain model coming from FluxC
          * @return a list of block list items
          */
-        abstract fun buildModel(model: Model): List<BlockListItem>
+        abstract fun buildUiModel(domainModel: DOMAIN_MODEL): List<BlockListItem>
 
-        final override fun buildModel(model: Model, nullableUiState: NotUsedUiState?): List<BlockListItem> {
-            return buildModel(model)
+        final override fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: NotUsedUiState?): List<BlockListItem> {
+            return buildUiModel(domainModel)
         }
 
         object NotUsedUiState

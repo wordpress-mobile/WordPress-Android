@@ -37,14 +37,14 @@ class TodayStatsUseCase
         }
     }
 
-    override fun buildModel(model: VisitsModel): List<BlockListItem> {
+    override fun buildUiModel(domainModel: VisitsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
 
-        val hasViews = model.views > 0
-        val hasVisitors = model.visitors > 0
-        val hasLikes = model.likes > 0
-        val hasComments = model.comments > 0
+        val hasViews = domainModel.views > 0
+        val hasVisitors = domainModel.visitors > 0
+        val hasLikes = domainModel.likes > 0
+        val hasComments = domainModel.comments > 0
         if (!hasViews && !hasVisitors && !hasLikes && !hasComments) {
             items.add(Empty)
         } else {
@@ -53,7 +53,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_visible_on_grey_dark_24dp,
                                 textResource = R.string.stats_views,
-                                value = model.views.toFormattedString(),
+                                value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasLikes || hasComments
                         )
                 )
@@ -63,7 +63,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_user_grey_dark_24dp,
                                 textResource = R.string.stats_visitors,
-                                value = model.visitors.toFormattedString(),
+                                value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasLikes || hasComments
                         )
                 )
@@ -73,7 +73,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_star_grey_dark_24dp,
                                 textResource = R.string.stats_likes,
-                                value = model.likes.toFormattedString(),
+                                value = domainModel.likes.toFormattedString(),
                                 showDivider = hasComments
                         )
                 )
@@ -83,7 +83,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_comment_grey_dark_24dp,
                                 textResource = R.string.stats_comments,
-                                value = model.comments.toFormattedString(),
+                                value = domainModel.comments.toFormattedString(),
                                 showDivider = false
                         )
                 )

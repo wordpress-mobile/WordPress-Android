@@ -59,10 +59,13 @@ class FollowersUseCase
         when {
             error != null -> onError(error.message ?: error.type.name)
             wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
+            else -> {
+                onModel(null)
+            }
         }
     }
 
-    override fun buildStatefulModel(
+    override fun buildStatefulUiModel(
         model: Pair<FollowersModel, FollowersModel>,
         uiState: Int
     ): List<BlockListItem> {

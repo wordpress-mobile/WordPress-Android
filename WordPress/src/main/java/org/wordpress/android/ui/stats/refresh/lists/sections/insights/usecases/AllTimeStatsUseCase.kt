@@ -39,14 +39,14 @@ class AllTimeStatsUseCase
         }
     }
 
-    override fun buildModel(model: InsightsAllTimeModel): List<BlockListItem> {
+    override fun buildUiModel(domainModel: InsightsAllTimeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_all_time_stats))
 
-        val hasPosts = model.posts > 0
-        val hasViews = model.views > 0
-        val hasVisitors = model.visitors > 0
-        val hasViewsBestDayTotal = model.viewsBestDayTotal > 0
+        val hasPosts = domainModel.posts > 0
+        val hasViews = domainModel.views > 0
+        val hasVisitors = domainModel.visitors > 0
+        val hasViewsBestDayTotal = domainModel.viewsBestDayTotal > 0
         if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
             items.add(Empty)
         } else {
@@ -55,7 +55,7 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_posts_grey_dark_24dp,
                                 textResource = R.string.posts,
-                                value = model.posts.toFormattedString(),
+                                value = domainModel.posts.toFormattedString(),
                                 showDivider = hasViews || hasVisitors || hasViewsBestDayTotal
                         )
                 )
@@ -65,7 +65,7 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_visible_on_grey_dark_24dp,
                                 textResource = R.string.stats_views,
-                                value = model.views.toFormattedString(),
+                                value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasViewsBestDayTotal
                         )
                 )
@@ -75,7 +75,7 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_user_grey_dark_24dp,
                                 textResource = R.string.stats_visitors,
-                                value = model.visitors.toFormattedString(),
+                                value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasViewsBestDayTotal
                         )
                 )
@@ -85,8 +85,8 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_trophy_grey_dark_24dp,
                                 textResource = R.string.stats_insights_best_ever,
-                                subText = statsDateFormatter.parseDate(model.viewsBestDay),
-                                value = model.viewsBestDayTotal.toFormattedString(),
+                                subText = statsDateFormatter.parseDate(domainModel.viewsBestDay),
+                                value = domainModel.viewsBestDayTotal.toFormattedString(),
                                 showDivider = false
                         )
                 )

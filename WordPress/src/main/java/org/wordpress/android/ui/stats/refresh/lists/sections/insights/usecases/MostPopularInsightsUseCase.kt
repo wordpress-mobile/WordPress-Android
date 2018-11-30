@@ -41,7 +41,7 @@ class MostPopularInsightsUseCase
         }
     }
 
-    override fun buildModel(model: InsightsMostPopularModel): List<BlockListItem> {
+    override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))
         items.add(Label(
@@ -50,20 +50,20 @@ class MostPopularInsightsUseCase
         )
         items.add(
                 ListItem(
-                        dateUtils.getWeekDay(model.highestDayOfWeek),
+                        dateUtils.getWeekDay(domainModel.highestDayOfWeek),
                         resourceProvider.getString(
                                 R.string.stats_insights_most_popular_percent_views,
-                                model.highestDayPercent.roundToInt()
+                                domainModel.highestDayPercent.roundToInt()
                         ),
                         true
                 )
         )
         items.add(
                 ListItem(
-                        dateUtils.getHour(model.highestHour),
+                        dateUtils.getHour(domainModel.highestHour),
                         resourceProvider.getString(
                                 R.string.stats_insights_most_popular_percent_views,
-                                model.highestHourPercent.roundToInt()
+                                domainModel.highestHourPercent.roundToInt()
                         ),
                         false
                 )

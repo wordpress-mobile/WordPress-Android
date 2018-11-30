@@ -96,8 +96,8 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
             ALL_TIME_STATS,
             Dispatchers.Unconfined
     ) {
-        override fun buildModel(model: String, nullableUiState: Int?): List<BlockListItem> {
-            return listOf(Text(model))
+        override fun buildUiModel(domainModel: String, nullableUiState: Int?): List<BlockListItem> {
+            return listOf(Text(domainModel))
         }
 
         override suspend fun loadCachedData(site: SiteModel) {

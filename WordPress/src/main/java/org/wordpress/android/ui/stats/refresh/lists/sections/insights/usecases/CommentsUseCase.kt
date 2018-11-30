@@ -22,13 +22,15 @@ import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
 
+typealias SelectedTabUiState = Int
+
 private const val PAGE_SIZE = 6
 
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : StatefulUseCase<CommentsModel, Int>(COMMENTS, mainDispatcher, 0) {
+) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
@@ -45,7 +47,7 @@ class CommentsUseCase
         dbModel?.let { onModel(dbModel) }
     }
 
-    override fun buildStatefulModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
+    override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
 
@@ -53,9 +55,8 @@ class CommentsUseCase
                 TabsItem(
                         listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
                         uiState
-                ) {
-                    onUiState(it)
-                })
+                ) { selectedTabPosition -> onUiState(selectedTabPosition) }
+        )
 
         if (uiState == 0) {
             items.addAll(buildAuthorsTab(model.authors))

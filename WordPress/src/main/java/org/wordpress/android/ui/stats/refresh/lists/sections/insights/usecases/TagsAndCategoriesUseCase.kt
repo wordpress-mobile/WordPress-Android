@@ -53,22 +53,22 @@ class TagsAndCategoriesUseCase
         model?.let { onModel(model) }
     }
 
-    override fun buildStatefulModel(model: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
+    override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))
-        if (model.tags.isEmpty()) {
+        if (domainModel.tags.isEmpty()) {
             items.add(Empty)
         } else {
             val tagsList = mutableListOf<BlockListItem>()
-            model.tags.forEachIndexed { index, tag ->
+            domainModel.tags.forEachIndexed { index, tag ->
                 when {
                     tag.items.size == 1 -> {
-                        tagsList.add(mapTag(tag, index, model.tags.size))
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size))
                     }
                     else -> {
                         val isExpanded = areTagsEqual(tag, uiState.expandedTag)
                         tagsList.add(ExpandableItem(
-                                mapCategory(tag, index, model.tags.size),
+                                mapCategory(tag, index, domainModel.tags.size),
                                 isExpanded
                         ) { changedExpandedState ->
                             onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
@@ -82,7 +82,7 @@ class TagsAndCategoriesUseCase
             }
 
             items.addAll(tagsList)
-            if (model.hasMore) {
+            if (domainModel.hasMore) {
                 items.add(Link(text = R.string.stats_insights_view_more) {
                     navigateTo(ViewTagsAndCategoriesStats)
                 })

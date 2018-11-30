@@ -42,23 +42,23 @@ class LatestPostSummaryUseCase
         }
     }
 
-    override fun buildModel(model: InsightsLatestPostModel): List<BlockListItem> {
+    override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
-        items.add(latestPostSummaryMapper.buildMessageItem(model))
-        if (model.hasData()) {
+        items.add(latestPostSummaryMapper.buildMessageItem(domainModel))
+        if (domainModel.hasData()) {
             items.add(
                     latestPostSummaryMapper.buildColumnItem(
-                            model.postViewsCount,
-                            model.postLikeCount,
-                            model.postCommentCount
+                            domainModel.postViewsCount,
+                            domainModel.postLikeCount,
+                            domainModel.postCommentCount
                     )
             )
-            if (model.dayViews.isNotEmpty()) {
-                items.add(latestPostSummaryMapper.buildBarChartItem(model.dayViews))
+            if (domainModel.dayViews.isNotEmpty()) {
+                items.add(latestPostSummaryMapper.buildBarChartItem(domainModel.dayViews))
             }
         }
-        items.add(buildLink(model))
+        items.add(buildLink(domainModel))
         return items
     }
 
