@@ -103,7 +103,7 @@ class NotificationSqlUtilsTest {
         val note = notifications[0]
         assertEquals(note.title, "New Order")
         assertEquals(note.noteHash, 2064099309)
-        assertEquals(note.remoteSiteId, 141286411)
+        assertEquals(note.localSiteId, 141286411)
         assertEquals(note.remoteNoteId, 3604874081)
         assertEquals(note.type, NotificationModel.Kind.STORE_ORDER)
         assertEquals(note.read, true)
@@ -185,7 +185,7 @@ class NotificationSqlUtilsTest {
         val note = notifications[0]
         assertEquals(note.noteHash, 1543255567)
         assertEquals(note.title, "Product Review")
-        assertEquals(note.remoteSiteId, 153482281)
+        assertEquals(note.localSiteId, 153482281)
         assertEquals(note.remoteNoteId, 3617558725)
         assertEquals(note.type, NotificationModel.Kind.COMMENT)
         assertEquals(note.read, true)
