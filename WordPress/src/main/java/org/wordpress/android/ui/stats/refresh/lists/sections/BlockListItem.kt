@@ -120,7 +120,10 @@ sealed class BlockListItem(val type: Type) {
 
     object Divider : BlockListItem(DIVIDER)
 
-    data class NavigationAction(val navigationTarget: NavigationTarget, val navigationLiveData: MutableLiveData<NavigationTarget>) {
+    data class NavigationAction(
+        val navigationTarget: NavigationTarget,
+        val navigationLiveData: MutableLiveData<NavigationTarget>
+    ) {
         fun click() {
             navigationLiveData.value = navigationTarget
         }

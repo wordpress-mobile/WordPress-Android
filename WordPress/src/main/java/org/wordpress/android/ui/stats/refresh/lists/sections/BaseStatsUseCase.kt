@@ -163,7 +163,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
          */
         abstract fun buildUiModel(domainModel: DOMAIN_MODEL): List<BlockListItem>
 
-        final override fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: NotUsedUiState?): List<BlockListItem> {
+        final override fun buildUiModel(
+            domainModel: DOMAIN_MODEL,
+            nullableUiState: NotUsedUiState?
+        ): List<BlockListItem> {
             return buildUiModel(domainModel)
         }
 
