@@ -48,7 +48,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsCustomModelUiState
             title.text = uiState.title
             subtitle.text = parent.resources.getString(uiState.subTitleResId)
-            requireNotNull(uiState.onItemTapped)
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
                 uiState.onItemTapped!!.invoke()
             }

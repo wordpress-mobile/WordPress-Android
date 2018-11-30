@@ -18,7 +18,7 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:textColor="@color/wp_grey_dark"
         android:textSize="@dimen/text_sz_large"
-        android:textStyle="bold"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
