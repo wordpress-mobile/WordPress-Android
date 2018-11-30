@@ -13,6 +13,7 @@ import de.greenrobot.event.EventBus
 import org.apache.commons.text.StringEscapeUtils
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
@@ -329,9 +330,15 @@ class PostListViewModel @Inject constructor(
         localPostIdForPublishDialog = null
     }
 
+    private fun isGutenbergEnabled(): Boolean {
+        return BuildConfig.OFFER_GUTENBERG && AppPrefs.isGutenbergEditorEnabled()
+    }
+
     private fun editPostButtonAction(site: SiteModel, post: PostModel) {
         // Show Gutenberg Warning Dialog if post contains GB blocks and it's not disabled
-        if (PostUtils.contentContainsGutenbergBlocks(post.content) && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+        if (!isGutenbergEnabled()
+                && PostUtils.contentContainsGutenbergBlocks(post.content)
+                && !AppPrefs.isGutenbergWarningDialogDisabled()) {
             _postListAction.postValue(ShowGutenbergWarningDialog(site, post))
         } else {
             editPost(site, post)
