@@ -62,11 +62,15 @@ class PublicizeUseCase
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigationAction = NavigationAction(ViewPublicizeStats, mutableNavigationTarget)
+                                navigateAction = NavigationAction.NoParams(this::onLinkClick)
                         )
                 )
             }
         }
         return items
+    }
+
+    private fun onLinkClick() {
+        return navigateTo(ViewPublicizeStats())
     }
 }

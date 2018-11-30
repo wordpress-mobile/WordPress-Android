@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections
 
-import android.arch.lifecycle.MutableLiveData
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -94,7 +92,7 @@ sealed class BlockListItem(val type: Type) {
     data class Link(
         @DrawableRes val icon: Int? = null,
         @StringRes val text: Int,
-        val navigationAction: NavigationAction
+        val navigateAction: NavigationAction
     ) :
             BlockListItem(LINK)
 
@@ -120,12 +118,45 @@ sealed class BlockListItem(val type: Type) {
 
     object Divider : BlockListItem(DIVIDER)
 
-    data class NavigationAction(
-        val navigationTarget: NavigationTarget,
-        val navigationLiveData: MutableLiveData<NavigationTarget>
-    ) {
-        fun click() {
-            navigationLiveData.value = navigationTarget
+    interface NavigationAction {
+        fun click()
+
+        data class OneParam<T>(
+            val navigationData: T,
+            val navigateAction: (T) -> Unit
+        ) : NavigationAction {
+            override fun click() {
+                navigateAction(navigationData)
+            }
+        }
+
+        data class TwoParams<T, U>(
+            val firstParam: T,
+            val secondParam: U,
+            val navigateAction: (T, U) -> Unit
+        ) : NavigationAction {
+            override fun click() {
+                navigateAction(firstParam, secondParam)
+            }
+        }
+
+        data class ThreeParams<T, U, V>(
+            val firstParam: T,
+            val secondParam: U,
+            val thirdParam: V,
+            val navigateAction: (T, U, V) -> Unit
+        ) : NavigationAction {
+            override fun click() {
+                navigateAction(firstParam, secondParam, thirdParam)
+            }
+        }
+
+        data class NoParams(
+            val navigateAction: () -> Unit
+        ) : NavigationAction {
+            override fun click() {
+                navigateAction()
+            }
         }
     }
 }

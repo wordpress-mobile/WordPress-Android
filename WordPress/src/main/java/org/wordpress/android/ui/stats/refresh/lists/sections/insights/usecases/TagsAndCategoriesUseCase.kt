@@ -38,6 +38,14 @@ class TagsAndCategoriesUseCase
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
+    private val onLinkClick: () -> Unit = {
+        navigateTo(ViewTagsAndCategoriesStats())
+    }
+
+    private val onTagClick: (String) -> Unit = {
+        navigateTo(ViewTag(it))
+    }
+
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
@@ -87,7 +95,7 @@ class TagsAndCategoriesUseCase
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigationAction = NavigationAction(ViewTagsAndCategoriesStats, mutableNavigationTarget)
+                                navigateAction = NavigationAction.NoParams(onLinkClick)
                         )
                 )
             }
@@ -106,7 +114,7 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction(ViewTag(item.link), mutableNavigationTarget)
+                navigationAction = NavigationAction.OneParam(item.link, onTagClick)
         )
     }
 
@@ -130,7 +138,7 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction(ViewTag(item.link), mutableNavigationTarget)
+                navigationAction = NavigationAction.OneParam(item.link, onTagClick)
         )
     }
 

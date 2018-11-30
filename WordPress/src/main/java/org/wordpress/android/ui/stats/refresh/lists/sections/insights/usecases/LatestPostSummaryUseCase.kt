@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.LATEST_POST_SU
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -46,7 +47,7 @@ class LatestPostSummaryUseCase
     override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
-        items.add(latestPostSummaryMapper.buildMessageItem(domainModel, mutableNavigationTarget))
+        items.add(latestPostSummaryMapper.buildMessageItem(domainModel, this::onLinkClicked))
         if (domainModel.hasData()) {
             items.add(
                     latestPostSummaryMapper.buildColumnItem(
@@ -71,27 +72,42 @@ class LatestPostSummaryUseCase
             model == null -> Link(
                     R.drawable.ic_create_blue_medium_24dp,
                     R.string.stats_insights_create_post,
-                    navigationAction = NavigationAction(AddNewPost, mutableNavigationTarget)
+                    navigateAction = NavigationAction.NoParams(this::onAddNewPostClick)
             )
             model.hasData() -> Link(
                     text = R.string.stats_insights_view_more,
-                    navigationAction = NavigationAction(
-                            ViewPostDetailStats(
-                                    model.postId,
-                                    model.postTitle,
-                                    model.postURL
-                            ),
-                            mutableNavigationTarget
+                    navigateAction = NavigationAction.ThreeParams(
+                            model.postId,
+                            model.postTitle,
+                            model.postURL,
+                            this::onViewMore
                     )
             )
             else -> Link(
                     R.drawable.ic_share_blue_medium_24dp,
                     R.string.stats_insights_share_post,
-                    navigationAction = NavigationAction(
-                            SharePost(model.postURL, model.postTitle),
-                            mutableNavigationTarget
+                    navigateAction = NavigationAction.TwoParams(
+                            model.postURL,
+                            model.postTitle,
+                            this::onSharePost
                     )
             )
         }
+    }
+
+    private fun onAddNewPostClick() {
+        navigateTo(AddNewPost())
+    }
+
+    private fun onViewMore(postId: Long, postTitle: String, postUrl: String) {
+        navigateTo(ViewPostDetailStats(postId, postTitle, postUrl))
+    }
+
+    private fun onSharePost(postUrl: String, postTitle: String) {
+        navigateTo(SharePost(postUrl, postTitle))
+    }
+
+    private fun onLinkClicked(postId: Long, postUrl: String) {
+        navigateTo(ViewPost(postId, postUrl))
     }
 }

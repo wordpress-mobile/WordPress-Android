@@ -230,7 +230,7 @@ sealed class BlockListItemViewHolder(
                 text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
             text.setText(item.text)
-            link.setOnClickListener { item.navigationAction.click() }
+            link.setOnClickListener { item.navigateAction.click() }
         }
     }
 

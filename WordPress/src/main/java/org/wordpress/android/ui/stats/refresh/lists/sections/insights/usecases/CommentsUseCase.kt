@@ -32,6 +32,11 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
+
+    private val onLinkClick: () -> Unit = {
+        navigateTo(ViewCommentsStats())
+    }
+
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
         val model = response.model
@@ -69,7 +74,7 @@ class CommentsUseCase
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
-                            navigationAction = NavigationAction(ViewCommentsStats, mutableNavigationTarget)
+                            navigateAction = NavigationAction.NoParams(onLinkClick)
                     )
             )
         }

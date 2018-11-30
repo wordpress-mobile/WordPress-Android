@@ -1,13 +1,10 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import android.arch.lifecycle.MutableLiveData
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
@@ -24,7 +21,10 @@ class LatestPostSummaryMapper
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    fun buildMessageItem(model: InsightsLatestPostModel?, navigationLiveData: MutableLiveData<NavigationTarget>): Text {
+    fun buildMessageItem(
+        model: InsightsLatestPostModel?,
+        navigationAction: (postId: Long, postUrl: String) -> Unit
+    ): Text {
         if (model == null) {
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
         }
@@ -48,9 +48,10 @@ class LatestPostSummaryMapper
                 listOf(
                         Clickable(
                                 postTitle,
-                                navigationAction = NavigationAction(
-                                        ViewPost(model.postId, model.postURL),
-                                        navigationLiveData
+                                navigationAction = NavigationAction.TwoParams(
+                                        model.postId,
+                                        model.postURL,
+                                        navigateAction = navigationAction
                                 )
                         )
                 )

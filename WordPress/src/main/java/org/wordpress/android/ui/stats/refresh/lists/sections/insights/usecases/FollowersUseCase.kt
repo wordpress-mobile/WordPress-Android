@@ -40,6 +40,10 @@ class FollowersUseCase
         mainDispatcher,
         0
 ) {
+    private val onLinkClick: () -> Unit = {
+        navigateTo(ViewFollowersStats())
+    }
+
     override suspend fun loadCachedData(site: SiteModel) {
         val wpComFollowers = insightsStore.getWpComFollowers(site, PAGE_SIZE)
         val emailFollowers = insightsStore.getEmailFollowers(site, PAGE_SIZE)
@@ -95,7 +99,7 @@ class FollowersUseCase
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
-                            navigationAction = NavigationAction(ViewFollowersStats, mutableNavigationTarget)
+                            navigateAction = NavigationAction.NoParams(onLinkClick)
                     )
             )
         }

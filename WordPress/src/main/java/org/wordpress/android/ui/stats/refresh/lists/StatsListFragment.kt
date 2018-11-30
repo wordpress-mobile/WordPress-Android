@@ -196,7 +196,7 @@ class StatsListFragment : DaggerFragment() {
 }
 
 sealed class NavigationTarget : Event() {
-    object AddNewPost : NavigationTarget()
+    class AddNewPost : NavigationTarget()
     data class ViewPost(val postId: Long, val postUrl: String) : NavigationTarget()
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
@@ -205,9 +205,9 @@ sealed class NavigationTarget : Event() {
         val postUrl: String
     ) : NavigationTarget()
 
-    object ViewFollowersStats : NavigationTarget()
-    object ViewCommentsStats : NavigationTarget()
-    object ViewTagsAndCategoriesStats : NavigationTarget()
-    object ViewPublicizeStats : NavigationTarget()
+    class ViewFollowersStats : NavigationTarget()
+    class ViewCommentsStats : NavigationTarget()
+    class ViewTagsAndCategoriesStats : NavigationTarget()
+    class ViewPublicizeStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
 }

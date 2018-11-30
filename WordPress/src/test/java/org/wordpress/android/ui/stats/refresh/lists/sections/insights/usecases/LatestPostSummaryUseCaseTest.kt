@@ -168,7 +168,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
         useCase.navigationTarget.observeForever { navigationTarget = it }
-        this.navigationAction.click()
+        this.navigateAction.click()
         return navigationTarget
     }
 
