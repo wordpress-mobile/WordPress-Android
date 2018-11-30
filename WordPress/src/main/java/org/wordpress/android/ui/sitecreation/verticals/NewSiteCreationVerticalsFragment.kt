@@ -24,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
@@ -55,6 +56,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var clearAllButton: View
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
+    private lateinit var skipClickedListener: OnSkipClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -63,7 +65,11 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         if (context !is VerticalsScreenListener) {
             throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
         }
+        if (context !is OnSkipClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
+        }
         verticalsScreenListener = context
+        skipClickedListener = context
     }
 
     @LayoutRes
@@ -192,9 +198,10 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             searchEditText.setText("")
         })
 
-        viewModel.verticalSelected.observe(this, Observer {
-            verticalsScreenListener.onVerticalSelected(it)
+        viewModel.verticalSelected.observe(this, Observer { verticalId ->
+            verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
         })
+        viewModel.skipBtnClicked.observe(this, Observer { skipClickedListener.onSkipClicked() })
         viewModel.start(segmentId)
     }
 

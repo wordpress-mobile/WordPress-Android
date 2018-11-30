@@ -63,8 +63,11 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
 
-    private val _verticalSelected = SingleLiveEvent<String?>()
-    val verticalSelected: LiveData<String?> = _verticalSelected
+    private val _verticalSelected = SingleLiveEvent<String>()
+    val verticalSelected: LiveData<String> = _verticalSelected
+
+    private val _skipBtnClicked = SingleLiveEvent<Void>()
+    val skipBtnClicked: LiveData<Void> = _skipBtnClicked
 
     init {
         dispatcher.register(fetchVerticalsUseCase)
@@ -116,7 +119,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     fun onSkipStepBtnClicked() {
-        _verticalSelected.value = null
+        _skipBtnClicked.call()
     }
 
     fun updateQuery(query: String, delay: Int = throttleDelay) {
