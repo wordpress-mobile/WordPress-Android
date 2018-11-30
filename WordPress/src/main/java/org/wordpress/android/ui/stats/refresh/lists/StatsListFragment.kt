@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
@@ -160,6 +161,9 @@ class StatsListFragment : DaggerFragment() {
                 is ViewTag -> {
                     ActivityLauncher.openStatsUrl(activity, it.link)
                 }
+                is ViewPublicizeStats -> {
+                    ActivityLauncher.viewPublicizeStats(activity, site)
+                }
             }
             true
         }
@@ -193,5 +197,6 @@ sealed class NavigationTarget : Event() {
     object ViewFollowersStats : NavigationTarget()
     object ViewCommentsStats : NavigationTarget()
     object ViewTagsAndCategoriesStats : NavigationTarget()
+    data class ViewPublicizeStats(val siteID: Long) : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
 }
