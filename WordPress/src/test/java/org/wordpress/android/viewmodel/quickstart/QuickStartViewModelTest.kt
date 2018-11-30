@@ -54,7 +54,8 @@ class QuickStartViewModelTest {
         whenever(store.hasDoneTask(siteId, ENABLE_POST_SHARING)).thenReturn(true)
         viewModel.completeTask(ENABLE_POST_SHARING, true)
 
-        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == ENABLE_POST_SHARING && it.isTaskCompleted }?.size)
+        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == ENABLE_POST_SHARING &&
+                it.isTaskCompleted }?.size)
     }
 
     @Test
