@@ -160,7 +160,7 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
@@ -180,8 +180,8 @@ public class MySiteFragment extends Fragment implements
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
 
-        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
-            getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        if (ServiceUtils.isServiceRunning(requireActivity(), StatsService.class)) {
+            requireActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
 
         SiteModel site = getSelectedSite();
@@ -382,7 +382,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
+                ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
             }
         });
 
@@ -507,7 +507,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.yes),
                 getString(R.string.no),
                 null);
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showChangeSiteIconDialog() {
@@ -518,7 +518,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.my_site_icon_dialog_change_button),
                 getString(R.string.my_site_icon_dialog_remove_button),
                 getString(R.string.my_site_icon_dialog_cancel_button));
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showEditingSiteIconRequiresPermissionDialog(@NonNull String message) {
@@ -529,7 +529,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.dialog_button_ok),
                 null,
                 null);
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show(((AppCompatActivity) requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void startWPComLoginForJetpackStats() {
@@ -686,8 +686,8 @@ public class MySiteFragment extends Fragment implements
 
     private MediaModel buildMediaModel(File file, SiteModel site) {
         Uri uri = new Uri.Builder().path(file.getPath()).build();
-        String mimeType = getActivity().getContentResolver().getType(uri);
-        return FluxCUtils.mediaModelFromLocalUri(getActivity(), uri, mimeType, mMediaStore, site.getId());
+        String mimeType = requireActivity().getContentResolver().getType(uri);
+        return FluxCUtils.mediaModelFromLocalUri(requireActivity(), uri, mimeType, mMediaStore, site.getId());
     }
 
     private void startCropActivity(Uri uri) {
@@ -858,12 +858,12 @@ public class MySiteFragment extends Fragment implements
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                        getActivity().findViewById(R.id.coordinator), true,
+                        requireActivity().findViewById(R.id.coordinator), true,
                         event.post, event.errorMessage, site, mDispatcher);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), true,
+                    requireActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage);
         }
     }
@@ -889,7 +889,7 @@ public class MySiteFragment extends Fragment implements
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), false,
+                            requireActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage);
                 }
             }
@@ -996,8 +996,8 @@ public class MySiteFragment extends Fragment implements
                 return;
             }
 
-            ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
-            final View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+            ViewGroup parentView = requireActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
+            final View quickStartTarget = requireActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
 
             if (quickStartTarget == null || parentView == null) {
                 return;
@@ -1044,7 +1044,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
-        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) requireActivity().findViewById(R.id.root_view_main));
     }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
@@ -1118,7 +1118,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator),
+        mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
                 message,
                 AccessibilityUtils.getSnackbarDuration(getActivity(),
                         getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
