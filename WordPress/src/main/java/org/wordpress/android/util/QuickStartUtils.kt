@@ -209,6 +209,10 @@ class QuickStartUtils {
                 ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                else -> {
+                    // TODO: Quick Start - Replace else with remaining tasks.
+                    Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
+                }
             }
         }
 
@@ -221,6 +225,10 @@ class QuickStartUtils {
                 ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
                 PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
                 FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                else -> {
+                    // TODO: Quick Start - Replace else with remaining tasks.
+                    Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
+                }
             }
         }
     }

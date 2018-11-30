@@ -181,6 +181,11 @@ class QuickStartFragment : Fragment() {
                 titleView = title_follow_site
                 checkMarkView = done_follow_site
             }
+            else -> {
+                // TODO: Quick Start - Replace else with remaining tasks.
+                titleView = title_browse_themes
+                checkMarkView = done_browse_themes
+            }
         }
 
         visuallyMarkTaskAsCompleted(titleView, checkMarkView)
