@@ -35,7 +35,7 @@ class NotificationApiResponse : Response {
             return NotificationModel(
                     noteId = 0,
                     remoteNoteId = response.id ?: 0,
-                    remoteSiteId = response.meta?.ids?.site,
+                    localSiteId = response.meta?.ids?.site,
                     noteHash = response.note_hash ?: 0L,
                     type = noteType,
                     subtype = noteSubType,

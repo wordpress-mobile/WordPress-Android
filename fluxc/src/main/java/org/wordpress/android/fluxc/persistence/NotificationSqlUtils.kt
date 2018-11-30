@@ -25,7 +25,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .equals(NotificationModelTable.ID, notification.noteId)
                 .or()
                 .beginGroup()
-                .equals(NotificationModelTable.REMOTE_SITE_ID, notification.remoteSiteId)
+                .equals(NotificationModelTable.LOCAL_SITE_ID, notification.localSiteId)
                 .equals(NotificationModelTable.REMOTE_NOTE_ID, notification.remoteNoteId)
                 .endGroup()
                 .endGroup().endWhere()
@@ -88,7 +88,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     ): List<NotificationModel> {
         val conditionClauseBuilder = WellSql.select(NotificationModelBuilder::class.java)
                 .where()
-                .equals(NotificationModelTable.REMOTE_SITE_ID, site.id)
+                .equals(NotificationModelTable.LOCAL_SITE_ID, site.id)
 
         if (filterByType != null || filterBySubtype != null) {
             conditionClauseBuilder.beginGroup()
@@ -123,7 +123,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         return NotificationModelBuilder(
                 mId = this.noteId,
                 remoteNoteId = this.remoteNoteId,
-                remoteSiteId = this.remoteSiteId,
+                localSiteId = this.localSiteId,
                 noteHash = this.noteHash,
                 type = this.type.toString(),
                 subtype = this.subtype.toString(),
@@ -143,7 +143,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
-        @Column var remoteSiteId: Long?,
+        @Column var localSiteId: Long?,
         @Column var noteHash: Long,
         @Column var type: String,
         @Column var subtype: String? = null,
@@ -179,7 +179,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
             return NotificationModel(
                     mId,
                     remoteNoteId,
-                    remoteSiteId,
+                    localSiteId,
                     noteHash,
                     NotificationModel.Kind.fromString(type),
                     subkind,
