@@ -510,10 +510,10 @@ public class MySiteFragment extends Fragment implements
             int countGrowUncompleted = mQuickStartStore.getUncompletedTasksByType(site, GROW).size();
 
             if (countCustomizeUncompleted > 0) {
-                mQuickStartCustomizeIcon.setBackgroundResource(R.drawable.bg_oval_blue_medium_customize_white_40dp);
+                mQuickStartCustomizeIcon.setEnabled(true);
                 mQuickStartCustomizeTitle.setEnabled(true);
             } else {
-                mQuickStartCustomizeIcon.setBackgroundResource(R.drawable.bg_oval_grey_customize_white_40dp);
+                mQuickStartCustomizeIcon.setEnabled(false);
                 mQuickStartCustomizeTitle.setEnabled(false);
                 mQuickStartCustomizeTitle.setPaintFlags(
                         mQuickStartCustomizeTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
