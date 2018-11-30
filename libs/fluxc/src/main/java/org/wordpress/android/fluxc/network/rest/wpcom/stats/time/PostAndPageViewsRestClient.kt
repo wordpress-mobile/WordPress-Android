@@ -44,11 +44,14 @@ constructor(
                 url,
                 params,
                 PostAndPageViewsResponse::class.java,
-                enableCaching = false,
+                enableCaching = true,
                 forced = forced
         )
         return when (response) {
             is Success -> {
+                if (period.toString() != response.data.period) {
+                    throw IllegalArgumentException("Illegal response - $period ${response.data.period}")
+                }
                 FetchStatsPayload(response.data)
             }
             is Error -> {
