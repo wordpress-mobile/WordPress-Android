@@ -92,6 +92,7 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock private lateinit var uiStateObserver: Observer<VerticalsUiState>
     @Mock private lateinit var clearBtnObserver: Observer<Void>
     @Mock private lateinit var verticalSelectedObserver: Observer<String?>
+    @Mock private lateinit var skipBtnClickedObservable: Observer<Void>
 
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
 
@@ -107,6 +108,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.clearBtnClicked.observeForever(clearBtnObserver)
         viewModel.verticalSelected.observeForever(verticalSelectedObserver)
+        viewModel.skipBtnClicked.observeForever(skipBtnClickedObservable)
     }
 
     private fun <T> testWithSuccessResponses(block: suspend CoroutineScope.() -> T) {
@@ -340,8 +342,8 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyOnSkipIsPropagated() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
         viewModel.onSkipStepBtnClicked()
-        val captor = ArgumentCaptor.forClass(String::class.java)
-        verify(verticalSelectedObserver).onChanged(captor.capture())
+        val captor = ArgumentCaptor.forClass(Void::class.java)
+        verify(skipBtnClickedObservable).onChanged(captor.capture())
 
         assertThat(captor.allValues.size).isEqualTo(1)
         assertThat(captor.lastValue).isNull()
