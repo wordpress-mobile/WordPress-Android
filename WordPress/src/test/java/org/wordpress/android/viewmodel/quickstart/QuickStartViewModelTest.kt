@@ -15,7 +15,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.ui.quickstart.QuickStartTaskState
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,10 +51,10 @@ class QuickStartViewModelTest {
     fun testSetDoneTask() {
         viewModel.start(siteId)
 
-        whenever(store.hasDoneTask(siteId, SHARE_SITE)).thenReturn(true)
-        viewModel.completeTask(SHARE_SITE, true)
+        whenever(store.hasDoneTask(siteId, ENABLE_POST_SHARING)).thenReturn(true)
+        viewModel.completeTask(ENABLE_POST_SHARING, true)
 
-        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == SHARE_SITE && it.isTaskCompleted }?.size)
+        assertEquals(1, mQuickStartDetailStateList?.filter { it.task == ENABLE_POST_SHARING && it.isTaskCompleted }?.size)
     }
 
     @Test

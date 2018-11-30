@@ -439,7 +439,7 @@ public class MySiteFragment extends Fragment implements
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
+                if (isQuickStartTaskActive(QuickStartTask.ENABLE_POST_SHARING)) {
                     requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());

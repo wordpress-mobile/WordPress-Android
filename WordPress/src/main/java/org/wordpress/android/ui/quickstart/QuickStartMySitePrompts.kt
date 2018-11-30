@@ -40,7 +40,7 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_customize_site_title,
             R.string.quick_start_dialog_customize_site_message),
     SHARE_SITE_TUTORIAL(
-            QuickStartTask.SHARE_SITE,
+            QuickStartTask.ENABLE_POST_SHARING,
             R.id.my_site_scroll_view_root,
             R.id.row_sharing,
             R.string.quick_start_dialog_share_site_message_short_sharing,
