@@ -134,8 +134,6 @@ public class MySiteFragment extends Fragment implements
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
     private QuickStartMySitePrompts mActiveTutorialPrompt;
-    private TextView mQuickStartCounter;
-    private View mQuickStartDot;
     private ImageView mQuickStartCustomizeIcon;
     private TextView mQuickStartCustomizeSubtitle;
     private TextView mQuickStartCustomizeTitle;
@@ -299,8 +297,6 @@ public class MySiteFragment extends Fragment implements
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
         mQuickStartContainer = rootView.findViewById(R.id.quick_start);
-        mQuickStartCounter = rootView.findViewById(R.id.my_site_quick_start_progress);
-        mQuickStartDot = rootView.findViewById(R.id.my_site_quick_start_dot);
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize);
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon);
         mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle);
