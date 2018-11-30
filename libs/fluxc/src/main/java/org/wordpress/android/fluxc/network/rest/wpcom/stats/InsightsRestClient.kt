@@ -6,36 +6,16 @@ import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.CENSORED
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.HTTP_AUTH_ERROR
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_SSL_CERTIFICATE
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_AUTHENTICATED
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_FOUND
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NO_CONNECTION
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ERROR
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_ERROR
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
-import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
-import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.network.utils.getFormattedDate
-import org.wordpress.android.fluxc.store.InsightsStore.FetchInsightsPayload
-import org.wordpress.android.fluxc.store.InsightsStore.StatsError
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType
-import org.wordpress.android.fluxc.store.InsightsStore.StatsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.toStatsError
 import java.util.Date
 import javax.inject.Singleton
 
@@ -49,7 +29,7 @@ constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<AllTimeResponse> {
+    suspend fun fetchAllTimeInsights(site: SiteModel, forced: Boolean): FetchStatsPayload<AllTimeResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.urlV1_1
 
         val params = mapOf<String, String>()
@@ -63,15 +43,15 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
 
-    suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<MostPopularResponse> {
+    suspend fun fetchMostPopularInsights(site: SiteModel, forced: Boolean): FetchStatsPayload<MostPopularResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.insights.urlV1_1
 
         val params = mapOf<String, String>()
@@ -85,15 +65,15 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
 
-    suspend fun fetchLatestPostForInsights(site: SiteModel, forced: Boolean): FetchInsightsPayload<PostsResponse> {
+    suspend fun fetchLatestPostForInsights(site: SiteModel, forced: Boolean): FetchStatsPayload<PostsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).posts.urlV1_1
         val params = mapOf(
                 "order_by" to "date",
@@ -111,10 +91,10 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
@@ -123,7 +103,7 @@ constructor(
         site: SiteModel,
         postId: Long,
         forced: Boolean
-    ): FetchInsightsPayload<PostStatsResponse> {
+    ): FetchStatsPayload<PostStatsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.post.item(postId).urlV1_1
 
         val response = wpComGsonRequestBuilder.syncGetRequest(
@@ -136,10 +116,10 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
@@ -149,11 +129,11 @@ constructor(
         period: StatsGranularity,
         date: Date,
         forced: Boolean
-    ): FetchInsightsPayload<VisitResponse> {
+    ): FetchStatsPayload<VisitResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
 
         val params = mapOf(
-                "unit" to period.toPath(),
+                "unit" to period.toString(),
                 "quantity" to "1",
                 "date" to getFormattedDate(site, date, period)
         )
@@ -167,10 +147,10 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
@@ -178,9 +158,9 @@ constructor(
     suspend fun fetchFollowers(
         site: SiteModel,
         type: FollowerType,
-        pageSize: Int = 6,
+        pageSize: Int,
         forced: Boolean
-    ): FetchInsightsPayload<FollowersResponse> {
+    ): FetchStatsPayload<FollowersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.followers.urlV1_1
 
         val params = mapOf(
@@ -197,19 +177,19 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
 
     suspend fun fetchTopComments(
         site: SiteModel,
-        pageSize: Int = 6,
+        pageSize: Int,
         forced: Boolean
-    ): FetchInsightsPayload<CommentsResponse> {
+    ): FetchStatsPayload<CommentsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.comments.urlV1_1
 
         val params = mapOf(
@@ -225,68 +205,102 @@ constructor(
         )
         return when (response) {
             is Success -> {
-                FetchInsightsPayload(response.data)
+                FetchStatsPayload(response.data)
             }
             is Error -> {
-                FetchInsightsPayload(buildStatsError(response.error))
+                FetchStatsPayload(response.error.toStatsError())
             }
         }
     }
 
-    private fun buildStatsError(error: WPComGsonNetworkError): StatsError {
-        val type = when (error.type) {
-            TIMEOUT -> StatsErrorType.TIMEOUT
-            NO_CONNECTION,
-            SERVER_ERROR,
-            INVALID_SSL_CERTIFICATE,
-            NETWORK_ERROR -> StatsErrorType.API_ERROR
-            PARSE_ERROR,
-            NOT_FOUND,
-            CENSORED,
-            INVALID_RESPONSE -> StatsErrorType.INVALID_RESPONSE
-            HTTP_AUTH_ERROR,
-            AUTHORIZATION_REQUIRED,
-            NOT_AUTHENTICATED -> StatsErrorType.AUTHORIZATION_REQUIRED
-            UNKNOWN,
-            null -> GENERIC_ERROR
+    suspend fun fetchTags(
+        site: SiteModel,
+        pageSize: Int,
+        forced: Boolean
+    ): FetchStatsPayload<TagsResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.tags.urlV1_1
+
+        val params = mapOf(
+                "max" to pageSize.toString()
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                TagsResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchStatsPayload(response.data)
+            }
+            is Error -> {
+                FetchStatsPayload(response.error.toStatsError())
+            }
         }
-        return StatsError(type, error.message)
+    }
+
+    suspend fun fetchPublicizeData(
+        site: SiteModel,
+        pageSize: Int = 6,
+        forced: Boolean
+    ): FetchStatsPayload<PublicizeResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.publicize.urlV1_1
+
+        val params = mapOf("max" to pageSize.toString())
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                PublicizeResponse::class.java,
+                enableCaching = true,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                FetchStatsPayload(response.data)
+            }
+            is Error -> {
+                FetchStatsPayload(response.error.toStatsError())
+            }
+        }
     }
 
     data class AllTimeResponse(
         @SerializedName("date") var date: Date? = null,
-        @SerializedName("stats") val stats: StatsResponse
+        @SerializedName("stats") val stats: StatsResponse?
     ) {
         data class StatsResponse(
-            @SerializedName("visitors") val visitors: Int,
-            @SerializedName("views") val views: Int,
-            @SerializedName("posts") val posts: Int,
-            @SerializedName("views_best_day") val viewsBestDay: String,
-            @SerializedName("views_best_day_total") val viewsBestDayTotal: Int
+            @SerializedName("visitors") val visitors: Int?,
+            @SerializedName("views") val views: Int?,
+            @SerializedName("posts") val posts: Int?,
+            @SerializedName("views_best_day") val viewsBestDay: String?,
+            @SerializedName("views_best_day_total") val viewsBestDayTotal: Int?
         )
     }
 
     data class MostPopularResponse(
-        @SerializedName("highest_day_of_week") val highestDayOfWeek: Int,
-        @SerializedName("highest_hour") val highestHour: Int,
-        @SerializedName("highest_day_percent") val highestDayPercent: Double,
-        @SerializedName("highest_hour_percent") val highestHourPercent: Double
+        @SerializedName("highest_day_of_week") val highestDayOfWeek: Int?,
+        @SerializedName("highest_hour") val highestHour: Int?,
+        @SerializedName("highest_day_percent") val highestDayPercent: Double?,
+        @SerializedName("highest_hour_percent") val highestHourPercent: Double?
     )
 
     data class PostsResponse(
-        @SerializedName("found") val postsFound: Int = 0,
+        @SerializedName("found") val postsFound: Int? = 0,
         @SerializedName("posts") val posts: List<PostResponse> = listOf()
     ) {
         data class PostResponse(
             @SerializedName("ID") val id: Long,
-            @SerializedName("title") val title: String,
-            @SerializedName("date") val date: Date,
-            @SerializedName("URL") val url: String,
-            @SerializedName("like_count") val likeCount: Int,
+            @SerializedName("title") val title: String?,
+            @SerializedName("date") val date: Date?,
+            @SerializedName("URL") val url: String?,
+            @SerializedName("like_count") val likeCount: Int?,
             @SerializedName("discussion") val discussion: Discussion?
         ) {
             data class Discussion(
-                @SerializedName("comment_count") val commentCount: Int
+                @SerializedName("comment_count") val commentCount: Int?
             )
         }
     }
@@ -295,7 +309,7 @@ constructor(
         @SerializedName("highest_month") val highestMonth: Int = 0,
         @SerializedName("highest_day_average") val highestDayAverage: Int = 0,
         @SerializedName("highest_week_average") val highestWeekAverage: Int = 0,
-        @SerializedName("views") val views: Int,
+        @SerializedName("views") val views: Int?,
         @SerializedName("date") val date: String? = null,
         @SerializedName("data") val data: List<List<String>>?,
         @SerializedName("fields") val fields: List<String>?,
@@ -306,29 +320,29 @@ constructor(
     ) {
         data class Year(
             @SerializedName("months") val months: Map<Int, Int>,
-            @SerializedName("total") val total: Int
+            @SerializedName("total") val total: Int?
         )
 
         data class Week(
-            @SerializedName("average") val average: Int,
-            @SerializedName("total") val total: Int,
+            @SerializedName("average") val average: Int?,
+            @SerializedName("total") val total: Int?,
             @SerializedName("days") val days: List<Day>
         )
 
         data class Day(
             @SerializedName("day") val day: String,
-            @SerializedName("count") val count: Int
+            @SerializedName("count") val count: Int?
         )
 
         data class Average(
             @SerializedName("months") val months: Map<Int, Int>,
-            @SerializedName("overall") val overall: Int
+            @SerializedName("overall") val overall: Int?
         )
     }
 
     data class VisitResponse(
-        @SerializedName("date") val date: String,
-        @SerializedName("unit") val unit: String,
+        @SerializedName("date") val date: String?,
+        @SerializedName("unit") val unit: String?,
         @SerializedName("fields") val fields: List<String>,
         @SerializedName("data") val data: List<List<String>>
     )
@@ -356,50 +370,66 @@ constructor(
         )
     }
 
-    private fun StatsGranularity.toPath(): String {
-        return when (this) {
-            DAYS -> "day"
-            WEEKS -> "week"
-            MONTHS -> "month"
-            YEARS -> "year"
-        }
-    }
-
     enum class FollowerType(val path: String) {
         EMAIL("email"), WP_COM("wpcom")
     }
 
     data class FollowersResponse(
-        @SerializedName("page") val page: Int,
-        @SerializedName("pages") val pages: Int,
-        @SerializedName("total") val total: Int,
-        @SerializedName("total_email") val totalEmail: Int,
-        @SerializedName("total_wpcom") val totalWpCom: Int,
+        @SerializedName("page") val page: Int?,
+        @SerializedName("pages") val pages: Int?,
+        @SerializedName("total") val total: Int?,
+        @SerializedName("total_email") val totalEmail: Int?,
+        @SerializedName("total_wpcom") val totalWpCom: Int?,
         @SerializedName("subscribers") val subscribers: List<FollowerResponse>
 
     ) {
         data class FollowerResponse(
-            @SerializedName("label") val label: String,
-            @SerializedName("avatar") val avatar: String,
-            @SerializedName("url") val url: String,
-            @SerializedName("date_subscribed") val dateSubscribed: Date,
-            @SerializedName("follow_data") val followData: FollowData
+            @SerializedName("label") val label: String?,
+            @SerializedName("avatar") val avatar: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("date_subscribed") val dateSubscribed: Date?,
+            @SerializedName("follow_data") val followData: FollowData?
         )
     }
 
     data class FollowData(
-        @SerializedName("type") val type: String,
-        @SerializedName("params") val params: FollowParams
+        @SerializedName("type") val type: String?,
+        @SerializedName("params") val params: FollowParams?
     ) {
         data class FollowParams(
-            @SerializedName("follow-text") val followText: String,
-            @SerializedName("following-text") val followingText: String,
-            @SerializedName("following-hover-text") val followingHoverText: String,
-            @SerializedName("is_following") val isFollowing: Boolean,
-            @SerializedName("blog_id") val blogId: String,
-            @SerializedName("site_id") val siteId: String,
-            @SerializedName("stats-source") val statsSource: String,
-            @SerializedName("blog_domain") val blogDomain: String
+            @SerializedName("follow-text") val followText: String?,
+            @SerializedName("following-text") val followingText: String?,
+            @SerializedName("following-hover-text") val followingHoverText: String?,
+            @SerializedName("is_following") val isFollowing: Boolean?,
+            @SerializedName("blog_id") val blogId: String?,
+            @SerializedName("site_id") val siteId: String?,
+            @SerializedName("stats-source") val statsSource: String?,
+            @SerializedName("blog_domain") val blogDomain: String?
+        )
+    }
+
+    data class TagsResponse(
+        @SerializedName("date") val date: String?,
+        @SerializedName("tags") val tags: List<TagsGroup>
+    ) {
+        data class TagsGroup(
+            @SerializedName("views") val views: Long?,
+            @SerializedName("tags") val tags: List<TagResponse>
+        ) {
+            data class TagResponse(
+                @SerializedName("name") val name: String?,
+                @SerializedName("type") val type: String?,
+                @SerializedName("link") val link: String?
+            )
+        }
+    }
+
+    data class PublicizeResponse(
+        @SerializedName("services") val services: List<Service>
+    ) {
+        data class Service(
+            @SerializedName("service") val service: String,
+            @SerializedName("followers") val followers: Int
         )
     }
 }
