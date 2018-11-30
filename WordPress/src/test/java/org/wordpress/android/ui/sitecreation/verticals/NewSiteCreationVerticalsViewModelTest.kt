@@ -34,6 +34,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState
@@ -48,12 +49,15 @@ private const val DUMMY_SUBTITLE = "dummySubtitle"
 
 private const val FIRST_MODEL_QUERY = "success_1"
 private const val SECOND_MODEL_QUERY = "success_2"
+private const val CUSTOM_CATEGORY_MODEL_QUERY = "success_custom_category"
 private const val ERROR_MODEL_QUERY = "error"
 
 private const val FIRST_MODEL_NAME = "firstModel"
 private const val FIRST_MODEL_ID = "1"
 private const val SECOND_MODEL_NAME = "secondModel"
 private const val SECOND_MODEL_ID = "2"
+private const val CUSTOM_CATEGORY_MODEL_NAME = "customCategoryModel"
+private const val CUSTOM_CATEGORY_MODEL_ID = "3"
 
 private val SUCCESSFUL_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
         SEGMENT_ID,
@@ -67,12 +71,17 @@ private val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
 
 private val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FIRST_MODEL_QUERY,
-        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID)),
+        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID, false)),
         null
 )
 private val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         SECOND_MODEL_QUERY,
-        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID)),
+        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID, false)),
+        null
+)
+private val CUSTOM_CATEGORY_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
+        CUSTOM_CATEGORY_MODEL_QUERY,
+        listOf(VerticalModel(CUSTOM_CATEGORY_MODEL_NAME, CUSTOM_CATEGORY_MODEL_ID, true)),
         null
 )
 private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
@@ -115,12 +124,12 @@ class NewSiteCreationVerticalsViewModelTest {
         test {
             whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID))
                     .thenReturn(SUCCESSFUL_HEADER_PROMPT_FETCHED)
-
             whenever(fetchVerticalsUseCase.fetchVerticals(FIRST_MODEL_QUERY))
                     .thenReturn(FIRST_MODEL_ON_VERTICALS_FETCHED)
-
             whenever(fetchVerticalsUseCase.fetchVerticals(SECOND_MODEL_QUERY))
                     .thenReturn(SECOND_MODEL_ON_VERTICALS_FETCHED)
+            whenever(fetchVerticalsUseCase.fetchVerticals(CUSTOM_CATEGORY_MODEL_QUERY))
+                    .thenReturn(CUSTOM_CATEGORY_MODEL_ON_VERTICALS_FETCHED)
             block()
         }
     }
@@ -222,6 +231,20 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
         viewModel.updateQuery(SECOND_MODEL_QUERY, ZERO_DELAY)
         verifyModelShown(viewModel.uiState, SECOND_MODEL_ID, SECOND_MODEL_NAME)
+    }
+
+    @Test
+    fun verifyCustomCategoryItemHasValidType() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY, ZERO_DELAY)
+        assertThat(viewModel.uiState.value!!.items[0]).isInstanceOf(VerticalsCustomModelUiState::class.java)
+    }
+
+    @Test
+    fun verifyCustomCategoryItemShown() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY, ZERO_DELAY)
+        verifyCustomCategoryModelShown(viewModel.uiState, CUSTOM_CATEGORY_MODEL_ID, CUSTOM_CATEGORY_MODEL_NAME)
     }
 
     @Test
@@ -415,6 +438,16 @@ class NewSiteCreationVerticalsViewModelTest {
         val uiState = uiStateLiveData.value!!
         assertThat((uiState.items[0] as VerticalsModelUiState).id).isEqualTo(id)
         assertThat((uiState.items[0] as VerticalsModelUiState).title).isEqualTo(title)
+    }
+
+    private fun verifyCustomCategoryModelShown(
+        uiStateLiveData: LiveData<VerticalsUiState>,
+        id: String,
+        title: String
+    ) {
+        val uiState = uiStateLiveData.value!!
+        assertThat((uiState.items[0] as VerticalsCustomModelUiState).id).isEqualTo(id)
+        assertThat((uiState.items[0] as VerticalsCustomModelUiState).title).isEqualTo(title)
     }
 
     private fun verifyRetrySuggestionItemShown(uiStateLiveData: LiveData<VerticalsUiState>) {
