@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.L
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.merge
 import javax.inject.Inject
@@ -38,7 +39,8 @@ class InsightsUseCase
     followersUseCase: FollowersUseCase,
     commentsUseCase: CommentsUseCase,
     mostPopularInsightsUseCase: MostPopularInsightsUseCase,
-    tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
+    tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
+    publicizeUseCase: PublicizeUseCase
 ) {
     private val useCases = listOf(
             allTimeStatsUseCase,
@@ -47,7 +49,8 @@ class InsightsUseCase
             followersUseCase,
             commentsUseCase,
             mostPopularInsightsUseCase,
-            tagsAndCategoriesUseCase
+            tagsAndCategoriesUseCase,
+            publicizeUseCase
     ).associateBy { it.type }
 
     private val liveData = combineMap(

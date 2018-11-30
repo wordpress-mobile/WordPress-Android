@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/item_container"
+              style="@style/StatsBlockLine"
+              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:background="?android:attr/selectableItemBackground"
+              android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="32dp"
+        android:contentDescription="@string/icon"
+        tools:src="@drawable/ic_share_blue_medium_24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="RtlSymmetry">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text"
+                style="@style/StatsBlockItem"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/one_line_list_item_height"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="@string/unknown"/>
+
+            <TextView
+                android:id="@+id/value"
+                style="@style/StatsBlockValue"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/one_line_list_item_height"
+                android:gravity="center_vertical"
+                android:text="@string/unknown"/>
+
+            <ImageView
+                android:id="@+id/expand_button"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/one_line_list_item_height"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
+                android:src="@drawable/ic_chevron_down_grey_dark_24dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey_lighten_30"
+            android:visibility="visible"/>
+    </LinearLayout>
+
+</LinearLayout>
