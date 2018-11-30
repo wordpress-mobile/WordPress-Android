@@ -375,7 +375,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                 oldVersion++;
             case 44:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
-                db.execSQL("ALTER TABLE QuickStartModel ADD TASK_TYPE TEXT");
+                db.execSQL("ALTER TABLE QuickStartTaskModel ADD TASK_TYPE TEXT");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
