@@ -40,7 +40,7 @@ class LatestPostSummaryMapperTest {
         val emptyMessage = "empty message"
         whenever(resourceProvider.getString(R.string.stats_insights_latest_post_empty)).thenReturn(emptyMessage)
 
-        val result = mapper.buildMessageItem(null) { _, _ ->  }
+        val result = mapper.buildMessageItem(null) { _, _ -> }
 
         assertThat(result.text).isEqualTo(emptyMessage)
         assertThat(result.links).isNull()
@@ -94,7 +94,7 @@ class LatestPostSummaryMapperTest {
                 )
         ).thenReturn(messageWithEngagement)
 
-        val result = mapper.buildMessageItem(model) { _, _ ->  }
+        val result = mapper.buildMessageItem(model) { _, _ -> }
 
         assertThat(result.text).isEqualTo(messageWithEngagement)
         assertThat(result.links).hasSize(1)
