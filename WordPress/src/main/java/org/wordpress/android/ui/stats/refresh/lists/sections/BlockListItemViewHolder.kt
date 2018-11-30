@@ -26,8 +26,6 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.ExpandPayload.EXPAND_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -300,7 +298,7 @@ sealed class BlockListItemViewHolder(
 
         fun bind(
             expandableItem: ExpandableItem,
-            expandablePayload: ExpandPayload?
+            expandChanged: Boolean
         ) {
             val header = expandableItem.header
             icon.setImageOrLoad(header, imageManager)
@@ -309,8 +307,8 @@ sealed class BlockListItemViewHolder(
             value.setTextOrHide(header.valueResource, header.value)
             divider.setVisible(header.showDivider)
 
-            if (expandablePayload != null) {
-                val rotationAngle = if (expandablePayload == EXPAND_ITEM) 180 else 0
+            if (expandChanged) {
+                val rotationAngle = if (expandButton.rotation == 0F) 180 else 0
                 expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
             } else {
                 expandButton.rotation = if (expandableItem.isExpanded) 180F else 0F

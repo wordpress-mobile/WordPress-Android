@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
@@ -17,10 +18,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.util.combineMap
+import org.wordpress.android.util.map
 import org.wordpress.android.util.mergeNotNull
 import javax.inject.Inject
 import javax.inject.Named
@@ -59,7 +61,7 @@ class InsightsUseCase
     private val insights = MutableLiveData<List<InsightsTypes>>()
     val data: LiveData<List<StatsBlock>> = mergeNotNull(insights, liveData) { insights, map ->
         insights.mapNotNull { map[it] }
-    }
+    }.map { if (it.isEmpty()) listOf(Empty(false)) else it }
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.value.navigationTarget })
 

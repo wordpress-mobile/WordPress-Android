@@ -65,7 +65,7 @@ fun <T, U, V> mergeNotNull(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (
  * @param sourceB second source
  * @return new data source
  */
-fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V): LiveData<V> {
+fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?) -> V?): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
         mediator.value = Pair(it, mediator.value?.second)

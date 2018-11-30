@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
@@ -29,7 +28,7 @@ abstract class BaseStatsUseCase<Model, UiState>(
             domainModel == null -> Loading(type)
             domainModel.error != null -> createFailedItem(domainModel.error)
             domainModel.model != null -> createDataItem(buildModel(domainModel.model, uiState))
-            else -> Empty(false)
+            else -> null
         }
     }
 
