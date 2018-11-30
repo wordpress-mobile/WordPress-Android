@@ -24,9 +24,7 @@ import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -252,7 +250,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private Handler mHandler;
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
-    private boolean mForceAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
 
@@ -1233,10 +1230,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mIsDiscardingChanges = true;
                 RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
                 mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
-            } else if (itemId == R.id.aztecmenu) {
-                mForceAztecEditor = true;
-                ActivityUtils.hideKeyboard(this);
-                mSectionsPagerAdapter.notifyDataSetChanged();
             }
         }
         return false;
@@ -1980,7 +1973,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
         private static final int NUM_PAGES_EDITOR = 4;
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -2013,10 +2006,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 default:
                     return EditPostPreviewFragment.newInstance(mPost);
             }
-        }
-
-        @Override public int getItemPosition(@NonNull Object object) {
-            return PagerAdapter.POSITION_NONE;
         }
 
         @Override
@@ -2067,8 +2056,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldShowGutenbergEditor() {
-        return !mForceAztecEditor &&
-               AppPrefs.isGutenbergEditorEnabled() &&
+        return AppPrefs.isGutenbergEditorEnabled() &&
                (mIsNewPost || TextUtils.isEmpty(mPost.getContent()) ||
                 GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
     }

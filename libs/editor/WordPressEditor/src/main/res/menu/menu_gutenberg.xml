@@ -11,11 +11,4 @@
         android:icon="@drawable/ic_launcher">
     </item>
 
-    <item
-        android:id="@+id/aztecmenu"
-        android:title="@string/menu_aztec"
-        android:orderInCategory="0"
-        android:icon="@drawable/ic_launcher">
-    </item>
-
 </menu>
