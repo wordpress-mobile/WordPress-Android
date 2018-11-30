@@ -20,8 +20,8 @@ import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, VerticalsScreenListener {
-    @Inject protected lateinit var viewModelFactory: ViewModelProvider.Factory
+class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, VerticalsScreenListener, OnSkipClickedListener {
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +47,12 @@ class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, Ver
         mainViewModel.onSegmentSelected(segmentId)
     }
 
-    override fun onVerticalSelected(verticalId: String?) {
+    override fun onVerticalSelected(verticalId: String) {
         mainViewModel.onVerticalsScreenFinished(verticalId)
+    }
+
+    override fun onSkipClicked() {
+        mainViewModel.onSkipClicked()
     }
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
@@ -79,7 +83,6 @@ class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, Ver
             onBackPressed()
             return true
         }
-
         return false
     }
 

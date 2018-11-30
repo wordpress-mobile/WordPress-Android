@@ -13,7 +13,6 @@ import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
-import org.wordpress.android.util.AppLog
 
 sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -30,8 +29,9 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsModelUiState
             suggestion.text = uiState.title
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
-                uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
+                uiState.onItemTapped!!.invoke()
             }
         }
     }
@@ -56,8 +56,9 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsFetchSuggestionsErrorUiState
             text.text = itemView.context.getText(uiState.messageResId)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             itemView.setOnClickListener {
-                uiState.onItemTapped?.invoke() ?: AppLog.e(AppLog.T.MAIN, "onClickListener method reference is null.")
+                uiState.onItemTapped!!.invoke()
             }
         }
     }

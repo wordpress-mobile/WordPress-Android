@@ -6,7 +6,6 @@ import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.SingleEventObservable
-import java.util.Arrays
 import javax.inject.Inject
 
 data class SiteCreationState(
@@ -18,11 +17,10 @@ data class SiteCreationState(
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
-class NewSiteCreationMainVM @Inject constructor() :
-        ViewModel() {
+class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
     private val wizardManager: WizardManager<SiteCreationStep> = WizardManager(
             // TODO we'll receive this from a server/Firebase config
-            Arrays.asList(
+            listOf(
                     SiteCreationStep.fromString("site_creation_segments"),
                     SiteCreationStep.fromString("site_creation_verticals"),
                     SiteCreationStep.fromString("site_creation_domains")
@@ -52,10 +50,12 @@ class NewSiteCreationMainVM @Inject constructor() :
         wizardManager.onBackPressed()
     }
 
-    fun onVerticalsScreenFinished(verticalId: String?) {
-        verticalId?.let {
-            siteCreationState = siteCreationState.copy(verticalId = verticalId)
-        }
+    fun onVerticalsScreenFinished(verticalId: String) {
+        siteCreationState = siteCreationState.copy(verticalId = verticalId)
+        wizardManager.showNextStep()
+    }
+
+    fun onSkipClicked() {
         wizardManager.showNextStep()
     }
 }
