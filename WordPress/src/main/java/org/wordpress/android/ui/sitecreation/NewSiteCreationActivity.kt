@@ -20,7 +20,10 @@ import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
 
-class NewSiteCreationActivity : AppCompatActivity(), SegmentsScreenListener, VerticalsScreenListener, OnSkipClickedListener {
+class NewSiteCreationActivity : AppCompatActivity(),
+        SegmentsScreenListener,
+        VerticalsScreenListener,
+        OnSkipClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
 

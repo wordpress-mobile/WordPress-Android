@@ -37,8 +37,7 @@ class FetchSegmentPromptUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onSegmentPromptFetched(event: OnSegmentPromptFetched) {
-        checkNotNull(continuation) { "onSegmentPromptFetched received without a suspended coroutine." }
-                .resume(event)
+        continuation?.resume(event)
         continuation = null
     }
 }
