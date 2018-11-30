@@ -1982,7 +1982,6 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         public Fragment getItem(int position) {
-
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
@@ -2056,9 +2055,9 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean shouldShowGutenbergEditor() {
-        return AppPrefs.isGutenbergEditorEnabled() &&
-               (mIsNewPost || TextUtils.isEmpty(mPost.getContent()) ||
-                GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
+        return AppPrefs.isGutenbergEditorEnabled()
+               && (mIsNewPost || TextUtils.isEmpty(mPost.getContent())
+               || GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
     }
 
     // Moved from EditPostContentFragment
