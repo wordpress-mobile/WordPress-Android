@@ -10,6 +10,7 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.getDistinct
 import javax.inject.Inject
@@ -19,6 +20,8 @@ import javax.inject.Inject
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
+ *
+ * Calling [setup] is required before using this ViewModel.
  */
 class GiphyPickerViewModel @Inject constructor(
     private val mediaFetcher: MediaFetcher,
@@ -29,6 +32,8 @@ class GiphyPickerViewModel @Inject constructor(
      */
     private val dataSourceFactory: GiphyPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
+    private lateinit var site: SiteModel
+
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
      * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
@@ -48,6 +53,15 @@ class GiphyPickerViewModel @Inject constructor(
     val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
         val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
         LivePagedListBuilder(dataSourceFactory, pagedListConfig).build()
+    }
+
+    /**
+     * Perform additional initialization for this ViewModel
+     *
+     * The [site] usually comes from this ViewModel's corresponding Activity
+     */
+    fun setup(site: SiteModel) {
+        this.site = site
     }
 
     /**

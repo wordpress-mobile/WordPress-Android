@@ -13,6 +13,7 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
@@ -47,7 +48,10 @@ class GiphyPickerActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GiphyPickerViewModel::class.java)
+        viewModel.setup(site)
 
         // We are intentionally reusing this layout since the UI is very similar.
         setContentView(R.layout.media_picker_activity)
