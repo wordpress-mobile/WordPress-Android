@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.getDistinct
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 /**
@@ -30,7 +31,19 @@ class GiphyPickerViewModel @Inject constructor(
      */
     private val dataSourceFactory: GiphyPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
+    enum class State {
+        IDLE,
+        DOWNLOADING,
+        DONE
+    }
+
     private lateinit var site: SiteModel
+
+    private val _state = MutableLiveData<State>().apply { value = State.IDLE }
+    val state: LiveData<State> = _state
+
+    private val _downloadResult = SingleLiveEvent<Pair<List<MediaModel>?, Int?>>()
+    val downloadResult: LiveData<Pair<List<MediaModel>?, Int?>> = _downloadResult
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
@@ -69,6 +82,10 @@ class GiphyPickerViewModel @Inject constructor(
      * currently selected [GiphyMediaViewModel] if the new search query results are different.
      */
     fun search(searchQuery: String) {
+        if (_state.value != State.IDLE) {
+            return
+        }
+
         _selectedMediaViewModelList.postValue(LinkedHashMap())
         dataSourceFactory.setSearchQuery(searchQuery)
     }
@@ -76,7 +93,9 @@ class GiphyPickerViewModel @Inject constructor(
     /**
      * Downloads the selected [GiphyMediaViewModel]
      */
-    fun downloadSelected(completion: (List<MediaModel>?, Int?) -> Unit) = launch {
+    fun downloadSelected() = launch {
+        _state.postValue(State.DOWNLOADING)
+
         val uris = (_selectedMediaViewModelList.value?.values?.toList() ?: emptyList()).map {
             it.thumbnailUri
         }
@@ -91,7 +110,8 @@ class GiphyPickerViewModel @Inject constructor(
             Pair(null, R.string.error_downloading_image)
         }
 
-        completion(eventValue.first, eventValue.second)
+        _downloadResult.postValue(eventValue)
+        _state.postValue(if (eventValue.first != null) State.DONE else State.IDLE)
     }
 
     /**
@@ -100,6 +120,10 @@ class GiphyPickerViewModel @Inject constructor(
      * This also updates the [GiphyMediaViewModel.selectionNumber] of all the objects in [selectedMediaViewModelList].
      */
     fun toggleSelected(mediaViewModel: GiphyMediaViewModel) {
+        if (_state.value != State.IDLE) {
+            return
+        }
+
         assert(mediaViewModel is MutableGiphyMediaViewModel)
         mediaViewModel as MutableGiphyMediaViewModel
 

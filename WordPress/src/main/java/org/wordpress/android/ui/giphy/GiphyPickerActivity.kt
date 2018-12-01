@@ -7,18 +7,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
@@ -26,8 +25,8 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Allows searching of gifs from Giphy
@@ -38,7 +37,6 @@ class GiphyPickerActivity : AppCompatActivity() {
      */
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
-    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
 
     private lateinit var viewModel: GiphyPickerViewModel
 
@@ -68,7 +66,8 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeRecyclerView()
         initializeSearchView()
         initializeSelectionBar()
-        initializeAddButtonClickHandler()
+        initializeDownloadHandlers()
+        initializeStateChangeHandlers()
     }
 
     /**
@@ -163,21 +162,48 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
-    private fun initializeAddButtonClickHandler() {
-        text_add.setOnClickListener {
-            viewModel.downloadSelected { mediaModels, errorStringResId ->
-                uiScope.launch {
-                    if (mediaModels != null) {
-                        val mediaLocalIds = mediaModels.map { model -> model.id }.toIntArray()
-                        val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
-                        setResult(Activity.RESULT_OK, intent)
-                        finish()
-                    } else if (errorStringResId != null) {
-                        ToastUtils.showToast(this@GiphyPickerActivity, errorStringResId, ToastUtils.Duration.SHORT)
-                    }
-                }
+    private fun initializeDownloadHandlers() {
+        text_add.setOnClickListener { viewModel.downloadSelected() }
+
+        viewModel.downloadResult.observe(this, Observer { pair ->
+            val mediaModels = pair?.first
+            val errorStringResId = pair?.second
+
+            if (mediaModels != null) {
+                val mediaLocalIds = mediaModels.map { model -> model.id }.toIntArray()
+                val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            } else if (errorStringResId != null) {
+                ToastUtils.showToast(this@GiphyPickerActivity, errorStringResId, ToastUtils.Duration.SHORT)
             }
-        }
+        })
+    }
+
+    private fun initializeStateChangeHandlers() {
+        viewModel.state.observe(this, Observer { state ->
+            state ?: return@Observer
+
+            val searchClearButton =
+                    search_view.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as ImageView
+            val searchEditText =
+                    search_view.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
+
+            val isIdle = state == State.IDLE
+            val isDownloading = state == State.DOWNLOADING
+
+            // Disable all the controls if we are not idle
+            text_add.isEnabled = isIdle
+            text_preview.isEnabled = isIdle
+
+            searchClearButton.isEnabled = isIdle
+            searchEditText.isEnabled = isIdle
+
+            // Show the progress bar instead of the Add text if we are downloading
+            upload_progress.visibility = if (isDownloading) View.VISIBLE else View.GONE
+            // The Add text should not be View.GONE because the progress bar relies on its layout to position itself
+            text_add.visibility = if (isDownloading) View.INVISIBLE else View.VISIBLE
+        })
     }
 
     /**
