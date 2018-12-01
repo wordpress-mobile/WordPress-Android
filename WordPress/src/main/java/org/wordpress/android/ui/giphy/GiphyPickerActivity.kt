@@ -168,10 +168,8 @@ class GiphyPickerActivity : AppCompatActivity() {
             viewModel.downloadSelected { mediaModels, errorStringResId ->
                 uiScope.launch {
                     if (mediaModels != null) {
-                        val intent = Intent().apply {
-                            putExtra(KEY_SAVED_MEDIA_IDS, mediaModels.map { model -> model.mediaId }.toLongArray())
-                        }
-
+                        val mediaLocalIds = mediaModels.map { model -> model.id }.toIntArray()
+                        val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
                         setResult(Activity.RESULT_OK, intent)
                         finish()
                     } else if (errorStringResId != null) {
@@ -195,6 +193,9 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val KEY_SAVED_MEDIA_IDS = "saved_media_ids"
+        /**
+         * Added to this Activity's result as an Int array [org.wordpress.android.fluxc.model.MediaModel] `id` values.
+         */
+        const val KEY_SAVED_MEDIA_MODEL_LOCAL_IDS = "saved_media_model_local_ids"
     }
 }
