@@ -97,7 +97,7 @@ class GiphyPickerViewModel @Inject constructor(
         _state.postValue(State.DOWNLOADING)
 
         val uris = (_selectedMediaViewModelList.value?.values?.toList() ?: emptyList()).map {
-            it.thumbnailUri
+            it.largeImageUri
         }
 
         val eventValue = try {
