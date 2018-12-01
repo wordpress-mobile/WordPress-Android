@@ -18,6 +18,13 @@ import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.WPMediaUtils
 import javax.inject.Inject
 
+/**
+ * Downloads [GiphyMediaViewModel.largeImageUri] objects and saves them as [MediaModel]
+ *
+ * The download happens concurrently and primarily uses [Dispatchers.IO]. This means that we are limited by the number
+ * of threads backed by that `CoroutineDispatcher`. In the future, we should probably add a limit to the number of
+ * GIFs that users can select to reduce the likelihood of OOM exceptions.
+ */
 class GiphyMediaFetcher @Inject constructor(
     private val context: Context,
     private val mediaStore: MediaStore,

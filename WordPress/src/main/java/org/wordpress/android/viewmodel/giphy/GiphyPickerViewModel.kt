@@ -32,17 +32,39 @@ class GiphyPickerViewModel @Inject constructor(
     private val dataSourceFactory: GiphyPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
     enum class State {
+        /**
+         * The default state where interaction with the UI like selecting and searching is allowed
+         */
         IDLE,
+        /**
+         * This is reached when the user chose some items and pressed the "Add" button
+         *
+         * We're actively downloading and saving in the background during this state.
+         */
         DOWNLOADING,
-        DONE
+        /**
+         * Reached after [DOWNLOADING] was successful
+         *
+         * No UI interaction should be allowed during this state and the Activity should already be dismissed.
+         */
+        FINISHED
     }
 
     private lateinit var site: SiteModel
 
-    private val _state = MutableLiveData<State>()
+    private val _state = MutableLiveData<State>().apply { value = State.IDLE }
+    /**
+     * Describes what state this ViewModel (and the corresponding Activity) is in.
+     */
     val state: LiveData<State> = _state
 
     private val _downloadResult = SingleLiveEvent<Pair<List<MediaModel>?, Int?>>()
+    /**
+     * Populated whenever [downloadSelected] finishes
+     *
+     * If [downloadSelected] is successful, this will have a non-null list of [MediaModel]. If not, the [Int] will
+     * be an error message string resource id.
+     */
     val downloadResult: LiveData<Pair<List<MediaModel>?, Int?>> = _downloadResult
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
@@ -61,6 +83,9 @@ class GiphyPickerViewModel @Inject constructor(
     val selectionBarIsVisible: LiveData<Boolean> =
             Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
 
+    /**
+     * The [PagedList] that should be displayed in the RecyclerView
+     */
     val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
         val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
         LivePagedListBuilder(dataSourceFactory, pagedListConfig).build()
@@ -73,10 +98,6 @@ class GiphyPickerViewModel @Inject constructor(
      */
     fun setup(site: SiteModel) {
         this.site = site
-
-        if (_state.value == null) {
-            _state.postValue(State.IDLE)
-        }
     }
 
     /**
@@ -95,7 +116,15 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Downloads the selected [GiphyMediaViewModel]
+     * Downloads all the selected [GiphyMediaViewModel]
+     *
+     * When the process is finished, the results will be posted to [downloadResult].
+     *
+     * This also changes the [state] to:
+     *
+     * - [State.DOWNLOADING] while downloading
+     * - [State.FINISHED] if the download was successful
+     * - [State.IDLE] if the download failed
      */
     fun downloadSelected() = launch {
         if (_state.value != State.IDLE) {
@@ -117,7 +146,7 @@ class GiphyPickerViewModel @Inject constructor(
         }
 
         _downloadResult.postValue(eventValue)
-        _state.postValue(if (eventValue.first != null) State.DONE else State.IDLE)
+        _state.postValue(if (eventValue.first != null) State.FINISHED else State.IDLE)
     }
 
     /**
