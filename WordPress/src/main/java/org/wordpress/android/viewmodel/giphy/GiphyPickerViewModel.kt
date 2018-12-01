@@ -96,17 +96,15 @@ class GiphyPickerViewModel @Inject constructor(
     fun downloadSelected() = launch {
         _state.postValue(State.DOWNLOADING)
 
-        val uris = (_selectedMediaViewModelList.value?.values?.toList() ?: emptyList()).map {
-            it.largeImageUri
-        }
-
         val eventValue = try {
-            val mediaModels = mediaFetcher.fetchAndSave(uris, site)
+            val giphyMediaViewModels = _selectedMediaViewModelList.value?.values?.toList() ?: emptyList()
+            val mediaModels = mediaFetcher.fetchAndSave(giphyMediaViewModels, site)
             Pair(mediaModels, null)
         } catch (e: CancellationException) {
             // We don't need to handle coroutine cancellations. The UI should just do nothing.
             Pair(null, null)
         } catch (e: Exception) {
+            // No need to log the error because that is already logged by `fetchAndSave()`
             Pair(null, R.string.error_downloading_image)
         }
 
