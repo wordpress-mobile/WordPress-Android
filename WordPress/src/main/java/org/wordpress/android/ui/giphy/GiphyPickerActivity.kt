@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.giphy
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -11,26 +13,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Allows searching of gifs from Giphy
  */
-class GiphyPickerActivity: AppCompatActivity() {
+class GiphyPickerActivity : AppCompatActivity() {
     /**
      * Used for loading images in [GiphyMediaViewHolder]
      */
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelFactory
+    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
 
     private lateinit var viewModel: GiphyPickerViewModel
 
@@ -60,6 +68,7 @@ class GiphyPickerActivity: AppCompatActivity() {
         initializeRecyclerView()
         initializeSearchView()
         initializeSelectionBar()
+        initializeAddButtonClickHandler()
     }
 
     /**
@@ -154,6 +163,25 @@ class GiphyPickerActivity: AppCompatActivity() {
         })
     }
 
+    private fun initializeAddButtonClickHandler() {
+        text_add.setOnClickListener {
+            viewModel.downloadSelected { mediaModels, errorStringResId ->
+                uiScope.launch {
+                    if (mediaModels != null) {
+                        val intent = Intent().apply {
+                            putExtra(KEY_SAVED_MEDIA_IDS, mediaModels.map { model -> model.mediaId }.toLongArray())
+                        }
+
+                        setResult(Activity.RESULT_OK, intent)
+                        finish()
+                    } else if (errorStringResId != null) {
+                        ToastUtils.showToast(this@GiphyPickerActivity, errorStringResId, ToastUtils.Duration.SHORT)
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Close this Activity when the up button is pressed
      */
@@ -164,5 +192,9 @@ class GiphyPickerActivity: AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        const val KEY_SAVED_MEDIA_IDS = "saved_media_ids"
     }
 }

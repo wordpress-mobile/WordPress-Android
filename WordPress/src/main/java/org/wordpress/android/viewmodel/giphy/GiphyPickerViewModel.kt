@@ -5,18 +5,16 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.content.Context
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.IO
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.getDistinct
 import javax.inject.Inject
 
 /**
- * Holds the data for [GiphyPickerActivity]
+ * Holds the data for [org.wordpress.android.ui.giphy.GiphyPickerActivity]
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
@@ -24,7 +22,7 @@ import javax.inject.Inject
  * Calling [setup] is required before using this ViewModel.
  */
 class GiphyPickerViewModel @Inject constructor(
-    private val mediaFetcher: MediaFetcher,
+    private val mediaFetcher: GiphyMediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
      *
@@ -73,6 +71,27 @@ class GiphyPickerViewModel @Inject constructor(
     fun search(searchQuery: String) {
         _selectedMediaViewModelList.postValue(LinkedHashMap())
         dataSourceFactory.setSearchQuery(searchQuery)
+    }
+
+    /**
+     * Downloads the selected [GiphyMediaViewModel]
+     */
+    fun downloadSelected(completion: (List<MediaModel>?, Int?) -> Unit) = launch {
+        val uris = (_selectedMediaViewModelList.value?.values?.toList() ?: emptyList()).map {
+            it.thumbnailUri
+        }
+
+        val eventValue = try {
+            val mediaModels = mediaFetcher.fetchAndSave(uris, site)
+            Pair(mediaModels, null)
+        } catch (e: CancellationException) {
+            // We don't need to handle coroutine cancellations. The UI should just do nothing.
+            Pair(null, null)
+        } catch (e: Exception) {
+            Pair(null, R.string.error_downloading_image)
+        }
+
+        completion(eventValue.first, eventValue.second)
     }
 
     /**
