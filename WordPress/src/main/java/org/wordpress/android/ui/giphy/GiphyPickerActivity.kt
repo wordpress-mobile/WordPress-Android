@@ -198,7 +198,8 @@ class GiphyPickerActivity : AppCompatActivity() {
             val searchClearButton =
                     search_view.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as ImageView
             val searchEditText =
-                    search_view.findViewById(android.support.v7.appcompat.R.id.search_src_text) as SearchView.SearchAutoComplete
+                    search_view.findViewById(android.support.v7.appcompat.R.id.search_src_text)
+                            as SearchView.SearchAutoComplete
 
             val isIdle = state == State.IDLE
             val isDownloading = state == State.DOWNLOADING

@@ -19,7 +19,6 @@ import kotlin.coroutines.experimental.CoroutineContext
  * - [KotlinConf 2018 - Kotlin Coroutines in Practice by Roman Elizarov](https://www.youtube.com/watch?v=a3agLJQ6vt8)
  */
 abstract class CoroutineScopedViewModel : ViewModel(), CoroutineScope {
-
     /**
      * The default parent [CoroutineContext] of all coroutine builders under this [ViewModel] ([CoroutineScope]).
      */
