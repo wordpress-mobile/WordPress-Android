@@ -130,13 +130,10 @@ class GiphyPickerViewModelTest {
         assertThat(viewModel.state.value).isEqualTo(State.FINISHED)
 
         with(checkNotNull(viewModel.downloadResult.value)) {
-            val mediaModels = checkNotNull(first)
-            val errorResId = second
-
             assertThat(mediaModels).hasSize(expectedResult.size)
             assertThat(mediaModels).isEqualTo(expectedResult)
 
-            assertThat(errorResId).isNull()
+            assertThat(errorMessageStringResId).isNull()
         }
     }
 
@@ -154,10 +151,7 @@ class GiphyPickerViewModelTest {
 
         // Assert
         with(checkNotNull(viewModel.downloadResult.value)) {
-            val mediaModels = first
-            val errorResId = second
-
-            assertThat(errorResId).isNotNull()
+            assertThat(errorMessageStringResId).isNotNull()
             assertThat(mediaModels).isNull()
         }
     }

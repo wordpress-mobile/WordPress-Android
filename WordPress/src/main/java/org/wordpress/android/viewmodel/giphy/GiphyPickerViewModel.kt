@@ -50,6 +50,11 @@ class GiphyPickerViewModel @Inject constructor(
         FINISHED
     }
 
+    /**
+     * A result of [downloadSelected] observed using the [downloadResult] LiveData
+     */
+    data class DownloadResult(val mediaModels: List<MediaModel>? = null, val errorMessageStringResId: Int? = null)
+
     private lateinit var site: SiteModel
 
     private val _state = MutableLiveData<State>().apply { value = State.IDLE }
@@ -58,14 +63,11 @@ class GiphyPickerViewModel @Inject constructor(
      */
     val state: LiveData<State> = _state
 
-    private val _downloadResult = SingleLiveEvent<Pair<List<MediaModel>?, Int?>>()
+    private val _downloadResult = SingleLiveEvent<DownloadResult>()
     /**
-     * Populated whenever [downloadSelected] finishes
-     *
-     * If [downloadSelected] is successful, this will have a non-null list of [MediaModel]. If not, the [Int] will
-     * be an error message string resource id.
+     * Produces results whenever [downloadSelected] finishes
      */
-    val downloadResult: LiveData<Pair<List<MediaModel>?, Int?>> = _downloadResult
+    val downloadResult: LiveData<DownloadResult> = _downloadResult
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
@@ -120,6 +122,9 @@ class GiphyPickerViewModel @Inject constructor(
      *
      * When the process is finished, the results will be posted to [downloadResult].
      *
+     * If [downloadSelected] is successful, the [DownloadResult.mediaModels] will be a non-null list. If not, the
+     * [DownloadResult.errorMessageStringResId] will be non-null and should be shown to the user.
+     *
      * This also changes the [state] to:
      *
      * - [State.DOWNLOADING] while downloading
@@ -133,20 +138,20 @@ class GiphyPickerViewModel @Inject constructor(
 
         _state.postValue(State.DOWNLOADING)
 
-        val eventValue = try {
+        val result = try {
             val giphyMediaViewModels = _selectedMediaViewModelList.value?.values?.toList() ?: emptyList()
             val mediaModels = mediaFetcher.fetchAndSave(giphyMediaViewModels, site)
-            Pair(mediaModels, null)
+            DownloadResult(mediaModels = mediaModels)
         } catch (e: CancellationException) {
             // We don't need to handle coroutine cancellations. The UI should just do nothing.
-            Pair(null, null)
+            DownloadResult()
         } catch (e: Exception) {
             // No need to log the error because that is already logged by `fetchAndSave()`
-            Pair(null, R.string.error_downloading_image)
+            DownloadResult(errorMessageStringResId = R.string.error_downloading_image)
         }
 
-        _downloadResult.postValue(eventValue)
-        _state.postValue(if (eventValue.first != null) State.FINISHED else State.IDLE)
+        _downloadResult.postValue(result)
+        _state.postValue(if (result.mediaModels != null) State.FINISHED else State.IDLE)
     }
 
     /**

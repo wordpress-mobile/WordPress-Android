@@ -165,17 +165,18 @@ class GiphyPickerActivity : AppCompatActivity() {
     private fun initializeDownloadHandlers() {
         text_add.setOnClickListener { viewModel.downloadSelected() }
 
-        viewModel.downloadResult.observe(this, Observer { pair ->
-            val mediaModels = pair?.first
-            val errorStringResId = pair?.second
-
-            if (mediaModels != null) {
-                val mediaLocalIds = mediaModels.map { model -> model.id }.toIntArray()
+        viewModel.downloadResult.observe(this, Observer { result ->
+            if (result?.mediaModels != null) {
+                val mediaLocalIds = result.mediaModels.map { it.id }.toIntArray()
                 val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            } else if (errorStringResId != null) {
-                ToastUtils.showToast(this@GiphyPickerActivity, errorStringResId, ToastUtils.Duration.SHORT)
+            } else if (result?.errorMessageStringResId != null) {
+                ToastUtils.showToast(
+                        this@GiphyPickerActivity,
+                        result.errorMessageStringResId,
+                        ToastUtils.Duration.SHORT
+                )
             }
         })
     }
