@@ -3,18 +3,25 @@ package org.wordpress.android.viewmodel.giphy
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockito_kotlin.mock
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.UUID
 
 class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private val viewModel = GiphyPickerViewModel(dataSourceFactory = mock())
+    private val viewModel = GiphyPickerViewModel(dataSourceFactory = mock(), mediaFetcher = mock())
+
+    @Before
+    fun setUp() {
+        viewModel.setup(site = mock())
+    }
 
     @Test
     fun `when setting a mediaViewModel as selected, it adds that to the selected list`() {
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -26,7 +33,7 @@ class GiphyPickerViewModelTest {
 
     @Test
     fun `when setting a mediaViewModel as selected, it updates the isSelected and selectedNumber`() {
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -37,7 +44,7 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when toggling an already selected mediaViewModel, it gets deselected and removed from the selected list`() {
         // Arrange
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -53,10 +60,10 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when deselecting a mediaViewModel, it rebuilds the selectedNumbers so they are continuous`() {
         // Arrange
-        val alpha = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "alpha")
-        val bravo = MutableGiphyMediaViewModel(id = "02", thumbnailUri = mock(), title = "bravo")
-        val charlie = MutableGiphyMediaViewModel(id = "03", thumbnailUri = mock(), title = "charlie")
-        val delta = MutableGiphyMediaViewModel(id = "04", thumbnailUri = mock(), title = "delta")
+        val alpha = createMediaViewModel()
+        val bravo = createMediaViewModel()
+        val charlie = createMediaViewModel()
+        val delta = createMediaViewModel()
 
         listOf(alpha, bravo, charlie, delta).forEach(viewModel::toggleSelected)
 
@@ -83,7 +90,7 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when the searchQuery is changed, it clears the selected mediaViewModel list`() {
         // Arrange
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -92,4 +99,11 @@ class GiphyPickerViewModelTest {
         // Assert
         assertThat(viewModel.selectedMediaViewModelList.value).isEmpty()
     }
+
+    private fun createMediaViewModel() = MutableGiphyMediaViewModel(
+            id = UUID.randomUUID().toString(),
+            thumbnailUri = mock(),
+            largeImageUri = mock(),
+            title = UUID.randomUUID().toString()
+    )
 }

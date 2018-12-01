@@ -39,7 +39,7 @@ class GiphyPickerViewModel @Inject constructor(
 
     private lateinit var site: SiteModel
 
-    private val _state = MutableLiveData<State>().apply { value = State.IDLE }
+    private val _state = MutableLiveData<State>()
     val state: LiveData<State> = _state
 
     private val _downloadResult = SingleLiveEvent<Pair<List<MediaModel>?, Int?>>()
@@ -73,6 +73,10 @@ class GiphyPickerViewModel @Inject constructor(
      */
     fun setup(site: SiteModel) {
         this.site = site
+
+        if (_state.value == null) {
+            _state.postValue(State.IDLE)
+        }
     }
 
     /**
@@ -94,6 +98,10 @@ class GiphyPickerViewModel @Inject constructor(
      * Downloads the selected [GiphyMediaViewModel]
      */
     fun downloadSelected() = launch {
+        if (_state.value != State.IDLE) {
+            return@launch
+        }
+
         _state.postValue(State.DOWNLOADING)
 
         val eventValue = try {
