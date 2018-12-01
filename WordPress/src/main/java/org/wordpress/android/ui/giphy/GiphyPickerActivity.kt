@@ -162,6 +162,9 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Set up reacting to "Add" button presses and processing the result
+     */
     private fun initializeDownloadHandlers() {
         text_add.setOnClickListener { viewModel.downloadSelected() }
 
@@ -181,6 +184,13 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Set up enabling/disabling of controls depending on the current [GiphyPickerViewModel.State]:
+     *
+     * - [State.IDLE]: All normal functions are allowed
+     * - [State.DOWNLOADING] or [State.FINISHED]: "Add", "Preview", searching, and selecting are disabled
+     * - [State.DOWNLOADING]: The "Add" button is replaced with a progress bar
+     */
     private fun initializeStateChangeHandlers() {
         viewModel.state.observe(this, Observer { state ->
             state ?: return@Observer
@@ -196,7 +206,6 @@ class GiphyPickerActivity : AppCompatActivity() {
             // Disable all the controls if we are not idle
             text_add.isEnabled = isIdle
             text_preview.isEnabled = isIdle
-
             searchClearButton.isEnabled = isIdle
             searchEditText.isEnabled = isIdle
 
