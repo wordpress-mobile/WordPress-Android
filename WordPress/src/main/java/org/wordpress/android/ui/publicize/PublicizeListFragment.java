@@ -216,7 +216,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
                     @Override public void onServiceClicked(PublicizeService service) {
-                        QuickStartUtils.completeTask(mQuickStartStore, QuickStartTask.ENABLE_POST_SHARING, mDispatcher, mSite);
+                        QuickStartUtils.completeTask(mQuickStartStore,
+                                QuickStartTask.ENABLE_POST_SHARING, mDispatcher, mSite);
                         if (getView() != null) {
                             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                         }

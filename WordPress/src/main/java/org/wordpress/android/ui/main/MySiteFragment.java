@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -63,7 +62,6 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
-import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -79,7 +77,6 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
-import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.io.File;
@@ -96,8 +93,6 @@ public class MySiteFragment extends Fragment implements
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface, PromoDialogClickInterface, MainToolbarFragment {
-    private static final long ALERT_ANIM_OFFSET_MS = 1000L;
-    private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -107,9 +102,6 @@ public class MySiteFragment extends Fragment implements
     public static final String TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG = "TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG";
     public static final String TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG";
     public static final String TAG_QUICK_START_MIGRATION_DIALOG = "TAG_QUICK_START_MIGRATION_DIALOG";
-    public static final String KEY_QUICK_START_SNACKBAR_WAS_SHOWN = "KEY_QUICK_START_SNACKBAR_WAS_SHOWN";
-    public static final int MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG = 1;
-    public static final int AUTO_QUICK_START_SNACKBAR_DELAY_MS = 1000;
 
     private ImageView mBlavatarImageView;
     private ProgressBar mBlavatarProgressBar;
@@ -134,9 +126,6 @@ public class MySiteFragment extends Fragment implements
     private QuickStartMySitePrompts mActiveTutorialPrompt;
     private TextView mQuickStartCounter;
     private View mQuickStartDot;
-    private boolean mQuickStartSnackBarWasShown = false;
-    private WPDialogSnackbar mQuickStartTaskPromptSnackBar;
-    private Handler mQuickStartSnackBarHandler = new Handler();
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -171,7 +160,6 @@ public class MySiteFragment extends Fragment implements
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
                     (QuickStartMySitePrompts) savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY);
-            mQuickStartSnackBarWasShown = savedInstanceState.getBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, false);
         }
     }
 
@@ -202,45 +190,15 @@ public class MySiteFragment extends Fragment implements
         }
 
         updateQuickStartContainer();
-        showQuickStartTaskPromptIfNecessary();
 
         if (!AppPrefs.hasQuickStartMigrationDialogShown() && QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
             showQuickStartDialogMigration();
         }
     }
 
-    private void showQuickStartTaskPromptIfNecessary() {
-        if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
-            QuickStartTask promptedTask = getPromptedQuickStartTask();
-
-            // if we finished prompted task - reset the dialog counter and pick the next task
-            if (promptedTask != null && mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), promptedTask)) {
-                resetQuickStartPromptCounter();
-
-                QuickStartMySitePrompts nextPrompt = getNextQuickStartPrompt();
-                if (nextPrompt != null) {
-                    setPromptedQuickStartTask(nextPrompt.getTask());
-                } else {
-                    // looks like we completed all the tasks!
-                    setPromptedQuickStartTask(null);
-                }
-            }
-
-            if (shouldShowQuickStartTaskPrompt()) {
-                mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
-                mQuickStartSnackBarHandler.postDelayed(new Runnable() {
-                    @Override public void run() {
-                        showQuickStartDialogTaskPrompt();
-                    }
-                }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
-            }
-        }
-    }
-
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
-        outState.putBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, mQuickStartSnackBarWasShown);
     }
 
     private void initSiteSettings() {
@@ -253,17 +211,8 @@ public class MySiteFragment extends Fragment implements
     @Override public void onPause() {
         super.onPause();
         if (getActivity() != null && !getActivity().isChangingConfigurations()) {
-            mQuickStartSnackBarWasShown = false;
             clearActiveQuickStartTask();
             removeQuickStartFocusPoint();
-        }
-
-        if (mQuickStartTaskPromptSnackBar != null) {
-            mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
-
-            if (mQuickStartTaskPromptSnackBar.isShowing()) {
-                mQuickStartTaskPromptSnackBar.dismiss();
-            }
         }
     }
 
@@ -572,8 +521,6 @@ public class MySiteFragment extends Fragment implements
                 if (resultCode == Activity.RESULT_OK) {
                     // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
-                    AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
-                    setPromptedQuickStartTask(null);
                 }
                 break;
             case RequestCodes.PHOTO_PICKER:
@@ -645,11 +592,6 @@ public class MySiteFragment extends Fragment implements
                     }
 
                     mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
-
-                    resetQuickStartPromptCounter();
-                    setPromptedQuickStartTask(mActiveTutorialPrompt.getTask());
-                    mQuickStartSnackBarWasShown = true;
-
                     showActiveQuickStartTutorial();
                 }
                 break;
@@ -936,9 +878,6 @@ public class MySiteFragment extends Fragment implements
 
     private void startQuickStart() {
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), QuickStartTask.CREATE_SITE, true);
-        AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
-        setPromptedQuickStartTask(QuickStartTask.VIEW_SITE);
-        showQuickStartDialogTaskPrompt();
         updateQuickStartContainer();
     }
 
@@ -1132,119 +1071,5 @@ public class MySiteFragment extends Fragment implements
             AppPrefs.setQuickStartMigrationDialogShown(true);
             // TODO: Quick Start - Add analytics for migration dialog viewed.
         }
-    }
-
-    private void showQuickStartDialogTaskPrompt() {
-        if (!isAdded() || getView() == null) {
-            return;
-        }
-
-        // if regular Quick Start Snackbar was displayed maximum number of times we should show the final one
-        // with a different content
-        final boolean shouldDirectUserToContinueQuickStart = AppPrefs.getNumberOfTimesQuickStartDialogShown()
-                                                             == MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG;
-        final QuickStartMySitePrompts mySitePrompt =
-                QuickStartMySitePrompts.getPromptDetailsForTask(getPromptedQuickStartTask());
-
-        String title;
-        String message;
-
-        if (shouldDirectUserToContinueQuickStart) {
-            title = getString(R.string.quick_start_dialog_continue_setup_title);
-            message = getString(R.string.quick_start_dialog_continue_setup_message);
-        } else if (mySitePrompt != null && mySitePrompt.getPromptDialogTitleId() != -1
-                   && mySitePrompt.getPromptDialogMessageId() != -1) {
-            title = getString(mySitePrompt.getPromptDialogTitleId());
-            message = getString(mySitePrompt.getPromptDialogMessageId());
-        } else {
-            // nothing to show
-            return;
-        }
-
-        mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator),
-                message,
-                AccessibilityUtils.getSnackbarDuration(getActivity(),
-                        getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
-
-        mQuickStartTaskPromptSnackBar.setTitle(title);
-
-        mQuickStartTaskPromptSnackBar.setPositiveButton(
-                getString(R.string.quick_start_button_positive), new OnClickListener() {
-                    @Override public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
-                        if (shouldDirectUserToContinueQuickStart) {
-                            ActivityLauncher.viewQuickStartForResult(getActivity());
-                        } else {
-                            mActiveTutorialPrompt = mySitePrompt;
-                            showActiveQuickStartTutorial();
-                        }
-                    }
-                });
-
-        mQuickStartTaskPromptSnackBar
-                .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
-                    @Override public void onClick(View v) {
-                        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
-                    }
-                });
-
-        mQuickStartTaskPromptSnackBar.show();
-        mQuickStartSnackBarWasShown = true;
-        incrementNumberOfTimesQuickStartDialogWasShown();
-        AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_VIEWED);
-        // clear the prompted quick start task after user sees the "continue" dialog, so the prompt will not appear when
-        // other tasks are completed outside of quick start process
-        if (shouldDirectUserToContinueQuickStart) {
-            setPromptedQuickStartTask(null);
-        }
-    }
-
-    private void incrementNumberOfTimesQuickStartDialogWasShown() {
-        AppPrefs.setNumberOfTimesQuickStartDialogShown(AppPrefs.getNumberOfTimesQuickStartDialogShown() + 1);
-    }
-
-    private boolean shouldShowQuickStartTaskPrompt() {
-        return AppPrefs.getNumberOfTimesQuickStartDialogShown() <= MAX_NUMBER_OF_TIMES_TO_SHOW_QUICK_START_DIALOG
-               && !mQuickStartSnackBarWasShown && getPromptedQuickStartTask() != null;
-    }
-
-    /**
-     * Cycles through Quick Start tasks and returns a prompt information for the next unfinished one
-     */
-    private QuickStartMySitePrompts getNextQuickStartPrompt() {
-        for (QuickStartMySitePrompts quickStartMySitePrompt : QuickStartMySitePrompts.values()) {
-            if (!mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite(), quickStartMySitePrompt.getTask())) {
-                return quickStartMySitePrompt;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns a Quick Start task that is currently being prompted to the user with a Snackbar
-     */
-    private QuickStartTask getPromptedQuickStartTask() {
-        String stringValue = AppPrefs.getPromptedQuickStartTask();
-        QuickStartTask task = null;
-        if (!TextUtils.isEmpty(stringValue)) {
-            task = QuickStartTask.Companion.fromString(stringValue);
-        }
-
-        return task;
-    }
-
-    /**
-     * Records Quick Start task that is currently being prompted to the user with a Snackbar
-     */
-    private void setPromptedQuickStartTask(QuickStartTask task) {
-        if (task == null) {
-            AppPrefs.setPromptedQuickStartTask(null);
-        } else {
-            AppPrefs.setPromptedQuickStartTask(task.toString());
-        }
-    }
-
-    private void resetQuickStartPromptCounter() {
-        AppPrefs.setNumberOfTimesQuickStartDialogShown(0);
     }
 }

@@ -451,8 +451,6 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                                 resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                         )
                 ).show()
-
-                 view!!.requestFocus()
             }
         }
     }
