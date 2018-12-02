@@ -22,12 +22,16 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
@@ -206,9 +210,13 @@ class QuickStartUtils {
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
-                SHARE_SITE -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
+                ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                CHECK_STATS -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
+                EXPLORE_PLANS -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
             }
         }
 
@@ -218,9 +226,13 @@ class QuickStartUtils {
                 VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
                 CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
-                SHARE_SITE -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
+                ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
                 PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
                 FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                 UPLOAD_SITE_ICON -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                CREATE_NEW_PAGE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                CHECK_STATS -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
+                EXPLORE_PLANS -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
             }
         }
     }
