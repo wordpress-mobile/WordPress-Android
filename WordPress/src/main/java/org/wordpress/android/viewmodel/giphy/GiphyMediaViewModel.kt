@@ -26,6 +26,12 @@ interface GiphyMediaViewModel {
      */
     val thumbnailUri: Uri
     /**
+     * The image to use for previews in the picker
+     *
+     * This should be the `downsized` image which is downsized to be under 2mb.
+     */
+    val previewImageUri: Uri
+    /**
      * The title that appears on giphy.com
      */
     val title: String
