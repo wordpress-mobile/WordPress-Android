@@ -333,6 +333,7 @@ public class MySiteFragment extends Fragment implements
             public void onClick(View v) {
                 SiteModel selectedSite = getSelectedSite();
                 if (selectedSite != null) {
+                    completeQuickStarTask(QuickStartTask.CHECK_STATS);
                     if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
                         // If the user is not connected to WordPress.com, ask him to connect first.
                         startWPComLoginForJetpackStats();
@@ -358,6 +359,7 @@ public class MySiteFragment extends Fragment implements
                             showChangeSiteIconDialog();
                         } else {
                             showAddSiteIconDialog();
+                            completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
                         }
                     } else {
                         showEditingSiteIconRequiresPermissionDialog(
@@ -371,6 +373,7 @@ public class MySiteFragment extends Fragment implements
         mPlanContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                completeQuickStarTask(QuickStartTask.EXPLORE_PLANS);
                 ActivityLauncher.viewBlogPlans(getActivity(), getSelectedSite());
             }
         });
@@ -392,6 +395,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                requestNextStepOfActiveQuickStartTask();
                 ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
             }
         });
@@ -445,7 +449,7 @@ public class MySiteFragment extends Fragment implements
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
+                if (isQuickStartTaskActive(QuickStartTask.ENABLE_POST_SHARING)) {
                     requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
@@ -1024,6 +1028,11 @@ public class MySiteFragment extends Fragment implements
                 horizontalOffset = (quickStartTarget.getWidth() / 2) - focusPointSize + getResources()
                         .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
                 verticalOffset = 0;
+            } else if (mActiveTutorialPrompt.getTask() == QuickStartTask.UPLOAD_SITE_ICON) {
+                horizontalOffset =
+                        getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
+                        / 2;
+                verticalOffset = -(quickStartTarget.getWidth() / 2);
             } else {
                 horizontalOffset =
                         getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
@@ -1033,11 +1042,11 @@ public class MySiteFragment extends Fragment implements
             QuickStartUtils.addQuickStartFocusPointAboveTheView(parentView, quickStartTarget, horizontalOffset,
                     verticalOffset);
 
-            // highlighting MySite row and scrolling to it
+            // highlight MySite row and scroll to it
             if (!QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 mScrollView.post(new Runnable() {
                     @Override public void run() {
-                        mScrollView.smoothScrollTo(0, quickStartTarget.getBottom());
+                        mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
                         quickStartTarget.setPressed(true);
                     }
                 });
@@ -1116,7 +1125,7 @@ public class MySiteFragment extends Fragment implements
                 "",
                 "",
                 ""
-        );
+                              );
 
         if (getFragmentManager() != null) {
             promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
@@ -1143,7 +1152,8 @@ public class MySiteFragment extends Fragment implements
         if (shouldDirectUserToContinueQuickStart) {
             title = getString(R.string.quick_start_dialog_continue_setup_title);
             message = getString(R.string.quick_start_dialog_continue_setup_message);
-        } else if (mySitePrompt != null) {
+        } else if (mySitePrompt != null && mySitePrompt.getPromptDialogTitleId() != -1
+                   && mySitePrompt.getPromptDialogMessageId() != -1) {
             title = getString(mySitePrompt.getPromptDialogTitleId());
             message = getString(mySitePrompt.getPromptDialogMessageId());
         } else {
