@@ -23,12 +23,16 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.QuickStartUtils
@@ -98,7 +102,7 @@ class QuickStartFragment : Fragment() {
         }
 
         layout_share_site.setOnClickListener {
-            startQuickStartTask(SHARE_SITE)
+            startQuickStartTask(ENABLE_POST_SHARING)
         }
 
         layout_publish_post.setOnClickListener {
@@ -107,6 +111,22 @@ class QuickStartFragment : Fragment() {
 
         layout_follow_site.setOnClickListener {
             startQuickStartTask(FOLLOW_SITE)
+        }
+
+        layout_upload_icon.setOnClickListener {
+            startQuickStartTask(UPLOAD_SITE_ICON)
+        }
+
+        layout_create_new_page.setOnClickListener {
+            startQuickStartTask(CREATE_NEW_PAGE)
+        }
+
+        layout_check_stats.setOnClickListener {
+            startQuickStartTask(CHECK_STATS)
+        }
+
+        layout_explore_plans.setOnClickListener {
+            startQuickStartTask(EXPLORE_PLANS)
         }
 
         button_skip_all.setOnClickListener {
@@ -121,8 +141,10 @@ class QuickStartFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putBoolean(STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE,
-                skipAllTasksDialog != null && skipAllTasksDialog!!.isShowing)
+        outState.putBoolean(
+                STATE_KEY_IS_SKIP_TASKS_DIALOG_VISIBLE,
+                skipAllTasksDialog != null && skipAllTasksDialog!!.isShowing
+        )
     }
 
     private fun startQuickStartTask(task: QuickStartTask) {
@@ -169,7 +191,7 @@ class QuickStartFragment : Fragment() {
                 titleView = title_customize_site
                 checkMarkView = done_customize_site
             }
-            SHARE_SITE -> {
+            ENABLE_POST_SHARING -> {
                 titleView = title_share_site
                 checkMarkView = done_share_site
             }
@@ -180,6 +202,22 @@ class QuickStartFragment : Fragment() {
             FOLLOW_SITE -> {
                 titleView = title_follow_site
                 checkMarkView = done_follow_site
+            }
+            UPLOAD_SITE_ICON -> {
+                titleView = title_upload_site_icon
+                checkMarkView = done_upload_site_icon
+            }
+            CREATE_NEW_PAGE -> {
+                titleView = title_create_new_page
+                checkMarkView = done_create_new_page
+            }
+            CHECK_STATS -> {
+                titleView = title_check_stats
+                checkMarkView = done_check_stats
+            }
+            EXPLORE_PLANS -> {
+                titleView = title_explore_plans
+                checkMarkView = done_explore_plans
             }
         }
 

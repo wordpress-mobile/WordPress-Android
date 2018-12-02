@@ -38,7 +38,7 @@
                 android:gravity="bottom"
                 android:text="@string/quick_start_list_complete_title"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/quick_start_completed_text" >
+                android:textSize="@dimen/quick_start_completed_text">
             </TextView>
 
             <TextView
@@ -358,6 +358,118 @@
                 android:layout_alignStart="@+id/title_follow_site"
                 android:layout_below="@+id/subtitle_follow_site">
             </View>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_upload_icon"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_upload_site_icon"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_globe_grey_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_upload_site_icon"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_upload_site_icon"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_upload_site_icon"
+                android:layout_toStartOf="@+id/done_upload_site_icon"
+                android:text="Upload icon">
+            </TextView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_create_new_page"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_create_new_page"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_pages_grey_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_create_new_page"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_create_new_page"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_create_new_page"
+                android:layout_toStartOf="@+id/done_create_new_page"
+                android:text="Create new page">
+            </TextView>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_check_stats"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_check_stats"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_stats_alt_grey_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_check_stats"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_check_stats"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_check_stats"
+                android:layout_toStartOf="@+id/done_check_stats"
+                android:text="Check stats">
+            </TextView>
+
+        </RelativeLayout>
+
+         <RelativeLayout
+            android:id="@+id/layout_explore_plans"
+            style="@style/QuickStartLayout">
+
+            <ImageView
+                android:id="@+id/icon_explore_plans"
+                style="@style/QuickStartIcon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_plans_grey_24dp">
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/done_explore_plans"
+                style="@style/QuickStartDone"
+                android:contentDescription="@string/content_description_done"
+                android:src="@drawable/ic_checkmark_white_24dp">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/title_explore_plans"
+                style="@style/QuickStartTitle"
+                android:layout_toEndOf="@+id/icon_explore_plans"
+                android:layout_toStartOf="@+id/done_explore_plans"
+                android:text="Explore plans">
+            </TextView>
 
         </RelativeLayout>
 
