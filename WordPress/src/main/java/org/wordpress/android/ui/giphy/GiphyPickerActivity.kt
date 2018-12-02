@@ -74,7 +74,8 @@ class GiphyPickerActivity : AppCompatActivity() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
-                onMediaViewClickListener = viewModel::toggleSelected
+                onMediaViewClickListener = viewModel::toggleSelected,
+                onMediaViewLongClickListener = { showPreview(listOf(it)) }
         )
 
         recycler.apply {
