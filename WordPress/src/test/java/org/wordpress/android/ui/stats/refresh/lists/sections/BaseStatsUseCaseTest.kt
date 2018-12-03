@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.ALL_TIME_STATS
 import org.wordpress.android.test
 import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.Empty
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -19,7 +18,7 @@ import javax.inject.Provider
 
 class BaseStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var localDataProvider: Provider<String?>
-    @Mock lateinit var remoteDataProvider: Provider<String>
+    @Mock lateinit var remoteDataProvider: Provider<String?>
     private val localData = "local data"
     private val remoteData = "remote data"
     @Mock lateinit var site: SiteModel
@@ -48,17 +47,13 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on fetch returns loading item when DB is empty`() = test {
+    fun `on fetch returns null item when DB is empty`() = test {
         assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
         block.fetch(site, false, false)
 
-        assertThat(block.liveData.value).isEqualTo(
-                Loading(
-                        ALL_TIME_STATS
-                )
-        )
+        assertThat(result).isEmpty()
     }
 
     @Test
@@ -80,7 +75,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.clear()
 
-        assertThat(result.last()).isEqualTo(Empty(false))
+        assertThat(block.liveData.value).isEqualTo(Loading(ALL_TIME_STATS))
     }
 
     private fun assertData(position: Int, data: String) {
@@ -91,7 +86,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
     class TestUseCase(
         private val localDataProvider: Provider<String?>,
-        private val remoteDataProvider: Provider<String>
+        private val remoteDataProvider: Provider<String?>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
             Dispatchers.Unconfined
@@ -101,11 +96,16 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         }
 
         override suspend fun loadCachedData(site: SiteModel) {
-            onModel(localDataProvider.get())
+            localDataProvider.get()?.let { onModel(it) }
         }
 
         override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-            onModel(remoteDataProvider.get())
+            val domainModel = remoteDataProvider.get()
+            if (domainModel != null) {
+                onModel(domainModel)
+            } else {
+                onEmpty()
+            }
         }
     }
 }

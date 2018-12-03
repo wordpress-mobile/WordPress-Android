@@ -40,7 +40,8 @@ class LatestPostSummaryUseCase
             error != null -> onError(
                     error.message ?: error.type.name
             )
-            else -> onModel(model)
+            model != null -> onModel(model)
+            else -> onEmpty()
         }
     }
 

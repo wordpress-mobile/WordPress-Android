@@ -11,6 +11,8 @@ import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.Loading
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Data
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.State.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase.NotUsedUiState
 import org.wordpress.android.util.merge
 
@@ -21,18 +23,18 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val type: InsightsTypes,
     private val mainDispatcher: CoroutineDispatcher
 ) {
-    private val domainModel = MutableLiveData<Data<DOMAIN_MODEL>>()
+    private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
     private val uiState = MutableLiveData<UI_STATE>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
-        when {
-            data == null -> Loading(type)
-            data.error != null -> createFailedItem(data.error)
-            data.model != null -> createDataItem(buildUiModel(data.model, uiState))
+        when (data) {
+            null -> Loading(type)
+            is State.Error -> createFailedItem(data.error)
+            is Data -> createDataItem(buildUiModel(data.model, uiState))
             else -> null
         }
     }
 
-    protected val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
+    private val mutableNavigationTarget = MutableLiveData<NavigationTarget>()
     val navigationTarget: LiveData<NavigationTarget> = mutableNavigationTarget
 
     /**
@@ -55,9 +57,15 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * When it's null, the current model is cleared.
      * @param domainModel new data
      */
-    suspend fun onModel(domainModel: DOMAIN_MODEL?) {
+    suspend fun onModel(domainModel: DOMAIN_MODEL) {
         withContext(mainDispatcher) {
             this@BaseStatsUseCase.domainModel.value = Data(model = domainModel)
+        }
+    }
+
+    suspend fun onEmpty() {
+        withContext(mainDispatcher) {
+            this@BaseStatsUseCase.domainModel.value = Empty()
         }
     }
 
@@ -67,7 +75,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     suspend fun onError(message: String) {
         withContext(mainDispatcher) {
-            domainModel.value = Data(error = message)
+            this@BaseStatsUseCase.domainModel.value = State.Error(message)
         }
     }
 
@@ -123,7 +131,11 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         return BlockList(type, data)
     }
 
-    private data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL? = null, val error: String? = null)
+    private sealed class State<DOMAIN_MODEL> {
+        data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()
+        data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL) : State<DOMAIN_MODEL>()
+        class Empty<DOMAIN_MODEL> : State<DOMAIN_MODEL>()
+    }
 
     /**
      * Stateful use case should be used when we have a block that has a UI state that needs to be preserved

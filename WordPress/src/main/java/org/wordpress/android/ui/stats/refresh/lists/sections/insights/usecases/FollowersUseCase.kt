@@ -65,7 +65,7 @@ class FollowersUseCase
             error != null -> onError(error.message ?: error.type.name)
             wpComModel != null && emailModel != null -> onModel(wpComModel to emailModel)
             else -> {
-                onModel(null)
+                onEmpty()
             }
         }
     }
