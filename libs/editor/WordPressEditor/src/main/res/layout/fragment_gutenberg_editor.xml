@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <org.wordpress.aztec.toolbar.AztecToolbar
-        android:id="@+id/formatting_toolbar"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        aztec:advanced="true" >
-    </org.wordpress.aztec.toolbar.AztecToolbar>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

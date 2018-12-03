@@ -47,7 +47,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private EditTextWithKeyBackListener mTitle;
     private SourceViewEditText mSource;
-    private AztecToolbar mFormattingToolbar;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
@@ -134,18 +133,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         // We need to intercept the "Enter" key on the title field, and replace it with a space instead
         mSource.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
-
-        mFormattingToolbar = view.findViewById(R.id.formatting_toolbar);
-        mFormattingToolbar.setExpanded(mIsToolbarExpanded);
-
-        mTitle.setOnFocusChangeListener(
-                new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean hasFocus) {
-                        mFormattingToolbar.enableFormatButtons(!hasFocus);
-                    }
-                }
-        );
 
         setHasOptionsMenu(true);
 
