@@ -279,6 +279,11 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 sCurrentUploadingPostAnalyticsProperties
                         .put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
                 sCurrentUploadingPostAnalyticsProperties.put("editor_source",
+                        // making sure to reuse the same logic for both showing Gutenberg and tracking.
+                        // Note that mIsNewPost is not available as a flag-logic per se outside of EditPostActivity,
+                        // but the check will pass anyway as long as Gutenberg is enabled and the PostModel contains
+                        // Gutenberg blocks. As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The
+                        // choice is loosely made knowing the other check ("contains blocks") is in place.
                         PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost) ? "gutenberg"
                                 : (AppPrefs.isAztecEditorEnabled() ? "aztec"
                                         : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
