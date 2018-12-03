@@ -588,7 +588,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
             mSubscriptionCount++;
 
-            if (maxSitesToShow != NO_MAXIMUM && mSubscriptionCount > maxSitesToShow) {
+            if (!showAll && mSubscriptionCount > maxSitesToShow) {
                 break;
             }
 
@@ -631,7 +631,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         // Add view all entry when more sites than maximum to show.
-        if (mSubscriptionCount > maxSitesToShow && !showAll) {
+        if (!showAll && mSubscriptionCount > maxSitesToShow) {
             appendViewAllSitesOption(context, getString(R.string.pref_notification_blogs_followed), true);
         }
 
