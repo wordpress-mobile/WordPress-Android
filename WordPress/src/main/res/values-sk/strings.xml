@@ -1178,7 +1178,6 @@ Language: sk
     <string name="detail_approve_manual">Vyžadovať manuálne schválenie všetkých komentárov.</string>
     <string name="days_quantity_other">počet dní: %d</string>
     <string name="days_quantity_one">1 deň</string>
-    <string name="web_address">Webová adresa</string>
     <string name="primary_site">Hlavná webová stránka</string>
     <string name="pending_email_change_snackbar">Kliknite na verifikačný odkaz v emaile poslaný na %1$s a potvrďte svoju novú adresu</string>
     <string name="editor_toast_uploading_please_wait">Momentálne nahrávate médiá. Prosím počkaj na dokončenie.</string>
@@ -1599,7 +1598,6 @@ Language: sk
     <string name="error_refresh_posts">Príspevky nebolo možné znova načítať</string>
     <string name="error_deleting_post">Počas odstraňovania príspevku sa vyskytla chyba</string>
     <string name="notifications_empty_list">Žiadne notifikácie</string>
-    <string name="invalid_url_message">Skontrolujte, či je zadaná URL adresa platná</string>
     <string name="stats_bar_graph_empty">Štatistiky nie sú dostupné</string>
     <string name="stats_empty_comments">Bez komentárov</string>
     <string name="sdcard_message">Pre nahratie súboru je potrebné vložiť SD kartu</string>
