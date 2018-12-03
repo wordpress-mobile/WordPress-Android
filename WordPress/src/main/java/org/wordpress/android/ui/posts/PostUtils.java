@@ -133,7 +133,7 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                            shouldShowGutenbergEditor(post.isLocalDraft(), post) ? "gutenberg"
+                                shouldShowGutenbergEditor(post.isLocalDraft(), post) ? "gutenberg"
                                     : (AppPrefs.isAztecEditorEnabled() ? "aztec"
                                         : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
 
@@ -371,6 +371,4 @@ public class PostUtils {
         return AppPrefs.isGutenbergEditorEnabled()
                && (isNewPost || contentContainsGutenbergBlocks(post.getContent()));
     }
-
-
 }
