@@ -565,14 +565,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             subscriptions = mAccountStore.getSubscriptions();
         }
 
-        mSubscriptionCount = subscriptions.size();
         Context context = getActivity();
         blogsCategory.removeAll();
 
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
-        int count = 0;
+        mSubscriptionCount = 0;
 
-        if (mSubscriptionCount > 0) {
+        if (subscriptions.size() > 0) {
             Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
                 @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
                     return getSiteNameOrHostFromSubscription(o1)
@@ -587,9 +586,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 break;
             }
 
-            count++;
+            mSubscriptionCount++;
 
-            if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) {
+            if (maxSitesToShow != NO_MAXIMUM && mSubscriptionCount > maxSitesToShow) {
                 break;
             }
 
