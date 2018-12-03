@@ -121,41 +121,29 @@ sealed class BlockListItem(val type: Type) {
     interface NavigationAction {
         fun click()
 
-        data class OneParam<T>(
-            val navigationData: T,
-            val navigateAction: (T) -> Unit
-        ) : NavigationAction {
-            override fun click() {
-                navigateAction(navigationData)
+        companion object {
+            fun create(action: () -> Unit): NavigationAction {
+                return NoParams(action)
+            }
+            fun <T> create(data: T, action: (T) -> Unit): NavigationAction {
+                return OneParam(data, action)
             }
         }
 
-        data class TwoParams<T, U>(
-            val firstParam: T,
-            val secondParam: U,
-            val navigateAction: (T, U) -> Unit
+        private data class OneParam<T>(
+            val data: T,
+            val action: (T) -> Unit
         ) : NavigationAction {
             override fun click() {
-                navigateAction(firstParam, secondParam)
+                action(data)
             }
         }
 
-        data class ThreeParams<T, U, V>(
-            val firstParam: T,
-            val secondParam: U,
-            val thirdParam: V,
-            val navigateAction: (T, U, V) -> Unit
+        private data class NoParams(
+            val action: () -> Unit
         ) : NavigationAction {
             override fun click() {
-                navigateAction(firstParam, secondParam, thirdParam)
-            }
-        }
-
-        data class NoParams(
-            val navigateAction: () -> Unit
-        ) : NavigationAction {
-            override fun click() {
-                navigateAction()
+                action()
             }
         }
     }

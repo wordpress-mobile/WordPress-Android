@@ -72,23 +72,20 @@ class LatestPostSummaryUseCase
             model == null -> Link(
                     R.drawable.ic_create_blue_medium_24dp,
                     R.string.stats_insights_create_post,
-                    navigateAction = NavigationAction.NoParams(this::onAddNewPostClick)
+                    navigateAction = NavigationAction.create(this::onAddNewPostClick)
             )
             model.hasData() -> Link(
                     text = R.string.stats_insights_view_more,
-                    navigateAction = NavigationAction.ThreeParams(
-                            model.postId,
-                            model.postTitle,
-                            model.postURL,
+                    navigateAction = NavigationAction.create(
+                            ViewMoreParams(model.postId, model.postTitle, model.postURL),
                             this::onViewMore
                     )
             )
             else -> Link(
                     R.drawable.ic_share_blue_medium_24dp,
                     R.string.stats_insights_share_post,
-                    navigateAction = NavigationAction.TwoParams(
-                            model.postURL,
-                            model.postTitle,
+                    navigateAction = NavigationAction.create(
+                            SharePostParams(model.postURL, model.postTitle),
                             this::onSharePost
                     )
             )
@@ -99,15 +96,19 @@ class LatestPostSummaryUseCase
         navigateTo(AddNewPost())
     }
 
-    private fun onViewMore(postId: Long, postTitle: String, postUrl: String) {
-        navigateTo(ViewPostDetailStats(postId, postTitle, postUrl))
+    private fun onViewMore(params: ViewMoreParams) {
+        navigateTo(ViewPostDetailStats(params.postId, params.postTitle, params.postUrl))
     }
 
-    private fun onSharePost(postUrl: String, postTitle: String) {
-        navigateTo(SharePost(postUrl, postTitle))
+    private fun onSharePost(params: SharePostParams) {
+        navigateTo(SharePost(params.postUrl, params.postTitle))
     }
 
-    private fun onLinkClicked(postId: Long, postUrl: String) {
-        navigateTo(ViewPost(postId, postUrl))
+    private fun onLinkClicked(params: LinkClickParams) {
+        navigateTo(ViewPost(params.postId, params.postUrl))
     }
+
+    data class LinkClickParams(val postId: Long, val postUrl: String)
+    data class SharePostParams(val postUrl: String, val postTitle: String)
+    data class ViewMoreParams(val postId: Long, val postTitle: String, val postUrl: String)
 }

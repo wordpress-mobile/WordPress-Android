@@ -73,7 +73,7 @@ class CommentsUseCase
             items.add(
                     Link(
                             text = string.stats_insights_view_more,
-                            navigateAction = NavigationAction.NoParams(onLinkClick)
+                            navigateAction = NavigationAction.create(onLinkClick)
                     )
             )
         }

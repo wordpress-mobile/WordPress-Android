@@ -95,7 +95,7 @@ class TagsAndCategoriesUseCase
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigateAction = NavigationAction.NoParams(onLinkClick)
+                                navigateAction = NavigationAction.create(onLinkClick)
                         )
                 )
             }
@@ -114,7 +114,7 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction.OneParam(item.link, onTagClick)
+                navigationAction = NavigationAction.create(item.link, onTagClick)
         )
     }
 
@@ -138,7 +138,7 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction.OneParam(item.link, onTagClick)
+                navigationAction = NavigationAction.create(item.link, onTagClick)
         )
     }
 

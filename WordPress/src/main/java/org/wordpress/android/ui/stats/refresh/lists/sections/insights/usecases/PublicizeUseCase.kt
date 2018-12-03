@@ -62,7 +62,7 @@ class PublicizeUseCase
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigateAction = NavigationAction.NoParams(this::onLinkClick)
+                                navigateAction = NavigationAction.create(this::onLinkClick)
                         )
                 )
             }

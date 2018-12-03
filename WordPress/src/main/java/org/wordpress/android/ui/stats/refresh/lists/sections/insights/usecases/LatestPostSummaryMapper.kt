@@ -10,6 +10,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -23,7 +24,7 @@ class LatestPostSummaryMapper
 ) {
     fun buildMessageItem(
         model: InsightsLatestPostModel?,
-        navigationAction: (postId: Long, postUrl: String) -> Unit
+        navigationAction: (params: LinkClickParams) -> Unit
     ): Text {
         if (model == null) {
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
@@ -48,10 +49,9 @@ class LatestPostSummaryMapper
                 listOf(
                         Clickable(
                                 postTitle,
-                                navigationAction = NavigationAction.TwoParams(
-                                        model.postId,
-                                        model.postURL,
-                                        navigateAction = navigationAction
+                                navigationAction = NavigationAction.create(
+                                        LinkClickParams(model.postId, model.postURL),
+                                        action = navigationAction
                                 )
                         )
                 )
