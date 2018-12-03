@@ -5,6 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
+import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.PAGE
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.POST
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -43,14 +44,14 @@ constructor(
         val error = response.error
 
         return when {
-            error != null -> createFailedItem(R.string.stats_insights_all_time_stats, error.message ?: error.type.name)
+            error != null -> createFailedItem(R.string.stats_posts_and_pages, error.message ?: error.type.name)
             else -> model?.let { loadPostsAndPages(model) }
         }
     }
 
     private fun loadPostsAndPages(model: PostAndPageViewsModel): StatsBlock {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_insights_all_time_stats))
+        items.add(Title(string.stats_posts_and_pages))
 
         if (model.views.isEmpty()) {
             items.add(Empty)
@@ -58,7 +59,7 @@ constructor(
             items.addAll(model.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_grey_dark_24dp
-                    PAGE -> R.drawable.ic_pages_grey_dark_24dp
+                    HOMEPAGE, PAGE -> R.drawable.ic_pages_grey_dark_24dp
                 }
                 ListItemWithIcon(
                         icon = icon,
