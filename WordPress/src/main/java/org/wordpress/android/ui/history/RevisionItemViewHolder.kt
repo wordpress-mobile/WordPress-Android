@@ -41,6 +41,8 @@ class RevisionItemViewHolder(
         if (boundRevision.totalAdditions == 0 && boundRevision.totalDeletions == 0) {
             diffLayout.visibility = View.GONE
         } else {
+            diffLayout.visibility = View.VISIBLE
+
             if (boundRevision.totalAdditions > 0) {
                 diffAdditions.text = boundRevision.totalAdditions.toString()
                 diffAdditions.visibility = View.VISIBLE

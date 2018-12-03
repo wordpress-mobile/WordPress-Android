@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 13:54:08+0000
+Translation-Revision-Date: 2018-11-28 10:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="change_password_dialog_message">جارٍ تغيير كلمة المرور…</string>
+    <string name="change_password_dialog_hint">ينبغي ألا يقل طول كلمة المرور الخاصة بك عن ستة أحرف. ولجعل كلمة المرور أقوى، استخدم أحرفًا كبيرة وصغيرة وأرقامًا ورموزًا مثل ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">تم تغيير كلمة المرور بنجاح</string>
+    <string name="change_password">تغيير كلمة المرور</string>
+    <string name="support_identity_input_dialog_name_label">الاسم</string>
+    <string name="history_no_title">(بلا عنوان)</string>
+    <string name="history_preview_html">معاينة HTML</string>
+    <string name="history_preview_visual">معاينة بصرية</string>
     <string name="history_detail_title">مراجعة</string>
     <string name="history_detail_button_previous">السابق</string>
     <string name="history_detail_button_next">التالي</string>
@@ -1131,7 +1139,6 @@ Language: ar
     <string name="detail_approve_manual">تلزم موافقة يدوية على تعليقات الجميع.</string>
     <string name="days_quantity_other">%d من الأيام</string>
     <string name="days_quantity_one">يوم واحد</string>
-    <string name="web_address">عنوان الويب</string>
     <string name="primary_site">موقع أساسي</string>
     <string name="pending_email_change_snackbar">انقر فوق رابط التحقق في البريد الإلكتروني المرسل إلى %1$s للتأكيد على عنوانك الجديد</string>
     <string name="editor_toast_uploading_please_wait">أنت تقوم حاليًا برفع وسائط. يُرجى الانتظار حتى تكتمل هذه العملية.</string>
@@ -1552,7 +1559,6 @@ Language: ar
     <string name="error_refresh_posts">المقالات لايمكن تحديثها في الوقت الحاضر</string>
     <string name="error_deleting_post">حدث خطأ أثناء حذف المقالة</string>
     <string name="notifications_empty_list">لا تنبيهات</string>
-    <string name="invalid_url_message">تحقق من أن عنوان URL الذي تم إدخاله صحيح</string>
     <string name="stats_bar_graph_empty">الإحصائيات غير متوفرة</string>
     <string name="stats_empty_comments">لا تعليقات حتى الآن</string>
     <string name="sdcard_message">بطاقة ذاكرة SD  مطلوبة لرفع ملفات الوسائط</string>

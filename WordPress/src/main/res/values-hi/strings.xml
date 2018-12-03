@@ -117,7 +117,6 @@ Language: hi_IN
     <string name="approve_auto">सभी उपयोगकर्ता</string>
     <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
-    <string name="web_address">वेब पता</string>
     <string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
     <string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
     <string name="email_address">ईमेल पता</string>
@@ -263,7 +262,6 @@ Language: hi_IN
     <string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
     <string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
     <string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
-    <string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
     <string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>
     <string name="error_refresh_pages">पृष्ठे इस समय रिफ्रेश नहीं हो सकती</string>
     <string name="theme_fetch_failed">थीम को प्राप्त करने में असफल</string>

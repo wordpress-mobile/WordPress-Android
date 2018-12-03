@@ -563,6 +563,7 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <string name="site_settings_enable_gutenberg">Enable Gutenberg</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -618,6 +619,7 @@
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
+    <string name="site_settings_enable_gutenberg_summary">This is still an experimental version of Gutenberg</string>
 
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
@@ -757,6 +759,7 @@
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
@@ -1201,6 +1204,7 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+    <string name="menu_debug">Debug Menu</string>
 
     <string name="post_title">Title</string>
 

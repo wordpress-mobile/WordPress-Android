@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 10:54:06+0000
+Translation-Revision-Date: 2018-11-28 07:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="change_password_dialog_message">正在變更密碼…</string>
+    <string name="change_password_dialog_hint">密碼必須至少包含 6 個字元。若要提升密碼強度，可使用大小寫字母、數字，以及 ! \" ? $ % ^ &amp; ) 等符號。</string>
+    <string name="change_password_confirmation">密碼已成功變更</string>
+    <string name="change_password">變更密碼</string>
+    <string name="support_identity_input_dialog_name_label">名稱</string>
+    <string name="history_no_title">(無標題)</string>
+    <string name="history_preview_html">HTML 預覽</string>
+    <string name="history_preview_visual">外觀預覽</string>
     <string name="history_detail_title">版本</string>
     <string name="history_detail_button_previous">上一篇</string>
     <string name="history_detail_button_next">下一篇</string>
@@ -1175,7 +1183,6 @@ Language: zh_TW
     <string name="detail_approve_manual">需要人工審核所有人的留言。</string>
     <string name="days_quantity_other">%d 天</string>
     <string name="days_quantity_one">1 天</string>
-    <string name="web_address">網站位址</string>
     <string name="primary_site">主要網站</string>
     <string name="pending_email_change_snackbar">按一下電子郵件 (收件者：%1$s) 中的驗證連結以確認您的新地址</string>
     <string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
@@ -1589,7 +1596,6 @@ Language: zh_TW
     <string name="error_refresh_posts">目前無法重新整理文章</string>
     <string name="error_deleting_post">刪除文章時發生錯誤</string>
     <string name="notifications_empty_list">沒有通知</string>
-    <string name="invalid_url_message">檢查輸入的 URL 是否有效</string>
     <string name="stats_bar_graph_empty">沒有可用的統計</string>
     <string name="stats_empty_comments">尚無回應</string>
     <string name="sdcard_message">需要掛接 SD 卡以上傳媒體</string>

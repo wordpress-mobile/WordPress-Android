@@ -415,7 +415,6 @@ Language: hr
     <string name="username_or_password_incorrect">Korisničko ime ili lozinka koje ste unijeli nisu točni</string>
     <string name="invalid_email_message">Vaša adresa e-pošte nije valjana</string>
     <string name="email_invalid">Unesite ispravnu adresu e-pošte</string>
-    <string name="invalid_url_message">Provjerite da je uneseni URL ispravan</string>
     <string name="error_deleting_post">Dogodila se greška prilikom brisanja posta</string>
     <string name="add_new_category">Dodaj novu kategoriju</string>
     <string name="category_name">Ime kategorije</string>

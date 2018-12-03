@@ -11,6 +11,10 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+# disable the default submodule logic so the gutenberg-mobile submodule is not pulled. No need to pull it.
+git:
+  submodules: false
+
 notifications:
   # Slack notification on failure (secured token).
   slack:
@@ -59,4 +63,4 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
-  - ./gradlew -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+  - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)

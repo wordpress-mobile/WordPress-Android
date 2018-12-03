@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -38,7 +37,6 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.MediaStore;
-import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.login.LoginMode;
@@ -100,8 +98,6 @@ public class MySiteFragment extends Fragment implements
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface, PromoDialogClickInterface, MainToolbarFragment {
-    private static final long ALERT_ANIM_OFFSET_MS = 1000L;
-    private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -155,7 +151,6 @@ public class MySiteFragment extends Fragment implements
     private int mBlavatarSz;
 
     @Inject AccountStore mAccountStore;
-    @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject QuickStartStore mQuickStartStore;
@@ -176,7 +171,7 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         if (savedInstanceState != null) {
             mActiveTutorialPrompt =
@@ -196,8 +191,8 @@ public class MySiteFragment extends Fragment implements
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(getSelectedSite());
 
-        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
-            getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        if (ServiceUtils.isServiceRunning(requireActivity(), StatsService.class)) {
+            requireActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
 
         SiteModel site = getSelectedSite();
@@ -239,7 +234,8 @@ public class MySiteFragment extends Fragment implements
             if (shouldShowQuickStartTaskPrompt()) {
                 mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
                 mQuickStartSnackBarHandler.postDelayed(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         showQuickStartDialogTaskPrompt();
                     }
                 }, AUTO_QUICK_START_SNACKBAR_DELAY_MS);
@@ -247,7 +243,8 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt);
         outState.putBoolean(KEY_QUICK_START_SNACKBAR_WAS_SHOWN, mQuickStartSnackBarWasShown);
@@ -260,7 +257,8 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-    @Override public void onPause() {
+    @Override
+    public void onPause() {
         super.onPause();
         if (getActivity() != null && !getActivity().isChangingConfigurations()) {
             mQuickStartSnackBarWasShown = false;
@@ -278,7 +276,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_site_fragment, container, false);
 
@@ -408,7 +406,7 @@ public class MySiteFragment extends Fragment implements
         rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
+                ActivityLauncher.viewCurrentBlogPages(requireActivity(), getSelectedSite());
             }
         });
 
@@ -498,7 +496,8 @@ public class MySiteFragment extends Fragment implements
         });
     }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (mActiveTutorialPrompt != null) {
@@ -555,7 +554,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.yes),
                 getString(R.string.no),
                 null);
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showChangeSiteIconDialog() {
@@ -566,7 +565,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.my_site_icon_dialog_change_button),
                 getString(R.string.my_site_icon_dialog_remove_button),
                 getString(R.string.my_site_icon_dialog_cancel_button));
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void showEditingSiteIconRequiresPermissionDialog(@NonNull String message) {
@@ -577,7 +576,7 @@ public class MySiteFragment extends Fragment implements
                 getString(R.string.dialog_button_ok),
                 null,
                 null);
-        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), tag);
+        dialog.show((requireActivity()).getSupportFragmentManager(), tag);
     }
 
     private void startWPComLoginForJetpackStats() {
@@ -734,8 +733,8 @@ public class MySiteFragment extends Fragment implements
 
     private MediaModel buildMediaModel(File file, SiteModel site) {
         Uri uri = new Uri.Builder().path(file.getPath()).build();
-        String mimeType = getActivity().getContentResolver().getType(uri);
-        return FluxCUtils.mediaModelFromLocalUri(getActivity(), uri, mimeType, mMediaStore, site.getId());
+        String mimeType = requireActivity().getContentResolver().getType(uri);
+        return FluxCUtils.mediaModelFromLocalUri(requireActivity(), uri, mimeType, mMediaStore, site.getId());
     }
 
     private void startCropActivity(Uri uri) {
@@ -875,7 +874,7 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void setTitle(@NonNull final String title) {
         if (isAdded()) {
-            mToolbarTitle = (title == null || title.isEmpty()) ? getString(R.string.wordpress) : title;
+            mToolbarTitle = (title.isEmpty()) ? getString(R.string.wordpress) : title;
 
             if (mToolbar != null) {
                 mToolbar.setTitle(mToolbarTitle);
@@ -906,12 +905,12 @@ public class MySiteFragment extends Fragment implements
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                        getActivity().findViewById(R.id.coordinator), true,
+                        requireActivity().findViewById(R.id.coordinator), true,
                         event.post, event.errorMessage, site, mDispatcher);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), true,
+                    requireActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage);
         }
     }
@@ -937,7 +936,7 @@ public class MySiteFragment extends Fragment implements
             } else {
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
                     UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), false,
+                            requireActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage);
                 }
             }
@@ -1041,14 +1040,15 @@ public class MySiteFragment extends Fragment implements
     }
 
     private Runnable mAddQuickStartFocusPointTask = new Runnable() {
-        @Override public void run() {
+        @Override
+        public void run() {
             // technically there is no situation (yet) where fragment is not added but we need to show focus point
             if (!isAdded()) {
                 return;
             }
 
-            ViewGroup parentView = getActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
-            final View quickStartTarget = getActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
+            ViewGroup parentView = requireActivity().findViewById(mActiveTutorialPrompt.getParentContainerId());
+            final View quickStartTarget = requireActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId());
 
             if (quickStartTarget == null || parentView == null) {
                 return;
@@ -1074,7 +1074,8 @@ public class MySiteFragment extends Fragment implements
             // highlighting MySite row and scrolling to it
             if (!QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 mScrollView.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getBottom());
                         quickStartTarget.setPressed(true);
                     }
@@ -1095,7 +1096,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
         getView().removeCallbacks(mAddQuickStartFocusPointTask);
-        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getActivity().findViewById(R.id.root_view_main));
+        QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) requireActivity().findViewById(R.id.root_view_main));
     }
 
     public boolean isQuickStartTaskActive(QuickStartTask task) {
@@ -1189,7 +1190,7 @@ public class MySiteFragment extends Fragment implements
             return;
         }
 
-        mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(getActivity().findViewById(R.id.coordinator),
+        mQuickStartTaskPromptSnackBar = WPDialogSnackbar.make(requireActivity().findViewById(R.id.coordinator),
                 message,
                 AccessibilityUtils.getSnackbarDuration(getActivity(),
                         getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)));
@@ -1198,7 +1199,8 @@ public class MySiteFragment extends Fragment implements
 
         mQuickStartTaskPromptSnackBar.setPositiveButton(
                 getString(R.string.quick_start_button_positive), new OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
                         if (shouldDirectUserToContinueQuickStart) {
                             ActivityLauncher.viewQuickStartForResult(getActivity());
@@ -1211,7 +1213,8 @@ public class MySiteFragment extends Fragment implements
 
         mQuickStartTaskPromptSnackBar
                 .setNegativeButton(getString(R.string.quick_start_button_negative), new OnClickListener() {
-                    @Override public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
                         AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED);
                     }
                 });
