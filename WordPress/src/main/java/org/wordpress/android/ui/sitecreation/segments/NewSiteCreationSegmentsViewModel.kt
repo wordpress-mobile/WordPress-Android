@@ -42,8 +42,8 @@ class NewSiteCreationSegmentsViewModel
     /* Should be updated only within updateUIState(). */
     private var listState: ListState<VerticalSegmentModel> = ListState.Ready(emptyList())
 
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
-    val uiState: LiveData<UiState> = _uiState
+    private val _segmentsUiState: MutableLiveData<SegmentsUiState> = MutableLiveData()
+    val segmentsUiState: LiveData<SegmentsUiState> = _segmentsUiState
 
     private val _segmentSelected = SingleLiveEvent<Long>()
     val segmentSelected: LiveData<Long> = _segmentSelected
@@ -104,7 +104,7 @@ class NewSiteCreationSegmentsViewModel
 
     private fun updateUIState(state: ListState<VerticalSegmentModel>) {
         listState = state
-        _uiState.value = UiState(
+        _segmentsUiState.value = SegmentsUiState(
                 showError = state is Error,
                 showContent = state !is Error,
                 items = if (state is Error)
@@ -154,7 +154,7 @@ class NewSiteCreationSegmentsViewModel
         }
     }
 
-    data class UiState(
+    data class SegmentsUiState(
         val showError: Boolean,
         val showContent: Boolean,
         val items: List<ItemUiState>

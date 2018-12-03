@@ -73,7 +73,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
-        viewModel.uiState.observe(this, Observer { state ->
+        viewModel.segmentsUiState.observe(this, Observer { state ->
             state?.let {
                 recyclerView.visibility = if (state.showContent) View.VISIBLE else View.GONE
                 errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
