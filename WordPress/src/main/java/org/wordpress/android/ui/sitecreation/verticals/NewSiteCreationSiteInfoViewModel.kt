@@ -55,7 +55,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
                     backgroundColor = R.color.white
             ),
             NEXT(
-                    text = R.string.new_site_creation_button_next,
+                    text = R.string.next,
                     textColor = R.color.white,
                     backgroundColor = R.color.wp_blue_medium
             )

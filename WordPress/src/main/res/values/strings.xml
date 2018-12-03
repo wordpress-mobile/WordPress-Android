@@ -2354,7 +2354,6 @@
     <string name="new_site_creation_business_name_hint">Business Name</string>
     <string name="new_site_creation_optional_tag_line_hint">Optional Tagline</string>
     <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_button_next">@string/next</string>
     <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
 </resources>
