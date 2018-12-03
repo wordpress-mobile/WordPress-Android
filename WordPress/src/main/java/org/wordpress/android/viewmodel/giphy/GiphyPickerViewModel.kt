@@ -52,7 +52,7 @@ class GiphyPickerViewModel(
      */
     fun search(searchQuery: String) {
         _selectedMediaViewModelList.postValue(LinkedHashMap())
-        dataSourceFactory.setSearchQuery(searchQuery)
+        dataSourceFactory.searchQuery = searchQuery
     }
 
     /**
