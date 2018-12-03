@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.sitecreation.segments
 
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.IMAGE
 
@@ -33,6 +36,11 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             title.text = uiState.title
             subtitle.text = uiState.subtitle
             imageManager.load(icon, IMAGE, uiState.iconUrl)
+            try {
+                icon.setColorFilter(Color.parseColor(uiState.iconColor), PorterDuff.Mode.SRC_IN)
+            } catch (e: IllegalArgumentException) {
+                AppLog.e(AppLog.T.SITE_CREATION, "Error parsing segment icon color: ${uiState.iconColor}")
+            }
             container.setOnClickListener { uiState.onItemTapped }
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
         }

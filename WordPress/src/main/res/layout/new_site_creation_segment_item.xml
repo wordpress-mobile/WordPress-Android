@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:foreground="?selectableItemBackground"
-    android:minHeight="@dimen/site_creation_list_min_item_height">
+    android:minHeight="@dimen/site_creation_segments_list_min_item_height">
 
     <ImageView
         android:id="@+id/icon"
@@ -29,7 +29,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/site_creation_list_divider_start_margin"
+        android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:textColor="@color/wp_grey_dark"
         android:textSize="@dimen/text_sz_large"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/site_creation_list_divider_start_margin"
+        android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:textColor="@color/wp_grey_darken_20"
         android:textSize="@dimen/text_sz_medium"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,7 +61,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/site_creation_list_divider_start_margin"
+        android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:background="@color/wp_grey_lighten_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
