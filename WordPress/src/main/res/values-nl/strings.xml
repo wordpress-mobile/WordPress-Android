@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 13:54:07+0000
+Translation-Revision-Date: 2018-11-27 11:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="change_password_dialog_message">Wachtwoord wordt gewijzigd …</string>
+    <string name="change_password_dialog_hint">Je wachtwoord moet tenminste zes tekens bevatten. Als je het wachtwoord sterker wilt maken, gebruik dan hoofdletters en kleine letters, cijfers en symbolen zoals ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Wachtwoord gewijzigd</string>
+    <string name="change_password">Wachtwoord wijzigen</string>
+    <string name="support_identity_input_dialog_name_label">Naam</string>
+    <string name="history_no_title">(geen titel)</string>
+    <string name="history_preview_html">HTML-voorbeeldweergave</string>
+    <string name="history_preview_visual">Visuele voorbeeldweergave</string>
     <string name="history_detail_title">Herziening</string>
     <string name="history_detail_button_previous">Vorige</string>
     <string name="history_detail_button_next">Volgende</string>
@@ -205,6 +213,15 @@ Language: nl
     <string name="reader_empty_search_title">Geen resultaten gevonden</string>
     <string name="comment_read_source_post">Lees het oorspronkelijke bericht</string>
     <string name="sites">Sites</string>
+    <string name="signup_magic_link_title">Magische link verzonden</string>
+    <string name="signup_email_screen_title">Aanmelden via E-mail</string>
+    <string name="verification_2fa_screen_title">Code verificatie</string>
+    <string name="selfhosted_site_login_title">Login referenties</string>
+    <string name="magic_link_sent_login_title">Magische link verzonden</string>
+    <string name="magic_link_login_title">Magische link login</string>
+    <string name="site_address_login_title">Site adres login</string>
+    <string name="email_address_login_title">E-mail adres login</string>
+    <string name="alternatively">Alternatief</string>
     <string name="reader_empty_saved_posts_description">Tik op %s om een bericht op te slaan in je lijst.</string>
     <string name="reader_empty_saved_posts_title">Nog geen berichten opgeslagen!</string>
     <string name="reader_bookmark_snack_title">Bericht opgeslagen</string>
@@ -1125,7 +1142,6 @@ Language: nl
     <string name="detail_approve_manual">Vereist handmatige goedkeuring voor de reacties van iedereen.</string>
     <string name="days_quantity_other">%d dagen</string>
     <string name="days_quantity_one">1 dag</string>
-    <string name="web_address">Webadres</string>
     <string name="primary_site">Primaire site</string>
     <string name="pending_email_change_snackbar">Klik op de link in de verificatiemail die verzonden is naar %1$s om je nieuwe adres te bevestigen</string>
     <string name="editor_toast_uploading_please_wait">Je bent media aan het uploaden. Wacht totdat dit is afgerond.</string>
@@ -1532,7 +1548,6 @@ Language: nl
     <string name="error_refresh_posts">Berichten kunnen momenteel niet worden ververst</string>
     <string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
     <string name="notifications_empty_list">Geen notificaties</string>
-    <string name="invalid_url_message">Controleer of de ingevoerde URL geldig is</string>
     <string name="stats_bar_graph_empty">Geen statistieken beschikbaar</string>
     <string name="stats_empty_comments">Er zijn nog geen reacties</string>
     <string name="sdcard_message">Er moet een SD-kaart zijn gekoppeld om media te uploaden</string>

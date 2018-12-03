@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-10 10:30:41+0000
+Translation-Revision-Date: 2018-11-27 20:21:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="change_password_dialog_message">Po ndryshohen fjalëkalimet…</string>
+    <string name="change_password_dialog_hint">Fjalëkalimi juaj duhet të jetë e pakta gjashtë shenja i gjatë. Për ta bërë më të fuqishëm, përdorni shkronja me të mëdha dhe me të vogla, numra, dhe simbole të tilla si ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Fjalëkalimi u ndryshua me sukses</string>
+    <string name="change_password">Ndryshoje fjalëkalimin</string>
+    <string name="support_identity_input_dialog_name_label">Emër</string>
+    <string name="history_no_title">(pa titull)</string>
+    <string name="history_preview_html">Paraparje HTML</string>
+    <string name="history_preview_visual">Paraparje pamore</string>
     <string name="history_detail_title">Rishikim</string>
     <string name="history_detail_button_previous">I mëparshmi</string>
     <string name="history_detail_button_next">Pasuesi</string>
@@ -179,6 +187,7 @@ Language: sq_AL
     <string name="button_discard">Hidhe Tej</string>
     <string name="reader_avatar_desc">foto profili</string>
     <string name="reader_blavatar_desc">ikonë sajti</string>
+    <string name="notification_channel_transient_title">Tranzient</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Ju lutemi, jepni adresën tuaj email</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Që të vazhdohet, ju lutemi, jepni adresën tuaj email dhe emrin</string>
@@ -1605,7 +1614,6 @@ Language: sq_AL
     <string name="error_refresh_posts">Postimet s’u rifreskuan dot tani</string>
     <string name="error_deleting_post">Ndodhi një gabim teksa fshihej postimi</string>
     <string name="notifications_empty_list">S’ka njoftime</string>
-    <string name="invalid_url_message">Kontrolloni nëse URL-ja e dhënë është e vlefshme</string>
     <string name="stats_bar_graph_empty">S’ka statistika gati</string>
     <string name="stats_empty_comments">Ende pa komente</string>
     <string name="sdcard_message">Për të ngarkuar media, lypset një kartë SD e montuar</string>

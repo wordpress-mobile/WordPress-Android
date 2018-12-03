@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-11 23:42:00+0000
+Translation-Revision-Date: 2018-11-24 01:20:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: gl_ES
@@ -647,7 +647,6 @@ Language: gl_ES
     <string name="cat_name_required">O campo de nome de categoría é obrigatorio</string>
     <string name="stats_empty_comments">Non hai comentarios aínda</string>
     <string name="stats_bar_graph_empty">Non hai estatísticas dispoñibles</string>
-    <string name="invalid_url_message">Comproba se a URL introducida é válida</string>
     <string name="notifications_empty_list">Sen notificacións</string>
     <string name="error_generic">Houbo un erro</string>
     <string name="email_invalid">Introduce un enderezo de correo electrónico válido</string>
