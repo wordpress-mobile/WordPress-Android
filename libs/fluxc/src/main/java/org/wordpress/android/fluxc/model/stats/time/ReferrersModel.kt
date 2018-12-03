@@ -1,0 +1,13 @@
+package org.wordpress.android.fluxc.model.stats.time
+
+data class ReferrersModel(val otherViews: Int, val totalViews: Int, val groups: List<Group>) {
+    data class Group(
+        val groupId: String?,
+        val name: String?,
+        val icon: String?,
+        val url: String?,
+        val total: Int?,
+        val referrers: List<Referrer>
+    )
+    data class Referrer(val name: String, val views: Int, val icon: String, val url: String?)
+}
