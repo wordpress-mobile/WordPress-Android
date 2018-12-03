@@ -24,6 +24,10 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
+    init {
+        _uiState.value = currentUiState
+    }
+
     fun updateBusinessName(businessName: String) {
         if (currentUiState.businessName != businessName) {
             currentUiState = currentUiState.copy(businessName = businessName)
