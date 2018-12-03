@@ -279,7 +279,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 sCurrentUploadingPostAnalyticsProperties
                         .put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
                 sCurrentUploadingPostAnalyticsProperties.put("editor_source",
-                        AppPrefs.isGutenbergEditorEnabled() ? "gutenberg"
+                        PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost) ? "gutenberg"
                                 : (AppPrefs.isAztecEditorEnabled() ? "aztec"
                                         : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
 
