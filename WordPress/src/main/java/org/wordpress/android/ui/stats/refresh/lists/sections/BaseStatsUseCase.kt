@@ -27,10 +27,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val uiState = MutableLiveData<UI_STATE>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         when (data) {
-            null -> Loading(type)
+            is State.Loading -> Loading(type)
             is State.Error -> createFailedItem(data.error)
-            is State.Data -> createDataItem(buildUiModel(data.model, uiState))
-            is State.Empty -> null
+            is Data -> createDataItem(buildUiModel(data.model, uiState))
+            is Empty, null -> null
         }
     }
 
@@ -45,6 +45,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
         if (liveData.value == null) {
+            withContext(mainDispatcher) {
+                this@BaseStatsUseCase.domainModel.value = State.Loading()
+            }
             loadCachedData(site)
         }
         if (refresh) {
@@ -54,7 +57,6 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
     /**
      * Trigger this method when there is a new (updated) model available.
-     * When it's null, the current model is cleared.
      * @param domainModel new data
      */
     suspend fun onModel(domainModel: DOMAIN_MODEL) {
@@ -63,6 +65,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         }
     }
 
+    /**
+     * Trigger this method when there is no response from the API (the block is missing).
+     */
     suspend fun onEmpty() {
         withContext(mainDispatcher) {
             this@BaseStatsUseCase.domainModel.value = Empty()
@@ -135,6 +140,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()
         data class Data<DOMAIN_MODEL>(val model: DOMAIN_MODEL) : State<DOMAIN_MODEL>()
         class Empty<DOMAIN_MODEL> : State<DOMAIN_MODEL>()
+        class Loading<DOMAIN_MODEL> : State<DOMAIN_MODEL>()
     }
 
     /**

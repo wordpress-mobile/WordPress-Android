@@ -44,7 +44,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 latestPostSummaryMapper
         )
         useCase.navigationTarget.observeForever {}
-        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
     @Test
