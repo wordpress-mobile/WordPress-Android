@@ -206,4 +206,6 @@
     <color name="revision_diff_add_action_underline">@color/blue_wordpress</color>
     <color name="revision_diff_add_action_background">#1A0087BE</color>
 
+    <color name="pink_500">#bc4681</color>
+
 </resources>

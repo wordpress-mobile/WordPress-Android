@@ -26,9 +26,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.SHARE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.QuickStartUtils
@@ -98,7 +98,7 @@ class QuickStartFragment : Fragment() {
         }
 
         layout_share_site.setOnClickListener {
-            startQuickStartTask(SHARE_SITE)
+            startQuickStartTask(ENABLE_POST_SHARING)
         }
 
         layout_publish_post.setOnClickListener {
@@ -169,7 +169,7 @@ class QuickStartFragment : Fragment() {
                 titleView = title_customize_site
                 checkMarkView = done_customize_site
             }
-            SHARE_SITE -> {
+            ENABLE_POST_SHARING -> {
                 titleView = title_share_site
                 checkMarkView = done_share_site
             }
@@ -180,6 +180,11 @@ class QuickStartFragment : Fragment() {
             FOLLOW_SITE -> {
                 titleView = title_follow_site
                 checkMarkView = done_follow_site
+            }
+            else -> {
+                // TODO: Quick Start - Replace else with remaining tasks.
+                titleView = title_browse_themes
+                checkMarkView = done_browse_themes
             }
         }
 

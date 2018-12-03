@@ -2271,6 +2271,7 @@
     <string name="site_creation_epilogue_write">Write first post</string>
 
     <string name="content_description_done">Done</string>
+    <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
@@ -2325,8 +2326,10 @@
     <string name="quick_start_list_share_site_title" translatable="false">@string/quick_start_dialog_share_site_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
     <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
-    <string name="quick_start_sites">Quick Start</string>
-    <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
+    <string name="quick_start_sites">Next Steps</string>
+    <string name="quick_start_sites_type_customize">Customize Your Site</string>
+    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
+    <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>

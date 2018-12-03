@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -91,6 +92,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
+
 public class MySiteFragment extends Fragment implements
         SiteSettingsListener,
         WPMainActivity.OnScrollToTopListener,
@@ -132,8 +136,14 @@ public class MySiteFragment extends Fragment implements
     private View mSharingView;
     private SiteSettingsInterface mSiteSettings;
     private QuickStartMySitePrompts mActiveTutorialPrompt;
-    private TextView mQuickStartCounter;
-    private View mQuickStartDot;
+    private ImageView mQuickStartCustomizeIcon;
+    private TextView mQuickStartCustomizeSubtitle;
+    private TextView mQuickStartCustomizeTitle;
+    private View mQuickStartCustomizeView;
+    private ImageView mQuickStartGrowIcon;
+    private TextView mQuickStartGrowSubtitle;
+    private TextView mQuickStartGrowTitle;
+    private View mQuickStartGrowView;
     private boolean mQuickStartSnackBarWasShown = false;
     private WPDialogSnackbar mQuickStartTaskPromptSnackBar;
     private Handler mQuickStartSnackBarHandler = new Handler();
@@ -292,9 +302,15 @@ public class MySiteFragment extends Fragment implements
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view);
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view);
         mPageView = rootView.findViewById(R.id.row_pages);
-        mQuickStartContainer = rootView.findViewById(R.id.row_quick_start);
-        mQuickStartCounter = rootView.findViewById(R.id.my_site_quick_start_progress);
-        mQuickStartDot = rootView.findViewById(R.id.my_site_quick_start_dot);
+        mQuickStartContainer = rootView.findViewById(R.id.quick_start);
+        mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize);
+        mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon);
+        mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle);
+        mQuickStartCustomizeTitle = rootView.findViewById(R.id.quick_start_customize_title);
+        mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow);
+        mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon);
+        mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle);
+        mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title);
 
         setupClickListeners(rootView);
 
@@ -445,7 +461,7 @@ public class MySiteFragment extends Fragment implements
         mSharingView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isQuickStartTaskActive(QuickStartTask.SHARE_SITE)) {
+                if (isQuickStartTaskActive(QuickStartTask.ENABLE_POST_SHARING)) {
                     requestNextStepOfActiveQuickStartTask();
                 }
                 ActivityLauncher.viewBlogSharing(getActivity(), getSelectedSite());
@@ -467,15 +483,16 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        mQuickStartContainer.setOnClickListener(new View.OnClickListener() {
+        mQuickStartCustomizeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mQuickStartDot.getVisibility() == View.VISIBLE) {
-                    mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
-                    updateQuickStartContainer();
-                    AnalyticsTracker.track(Stat.QUICK_START_LIST_COMPLETED_VIEWED);
-                }
+                ActivityLauncher.viewQuickStartForResult(getActivity());
+            }
+        });
 
+        mQuickStartGrowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 ActivityLauncher.viewQuickStartForResult(getActivity());
             }
         });
@@ -491,18 +508,39 @@ public class MySiteFragment extends Fragment implements
 
     private void updateQuickStartContainer() {
         if (QuickStartUtils.isQuickStartInProgress(mQuickStartStore)) {
-            int totalNumberOfTasks = QuickStartTask.values().length;
-            int numberOfTasksCompleted = mQuickStartStore.getDoneCount(AppPrefs.getSelectedSite());
+            int site = AppPrefs.getSelectedSite();
 
-            mQuickStartCounter.setText(getString(R.string.quick_start_sites_progress,
-                    numberOfTasksCompleted,
-                    totalNumberOfTasks));
+            int countCustomizeCompleted = mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE).size();
+            int countCustomizeUncompleted = mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE).size();
+            int countGrowCompleted = mQuickStartStore.getCompletedTasksByType(site, GROW).size();
+            int countGrowUncompleted = mQuickStartStore.getUncompletedTasksByType(site, GROW).size();
 
-            if (numberOfTasksCompleted == totalNumberOfTasks) {
-                mQuickStartDot.setVisibility(View.VISIBLE);
+            if (countCustomizeUncompleted > 0) {
+                mQuickStartCustomizeIcon.setEnabled(true);
+                mQuickStartCustomizeTitle.setEnabled(true);
             } else {
-                mQuickStartDot.setVisibility(View.GONE);
+                mQuickStartCustomizeIcon.setEnabled(false);
+                mQuickStartCustomizeTitle.setEnabled(false);
+                mQuickStartCustomizeTitle.setPaintFlags(
+                        mQuickStartCustomizeTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
+
+            mQuickStartCustomizeSubtitle.setText(getString(R.string.quick_start_sites_type_subtitle,
+                    countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted));
+
+            if (countGrowUncompleted > 0) {
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_pink_500_multiple_users_white_40dp);
+                mQuickStartGrowTitle.setEnabled(true);
+            } else {
+                mQuickStartGrowIcon.setBackgroundResource(R.drawable.bg_oval_grey_multiple_users_white_40dp);
+                mQuickStartGrowTitle.setEnabled(false);
+                mQuickStartGrowTitle.setPaintFlags(
+                        mQuickStartGrowTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+
+            mQuickStartGrowSubtitle.setText(getString(R.string.quick_start_sites_type_subtitle,
+                    countGrowCompleted, countGrowCompleted + countGrowUncompleted));
+
             mQuickStartContainer.setVisibility(View.VISIBLE);
         } else {
             mQuickStartContainer.setVisibility(View.GONE);
