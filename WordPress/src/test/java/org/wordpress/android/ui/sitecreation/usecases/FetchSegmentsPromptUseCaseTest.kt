@@ -21,6 +21,8 @@ import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentPromptPayload
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentPromptFetched
 import org.wordpress.android.test
 
+private const val SEGMENT_ID = 1L
+
 @RunWith(MockitoJUnitRunner::class)
 class FetchSegmentsPromptUseCaseTest {
     @Rule
@@ -30,7 +32,7 @@ class FetchSegmentsPromptUseCaseTest {
     @Mock lateinit var store: VerticalStore
     private lateinit var useCase: FetchSegmentPromptUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<FetchSegmentPromptPayload>>
-    private val event = OnSegmentPromptFetched(1L, SegmentPromptModel("", "", ""), null)
+    private val event = OnSegmentPromptFetched(SEGMENT_ID, SegmentPromptModel("", "", ""), null)
 
     @Before
     fun setUp() {
@@ -42,10 +44,10 @@ class FetchSegmentsPromptUseCaseTest {
     fun coroutineResumedWhenResultEventDispatched() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onSegmentPromptFetched(event) }
 
-        val resultEvent = useCase.fetchSegmentsPrompt(1L)
+        val resultEvent = useCase.fetchSegmentsPrompt(SEGMENT_ID)
 
         verify(dispatcher).dispatch(dispatchCaptor.capture())
-        Assert.assertEquals(1L, dispatchCaptor.lastValue.payload.segmentId)
+        Assert.assertEquals(SEGMENT_ID, dispatchCaptor.lastValue.payload.segmentId)
         Assert.assertEquals(event, resultEvent)
     }
 }

@@ -62,6 +62,12 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
 
+    private val _verticalSelected = SingleLiveEvent<String>()
+    val verticalSelected: LiveData<String> = _verticalSelected
+
+    private val _skipBtnClicked = SingleLiveEvent<Void>()
+    val skipBtnClicked: LiveData<Void> = _skipBtnClicked
+
     init {
         dispatcher.register(fetchVerticalsUseCase)
         dispatcher.register(fetchSegmentPromptUseCase)
@@ -109,6 +115,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     fun onClearTextBtnClicked() {
         _clearBtnClicked.call()
+    }
+
+    fun onSkipStepBtnClicked() {
+        _skipBtnClicked.call()
     }
 
     fun updateQuery(query: String, delay: Int = throttleDelay) {
@@ -184,7 +194,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                items.add(VerticalsModelUiState(model.verticalId, model.name, showDivider = index != lastItemIndex))
+                val itemUiState = VerticalsModelUiState(
+                        model.verticalId,
+                        model.name,
+                        showDivider = index != lastItemIndex
+                )
+                itemUiState.onItemTapped = { _verticalSelected.value = itemUiState.id }
+                items.add(itemUiState)
             }
         }
         return items
@@ -269,14 +285,14 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     sealed class VerticalsListItemUiState {
+        var onItemTapped: (() -> Unit)? = null
+
         data class VerticalsModelUiState(val id: String, val title: String, val showDivider: Boolean) :
                 VerticalsListItemUiState()
 
         data class VerticalsFetchSuggestionsErrorUiState(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int
-        ) : VerticalsListItemUiState() {
-            lateinit var onItemTapped: () -> Unit
-        }
+        ) : VerticalsListItemUiState()
     }
 }

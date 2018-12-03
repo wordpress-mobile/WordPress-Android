@@ -33,7 +33,10 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             title.text = uiState.title
             subtitle.text = uiState.subtitle
             imageManager.load(icon, IMAGE, uiState.iconUrl)
-            container.setOnClickListener { uiState.onItemTapped }
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            container.setOnClickListener {
+                uiState.onItemTapped!!.invoke()
+            }
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
         }
     }

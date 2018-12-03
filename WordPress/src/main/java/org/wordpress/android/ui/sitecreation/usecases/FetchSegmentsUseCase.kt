@@ -32,8 +32,7 @@ class FetchSegmentsUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onSiteCategoriesFetched(event: OnSegmentsFetched) {
-        checkNotNull(continuation) { "onSiteCategoriesFetched received without a suspended coroutine." }
-                .resume(event)
+        continuation?.resume(event)
         continuation = null
     }
 }

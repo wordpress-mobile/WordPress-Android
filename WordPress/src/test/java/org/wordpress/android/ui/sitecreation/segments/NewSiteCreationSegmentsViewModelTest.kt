@@ -25,6 +25,8 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsVie
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.UiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 
+private const val FIRST_MODEL_SEGMENT_ID = 1L
+
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationSegmentsViewModelTest {
     @Rule
@@ -38,7 +40,7 @@ class NewSiteCreationSegmentsViewModelTest {
                     "dummySubtitle",
                     "http://dummy.com",
                     "ffffff",
-                    123
+                    FIRST_MODEL_SEGMENT_ID
             )
     private val secondModel =
             VerticalSegmentModel(
@@ -86,6 +88,7 @@ class NewSiteCreationSegmentsViewModelTest {
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     @Mock private lateinit var uiStateObserver: Observer<UiState>
+    @Mock private lateinit var segmentSelectedObserver: Observer<Long>
 
     @Before
     fun setUp() {
@@ -95,8 +98,8 @@ class NewSiteCreationSegmentsViewModelTest {
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined
         )
-        val uiStateObservable = viewModel.uiState
-        uiStateObservable.observeForever(uiStateObserver)
+        viewModel.uiState.observeForever(uiStateObserver)
+        viewModel.segmentSelected.observeForever(segmentSelectedObserver)
     }
 
     @Test
@@ -167,5 +170,16 @@ class NewSiteCreationSegmentsViewModelTest {
 
         val items = viewModel.uiState.value!!.items
         assertFalse((items[items.size - 1] as SegmentUiState).showDivider)
+    }
+
+    @Test
+    fun verifyOnSegmentSelectedIsPropagated() = test {
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(firstModelEvent)
+        viewModel.start()
+        (viewModel.uiState.value!!.items[1] as SegmentUiState).onItemTapped!!.invoke()
+        inOrder(segmentSelectedObserver).apply {
+            verify(segmentSelectedObserver).onChanged(FIRST_MODEL_SEGMENT_ID)
+            verifyNoMoreInteractions()
+        }
     }
 }
