@@ -133,8 +133,8 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                            AppPrefs.isGutenbergEditorEnabled() ? "gutenberg" :
-                                    (AppPrefs.isAztecEditorEnabled() ? "aztec"
+                            AppPrefs.isGutenbergEditorEnabled() ? "gutenberg"
+                                    : (AppPrefs.isAztecEditorEnabled() ? "aztec"
                                         : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy"));
 
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
