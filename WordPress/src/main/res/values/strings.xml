@@ -106,6 +106,7 @@
     <string name="preview_count">Preview %d</string>
     <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
+    <string name="empty" translatable="false"/>
 
     <string name="button_not_now">Not now</string>
 
@@ -2352,4 +2353,7 @@
     <string name="site_creation_fetch_suggestions_failed">No connection</string>
     <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
+    <string name="site_creation_error_generic_title">There was a problem</string>
+    <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="site_creation_error_connection_title">No internet connection</string>
 </resources>

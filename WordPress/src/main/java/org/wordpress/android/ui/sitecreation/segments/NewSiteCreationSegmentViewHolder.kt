@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
+import org.wordpress.android.ui.sitecreation.segments.ItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.ItemUiState.SegmentUiState
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.IMAGE
 

@@ -16,7 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
+import org.wordpress.android.ui.sitecreation.errors.updateSiteCreationErrorLayout
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -75,18 +75,21 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
         viewModel.segmentsUiState.observe(this, Observer { state ->
             state?.let {
-                recyclerView.visibility = if (state.showContent) View.VISIBLE else View.GONE
-                errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
-                updateSegments(state.items)
+                updateContentLayout(state.segmentsContent)
+                updateSiteCreationErrorLayout(errorLayout, state.segmentsError)
+                recyclerView.visibility = if (state.segmentsContent.isVisible) View.VISIBLE else View.GONE
+                errorLayout.visibility = if (state.segmentsError.isVisible) View.VISIBLE else View.GONE
             }
         })
-        viewModel.segmentSelected.observe(this, Observer { it?.let { segmentsScreenListener.onSegmentSelected(it) } })
+        viewModel.segmentSelected.observe(
+                this,
+                Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
         viewModel.start()
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
         val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { view -> viewModel.onRetryClicked() }
+        retryBtn.setOnClickListener { viewModel.onRetryClicked() }
     }
 
     override fun onHelp() {
@@ -112,12 +115,12 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
-    private fun updateSegments(segments: List<ItemUiState>) {
-        (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments)
+    private fun updateContentLayout(segments: SegmentsContent) {
+        (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments.items)
     }
 
     companion object {
-        val TAG = "site_creation_segment_fragment_tag"
+        const val TAG = "site_creation_segment_fragment_tag"
 
         fun newInstance(): NewSiteCreationSegmentsFragment {
             return NewSiteCreationSegmentsFragment()
