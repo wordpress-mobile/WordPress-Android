@@ -186,7 +186,7 @@ class QuickStartUtils {
             val siteId = site.id.toLong()
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
-                    quickStartStore.hasDoneTask(siteId, task)) {
+                    quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
                 return
             }
 

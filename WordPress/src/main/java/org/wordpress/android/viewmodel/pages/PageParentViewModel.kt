@@ -7,6 +7,7 @@ import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SET_PARENT_CHANGES_SAVED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
@@ -18,7 +19,9 @@ import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.ParentPage
 import org.wordpress.android.ui.pages.PageItem.Type.PARENT
 import org.wordpress.android.ui.pages.PageItem.Type.TOP_LEVEL_PARENT
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -38,8 +41,11 @@ class PageParentViewModel
     private val _isSaveButtonVisible = MutableLiveData<Boolean>()
     val isSaveButtonVisible: LiveData<Boolean> = _isSaveButtonVisible
 
-    private var isStarted: Boolean = false
+    private val _saveParent = SingleLiveEvent<Unit>()
+    val saveParent: LiveData<Unit> = _saveParent
+
     private lateinit var site: SiteModel
+    private var isStarted: Boolean = false
     private var page: PageModel? = null
 
     fun start(site: SiteModel, pageId: Long) {
@@ -94,6 +100,20 @@ class PageParentViewModel
         _currentParent.isSelected = true
 
         _isSaveButtonVisible.postValue(true)
+    }
+
+    fun onSaveButtonTapped() {
+        trackSaveEvent()
+
+        _saveParent.asyncCall()
+    }
+
+    private fun trackSaveEvent() {
+        val properties = mutableMapOf(
+                "page_id" to page?.remoteId as Any,
+                "new_parent_id" to currentParent.id
+        )
+        AnalyticsUtils.trackWithSiteDetails(PAGES_SET_PARENT_CHANGES_SAVED, site, properties)
     }
 
     private fun isNotChild(choice: PageModel, choices: List<PageModel>): Boolean {
