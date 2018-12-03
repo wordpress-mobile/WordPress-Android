@@ -38,14 +38,6 @@ class TagsAndCategoriesUseCase
         mainDispatcher,
         TagsAndCategoriesUiState(null)
 ) {
-    private val onLinkClick: () -> Unit = {
-        navigateTo(ViewTagsAndCategoriesStats())
-    }
-
-    private val onTagClick: (String) -> Unit = {
-        navigateTo(ViewTag(it))
-    }
-
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
@@ -53,7 +45,7 @@ class TagsAndCategoriesUseCase
 
         when {
             error != null -> onError(error.message ?: error.type.name)
-            model != null -> model?.let { onModel(model) }
+            model != null -> model.let { onModel(model) }
             else -> onEmpty()
         }
     }
@@ -96,7 +88,7 @@ class TagsAndCategoriesUseCase
                 items.add(
                         Link(
                                 text = R.string.stats_insights_view_more,
-                                navigateAction = NavigationAction.create(onLinkClick)
+                                navigateAction = NavigationAction.create(this::onLinkClick)
                         )
                 )
             }
@@ -115,7 +107,7 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
-                navigationAction = NavigationAction.create(item.link, onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
@@ -139,12 +131,21 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,
-                navigationAction = NavigationAction.create(item.link, onTagClick)
+                navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
     private fun getIcon(type: String) =
             if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
+
+    private fun onLinkClick() {
+        navigateTo(ViewTagsAndCategoriesStats())
+    }
+
+    private fun onTagClick(link: String) {
+        navigateTo(ViewTag(link))
+    }
+
 
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 }

@@ -29,8 +29,8 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         when (data) {
             null -> Loading(type)
             is State.Error -> createFailedItem(data.error)
-            is Data -> createDataItem(buildUiModel(data.model, uiState))
-            else -> null
+            is State.Data -> createDataItem(buildUiModel(data.model, uiState))
+            is State.Empty -> null
         }
     }
 
