@@ -32,7 +32,6 @@ class CommentsUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
-
     private val onLinkClick: () -> Unit = {
         navigateTo(ViewCommentsStats())
     }
