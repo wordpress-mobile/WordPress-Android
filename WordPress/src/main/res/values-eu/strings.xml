@@ -143,7 +143,6 @@ Language: eu_ES
     <string name="site_settings_paging_summary_one">Iruzkin 1 orrialdeko</string>
     <string name="days_quantity_one">Egun 1</string>
     <string name="days_quantity_other">%d egun</string>
-    <string name="web_address">Web helbidea</string>
     <string name="primary_site">Gune nagusia</string>
     <string name="visual_editor_enabled">Editore bisuala gaituta</string>
     <string name="editor_content_placeholder">Partekatu zure istorioa hemen…</string>
@@ -390,7 +389,6 @@ Language: eu_ES
     <string name="theme_fetch_failed">Huts egin du itxurak eskuratzeak</string>
     <string name="error_refresh_posts">Bidalketak ezin dira momentu honetan eguneratu</string>
     <string name="username_or_password_incorrect">Sartutako erabiltzaile-izena edo pasahitza ez dira zuzenak</string>
-    <string name="invalid_url_message">Ziurtatu sartutako URLa zuzena dela</string>
     <string name="error_deleting_post">Bidalketa ezabatzean errore bat gertatu da</string>
     <string name="comment_status_approved">Onartua</string>
     <string name="comment_status_unapproved">Onartzeko zain</string>

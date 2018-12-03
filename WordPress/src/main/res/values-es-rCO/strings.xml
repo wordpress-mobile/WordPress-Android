@@ -521,7 +521,6 @@ Language: es_CO
     <string name="detail_approve_manual">Se requiere aprobación manual de los comentarios de todos.</string>
     <string name="days_quantity_other">%d días</string>
     <string name="days_quantity_one">1 día</string>
-    <string name="web_address">Dirección web</string>
     <string name="primary_site">Sitio principal</string>
     <string name="pending_email_change_snackbar">Haz click en el enlace de verificación del correo electrónica enviado a %1$s para confirmar tu nueva dirección</string>
     <string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
@@ -917,7 +916,6 @@ Language: es_CO
     <string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
     <string name="error_deleting_post">Ocurrió un error al eliminar la entrada</string>
     <string name="notifications_empty_list">Sin notificaciones</string>
-    <string name="invalid_url_message">Comprueba que la URL introducida sea válida</string>
     <string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
     <string name="stats_empty_comments">Aún sin comentarios</string>
     <string name="sdcard_message">Se necesita una tarjeta SD montada para subir medios</string>
