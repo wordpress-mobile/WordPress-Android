@@ -57,24 +57,38 @@ constructor(
     }
 
     data class ReferrersResponse(
-        @SerializedName("period") val period: String,
-        @SerializedName("groups") val groups: List<ReferrerGroupResponse>
+        @SerializedName("period") val period: String?,
+        @SerializedName("days") val groups: Map<String, Groups>
     ) {
-        data class ReferrerGroupResponse(
-            @SerializedName("group") val groupId: String,
-            @SerializedName("name") val name: String,
-            @SerializedName("icon") val icon: String,
-            @SerializedName("url") val url: String,
-            @SerializedName("total") val total: Int,
-            @SerializedName("results") val results: Int
-        ) {
-            data class ReferrerResultResponse(
-                @SerializedName("group") val groupId: String,
-                @SerializedName("name") val name: String,
-                @SerializedName("icon") val icon: String,
-                @SerializedName("url") val url: String,
-                @SerializedName("total") val total: Int
-            )
-        }
+        data class Groups(
+            @SerializedName("other_views") val otherViews: Int?,
+            @SerializedName("total_views") val totalViews: Int?,
+            @SerializedName("groups") val groups: List<Group>
+        )
+
+        data class Group(
+            @SerializedName("group") val groupId: String?,
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("total") val total: Int?,
+            @SerializedName("results") val results: List<Referrer>
+        )
+
+        data class Referrer(
+            @SerializedName("group") val groupId: String?,
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("views") val views: Int?,
+            @SerializedName("children") val children: List<Child>
+        )
+
+        data class Child(
+            @SerializedName("name") val name: String?,
+            @SerializedName("views") val totals: Int?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?
+        )
     }
 }
