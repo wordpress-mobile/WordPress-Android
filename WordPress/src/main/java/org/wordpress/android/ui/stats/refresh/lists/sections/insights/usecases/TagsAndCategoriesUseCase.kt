@@ -146,6 +146,5 @@ class TagsAndCategoriesUseCase
         navigateTo(ViewTag(link))
     }
 
-
     data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 }
