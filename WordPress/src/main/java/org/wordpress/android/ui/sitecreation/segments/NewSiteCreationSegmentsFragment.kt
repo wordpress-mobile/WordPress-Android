@@ -98,12 +98,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: SegmentsErrorUiState) {
         errorLayout.error_title.text = resources.getString(errorUiStateState.titleResId)
-        if (errorUiStateState.subtitleVisible) {
-            errorLayout.error_subtitle.visibility = View.VISIBLE
-            errorLayout.error_subtitle.text = resources.getString(errorUiStateState.subtitleResId)
-        } else {
-            errorLayout.error_subtitle.visibility = View.GONE
-        }
+        errorLayout.error_subtitle.text = resources.getString(errorUiStateState.subtitleResId)
+        errorLayout.error_subtitle.visibility = if (errorUiStateState.subtitleVisible) View.VISIBLE else View.GONE
     }
 
     private fun initRetryButton(rootView: ViewGroup) {

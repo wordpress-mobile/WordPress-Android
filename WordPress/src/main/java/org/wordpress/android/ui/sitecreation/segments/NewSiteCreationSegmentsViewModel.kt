@@ -18,11 +18,11 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.segments.ItemUiState.HeaderUiState
-import org.wordpress.android.ui.sitecreation.segments.ItemUiState.ProgressUiState
-import org.wordpress.android.ui.sitecreation.segments.ItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsErrorUiState.ConnectionError
 import org.wordpress.android.ui.sitecreation.segments.SegmentsErrorUiState.GenericError
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -145,8 +145,8 @@ class NewSiteCreationSegmentsViewModel
     private fun createUiStatesForItems(
         showProgress: Boolean,
         segments: List<VerticalSegmentModel>
-    ): List<ItemUiState> {
-        val items: ArrayList<ItemUiState> = ArrayList()
+    ): List<SegmentsItemUiState> {
+        val items: ArrayList<SegmentsItemUiState> = ArrayList()
         addHeader(items)
         if (showProgress) {
             addProgress(items)
@@ -155,17 +155,17 @@ class NewSiteCreationSegmentsViewModel
         return items
     }
 
-    private fun addHeader(items: ArrayList<ItemUiState>) {
+    private fun addHeader(items: ArrayList<SegmentsItemUiState>) {
         items.add(HeaderUiState)
     }
 
-    private fun addProgress(items: ArrayList<ItemUiState>) {
+    private fun addProgress(items: ArrayList<SegmentsItemUiState>) {
         items.add(ProgressUiState)
     }
 
     private fun addSegments(
         segments: List<VerticalSegmentModel>,
-        items: ArrayList<ItemUiState>
+        items: ArrayList<SegmentsItemUiState>
     ) {
         val segmentsCount = segments.size
         segments.forEachIndexed { index, model ->
@@ -200,10 +200,10 @@ class SegmentsUiState {
 }
 
 sealed class SegmentsContentUiState(val visible: Boolean) {
-    open val items: List<ItemUiState> = emptyList()
+    open val items: List<SegmentsItemUiState> = emptyList()
 
     internal object Hidden : SegmentsContentUiState(false)
-    internal data class Visible(override val items: List<ItemUiState>) : SegmentsContentUiState(true)
+    internal data class Visible(override val items: List<SegmentsItemUiState>) : SegmentsContentUiState(true)
 }
 
 sealed class SegmentsErrorUiState(val visible: Boolean) {
@@ -223,13 +223,13 @@ sealed class SegmentsErrorUiState(val visible: Boolean) {
     }
 }
 
-sealed class ItemUiState {
-    object HeaderUiState : ItemUiState() {
+sealed class SegmentsItemUiState {
+    object HeaderUiState : SegmentsItemUiState() {
         const val titleResId: Int = R.string.site_creation_segments_title
         const val subtitleResId: Int = R.string.site_creation_segments_subtitle
     }
 
-    object ProgressUiState : ItemUiState()
+    object ProgressUiState : SegmentsItemUiState()
 
     data class SegmentUiState(
         val segmentId: Long,
@@ -238,7 +238,7 @@ sealed class ItemUiState {
         val iconUrl: String,
         val iconColor: String,
         val showDivider: Boolean
-    ) : ItemUiState() {
+    ) : SegmentsItemUiState() {
         var onItemTapped: (() -> Unit)? = null
     }
 }
