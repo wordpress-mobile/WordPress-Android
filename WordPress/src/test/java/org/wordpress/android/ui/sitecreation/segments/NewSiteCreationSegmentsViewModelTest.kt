@@ -6,13 +6,13 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.experimental.Dispatchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
@@ -59,6 +59,7 @@ private val SECOND_MODEL =
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
 private val GENERIC_ERROR_STATE = SegmentsErrorUiState.createGenericErrorUiState()
+private val NO_CONNECTION_ERROR_STATE = SegmentsErrorUiState.createConnectionErrorUiState()
 private val HEADER_AND_FIRST_ITEM_STATE = SegmentsContentUiState(
         listOf(
                 HeaderUiState,
@@ -111,11 +112,12 @@ class NewSiteCreationSegmentsViewModelTest {
                 networkUtils,
                 dispatcher,
                 fetchSegmentsUseCase,
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
         )
         viewModel.segmentsUiState.observeForever(uiStateObserver)
         viewModel.segmentSelected.observeForever(segmentSelectedObserver)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
@@ -197,6 +199,18 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(segmentSelectedObserver).apply {
             verify(segmentSelectedObserver).onChanged(FIRST_MODEL_SEGMENT_ID)
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun verifyNoConnectionErrorShown() = test {
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+        viewModel.start()
+
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(PROGRESS_STATE)
+            verify(uiStateObserver).onChanged(NO_CONNECTION_ERROR_STATE)
             verifyNoMoreInteractions()
         }
     }
