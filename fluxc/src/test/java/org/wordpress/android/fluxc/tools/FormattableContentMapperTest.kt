@@ -4,6 +4,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule
 import kotlin.test.assertEquals
 
@@ -137,5 +138,25 @@ class FormattableContentMapperTest {
         val unknownType = FormattableRangeType.fromString("")
 
         assertEquals(FormattableRangeType.UNKNOWN, unknownType)
+    }
+
+    @Test
+    fun mapsJsonArrayToFormattableContentList() {
+        val jsonContentArray = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/formattable-content-array.json")
+        val formattableList = formattableContentMapper.mapToFormattableContentList(jsonContentArray)
+        assertEquals(3, formattableList.size)
+        assertEquals("Jennifer Shultz", formattableList[0].text)
+        assertEquals("I bought this for my daughter and it fits beautifully!", formattableList[1].text)
+        assertEquals("Review for Ninja Hoodie", formattableList[2].text)
+    }
+
+    @Test
+    fun mapsFormattableContentListToJsonString() {
+        val jsonContentArray = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/formattable-content-array.json")
+        val formattableList = formattableContentMapper.mapToFormattableContentList(jsonContentArray)
+        val formattableJson = formattableContentMapper.mapFormattableContentListToJson(formattableList)
+        assertEquals(jsonContentArray, formattableJson)
     }
 }

@@ -1,0 +1,138 @@
+{
+  "id": 3617558725,
+  "type": "comment",
+  "subtype": "store_review",
+  "read": 1,
+  "noticon": "\uf300",
+  "timestamp": "2018-10-30T16:22:11+00:00",
+  "icon": "https:\/\/2.gravatar.com\/avatar\/ebab642c3eb6022e6986f9dcf3147c1e?s=256&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G",
+  "url": "https:\/\/testwooshop.mystagingwebsite.com\/product\/ninja-hoodie\/#comment-2716",
+  "subject": [
+    {
+      "text": "Jennifer Shultz left a review on Ninja Hoodie",
+      "ranges": [
+        {
+          "type": "user",
+          "indices": [
+            0,
+            15
+          ],
+          "email": "jshultz@test.com"
+        },
+        {
+          "type": "post",
+          "indices": [
+            33,
+            45
+          ],
+          "url": "https:\/\/testwooshop.mystagingwebsite.com\/product\/ninja-hoodie\/",
+          "site_id": 153482281,
+          "id": 2231
+        }
+      ]
+    },
+    {
+      "text": "I bought this for my daughter and it fits beautifully!\n",
+      "ranges": [
+        {
+          "type": "comment",
+          "indices": [
+            0,
+            55
+          ],
+          "url": "https:\/\/testwooshop.mystagingwebsite.com\/product\/ninja-hoodie\/#comment-2716",
+          "site_id": 153482281,
+          "post_id": 2231,
+          "id": 2716
+        }
+      ]
+    }
+  ],
+  "body": [
+    {
+      "text": "Jennifer Shultz",
+      "ranges": [
+        {
+          "email": "jshultz@test.com",
+          "type": "user",
+          "indices": [
+            0,
+            15
+          ]
+        }
+      ],
+      "media": [
+        {
+          "type": "image",
+          "indices": [
+            0,
+            0
+          ],
+          "height": "256",
+          "width": "256",
+          "url": "https:\/\/2.gravatar.com\/avatar\/ebab642c3eb6022e6986f9dcf3147c1e?s=256&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G"
+        }
+      ],
+      "meta": {
+        "links": {
+          "email": "jshultz@test.com"
+        }
+      },
+      "type": "user"
+    },
+    {
+      "text": "I bought this for my daughter and it fits beautifully!",
+      "actions": {
+        "spam-comment": false,
+        "trash-comment": false,
+        "approve-comment": false,
+        "edit-comment": true,
+        "replyto-comment": true
+      },
+      "meta": {
+        "ids": {
+          "comment": 2716,
+          "post": 2231,
+          "site": 153482281
+        },
+        "links": {
+          "comment": "https:\/\/public-api.wordpress.com\/rest\/v1\/comments\/2716",
+          "post": "https:\/\/public-api.wordpress.com\/rest\/v1\/posts\/2231",
+          "site": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/153482281"
+        }
+      },
+      "type": "comment",
+      "nest_level": 0,
+      "edit_comment_link": "https:\/\/testwooshop.mystagingwebsite.com\/wp-admin\/comment.php?action=editcomment&c=2716"
+    },
+    {
+      "text": "Review for Ninja Hoodie",
+      "ranges": [
+        {
+          "url": "https:\/\/testwooshop.mystagingwebsite.com\/product\/ninja-hoodie\/",
+          "indices": [
+            11,
+            23
+          ],
+          "type": "link"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "ids": {
+      "user": 0,
+      "comment": 2716,
+      "post": 2231,
+      "site": 153482281
+    },
+    "links": {
+      "user": "https:\/\/public-api.wordpress.com\/rest\/v1\/users\/0",
+      "comment": "https:\/\/public-api.wordpress.com\/rest\/v1\/comments\/2716",
+      "post": "https:\/\/public-api.wordpress.com\/rest\/v1\/posts\/2231",
+      "site": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/153482281"
+    }
+  },
+  "title": "Product Review",
+  "note_hash": 1543255567
+}
