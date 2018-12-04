@@ -175,6 +175,7 @@ class NewSiteCreationSegmentsViewModel
                     model.title,
                     model.subtitle,
                     model.iconUrl,
+                    model.iconColor,
                     showDivider = !isLastItem
             )
             segment.onItemTapped = { onSegmentSelected(model.segmentId) }
@@ -235,6 +236,7 @@ sealed class ItemUiState {
         val title: String,
         val subtitle: String,
         val iconUrl: String,
+        val iconColor: String,
         val showDivider: Boolean
     ) : ItemUiState() {
         var onItemTapped: (() -> Unit)? = null
