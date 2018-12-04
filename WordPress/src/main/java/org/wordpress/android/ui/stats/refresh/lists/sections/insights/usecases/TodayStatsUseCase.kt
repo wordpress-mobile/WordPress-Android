@@ -7,8 +7,7 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TODAY_STATS
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -21,31 +20,32 @@ class TodayStatsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore
-) : BaseStatsUseCase(TODAY_STATS, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<VisitsModel>(TODAY_STATS, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getTodayInsights(site)
-        return dbModel?.let { loadTodayStatsItem(it) }
+        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTodayInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(R.string.stats_insights_today_stats, error.message ?: error.type.name)
-            else -> model?.let { loadTodayStatsItem(model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            model != null -> onModel(model)
+            else -> onEmpty()
         }
     }
 
-    private fun loadTodayStatsItem(model: VisitsModel): StatsBlock {
+    override fun buildUiModel(domainModel: VisitsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))
 
-        val hasViews = model.views > 0
-        val hasVisitors = model.visitors > 0
-        val hasLikes = model.likes > 0
-        val hasComments = model.comments > 0
+        val hasViews = domainModel.views > 0
+        val hasVisitors = domainModel.visitors > 0
+        val hasLikes = domainModel.likes > 0
+        val hasComments = domainModel.comments > 0
         if (!hasViews && !hasVisitors && !hasLikes && !hasComments) {
             items.add(Empty)
         } else {
@@ -54,7 +54,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_visible_on_grey_dark_24dp,
                                 textResource = R.string.stats_views,
-                                value = model.views.toFormattedString(),
+                                value = domainModel.views.toFormattedString(),
                                 showDivider = hasVisitors || hasLikes || hasComments
                         )
                 )
@@ -64,7 +64,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_user_grey_dark_24dp,
                                 textResource = R.string.stats_visitors,
-                                value = model.visitors.toFormattedString(),
+                                value = domainModel.visitors.toFormattedString(),
                                 showDivider = hasLikes || hasComments
                         )
                 )
@@ -74,7 +74,7 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_star_grey_dark_24dp,
                                 textResource = R.string.stats_likes,
-                                value = model.likes.toFormattedString(),
+                                value = domainModel.likes.toFormattedString(),
                                 showDivider = hasComments
                         )
                 )
@@ -84,12 +84,12 @@ class TodayStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_comment_grey_dark_24dp,
                                 textResource = R.string.stats_comments,
-                                value = model.comments.toFormattedString(),
+                                value = domainModel.comments.toFormattedString(),
                                 showDivider = false
                         )
                 )
             }
         }
-        return createDataItem(items)
+        return items
     }
 }

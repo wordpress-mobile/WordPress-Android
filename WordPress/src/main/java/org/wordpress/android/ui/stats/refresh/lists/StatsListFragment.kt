@@ -23,13 +23,16 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
+import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
@@ -140,6 +143,15 @@ class StatsListFragment : DaggerFragment() {
         viewModel.navigationTarget.observeEvent(this) {
             when (it) {
                 is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
+                is ViewPost -> {
+                    StatsUtils.openPostInReaderOrInAppWebview(
+                            activity,
+                            site.siteId,
+                            it.postId.toString(),
+                            StatsConstants.ITEM_TYPE_POST,
+                            it.postUrl
+                    )
+                }
                 is SharePost -> {
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
@@ -153,8 +165,8 @@ class StatsListFragment : DaggerFragment() {
                 }
                 is ViewPostDetailStats -> {
                     val postModel = StatsPostModel(
-                            it.siteID,
-                            it.postID,
+                            site.siteId,
+                            it.postId.toString(),
                             it.postTitle,
                             it.postUrl,
                             StatsConstants.ITEM_TYPE_POST
@@ -172,6 +184,9 @@ class StatsListFragment : DaggerFragment() {
                 }
                 is ViewTag -> {
                     ActivityLauncher.openStatsUrl(activity, it.link)
+                }
+                is ViewPublicizeStats -> {
+                    ActivityLauncher.viewPublicizeStats(activity, site)
                 }
                 is ViewPostsAndPages -> {
                     ActivityLauncher.viewPostsAndPagesStats(activity, site, it.statsGranularity.toStatsTimeFrame())
@@ -197,18 +212,19 @@ class StatsListFragment : DaggerFragment() {
 }
 
 sealed class NavigationTarget : Event() {
-    object AddNewPost : NavigationTarget()
+    class AddNewPost : NavigationTarget()
+    data class ViewPost(val postId: Long, val postUrl: String) : NavigationTarget()
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
-        val siteID: Long,
-        val postID: String,
+        val postId: Long,
         val postTitle: String,
         val postUrl: String
     ) : NavigationTarget()
 
-    object ViewFollowersStats : NavigationTarget()
-    object ViewCommentsStats : NavigationTarget()
-    object ViewTagsAndCategoriesStats : NavigationTarget()
+    class ViewFollowersStats : NavigationTarget()
+    class ViewCommentsStats : NavigationTarget()
+    class ViewTagsAndCategoriesStats : NavigationTarget()
+    class ViewPublicizeStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
     data class ViewPostsAndPages(val statsGranularity: StatsGranularity) : NavigationTarget()
 }

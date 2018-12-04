@@ -15,17 +15,17 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Error
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
 
 class TodayStatsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
@@ -122,7 +122,6 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.errorType).isEqualTo(R.string.stats_insights_today_stats)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }

@@ -8,8 +8,6 @@ import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.Spannable
 import android.text.SpannableString
@@ -42,7 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.utils.draw
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.util.image.ImageType.IMAGE
 import org.wordpress.android.util.setVisible
 
@@ -90,9 +88,10 @@ sealed class BlockListItemViewHolder(
             } else {
                 View.GONE
             }
-            if (item.clickAction != null) {
+            val clickAction = item.navigationAction
+            if (clickAction != null) {
                 itemView.isClickable = true
-                itemView.setOnClickListener { item.clickAction.invoke() }
+                itemView.setOnClickListener { clickAction.click() }
             } else {
                 itemView.isClickable = false
                 itemView.background = null
@@ -103,7 +102,7 @@ sealed class BlockListItemViewHolder(
 
     class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_list_item
+            R.layout.stats_block_user_item
     ) {
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
@@ -111,7 +110,7 @@ sealed class BlockListItemViewHolder(
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: UserItem) {
-            imageManager.loadIntoCircle(icon, AVATAR, item.avatarUrl)
+            imageManager.loadIntoCircle(icon, AVATAR_WITHOUT_BACKGROUND, item.avatarUrl)
             text.text = item.text
             value.text = item.value
             divider.visibility = if (item.showDivider) {
@@ -148,6 +147,11 @@ sealed class BlockListItemViewHolder(
             R.layout.stats_block_empty_item
     )
 
+    class DividerViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_divider_item
+    )
+
     class TextViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_text_item
@@ -156,7 +160,9 @@ sealed class BlockListItemViewHolder(
         fun bind(textItem: Text) {
             val spannableString = SpannableString(textItem.text)
             textItem.links?.forEach { link ->
-                spannableString.withClickableSpan(text.context, link.link) { link.action(text.context) }
+                spannableString.withClickableSpan(text.context, link.link) {
+                    link.navigationAction.click()
+                }
             }
             text.text = spannableString
             text.linksClickable = true
@@ -224,7 +230,7 @@ sealed class BlockListItemViewHolder(
                 text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
             text.setText(item.text)
-            link.setOnClickListener { item.action() }
+            link.setOnClickListener { item.navigateAction.click() }
         }
     }
 
@@ -248,20 +254,15 @@ sealed class BlockListItemViewHolder(
             R.layout.stats_block_tabs_item
     ) {
         private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout)
-        private val list = itemView.findViewById<RecyclerView>(R.id.recycler_view)
 
         fun bind(item: TabsItem) {
-            if (tabLayout.tabCount == 0) {
-                item.tabs.forEach {
-                    tabLayout.addTab(tabLayout.newTab().setText(it.title))
-                }
+            tabLayout.clearOnTabSelectedListeners()
+            tabLayout.removeAllTabs()
+            item.tabs.forEach { tabItem ->
+                tabLayout.addTab(tabLayout.newTab().setText(tabItem))
             }
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
-            list.isNestedScrollingEnabled = false
-            if (list.adapter == null) {
-                list.adapter = BlockListAdapter(imageManager)
-            }
-            (list.adapter as BlockListAdapter).update(item.tabs[tabLayout.selectedTabPosition].items)
+
+            tabLayout.getTabAt(item.selectedTabPosition)?.select()
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }
@@ -270,7 +271,7 @@ sealed class BlockListItemViewHolder(
                 }
 
                 override fun onTabSelected(tab: Tab) {
-                    (list.adapter as BlockListAdapter).update(item.tabs[tab.position].items)
+                    item.onTabSelected(tab.position)
                 }
             })
         }
@@ -290,18 +291,18 @@ sealed class BlockListItemViewHolder(
 
     class ExpandableItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_expandable_item
+            R.layout.stats_block_list_item
     ) {
-        private val list = itemView.findViewById<RecyclerView>(R.id.expandable_items)
-        private val expandedListDivider = itemView.findViewById<View>(R.id.expanded_list_divider)
-
         private val icon = itemView.findViewById<ImageView>(R.id.icon)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
-        private val expandButton = itemView.findViewById<View>(R.id.expand_button)
+        private val expandButton = itemView.findViewById<ImageView>(R.id.expand_button)
 
-        fun bind(expandableItem: ExpandableItem) {
+        fun bind(
+            expandableItem: ExpandableItem,
+            expandChanged: Boolean
+        ) {
             val header = expandableItem.header
             icon.setImageOrLoad(header, imageManager)
             text.setTextOrHide(header.textResource, header.text)
@@ -309,33 +310,21 @@ sealed class BlockListItemViewHolder(
             value.setTextOrHide(header.valueResource, header.value)
             divider.setVisible(header.showDivider)
 
-            list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
-            list.isNestedScrollingEnabled = false
-            if (list.adapter == null) {
-                list.adapter = BlockListAdapter(imageManager)
+            if (expandChanged) {
+                val rotationAngle = if (expandButton.rotation == 0F) 180 else 0
+                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
+            } else {
+                expandButton.rotation = if (expandableItem.isExpanded) 180F else 0F
             }
-            updateExpandedList(expandableItem)
             itemView.isClickable = true
             itemView.setOnClickListener {
-                expandableItem.isExpanded = !expandableItem.isExpanded
-                val rotationAngle = if (expandableItem.isExpanded) 180 else 0
-                expandButton.animate().rotation(rotationAngle.toFloat()).setDuration(200).start()
-                updateExpandedList(expandableItem)
+                expandableItem.onExpandClicked(!expandableItem.isExpanded)
             }
-        }
-
-        private fun updateExpandedList(expandableItem: ExpandableItem) {
-            if (expandableItem.isExpanded) {
-                (list.adapter as BlockListAdapter).update(expandableItem.expandedItems)
-            } else {
-                (list.adapter as BlockListAdapter).update(listOf())
-            }
-            divider.setVisible(!expandableItem.isExpanded && expandableItem.header.showDivider)
-            expandedListDivider.setVisible(expandableItem.isExpanded)
         }
     }
 
-    fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+    internal fun TextView.setTextOrHide(@StringRes resource: Int?, value: String?) {
+        this.visibility = View.VISIBLE
         when {
             resource != null -> {
                 this.visibility = View.VISIBLE
@@ -349,7 +338,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    fun ImageView.setImageOrLoad(
+    internal fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {

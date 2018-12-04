@@ -105,7 +105,7 @@
     </style>
 
     <style name="StatsBlockLine">
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
         <item name="android:paddingStart">16dp</item>
     </style>
 

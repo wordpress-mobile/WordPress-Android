@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
-import android.content.Context
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -43,7 +40,7 @@ class LatestPostSummaryMapperTest {
         val emptyMessage = "empty message"
         whenever(resourceProvider.getString(R.string.stats_insights_latest_post_empty)).thenReturn(emptyMessage)
 
-        val result = mapper.buildMessageItem(null)
+        val result = mapper.buildMessageItem(null) { }
 
         assertThat(result.text).isEqualTo(emptyMessage)
         assertThat(result.links).isNull()
@@ -65,20 +62,20 @@ class LatestPostSummaryMapperTest {
                 )
         ).thenReturn(messageWithNoEngagement)
 
-        val result = mapper.buildMessageItem(model)
+        var clickedPostId: Long? = null
+        var clickedPostUrl: String? = null
+        val result = mapper.buildMessageItem(model) { params ->
+            clickedPostId = params.postId
+            clickedPostUrl = params.postUrl
+        }
 
         assertThat(result.text).isEqualTo(messageWithNoEngagement)
         assertThat(result.links).hasSize(1)
 
-        val context = mock<Context>()
-        result.links!![0].action(context)
+        result.links!![0].navigationAction.click()
 
-        verify(statsUtilsWrapper).openPostInReaderOrInAppWebview(
-                context,
-                siteId,
-                postId.toString(),
-                postURL
-        )
+        assertThat(clickedPostId).isEqualTo(model.postId)
+        assertThat(clickedPostUrl).isEqualTo(model.postURL)
     }
 
     @Test
@@ -97,20 +94,10 @@ class LatestPostSummaryMapperTest {
                 )
         ).thenReturn(messageWithEngagement)
 
-        val result = mapper.buildMessageItem(model)
+        val result = mapper.buildMessageItem(model) { }
 
         assertThat(result.text).isEqualTo(messageWithEngagement)
         assertThat(result.links).hasSize(1)
-
-        val context = mock<Context>()
-        result.links!![0].action(context)
-
-        verify(statsUtilsWrapper).openPostInReaderOrInAppWebview(
-                context,
-                siteId,
-                postId.toString(),
-                postURL
-        )
     }
 
     @Test

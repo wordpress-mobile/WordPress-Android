@@ -71,17 +71,13 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
+        val tabsItem = (result as BlockList).assertEmptyTab(0)
 
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_comments_authors)
-            assertThat(tabsItem.tabs[0].items).containsOnly(Empty)
+        tabsItem.onTabSelected(1)
 
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_comments_posts_and_pages)
-            assertTabWithPosts(tabsItem.tabs[1])
-        }
+        val updatedResult = loadComments(true, forced)
+
+        (updatedResult as BlockList).assertTabWithPosts(1)
     }
 
     @Test
@@ -102,9 +98,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            assertThat(this.items[2] is Link).isTrue()
+            assertThat(this.items[3] is Link).isTrue()
         }
     }
 
@@ -126,9 +122,9 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            assertThat(this.items[2] is Link).isTrue()
+            assertThat(this.items[3] is Link).isTrue()
         }
     }
 
@@ -149,17 +145,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
 
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_comments_authors)
-            assertTabWithUsers(tabsItem.tabs[0])
+        val tabsItem = (result as BlockList).assertTabWithUsers(0)
 
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_comments_posts_and_pages)
-            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
-        }
+        tabsItem.onTabSelected(1)
+
+        val updatedResult = loadComments(true, forced)
+
+        (updatedResult as BlockList).assertEmptyTab(1)
     }
 
     @Test
@@ -174,17 +167,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).apply {
-            assertThat(this.items).hasSize(2)
-            assertTitle(this.items[0])
-            val tabsItem = this.items[1] as TabsItem
-
-            assertThat(tabsItem.tabs[0].title).isEqualTo(string.stats_comments_authors)
-            assertThat(tabsItem.tabs[0].items).containsOnly(Empty)
-
-            assertThat(tabsItem.tabs[1].title).isEqualTo(string.stats_comments_posts_and_pages)
-            assertThat(tabsItem.tabs[1].items).containsOnly(Empty)
-        }
+        (result as BlockList).assertEmptyTab(0)
     }
 
     @Test
@@ -201,36 +184,69 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            assertThat(this.errorType).isEqualTo(string.stats_view_comments)
             assertThat(this.errorMessage).isEqualTo(message)
         }
     }
 
-    private fun assertTabWithPosts(tab: TabsItem.Tab) {
-        val labelItem = tab.items[0]
+    private fun BlockList.assertTabWithPosts(position: Int): TabsItem {
+        assertThat(this.items).hasSize(4)
+        assertTitle(this.items[0])
+        val tabsItem = this.items[1] as TabsItem
+
+        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+
+        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
+
+        val labelItem = this.items[2]
         assertThat(labelItem.type).isEqualTo(LABEL)
         assertThat((labelItem as Label).leftLabel).isEqualTo(R.string.stats_comments_title_label)
         assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
-        val userItem = tab.items[1]
+        val userItem = this.items[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM)
         assertThat((userItem as ListItem).text).isEqualTo(postTitle)
         assertThat(userItem.showDivider).isEqualTo(false)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        return tabsItem
     }
 
-    private fun assertTabWithUsers(tab: TabsItem.Tab) {
-        val labelItem = tab.items[0]
+    private fun BlockList.assertTabWithUsers(position: Int): TabsItem {
+        assertThat(this.items).hasSize(4)
+        assertTitle(this.items[0])
+        val tabsItem = this.items[1] as TabsItem
+
+        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+
+        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
+
+        val labelItem = this.items[2]
         assertThat(labelItem.type).isEqualTo(LABEL)
         assertThat((labelItem as Label).leftLabel).isEqualTo(R.string.stats_comments_author_label)
         assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
-        val userItem = tab.items[1]
+        val userItem = this.items[3]
         assertThat(userItem.type).isEqualTo(USER_ITEM)
         assertThat((userItem as UserItem).avatarUrl).isEqualTo(avatar)
         assertThat(userItem.showDivider).isEqualTo(false)
         assertThat(userItem.text).isEqualTo(user)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
+        return tabsItem
+    }
+
+    private fun BlockList.assertEmptyTab(position: Int): TabsItem {
+        assertThat(this.items).hasSize(3)
+        assertTitle(this.items[0])
+        val tabsItem = this.items[1] as TabsItem
+
+        assertThat(tabsItem.tabs[0]).isEqualTo(string.stats_comments_authors)
+
+        assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
+        assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
+
+        assertThat(this.items[2]).isEqualTo(Empty)
+        return tabsItem
     }
 
     private fun assertTitle(item: BlockListItem) {

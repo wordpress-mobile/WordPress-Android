@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.C
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.MostPopularInsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.PublicizeUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import javax.inject.Named
@@ -45,8 +46,9 @@ class StatsModule {
         followersUseCase: FollowersUseCase,
         commentsUseCase: CommentsUseCase,
         mostPopularInsightsUseCase: MostPopularInsightsUseCase,
-        tagsAndCategoriesUseCase: TagsAndCategoriesUseCase
-    ): List<@JvmSuppressWildcards BaseStatsUseCase> {
+        tagsAndCategoriesUseCase: TagsAndCategoriesUseCase,
+        publicizeUseCase: PublicizeUseCase
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
@@ -54,7 +56,8 @@ class StatsModule {
                 followersUseCase,
                 commentsUseCase,
                 mostPopularInsightsUseCase,
-                tagsAndCategoriesUseCase
+                tagsAndCategoriesUseCase,
+                publicizeUseCase
         )
     }
 
@@ -74,7 +77,7 @@ class StatsModule {
         statsStore: StatsStore,
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase>
+        @Named(INSIGHTS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>
     ): BaseListUseCase {
         return BaseListUseCase(bgDispatcher, mainDispatcher, useCases) {
             statsStore.getInsights()

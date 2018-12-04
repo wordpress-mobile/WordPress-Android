@@ -16,13 +16,13 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 
 class AllTimeStatsUseCaseTest : BaseUnitTest() {
@@ -58,7 +58,6 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         assertTrue(result is Error)
         assertEquals(result.type, Type.ERROR)
         assertEquals((result as Error).errorMessage, message)
-        assertEquals(result.errorType, R.string.stats_insights_all_time_stats)
     }
 
     @Test

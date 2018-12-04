@@ -7,9 +7,7 @@ import org.wordpress.android.fluxc.model.stats.InsightsMostPopularModel
 import org.wordpress.android.fluxc.store.InsightsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_DAY_AND_HOUR
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -26,24 +24,25 @@ class MostPopularInsightsUseCase
     private val insightsStore: InsightsStore,
     private val dateUtils: DateUtils,
     private val resourceProvider: ResourceProvider
-) : BaseStatsUseCase(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<InsightsMostPopularModel>(MOST_POPULAR_DAY_AND_HOUR, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getMostPopularInsights(site)
-        return dbModel?.let { loadMostPopularInsightsItem(dbModel) }
+        dbModel?.let { onModel(dbModel) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchMostPopularInsights(site, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(R.string.stats_insights_popular, error.message ?: error.type.name)
-            else -> model?.let { loadMostPopularInsightsItem(model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            model != null -> onModel(model)
+            else -> onEmpty()
         }
     }
 
-    private fun loadMostPopularInsightsItem(model: InsightsMostPopularModel): BlockList {
+    override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))
         items.add(Label(
@@ -52,24 +51,24 @@ class MostPopularInsightsUseCase
         )
         items.add(
                 ListItem(
-                        dateUtils.getWeekDay(model.highestDayOfWeek),
+                        dateUtils.getWeekDay(domainModel.highestDayOfWeek),
                         resourceProvider.getString(
                                 R.string.stats_insights_most_popular_percent_views,
-                                model.highestDayPercent.roundToInt()
+                                domainModel.highestDayPercent.roundToInt()
                         ),
                         true
                 )
         )
         items.add(
                 ListItem(
-                        dateUtils.getHour(model.highestHour),
+                        dateUtils.getHour(domainModel.highestHour),
                         resourceProvider.getString(
                                 R.string.stats_insights_most_popular_percent_views,
-                                model.highestHourPercent.roundToInt()
+                                domainModel.highestHourPercent.roundToInt()
                         ),
                         false
                 )
         )
-        return createDataItem(items)
+        return items
     }
 }

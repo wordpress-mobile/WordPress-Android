@@ -13,12 +13,12 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAG
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -32,31 +32,32 @@ constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore
-) : BaseStatsUseCase(POSTS_AND_PAGES, mainDispatcher) {
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+) : StatelessUseCase<PostAndPageViewsModel>(POSTS_AND_PAGES, mainDispatcher) {
+    override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(site, statsGranularity, PAGE_SIZE)
-        return dbModel?.let { loadPostsAndPages(it) }
+        dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = postsAndPageViewsStore.fetchPostAndPageViews(site, PAGE_SIZE, statsGranularity, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(R.string.stats_posts_and_pages, error.message ?: error.type.name)
-            else -> model?.let { loadPostsAndPages(model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            model != null -> onModel(model)
+            else -> onEmpty()
         }
     }
 
-    private fun loadPostsAndPages(model: PostAndPageViewsModel): StatsBlock {
+    override fun buildUiModel(domainModel: PostAndPageViewsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_posts_and_pages))
 
-        if (model.views.isEmpty()) {
+        if (domainModel.views.isEmpty()) {
             items.add(Empty)
         } else {
-            items.addAll(model.views.mapIndexed { index, viewsModel ->
+            items.addAll(domainModel.views.mapIndexed { index, viewsModel ->
                 val icon = when (viewsModel.type) {
                     POST -> R.drawable.ic_posts_grey_dark_24dp
                     HOMEPAGE, PAGE -> R.drawable.ic_pages_grey_dark_24dp
@@ -65,23 +66,30 @@ constructor(
                         icon = icon,
                         text = viewsModel.title,
                         value = viewsModel.views.toFormattedString(),
-                        showDivider = index < model.views.size - 1
+                        showDivider = index < domainModel.views.size - 1
                 )
             })
-            if (model.hasMore) {
-                items.add(Link(text = string.stats_insights_view_more) {
-                    navigateTo(ViewPostsAndPages(statsGranularity))
-                })
+            if (domainModel.hasMore) {
+                items.add(
+                        Link(
+                                text = string.stats_insights_view_more,
+                                navigateAction = create(statsGranularity, this::onViewMoreClick)
+                        )
+                )
             }
         }
-        return createDataItem(items)
+        return items
+    }
+
+    private fun onViewMoreClick(statsGranularity: StatsGranularity) {
+        navigateTo(ViewPostsAndPages(statsGranularity))
     }
 
     class PostsAndPagesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore
-    ): UseCaseFactory {
+    ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 PostsAndPagesUseCase(granularity, mainDispatcher, postsAndPageViewsStore)
     }
