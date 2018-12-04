@@ -1,16 +1,31 @@
 package org.wordpress.android.viewmodel.giphy
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.arch.paging.PositionalDataSource.LoadInitialCallback
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 
 class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private val viewModel = GiphyPickerViewModel(dataSourceFactory = mock())
+    private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
+    private lateinit var viewModel: GiphyPickerViewModel
+
+    @Before
+    fun setup() {
+        viewModel = GiphyPickerViewModel(dataSourceFactory = dataSourceFactory)
+    }
 
     @Test
     fun `when setting a mediaViewModel as selected, it adds that to the selected list`() {
@@ -91,5 +106,46 @@ class GiphyPickerViewModelTest {
 
         // Assert
         assertThat(viewModel.selectedMediaViewModelList.value).isEmpty()
+    }
+
+    @Test
+    fun `when searching, the empty view should be immediately set to hidden`() {
+        // Arrange
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY)
+
+        // Act
+        viewModel.search("dummy")
+
+        // Assert
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.HIDDEN)
+    }
+
+    @Test
+    fun `when search results are empty, the empty view should be visible and says there are no results`() {
+        // Arrange
+        val dataSource = mock<GiphyPickerDataSource>()
+
+        whenever(dataSourceFactory.create()).thenReturn(dataSource)
+        whenever(dataSourceFactory.searchQuery).thenReturn("dummy")
+
+        val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
+        doNothing().whenever(dataSource).loadInitial(any(), callbackCaptor.capture())
+
+        // Observe mediaViewModelPagedList so the DataSourceFactory will be activated and perform API requests
+        viewModel.mediaViewModelPagedList.observeForever {
+
+        }
+
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY)
+
+        // Act
+        viewModel.search("dummy")
+        // Emulate a callback from the API
+        callbackCaptor.lastValue.onResult(emptyList(), 0, 0)
+
+        // Assert
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS)
+
+        verify(dataSource, times(1)).loadInitial(any(), any())
     }
 }
