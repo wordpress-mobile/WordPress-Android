@@ -12,11 +12,11 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
-import org.wordpress.android.ui.sitecreation.errors.updateSiteCreationErrorLayout
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -75,16 +75,35 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
         viewModel.segmentsUiState.observe(this, Observer { state ->
             state?.let {
-                updateContentLayout(state.segmentsContent)
-                updateSiteCreationErrorLayout(errorLayout, state.segmentsError)
-                recyclerView.visibility = if (state.segmentsContent.isVisible) View.VISIBLE else View.GONE
-                errorLayout.visibility = if (state.segmentsError.isVisible) View.VISIBLE else View.GONE
+                if (state.contentUiStateState.visible) {
+                    recyclerView.visibility = View.VISIBLE
+                    updateContentLayout(recyclerView, state.contentUiStateState)
+                } else {
+                    recyclerView.visibility = View.GONE
+                }
+
+                if (state.errorUiStateState.visible) {
+                    errorLayout.visibility = View.VISIBLE
+                    updateErrorLayout(errorLayout, state.errorUiStateState)
+                } else {
+                    errorLayout.visibility = View.GONE
+                }
             }
         })
         viewModel.segmentSelected.observe(
                 this,
                 Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
         viewModel.start()
+    }
+
+    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: SegmentsErrorUiState) {
+        errorLayout.error_title.text = resources.getString(errorUiStateState.titleResId)
+        if (errorUiStateState.subtitleVisible) {
+            errorLayout.error_subtitle.visibility = View.VISIBLE
+            errorLayout.error_subtitle.text = resources.getString(errorUiStateState.subtitleResId)
+        } else {
+            errorLayout.error_subtitle.visibility = View.GONE
+        }
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
@@ -115,7 +134,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
-    private fun updateContentLayout(segments: SegmentsContent) {
+    private fun updateContentLayout(recyclerView: RecyclerView, segments: SegmentsContentUiState) {
         (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments.items)
     }
 
