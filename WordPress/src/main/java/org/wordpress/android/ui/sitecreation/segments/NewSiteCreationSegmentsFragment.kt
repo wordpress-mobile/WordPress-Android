@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -74,19 +75,18 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
         viewModel.segmentsUiState.observe(this, Observer { state ->
-            state?.let {
-                if (state.contentUiStateState.visible) {
-                    recyclerView.visibility = View.VISIBLE
-                    updateContentLayout(recyclerView, state.contentUiStateState)
-                } else {
-                    recyclerView.visibility = View.GONE
-                }
-
-                if (state.errorUiStateState.visible) {
-                    errorLayout.visibility = View.VISIBLE
-                    updateErrorLayout(errorLayout, state.errorUiStateState)
-                } else {
-                    errorLayout.visibility = View.GONE
+            state?.let { uiState ->
+                when (uiState) {
+                    is SegmentsContentUiState -> {
+                        recyclerView.visibility = View.VISIBLE
+                        errorLayout.visibility = View.GONE
+                        updateContentLayout(recyclerView, uiState)
+                    }
+                    is SegmentsErrorUiState -> {
+                        recyclerView.visibility = View.GONE
+                        errorLayout.visibility = View.VISIBLE
+                        updateErrorLayout(errorLayout, uiState)
+                    }
                 }
             }
         })
@@ -97,9 +97,15 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: SegmentsErrorUiState) {
-        errorLayout.error_title.text = resources.getString(errorUiStateState.titleResId)
-        errorLayout.error_subtitle.text = resources.getString(errorUiStateState.subtitleResId)
-        errorLayout.error_subtitle.visibility = if (errorUiStateState.subtitleVisible) View.VISIBLE else View.GONE
+        setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
+        setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
+        }
     }
 
     private fun initRetryButton(rootView: ViewGroup) {

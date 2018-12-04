@@ -18,8 +18,6 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
-import org.wordpress.android.ui.sitecreation.segments.SegmentsErrorUiState.ConnectionError
-import org.wordpress.android.ui.sitecreation.segments.SegmentsErrorUiState.GenericError
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
@@ -97,7 +95,10 @@ class NewSiteCreationSegmentsViewModel
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(FAKE_DELAY)
                 withContext(MAIN) {
-                    updateUiStateToError(ListState.Error(listState, null), ConnectionError)
+                    updateUiStateToError(
+                            ListState.Error(listState, null),
+                            SegmentsErrorUiState.createConnectionErrorUiState()
+                    )
                 }
             }
         }
@@ -105,7 +106,10 @@ class NewSiteCreationSegmentsViewModel
 
     private fun onCategoriesFetched(event: OnSegmentsFetched) {
         if (event.isError) {
-            updateUiStateToError(ListState.Error(listState, event.error.message), GenericError)
+            updateUiStateToError(
+                    ListState.Error(listState, event.error.message),
+                    SegmentsErrorUiState.createGenericErrorUiState()
+            )
         } else {
             updateUiStateToContent(ListState.Success(event.segmentList))
         }
@@ -123,17 +127,15 @@ class NewSiteCreationSegmentsViewModel
 
     private fun updateUiStateToError(state: ListState<VerticalSegmentModel>, segmentError: SegmentsErrorUiState) {
         updateUiState(state)
-        _segmentsUiState.value = SegmentsUiState(segmentError)
+        _segmentsUiState.value = segmentError
     }
 
     private fun updateUiStateToContent(state: ListState<VerticalSegmentModel>) {
         updateUiState(state)
-        _segmentsUiState.value = SegmentsUiState(
-                SegmentsContentUiState.Visible(
-                        createUiStatesForItems(
-                                showProgress = state is Loading,
-                                segments = state.data
-                        )
+        _segmentsUiState.value = SegmentsContentUiState(
+                createUiStatesForItems(
+                        showProgress = state is Loading,
+                        segments = state.data
                 )
         )
     }
@@ -184,42 +186,16 @@ class NewSiteCreationSegmentsViewModel
     }
 }
 
-class SegmentsUiState {
-    val contentUiStateState: SegmentsContentUiState
-    val errorUiStateState: SegmentsErrorUiState
+interface SegmentsUiState
+class SegmentsContentUiState(val items: List<SegmentsItemUiState>) : SegmentsUiState
+class SegmentsErrorUiState private constructor(val titleResId: Int, val subtitleResId: Int? = null) : SegmentsUiState {
+    companion object {
+        fun createGenericErrorUiState() = SegmentsErrorUiState(
+                R.string.site_creation_error_generic_title,
+                R.string.site_creation_error_generic_subtitle
+        )
 
-    constructor(errorUiStateState: SegmentsErrorUiState) {
-        this.contentUiStateState = SegmentsContentUiState.Hidden
-        this.errorUiStateState = errorUiStateState
-    }
-
-    constructor(contentUiStateState: SegmentsContentUiState) {
-        this.contentUiStateState = contentUiStateState
-        this.errorUiStateState = SegmentsErrorUiState.Hidden
-    }
-}
-
-sealed class SegmentsContentUiState(val visible: Boolean) {
-    open val items: List<SegmentsItemUiState> = emptyList()
-
-    internal object Hidden : SegmentsContentUiState(false)
-    internal data class Visible(override val items: List<SegmentsItemUiState>) : SegmentsContentUiState(true)
-}
-
-sealed class SegmentsErrorUiState(val visible: Boolean) {
-    open val titleResId: Int = R.string.empty
-    open val subtitleVisible = false
-    open val subtitleResId: Int = R.string.empty
-
-    internal object Hidden : SegmentsErrorUiState(false)
-    internal object GenericError : SegmentsErrorUiState(true) {
-        override val titleResId: Int = R.string.site_creation_error_generic_title
-        override val subtitleResId: Int = R.string.site_creation_error_generic_subtitle
-        override val subtitleVisible: Boolean = true
-    }
-
-    internal object ConnectionError : SegmentsErrorUiState(true) {
-        override val titleResId: Int = R.string.site_creation_error_connection_title
+        fun createConnectionErrorUiState() = SegmentsErrorUiState(R.string.site_creation_error_connection_title)
     }
 }
 
