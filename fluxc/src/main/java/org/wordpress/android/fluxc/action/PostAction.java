@@ -28,6 +28,8 @@ public enum PostAction implements IAction {
     PUSH_POST,
     @Action(payloadType = RemotePostPayload.class)
     DELETE_POST,
+    @Action(payloadType = RemotePostPayload.class)
+    RESTORE_POST,
     @Action(payloadType = FetchRevisionsPayload.class)
     FETCH_REVISIONS,
 
@@ -42,6 +44,8 @@ public enum PostAction implements IAction {
     PUSHED_POST,
     @Action(payloadType = RemotePostPayload.class)
     DELETED_POST,
+    @Action(payloadType = RemotePostPayload.class)
+    RESTORED_POST,
     @Action(payloadType = FetchRevisionsResponsePayload.class)
     FETCHED_REVISIONS,
 

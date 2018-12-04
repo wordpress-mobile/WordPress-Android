@@ -255,6 +255,39 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+     public void restorePost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).restore.getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel restoredPost = postResponseToPostModel(response);
+                        restoredPost.setId(post.getId());
+                        restoredPost.setLocalSiteId(post.getLocalSiteId());
+
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(error.apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+                    }
+                }
+        );
+
+        request.addQueryParameter("context", "edit");
+
+        request.disableRetries();
+        add(request);
+    }
+
     public void fetchRevisions(final PostModel post, final SiteModel site) {
         String url;
         if (post.isPage()) {
