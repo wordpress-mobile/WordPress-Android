@@ -50,6 +50,7 @@
                 android:id="@+id/site_info_business_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/wp_grey"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textColor="@color/wp_grey_dark">
@@ -69,6 +70,7 @@
                 android:id="@+id/site_info_tag_line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/wp_grey"
                 android:inputType="text"
                 android:singleLine="true"
                 android:textColor="@color/wp_grey_dark">
@@ -95,8 +97,8 @@
             android:text="@string/new_site_creation_button_skip"
             android:theme="@style/WordPress.Button"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="1"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_description"/>
+            app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_description"
+            app:layout_constraintVertical_bias="1"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
