@@ -21,6 +21,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
     class VerticalsSuggestionItemViewHolder(
         parentView: ViewGroup
     ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_suggestion_item) {
+        private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<TextView>(R.id.suggestion)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
@@ -28,7 +29,10 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsModelUiState
             suggestion.text = uiState.title
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
-            // TODO add onClick listener
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            container.setOnClickListener {
+                uiState.onItemTapped!!.invoke()
+            }
         }
     }
 
@@ -52,8 +56,9 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
             uiState as VerticalsFetchSuggestionsErrorUiState
             text.text = itemView.context.getText(uiState.messageResId)
             retry.text = itemView.context.getText(uiState.retryButtonResId)
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             itemView.setOnClickListener {
-                uiState.onItemTapped.invoke()
+                uiState.onItemTapped!!.invoke()
             }
         }
     }

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.segments
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
@@ -30,6 +31,16 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var segmentsScreenListener: SegmentsScreenListener
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is SegmentsScreenListener) {
+            throw IllegalStateException("Parent activity must implement SegmentsScreenListener.")
+        }
+        segmentsScreenListener = context
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -59,7 +70,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { state ->
@@ -69,7 +80,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 updateSegments(state.items)
             }
         })
-
+        viewModel.segmentSelected.observe(this, Observer { it?.let { segmentsScreenListener.onSegmentSelected(it) } })
         viewModel.start()
     }
 
@@ -107,5 +118,9 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     companion object {
         val TAG = "site_creation_segment_fragment_tag"
+
+        fun newInstance(): NewSiteCreationSegmentsFragment {
+            return NewSiteCreationSegmentsFragment()
+        }
     }
 }
