@@ -95,7 +95,7 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Configure the search view to execute search when the keyboard's Done button is pressed.
      */
     private fun initializeSearchView() {
-        search_view.queryHint = getString(R.string.giphy_search_hint)
+        search_view.queryHint = getString(R.string.giphy_picker_search_hint)
 
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {

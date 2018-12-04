@@ -1998,7 +1998,7 @@
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
-    <string name="giphy_search_hint">Search Giphy</string>
+    <string name="giphy_picker_search_hint">Search Giphy</string>
     <string name="giphy_picker_initial_empty_text">Search to find free GIFs to add to your Media Library</string>
     <string name="giphy_picker_initial_empty_subtext">GIFs provided by %s</string>
     <string name="giphy_picker_empty_search_list">No GIFs matching your search</string>
