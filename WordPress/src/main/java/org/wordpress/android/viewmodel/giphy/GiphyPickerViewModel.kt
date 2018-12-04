@@ -39,11 +39,13 @@ class GiphyPickerViewModel(
         VISIBLE_NO_SEARCH_RESULTS
     }
 
-    private val _emptyDisplayMode = MutableLiveData<EmptyDisplayMode>().apply { value = EmptyDisplayMode.HIDDEN }
+    private val _emptyDisplayMode = MutableLiveData<EmptyDisplayMode>().apply {
+        value = EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
+    }
     /**
      * Describes how the empty view UI should be displayed
      */
-    val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode.getDistinct()
+    val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**

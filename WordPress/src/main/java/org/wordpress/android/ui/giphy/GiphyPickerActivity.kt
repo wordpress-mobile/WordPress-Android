@@ -20,6 +20,7 @@ import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensio
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPLinkMovementMethod
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
@@ -155,7 +156,7 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     private fun initializeEmptyView() {
-        viewModel.emptyDisplayMode.observe(this, Observer { emptyDisplayMode ->
+        viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
             val emptyView: ActionableEmptyView = actionable_empty_view
 
             emptyView.updateLayoutForSearch(true, 0)
