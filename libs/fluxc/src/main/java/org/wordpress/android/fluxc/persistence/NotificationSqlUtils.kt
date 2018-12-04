@@ -143,7 +143,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
     data class NotificationModelBuilder(
         @PrimaryKey @Column private var mId: Int = -1,
         @Column var remoteNoteId: Long,
-        @Column var localSiteId: Long?,
+        @Column var localSiteId: Int,
         @Column var noteHash: Long,
         @Column var type: String,
         @Column var subtype: String? = null,
@@ -157,7 +157,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         @Column var formattableSubject: String? = null,
         @Column var formattableMeta: String? = null
     ) : Identifiable {
-        constructor() : this(-1, 0L, 0, 0L, NotificationModel.Kind.STORE_ORDER.toString())
+        constructor() : this(-1, 0L, -1, 0, NotificationModel.Kind.STORE_ORDER.toString())
         override fun setId(id: Int) {
             this.mId = id
         }
