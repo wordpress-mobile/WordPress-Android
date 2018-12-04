@@ -21,7 +21,7 @@ class TimeStatsMapper
                     null
                 }
             }
-            type?.let { ViewsModel(item.title, item.views, type, item.href) }
+            type?.let { ViewsModel(item.id, item.title, item.views, type, item.href) }
         }
         return PostAndPageViewsModel(stats, postViews.size > pageSize)
     }
