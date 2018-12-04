@@ -266,19 +266,7 @@ public class MySiteFragment extends Fragment implements
     @Override
     public void onPause() {
         super.onPause();
-        if (getActivity() != null && !getActivity().isChangingConfigurations()) {
-            mQuickStartSnackBarWasShown = false;
-            clearActiveQuickStartTask();
-            removeQuickStartFocusPoint();
-        }
-
-        if (mQuickStartTaskPromptSnackBar != null) {
-            mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
-
-            if (mQuickStartTaskPromptSnackBar.isShowing()) {
-                mQuickStartTaskPromptSnackBar.dismiss();
-            }
-        }
+        clearActiveQuickStart();
     }
 
     @Override
@@ -553,6 +541,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void showQuickStartList(QuickStartTaskType type) {
+        clearActiveQuickStart();
         final Bundle bundle = QuickStartFullScreenDialogFragment.newBundle(type);
 
         switch (type) {
@@ -1173,6 +1162,28 @@ public class MySiteFragment extends Fragment implements
         removeQuickStartFocusPoint();
         EventBus.getDefault().postSticky(new QuickStartEvent(mActiveTutorialPrompt.getTask()));
         clearActiveQuickStartTask();
+    }
+
+    private void clearActiveQuickStart() {
+        // Clear pressed row.
+        if (mActiveTutorialPrompt != null
+            && !QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
+            requireActivity().findViewById(mActiveTutorialPrompt.getFocusedContainerId()).setPressed(false);
+        }
+
+        if (getActivity() != null && !getActivity().isChangingConfigurations()) {
+            mQuickStartSnackBarWasShown = false;
+            clearActiveQuickStartTask();
+            removeQuickStartFocusPoint();
+        }
+
+        if (mQuickStartTaskPromptSnackBar != null) {
+            mQuickStartSnackBarHandler.removeCallbacksAndMessages(null);
+
+            if (mQuickStartTaskPromptSnackBar.isShowing()) {
+                mQuickStartTaskPromptSnackBar.dismiss();
+            }
+        }
     }
 
     private void clearActiveQuickStartTask() {
