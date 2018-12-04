@@ -31,7 +31,8 @@ constructor(
     dispatcher: Dispatcher,
     private val context: Context,
     private val notificationRestClient: NotificationRestClient,
-    private val notificationSqlUtils: NotificationSqlUtils
+    private val notificationSqlUtils: NotificationSqlUtils,
+    private val siteStore: SiteStore
 ) : Store(dispatcher) {
     companion object {
         const val WPCOM_PUSH_DEVICE_UUID = "NOTIFICATIONS_UUID_PREF_KEY"
@@ -251,7 +252,8 @@ constructor(
     }
 
     private fun fetchNotifications() {
-        notificationRestClient.fetchNotifications()
+        // get a map of all the cached sites
+        notificationRestClient.fetchNotifications(siteStore)
     }
 
     private fun handleFetchNotificationsCompleted(payload: FetchNotificationsResponsePayload) {
