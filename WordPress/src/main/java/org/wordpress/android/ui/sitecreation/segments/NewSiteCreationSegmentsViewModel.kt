@@ -183,8 +183,8 @@ class NewSiteCreationSegmentsViewModel
 }
 
 interface SegmentsUiState
-class SegmentsContentUiState(val items: List<SegmentsItemUiState>) : SegmentsUiState
-class SegmentsErrorUiState private constructor(val titleResId: Int, val subtitleResId: Int? = null) : SegmentsUiState {
+data class SegmentsContentUiState(val items: List<SegmentsItemUiState>) : SegmentsUiState
+data class SegmentsErrorUiState constructor(val titleResId: Int, val subtitleResId: Int? = null) : SegmentsUiState {
     companion object {
         fun createGenericErrorUiState() = SegmentsErrorUiState(
                 R.string.site_creation_error_generic_title,
