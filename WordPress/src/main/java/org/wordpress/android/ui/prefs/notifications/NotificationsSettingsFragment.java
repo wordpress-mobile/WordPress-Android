@@ -565,14 +565,13 @@ public class NotificationsSettingsFragment extends PreferenceFragment
             subscriptions = mAccountStore.getSubscriptions();
         }
 
-        mSubscriptionCount = subscriptions.size();
         Context context = getActivity();
         blogsCategory.removeAll();
 
         int maxSitesToShow = showAll ? NO_MAXIMUM : MAX_SITES_TO_SHOW_ON_FIRST_SCREEN;
-        int count = 0;
+        mSubscriptionCount = 0;
 
-        if (mSubscriptionCount > 0) {
+        if (subscriptions.size() > 0) {
             Collections.sort(subscriptions, new Comparator<SubscriptionModel>() {
                 @Override public int compare(SubscriptionModel o1, SubscriptionModel o2) {
                     return getSiteNameOrHostFromSubscription(o1)
@@ -582,13 +581,14 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         for (final SubscriptionModel subscription : subscriptions) {
-            if (context == null) {
-                return;
+            // Subscriptions with a "false" blogId are for feeds and don't have notifications settings.
+            if (context == null || subscription.getBlogId().equalsIgnoreCase("false")) {
+                break;
             }
 
-            count++;
+            mSubscriptionCount++;
 
-            if (maxSitesToShow != NO_MAXIMUM && count > maxSitesToShow) {
+            if (!showAll && mSubscriptionCount > maxSitesToShow) {
                 break;
             }
 
@@ -631,7 +631,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         }
 
         // Add view all entry when more sites than maximum to show.
-        if (mSubscriptionCount > maxSitesToShow && !showAll) {
+        if (!showAll && mSubscriptionCount > maxSitesToShow) {
             appendViewAllSitesOption(context, getString(R.string.pref_notification_blogs_followed), true);
         }
 

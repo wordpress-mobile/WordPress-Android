@@ -2122,10 +2122,13 @@ public class ReaderPostListFragment extends Fragment
         if (ReaderPostTable.isPostFollowed(post)) {
             menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
 
-            if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
-            } else {
-                menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+            // When blogId and feedId are not equal, post is not a feed so show notifications option.
+            if (post.blogId != post.feedId) {
+                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+                } else {
+                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+                }
             }
         } else {
             menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
