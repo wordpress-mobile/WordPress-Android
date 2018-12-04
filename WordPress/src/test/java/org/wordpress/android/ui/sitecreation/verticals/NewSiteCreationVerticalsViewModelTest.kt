@@ -33,10 +33,10 @@ import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 
 private const val SEGMENT_ID = 1L
 private const val ZERO_DELAY = 0
@@ -170,14 +170,14 @@ class NewSiteCreationVerticalsViewModelTest {
     @Test
     fun verifyClearSearchNotShownAfterPromptFetched() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
-        assertThat(viewModel.uiState.value!!.searchInputState.showClearButton).isFalse()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showClearButton).isFalse()
     }
 
     @Test
     fun verifyClearSearchShownOnNonEmptyQuery() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
-        assertThat(viewModel.uiState.value!!.searchInputState.showClearButton).isTrue()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showClearButton).isTrue()
     }
 
     @Test
@@ -185,20 +185,20 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
         viewModel.updateQuery(EMPTY_STRING, ZERO_DELAY)
-        assertThat(viewModel.uiState.value!!.searchInputState.showClearButton).isFalse()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showClearButton).isFalse()
     }
 
     @Test
     fun verifySearchProgressNotShownAfterPromptFetched() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
-        assertThat(viewModel.uiState.value!!.searchInputState.showProgress).isFalse()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showProgress).isFalse()
     }
 
     @Test
     fun verifySearchProgressNotShownOnEmptyQuery() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
-        assertThat(viewModel.uiState.value!!.searchInputState.showProgress).isFalse()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showProgress).isFalse()
     }
 
     @Test
@@ -206,7 +206,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
         viewModel.updateQuery(EMPTY_STRING, ZERO_DELAY)
-        assertThat(viewModel.uiState.value!!.searchInputState.showProgress).isFalse()
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).searchInputUiState.showProgress).isFalse()
     }
 
     @Test
@@ -267,7 +267,7 @@ class NewSiteCreationVerticalsViewModelTest {
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
 
         verifyFullscreenProgressShown(captor.firstValue)
-        verifyEmptySearchInputVisible(captor.secondValue)
+        verifyEmptySearchInputVisible(captor.secondValue as VerticalsContentUiState)
     }
 
     @Test
@@ -294,9 +294,9 @@ class NewSiteCreationVerticalsViewModelTest {
         verify(uiStateObserver, times(4)).onChanged(captor.capture())
 
         verifyFullscreenProgressShown(captor.firstValue)
-        verifyEmptySearchInputVisible(captor.secondValue)
-        verifySearchInputWithProgressVisible(captor.thirdValue)
-        verifyNonEmptySearchInputVisible(captor.lastValue)
+        verifyEmptySearchInputVisible(captor.secondValue as VerticalsContentUiState)
+        verifySearchInputWithProgressVisible(captor.thirdValue as VerticalsContentUiState)
+        verifyNonEmptySearchInputVisible(captor.lastValue as VerticalsContentUiState)
     }
 
     @Test
@@ -309,7 +309,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.updateQuery(ERROR_MODEL_QUERY, ZERO_DELAY)
 
         // invoke retry
-        (viewModel.uiState.value!!.items[0] as VerticalsFetchSuggestionsErrorUiState).onItemTapped!!.invoke()
+        ((viewModel.uiState.value!!as VerticalsContentUiState).items[0] as VerticalsFetchSuggestionsErrorUiState).onItemTapped!!.invoke()
 
         val captor = ArgumentCaptor.forClass(VerticalsUiState::class.java)
         verify(uiStateObserver, times(5)).onChanged(captor.capture())
@@ -321,7 +321,7 @@ class NewSiteCreationVerticalsViewModelTest {
 
         // the last item is the 'inProgress' state as the result will never be returned
         // since we can't set throttle delay to 0 in onItemTapped
-        verifySearchInputWithProgressVisible(captor.lastValue)
+        verifySearchInputWithProgressVisible(captor.lastValue as VerticalsContentUiState)
     }
 
     @Test
@@ -329,7 +329,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
 
-        viewModel.uiState.value!!.items[0].onItemTapped!!.invoke()
+        (viewModel.uiState.value!!as VerticalsContentUiState).items[0].onItemTapped!!.invoke()
 
         val selectedVerticalCaptor = ArgumentCaptor.forClass(String::class.java)
         verify(verticalSelectedObserver).onChanged(selectedVerticalCaptor.capture())
@@ -350,57 +350,49 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     private fun verifyEmptySearchInputVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
-        verifyEmptySearchInputVisible(uiStateLiveData.value!!)
+        verifyEmptySearchInputVisible(uiStateLiveData.value!! as VerticalsContentUiState)
     }
 
-    private fun verifyEmptySearchInputVisible(uiState: VerticalsUiState) {
-        assertThat(uiState.contentState == CONTENT).isTrue()
-        assertThat(uiState.searchInputState.isVisible).isTrue()
-        assertThat(uiState.searchInputState.showProgress).isFalse()
-        assertThat(uiState.searchInputState.showClearButton).isFalse()
-        assertThat(uiState.searchInputState.hint).isEqualTo(DUMMY_HINT)
+    private fun verifyEmptySearchInputVisible(uiState: VerticalsContentUiState) {
+        assertThat(uiState.searchInputUiState.showProgress).isFalse()
+        assertThat(uiState.searchInputUiState.showClearButton).isFalse()
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
     }
 
     private fun verifyNonEmptySearchInputVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
-        verifyNonEmptySearchInputVisible(uiStateLiveData.value!!)
+        verifyNonEmptySearchInputVisible(uiStateLiveData.value!! as VerticalsContentUiState)
     }
 
-    private fun verifyNonEmptySearchInputVisible(uiState: VerticalsUiState) {
-        assertThat(uiState.contentState == CONTENT).isTrue()
-        assertThat(uiState.searchInputState.isVisible).isTrue()
-        assertThat(uiState.searchInputState.showProgress).isFalse()
-        assertThat(uiState.searchInputState.showClearButton).isTrue()
-        assertThat(uiState.searchInputState.hint).isEqualTo(DUMMY_HINT)
+    private fun verifyNonEmptySearchInputVisible(uiState: VerticalsContentUiState) {
+        assertThat(uiState.searchInputUiState.showProgress).isFalse()
+        assertThat(uiState.searchInputUiState.showClearButton).isTrue()
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
     }
 
-    private fun verifySearchInputWithProgressVisible(uiState: VerticalsUiState) {
-        assertThat(uiState.contentState == CONTENT).isTrue()
-        assertThat(uiState.searchInputState.isVisible).isTrue()
-        assertThat(uiState.searchInputState.showProgress).isTrue()
-        assertThat(uiState.searchInputState.showClearButton).isTrue()
-        assertThat(uiState.searchInputState.hint).isEqualTo(DUMMY_HINT)
+    private fun verifySearchInputWithProgressVisible(uiState: VerticalsContentUiState) {
+        assertThat(uiState.searchInputUiState.showProgress).isTrue()
+        assertThat(uiState.searchInputUiState.showClearButton).isTrue()
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
     }
 
     private fun verifyHeaderAndSkipButtonVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
-        verifyHeaderAndSkipButtonVisible(uiStateLiveData.value!!)
+        verifyHeaderAndSkipButtonVisible(uiStateLiveData.value!! as VerticalsContentUiState)
     }
 
-    private fun verifyHeaderAndSkipButtonVisible(uiState: VerticalsUiState) {
-        assertThat(uiState.contentState == CONTENT).isTrue()
+    private fun verifyHeaderAndSkipButtonVisible(uiState: VerticalsContentUiState) {
         assertThat(uiState.showSkipButton).isTrue()
-        assertThat(uiState.headerUiState.isVisible).isTrue()
-        assertThat(uiState.headerUiState.title).isEqualTo(DUMMY_TITLE)
-        assertThat(uiState.headerUiState.subtitle).isEqualTo(DUMMY_SUBTITLE)
+        assertThat(uiState.headerUiState).isNotNull()
+        assertThat(uiState.headerUiState!!.title).isEqualTo(DUMMY_TITLE)
+        assertThat(uiState.headerUiState!!.subtitle).isEqualTo(DUMMY_SUBTITLE)
     }
 
     private fun verifyHeaderAndSkipButtonHidden(uiStateLiveData: LiveData<VerticalsUiState>) {
-        verifyHeaderAndSkipButtonHidden(uiStateLiveData.value!!)
+        verifyHeaderAndSkipButtonHidden(uiStateLiveData.value!! as VerticalsContentUiState)
     }
 
-    private fun verifyHeaderAndSkipButtonHidden(uiState: VerticalsUiState) {
-        assertThat(uiState.contentState == CONTENT).isTrue()
+    private fun verifyHeaderAndSkipButtonHidden(uiState: VerticalsContentUiState) {
         assertThat(uiState.showSkipButton).isFalse()
-        assertThat(uiState.headerUiState.isVisible).isFalse()
+        assertThat(uiState.headerUiState).isNull()
     }
 
     private fun verifyFullscreenErrorShown(uiState: VerticalsUiState) {
@@ -412,13 +404,13 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     private fun verifyModelShown(uiStateLiveData: LiveData<VerticalsUiState>, id: String, title: String) {
-        val uiState = uiStateLiveData.value!!
+        val uiState = uiStateLiveData.value!! as VerticalsContentUiState
         assertThat((uiState.items[0] as VerticalsModelUiState).id).isEqualTo(id)
         assertThat((uiState.items[0] as VerticalsModelUiState).title).isEqualTo(title)
     }
 
     private fun verifyRetrySuggestionItemShown(uiStateLiveData: LiveData<VerticalsUiState>) {
-        assertThat(uiStateLiveData.value!!.items[0])
+        assertThat((uiStateLiveData.value!! as VerticalsContentUiState).items[0])
                 .isInstanceOf(VerticalsFetchSuggestionsErrorUiState::class.java)
     }
 }
