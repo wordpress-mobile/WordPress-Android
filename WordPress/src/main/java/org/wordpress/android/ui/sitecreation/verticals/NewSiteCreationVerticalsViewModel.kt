@@ -10,6 +10,7 @@ import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.apache.commons.lang3.StringUtils
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.OnVerticalsFetched
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
+import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
@@ -28,14 +30,17 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
 private const val throttleDelay: Int = 500
+private const val FAKE_DELAY = 1000
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
+    private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val fetchSegmentPromptUseCase: FetchSegmentPromptUseCase,
     private val fetchVerticalsUseCase: FetchVerticalsUseCase,
@@ -86,20 +91,33 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     private fun fetchSegmentsPrompt() {
-        launch {
-            withContext(MAIN) {
-                updateUiState(VerticalsFullscreenProgressUiState)
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiState(VerticalsFullscreenProgressUiState)
+            launch {
+                val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
+                withContext(MAIN) {
+                    onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
+                }
             }
-            val onSegmentsPromptFetchedEvent = fetchSegmentPromptUseCase.fetchSegmentsPrompt(segmentId!!)
+        } else {
+            showFullscreenErrorWithDelay()
+        }
+    }
+
+    private fun showFullscreenErrorWithDelay() {
+        updateUiState(VerticalsFullscreenProgressUiState)
+        launch {
+            // We show the loading indicator for a bit so the user has some feedback when they press retry
+            delay(FAKE_DELAY)
             withContext(MAIN) {
-                onSegmentsPromptFetched(onSegmentsPromptFetchedEvent)
+                updateUiState(VerticalsFullscreenErrorUiState.createConnectionErrorUiState())
             }
         }
     }
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
-            updateUiState(VerticalsFullscreenErrorUiState)
+            updateUiState(VerticalsFullscreenErrorUiState.createGenericErrorUiState())
         } else {
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
@@ -128,14 +146,27 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     private fun fetchVerticals(query: String, throttleDelay: Int) {
-        fetchVerticalsJob = launch {
-            withContext(MAIN) {
-                updateUiStateToContent(query, ListState.Loading(ListState.Ready(emptyList()), false))
+        if (networkUtils.isNetworkAvailable()) {
+            updateUiStateToContent(query, Loading(Ready(emptyList()), false))
+            fetchVerticalsJob = launch {
+                delay(throttleDelay)
+                val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
+                withContext(MAIN) {
+                    onVerticalsFetched(query, fetchedVerticals)
+                }
             }
-            delay(throttleDelay)
-            val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
+        } else {
+            showFetchingVerticalsFailedWithDelay(query)
+        }
+    }
+
+    private fun showFetchingVerticalsFailedWithDelay(query: String) {
+        updateUiStateToContent(query, Loading(Ready(emptyList()), false))
+        launch {
+            // We show the loading indicator for a bit so the user has some feedback when they press retry
+            delay(FAKE_DELAY)
             withContext(MAIN) {
-                onVerticalsFetched(query, fetchedVerticals)
+                updateUiStateToContent(query, Error(listState, null))
             }
         }
     }
@@ -183,8 +214,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         val items: ArrayList<VerticalsListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
             val errorUiState = VerticalsFetchSuggestionsErrorUiState(
-                    messageResId = string.site_creation_fetch_suggestions_failed,
-                    retryButtonResId = string.button_retry
+                    messageResId = R.string.site_creation_fetch_suggestions_error_no_connection,
+                    retryButtonResId = R.string.button_retry
             )
             errorUiState.onItemTapped = onRetry
             items.add(errorUiState)
@@ -235,7 +266,20 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         ) : VerticalsUiState()
 
         object VerticalsFullscreenProgressUiState : VerticalsUiState()
-        object VerticalsFullscreenErrorUiState : VerticalsUiState()
+        class VerticalsFullscreenErrorUiState private constructor(
+            val titleResId: Int,
+            val subtitleResId: Int? = null
+        ) : VerticalsUiState() {
+            companion object {
+                fun createGenericErrorUiState() = VerticalsFullscreenErrorUiState(
+                        string.site_creation_error_generic_title,
+                        string.site_creation_error_generic_subtitle
+                )
+
+                fun createConnectionErrorUiState() =
+                        VerticalsFullscreenErrorUiState(R.string.site_creation_error_connection_title)
+            }
+        }
     }
 
     class VerticalsSearchInputUiState(
@@ -245,6 +289,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     )
 
     class VerticalsHeaderUiState(val title: String, val subtitle: String)
+
     sealed class VerticalsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
 

@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
@@ -46,6 +47,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var fullscreenErrorLayout: ViewGroup
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
+    private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
 
     private lateinit var headerLayout: ViewGroup
@@ -84,6 +86,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
+        errorLayout = rootView.findViewById(R.id.error_layout)
         initSearchEditText(rootView)
         initClearTextButton(rootView)
         initHeader(rootView)
@@ -185,20 +188,21 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             uiState?.let {
                 when (uiState) {
                     is VerticalsContentUiState -> {
+                        updateVisibility(fullscreenProgressLayout, false)
                         updateVisibility(contentLayout, true)
                         updateVisibility(fullscreenErrorLayout, false)
-                        updateVisibility(fullscreenProgressLayout, false)
                         updateContentLayout(uiState)
                     }
                     is VerticalsFullscreenProgressUiState -> {
+                        updateVisibility(fullscreenProgressLayout, true)
                         updateVisibility(contentLayout, false)
                         updateVisibility(fullscreenErrorLayout, false)
-                        updateVisibility(fullscreenProgressLayout, true)
                     }
                     is VerticalsFullscreenErrorUiState -> {
+                        updateVisibility(fullscreenProgressLayout, false)
                         updateVisibility(contentLayout, false)
                         updateVisibility(fullscreenErrorLayout, true)
-                        updateVisibility(fullscreenProgressLayout, false)
+                        updateErrorLayout(errorLayout, uiState)
                     }
                 }
             }
@@ -219,6 +223,18 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         updateHeader(uiState.headerUiState)
         updateSearchInput(uiState.searchInputUiState)
         updateSuggestions(uiState.items)
+    }
+
+    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {
+        setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
+        setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
+        }
     }
 
     override fun onHelp() {
