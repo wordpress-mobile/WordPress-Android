@@ -28,6 +28,7 @@ class ReferrersSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var site: SiteModel
     private lateinit var timeStatsSqlUtils: TimeStatsSqlUtils
+    private val mappedTypes = mapOf(DAY to DAYS, WEEK to WEEKS, MONTH to MONTHS, YEAR to YEARS)
 
     @Before
     fun setUp() {
@@ -35,90 +36,26 @@ class ReferrersSqlUtilsTest {
     }
 
     @Test
-    fun `returns referrers by day from stats utils`() {
-        whenever(statsSqlUtils.select(site, REFERRERS, DAY, ReferrersResponse::class.java))
-                .thenReturn(
-                        REFERRERS_RESPONSE
-                )
+    fun `returns referrers from stats utils`() {
+        mappedTypes.forEach { statsType, dbGranularity ->
 
-        val result = timeStatsSqlUtils.selectReferrers(site, DAYS)
+            whenever(statsSqlUtils.select(site, REFERRERS, statsType, ReferrersResponse::class.java))
+                    .thenReturn(
+                            REFERRERS_RESPONSE
+                    )
 
-        assertEquals(result, REFERRERS_RESPONSE)
+            val result = timeStatsSqlUtils.selectReferrers(site, dbGranularity)
+
+            assertEquals(result, REFERRERS_RESPONSE)
+        }
     }
 
     @Test
-    fun `returns referrers by week from stats utils`() {
-        whenever(statsSqlUtils.select(site, REFERRERS, WEEK, ReferrersResponse::class.java))
-                .thenReturn(
-                        REFERRERS_RESPONSE
-                )
+    fun `inserts referrers to stats utils`() {
+        mappedTypes.forEach { statsType, dbGranularity ->
+            timeStatsSqlUtils.insert(site, REFERRERS_RESPONSE, dbGranularity)
 
-        val result = timeStatsSqlUtils.selectReferrers(site, WEEKS)
-
-        assertEquals(result, REFERRERS_RESPONSE)
-    }
-
-    @Test
-    fun `returns referrers by month from stats utils`() {
-        whenever(statsSqlUtils.select(site, REFERRERS, MONTH, ReferrersResponse::class.java))
-                .thenReturn(
-                        REFERRERS_RESPONSE
-                )
-
-        val result = timeStatsSqlUtils.selectReferrers(site, MONTHS)
-
-        assertEquals(result, REFERRERS_RESPONSE)
-    }
-
-    @Test
-    fun `returns referrers by year from stats utils`() {
-        whenever(statsSqlUtils.select(site, REFERRERS, YEAR, ReferrersResponse::class.java))
-                .thenReturn(
-                        REFERRERS_RESPONSE
-                )
-
-        val result = timeStatsSqlUtils.selectReferrers(site, YEARS)
-
-        assertEquals(result, REFERRERS_RESPONSE)
-    }
-
-    @Test
-    fun `inserts referrers by day to stats utils`() {
-        timeStatsSqlUtils.insert(site,
-                REFERRERS_RESPONSE, DAYS)
-
-        verify(statsSqlUtils).insert(site, REFERRERS, DAY,
-                REFERRERS_RESPONSE
-        )
-    }
-
-    @Test
-    fun `inserts referrers by week to stats utils`() {
-        timeStatsSqlUtils.insert(site,
-                REFERRERS_RESPONSE, WEEKS)
-
-        verify(statsSqlUtils).insert(site, REFERRERS, WEEK,
-                REFERRERS_RESPONSE
-        )
-    }
-
-    @Test
-    fun `inserts referrers by month to stats utils`() {
-        timeStatsSqlUtils.insert(site,
-                REFERRERS_RESPONSE, MONTHS)
-
-        verify(statsSqlUtils).insert(site, REFERRERS, MONTH,
-                REFERRERS_RESPONSE
-        )
-    }
-
-    @Test
-    fun `inserts referrers by year to stats utils`() {
-        timeStatsSqlUtils.insert(site,
-                REFERRERS_RESPONSE, YEARS)
-
-        verify(statsSqlUtils).insert(site, REFERRERS, YEAR,
-                REFERRERS_RESPONSE
-        )
+            verify(statsSqlUtils).insert(site, REFERRERS, statsType, REFERRERS_RESPONSE)
+        }
     }
 }
