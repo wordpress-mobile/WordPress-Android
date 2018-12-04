@@ -57,12 +57,13 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
   lane :code_freeze do | options |
     old_version = android_codefreeze(options)
     
+    localize_libs()
+
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{options[:codefreeze_version]}")
     setfrozentag(repository:GHHELPER_REPO, milestone: options[:codefreeze_version])
 
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{options[:codefreeze_version]}.txt")
   end
-
 
 #####################################################################################
 # update_ps_strings 
@@ -152,6 +153,18 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
   end
 
+  desc "Merge libraries strings files into the main app one"
+  lane :localize_libs do | options |
+    main_strings_path = "./WordPress/src/main/res/values/strings.xml"
+    libraries_strings_path = [
+      {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
+    ]
+  
+    if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
+      UI.important("Your #{main_strings_path} has changed.")
+      UI.input("Please, review the changes, commit them and press return to continue.")
+    end
+  end
 #####################################################################################
 # Private lanes
 #####################################################################################
