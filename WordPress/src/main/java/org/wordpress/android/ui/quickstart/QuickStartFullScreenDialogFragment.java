@@ -110,6 +110,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         // TODO: Quick Start - Remove switch statement after new tutorials are added.
         switch (task) {
             case CREATE_SITE:
+                mDialogController.dismiss();
+                break;
             case CHOOSE_THEME:
             case CUSTOMIZE_SITE:
             case VIEW_SITE:
