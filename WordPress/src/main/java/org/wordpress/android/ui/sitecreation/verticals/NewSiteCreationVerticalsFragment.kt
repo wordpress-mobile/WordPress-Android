@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
+import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
@@ -22,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
@@ -52,7 +55,22 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var searchEditTextProgressBar: View
     private lateinit var clearAllButton: View
 
+    private lateinit var verticalsScreenListener: VerticalsScreenListener
+    private lateinit var skipClickedListener: OnSkipClickedListener
+
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is VerticalsScreenListener) {
+            throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
+        }
+        if (context !is OnSkipClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
+        }
+        verticalsScreenListener = context
+        skipClickedListener = context
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -147,7 +165,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private fun initSkipButton(rootView: ViewGroup) {
         skipButton = rootView.findViewById(R.id.btn_skip)
         skipButton.setOnClickListener { _ ->
-            // TODO add skip action
+            viewModel.onSkipStepBtnClicked()
         }
     }
 
@@ -162,7 +180,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationVerticalsViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { state ->
@@ -180,6 +198,10 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             searchEditText.setText("")
         })
 
+        viewModel.verticalSelected.observe(this, Observer { verticalId ->
+            verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
+        })
+        viewModel.skipBtnClicked.observe(this, Observer { skipClickedListener.onSkipClicked() })
         viewModel.start(segmentId)
     }
 
@@ -191,6 +213,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateHeader(uiState: VerticalsHeaderUiState) {
         if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
+            if (contentLayout.layoutTransition == null) {
+                contentLayout.layoutTransition = LayoutTransition() // animate layout changes
+            }
             headerLayout.animate().translationY(-headerLayout.height.toFloat())
         } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
             headerLayout.animate().translationY(0f)

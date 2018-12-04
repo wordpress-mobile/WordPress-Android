@@ -41,7 +41,10 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             } catch (e: IllegalArgumentException) {
                 AppLog.e(AppLog.T.SITE_CREATION, "Error parsing segment icon color: ${uiState.iconColor}")
             }
-            container.setOnClickListener { uiState.onItemTapped }
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            container.setOnClickListener {
+                uiState.onItemTapped!!.invoke()
+            }
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
         }
     }

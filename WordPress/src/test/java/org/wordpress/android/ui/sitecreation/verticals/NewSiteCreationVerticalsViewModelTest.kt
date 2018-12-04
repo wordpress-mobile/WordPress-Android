@@ -91,6 +91,8 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock lateinit var fetchSegmentsPromptUseCase: FetchSegmentPromptUseCase
     @Mock private lateinit var uiStateObserver: Observer<VerticalsUiState>
     @Mock private lateinit var clearBtnObserver: Observer<Void>
+    @Mock private lateinit var verticalSelectedObserver: Observer<String?>
+    @Mock private lateinit var skipBtnClickedObservable: Observer<Void>
 
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
 
@@ -105,6 +107,8 @@ class NewSiteCreationVerticalsViewModelTest {
         )
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.clearBtnClicked.observeForever(clearBtnObserver)
+        viewModel.verticalSelected.observeForever(verticalSelectedObserver)
+        viewModel.skipBtnClicked.observeForever(skipBtnClickedObservable)
     }
 
     private fun <T> testWithSuccessResponses(block: suspend CoroutineScope.() -> T) {
@@ -305,7 +309,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.updateQuery(ERROR_MODEL_QUERY, ZERO_DELAY)
 
         // invoke retry
-        (viewModel.uiState.value!!.items[0] as VerticalsFetchSuggestionsErrorUiState).onItemTapped.invoke()
+        (viewModel.uiState.value!!.items[0] as VerticalsFetchSuggestionsErrorUiState).onItemTapped!!.invoke()
 
         val captor = ArgumentCaptor.forClass(VerticalsUiState::class.java)
         verify(uiStateObserver, times(5)).onChanged(captor.capture())
@@ -318,6 +322,31 @@ class NewSiteCreationVerticalsViewModelTest {
         // the last item is the 'inProgress' state as the result will never be returned
         // since we can't set throttle delay to 0 in onItemTapped
         verifySearchInputWithProgressVisible(captor.lastValue)
+    }
+
+    @Test
+    fun verifyOnVerticalSelectedIsPropagated() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        viewModel.updateQuery(FIRST_MODEL_QUERY, ZERO_DELAY)
+
+        viewModel.uiState.value!!.items[0].onItemTapped!!.invoke()
+
+        val selectedVerticalCaptor = ArgumentCaptor.forClass(String::class.java)
+        verify(verticalSelectedObserver).onChanged(selectedVerticalCaptor.capture())
+
+        assertThat(selectedVerticalCaptor.allValues.size).isEqualTo(1)
+        assertThat(selectedVerticalCaptor.lastValue).isEqualTo(FIRST_MODEL_ID)
+    }
+
+    @Test
+    fun verifyOnSkipIsPropagated() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        viewModel.onSkipStepBtnClicked()
+        val captor = ArgumentCaptor.forClass(Void::class.java)
+        verify(skipBtnClickedObservable).onChanged(captor.capture())
+
+        assertThat(captor.allValues.size).isEqualTo(1)
+        assertThat(captor.lastValue).isNull()
     }
 
     private fun verifyEmptySearchInputVisible(uiStateLiveData: LiveData<VerticalsUiState>) {

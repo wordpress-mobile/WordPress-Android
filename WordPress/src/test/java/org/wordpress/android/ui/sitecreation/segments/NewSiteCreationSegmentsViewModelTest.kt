@@ -104,6 +104,7 @@ class NewSiteCreationSegmentsViewModelTest {
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     @Mock private lateinit var uiStateObserver: Observer<UiState>
+    @Mock private lateinit var segmentSelectedObserver: Observer<Long>
 
     @Before
     fun setUp() {
@@ -114,6 +115,7 @@ class NewSiteCreationSegmentsViewModelTest {
                 Dispatchers.Unconfined
         )
         viewModel.uiState.observeForever(uiStateObserver)
+        viewModel.segmentSelected.observeForever(segmentSelectedObserver)
     }
 
     @Test
@@ -184,5 +186,16 @@ class NewSiteCreationSegmentsViewModelTest {
 
         val items = viewModel.uiState.value!!.items
         assertFalse((items[items.size - 1] as SegmentUiState).showDivider)
+    }
+
+    @Test
+    fun verifyOnSegmentSelectedIsPropagated() = test {
+        whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_MODEL_EVENT)
+        viewModel.start()
+        (viewModel.uiState.value!!.items[1] as SegmentUiState).onItemTapped!!.invoke()
+        inOrder(segmentSelectedObserver).apply {
+            verify(segmentSelectedObserver).onChanged(FIRST_MODEL_SEGMENT_ID)
+            verifyNoMoreInteractions()
+        }
     }
 }

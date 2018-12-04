@@ -22,6 +22,7 @@ import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsVie
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
@@ -43,6 +44,9 @@ class NewSiteCreationSegmentsViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _segmentSelected = SingleLiveEvent<Long>()
+    val segmentSelected: LiveData<Long> = _segmentSelected
 
     fun start() {
         if (isStarted) return
@@ -93,7 +97,7 @@ class NewSiteCreationSegmentsViewModel
     }
 
     fun onSegmentSelected(segmentId: Long) {
-        // TODO send result to the SCMainVM
+        _segmentSelected.value = segmentId
     }
 
     // TODO analytics
@@ -173,7 +177,7 @@ class NewSiteCreationSegmentsViewModel
             val iconColor: String,
             val showDivider: Boolean
         ) : ItemUiState() {
-            lateinit var onItemTapped: (Long) -> Unit
+            var onItemTapped: (() -> Unit)? = null
         }
     }
 }
