@@ -79,7 +79,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.clear()
 
-        assertThat(block.liveData.value).isNull()
+        assertThat(block.liveData.value).isEqualTo(Loading(ALL_TIME_STATS))
     }
 
     private fun assertData(position: Int, data: String) {

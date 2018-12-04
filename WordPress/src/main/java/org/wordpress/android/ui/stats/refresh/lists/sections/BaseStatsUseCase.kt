@@ -96,7 +96,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * Clears the LiveData value when we switch the current Site so we don't show the old data for a new site
      */
     fun clear() {
-        domainModel.postValue(null)
+        domainModel.postValue(State.Loading())
         uiState.postValue(null)
     }
 
