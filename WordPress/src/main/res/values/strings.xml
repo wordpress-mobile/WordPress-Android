@@ -998,7 +998,7 @@
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
     <string name="notifications_empty_list">No notifications</string>
-    <string name="notifications_empty_all">No notifications&#8230;yet.</string>
+    <string name="notifications_empty_all">No notifications…yet.</string>
     <string name="notifications_empty_unread">You\'re all up to date!</string>
     <string name="notifications_empty_comments">No comments yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
@@ -1182,7 +1182,7 @@
     </string-array>
 
     <!-- Aztec -->
-    <string name="editor_content_hint">Share your story here&#8230;</string>
+    <string name="editor_content_hint">Share your story here…</string>
 
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
@@ -1818,8 +1818,8 @@
     <string name="plugin_remove_failed">Error removing %s</string>
     <string name="plugin_installed_failed">Error installing %s</string>
     <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
-    <string name="plugin_disable_progress_dialog_message">Disabling %s&#8230;</string>
-    <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
+    <string name="plugin_disable_progress_dialog_message">Disabling %s…</string>
+    <string name="plugin_remove_progress_dialog_message">Removing %s…</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Install plugin</string>
@@ -1922,7 +1922,7 @@
     <string name="change_password">Change password</string>
     <string name="change_password_confirmation">Password changed successfully</string>
     <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
-    <string name="change_password_dialog_message">Changing password&#8230;</string>
+    <string name="change_password_dialog_message">Changing password…</string>
     <string name="exporting_content_progress">Exporting content…</string>
     <string name="export_email_sent">Export email sent!</string>
     <string name="export_your_content">Export your content</string>
@@ -2118,11 +2118,11 @@
     <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_updating_account">Updating account&#8230;</string>
+    <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
-    <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
+    <string name="signup_with_google_progress">Signing up with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
     <string name="signup_email_screen_title">Email signup</string>
@@ -2266,7 +2266,7 @@
     <string name="site_creation_creating_configuring_content">Configuring site content…</string>
     <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
     <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
-    <string name="site_creation_creating_failed">Something went wrong&#8230;</string>
+    <string name="site_creation_creating_failed">Something went wrong…</string>
     <string name="site_creation_creating_failed_extended">We ran into an unexpected problem. How about giving it another shot?</string>
     <string name="site_creation_creating_retry">Try again</string>
     <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
@@ -2302,7 +2302,7 @@
     <string name="quick_start_dialog_publish_post_message">It\'s time!  Draft and publish your very first post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
-    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts &#8211; your site will automatically share new posts.</string>
+    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_share_site_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_share_site_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
@@ -2330,7 +2330,7 @@
     <string name="quick_start_sites">Quick Start</string>
     <string name="quick_start_sites_progress" translatable="false">%1$d/%2$d</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
-    <string name="quick_start_span_start" translatable="false">&lt;span style=&quot;color:#0&quot;&gt;</string>
+    <string name="quick_start_span_start" translatable="false">&lt;span style="color:#0"&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
     <!-- Pages -->
