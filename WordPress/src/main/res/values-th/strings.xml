@@ -357,7 +357,6 @@ Language: th
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
     <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
-    <string name="invalid_url_message">ตรวจสอบ URL ที่ใส่มาว่าใช้งานได้หรือไม่</string>
     <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
     <string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>

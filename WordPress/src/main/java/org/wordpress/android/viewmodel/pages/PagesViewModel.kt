@@ -13,10 +13,15 @@ import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
@@ -32,6 +37,7 @@ import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction
@@ -43,6 +49,9 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.ERR
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.REFRESHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
+import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import java.util.Date
 import java.util.SortedMap
 import javax.inject.Inject
@@ -203,8 +212,21 @@ class PagesViewModel
     }
 
     fun onPageTypeChanged(type: PageListType) {
+        trackTabChangeEvent(type)
+
         currentPageType = type
         checkIfNewPageButtonShouldBeVisible()
+    }
+
+    private fun trackTabChangeEvent(type: PageListType) {
+        val tab = when (type) {
+            PUBLISHED -> "published"
+            DRAFTS -> "drafts"
+            SCHEDULED -> "scheduled"
+            PageListType.TRASHED -> "binned"
+        }
+        val properties = mutableMapOf("tab_name" to tab as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_TAB_PRESSED, site, properties)
     }
 
     fun checkIfNewPageButtonShouldBeVisible() {
@@ -264,18 +286,20 @@ class PagesViewModel
                 })
     }
 
-    fun onSearchExpanded(restorePreviousSearch: Boolean): Boolean {
-        if (!restorePreviousSearch) {
-            clearSearch()
+    fun onSearchExpanded(restorePreviousSearch: Boolean) {
+        if (isSearchExpanded.value != true) {
+            AnalyticsUtils.trackWithSiteDetails(PAGES_SEARCH_ACCESSED, site)
+
+            if (!restorePreviousSearch) {
+                clearSearch()
+            }
+
+            _isSearchExpanded.value = true
+            _isNewPageButtonVisible.value = false
         }
-
-        _isSearchExpanded.value = true
-        _isNewPageButtonVisible.value = false
-
-        return true
     }
 
-    fun onSearchCollapsed(): Boolean {
+    fun onSearchCollapsed() {
         _isSearchExpanded.value = false
         clearSearch()
 
@@ -283,19 +307,46 @@ class PagesViewModel
             delay(SEARCH_COLLAPSE_DELAY)
             checkIfNewPageButtonShouldBeVisible()
         }
-        return true
     }
 
     fun onMenuAction(action: Action, page: Page): Boolean {
         when (action) {
-            VIEW_PAGE -> _previewPage.postValue(pageMap[page.id])
-            SET_PARENT -> _setPageParent.postValue(pageMap[page.id])
+            VIEW_PAGE -> previewPage(page)
+            SET_PARENT -> setParent(page)
             MOVE_TO_DRAFT -> changePageStatus(page.id, PageStatus.DRAFT)
             MOVE_TO_TRASH -> changePageStatus(page.id, PageStatus.TRASHED)
             PUBLISH_NOW -> publishPageNow(page.id)
-            DELETE_PERMANENTLY -> _displayDeleteDialog.postValue(page)
+            DELETE_PERMANENTLY -> deletePage(page)
         }
         return true
+    }
+
+    private fun deletePage(page: Page) {
+        _displayDeleteDialog.postValue(page)
+    }
+
+    private fun setParent(page: Page) {
+        trackMenuSelectionEvent(SET_PARENT)
+
+        _setPageParent.postValue(pageMap[page.id])
+    }
+
+    private fun previewPage(page: Page) {
+        trackMenuSelectionEvent(VIEW_PAGE)
+
+        _previewPage.postValue(pageMap[page.id])
+    }
+
+    private fun trackMenuSelectionEvent(action: Action) {
+        val menu = when (action) {
+            VIEW_PAGE -> "view"
+            SET_PARENT -> "set_parent"
+            MOVE_TO_DRAFT -> "move_to_draft"
+            MOVE_TO_TRASH -> "move_to_bin"
+            else -> return
+        }
+        val properties = mutableMapOf("option_name" to menu as Any)
+        AnalyticsUtils.trackWithSiteDetails(PAGES_OPTIONS_PRESSED, site, properties)
     }
 
     private fun publishPageNow(remoteId: Long) {
@@ -314,6 +365,8 @@ class PagesViewModel
     }
 
     fun onNewPageButtonTapped() {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PAGES_ADD_PAGE, site)
+
         _createNewPage.asyncCall()
     }
 
@@ -419,6 +472,12 @@ class PagesViewModel
     }
 
     private fun changePageStatus(remoteId: Long, status: PageStatus) {
+        if (status == DRAFT) {
+            trackMenuSelectionEvent(MOVE_TO_DRAFT)
+        } else if (status == TRASHED) {
+            trackMenuSelectionEvent(MOVE_TO_TRASH)
+        }
+
         pageMap[remoteId]?.let { page ->
             val oldStatus = page.status
             val action = PageAction(remoteId, UPLOAD) {
