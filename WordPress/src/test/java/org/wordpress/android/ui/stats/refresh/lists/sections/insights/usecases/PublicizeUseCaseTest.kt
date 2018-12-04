@@ -10,7 +10,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
@@ -135,7 +134,6 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
         Assertions.assertThat(result.type).isEqualTo(ERROR)
         (result as Error).apply {
-            Assertions.assertThat(this.errorType).isEqualTo(string.stats_view_publicize)
             Assertions.assertThat(this.errorMessage).isEqualTo(message)
         }
     }

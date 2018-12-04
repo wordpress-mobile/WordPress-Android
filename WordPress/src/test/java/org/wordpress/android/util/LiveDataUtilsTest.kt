@@ -11,7 +11,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<Int>()
 
-        val mergedSources = merge(sourceA, sourceB)
+        val mergedSources = mergeNotNull(sourceA, sourceB)
         mergedSources.observeForever { }
 
         assertThat(mergedSources.value).isNull()
@@ -28,7 +28,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<String>()
 
-        val mergedSources = merge(sourceA, sourceB) { i, s ->
+        val mergedSources = mergeNotNull(sourceA, sourceB) { i, s ->
             "$s: $i"
         }
         mergedSources.observeForever { }

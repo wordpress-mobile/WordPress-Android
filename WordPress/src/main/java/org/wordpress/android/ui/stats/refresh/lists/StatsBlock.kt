@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import android.support.annotation.StringRes
 import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
@@ -18,12 +17,15 @@ sealed class StatsBlock(val type: Type, open val statsTypes: StatsTypes?) {
     }
 }
 
-data class BlockList(override val statsTypes: StatsTypes, val items: List<BlockListItem>) : StatsBlock(
+data class BlockList(
+    override val statsTypes: StatsTypes,
+    val items: List<BlockListItem>
+) : StatsBlock(
         BLOCK_LIST,
         statsTypes
 )
 
-data class Error(override val statsTypes: StatsTypes, @StringRes val errorType: Int, val errorMessage: String) :
+data class Error(override val statsTypes: StatsTypes, val errorMessage: String) :
         StatsBlock(ERROR, statsTypes)
 
 data class Empty(val isButtonVisible: Boolean = true) : StatsBlock(EMPTY, null)

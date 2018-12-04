@@ -7,10 +7,12 @@ import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.ui.stats.StatsUtilsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text.Clickable
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase.LinkClickParams
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -20,7 +22,10 @@ class LatestPostSummaryMapper
     private val resourceProvider: ResourceProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) {
-    fun buildMessageItem(model: InsightsLatestPostModel?): Text {
+    fun buildMessageItem(
+        model: InsightsLatestPostModel?,
+        navigationAction: (params: LinkClickParams) -> Unit
+    ): Text {
         if (model == null) {
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
         }
@@ -39,14 +44,18 @@ class LatestPostSummaryMapper
                     postTitle
             )
         }
-        return Text(message, listOf(Clickable(postTitle) {
-            statsUtilsWrapper.openPostInReaderOrInAppWebview(
-                    it,
-                    model.siteId,
-                    model.postId.toString(),
-                    model.postURL
-            )
-        }))
+        return Text(
+                message,
+                listOf(
+                        Clickable(
+                                postTitle,
+                                navigationAction = NavigationAction.create(
+                                        LinkClickParams(model.postId, model.postURL),
+                                        action = navigationAction
+                                )
+                        )
+                )
+        )
     }
 
     fun buildColumnItem(postViewsCount: Int, postLikeCount: Int, postCommentCount: Int): Columns {

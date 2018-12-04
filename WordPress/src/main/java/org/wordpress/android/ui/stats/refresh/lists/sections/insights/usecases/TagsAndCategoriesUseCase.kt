@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.model.stats.TagsModel.TagModel
@@ -12,14 +11,16 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.TAGS_AND_CATEG
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase.TagsAndCategoriesUiState
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -32,51 +33,71 @@ class TagsAndCategoriesUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val resourceProvider: ResourceProvider
-) : BaseStatsUseCase(TAGS_AND_CATEGORIES, mainDispatcher) {
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean): StatsBlock? {
+) : StatefulUseCase<TagsModel, TagsAndCategoriesUiState>(
+        TAGS_AND_CATEGORIES,
+        mainDispatcher,
+        TagsAndCategoriesUiState(null)
+) {
+    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchTags(site, PAGE_SIZE, forced)
         val model = response.model
         val error = response.error
 
-        return when {
-            error != null -> createFailedItem(
-                    string.stats_view_tags_and_categories,
-                    error.message ?: error.type.name
-            )
-            else -> model?.let { loadTagsAndCategories(site, model) }
+        when {
+            error != null -> onError(error.message ?: error.type.name)
+            model != null -> model.let { onModel(model) }
+            else -> onEmpty()
         }
     }
 
-    override suspend fun loadCachedData(site: SiteModel): StatsBlock? {
+    override suspend fun loadCachedData(site: SiteModel) {
         val model = insightsStore.getTags(site, PAGE_SIZE)
-        return model?.let { loadTagsAndCategories(site, model) }
+        model?.let { onModel(model) }
     }
 
-    private fun loadTagsAndCategories(
-        site: SiteModel,
-        model: TagsModel
-    ): StatsBlock {
+    override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))
-        if (model.tags.isEmpty()) {
+        if (domainModel.tags.isEmpty()) {
             items.add(Empty)
         } else {
-            items.addAll(model.tags.take(PAGE_SIZE).mapIndexed { index, tag ->
+            val tagsList = mutableListOf<BlockListItem>()
+            domainModel.tags.forEachIndexed { index, tag ->
                 when {
-                    tag.items.size == 1 -> mapTag(tag, index, model.tags.size)
-                    else -> ExpandableItem(
-                            mapCategory(tag, index, model.tags.size),
-                            tag.items.map { subTag -> mapItem(subTag) }
-                    )
+                    tag.items.size == 1 -> {
+                        tagsList.add(mapTag(tag, index, domainModel.tags.size))
+                    }
+                    else -> {
+                        val isExpanded = areTagsEqual(tag, uiState.expandedTag)
+                        tagsList.add(ExpandableItem(
+                                mapCategory(tag, index, domainModel.tags.size),
+                                isExpanded
+                        ) { changedExpandedState ->
+                            onUiState(uiState.copy(expandedTag = if (changedExpandedState) tag else null))
+                        })
+                        if (isExpanded) {
+                            tagsList.addAll(tag.items.map { subTag -> mapItem(subTag) })
+                            tagsList.add(Divider)
+                        }
+                    }
                 }
-            })
-            if (model.hasMore) {
-                items.add(Link(text = R.string.stats_insights_view_more) {
-                    navigateTo(ViewTagsAndCategoriesStats(site.siteId))
-                })
+            }
+
+            items.addAll(tagsList)
+            if (domainModel.hasMore) {
+                items.add(
+                        Link(
+                                text = R.string.stats_insights_view_more,
+                                navigateAction = NavigationAction.create(this::onLinkClick)
+                        )
+                )
             }
         }
-        return createDataItem(items)
+        return items
+    }
+
+    private fun areTagsEqual(tagA: TagModel, tagB: TagModel?): Boolean {
+        return tagA.items == tagB?.items && tagA.views == tagB.views
     }
 
     private fun mapTag(tag: TagsModel.TagModel, index: Int, listSize: Int): ListItemWithIcon {
@@ -86,7 +107,7 @@ class TagsAndCategoriesUseCase
                 text = item.name,
                 value = tag.views.toFormattedString(),
                 showDivider = index < listSize - 1,
-                clickAction = { clickTag(item.link) }
+                navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
@@ -110,14 +131,20 @@ class TagsAndCategoriesUseCase
                 icon = getIcon(item.type),
                 text = item.name,
                 showDivider = false,
-                clickAction = { clickTag(item.link) }
+                navigationAction = NavigationAction.create(item.link, this::onTagClick)
         )
     }
 
     private fun getIcon(type: String) =
             if (type == "tag") drawable.ic_tag_grey_dark_24dp else drawable.ic_folder_grey_dark_24dp
 
-    private fun clickTag(link: String) {
+    private fun onLinkClick() {
+        navigateTo(ViewTagsAndCategoriesStats())
+    }
+
+    private fun onTagClick(link: String) {
         navigateTo(ViewTag(link))
     }
+
+    data class TagsAndCategoriesUiState(val expandedTag: TagModel? = null)
 }

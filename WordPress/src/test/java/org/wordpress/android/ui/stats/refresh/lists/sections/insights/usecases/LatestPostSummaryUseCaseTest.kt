@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -16,17 +18,17 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.stats.refresh.lists.BlockList
+import org.wordpress.android.ui.stats.refresh.lists.Error
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.Error
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
-import org.wordpress.android.ui.stats.refresh.lists.BlockList
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
@@ -42,7 +44,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 latestPostSummaryMapper
         )
         useCase.navigationTarget.observeForever {}
-        whenever(insightsStore.getLatestPostInsights(site)).thenReturn(null)
     }
 
     @Test
@@ -63,7 +64,6 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
 
         assertThat(result).isInstanceOf(Error::class.java)
         val failed = result as Error
-        assertThat(failed.errorType).isEqualTo(R.string.stats_insights_latest_post_summary)
         assertThat(failed.errorMessage).isEqualTo(message)
     }
 
@@ -91,7 +91,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 )
         )
         val textItem = mock<Text>()
-        whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
+        whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
 
         val result = loadLatestPostSummary(refresh, forced)
 
@@ -126,7 +126,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 )
         )
         val textItem = mock<Text>()
-        whenever(latestPostSummaryMapper.buildMessageItem(model)).thenReturn(textItem)
+        whenever(latestPostSummaryMapper.buildMessageItem(eq(model), any())).thenReturn(textItem)
         val columnItem = mock<Columns>()
         whenever(latestPostSummaryMapper.buildColumnItem(viewsCount, 0, 0)).thenReturn(columnItem)
         val chartItem = mock<BarChartItem>()
@@ -149,8 +149,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
                 assertThat(this).isInstanceOf(ViewPostDetailStats::class.java)
                 assertThat((this as ViewPostDetailStats).postUrl).isEqualTo(model.postURL)
                 assertThat(this.postTitle).isEqualTo(model.postTitle)
-                assertThat(this.postID).isEqualTo(model.postId.toString())
-                assertThat(this.siteID).isEqualTo(model.siteId)
+                assertThat(this.postId).isEqualTo(model.postId)
             }
         }
     }
@@ -168,7 +167,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     private fun Link.toNavigationTarget(): NavigationTarget? {
         var navigationTarget: NavigationTarget? = null
         useCase.navigationTarget.observeForever { navigationTarget = it }
-        this.action()
+        this.navigateAction.click()
         return navigationTarget
     }
 

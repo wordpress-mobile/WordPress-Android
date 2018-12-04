@@ -44,12 +44,16 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int, payloads: List<Any>) {
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as BlockList)
             is ErrorViewHolder -> holder.bind(item as Error)
             is EmptyViewHolder -> holder.bind(item as Empty)
         }
+    }
+
+    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int) {
+        onBindViewHolder(holder, position, listOf())
     }
 }
