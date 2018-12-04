@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
@@ -34,6 +33,8 @@ import org.wordpress.android.widgets.WPDialogSnackbar;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING;
 
 public class PublicizeListFragment extends PublicizeBaseFragment {
     public interface PublicizeButtonPrefsListener {
@@ -125,11 +126,11 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         mQuickStartEvent = event;
         EventBus.getDefault().removeStickyEvent(event);
 
-        if (mQuickStartEvent.getTask() == QuickStartTask.ENABLE_POST_SHARING) {
+        if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
             showQuickStartFocusPoint();
 
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
-                    R.string.quick_start_dialog_share_site_message_short_connections);
+                    R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
             WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
@@ -216,8 +217,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener(new OnServiceClickListener() {
                     @Override public void onServiceClicked(PublicizeService service) {
-                        QuickStartUtils.completeTask(mQuickStartStore,
-                                QuickStartTask.ENABLE_POST_SHARING, mDispatcher, mSite);
+                        QuickStartUtils.completeTask(mQuickStartStore, ENABLE_POST_SHARING, mDispatcher, mSite);
                         if (getView() != null) {
                             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                         }

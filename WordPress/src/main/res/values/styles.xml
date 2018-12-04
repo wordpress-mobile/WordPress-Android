@@ -415,37 +415,40 @@
         <item name="android:background">@color/me_divider</item>
     </style>
 
-    <!--Quick Start Styles-->
+    <!--Quick Start-->
     <style name="QuickStartLayout">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingTop">@dimen/margin_extra_large</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
     </style>
 
     <style name="QuickStartIcon">
-        <item name="android:layout_marginEnd">32dp</item>
+        <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">32dp</item>
         <item name="android:layout_width">24dp</item>
-        <item name="android:tint">@color/grey_darken_30</item>
+        <item name="android:tint">@color/quick_start_icon_selector</item>
     </style>
 
     <style name="QuickStartTitle" parent="android:TextAppearance.Widget.TextView">
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:minHeight">24dp</item>
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/quick_start_title_selector</item>
         <item name="android:textSize">16sp</item>
     </style>
 
     <style name="QuickStartSubtitle" parent="android:TextAppearance.Widget.TextView">
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -464,6 +467,47 @@
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="QuickStartTypeRow">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:focusable">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/listPreferredItemHeight</item>
+        <item name="android:paddingBottom">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_large</item>
+        <item name="android:paddingStart">@dimen/margin_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="QuickStartTypeIcon">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_height">@dimen/quick_start_type_icon</item>
+        <item name="android:layout_marginEnd">@dimen/margin_large</item>
+        <item name="android:layout_width">@dimen/quick_start_type_icon</item>
+    </style>
+
+    <style name="QuickStartTypeTitle">
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+        <item name="android:textColor">@color/quick_start_title_selector</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="QuickStartTypeSubtitle">
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingEnd">@dimen/content_margin</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <!--People Management Styles-->

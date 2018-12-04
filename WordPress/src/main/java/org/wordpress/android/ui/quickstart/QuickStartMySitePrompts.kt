@@ -26,7 +26,7 @@ enum class QuickStartMySitePrompts constructor(
             QuickStartTask.CHOOSE_THEME,
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
-            R.string.quick_start_dialog_choose_theme_message_short,
+            R.string.quick_start_dialog_browse_themes_message_short,
             R.drawable.ic_themes_grey_24dp
     ),
     CUSTOMIZE_SITE_TUTORIAL(
@@ -40,7 +40,7 @@ enum class QuickStartMySitePrompts constructor(
             QuickStartTask.ENABLE_POST_SHARING,
             R.id.my_site_scroll_view_root,
             R.id.row_sharing,
-            R.string.quick_start_dialog_share_site_message_short_sharing,
+            R.string.quick_start_dialog_enable_sharing_message_short_sharing,
             R.drawable.ic_share_white_24dp
     ),
     PUBLISH_POST_TUTORIAL(

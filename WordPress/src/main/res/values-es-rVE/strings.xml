@@ -198,7 +198,6 @@ Language: es_VE
     <string name="days_quantity_other">%d días</string>
     <string name="primary_site">Sitio principal</string>
     <string name="pending_email_change_snackbar">Haz click en el enlace de verificación del correo electrónica enviado a %1$s para confirmar tu nueva dirección</string>
-    <string name="web_address">Dirección web</string>
     <string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
     <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
     <string name="visual_editor_enabled">Editor visual activado</string>
@@ -596,7 +595,6 @@ Language: es_VE
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
-    <string name="invalid_url_message">Comprueba que la URL introducida sea válida</string>
     <string name="select_categories">Seleccionar categorías</string>
     <string name="connection_error">Error de conexión</string>
     <string name="cancel_edit">Cancelar edición</string>
