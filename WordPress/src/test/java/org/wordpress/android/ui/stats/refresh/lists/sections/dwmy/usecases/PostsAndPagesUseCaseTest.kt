@@ -185,7 +185,6 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(item.value).isEqualTo(views.toFormattedString())
     }
 
-
     @Test
     fun `shows divider between items`() = test {
         val forced = false
@@ -213,7 +212,6 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat((items[1] as ListItemWithIcon).showDivider).isEqualTo(true)
         assertThat((items[2] as ListItemWithIcon).showDivider).isEqualTo(false)
     }
-
 
     @Test
     fun `shows view more button when hasMore is true`() = test {
