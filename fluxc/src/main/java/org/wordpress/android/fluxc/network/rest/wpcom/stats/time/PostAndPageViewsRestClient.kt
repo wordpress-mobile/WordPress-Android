@@ -67,7 +67,7 @@ constructor(
             @SerializedName("total_views") val totalViews: Int
         ) {
             data class PostViewsResponse(
-                @SerializedName("id") val id: Int,
+                @SerializedName("id") val id: Long,
                 @SerializedName("title") val title: String,
                 @SerializedName("type") val type: String,
                 @SerializedName("href") val href: String,
