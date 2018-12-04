@@ -3354,7 +3354,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
-        fillContentEditorFields();
+        refreshEditorContent();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
             mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);

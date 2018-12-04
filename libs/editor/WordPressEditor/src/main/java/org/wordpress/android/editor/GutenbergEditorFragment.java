@@ -39,7 +39,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
-    private static final String STATE_KEY_LATEST_CONTENT = "latestContent";
 
     private static boolean mIsToolbarExpanded = false;
 
@@ -56,7 +55,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-    private CharSequence mLatestContent = "";
 
     public GutenbergEditorFragment() {
         mWPAndroidGlueCode = new WPAndroidGlueCode();
@@ -80,12 +78,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putCharSequence(STATE_KEY_LATEST_CONTENT, mLatestContent);
     }
 
     @Override
@@ -168,10 +160,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         };
 
         mEditorFragmentListener.onEditorFragmentInitialized();
-
-        if (savedInstanceState != null) {
-            setContent(savedInstanceState.getCharSequence(STATE_KEY_LATEST_CONTENT));
-        }
 
         return view;
     }
@@ -300,8 +288,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mSource.displayStyledAndFormattedHtml(postContent);
 
         mWPAndroidGlueCode.setContent(postContent);
-
-        mLatestContent = postContent;
     }
 
 
@@ -370,15 +356,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
      */
     @Override
     public CharSequence getContent(CharSequence originalContent) {
-        CharSequence content = mWPAndroidGlueCode.getContent(originalContent, new OnGetContentTimeout() {
+        return mWPAndroidGlueCode.getContent(originalContent, new OnGetContentTimeout() {
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
             }
         });
-
-        mLatestContent = content;
-        return content;
     }
 
     @Override
