@@ -4,8 +4,10 @@ data class PostAndPageViewsModel(val views: List<ViewsModel>, val hasMore: Boole
     data class ViewsModel(
         val title: String,
         val views: Int,
-        val type: ViewsType
+        val type: ViewsType,
+        val url: String
     )
+
     enum class ViewsType {
         POST,
         PAGE,

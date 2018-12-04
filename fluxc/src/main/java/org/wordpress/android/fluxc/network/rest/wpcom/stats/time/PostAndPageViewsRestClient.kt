@@ -70,6 +70,7 @@ constructor(
                 @SerializedName("id") val id: Int,
                 @SerializedName("title") val title: String,
                 @SerializedName("type") val type: String,
+                @SerializedName("href") val href: String,
                 @SerializedName("views") val views: Int
             )
         }
