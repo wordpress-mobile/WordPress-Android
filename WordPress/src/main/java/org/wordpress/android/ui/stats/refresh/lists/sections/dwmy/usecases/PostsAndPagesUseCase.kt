@@ -12,6 +12,9 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
 import org.wordpress.android.fluxc.store.stats.time.PostAndPageViewsStore
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_HOME_PAGE
+import org.wordpress.android.ui.stats.StatsConstants.ITEM_TYPE_POST
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -66,7 +69,11 @@ constructor(
                         icon = icon,
                         text = viewsModel.title,
                         value = viewsModel.views.toFormattedString(),
-                        showDivider = index < domainModel.views.size - 1
+                        showDivider = index < domainModel.views.size - 1,
+                        navigationAction = create(
+                                LinkClickParams(viewsModel.id, viewsModel.url, viewsModel.type),
+                                this::onLinkClicked
+                        )
                 )
             })
             if (domainModel.hasMore) {
@@ -84,6 +91,20 @@ constructor(
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         navigateTo(ViewPostsAndPages(statsGranularity))
     }
+
+    private fun onLinkClicked(params: LinkClickParams) {
+        val type = when (params.postType) {
+            POST -> ITEM_TYPE_POST
+            PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
+        }
+        navigateTo(ViewPost(params.postId, params.postUrl, type))
+    }
+
+    private data class LinkClickParams(
+        val postId: Long,
+        val postUrl: String,
+        val postType: PostAndPageViewsModel.ViewsType
+    )
 
     class PostsAndPagesUseCaseFactory
     @Inject constructor(

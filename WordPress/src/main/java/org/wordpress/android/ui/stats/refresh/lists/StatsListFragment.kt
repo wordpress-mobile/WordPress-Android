@@ -23,8 +23,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.stats.StatsConstants
-import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
@@ -32,8 +32,8 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewComment
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
@@ -148,7 +148,7 @@ class StatsListFragment : DaggerFragment() {
                             activity,
                             site.siteId,
                             it.postId.toString(),
-                            StatsConstants.ITEM_TYPE_POST,
+                            it.postType,
                             it.postUrl
                     )
                 }
@@ -169,7 +169,7 @@ class StatsListFragment : DaggerFragment() {
                             it.postId.toString(),
                             it.postTitle,
                             it.postUrl,
-                            StatsConstants.ITEM_TYPE_POST
+                            it.postType
                     )
                     ActivityLauncher.viewStatsSinglePostDetails(activity, postModel)
                 }
@@ -213,12 +213,15 @@ class StatsListFragment : DaggerFragment() {
 
 sealed class NavigationTarget : Event() {
     class AddNewPost : NavigationTarget()
-    data class ViewPost(val postId: Long, val postUrl: String) : NavigationTarget()
+    data class ViewPost(val postId: Long, val postUrl: String, val postType: String = StatsConstants.ITEM_TYPE_POST) :
+            NavigationTarget()
+
     data class SharePost(val url: String, val title: String) : NavigationTarget()
     data class ViewPostDetailStats(
         val postId: Long,
         val postTitle: String,
-        val postUrl: String
+        val postUrl: String,
+        val postType: String = StatsConstants.ITEM_TYPE_POST
     ) : NavigationTarget()
 
     class ViewFollowersStats : NavigationTarget()
@@ -230,7 +233,7 @@ sealed class NavigationTarget : Event() {
 }
 
 fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
-    return when(this) {
+    return when (this) {
         DAYS -> StatsTimeframe.DAY
         WEEKS -> StatsTimeframe.WEEK
         MONTHS -> StatsTimeframe.MONTH
