@@ -7,7 +7,7 @@ import java.util.Locale
 data class NotificationModel(
     val noteId: Int,
     val remoteNoteId: Long,
-    val localSiteId: Long?,
+    val localSiteId: Int,
     val noteHash: Long,
     val type: Kind,
     val subtype: Subkind?,
