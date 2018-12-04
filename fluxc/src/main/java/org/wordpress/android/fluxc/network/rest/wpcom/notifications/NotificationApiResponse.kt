@@ -22,7 +22,8 @@ class NotificationApiResponse : Response {
 
     companion object {
         fun notificationResponseToNotificationModel(
-            response: NotificationApiResponse
+            response: NotificationApiResponse,
+            siteId: Int
         ): NotificationModel {
             val noteType = response.type?.let {
                 NotificationModel.Kind.fromString(response.type)
@@ -35,7 +36,7 @@ class NotificationApiResponse : Response {
             return NotificationModel(
                     noteId = 0,
                     remoteNoteId = response.id ?: 0,
-                    localSiteId = response.meta?.ids?.site,
+                    localSiteId = siteId,
                     noteHash = response.note_hash ?: 0L,
                     type = noteType,
                     subtype = noteSubType,
@@ -49,5 +50,7 @@ class NotificationApiResponse : Response {
                     subject = response.subject,
                     meta = response.meta)
         }
+
+        fun getRemoteSiteId(response: NotificationApiResponse): Long? = response.meta?.ids?.site
     }
 }
