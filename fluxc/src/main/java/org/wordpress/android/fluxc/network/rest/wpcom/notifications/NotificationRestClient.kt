@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.NotificationStore.NotificationError
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDeviceResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.UnregisterDeviceResponsePayload
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.util.DeviceUtils
 import org.wordpress.android.util.PackageUtils
 import java.util.Date
@@ -103,7 +104,7 @@ class NotificationRestClient constructor(
      *
      * https://developer.wordpress.com/docs/api/1/get/notifications/
      */
-    fun fetchNotifications() {
+    fun fetchNotifications(siteStore: SiteStore) {
         val url = WPCOMREST.notifications.urlV1_1
         val params = mapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
@@ -114,8 +115,10 @@ class NotificationRestClient constructor(
                     val lastSeenTime = response?.last_seen_time?.let {
                         Date(it)
                     }
-                    val notifications = response?.notes?.map {
-                        NotificationApiResponse.notificationResponseToNotificationModel(it)
+                    val notifications = response?.notes?.map { it ->
+                        val remoteSiteId = NotificationApiResponse.getRemoteSiteId(it) ?: 0
+                        val localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
+                        NotificationApiResponse.notificationResponseToNotificationModel(it, localSiteId)
                     } ?: listOf()
                     val payload = FetchNotificationsResponsePayload(notifications, lastSeenTime)
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
