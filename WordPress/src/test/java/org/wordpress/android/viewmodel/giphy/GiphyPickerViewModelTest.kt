@@ -132,15 +132,13 @@ class GiphyPickerViewModelTest {
         doNothing().whenever(dataSource).loadInitial(any(), callbackCaptor.capture())
 
         // Observe mediaViewModelPagedList so the DataSourceFactory will be activated and perform API requests
-        viewModel.mediaViewModelPagedList.observeForever {
-
-        }
+        viewModel.mediaViewModelPagedList.observeForever { }
 
         assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY)
 
         // Act
         viewModel.search("dummy")
-        // Emulate a callback from the API
+        // Emulate that the API responded with an empty result
         callbackCaptor.lastValue.onResult(emptyList(), 0, 0)
 
         // Assert

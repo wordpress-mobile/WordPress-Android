@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.text.Html
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -155,6 +154,9 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Set up showing and hiding of the empty view depending on the search results
+     */
     private fun initializeEmptyView() {
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
             val emptyView: ActionableEmptyView = actionable_empty_view
