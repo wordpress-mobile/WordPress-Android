@@ -126,22 +126,18 @@ class NewSiteCreationSegmentsViewModel
     // TODO analytics
 
     private fun updateUiStateToError(state: ListState<VerticalSegmentModel>, segmentError: SegmentsErrorUiState) {
-        updateUiState(state)
+        listState = state
         _segmentsUiState.value = segmentError
     }
 
     private fun updateUiStateToContent(state: ListState<VerticalSegmentModel>) {
-        updateUiState(state)
+        listState = state
         _segmentsUiState.value = SegmentsContentUiState(
                 createUiStatesForItems(
                         showProgress = state is Loading,
                         segments = state.data
                 )
         )
-    }
-
-    private fun updateUiState(state: ListState<VerticalSegmentModel>) {
-        listState = state
     }
 
     private fun createUiStatesForItems(

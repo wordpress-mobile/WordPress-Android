@@ -16,7 +16,6 @@ fun <T> test(context: CoroutineContext = EmptyCoroutineContext, block: suspend C
 val TEST_DISPATCHER: CoroutineDispatcher = TestDispatcher()
 val TEST_SCOPE = CoroutineScope(TEST_DISPATCHER)
 
-
 private class TestDispatcher : CoroutineDispatcher(), Delay {
     override fun scheduleResumeAfterDelay(time: Long, unit: TimeUnit, continuation: CancellableContinuation<Unit>) {
         continuation.resume(Unit)
