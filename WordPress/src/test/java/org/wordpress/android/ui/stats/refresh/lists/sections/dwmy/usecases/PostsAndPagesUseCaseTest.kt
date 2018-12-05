@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 
 private const val pageSize = 6
@@ -39,10 +40,11 @@ private val statsGranularity = DAYS
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostAndPageViewsStore
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsDateFormatter: StatsDateFormatter
     private lateinit var useCase: PostsAndPagesUseCase
     @Before
     fun setUp() {
-        useCase = PostsAndPagesUseCase(statsGranularity, Dispatchers.Unconfined, store)
+        useCase = PostsAndPagesUseCase(statsGranularity, Dispatchers.Unconfined, store, statsDateFormatter)
     }
 
     @Test
@@ -222,6 +224,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val page = ViewsModel(id, "Page 1", 10, PAGE, url)
         val hasMore = true
         val model = PostAndPageViewsModel(listOf(page), hasMore)
+        whenever(statsDateFormatter.todaysDateInStatsFormat()).thenReturn("2018-10-10")
         whenever(
                 store.fetchPostAndPageViews(
                         site,
