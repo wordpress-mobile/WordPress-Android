@@ -156,11 +156,11 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                 }
             }
         } else {
-            showFetchingVerticalsFailedWithDelay(query)
+            showFullscreenConnectionErrorWithDelay(query)
         }
     }
 
-    private fun showFetchingVerticalsFailedWithDelay(query: String) {
+    private fun showFullscreenConnectionErrorWithDelay(query: String) {
         updateUiStateToContent(query, Loading(Ready(emptyList()), false))
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
