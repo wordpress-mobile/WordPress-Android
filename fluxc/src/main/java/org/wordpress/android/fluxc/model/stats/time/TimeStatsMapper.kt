@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.model.stats.time
 
+import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
@@ -10,7 +11,7 @@ import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 
 class TimeStatsMapper
-@Inject constructor() {
+@Inject constructor(val gson: Gson) {
     fun map(response: PostAndPageViewsResponse, pageSize: Int): PostAndPageViewsModel {
         val postViews = response.days.entries.first().value.postViews
         val stats = postViews.take(pageSize).mapNotNull { item ->
@@ -31,7 +32,7 @@ class TimeStatsMapper
     fun map(response: ReferrersResponse, pageSize: Int): ReferrersModel {
         val first = response.groups.values.first()
         val groups = first.groups.take(pageSize).map { group ->
-            val children = group.results.mapNotNull { result ->
+            val children = group.referrers.mapNotNull { result ->
                 if (result.name != null && result.views != null && result.icon != null && result.url != null) {
                     val firstChildUrl = result.children.firstOrNull()?.url
                     Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)

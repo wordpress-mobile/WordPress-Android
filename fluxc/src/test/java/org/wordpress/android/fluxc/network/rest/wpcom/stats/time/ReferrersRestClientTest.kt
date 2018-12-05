@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
+import com.google.gson.Gson
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
@@ -41,6 +42,7 @@ class ReferrersRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var gson: Gson
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: ReferrersRestClient
@@ -57,7 +59,8 @@ class ReferrersRestClientTest {
                 null,
                 requestQueue,
                 accessToken,
-                userAgent
+                userAgent,
+                gson
         )
     }
 
