@@ -31,6 +31,7 @@
     </org.wordpress.android.widgets.WPTextView>
 
     <View
+        android:id="@+id/divider"
         android:layout_alignStart="@+id/title"
         android:layout_below="@+id/subtitle"
         style="@style/QuickStartDivider" >
