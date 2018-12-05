@@ -11,7 +11,8 @@
         android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        aztec:advanced="true" >
+        aztec:advanced="true"
+        aztec:mediaToolbarAvailable="true">
     </org.wordpress.aztec.toolbar.AztecToolbar>
 
     <ScrollView
