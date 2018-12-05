@@ -71,7 +71,7 @@ class ClicksRestClient
         data class Groups(
             @SerializedName("other_clicks") val otherClicks: Int?,
             @SerializedName("total_clicks") val totalClicks: Int?,
-            @SerializedName("clicks") val clicks: List<ClickGroup>?
+            @SerializedName("clicks") val clicks: List<ClickGroup>
         )
 
         data class ClickGroup(
@@ -80,12 +80,12 @@ class ClicksRestClient
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
-            @SerializedName("results") val results: JsonElement?,
+            @SerializedName("children") val children: JsonElement?,
             @SerializedName("clicks") var clicks: List<Click>? = null
         ) {
             fun build(gson: Gson) {
-                when (this.results) {
-                    is JsonArray -> this.clicks = this.results.map {
+                when (this.children) {
+                    is JsonArray -> this.clicks = this.children.map {
                         gson.fromJson<Click>(
                                 it,
                                 Referrer::class.java
