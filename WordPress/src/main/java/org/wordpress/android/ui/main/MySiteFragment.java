@@ -657,6 +657,9 @@ public class MySiteFragment extends Fragment implements
     public void onConfirm(@Nullable Bundle result) {
         if (result != null) {
             QuickStartTask task = (QuickStartTask) result.getSerializable(RESULT_TASK);
+            if (task == QuickStartTask.CREATE_SITE) {
+                return;
+            }
 
             // Remove existing quick start indicator, if necessary.
             if (mActiveTutorialPrompt != null) {
@@ -1106,7 +1109,7 @@ public class MySiteFragment extends Fragment implements
         }
     }
 
-     public void requestNextStepOfActiveQuickStartTask() {
+    public void requestNextStepOfActiveQuickStartTask() {
         if (!hasActiveQuickStartTask()) {
             return;
         }
