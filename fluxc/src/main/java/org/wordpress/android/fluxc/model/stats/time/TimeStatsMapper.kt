@@ -50,7 +50,7 @@ class TimeStatsMapper
 
     fun map(response: ClicksResponse, pageSize: Int): ClicksModel {
         val first = response.groups.values.first()
-        val groups = first.clicks?.take(pageSize)?.map { group ->
+        val groups = first.clicks.take(pageSize).map { group ->
             val children = group.clicks?.mapNotNull { result ->
                 if (result.name != null && result.views != null && result.icon != null && result.url != null) {
                     Click(result.name, result.views, result.icon, result.url)
@@ -64,8 +64,8 @@ class TimeStatsMapper
         return ClicksModel(
                 first.otherClicks ?: 0,
                 first.totalClicks ?: 0,
-                groups ?: listOf(),
-                first.clicks?.size ?: 0 > groups?.size ?: 0
+                groups,
+                first.clicks.size > groups.size
         )
     }
 }
