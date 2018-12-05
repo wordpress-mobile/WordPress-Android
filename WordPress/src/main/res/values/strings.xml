@@ -1006,6 +1006,7 @@
     <string name="stats_insights_path">Path</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
+    <string name="stats_referrers">Referrers</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
