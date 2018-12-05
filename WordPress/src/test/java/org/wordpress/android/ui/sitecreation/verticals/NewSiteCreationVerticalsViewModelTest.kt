@@ -61,33 +61,33 @@ private const val CUSTOM_CATEGORY_MODEL_ID = "3"
 
 private val SUCCESSFUL_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
         SEGMENT_ID,
-        SegmentPromptModel(DUMMY_TITLE, DUMMY_SUBTITLE, DUMMY_HINT), null
+        SegmentPromptModel(DUMMY_TITLE, DUMMY_SUBTITLE, DUMMY_HINT), error = null
 )
 private val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
         SEGMENT_ID,
         null,
-        FetchSegmentPromptError(GENERIC_ERROR, null)
+        FetchSegmentPromptError(GENERIC_ERROR, message = null)
 )
 
 private val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FIRST_MODEL_QUERY,
-        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID, false)),
-        null
+        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID, isNewUserVertical = false)),
+        error = null
 )
 private val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         SECOND_MODEL_QUERY,
-        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID, false)),
-        null
+        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID, isNewUserVertical = false)),
+        error = null
 )
 private val CUSTOM_CATEGORY_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         CUSTOM_CATEGORY_MODEL_QUERY,
-        listOf(VerticalModel(CUSTOM_CATEGORY_MODEL_NAME, CUSTOM_CATEGORY_MODEL_ID, true)),
-        null
+        listOf(VerticalModel(CUSTOM_CATEGORY_MODEL_NAME, CUSTOM_CATEGORY_MODEL_ID, isNewUserVertical = true)),
+        error = null
 )
 private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         ERROR_MODEL_QUERY,
         emptyList(),
-        FetchVerticalsError(GENERIC_ERROR, null)
+        FetchVerticalsError(GENERIC_ERROR, message = null)
 )
 
 @RunWith(MockitoJUnitRunner::class)

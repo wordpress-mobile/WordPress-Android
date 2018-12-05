@@ -304,7 +304,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
         data class VerticalsCustomModelUiState(
             val id: String,
-            val title: String, @StringRes val subTitleResId: Int,
+            val title: String,
+            @StringRes val subTitleResId: Int,
             val showDivider: Boolean
         ) : VerticalsListItemUiState()
 
