@@ -125,6 +125,44 @@ class ReferrersRestClientTest {
         assertThat(parsedGroup.referrers).isNull()
     }
 
+    @Test
+    fun `maps group with referrers`() {
+        val groupId = "group1"
+        val groupName = "Group Name"
+        val groupViews = 96
+        val firstReferrerName = "referrer1"
+        val secondReferrerName = "referrer2"
+        val firstUrl = "url1.com"
+        val secondUrl = "url2.com"
+        val firstViews = 91
+        val secondViews = 5
+        val group = "{\"group\":\"$groupId\",\n" +
+                "\"name\":\"$groupName\",\n" +
+                "\"icon\":null,\"total\":$groupViews,\"follow_data\":null," +
+                "\"results\":" +
+                "[{\"name\":\"$firstReferrerName\",\"url\":\"$firstUrl\",\"views\":$firstViews}," +
+                "{\"name\":\"$secondReferrerName\",\"url\":\"$secondUrl\",\"views\":$secondViews}]}"
+        val parsedGroup = gson.fromJson<Group>(group, Group::class.java)
+
+        parsedGroup.build(gson)
+
+        assertThat(parsedGroup.groupId).isEqualTo(groupId)
+        assertThat(parsedGroup.views).isNull()
+        assertThat(parsedGroup.referrers).hasSize(2)
+        parsedGroup.referrers?.get(0)?.apply {
+            assertThat(this.name).isEqualTo(firstReferrerName)
+            assertThat(this.url).isEqualTo(firstUrl)
+            assertThat(this.views).isEqualTo(firstViews)
+            assertThat(this.icon).isNull()
+        }
+        parsedGroup.referrers?.get(1)?.apply {
+            assertThat(this.name).isEqualTo(secondReferrerName)
+            assertThat(this.url).isEqualTo(secondUrl)
+            assertThat(this.views).isEqualTo(secondViews)
+            assertThat(this.icon).isNull()
+        }
+    }
+
     private suspend fun testSuccessResponse(period: StatsGranularity) {
         val response = mock<ReferrersResponse>()
         initReferrersResponse(response)
