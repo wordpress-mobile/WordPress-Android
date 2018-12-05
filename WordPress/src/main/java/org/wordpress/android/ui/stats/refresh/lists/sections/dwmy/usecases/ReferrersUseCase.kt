@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
@@ -53,11 +55,12 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(string.stats_referrers))
+        items.add(Title(R.string.stats_referrers))
 
         if (domainModel.groups.isEmpty()) {
             items.add(Empty)
         } else {
+            items.add(Label(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
             domainModel.groups.forEachIndexed { index, group ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = group.icon,

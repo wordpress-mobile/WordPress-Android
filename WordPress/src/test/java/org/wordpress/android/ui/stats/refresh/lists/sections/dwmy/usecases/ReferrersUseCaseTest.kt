@@ -26,10 +26,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -77,29 +79,31 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     }
 
     private fun BlockList.assertNonExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(3)
+        assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
+        assertLabel(this.items[1])
         assertSingleItem(
-                this.items[1],
+                this.items[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        return assertExpandableItem(this.items[2], group.name!!, group.total!!, group.icon)
+        return assertExpandableItem(this.items[3], group.name!!, group.total!!, group.icon)
     }
 
     private fun BlockList.assertExpandedList(): ExpandableItem {
-        assertThat(this.items).hasSize(5)
+        assertThat(this.items).hasSize(6)
         assertTitle(this.items[0])
+        assertLabel(this.items[1])
         assertSingleItem(
-                this.items[1],
+                this.items[2],
                 singleReferrer.name!!,
                 singleReferrer.total,
                 singleReferrer.icon
         )
-        val expandableItem = assertExpandableItem(this.items[2], group.name!!, group.total!!, group.icon)
-        assertSingleItem(this.items[3], referrer.name, referrer.views, referrer.icon)
-        assertThat(this.items[4]).isEqualTo(Divider)
+        val expandableItem = assertExpandableItem(this.items[3], group.name!!, group.total!!, group.icon)
+        assertSingleItem(this.items[4], referrer.name, referrer.views, referrer.icon)
+        assertThat(this.items[5]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -116,15 +120,16 @@ class ReferrersUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
+            assertLabel(this.items[1])
             assertSingleItem(
-                    this.items[1],
+                    this.items[2],
                     singleReferrer.name!!,
                     singleReferrer.total,
                     singleReferrer.icon
             )
-            assertLink(this.items[2])
+            assertLink(this.items[3])
         }
     }
 
@@ -166,6 +171,12 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).text).isEqualTo(R.string.stats_referrers)
+    }
+
+    private fun assertLabel(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(LABEL)
+        assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_referrer_label)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_referrer_views_label)
     }
 
     private fun assertSingleItem(

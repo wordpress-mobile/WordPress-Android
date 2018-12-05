@@ -190,7 +190,12 @@ class StatsListFragment : DaggerFragment() {
                     ActivityLauncher.viewPublicizeStats(activity, site)
                 }
                 is ViewPostsAndPages -> {
-                    ActivityLauncher.viewPostsAndPagesStats(activity, site, it.statsGranularity.toStatsTimeFrame(), it.selectedDate)
+                    ActivityLauncher.viewPostsAndPagesStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
                 }
                 is ViewReferrers -> {
                     ActivityLauncher.viewReferrersStats(
