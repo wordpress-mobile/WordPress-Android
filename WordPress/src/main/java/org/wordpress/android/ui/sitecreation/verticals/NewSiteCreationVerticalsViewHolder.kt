@@ -43,11 +43,13 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val title = itemView.findViewById<TextView>(R.id.title)
         private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
+        private val divider = itemView.findViewById<View>(R.id.divider)
 
         override fun onBind(uiState: VerticalsListItemUiState) {
             uiState as VerticalsCustomModelUiState
             title.text = uiState.title
             subtitle.text = parent.resources.getString(uiState.subTitleResId)
+            divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
                 uiState.onItemTapped!!.invoke()
