@@ -36,7 +36,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
-private const val throttleDelay: Int = 500
+private const val THROTTLE_DELAY: Int = 500
 private const val FAKE_DELAY = 1000
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
@@ -136,20 +136,20 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         _skipBtnClicked.call()
     }
 
-    fun updateQuery(query: String, delay: Int = throttleDelay) {
+    fun updateQuery(query: String) {
         fetchVerticalsJob?.cancel() // cancel any previous requests
         if (query.isNotEmpty()) {
-            fetchVerticals(query, delay)
+            fetchVerticals(query)
         } else {
             updateUiStateToContent(query, ListState.Ready(emptyList()))
         }
     }
 
-    private fun fetchVerticals(query: String, throttleDelay: Int) {
+    private fun fetchVerticals(query: String) {
         if (networkUtils.isNetworkAvailable()) {
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchVerticalsJob = launch {
-                delay(throttleDelay)
+                delay(THROTTLE_DELAY)
                 val fetchedVerticals = fetchVerticalsUseCase.fetchVerticals(query)
                 withContext(MAIN) {
                     onVerticalsFetched(query, fetchedVerticals)
@@ -258,7 +258,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     }
 
     sealed class VerticalsUiState {
-        class VerticalsContentUiState(
+        data class VerticalsContentUiState(
             val searchInputUiState: VerticalsSearchInputUiState,
             val headerUiState: VerticalsHeaderUiState?,
             val showSkipButton: Boolean,
@@ -266,7 +266,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         ) : VerticalsUiState()
 
         object VerticalsFullscreenProgressUiState : VerticalsUiState()
-        class VerticalsFullscreenErrorUiState private constructor(
+        data class VerticalsFullscreenErrorUiState constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null
         ) : VerticalsUiState() {
@@ -282,13 +282,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         }
     }
 
-    class VerticalsSearchInputUiState(
+    data class VerticalsSearchInputUiState(
         val hint: String,
         val showProgress: Boolean,
         val showClearButton: Boolean
     )
 
-    class VerticalsHeaderUiState(val title: String, val subtitle: String)
+    data class VerticalsHeaderUiState(val title: String, val subtitle: String)
 
     sealed class VerticalsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
