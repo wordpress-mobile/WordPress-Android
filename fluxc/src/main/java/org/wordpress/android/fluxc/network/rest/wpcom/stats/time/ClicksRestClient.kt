@@ -1,0 +1,105 @@
+package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
+
+import android.content.Context
+import com.android.volley.RequestQueue
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.annotations.SerializedName
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
+import org.wordpress.android.fluxc.store.toStatsError
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
+
+@Singleton
+class ClicksRestClient
+@Inject constructor(
+    dispatcher: Dispatcher,
+    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    appContext: Context?,
+    @param:Named("regular") requestQueue: RequestQueue,
+    accessToken: AccessToken,
+    userAgent: UserAgent,
+    val gson: Gson
+) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    suspend fun fetchClicks(
+        site: SiteModel,
+        period: StatsGranularity,
+        pageSize: Int,
+        forced: Boolean
+    ): FetchStatsPayload<ClicksResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.urlV1_1
+        val params = mapOf(
+                "period" to period.toString(),
+                "max" to pageSize.toString()
+        )
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                params,
+                ClicksResponse::class.java,
+                enableCaching = false,
+                forced = forced
+        )
+        return when (response) {
+            is Success -> {
+                response.data.groups.values.forEach { it.clicks.forEach { group -> group.build(gson) } }
+                FetchStatsPayload(response.data)
+            }
+            is Error -> {
+                FetchStatsPayload(response.error.toStatsError())
+            }
+        }
+    }
+
+    data class ClicksResponse(
+        @SerializedName("period") val period: String?,
+        @SerializedName("days") val groups: Map<String, Groups>
+    ) {
+        data class Groups(
+            @SerializedName("other_clicks") val otherClicks: Int?,
+            @SerializedName("total_clicks") val totalClicks: Int?,
+            @SerializedName("clicks") val clicks: List<ClickGroup>
+        )
+
+        data class ClickGroup(
+            @SerializedName("group") val groupId: String?,
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("views") val views: Int?,
+            @SerializedName("results") val results: JsonElement?,
+            @SerializedName("clicks") var clicks: List<Click>? = null
+        ) {
+            fun build(gson: Gson) {
+                when (this.results) {
+                    is JsonArray -> this.clicks = this.results.map {
+                        gson.fromJson<Click>(
+                                it,
+                                Referrer::class.java
+                        )
+                    }
+                }
+            }
+        }
+
+        data class Click(
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("views") val views: Int?
+        )
+    }
+}
