@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
@@ -29,6 +28,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     private lateinit var errorLayout: ViewGroup
+    private lateinit var errorTitle: TextView
+    private lateinit var errorSubtitle: TextView
 
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -51,10 +52,16 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // important for accessibility - talkback
         activity!!.setTitle(R.string.new_site_creation_segments_title)
-        errorLayout = rootView.findViewById(R.id.error_layout)
+        initErrorLayout(rootView)
         initRecyclerView(rootView)
         initViewModel()
         initRetryButton(rootView)
+    }
+
+    private fun initErrorLayout(rootView: ViewGroup) {
+        errorLayout = rootView.findViewById(R.id.error_layout)
+        errorTitle = errorLayout.findViewById(R.id.error_title)
+        errorSubtitle = errorLayout.findViewById(R.id.error_subtitle)
     }
 
     private fun initRecyclerView(rootView: ViewGroup) {
@@ -80,12 +87,12 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
                     is SegmentsContentUiState -> {
                         recyclerView.visibility = View.VISIBLE
                         errorLayout.visibility = View.GONE
-                        updateContentLayout(recyclerView, uiState)
+                        updateContentLayout(uiState)
                     }
                     is SegmentsErrorUiState -> {
                         recyclerView.visibility = View.GONE
                         errorLayout.visibility = View.VISIBLE
-                        updateErrorLayout(errorLayout, uiState)
+                        updateErrorLayout(uiState)
                     }
                 }
             }
@@ -96,9 +103,9 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         viewModel.start()
     }
 
-    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: SegmentsErrorUiState) {
-        setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
-        setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
+    private fun updateErrorLayout(errorUiStateState: SegmentsErrorUiState) {
+        setTextOrHide(errorTitle, errorUiStateState.titleResId)
+        setTextOrHide(errorSubtitle, errorUiStateState.subtitleResId)
     }
 
     private fun setTextOrHide(textView: TextView, resId: Int?) {
@@ -136,7 +143,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
-    private fun updateContentLayout(recyclerView: RecyclerView, segments: SegmentsContentUiState) {
+    private fun updateContentLayout(segments: SegmentsContentUiState) {
         (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments.items)
     }
 
