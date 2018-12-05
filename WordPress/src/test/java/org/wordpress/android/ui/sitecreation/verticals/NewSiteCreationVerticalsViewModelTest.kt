@@ -315,7 +315,8 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.updateQuery(ERROR_MODEL_QUERY)
 
         // invoke retry
-        ((viewModel.uiState.value!! as VerticalsContentUiState).items[0] as VerticalsFetchSuggestionsErrorUiState).onItemTapped!!.invoke()
+        ((viewModel.uiState.value!! as VerticalsContentUiState).items[0] as VerticalsFetchSuggestionsErrorUiState)
+                .onItemTapped!!.invoke()
 
         val captor = ArgumentCaptor.forClass(VerticalsUiState::class.java)
         verify(uiStateObserver, times(6)).onChanged(captor.capture())
