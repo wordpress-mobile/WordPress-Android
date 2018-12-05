@@ -93,5 +93,9 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     companion object {
         const val TAG = "site_creation_site_info_fragment_tag"
+
+        fun newInstance(): NewSiteCreationSiteInfoFragment {
+            return NewSiteCreationSiteInfoFragment()
+        }
     }
 }

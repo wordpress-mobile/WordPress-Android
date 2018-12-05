@@ -26,6 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
                 android:maxWidth="@dimen/new_site_creation_site_info_tablet_max_text_width"
                 android:text="@string/new_site_creation_site_info_header_title"
                 android:textColor="@color/wp_grey_dark"
