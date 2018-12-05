@@ -82,7 +82,7 @@ class ReferrersRestClient
             @SerializedName("url") val url: String?,
             @SerializedName("total") val total: Int?,
             @SerializedName("results") val results: JsonElement?,
-            var referrers: List<Referrer> = listOf(),
+            var referrers: List<Referrer>? = null,
             var views: Int? = null
         ) {
             fun build(gson: Gson) {
