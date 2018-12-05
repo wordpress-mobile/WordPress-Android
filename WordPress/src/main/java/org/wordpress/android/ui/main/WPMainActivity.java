@@ -763,12 +763,6 @@ public class WPMainActivity extends AppCompatActivity implements
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
-            case RequestCodes.QUICK_START:
-                MySiteFragment msf = getMySiteFragment();
-                if (msf != null) {
-                    msf.onActivityResult(requestCode, resultCode, data);
-                }
-                break;
         }
     }
 
