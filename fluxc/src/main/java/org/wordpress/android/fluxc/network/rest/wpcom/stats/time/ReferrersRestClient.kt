@@ -2,6 +2,10 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -13,19 +17,23 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
+import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class ReferrersRestClient
-constructor(
+@Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
     appContext: Context?,
-    requestQueue: RequestQueue,
+    @param:Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent
+    userAgent: UserAgent,
+    val gson: Gson
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchReferrers(
         site: SiteModel,
@@ -48,6 +56,7 @@ constructor(
         )
         return when (response) {
             is Success -> {
+                response.data.groups.values.forEach { it.groups.forEach { group -> group.build(gson) } }
                 FetchStatsPayload(response.data)
             }
             is Error -> {
@@ -72,8 +81,22 @@ constructor(
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("total") val total: Int?,
-            @SerializedName("results") val results: List<Referrer>
-        )
+            @SerializedName("results") val results: JsonElement?,
+            var referrers: List<Referrer> = listOf(),
+            var views: Int? = null
+        ) {
+            fun build(gson: Gson) {
+                when(this.results) {
+                    is JsonArray -> this.referrers = this.results.map {
+                        gson.fromJson<Referrer>(
+                                it,
+                                Referrer::class.java
+                        )
+                    }
+                    is JsonObject -> this.views = this.results.getInt("views")
+                }
+            }
+        }
 
         data class Referrer(
             @SerializedName("group") val groupId: String?,

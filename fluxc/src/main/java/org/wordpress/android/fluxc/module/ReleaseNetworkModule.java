@@ -212,17 +212,6 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public ReferrersRestClient provideReferrersRestClient(
-            Context appContext, Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
-            AccessToken token, UserAgent userAgent,
-            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ReferrersRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
-    }
-
-    @Singleton
-    @Provides
     public JetpackRestClient provideJetpackRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AccessToken token, UserAgent userAgent,
