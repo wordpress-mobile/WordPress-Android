@@ -40,7 +40,7 @@ class TimeStatsMapper
                     AppLog.e(STATS, "ReferrersResponse.type: Missing fields on a referrer")
                     null
                 }
-            }?.take(pageSize)
+            }
             ReferrersModel.Group(group.groupId, group.name, group.icon, group.url, group.total, children ?: listOf())
         }
         return ReferrersModel(first.otherViews ?: 0, first.totalViews ?: 0, groups, first.groups.size > groups.size)
