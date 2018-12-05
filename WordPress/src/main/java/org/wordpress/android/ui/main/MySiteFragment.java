@@ -58,7 +58,6 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
-import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
@@ -689,25 +688,6 @@ public class MySiteFragment extends Fragment implements
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
                 }
                 break;
-            case RequestCodes.QUICK_START:
-                if (data != null && data.hasExtra(QuickStartActivity.ARG_QUICK_START_TASK)) {
-                    QuickStartTask task =
-                            (QuickStartTask) data.getSerializableExtra(QuickStartActivity.ARG_QUICK_START_TASK);
-
-                    // remove existing quick start indicator if necessary
-                    if (mActiveTutorialPrompt != null) {
-                        removeQuickStartFocusPoint();
-                    }
-
-                    mActiveTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task);
-
-                    resetQuickStartPromptCounter();
-                    setPromptedQuickStartTask(mActiveTutorialPrompt.getTask());
-                    mQuickStartSnackBarWasShown = true;
-
-                    showActiveQuickStartTutorial();
-                }
-                break;
         }
     }
 
@@ -1266,9 +1246,7 @@ public class MySiteFragment extends Fragment implements
                     @Override
                     public void onClick(View v) {
                         AnalyticsTracker.track(Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED);
-                        if (shouldDirectUserToContinueQuickStart) {
-                            ActivityLauncher.viewQuickStartForResult(getActivity());
-                        } else {
+                        if (!shouldDirectUserToContinueQuickStart) {
                             mActiveTutorialPrompt = mySitePrompt;
                             showActiveQuickStartTutorial();
                         }
