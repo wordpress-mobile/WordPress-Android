@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AniUtils.Duration;
 
 import java.util.ArrayList;
@@ -48,22 +47,20 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
         mTasksUncompleted = tasksUncompleted;
         mTaskCompleted = tasksCompleted;
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+
         switch (viewType) {
-            case VIEW_TYPE_TASK: {
-                View view = LayoutInflater.from(mContext).inflate(R.layout.quick_start_list_item, viewGroup, false);
-                return new TaskViewHolder(view);
-            }
-            case VIEW_TYPE_COMPLETE_TASKS_HEADER: {
-                View view = LayoutInflater.from(mContext)
-                                          .inflate(R.layout.quick_start_completed_tasks_list_header, viewGroup, false);
-                return new CompletedTasksHeaderViewHolder(view);
-            }
+            case VIEW_TYPE_TASK:
+                return new TaskViewHolder(
+                        inflater.inflate(R.layout.quick_start_list_item, viewGroup, false));
+            case VIEW_TYPE_COMPLETE_TASKS_HEADER:
+                return new CompletedTasksHeaderViewHolder(
+                        inflater.inflate(R.layout.quick_start_completed_tasks_list_header, viewGroup, false));
             default:
                 throw new IllegalArgumentException("Unexpected view type");
         }
@@ -265,8 +262,6 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                         mChevron.startAnimation(getChevronRotationAnimation(false));
                         notifyItemRangeInserted(from, to);
                     }
-
-
                 }
             };
 
