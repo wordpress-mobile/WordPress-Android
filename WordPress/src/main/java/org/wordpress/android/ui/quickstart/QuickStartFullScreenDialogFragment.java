@@ -32,7 +32,9 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 public class QuickStartFullScreenDialogFragment extends Fragment implements FullScreenDialogContent,
         OnTaskTappedListener {
     private FullScreenDialogController mDialogController;
+    private QuickStartAdapter mQuickStartAdapter;
 
+    public static final String KEY_COMPLETED_TASKS_LIST_EXPANDED = "completed_tasks_list_expanded";
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
     public static final String RESULT_TASK = "RESULT_TASK";
 
@@ -61,7 +63,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             type = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
         }
 
-        RecyclerView list = rootView.findViewById(R.id.list);
+        RecyclerView recyclerView = rootView.findViewById(R.id.list);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
@@ -81,10 +83,14 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 break;
         }
 
-        QuickStartAdapter adapter = new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted);
-        adapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
-        list.setLayoutManager(new LinearLayoutManager(requireContext()));
-        list.setAdapter(adapter);
+        boolean isCompletedTasksListExpaned = savedInstanceState != null
+                                              && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
+
+        mQuickStartAdapter =
+                new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted, isCompletedTasksListExpaned);
+        mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(mQuickStartAdapter);
 
         return rootView;
     }
@@ -110,5 +116,12 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         Bundle result = new Bundle();
         result.putSerializable(RESULT_TASK, task);
         mDialogController.confirm(result);
+    }
+
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mQuickStartAdapter != null) {
+            outState.putBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED, mQuickStartAdapter.isCompletedTaskListExpanded());
+        }
     }
 }
