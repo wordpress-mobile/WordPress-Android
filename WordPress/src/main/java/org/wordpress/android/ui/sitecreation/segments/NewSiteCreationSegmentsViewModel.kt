@@ -78,20 +78,16 @@ class NewSiteCreationSegmentsViewModel
             }
         }
         if (networkUtils.isNetworkAvailable()) {
+            updateUiStateToContent(ListState.Loading(listState))
             launch {
-                withContext(MAIN) {
-                    updateUiStateToContent(ListState.Loading(listState))
-                }
                 val event = fetchSegmentsUseCase.fetchCategories()
                 withContext(MAIN) {
                     onCategoriesFetched(event)
                 }
             }
         } else {
+            updateUiStateToContent(ListState.Loading(listState))
             launch {
-                withContext(MAIN) {
-                    updateUiStateToContent(ListState.Loading(listState))
-                }
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
                 delay(FAKE_DELAY)
                 withContext(MAIN) {
