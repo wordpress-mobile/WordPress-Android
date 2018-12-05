@@ -55,7 +55,7 @@ class ClicksRestClient
         )
         return when (response) {
             is Success -> {
-                response.data.groups.values.forEach { it.clicks.forEach { group -> group.build(gson) } }
+                response.data.groups.values.forEach { it.clicks?.forEach { group -> group.build(gson) } }
                 FetchStatsPayload(response.data)
             }
             is Error -> {
@@ -71,7 +71,7 @@ class ClicksRestClient
         data class Groups(
             @SerializedName("other_clicks") val otherClicks: Int?,
             @SerializedName("total_clicks") val totalClicks: Int?,
-            @SerializedName("clicks") val clicks: List<ClickGroup>
+            @SerializedName("clicks") val clicks: List<ClickGroup>?
         )
 
         data class ClickGroup(
