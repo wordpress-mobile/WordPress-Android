@@ -166,14 +166,26 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(FAKE_DELAY)
             withContext(MAIN) {
-                updateUiStateToContent(query, Error(listState, null))
+                updateUiStateToContent(
+                        query,
+                        Error(
+                                listState,
+                                errorMessageResId = R.string.site_creation_fetch_suggestions_error_no_connection
+                        )
+                )
             }
         }
     }
 
     private fun onVerticalsFetched(query: String, event: OnVerticalsFetched) {
         if (event.isError) {
-            updateUiStateToContent(query, ListState.Error(listState, event.error.message))
+            updateUiStateToContent(
+                    query,
+                    ListState.Error(
+                            listState,
+                            errorMessageResId = R.string.site_creation_fetch_suggestions_error_unknown
+                    )
+            )
         } else {
             updateUiStateToContent(query, ListState.Success(event.verticalList))
         }
@@ -196,7 +208,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
                         items = createSuggestionsUiStates(
                                 onRetry = { updateQuery(query) },
                                 data = state.data,
-                                errorFetchingSuggestions = state is Error
+                                errorFetchingSuggestions = state is Error,
+                                errorResId = if (state is Error) state.errorMessageResId else null
                         )
                 )
         )
@@ -209,12 +222,13 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private fun createSuggestionsUiStates(
         onRetry: () -> Unit,
         data: List<VerticalModel>,
-        errorFetchingSuggestions: Boolean
+        errorFetchingSuggestions: Boolean,
+        @StringRes errorResId: Int?
     ): List<VerticalsListItemUiState> {
         val items: ArrayList<VerticalsListItemUiState> = ArrayList()
         if (errorFetchingSuggestions) {
             val errorUiState = VerticalsFetchSuggestionsErrorUiState(
-                    messageResId = R.string.site_creation_fetch_suggestions_error_no_connection,
+                    messageResId = errorResId ?: R.string.site_creation_fetch_suggestions_error_unknown,
                     retryButtonResId = R.string.button_retry
             )
             errorUiState.onItemTapped = onRetry

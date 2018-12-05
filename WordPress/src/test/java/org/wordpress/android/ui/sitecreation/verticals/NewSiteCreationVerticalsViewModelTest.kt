@@ -21,6 +21,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
@@ -239,7 +240,7 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyFullscreenErrorShownOnFailedHeaderInfoRequest() = test {
         whenever(fetchSegmentsPromptUseCase.fetchSegmentsPrompt(SEGMENT_ID)).thenReturn(FAILED_HEADER_PROMPT_FETCHED)
         viewModel.start(SEGMENT_ID)
-        verifyFullscreenErrorShown(viewModel.uiState.value!! as VerticalsFullscreenErrorUiState)
+        verifyGenericFullscreenErrorShown(viewModel.uiState.value!! as VerticalsFullscreenErrorUiState)
     }
 
     @Test
@@ -261,7 +262,7 @@ class NewSiteCreationVerticalsViewModelTest {
         whenever(fetchVerticalsUseCase.fetchVerticals(any())).thenReturn(ERROR_ON_VERTICALS_FETCHED)
         viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(FIRST_MODEL_QUERY)
-        verifyRetrySuggestionItemShown(viewModel.uiState)
+        verifyUnknownErrorRetryItemShown(viewModel.uiState.value!! as VerticalsContentUiState)
     }
 
     @Test
@@ -285,9 +286,9 @@ class NewSiteCreationVerticalsViewModelTest {
         verify(uiStateObserver, times(4)).onChanged(captor.capture())
 
         verifyFullscreenProgressShown(captor.firstValue as VerticalsFullscreenProgressUiState)
-        verifyFullscreenErrorShown(captor.secondValue as VerticalsFullscreenErrorUiState)
+        verifyGenericFullscreenErrorShown(captor.secondValue as VerticalsFullscreenErrorUiState)
         verifyFullscreenProgressShown(captor.thirdValue as VerticalsFullscreenProgressUiState)
-        verifyFullscreenErrorShown(captor.lastValue as VerticalsFullscreenErrorUiState)
+        verifyGenericFullscreenErrorShown(captor.lastValue as VerticalsFullscreenErrorUiState)
     }
 
     @Test
@@ -326,7 +327,7 @@ class NewSiteCreationVerticalsViewModelTest {
         // [2] Input Progress
         verifySearchInputWithProgressVisible(captor.allValues[2] as VerticalsContentUiState)
         // [3] Input Error
-        verifyRetrySuggestionItemShown(captor.allValues[3] as VerticalsContentUiState)
+        verifyUnknownErrorRetryItemShown(captor.allValues[3] as VerticalsContentUiState)
         // [4] Input Progress
         verifySearchInputWithProgressVisible(captor.allValues[4] as VerticalsContentUiState)
     }
@@ -354,6 +355,23 @@ class NewSiteCreationVerticalsViewModelTest {
 
         assertThat(captor.allValues.size).isEqualTo(1)
         assertThat(captor.lastValue).isNull()
+    }
+
+    @Test
+    fun verifyNoConnectionErrorShownOnFetchPrompt() = test {
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+        viewModel.start(SEGMENT_ID)
+
+        verifyNoConnectionFullscreenErrorShown(viewModel.uiState.value!! as VerticalsFullscreenErrorUiState)
+    }
+
+    @Test
+    fun verifyErrorShownOnFetchVerticals() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+        viewModel.updateQuery(FIRST_MODEL_QUERY)
+
+        verifyNoConnectionRetryItemShown(viewModel.uiState.value!! as VerticalsContentUiState)
     }
 
     private fun verifyEmptySearchInputVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
@@ -402,8 +420,12 @@ class NewSiteCreationVerticalsViewModelTest {
         assertThat(uiState.headerUiState).isNull()
     }
 
-    private fun verifyFullscreenErrorShown(uiState: VerticalsFullscreenErrorUiState) {
+    private fun verifyGenericFullscreenErrorShown(uiState: VerticalsFullscreenErrorUiState) {
         assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.createGenericErrorUiState())
+    }
+
+    private fun verifyNoConnectionFullscreenErrorShown(uiState: VerticalsFullscreenErrorUiState) {
+        assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.createConnectionErrorUiState())
     }
 
     private fun verifyFullscreenProgressShown(uiState: VerticalsFullscreenProgressUiState) {
@@ -420,12 +442,15 @@ class NewSiteCreationVerticalsViewModelTest {
         assertThat((uiState.items[0] as VerticalsModelUiState).title).isEqualTo(title)
     }
 
-    private fun verifyRetrySuggestionItemShown(uiStateLiveData: LiveData<VerticalsUiState>) {
-        verifyRetrySuggestionItemShown(uiStateLiveData.value!! as VerticalsContentUiState)
+    private fun verifyUnknownErrorRetryItemShown(uiState: VerticalsContentUiState) {
+        assertThat(uiState.items[0]).isInstanceOf(VerticalsFetchSuggestionsErrorUiState::class.java)
+        assertThat((uiState.items[0] as VerticalsFetchSuggestionsErrorUiState).messageResId)
+                .isEqualTo(R.string.site_creation_fetch_suggestions_error_unknown)
     }
 
-    private fun verifyRetrySuggestionItemShown(uiState: VerticalsContentUiState) {
-        assertThat(uiState.items[0])
-                .isInstanceOf(VerticalsFetchSuggestionsErrorUiState::class.java)
+    private fun verifyNoConnectionRetryItemShown(uiState: VerticalsContentUiState) {
+        assertThat(uiState.items[0]).isInstanceOf(VerticalsFetchSuggestionsErrorUiState::class.java)
+        assertThat((uiState.items[0] as VerticalsFetchSuggestionsErrorUiState).messageResId)
+                .isEqualTo(R.string.site_creation_fetch_suggestions_error_no_connection)
     }
 }
