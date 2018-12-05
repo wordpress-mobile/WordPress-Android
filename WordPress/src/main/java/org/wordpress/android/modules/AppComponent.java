@@ -110,7 +110,6 @@ import org.wordpress.android.ui.publicize.PublicizeListFragment;
 import org.wordpress.android.ui.publicize.PublicizeWebViewFragment;
 import org.wordpress.android.ui.publicize.adapters.PublicizeConnectionAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
-import org.wordpress.android.ui.quickstart.QuickStartFragment;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -415,8 +414,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SuggestionAdapter object);
 
     void inject(WordPressGlideModule object);
-
-    void inject(QuickStartFragment object);
 
     void inject(QuickStartFullScreenDialogFragment object);
 

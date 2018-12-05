@@ -7,7 +7,6 @@
 
     <fragment
         android:id="@+id/quick_start_fragment"
-        android:name="org.wordpress.android.ui.quickstart.QuickStartFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
