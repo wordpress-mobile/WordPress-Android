@@ -86,7 +86,7 @@ class ReferrersRestClient
             @SerializedName("views") var views: Int? = null
         ) {
             fun build(gson: Gson) {
-                when(this.results) {
+                when (this.results) {
                     is JsonArray -> this.referrers = this.results.map {
                         gson.fromJson<Referrer>(
                                 it,
