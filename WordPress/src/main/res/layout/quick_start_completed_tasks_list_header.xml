@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/margin_extra_large"
+        android:background="@color/grey_lighten_30"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackground"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large">
+
+        <TextView
+            android:id="@+id/complete_tasks_header_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/completed_tasks_list_chevron"
+            android:text="@string/quick_start_complete_tasks_header"/>
+
+
+        <ImageView
+            android:id="@+id/completed_tasks_list_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/quick_start_completed_tasks_header_chevron_expand_desc"
+            android:src="@drawable/ic_chevron_down_blue_wordpress_24dp"
+            android:tint="@color/grey_darken_20"/>
+
+    </RelativeLayout>
+</LinearLayout>
