@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -42,7 +44,7 @@ class ReferrersRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
-    @Mock private lateinit var gson: Gson
+    private val gson: Gson = GsonBuilder().create()
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: ReferrersRestClient
@@ -102,6 +104,25 @@ class ReferrersRestClientTest {
     @Test
     fun `returns post & page year views error response`() = test {
         testErrorResponse(YEARS)
+    }
+
+    @Test
+    fun `maps group with views`() {
+        val group = "{\"group\":\"WordPress.com Reader\"," +
+                "\"name\":\"WordPress.com Reader\"," +
+                "\"url\":\"https:\\/\\/wordpress.com\\/\"," +
+                "\"icon\":\"https:\\/\\/secure.gravatar.com\\/blavatar\\/236c008da9dc0edb4b3464ecebb3fc1d?s=48\"," +
+                "\"total\":16," +
+                "\"follow_data\":null," +
+                "\"results\":" +
+                "{\"views\":16}" +
+                "}"
+        val parsedGroup = gson.fromJson<Group>(group, Group::class.java)
+
+        parsedGroup.build(gson)
+
+        assertThat(parsedGroup.views).isEqualTo(16)
+        assertThat(parsedGroup.referrers).isNull()
     }
 
     private suspend fun testSuccessResponse(period: StatsGranularity) {
