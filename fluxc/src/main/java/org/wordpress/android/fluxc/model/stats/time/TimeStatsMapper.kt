@@ -33,7 +33,7 @@ class TimeStatsMapper
         val first = response.groups.values.first()
         val groups = first.groups.take(pageSize).map { group ->
             val children = group.referrers?.mapNotNull { result ->
-                if (result.name != null && result.views != null && result.icon != null && result.url != null) {
+                if (result.name != null && result.views != null) {
                     val firstChildUrl = result.children.firstOrNull()?.url
                     Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)
                 } else {
