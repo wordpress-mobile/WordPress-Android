@@ -13,6 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
@@ -67,9 +68,10 @@ class StatsModule {
     @Named(DWMY_USE_CASE_FACTORIES)
     fun provideDayStatsUseCases(
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        referrersUseCaseFactory: ReferrersUseCaseFactory
+        referrersUseCaseFactory: ReferrersUseCaseFactory,
+        clicksUseCaseFactory: ClicksUseCaseFactory
     ): List<@JvmSuppressWildcards UseCaseFactory> {
-        return listOf(postsAndPagesUseCaseFactory, referrersUseCaseFactory)
+        return listOf(postsAndPagesUseCaseFactory, referrersUseCaseFactory, clicksUseCaseFactory)
     }
 
     @Provides
