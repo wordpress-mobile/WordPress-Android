@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
@@ -23,7 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -82,7 +82,7 @@ constructor(
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
+                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
                         )
                 )
             }
@@ -90,7 +90,7 @@ constructor(
         return items
     }
 
-    private fun onViewMoreClick(statsGranularity: StatsGranularity) {
+    private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         navigateTo(ViewPostsAndPages(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 

@@ -37,12 +37,11 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublici
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.DaysListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.MonthsListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.WeeksListViewModel
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.YearsListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
@@ -64,10 +63,10 @@ class StatsListFragment : DaggerFragment() {
     companion object {
         private const val typeKey = "type_key"
 
-        fun newInstance(listType: StatsListType): StatsListFragment {
+        fun newInstance(section: StatsSection): StatsListFragment {
             val fragment = StatsListFragment()
             val bundle = Bundle()
-            bundle.putSerializable(typeKey, listType)
+            bundle.putSerializable(typeKey, section)
             fragment.arguments = bundle
             return fragment
         }
@@ -111,18 +110,18 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        val statsType = arguments?.getSerializable(typeKey) as StatsListType
+        val statsSection = arguments?.getSerializable(typeKey) as StatsSection
 
-        val viewModelClass = when (statsType) {
-            INSIGHTS -> InsightsListViewModel::class.java
-            StatsListType.DAYS -> DaysListViewModel::class.java
-            StatsListType.WEEKS -> WeeksListViewModel::class.java
-            StatsListType.MONTHS -> MonthsListViewModel::class.java
-            StatsListType.YEARS -> YearsListViewModel::class.java
+        val viewModelClass = when (statsSection) {
+            StatsSection.INSIGHTS -> InsightsListViewModel::class.java
+            StatsSection.DAYS -> DaysListViewModel::class.java
+            StatsSection.WEEKS -> WeeksListViewModel::class.java
+            StatsSection.MONTHS -> MonthsListViewModel::class.java
+            StatsSection.YEARS -> YearsListViewModel::class.java
         }
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(statsType.name, viewModelClass)
+                .get(statsSection.name, viewModelClass)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(activity.intent)
@@ -210,7 +209,7 @@ class StatsListFragment : DaggerFragment() {
         }
     }
 
-    private fun updateInsights(statsState: StatsUiState) {
+    private fun updateInsights(statsState: List<StatsBlock>) {
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)
@@ -220,7 +219,7 @@ class StatsListFragment : DaggerFragment() {
         }
         val layoutManager = recyclerView?.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
-        adapter.update(statsState.data)
+        adapter.update(statsState)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
