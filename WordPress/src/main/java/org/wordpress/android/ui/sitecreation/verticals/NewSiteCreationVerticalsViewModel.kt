@@ -306,7 +306,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             )
 
             object VerticalsConnectionErrorUiState : VerticalsFullscreenErrorUiState(
-                    R.string.site_creation_error_connection_title
+                    R.string.no_network_message
             )
         }
     }
