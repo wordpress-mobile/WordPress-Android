@@ -44,7 +44,7 @@ constructor(
                 url,
                 params,
                 PostAndPageViewsResponse::class.java,
-                enableCaching = true,
+                enableCaching = false,
                 forced = forced
         )
         return when (response) {
@@ -60,17 +60,18 @@ constructor(
     data class PostAndPageViewsResponse(
         @SerializedName("date") var date: Date? = null,
         @SerializedName("days") val days: Map<String, ViewsResponse>,
-        @SerializedName("period") val period: String
+        @SerializedName("period") val period: String?
     ) {
         data class ViewsResponse(
             @SerializedName("postviews") val postViews: List<PostViewsResponse>,
-            @SerializedName("total_views") val totalViews: Int
+            @SerializedName("total_views") val totalViews: Int?
         ) {
             data class PostViewsResponse(
-                @SerializedName("id") val id: Int,
-                @SerializedName("title") val title: String,
-                @SerializedName("type") val type: String,
-                @SerializedName("views") val views: Int
+                @SerializedName("id") val id: Long?,
+                @SerializedName("title") val title: String?,
+                @SerializedName("type") val type: String?,
+                @SerializedName("href") val href: String?,
+                @SerializedName("views") val views: Int?
             )
         }
     }
