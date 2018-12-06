@@ -107,7 +107,7 @@
 
     <style name="StatsBlockLine">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingStart">@dimen/margin_large</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
@@ -150,21 +150,21 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
     <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
     <style name="StatsGraphLabel">
         <item name="android:textColor">@color/wp_grey</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_small</item>
     </style>
 
 

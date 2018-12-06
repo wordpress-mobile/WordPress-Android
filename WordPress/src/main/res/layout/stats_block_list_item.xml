@@ -39,6 +39,7 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
         android:contentDescription="@string/icon"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/text"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,9 +97,10 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:background="@color/grey_lighten_30"
+        android:background="@color/blue_wordpress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon"/>
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_goneMarginStart="@dimen/margin_extra_large"/>
 
 </android.support.constraint.ConstraintLayout>
