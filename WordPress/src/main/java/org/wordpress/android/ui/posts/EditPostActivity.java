@@ -998,6 +998,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityLauncher.showStockMediaPickerForResult(
                         this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
+            case GIPHY:
+                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
+                break;
         }
     }
 
