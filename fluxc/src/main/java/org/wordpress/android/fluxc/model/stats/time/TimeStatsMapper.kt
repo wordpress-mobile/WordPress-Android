@@ -52,7 +52,7 @@ class TimeStatsMapper
         val first = response.groups.values.first()
         val groups = first.clicks.take(pageSize).map { group ->
             val children = group.clicks?.mapNotNull { result ->
-                if (result.name != null && result.views != null && result.icon != null && result.url != null) {
+                if (result.name != null && result.views != null) {
                     Click(result.name, result.views, result.icon, result.url)
                 } else {
                     AppLog.e(STATS, "ClicksResponse.type: Missing fields on a Click object")

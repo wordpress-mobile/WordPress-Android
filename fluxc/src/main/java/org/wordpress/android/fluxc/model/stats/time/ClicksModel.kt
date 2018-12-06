@@ -9,5 +9,5 @@ data class ClicksModel(val otherClicks: Int, val totalClicks: Int, val groups: L
         val views: Int?,
         val clicks: List<Click>
     )
-    data class Click(val name: String, val views: Int, val icon: String, val url: String?)
+    data class Click(val name: String, val views: Int, val icon: String?, val url: String?)
 }
