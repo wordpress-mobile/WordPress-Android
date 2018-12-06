@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -50,6 +51,8 @@ class PublicizeUseCase
             else -> onEmpty()
         }
     }
+
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_publicize))
 
     override fun buildUiModel(domainModel: PublicizeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()

@@ -49,6 +49,8 @@ class CommentsUseCase
         dbModel?.let { onModel(dbModel) }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_comments))
+
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))

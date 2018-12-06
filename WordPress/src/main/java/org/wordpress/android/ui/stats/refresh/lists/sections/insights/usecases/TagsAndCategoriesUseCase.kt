@@ -55,6 +55,8 @@ class TagsAndCategoriesUseCase
         model?.let { onModel(model) }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_tags_and_categories))
+
     override fun buildStatefulUiModel(domainModel: TagsModel, uiState: TagsAndCategoriesUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_view_tags_and_categories))

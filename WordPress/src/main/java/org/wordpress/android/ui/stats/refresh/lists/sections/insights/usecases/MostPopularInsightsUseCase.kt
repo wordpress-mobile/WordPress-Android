@@ -42,6 +42,8 @@ class MostPopularInsightsUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_popular))
+
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))

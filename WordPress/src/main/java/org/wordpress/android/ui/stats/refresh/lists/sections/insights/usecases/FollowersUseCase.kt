@@ -64,6 +64,8 @@ class FollowersUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_followers))
+
     override fun buildStatefulUiModel(
         model: Pair<FollowersModel, FollowersModel>,
         uiState: Int
