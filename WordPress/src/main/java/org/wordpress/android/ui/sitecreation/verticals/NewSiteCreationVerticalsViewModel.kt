@@ -36,7 +36,7 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
 private const val THROTTLE_DELAY: Int = 500
-private const val SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY = 1000
+private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
 
 class NewSiteCreationVerticalsViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -107,7 +107,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         updateUiState(VerticalsFullscreenProgressUiState)
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
-            delay(SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY)
+            delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             withContext(MAIN) {
                 updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
@@ -163,7 +163,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         updateUiStateToContent(query, Loading(Ready(emptyList()), false))
         launch {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
-            delay(SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY)
+            delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             withContext(MAIN) {
                 updateUiStateToContent(
                         query,
