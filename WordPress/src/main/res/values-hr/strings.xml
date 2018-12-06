@@ -202,14 +202,10 @@ Language: hr
     <string name="notification_settings_item_other_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
     <string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja…</string>
     <string name="stats_insights_latest_post_summary">Najnoviji sažetak objava</string>
-    <string name="yesterday">Jučer</string>
-    <string name="days_ago">prije %d dana</string>
     <string name="connectionbar_no_connection">Nema konekcije</string>
     <string name="button_view">Pogledaj</string>
     <string name="button_edit">Uredi</string>
     <string name="button_publish">Objavi</string>
-    <string name="page_deleted">Stranica obrisana</string>
-    <string name="page_trashed">Stanica poslana u smeće</string>
     <string name="post_trashed">Objava poslana u smeće</string>
     <string name="button_trash">Smeće</string>
     <string name="button_back">Nazad</string>
@@ -368,7 +364,6 @@ Language: hr
     <string name="comment_trashed">Komentar premješten u smeće</string>
     <string name="posts_empty_list">Još nemate objava. Zašto ne napišete jednu?</string>
     <string name="comment_reply_to_user">Odgovor na %s</string>
-    <string name="pages_empty_list">Još nemate stranica. Zašto ne kreirate jednu?</string>
     <string name="browse_our_faq_button">Pregledajte naš ČPP (FAQ)</string>
     <string name="stats_no_blog">Nije moguće učitati statistiku za navedeni blog</string>
     <string name="more">Više</string>
@@ -420,7 +415,6 @@ Language: hr
     <string name="username_or_password_incorrect">Korisničko ime ili lozinka koje ste unijeli nisu točni</string>
     <string name="invalid_email_message">Vaša adresa e-pošte nije valjana</string>
     <string name="email_invalid">Unesite ispravnu adresu e-pošte</string>
-    <string name="invalid_url_message">Provjerite da je uneseni URL ispravan</string>
     <string name="error_deleting_post">Dogodila se greška prilikom brisanja posta</string>
     <string name="add_new_category">Dodaj novu kategoriju</string>
     <string name="category_name">Ime kategorije</string>
@@ -573,7 +567,6 @@ Language: hr
     <string name="edit">Uredi</string>
     <string name="immediately">Odmah</string>
     <string name="quickpress_add_alert_title">Postavi naziv prečaca</string>
-    <string name="today">Danas</string>
     <string name="settings">Postavke</string>
     <string name="quickpress_window_title">Odaberi blog za QuickPress prečac</string>
     <string name="quickpress_add_error">Naziv prečaca ne može biti prazan</string>

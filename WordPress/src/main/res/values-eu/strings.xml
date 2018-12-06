@@ -143,7 +143,6 @@ Language: eu_ES
     <string name="site_settings_paging_summary_one">Iruzkin 1 orrialdeko</string>
     <string name="days_quantity_one">Egun 1</string>
     <string name="days_quantity_other">%d egun</string>
-    <string name="web_address">Web helbidea</string>
     <string name="primary_site">Gune nagusia</string>
     <string name="visual_editor_enabled">Editore bisuala gaituta</string>
     <string name="editor_content_placeholder">Partekatu zure istorioa hemen…</string>
@@ -248,14 +247,10 @@ Language: eu_ES
     <string name="notifications_tab">Jakinarazpenen erlaitza</string>
     <string name="email">E-posta</string>
     <string name="stats_insights_latest_post_summary">Azken bidalketaren laburpena</string>
-    <string name="days_ago">Duela %d egun</string>
-    <string name="yesterday">Atzo</string>
     <string name="connectionbar_no_connection">Konexiorik ez</string>
-    <string name="page_trashed">Orrialdea zaborretara bidalia</string>
     <string name="post_trashed">Bidalketa zaborretara bidalia</string>
     <string name="post_deleted">Bidalketa ezabatua</string>
     <string name="button_back">Itzuli</string>
-    <string name="page_deleted">Orrialdea ezabatua</string>
     <string name="button_stats">Estatistikak</string>
     <string name="button_trash">Zaborra</string>
     <string name="button_preview">Aurreikusi</string>
@@ -358,7 +353,6 @@ Language: eu_ES
     <string name="reader_label_view_original">Ikusi artikulu originala</string>
     <string name="reader_label_like">Gustukoa</string>
     <string name="posts_empty_list">Bidalketarik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
-    <string name="pages_empty_list">Orrialderik ez oraingoz. Zergatik ez duzu bat sortzen?</string>
     <string name="browse_our_faq_button">Arakatu Galdera eta Erantzunak</string>
     <string name="error_publish_empty_post">Ezin da bidalketa huts bat argitaratu</string>
     <string name="older_two_days">2 egun baino zaharragoa</string>
@@ -395,7 +389,6 @@ Language: eu_ES
     <string name="theme_fetch_failed">Huts egin du itxurak eskuratzeak</string>
     <string name="error_refresh_posts">Bidalketak ezin dira momentu honetan eguneratu</string>
     <string name="username_or_password_incorrect">Sartutako erabiltzaile-izena edo pasahitza ez dira zuzenak</string>
-    <string name="invalid_url_message">Ziurtatu sartutako URLa zuzena dela</string>
     <string name="error_deleting_post">Bidalketa ezabatzean errore bat gertatu da</string>
     <string name="comment_status_approved">Onartua</string>
     <string name="comment_status_unapproved">Onartzeko zain</string>
@@ -549,7 +542,6 @@ Language: eu_ES
     <string name="edit">Editatu</string>
     <string name="immediately">Berehala</string>
     <string name="quickpress_add_alert_title">Sarbide zuzenaren izena</string>
-    <string name="today">Gaur</string>
     <string name="settings">Ezarpenak</string>
     <string name="quickpress_add_error">Sarbide zuzenaren izena ezin da hutsik egon.</string>
     <string name="quickpress_window_title">Aukeratu Argitaratze Azkarra erabiltzeko blog bat</string>

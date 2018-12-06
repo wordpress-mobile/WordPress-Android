@@ -40,7 +40,6 @@ Language: hi_IN
     <string name="notification_settings_master_status_on">ऑन </string>
     <string name="max_video_resolution">अधिकतम वीडियो साइज</string>
     <string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
-    <string name="error_page_does_not_exist">यह  पृष्ठ अब उपलब्ध नहीं है</string>
     <string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>
     <string name="error_upload_post_param">इस पोस्ट : %s में अपलोड करते समय त्रुटि आई।</string>
     <string name="add_media_progress">मीडिया जोड़े </string>
@@ -118,7 +117,6 @@ Language: hi_IN
     <string name="approve_auto">सभी उपयोगकर्ता</string>
     <string name="days_quantity_one">1 दिन </string>
     <string name="days_quantity_other">%d दिन</string>
-    <string name="web_address">वेब पता</string>
     <string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
     <string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
     <string name="email_address">ईमेल पता</string>
@@ -174,16 +172,12 @@ Language: hi_IN
     <string name="notifications_tab">अधिसूचना सूचि</string>
     <string name="email">ईमेल</string>
     <string name="app_notifications">एप्लिकेशन अधिसूची</string>
-    <string name="days_ago">%d दिन पहले</string>
-    <string name="yesterday">कल</string>
     <string name="button_back">पीछे</string>
-    <string name="page_deleted">पृष्ठ हट गया</string>
     <string name="button_preview">पूर्वावलोकन</string>
     <string name="button_view">देखें</string>
     <string name="button_publish">प्रकाशित करें</string>
     <string name="button_edit">संपादित करें</string>
     <string name="post_trashed">पोस्ट ट्रैश में भेज दिया गया</string>
-    <string name="page_trashed">पृष्ठ ट्रैश में भेज दिया गया</string>
     <string name="button_trash">ट्रैश</string>
     <string name="button_stats">आकड़े</string>
     <string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
@@ -268,7 +262,6 @@ Language: hi_IN
     <string name="username_or_password_incorrect">आपके द्वारा दर्ज उपयोगकर्ता नाम या कूटशब्द गलत है</string>
     <string name="gallery_error">मीडिया आइटम पुनः प्राप्त नहीं किया जा सका</string>
     <string name="error_edit_comment">टिप्पणी के संपादन के दौरान एक त्रुटि हुई</string>
-    <string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
     <string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>
     <string name="error_refresh_pages">पृष्ठे इस समय रिफ्रेश नहीं हो सकती</string>
     <string name="theme_fetch_failed">थीम को प्राप्त करने में असफल</string>
@@ -428,7 +421,6 @@ Language: hi_IN
     <string name="immediately">तुरंत</string>
     <string name="quickpress_add_alert_title">शॉर्टकट नाम निर्धारित करें </string>
     <string name="settings">सेटिंग्स</string>
-    <string name="today">आज</string>
     <string name="quickpress_add_error">शॉर्टकट का नाम खाली नहीं हो सकता</string>
     <string name="quickpress_window_title">QuickPress शॉर्टकट के लिए एक ब्लॉग चुने</string>
     <string name="categories">श्रेणिया</string>

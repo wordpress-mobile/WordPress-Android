@@ -16,7 +16,6 @@ Language: ms
     <string name="login_text_otp_another">Sebaliknya tekskan saya kod sekali lagi.</string>
     <string name="enter_verification_code_sms">Kami telah menghantar mesej teks ke nombor telefon berakhir dengan %s. Sila masukkan kod pengesahan dalam SMS.</string>
     <string name="error_generic_error">Tidak dapat melaksanakan operasi</string>
-    <string name="error_media_recover_page">Tidak dapat memuat naik media halaman ini</string>
     <string name="error_media_recover_post">Tidak dapat memuat naik media kiriman ini</string>
     <string name="image_size">Saiz</string>
     <string name="uploading_subtitle_media_only_one">Tinggal 1 fail</string>
@@ -103,7 +102,6 @@ Language: ms
     <string name="notification_settings_master_status_on">Hidup</string>
     <string name="max_video_resolution">Saiz Video Maksimum</string>
     <string name="max_thumbnail_px_size">Saiz Imej Maksimum</string>
-    <string name="error_page_does_not_exist">Halaman ini tidak lagi wujud</string>
     <string name="error_upload_post_media_param">Terdapat ralat memuat naik media dalam kiriman ini: %s.</string>
     <string name="error_upload_post_param">Terdapat ralat memuat naik kiriman ini: %s.</string>
     <string name="add_media_progress">Menambah media</string>
@@ -559,7 +557,6 @@ Language: ms
     <string name="detail_approve_manual">Perlukan kelulusan manual bagi ulasan semua orang.</string>
     <string name="days_quantity_other">%d hari</string>
     <string name="days_quantity_one">1 hari</string>
-    <string name="web_address">Alamat Web</string>
     <string name="primary_site">Laman utama</string>
     <string name="pending_email_change_snackbar">Klik pautan pengesahan dalam emel yang dihantar ke %1$s untuk mengesahkan alamat baharu anda</string>
     <string name="editor_toast_uploading_please_wait">Anda sedang memuatnaik media. Sila tunggu sehingga selesai.</string>
@@ -767,8 +764,6 @@ Language: ms
     <string name="notification_settings_item_other_account_emails_summary">Kami akan selalu menghantar emel penting berkenaan akaun anda, tetapi anda juga boleh mendapat beberapa tambahan yang membantu.</string>
     <string name="stats_insights_latest_post_trend">Telah %1$s sejak %2$s diterbitkan. Sini adalah prestasi kiriman ini setakat ini…</string>
     <string name="stats_insights_latest_post_summary">Ringkasan Kiriman Terkini</string>
-    <string name="yesterday">Semalam</string>
-    <string name="days_ago">%d hari yang lalu</string>
     <string name="connectionbar_no_connection">Tiada sambungan</string>
     <string name="button_publish">Terbit</string>
     <string name="button_edit">Sunting</string>
@@ -776,12 +771,10 @@ Language: ms
     <string name="button_preview">Pratonton</string>
     <string name="button_trash">Sampah</string>
     <string name="button_stats">Statistik</string>
-    <string name="page_deleted">Halaman dihapuskan</string>
     <string name="button_back">Kembali</string>
     <string name="stats_no_activity_this_period">Tiada aktiviti tempoh ini</string>
     <string name="post_trashed">Kiriman dihantar ke sampah</string>
     <string name="post_deleted">Kiriman dihapuskan</string>
-    <string name="page_trashed">Halaman dihantar ke sampah</string>
     <string name="undo">Kembali ke asal</string>
     <string name="push_auth_expired">Permintaan telah tamat tempoh. Log masuk ke WordPress.com dan cuba lagi.</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% yang dilihat</string>
@@ -911,7 +904,6 @@ Language: ms
     <string name="ssl_certificate_details">Perincian</string>
     <string name="cab_selected">%d dipilih</string>
     <string name="signing_out">Melog keluar…</string>
-    <string name="pages_empty_list">Belum ada halaman. Kenapa tidak wujudkannya?</string>
     <string name="comment_reply_to_user">Balasan kepada %s</string>
     <string name="posts_empty_list">Belum ada kiriman. Kenapa tidak wujudkannya?</string>
     <string name="comment_trashed">Ulasan disampahkan</string>
@@ -960,7 +952,6 @@ Language: ms
     <string name="error_refresh_posts">Kiriman tidak dapat disegar semula pada masa ini</string>
     <string name="error_deleting_post">Ralat berlaku apabila sedang menghapuskan kiriman</string>
     <string name="notifications_empty_list">Tiada notifikasi</string>
-    <string name="invalid_url_message">Periksa sama ada URL yang dimasukkan adalah sah</string>
     <string name="stats_bar_graph_empty">Tiada statistik tersedia</string>
     <string name="stats_empty_comments">Belum ada ulasan</string>
     <string name="sdcard_message">Kad SD yang dipasang diperlukan untuk memuat naik media</string>
@@ -978,7 +969,6 @@ Language: ms
     <string name="fatal_db_error">Ralat berlaku semasa mencipta pangkalan data aplikasi. Cuba memasangnya semula.</string>
     <string name="error_blog_hidden">Blog ini disembunyi dan tidak dapat dimuatkan. Bolehkan ia semula dalam tetapan dan cuba lagi.</string>
     <string name="error_refresh_media">Media tidak dapat disegar semula pada masa ini</string>
-    <string name="error_deleting_page">Ralat berlaku semasa menghapuskan halaman</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Tetapan imej</string>
     <string name="local_changes">Perubahan setempat</string>
@@ -1128,7 +1118,6 @@ Language: ms
     <string name="immediately">Segera</string>
     <string name="quickpress_add_alert_title">Set nama jalan pintas</string>
     <string name="settings">Tetapan</string>
-    <string name="today">Hari Ini</string>
     <string name="quickpress_add_error">Nama jalan pintas tidak boleh kosong</string>
     <string name="quickpress_window_title">Pilih blog untuk jalan pintas QuickPress</string>
     <string name="categories">Kategori</string>

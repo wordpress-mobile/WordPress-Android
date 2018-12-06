@@ -258,7 +258,6 @@ Language: is
     <string name="detail_approve_manual">Allar athugasemdir verða að vera samþykktar handvirkt.</string>
     <string name="days_quantity_other">%d dagar</string>
     <string name="days_quantity_one">1 dagur</string>
-    <string name="web_address">Vefslóð</string>
     <string name="primary_site">Aðalvefur</string>
     <string name="pending_email_change_snackbar">Smelltu á staðfestingartengil í tölvupósti sem sendur var á %1$s til þess að staðfesta nýja netfangið þitt</string>
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
@@ -462,8 +461,6 @@ Language: is
     <string name="notifications_tab">Tilkynningar</string>
     <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
-    <string name="yesterday">Í gær</string>
-    <string name="days_ago">%d dögum síðan</string>
     <string name="connectionbar_no_connection">Ekkert samband</string>
     <string name="button_back">Til baka</string>
     <string name="button_edit">Leiðrétta</string>
@@ -475,8 +472,6 @@ Language: is
     <string name="stats_no_activity_this_period">Engin virkni skráð á tímabili</string>
     <string name="post_deleted">Færslu eytt</string>
     <string name="post_trashed">Færslu hent í ruslatunnu</string>
-    <string name="page_deleted">Síðu eytt</string>
-    <string name="page_trashed">Síðu hent í rurslatunnu</string>
     <string name="undo">Afturkalla</string>
     <string name="push_auth_expired">Fyrirspurnin rann út á tíma. Skráðu þig inn á WordPress.com til þess að reyna aftur.</string>
     <string name="ignore">Hunsa</string>
@@ -625,7 +620,6 @@ Language: is
     <string name="posts_empty_list">Engar færslur enn. Hví ekki rita eina?</string>
     <string name="reader_empty_comments">Engar athugasemdir enn</string>
     <string name="reader_label_view_original">Skoða upprunalega grein</string>
-    <string name="pages_empty_list">Engar síður enn. Hvers vegna ekki að búa til eina?</string>
     <string name="reader_empty_posts_in_tag">Engar færslur með þetta merki</string>
     <string name="stats_no_blog">Ekki var hægt að hlaða tölfræði fyrir bloggið</string>
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
@@ -649,7 +643,6 @@ Language: is
     <string name="adding_cat_success">Flokki bætt við</string>
     <string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
     <string name="adding_cat_failed">Tókst ekki að bæta við flokki</string>
-    <string name="invalid_url_message">Athugaðu hvort að uppgefin vefslóð (URL) bloggs sé gild</string>
     <string name="cat_name_required">Nafn flokks er krafist</string>
     <string name="email_invalid">Sláðu inn gilt netfang</string>
     <string name="error_downloading_image">Villa kom upp við niðurhal á mynd</string>
@@ -817,7 +810,6 @@ Language: is
     <string name="immediately">Strax</string>
     <string name="quickpress_add_alert_title">Skilgreindu nafn á flýtileið</string>
     <string name="settings">Stillingar</string>
-    <string name="today">Í dag</string>
     <string name="quickpress_add_error">Nafn á flýtileið getur ekki verið autt</string>
     <string name="quickpress_window_title">Veldu blogg fyrir QuickPress flýtileið</string>
     <string name="title">Titill</string>
