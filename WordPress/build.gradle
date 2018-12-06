@@ -26,6 +26,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+apply from: 'gutenberg-tasks.gradle'
+
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
@@ -42,12 +44,17 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-138"
-        versionCode 644
+        versionName "alpha-141"
+        versionCode 650
         minSdkVersion 21
         targetSdkVersion 26
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
@@ -59,17 +66,20 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
     }
 
