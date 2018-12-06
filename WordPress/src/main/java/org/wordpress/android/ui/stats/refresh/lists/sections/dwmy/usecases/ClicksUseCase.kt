@@ -71,9 +71,9 @@ constructor(
                 if (group.clicks.isEmpty()) {
                     items.add(headerItem)
                 } else {
-                    val isExpanded = group.groupId == uiState.groupId
+                    val isExpanded = group == uiState.group
                     items.add(ExpandableItem(headerItem, isExpanded) { changedExpandedState ->
-                        onUiState(SelectedClicksGroup(if (changedExpandedState) group.groupId else null))
+                        onUiState(SelectedClicksGroup(if (changedExpandedState) group else null))
                     })
                     if (isExpanded) {
                         items.addAll(group.clicks.map { click ->
@@ -105,7 +105,7 @@ constructor(
         navigateTo(ViewReferrers(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
-    data class SelectedClicksGroup(val groupId: String? = null)
+    data class SelectedClicksGroup(val group: ClicksModel.Group? = null)
 
     class ClicksUseCaseFactory
     @Inject constructor(
