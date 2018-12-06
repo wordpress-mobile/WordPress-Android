@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -17,12 +18,15 @@
         android:drawableTint="@color/grey_text_min"
         android:hint="@string/site_creation_domain_keywords_hint"
         android:imeOptions="actionSearch"
+        android:importantForAutofill="noExcludeDescendants"
+        android:inputType="text"
         android:paddingBottom="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_extra_large"
         android:singleLine="true"
-        android:textColorHint="@color/grey_darken_10"/>
+        android:textColorHint="@color/grey_darken_10"
+        tools:ignore="UnusedAttribute"/>
 
     <!-- ProgressBar seems to render correctly after when scrolled away only when in a container :( -->
     <FrameLayout
