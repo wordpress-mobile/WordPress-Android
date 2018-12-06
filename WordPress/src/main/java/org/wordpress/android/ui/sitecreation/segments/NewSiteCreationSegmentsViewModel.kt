@@ -21,6 +21,8 @@ import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -28,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
-private const val FAKE_DELAY = 1000
+private const val SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY = 1000
 
 class NewSiteCreationSegmentsViewModel
 @Inject constructor(
@@ -89,11 +91,11 @@ class NewSiteCreationSegmentsViewModel
             updateUiStateToContent(ListState.Loading(listState))
             launch {
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
-                delay(FAKE_DELAY)
+                delay(SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY)
                 withContext(MAIN) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
-                            SegmentsErrorUiState.createConnectionErrorUiState()
+                            SegmentsErrorUiState.SegmentsConnectionErrorUiState
                     )
                 }
             }
@@ -104,7 +106,7 @@ class NewSiteCreationSegmentsViewModel
         if (event.isError) {
             updateUiStateToError(
                     ListState.Error(listState, event.error.message),
-                    SegmentsErrorUiState.createGenericErrorUiState()
+                    SegmentsErrorUiState.SegmentsGenericErrorUiState
             )
         } else {
             updateUiStateToContent(ListState.Success(event.segmentList))
@@ -178,16 +180,18 @@ class NewSiteCreationSegmentsViewModel
     }
 }
 
-interface SegmentsUiState
-data class SegmentsContentUiState(val items: List<SegmentsItemUiState>) : SegmentsUiState
-data class SegmentsErrorUiState constructor(val titleResId: Int, val subtitleResId: Int? = null) : SegmentsUiState {
-    companion object {
-        fun createGenericErrorUiState() = SegmentsErrorUiState(
+sealed class SegmentsUiState {
+    data class SegmentsContentUiState(val items: List<SegmentsItemUiState>) : SegmentsUiState()
+    sealed class SegmentsErrorUiState constructor(
+        val titleResId: Int,
+        val subtitleResId: Int? = null
+    ) : SegmentsUiState() {
+        object SegmentsGenericErrorUiState : SegmentsErrorUiState(
                 R.string.site_creation_error_generic_title,
                 R.string.site_creation_error_generic_subtitle
         )
 
-        fun createConnectionErrorUiState() = SegmentsErrorUiState(R.string.site_creation_error_connection_title)
+        object SegmentsConnectionErrorUiState : SegmentsErrorUiState(R.string.site_creation_error_connection_title)
     }
 }
 

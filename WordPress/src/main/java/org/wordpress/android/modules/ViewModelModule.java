@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 
 import dagger.Binds;
@@ -95,6 +96,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NewSiteCreationMainVM.class)
     abstract ViewModel newSiteCreationMainVM(NewSiteCreationMainVM viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostListViewModel.class)
+    abstract ViewModel postListViewModel(PostListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

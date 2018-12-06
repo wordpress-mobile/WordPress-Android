@@ -41,7 +41,6 @@ Language: hu
     <string name="more">Bövebben</string>
     <string name="older_two_days">2 napnál régebbi</string>
     <string name="older_last_week">Egy hétnél régebbi</string>
-    <string name="pages_empty_list">Még nincs egy oldal sem. Létrehozzunk egyet?</string>
     <string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
     <string name="contact_us">Kapcsolat</string>
     <string name="update_verb">Frissítést</string>
@@ -138,7 +137,6 @@ Language: hu
     <string name="edit">Szerkesztés</string>
     <string name="immediately">Azonnal</string>
     <string name="quickpress_add_alert_title">Hivatkozás neve</string>
-    <string name="today">Ma</string>
     <string name="settings">Beállítások</string>
     <string name="quickpress_add_error">A hivatkozás neve nem lehet üres</string>
     <string name="quickpress_window_title">Válasszunk egy honlapot a QuickPress rövidcímhez</string>

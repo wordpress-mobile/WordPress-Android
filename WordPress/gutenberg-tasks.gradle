@@ -1,0 +1,28 @@
+// import the `submoduleGitHash()` function
+apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/38557f55d0a3be9605c82b1df9ced4c846fd3aea/submoduleGitHash.gradle'
+
+// define the filename to use for the JS bundle. This will "bubble" up to the Java code via a BuildConfig constant
+def gutenbergMobileJsBundleFilename = 'index.android.bundle'
+
+task downloadJSBundle {
+    doLast {
+        def assetsFolderName = "${project.projectDir}/src/main/assets"
+        File assetsFolder = new File(assetsFolderName)
+        if (! assetsFolder.exists()){
+            assetsFolder.mkdirs();
+        }
+
+        def targetFile = new File("${assetsFolderName}/${gutenbergMobileJsBundleFilename}")
+        def hash = submoduleGitHash("${project.projectDir}/../", 'libs/gutenberg-mobile')
+        def url = new URL("https://s3-us-west-1.amazonaws.com/gutenberg-mobile-js-bundle/wordpress-mobile/gutenberg-mobile/${hash}/android/App.js")
+
+        println "Downloading JS bundle from ${url}"
+        url.withInputStream{ i -> targetFile.withOutputStream{ it << i }}
+    }
+}
+
+if (!rootProject.ext.buildGutenbergFromSource) {
+    // Download the JS bundle if we're not building from source.
+    // Usually happens when compiling this project as standalone or via jitpack
+    preBuild.dependsOn(downloadJSBundle)
+}

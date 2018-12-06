@@ -40,6 +40,8 @@ public class WPLaunchActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction(getIntent().getAction());
+        intent.setData(getIntent().getData());
         startActivity(intent);
         finish();
     }
