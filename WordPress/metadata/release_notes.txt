@@ -1,3 +1,4 @@
-* Problems installing Jetpack? A new step-by step flow is ready to guide you.
-* We cleaned out some code cobwebs to make everything faster and more reliable.
-* Bug fixes.
+This release takes care of a pair of pesky bugs:
+
+* If your site had no title set, you’d see an empty field where the title would ordinarily go. Now, you’ll see “WordPress” there. (Also: you should give your site a title! It’s good for SEO.)
+* Sometimes the History screens for pages and posts wouldn’t actually show the differences between revisions, making the screen a little pointless. That’s fixed, so the History screen is once again useful.

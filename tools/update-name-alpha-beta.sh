@@ -31,6 +31,7 @@ BUILD_FILE=WordPress/build.gradle
 LOGFILE=/tmp/update-release-names.log
 echo > $LOGFILE
 
+CURRENT_VERSION_CODE=$BETA_VERSION_CODE
 check_version_code
 
 switch_branch_pull $BETA_BRANCH
