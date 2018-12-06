@@ -3000,24 +3000,18 @@ public class EditPostActivity extends AppCompatActivity implements
      * Starts the upload service to upload selected media.
      */
     private void startUploadService(MediaModel media) {
-        // make sure we only pass items with the QUEUED state to the UploadService
-        if (!MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-            return;
-        }
-
         final ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
-        // before starting the service, we need to update the posts' contents so we are sure the service
-        // can retrieve it from there on
-        savePostAsync(new AfterSavePostListener() {
-            @Override
-            public void onPostSave() {
-                UploadService.uploadMediaFromEditor(EditPostActivity.this, mediaList);
-            }
-        });
+        startUploadService(mediaList);
     }
 
+    /**
+     * Start the {@link UploadService} to upload the given {@code mediaModels}.
+     *
+     * Only {@link MediaModel} objects that have {@code MediaUploadState.QUEUED} statuses will be uploaded. .
+     */
     private void startUploadService(@NonNull List<MediaModel> mediaModels) {
+        // make sure we only pass items with the QUEUED state to the UploadService
         final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
         for (MediaModel media: mediaModels) {
             if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
@@ -3025,12 +3019,13 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
 
+        // before starting the service, we need to update the posts' contents so we are sure the service
+        // can retrieve it from there on
         savePostAsync(new AfterSavePostListener() {
             @Override public void onPostSave() {
                 UploadService.uploadMediaFromEditor(EditPostActivity.this, queuedMediaModels);
             }
         });
-
     }
 
     private String getVideoThumbnail(String videoPath) {
