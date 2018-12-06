@@ -37,15 +37,15 @@ constructor(
 
     val navigationTarget: LiveData<NavigationTarget> = mergeNotNull(useCases.map { it.navigationTarget })
 
-    suspend fun loadInsightItems(site: SiteModel) {
-        loadItems(site, false, false)
+    suspend fun loadData(site: SiteModel) {
+        loadData(site, false, false)
     }
 
-    suspend fun refreshInsightItems(site: SiteModel, forced: Boolean = false) {
-        loadItems(site, true, forced)
+    suspend fun refreshData(site: SiteModel, forced: Boolean = false) {
+        loadData(site, true, forced)
     }
 
-    private suspend fun loadItems(site: SiteModel, refresh: Boolean, forced: Boolean) {
+    private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
             useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
             val items = getStatsTypes()
