@@ -7,7 +7,7 @@ data class ClicksModel(val otherClicks: Int, val totalClicks: Int, val groups: L
         val icon: String?,
         val url: String?,
         val views: Int?,
-        val referrers: List<Click>
+        val clicks: List<Click>
     )
     data class Click(val name: String, val views: Int, val icon: String, val url: String?)
 }
