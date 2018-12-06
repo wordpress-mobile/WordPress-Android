@@ -34,7 +34,7 @@ class TimeStatsMapper
         val groups = first.groups.take(pageSize).map { group ->
             val children = group.referrers?.mapNotNull { result ->
                 if (result.name != null && result.views != null) {
-                    val firstChildUrl = result.children.firstOrNull()?.url
+                    val firstChildUrl = result.children?.firstOrNull()?.url
                     Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)
                 } else {
                     AppLog.e(STATS, "ReferrersResponse.type: Missing fields on a referrer")

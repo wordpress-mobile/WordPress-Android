@@ -104,7 +104,7 @@ class ReferrersRestClient
             @SerializedName("icon") val icon: String?,
             @SerializedName("url") val url: String?,
             @SerializedName("views") val views: Int?,
-            @SerializedName("children") val children: List<Child>
+            @SerializedName("children") val children: List<Child>?
         )
 
         data class Child(
