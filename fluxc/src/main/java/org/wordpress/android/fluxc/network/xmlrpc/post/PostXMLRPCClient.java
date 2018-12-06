@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.PostAction;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
@@ -43,6 +44,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -91,38 +93,37 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         }
                     }
                 }, new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        // Possible non-generic errors:
-                        // 404 - "Invalid post ID."
-                        FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
-                        // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
-                        // Convert GenericErrorType to PostErrorType where applicable
-                        PostError postError;
-                        switch (error.type) {
-                            case AUTHORIZATION_REQUIRED:
-                                postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
-                                break;
-                            default:
-                                postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
-                        }
-                        payload.error = postError;
-                        payload.origin = origin;
-                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
-                    }
-                });
+            @Override
+            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                // Possible non-generic errors:
+                // 404 - "Invalid post ID."
+                FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
+                // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
+                // Convert GenericErrorType to PostErrorType where applicable
+                PostError postError;
+                switch (error.type) {
+                    case AUTHORIZATION_REQUIRED:
+                        postError = new PostError(PostErrorType.UNAUTHORIZED, error.message);
+                        break;
+                    default:
+                        postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
+                }
+                payload.error = postError;
+                payload.origin = origin;
+                mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
+            }
+        });
 
         add(request);
     }
 
     public void fetchPostList(final PostListDescriptorForXmlRpcSite listDescriptor, final int offset) {
         SiteModel site = listDescriptor.getSite();
-        List<String> fields = new ArrayList<>();
-        fields.add("post_id");
-        fields.add("post_modified");
+        List<String> fields = Arrays.asList("post_id", "post_modified_gmt");
+        final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         List<Object> params =
                 createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
-                        offset, listDescriptor.getPageSize(), listDescriptor.getStatusList(), fields,
+                        offset, pageSize, listDescriptor.getStatusList(), fields,
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue());
         final boolean loadedMore = offset > 0;
 
@@ -131,7 +132,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                     @Override
                     public void onResponse(Object[] response) {
                         boolean canLoadMore =
-                                response != null && response.length == listDescriptor.getPageSize();
+                                response != null && response.length == pageSize;
                         List<PostListItem> postListItems = postListItemsFromPostsResponse(response);
                         PostError postError = response == null ? new PostError(PostErrorType.INVALID_RESPONSE) : null;
                         FetchPostListResponsePayload responsePayload =
@@ -213,10 +214,14 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void pushPost(final PostModel post, final SiteModel site) {
-        if (TextUtils.isEmpty(post.getStatus())) {
-            post.setStatus(PostStatus.PUBLISHED.toString());
-        }
+        pushPostInternal(post, site, false);
+    }
 
+    public void restorePost(final PostModel post, final SiteModel site) {
+        pushPostInternal(post, site, true);
+    }
+
+    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost) {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         if (post.isLocalDraft()) {
@@ -247,7 +252,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         post.setIsLocallyChanged(false);
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 },
                 new BaseErrorListener() {
@@ -270,7 +278,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 postError = new PostError(PostErrorType.GENERIC_ERROR, error.message);
                         }
                         payload.error = postError;
-                        mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
+
+                        Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
+                                : UploadActionBuilder.newPushedPostAction(payload);
+                        mDispatcher.dispatch(resultAction);
                     }
                 });
 
@@ -326,9 +337,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         for (Object responseObject : response) {
             Map<?, ?> postMap = (Map<?, ?>) responseObject;
             String postID = MapUtils.getMapStr(postMap, "post_id");
-            String postModified = MapUtils.getMapStr(postMap, "post_modified");
+            Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
+            String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
 
-            postListItems.add(new PostListItem(Long.parseLong(postID), postModified));
+            postListItems.add(new PostListItem(Long.parseLong(postID), lastModifiedAsIso8601));
         }
         return postListItems;
     }
@@ -374,7 +386,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         String dateCreatedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(dateCreatedGmt);
         post.setDateCreated(dateCreatedAsIso8601);
 
-        Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified");
+        Date lastModifiedGmt = MapUtils.getMapDate(postMap, "post_modified_gmt");
         String lastModifiedAsIso8601 = DateTimeUtils.iso8601UTCFromDate(lastModifiedGmt);
         post.setLastModified(lastModifiedAsIso8601);
 

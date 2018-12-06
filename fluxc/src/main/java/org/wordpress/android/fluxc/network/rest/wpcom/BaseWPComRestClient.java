@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -101,6 +102,7 @@ public abstract class BaseWPComRestClient {
     }
 
     private Request addRequest(BaseRequest request) {
+        Log.d("sync_get_request", "Is caching: " + request.mUri.toString());
         if (request.shouldCache() && request.shouldForceUpdate()) {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }
