@@ -161,5 +161,10 @@
         <item name="android:layout_marginEnd">8dp</item>
     </style>
 
+    <style name="StatsGraphLabel">
+        <item name="android:textColor">@color/wp_grey</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
 
 </resources>

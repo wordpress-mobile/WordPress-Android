@@ -10,7 +10,7 @@
         style="@style/StatsBlockText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_gravity="center_vertical"
         android:text="@string/unknown"/>
 

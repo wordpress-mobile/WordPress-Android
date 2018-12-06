@@ -10,10 +10,10 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_small"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:contentDescription="@string/icon"
         tools:src="@drawable/ic_share_blue_medium_24dp"/>
 
@@ -26,7 +26,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:orientation="horizontal">
 
             <TextView
