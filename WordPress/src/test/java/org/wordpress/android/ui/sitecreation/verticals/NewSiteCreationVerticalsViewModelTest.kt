@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState
@@ -241,14 +242,15 @@ class NewSiteCreationVerticalsViewModelTest {
     @Test
     fun verifyCustomCategoryItemHasValidType() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
-        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY, ZERO_DELAY)
-        assertThat(viewModel.uiState.value!!.items[0]).isInstanceOf(VerticalsCustomModelUiState::class.java)
+        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY)
+        assertThat((viewModel.uiState.value!! as VerticalsContentUiState).items[0])
+                .isInstanceOf(VerticalsCustomModelUiState::class.java)
     }
 
     @Test
     fun verifyCustomCategoryItemShown() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
-        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY, ZERO_DELAY)
+        viewModel.updateQuery(CUSTOM_CATEGORY_MODEL_QUERY)
         verifyCustomCategoryModelShown(viewModel.uiState, CUSTOM_CATEGORY_MODEL_ID, CUSTOM_CATEGORY_MODEL_NAME)
     }
 
@@ -470,14 +472,9 @@ class NewSiteCreationVerticalsViewModelTest {
         id: String,
         title: String
     ) {
-        val uiState = uiStateLiveData.value!!
+        val uiState = uiStateLiveData.value!! as VerticalsContentUiState
         assertThat((uiState.items[0] as VerticalsCustomModelUiState).id).isEqualTo(id)
         assertThat((uiState.items[0] as VerticalsCustomModelUiState).title).isEqualTo(title)
-    }
-
-    private fun verifyRetrySuggestionItemShown(uiStateLiveData: LiveData<VerticalsUiState>) {
-        assertThat(uiStateLiveData.value!!.items[0])
-                .isInstanceOf(VerticalsFetchSuggestionsErrorUiState::class.java)
     }
 
     private fun verifyUnknownErrorRetryItemShown(uiState: VerticalsContentUiState) {
