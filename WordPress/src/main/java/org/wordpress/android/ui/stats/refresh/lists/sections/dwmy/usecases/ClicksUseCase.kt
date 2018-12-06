@@ -68,7 +68,7 @@ constructor(
                         value = group.views?.toFormattedString(),
                         showDivider = index < domainModel.groups.size - 1
                 )
-                if (group.referrers.isEmpty()) {
+                if (group.clicks.isEmpty()) {
                     items.add(headerItem)
                 } else {
                     val isExpanded = group.groupId == uiState.groupId
@@ -76,11 +76,11 @@ constructor(
                         onUiState(SelectedClicksGroup(if (changedExpandedState) group.groupId else null))
                     })
                     if (isExpanded) {
-                        items.addAll(group.referrers.map { referrer ->
+                        items.addAll(group.clicks.map { click ->
                             ListItemWithIcon(
-                                    iconUrl = referrer.icon,
-                                    text = referrer.name,
-                                    value = referrer.views.toFormattedString(),
+                                    iconUrl = click.icon,
+                                    text = click.name,
+                                    value = click.views.toFormattedString(),
                                     showDivider = false
                             )
                         })
