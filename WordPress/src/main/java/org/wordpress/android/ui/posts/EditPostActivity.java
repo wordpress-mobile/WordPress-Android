@@ -2783,15 +2783,15 @@ public class EditPostActivity extends AppCompatActivity implements
                     break;
                 case RequestCodes.GIPHY_PICKER:
                     if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
-                        int[] mediaLocalIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         ArrayList<MediaModel> mediaModels = new ArrayList<>();
-                        for (int localId : mediaLocalIds) {
+                        for (int localId : localIds) {
                             mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
                         }
 
                         startUploadService(mediaModels);
 
-                        for (MediaModel mediaModel: mediaModels) {
+                        for (MediaModel mediaModel : mediaModels) {
                             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                             mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
                         }
@@ -3013,7 +3013,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private void startUploadService(@NonNull List<MediaModel> mediaModels) {
         // make sure we only pass items with the QUEUED state to the UploadService
         final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
-        for (MediaModel media: mediaModels) {
+        for (MediaModel media : mediaModels) {
             if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
                 queuedMediaModels.add(media);
             }
