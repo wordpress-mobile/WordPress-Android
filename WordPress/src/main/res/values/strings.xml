@@ -2383,6 +2383,7 @@
     <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right below the title.</string>
     <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
+    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
 </resources>

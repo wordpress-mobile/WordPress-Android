@@ -4,13 +4,16 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewHolder.VerticalsErrorViewHolder
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewHolder.VerticalsSuggestionCustomItemViewHolder
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewHolder.VerticalsSuggestionItemViewHolder
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
 private const val suggestionItemViewType: Int = 1
-private const val suggestionErrorViewType: Int = 2
+private const val suggestionCustomItemViewType: Int = 2
+private const val suggestionErrorViewType: Int = 3
 
 class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHolder>() {
     private val items = mutableListOf<VerticalsListItemUiState>()
@@ -18,6 +21,7 @@ class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHold
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSiteCreationVerticalsViewHolder {
         return when (viewType) {
             suggestionItemViewType -> VerticalsSuggestionItemViewHolder(parent)
+            suggestionCustomItemViewType -> VerticalsSuggestionCustomItemViewHolder(parent)
             suggestionErrorViewType -> VerticalsErrorViewHolder(parent)
             else -> throw NotImplementedError("Unknown ViewType")
         }
@@ -39,6 +43,7 @@ class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHold
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is VerticalsModelUiState -> suggestionItemViewType
+            is VerticalsCustomModelUiState -> suggestionCustomItemViewType
             is VerticalsFetchSuggestionsErrorUiState -> suggestionErrorViewType
         }
     }
@@ -56,6 +61,7 @@ class NewSiteCreationVerticalsAdapter : Adapter<NewSiteCreationVerticalsViewHold
             return when (oldItem) {
                 is VerticalsFetchSuggestionsErrorUiState -> true
                 is VerticalsModelUiState -> oldItem.id == (newItem as VerticalsModelUiState).id
+                is VerticalsCustomModelUiState -> oldItem.id == (newItem as VerticalsCustomModelUiState).id
             }
         }
 

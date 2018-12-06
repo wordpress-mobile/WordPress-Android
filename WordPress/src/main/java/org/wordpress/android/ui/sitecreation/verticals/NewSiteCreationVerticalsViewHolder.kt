@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsModelUiState
 
@@ -28,6 +29,26 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
         override fun onBind(uiState: VerticalsListItemUiState) {
             uiState as VerticalsModelUiState
             suggestion.text = uiState.title
+            divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
+            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
+            container.setOnClickListener {
+                uiState.onItemTapped!!.invoke()
+            }
+        }
+    }
+
+    class VerticalsSuggestionCustomItemViewHolder(
+        parentView: ViewGroup
+    ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_custom_suggestion_item) {
+        private val container = itemView.findViewById<ViewGroup>(R.id.container)
+        private val title = itemView.findViewById<TextView>(R.id.title)
+        private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
+        private val divider = itemView.findViewById<View>(R.id.divider)
+
+        override fun onBind(uiState: VerticalsListItemUiState) {
+            uiState as VerticalsCustomModelUiState
+            title.text = uiState.title
+            subtitle.text = parent.resources.getString(uiState.subTitleResId)
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
             requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             container.setOnClickListener {
