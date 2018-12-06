@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
@@ -6,7 +6,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.POSTS_AND_PAGES
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.REFERRERS
 import org.wordpress.android.fluxc.store.stats.time.ReferrersStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
@@ -20,8 +20,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases.ReferrersUseCase.SelectedGroup
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -35,14 +35,17 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val referrersStore: ReferrersStore,
     private val statsDateFormatter: StatsDateFormatter
-) : StatefulUseCase<ReferrersModel, SelectedGroup>(POSTS_AND_PAGES, mainDispatcher, SelectedGroup()) {
+) : StatefulUseCase<ReferrersModel, SelectedGroup>(REFERRERS, mainDispatcher, SelectedGroup()) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = referrersStore.getReferrers(site, statsGranularity, PAGE_SIZE)
+        val dbModel = referrersStore.getReferrers(site, statsGranularity,
+                PAGE_SIZE
+        )
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = referrersStore.fetchReferrers(site, PAGE_SIZE, statsGranularity, forced)
+        val response = referrersStore.fetchReferrers(site,
+                PAGE_SIZE, statsGranularity, forced)
         val model = response.model
         val error = response.error
 
@@ -114,6 +117,11 @@ constructor(
         private val statsDateFormatter: StatsDateFormatter
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
-                ReferrersUseCase(granularity, mainDispatcher, referrersStore, statsDateFormatter)
+                ReferrersUseCase(
+                        granularity,
+                        mainDispatcher,
+                        referrersStore,
+                        statsDateFormatter
+                )
     }
 }

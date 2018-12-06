@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -53,14 +53,21 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(referrer))
     @Before
     fun setUp() {
-        useCase = ReferrersUseCase(statsGranularity, Dispatchers.Unconfined, store, statsDateFormatter)
+        useCase = ReferrersUseCase(
+                statsGranularity,
+                Dispatchers.Unconfined,
+                store,
+                statsDateFormatter
+        )
     }
 
     @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer, group), false)
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchReferrers(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -111,7 +118,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer), true)
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchReferrers(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -136,7 +145,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchReferrers(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(ReferrersModel(0, 0, listOf(), false))
         )
 
@@ -154,7 +165,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchReferrers(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
