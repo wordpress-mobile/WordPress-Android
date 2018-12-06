@@ -130,7 +130,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             showQuickStartFocusPoint();
 
             Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
-                    R.string.quick_start_dialog_share_site_message_short_connections);
+                    R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
             WPDialogSnackbar.make(getView(), title, AccessibilityUtils.getSnackbarDuration(getActivity(),
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms))).show();
