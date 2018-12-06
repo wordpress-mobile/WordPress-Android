@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.RequestQueue
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -57,9 +56,7 @@ class ClicksRestClient
             is Success -> {
                 response.data.groups.values.forEach {
                     it.clicks.forEach { group ->
-                        Log.e("clicks_response", "$period: ${group.children?.toString()}}")
                         group.build(gson)
-                        Log.e("clicks_response", "Size after mapping: ${group.clicks?.size}}")
                     }
                 }
                 FetchStatsPayload(response.data)
@@ -92,7 +89,6 @@ class ClicksRestClient
             fun build(gson: Gson) {
                 when (this.children) {
                     is JsonArray -> this.clicks = this.children.map {
-                        Log.e("clicks_response", "Trying to map child: $it")
                         gson.fromJson<Click>(
                                 it,
                                 Click::class.java
