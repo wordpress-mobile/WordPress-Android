@@ -99,10 +99,12 @@ public class PostRestClient extends BaseWPComRestClient {
     public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final int offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
+        final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
         String fields = TextUtils.join(",", Arrays.asList("ID", "modified"));
-        Map<String, String> params = createFetchPostListParameters(false, offset, listDescriptor.getPageSize(),
-                listDescriptor.getStatusList(), fields, listDescriptor.getOrder().getValue(),
-                listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
+        Map<String, String> params =
+                createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(), fields,
+                        listDescriptor.getOrder().getValue(), listDescriptor.getOrderBy().getValue(),
+                        listDescriptor.getSearchQuery());
 
         final boolean loadedMore = offset > 0;
 
@@ -115,7 +117,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         for (PostWPComRestResponse postResponse : response.posts) {
                             postListItems.add(new PostListItem(postResponse.ID, postResponse.modified));
                         }
-                        boolean canLoadMore = postListItems.size() == listDescriptor.getPageSize();
+                        boolean canLoadMore = postListItems.size() == pageSize;
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
                                         canLoadMore, null);
@@ -243,6 +245,39 @@ public class PostRestClient extends BaseWPComRestClient {
                         RemotePostPayload payload = new RemotePostPayload(post, site);
                         payload.error = new PostError(error.apiError, error.message);
                         mDispatcher.dispatch(PostActionBuilder.newDeletedPostAction(payload));
+                    }
+                }
+        );
+
+        request.addQueryParameter("context", "edit");
+
+        request.disableRetries();
+        add(request);
+    }
+
+     public void restorePost(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).restore.getUrlV1_1();
+
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        PostModel restoredPost = postResponseToPostModel(response);
+                        restoredPost.setId(post.getId());
+                        restoredPost.setLocalSiteId(post.getLocalSiteId());
+
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.error = new PostError(error.apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newRestoredPostAction(payload));
                     }
                 }
         );

@@ -15,7 +15,7 @@ public class SiteUtils {
     /**
      * Given a {@link SiteModel} and a {@link String} compatible with {@link SimpleDateFormat},
      * returns a formatted date that accounts for the site's timezone setting.
-     *
+     * <p>
      * Imported from WordPress-Android with some modifications.
      */
     public static @NonNull String getCurrentDateTimeForSite(@NonNull SiteModel site, @NonNull String pattern) {
@@ -24,13 +24,36 @@ public class SiteUtils {
     }
 
     /**
+     * Given a {@link SiteModel}, {@link String} and a {@link Date} compatible with {@link SimpleDateFormat},
+     * returns a formatted date that accounts for the site's timezone setting.
+     */
+    public static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
+                                                     @NonNull String pattern,
+                                                     @NonNull Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.ROOT);
+        return getDateTimeForSite(site, dateFormat, date);
+    }
+
+    /**
      * Given a {@link SiteModel} and a {@link SimpleDateFormat},
      * returns a formatted date that accounts for the site's timezone setting.
-     *
+     * <p>
      * Imported from WordPress-Android with some modifications.
      */
     public static @NonNull String getCurrentDateTimeForSite(@NonNull SiteModel site,
                                                             @NonNull SimpleDateFormat dateFormat) {
+        Date date = new Date();
+        return getDateTimeForSite(site, dateFormat, date);
+    }
+
+
+    /**
+     * Given a {@link SiteModel}, {@link SimpleDateFormat} and a {@link Date},
+     * returns a formatted date that accounts for the site's timezone setting.
+     */
+    private static @NonNull String getDateTimeForSite(@NonNull SiteModel site,
+                                                      @NonNull SimpleDateFormat dateFormat,
+                                                      @NonNull Date date) {
         String wpTimeZone = site.getTimezone();
 
         /*
@@ -73,6 +96,6 @@ public class SiteUtils {
         }
 
         dateFormat.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
-        return dateFormat.format(new Date());
+        return dateFormat.format(date);
     }
 }
