@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.modules.UI_THREAD

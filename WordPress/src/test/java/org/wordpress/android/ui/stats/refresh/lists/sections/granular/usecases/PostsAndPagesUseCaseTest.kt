@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
