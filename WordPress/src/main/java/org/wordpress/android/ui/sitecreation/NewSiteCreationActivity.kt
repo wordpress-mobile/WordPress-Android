@@ -31,7 +31,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
-        setContentView(R.layout.site_creation_activity)
+        setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
         mainViewModel.start()
 

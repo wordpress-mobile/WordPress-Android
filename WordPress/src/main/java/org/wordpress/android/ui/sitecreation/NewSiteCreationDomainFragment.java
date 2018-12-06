@@ -62,7 +62,7 @@ public class NewSiteCreationDomainFragment extends NewSiteCreationBaseFormFragme
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return R.layout.site_creation_domain_screen;
+        return R.layout.new_site_creation_domain_screen;
     }
 
     @Override
