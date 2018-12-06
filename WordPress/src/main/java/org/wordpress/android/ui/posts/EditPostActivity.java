@@ -111,6 +111,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -2780,6 +2781,22 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
+                case RequestCodes.GIPHY_PICKER:
+                    if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] mediaLocalIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        ArrayList<MediaModel> mediaModels = new ArrayList<>();
+                        for (int localId : mediaLocalIds) {
+                            mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
+                        }
+
+                        startUploadService(mediaModels);
+
+                        for (MediaModel mediaModel: mediaModels) {
+                            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
+                            mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
+                        }
+                    }
+                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2998,6 +3015,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 UploadService.uploadMediaFromEditor(EditPostActivity.this, mediaList);
             }
         });
+    }
+
+    private void startUploadService(@NonNull List<MediaModel> mediaModels) {
+        final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
+        for (MediaModel media: mediaModels) {
+            if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
+                queuedMediaModels.add(media);
+            }
+        }
+
+        savePostAsync(new AfterSavePostListener() {
+            @Override public void onPostSave() {
+                UploadService.uploadMediaFromEditor(EditPostActivity.this, queuedMediaModels);
+            }
+        });
+
     }
 
     private String getVideoThumbnail(String videoPath) {
