@@ -17,6 +17,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 

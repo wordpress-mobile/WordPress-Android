@@ -22,6 +22,8 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -58,8 +60,8 @@ private val SECOND_MODEL =
         )
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
-private val GENERIC_ERROR_STATE = SegmentsErrorUiState.createGenericErrorUiState()
-private val NO_CONNECTION_ERROR_STATE = SegmentsErrorUiState.createConnectionErrorUiState()
+private val GENERIC_ERROR_STATE = SegmentsErrorUiState.SegmentsGenericErrorUiState
+private val NO_CONNECTION_ERROR_STATE = SegmentsErrorUiState.SegmentsConnectionErrorUiState
 private val HEADER_AND_FIRST_ITEM_STATE = SegmentsContentUiState(
         listOf(
                 HeaderUiState,
