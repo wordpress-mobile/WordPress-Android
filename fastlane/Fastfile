@@ -144,6 +144,16 @@ ENV[GHHELPER_REPO="wordpress-mobile/WordPress-android"]
       download_path: Dir.pwd + "/fastlane/metadata/android")
   end 
 
+#####################################################################################
+# release_preflight
+# -----------------------------------------------------------------------------------
+# Run pre-build checks to ensure we're ready for release!
+#####################################################################################
+desc "Run release preflight checks"
+ lane :release_preflight do | options |
+     configure_validate()
+ end
+
 ########################################################################
 # Helper Lanes
 ########################################################################  
