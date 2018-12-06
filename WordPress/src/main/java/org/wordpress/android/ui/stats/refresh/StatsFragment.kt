@@ -22,10 +22,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsListType.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
@@ -113,16 +114,16 @@ class StatsFragment : DaggerFragment() {
 
 class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
     companion object {
-        val statsTypes = listOf(INSIGHTS, DAYS, WEEKS, MONTHS)
+        val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
     }
 
-    override fun getCount(): Int = statsTypes.size
+    override fun getCount(): Int = statsSections.size
 
     override fun getItem(position: Int): Fragment {
-        return StatsListFragment.newInstance(statsTypes[position])
+        return StatsListFragment.newInstance(statsSections[position])
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return context.getString(statsTypes[position].titleRes)
+        return context.getString(statsSections[position].titleRes)
     }
 }

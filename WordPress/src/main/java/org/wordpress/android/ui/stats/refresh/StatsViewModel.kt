@@ -10,7 +10,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -18,7 +18,11 @@ import javax.inject.Named
 
 class StatsViewModel
 @Inject constructor(
-    private val insightsUseCase: InsightsUseCase,
+    @Named(INSIGHTS_USE_CASE) private val insightsUseCase: BaseListUseCase,
+    @Named(DAY_STATS_USE_CASE) private val dayStatsUseCase: BaseListUseCase,
+    @Named(WEEK_STATS_USE_CASE) private val weekStatsUseCase: BaseListUseCase,
+    @Named(MONTH_STATS_USE_CASE) private val monthStatsUseCase: BaseListUseCase,
+    @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
@@ -44,8 +48,11 @@ class StatsViewModel
 
     private fun loadStats() {
         loadData {
-            insightsUseCase.loadInsightItems(site)
-            insightsUseCase.refreshInsightItems(site)
+            insightsUseCase.loadData(site)
+            dayStatsUseCase.loadData(site)
+            weekStatsUseCase.loadData(site)
+            monthStatsUseCase.loadData(site)
+            yearStatsUseCase.loadData(site)
         }
     }
 
@@ -70,7 +77,11 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         loadData {
-            insightsUseCase.refreshInsightItems(site, true)
+            insightsUseCase.refreshData(site, true)
+            dayStatsUseCase.refreshData(site, true)
+            weekStatsUseCase.refreshData(site, true)
+            monthStatsUseCase.refreshData(site, true)
+            yearStatsUseCase.refreshData(site, true)
         }
     }
 }

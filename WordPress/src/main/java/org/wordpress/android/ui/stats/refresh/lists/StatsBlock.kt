@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
-import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes
 import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.EMPTY
@@ -30,4 +29,4 @@ data class Error(override val statsTypes: StatsTypes, val errorMessage: String) 
 
 data class Empty(val isButtonVisible: Boolean = true) : StatsBlock(EMPTY, null)
 
-data class Loading(override val statsTypes: InsightsTypes) : StatsBlock(LOADING, statsTypes)
+data class Loading(override val statsTypes: StatsTypes) : StatsBlock(LOADING, statsTypes)
