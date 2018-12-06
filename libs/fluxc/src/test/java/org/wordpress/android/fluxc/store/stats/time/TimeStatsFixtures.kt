@@ -11,14 +11,16 @@ const val WEEK_PERIOD = "week"
 const val MONTH_PERIOD = "month"
 const val YEAR_PERIOD = "year"
 const val TOTAL_VIEWS = 100
-const val POST_ID = 1
+const val POST_ID = 1L
 const val POST_TITLE = "ABCD"
+const val POST_URL = "url.com"
 const val POST_VIEWS = 10
 
 val DAY_POST_VIEW_RESPONSE = PostViewsResponse(
         POST_ID,
         POST_TITLE,
         DAY_PERIOD,
+        POST_URL,
         POST_VIEWS
 )
 val DAY_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { DAY_POST_VIEW_RESPONSE }
@@ -38,6 +40,7 @@ val WEEK_POST_VIEW_RESPONSE = PostViewsResponse(
         POST_ID,
         POST_TITLE,
         DAY_PERIOD,
+        POST_URL,
         POST_VIEWS
 )
 val WEEK_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { WEEK_POST_VIEW_RESPONSE }
@@ -57,6 +60,7 @@ val MONTH_POST_VIEW_RESPONSE = PostViewsResponse(
         POST_ID,
         POST_TITLE,
         DAY_PERIOD,
+        POST_URL,
         POST_VIEWS
 )
 val MONTH_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { MONTH_POST_VIEW_RESPONSE }
@@ -76,6 +80,7 @@ val YEAR_POST_VIEW_RESPONSE = PostViewsResponse(
         POST_ID,
         POST_TITLE,
         DAY_PERIOD,
+        POST_URL,
         POST_VIEWS
 )
 val YEAR_POST_VIEW_RESPONSE_LIST = List(POST_COUNT) { YEAR_POST_VIEW_RESPONSE }
