@@ -2381,5 +2381,4 @@
     <string name="new_site_creation_button_skip">Skip</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
-    <string name="site_creation_error_connection_title">No internet connection</string>
 </resources>

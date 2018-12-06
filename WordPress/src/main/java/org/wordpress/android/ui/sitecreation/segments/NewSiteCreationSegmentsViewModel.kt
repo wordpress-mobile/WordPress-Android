@@ -191,7 +191,7 @@ sealed class SegmentsUiState {
                 R.string.site_creation_error_generic_subtitle
         )
 
-        object SegmentsConnectionErrorUiState : SegmentsErrorUiState(R.string.site_creation_error_connection_title)
+        object SegmentsConnectionErrorUiState : SegmentsErrorUiState(R.string.no_network_message)
     }
 }
 
