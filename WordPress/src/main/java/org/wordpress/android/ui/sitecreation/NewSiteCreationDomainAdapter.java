@@ -140,14 +140,16 @@ public class NewSiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerV
         switch (viewType) {
             case VIEW_TYPE_HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(parent.getContext())
-                                                          .inflate(R.layout.site_creation_domain_header, parent,
+                                                          .inflate(R.layout.new_site_creation_domain_header, parent,
                                                                    false));
             case VIEW_TYPE_INPUT:
                 return new InputViewHolder(LayoutInflater.from(parent.getContext())
-                                                         .inflate(R.layout.site_creation_domain_input, parent, false));
+                                                         .inflate(R.layout.new_site_creation_domain_input, parent,
+                                                                 false));
             case VIEW_TYPE_ITEM:
                 return new DomainViewHolder(LayoutInflater.from(parent.getContext())
-                                                          .inflate(R.layout.site_creation_domain_item, parent, false));
+                                                          .inflate(R.layout.new_site_creation_domain_item, parent,
+                                                                  false));
             default:
                 throw new RuntimeException("Unknown view type " + viewType);
         }
