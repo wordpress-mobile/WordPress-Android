@@ -161,12 +161,9 @@ Language: th
     <string name="email">อีเมล</string>
     <string name="stats_insights_latest_post_trend">มันเป็นเวลา %1$s ตั้งแต่ %2$s ได้เผยแพร่  นี่เป็นวิธีที่เรื่องจะถูกแสดงจนถึงตอนนี้…</string>
     <string name="stats_insights_latest_post_summary">สรุปเรื่องล่าสุด</string>
-    <string name="days_ago">%d วันที่แล้ว</string>
-    <string name="yesterday">เมื่อวานนี้</string>
     <string name="connectionbar_no_connection">ไม่มีการเชื่อมต่อ</string>
     <string name="stats_no_activity_this_period">ไม่มีกิจกรรมในช่วงเวลานี้</string>
     <string name="button_back">กลับไป</string>
-    <string name="page_deleted">ลบหน้าแล้ว</string>
     <string name="button_stats">สถิติ</string>
     <string name="button_trash">ขยะ</string>
     <string name="button_preview">ดูก่อน</string>
@@ -175,7 +172,6 @@ Language: th
     <string name="button_publish">เผยแพร่</string>
     <string name="post_deleted">ลบหน้าแล้ว</string>
     <string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
-    <string name="page_trashed">หน้าที่ส่งไปถังขยะ</string>
     <string name="undo">ย้อนกลับ</string>
     <string name="push_auth_expired">การร้องขอหมดอายุแล้ว  ลงทะเบียนเข้าสู่ WordPress.com เพื่อลองอีกครั้ง</string>
     <string name="stats_insights_best_ever">การดูที่ดีที่สุด</string>
@@ -303,7 +299,6 @@ Language: th
     <string name="ssl_certificate_details">รายละเอียด</string>
     <string name="cab_selected">%d ถูกเลือก</string>
     <string name="comment_reply_to_user">ตอบกลับไปที่ %s</string>
-    <string name="pages_empty_list">ยังไม่มีหน้า ทำไมไม่สร้างสักหนึ่งหน้า?</string>
     <string name="older_two_days">เก่ากว่า 2 วัน</string>
     <string name="older_last_week">เก่ากว่าหนึ่งอาทิตย์</string>
     <string name="stats_no_blog">ไม่สามารถโหลดสถิติได้สำหรับบล็อกที่ต้องการ</string>
@@ -362,7 +357,6 @@ Language: th
     <string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
     <string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
     <string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
-    <string name="invalid_url_message">ตรวจสอบ URL ที่ใส่มาว่าใช้งานได้หรือไม่</string>
     <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>
     <string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
     <string name="new_media">ไฟล์สื่อใหม่</string>
@@ -514,7 +508,6 @@ Language: th
     <string name="edit">แก้ไข</string>
     <string name="immediately">ทันที</string>
     <string name="quickpress_add_alert_title">ตั้งชื่อทางลัด</string>
-    <string name="today">วันนี้</string>
     <string name="settings">ตั้งค่า</string>
     <string name="quickpress_window_title">เลือกบล็อกจากทางลัด QuickPress</string>
     <string name="quickpress_add_error">ชื่อปุ่มลัดไม่สามารถเว้นว่างได้</string>

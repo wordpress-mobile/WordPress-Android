@@ -366,4 +366,6 @@
     <dimen name="new_site_creation_preview_ok_button_container_elevation">6dp</dimen>
     <dimen name="new_site_creation_verticals_search_input_text_padding">32dp</dimen>
 
+    <dimen name="new_site_creation_site_info_tablet_max_width">512dp</dimen>
+    <dimen name="new_site_creation_site_info_tablet_max_text_width">432dp</dimen>
 </resources>

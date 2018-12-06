@@ -24,4 +24,9 @@
         android:layout="@layout/wp_preference_layout"
         android:title="@string/web_address" />
 
+    <org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
+        android:key="@string/pref_key_change_password"
+        android:layout="@layout/wp_preference_layout"
+        android:title="@string/change_password" />
+
 </PreferenceScreen>

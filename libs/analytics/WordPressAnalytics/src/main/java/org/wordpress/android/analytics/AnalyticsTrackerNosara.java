@@ -17,6 +17,8 @@ public class AnalyticsTrackerNosara extends Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
+    @SuppressWarnings("checkstyle:RegexpSingleline")
+    private static final String WPCOM_USER = "dotcom_user";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -186,6 +188,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case OPENED_BLOG_SETTINGS:
                 predefinedEventProperties.put("menu_item", "site_settings");
+                break;
+            case OPENED_PLANS:
+                predefinedEventProperties.put("menu_item", "plans");
+                break;
+            case OPENED_SHARING_MANAGEMENT:
+                predefinedEventProperties.put("menu_item", "sharing_management");
                 break;
             case STATS_PERIOD_DAYS_ACCESSED:
                 predefinedEventProperties.put("period", "days");
@@ -412,6 +420,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             JSONObject properties = new JSONObject();
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
+            properties.put(WPCOM_USER, metadata.isWordPressComUser());
             mNosaraClient.registerUserProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -782,6 +791,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_directory_opened";
             case OPENED_PLUGIN_LIST:
                 return "plugin_list_opened";
+            case OPENED_PLANS:
+                return "site_menu_opened";
+            case OPENED_SHARING_MANAGEMENT:
+                return "site_menu_opened";
+            case OPENED_SHARING_BUTTON_MANAGEMENT:
+                return "sharing_buttons_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -940,6 +955,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_error_unknown_user";
             case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
                 return "login_wpcom_background_service_update";
+            case PAGES_SET_PARENT_CHANGES_SAVED:
+                return "site_pages_set_parent_changes_saved";
+            case PAGES_ADD_PAGE:
+                return "site_pages_add_page";
+            case PAGES_TAB_PRESSED:
+                return "site_pages_tabs_pressed";
+            case PAGES_OPTIONS_PRESSED:
+                return "site_pages_options_pressed";
+            case PAGES_SEARCH_ACCESSED:
+                return "site_pages_search_accessed";
             case SIGNUP_BUTTON_TAPPED:
                 return "signup_button_tapped";
             case SIGNUP_EMAIL_BUTTON_TAPPED:
@@ -1293,6 +1318,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "installation_referrer_failed";
             case OPENED_PAGE_PARENT:
                 return "page_parent_opened";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_SHOWN:
+                return "gutenberg_warning_confirm_dialog_shown";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_YES_TAPPED:
+                return "gutenberg_warning_confirm_dialog_yes_tapped";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_CANCEL_TAPPED:
+                return "gutenberg_warning_confirm_dialog_cancel_tapped";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_CHECKED:
+                return "gutenberg_warning_confirm_dialog_dont_show_again_checked";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_DONT_SHOW_AGAIN_UNCHECKED:
+                return "gutenberg_warning_confirm_dialog_dont_show_again_unchecked";
+            case GUTENBERG_WARNING_CONFIRM_DIALOG_LEARN_MORE_TAPPED:
+                return "gutenberg_warning_confirm_dialog_learn_more_tapped";
         }
         return null;
     }

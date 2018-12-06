@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="@dimen/default_dialog_width" >
+    <LinearLayout
+        android:id="@+id/gutenberg_warning_dialog_text"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_dialog"
+        android:paddingLeft="@dimen/margin_dialog"
+        android:paddingRight="@dimen/margin_dialog"
+        >
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/gutenberg_warning_dialog_title"
+            tools:text="This a title."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textStyle="bold"/>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/gutenberg_warning_dialog_description"
+            tools:text="This is a short description about the promotional feature."
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            >
+        </org.wordpress.android.widgets.WPTextView>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/gutenberg_warning_dialog_link"
+            android:clickable="true"
+            android:focusable="true"
+            tools:text="Link"
+            style="@style/PromoDialogLink"
+            android:layout_marginBottom="@dimen/margin_large">
+        </org.wordpress.android.widgets.WPTextView>
+        <CheckBox
+            android:id="@+id/gutenberg_warning_dialog_dont_show_anymore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_large"
+            android:text="@string/dialog_gutenberg_compatibility_dont_show_again"
+            android:textColor="@color/grey_dark"
+            android:layout_marginStart="@dimen/image_settings_dialog_input_field_start_margin"
+            android:visibility="visible"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_below="@+id/gutenberg_warning_dialog_text"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        >
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/gutenberg_warning_dialog_button_positive"
+            android:ellipsize="end"
+            android:layout_alignParentEnd="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_medium"
+            tools:text="Yes"
+            style="@style/Widget.AppCompat.Button.Borderless" >
+        </android.support.v7.widget.AppCompatButton>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/gutenberg_warning_dialog_button_negative"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/gutenberg_warning_dialog_button_positive"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_medium"
+            android:visibility="gone"
+            tools:text="No"
+            tools:visibility="visible"
+            style="@style/Widget.AppCompat.Button.Borderless" >
+        </android.support.v7.widget.AppCompatButton>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/gutenberg_warning_dialog_button_neutral"
+            android:ellipsize="end"
+            android:layout_alignParentStart="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/blue_medium"
+            android:visibility="gone"
+            tools:text="Maybe"
+            tools:visibility="visible"
+            style="@style/Widget.AppCompat.Button.Borderless" >
+        </android.support.v7.widget.AppCompatButton>
+    </RelativeLayout>
+</RelativeLayout>

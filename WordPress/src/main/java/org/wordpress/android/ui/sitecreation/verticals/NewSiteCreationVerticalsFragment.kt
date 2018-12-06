@@ -20,17 +20,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.CONTENT
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_ERROR
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsContentState.FULLSCREEN_PROGRESS
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -46,6 +47,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var fullscreenErrorLayout: ViewGroup
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
+    private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
 
     private lateinit var headerLayout: ViewGroup
@@ -84,6 +86,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
+        errorLayout = rootView.findViewById(R.id.error_layout)
         initSearchEditText(rootView)
         initClearTextButton(rootView)
         initHeader(rootView)
@@ -164,9 +167,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun initSkipButton(rootView: ViewGroup) {
         skipButton = rootView.findViewById(R.id.btn_skip)
-        skipButton.setOnClickListener { _ ->
-            viewModel.onSkipStepBtnClicked()
-        }
+        skipButton.setOnClickListener { viewModel.onSkipStepBtnClicked() }
     }
 
     private fun initTextWatcher() {
@@ -183,15 +184,18 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationVerticalsViewModel::class.java)
 
-        viewModel.uiState.observe(this, Observer { state ->
-            state?.let {
-                updateVisibility(contentLayout, state.contentState == CONTENT)
-                updateVisibility(fullscreenErrorLayout, state.contentState == FULLSCREEN_ERROR)
-                updateVisibility(fullscreenProgressLayout, state.contentState == FULLSCREEN_PROGRESS)
-                updateVisibility(skipButton, state.showSkipButton)
-                updateHeader(state.headerUiState)
-                updateSearchInput(state.searchInputState)
-                updateSuggestions(state.items)
+        viewModel.uiState.observe(this, Observer { uiState ->
+            uiState?.let {
+                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+
+                when (uiState) {
+                    is VerticalsContentUiState -> updateContentLayout(uiState)
+                    is VerticalsFullscreenProgressUiState -> { // no action
+                    }
+                    is VerticalsFullscreenErrorUiState -> updateErrorLayout(errorLayout, uiState)
+                }
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
@@ -205,24 +209,45 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         viewModel.start(segmentId)
     }
 
+    private fun updateContentLayout(uiState: VerticalsContentUiState) {
+        updateVisibility(skipButton, uiState.showSkipButton)
+        updateHeader(uiState.headerUiState)
+        updateSearchInput(uiState.searchInputUiState)
+        updateSuggestions(uiState.items)
+    }
+
+    private fun updateErrorLayout(errorLayout: ViewGroup, errorUiStateState: VerticalsFullscreenErrorUiState) {
+        setTextOrHide(errorLayout.error_title, errorUiStateState.titleResId)
+        setTextOrHide(errorLayout.error_subtitle, errorUiStateState.subtitleResId)
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
+        }
+    }
+
     override fun onHelp() {
         if (mSiteCreationListener != null) {
             mSiteCreationListener.helpCategoryScreen()
         }
     }
 
-    private fun updateHeader(uiState: VerticalsHeaderUiState) {
-        if (!uiState.isVisible && headerLayout.visibility == View.VISIBLE) {
-            if (contentLayout.layoutTransition == null) {
-                contentLayout.layoutTransition = LayoutTransition() // animate layout changes
+    private fun updateHeader(uiState: VerticalsHeaderUiState?) {
+        uiState?.let {
+            if (headerLayout.visibility == View.VISIBLE) {
+                if (contentLayout.layoutTransition == null) {
+                    contentLayout.layoutTransition = LayoutTransition() // animate layout changes
+                }
+                headerLayout.animate().translationY(-headerLayout.height.toFloat())
+            } else if (headerLayout.visibility == View.GONE) {
+                headerLayout.animate().translationY(0f)
             }
-            headerLayout.animate().translationY(-headerLayout.height.toFloat())
-        } else if (uiState.isVisible && headerLayout.visibility == View.GONE) {
-            headerLayout.animate().translationY(0f)
-        }
-        updateVisibility(headerLayout, uiState.isVisible)
-        headerTitle.text = uiState.title
-        headerSubtitle.text = uiState.subtitle
+            updateVisibility(headerLayout, true)
+            headerTitle.text = uiState.title
+            headerSubtitle.text = uiState.subtitle
+        } ?: updateVisibility(headerLayout, false)
     }
 
     private fun updateSearchInput(uiState: VerticalsSearchInputUiState) {
@@ -240,8 +265,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     companion object {
-        val TAG = "site_creation_verticals_fragment_tag"
-        private val EXTRA_SEGMENT_ID = "extra_segment_id"
+        const val TAG = "site_creation_verticals_fragment_tag"
+        private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
         fun newInstance(segmentId: Long): NewSiteCreationVerticalsFragment {
             val fragment = NewSiteCreationVerticalsFragment()

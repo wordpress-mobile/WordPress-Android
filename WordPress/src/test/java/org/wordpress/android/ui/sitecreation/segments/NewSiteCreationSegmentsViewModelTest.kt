@@ -6,24 +6,26 @@ import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
-import kotlinx.coroutines.experimental.Dispatchers
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
 import org.wordpress.android.fluxc.store.VerticalStore.OnSegmentsFetched
 import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC_ERROR
 import org.wordpress.android.test
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.UiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentsUseCase
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val FIRST_MODEL_TITLE = "first_title"
 private const val FIRST_MODEL_SUBTITLE = "first_subtitle"
@@ -57,10 +59,8 @@ private val SECOND_MODEL =
                 SECOND_MODEL_SEGMENT_ID
         )
 
-private val PROGRESS_STATE = UiState(false, true, listOf(HeaderUiState, ProgressUiState))
-private val ERROR_STATE = UiState(true, false, emptyList())
-private val HEADER_AND_FIRST_ITEM_STATE = UiState(
-        false, true,
+private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
+private val HEADER_AND_FIRST_ITEM_STATE = SegmentsContentUiState(
         listOf(
                 HeaderUiState,
                 SegmentUiState(
@@ -73,8 +73,7 @@ private val HEADER_AND_FIRST_ITEM_STATE = UiState(
                 )
         )
 )
-private val HEADER_AND_SECOND_ITEM_STATE = UiState(
-        false, true,
+private val HEADER_AND_SECOND_ITEM_STATE = SegmentsContentUiState(
         listOf(
                 HeaderUiState,
                 SegmentUiState(
@@ -100,22 +99,25 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var fetchSegmentsUseCase: FetchSegmentsUseCase
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
-    @Mock private lateinit var uiStateObserver: Observer<UiState>
+    @Mock private lateinit var uiStateObserver: Observer<SegmentsUiState>
     @Mock private lateinit var segmentSelectedObserver: Observer<Long>
 
     @Before
     fun setUp() {
         viewModel = NewSiteCreationSegmentsViewModel(
+                networkUtils,
                 dispatcher,
                 fetchSegmentsUseCase,
-                Dispatchers.Unconfined,
-                Dispatchers.Unconfined
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
         )
-        viewModel.uiState.observeForever(uiStateObserver)
+        viewModel.segmentsUiState.observeForever(uiStateObserver)
         viewModel.segmentSelected.observeForever(segmentSelectedObserver)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @Test
@@ -123,7 +125,7 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_MODEL_EVENT)
         viewModel.start()
 
-        assertTrue(viewModel.uiState.value!! == HEADER_AND_FIRST_ITEM_STATE)
+        assertTrue(viewModel.segmentsUiState.value!! == HEADER_AND_FIRST_ITEM_STATE)
     }
 
     @Test
@@ -131,12 +133,12 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_MODEL_EVENT)
         viewModel.start()
 
-        assertTrue(viewModel.uiState.value!! == HEADER_AND_FIRST_ITEM_STATE)
+        assertTrue(viewModel.segmentsUiState.value!! == HEADER_AND_FIRST_ITEM_STATE)
 
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(SECOND_MODEL_EVENT)
         viewModel.onRetryClicked()
 
-        assertTrue(viewModel.uiState.value!! == HEADER_AND_SECOND_ITEM_STATE)
+        assertTrue(viewModel.segmentsUiState.value!! == HEADER_AND_SECOND_ITEM_STATE)
     }
 
     @Test
@@ -158,7 +160,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
-            verify(uiStateObserver).onChanged(ERROR_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsGenericErrorUiState)
             verifyNoMoreInteractions()
         }
     }
@@ -172,7 +174,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
-            verify(uiStateObserver).onChanged(ERROR_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsGenericErrorUiState)
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
             verify(uiStateObserver).onChanged(HEADER_AND_SECOND_ITEM_STATE)
             verifyNoMoreInteractions()
@@ -184,7 +186,7 @@ class NewSiteCreationSegmentsViewModelTest {
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_AND_SECOND_MODEL_EVENT)
         viewModel.start()
 
-        val items = viewModel.uiState.value!!.items
+        val items = (viewModel.segmentsUiState.value!! as SegmentsContentUiState).items
         assertFalse((items[items.size - 1] as SegmentUiState).showDivider)
     }
 
@@ -192,9 +194,23 @@ class NewSiteCreationSegmentsViewModelTest {
     fun verifyOnSegmentSelectedIsPropagated() = test {
         whenever(fetchSegmentsUseCase.fetchCategories()).thenReturn(FIRST_MODEL_EVENT)
         viewModel.start()
-        (viewModel.uiState.value!!.items[1] as SegmentUiState).onItemTapped!!.invoke()
+        ((viewModel.segmentsUiState.value!! as SegmentsContentUiState).items[1] as SegmentUiState)
+                .onItemTapped!!.invoke()
+
         inOrder(segmentSelectedObserver).apply {
             verify(segmentSelectedObserver).onChanged(FIRST_MODEL_SEGMENT_ID)
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun verifyNoConnectionErrorShown() = test {
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+        viewModel.start()
+
+        inOrder(uiStateObserver).apply {
+            verify(uiStateObserver).onChanged(PROGRESS_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsConnectionErrorUiState)
             verifyNoMoreInteractions()
         }
     }

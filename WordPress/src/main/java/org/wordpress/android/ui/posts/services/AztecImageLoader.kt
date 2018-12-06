@@ -34,12 +34,15 @@ class AztecImageLoader(
     private val loadingInProgress: Drawable
 ) : Html.ImageGetter {
     private val targets = ArrayList<WeakReference<BaseTarget<Bitmap>>>()
+    private val mRequestsInProgress = ArrayList<String>()
 
     override fun loadImage(url: String, callbacks: Html.ImageGetter.Callbacks, maxWidth: Int) {
         loadImage(url, callbacks, maxWidth, 0)
     }
 
     override fun loadImage(url: String, callbacks: Html.ImageGetter.Callbacks, maxSize: Int, minWidth: Int) {
+        mRequestsInProgress.add(url)
+
         val target = object : BaseTarget<Bitmap>() {
             override fun onLoadStarted(placeholder: Drawable?) {
                 callbacks.onImageLoading(loadingInProgress)
@@ -47,6 +50,7 @@ class AztecImageLoader(
 
             override fun onLoadFailed(errorDrawable: Drawable?) {
                 callbacks.onImageFailed()
+                mRequestsInProgress.remove(url)
             }
 
             override fun onResourceReady(
@@ -60,6 +64,7 @@ class AztecImageLoader(
                 val bitmapDrawable = BitmapDrawable(context.resources, resource)
                 result = bitmapDrawable
                 callbacks.onImageLoaded(result)
+                mRequestsInProgress.remove(url)
             }
 
             override fun getSize(cb: SizeReadyCallback) {
@@ -82,5 +87,9 @@ class AztecImageLoader(
         for (weakReference in targets) {
             imageManager.cancelRequest(context, weakReference.get())
         }
+    }
+
+    fun getNumberOfImagesBeingDownloaded(): Int {
+        return mRequestsInProgress.count()
     }
 }

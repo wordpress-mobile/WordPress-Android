@@ -3,13 +3,12 @@ package org.wordpress.android.ui.sitecreation.segments
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.ProgressUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsHeaderViewHolder
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsItemViewHolder
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentViewHolder.SegmentsProgressViewHolder
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.ProgressUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
 import org.wordpress.android.util.image.ImageManager
 
 private const val headerViewType: Int = 1
@@ -19,7 +18,7 @@ private const val segmentViewType: Int = 3
 class NewSiteCreationSegmentsAdapter(
     private val imageManager: ImageManager
 ) : Adapter<NewSiteCreationSegmentViewHolder>() {
-    private val items = mutableListOf<ItemUiState>()
+    private val items = mutableListOf<SegmentsItemUiState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewSiteCreationSegmentViewHolder {
         return when (viewType) {
@@ -36,7 +35,7 @@ class NewSiteCreationSegmentsAdapter(
         holder.onBind(items[position])
     }
 
-    fun update(newItems: List<ItemUiState>) {
+    fun update(newItems: List<SegmentsItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(SegmentsDiffUtils(items.toList(), newItems))
         items.clear()
         items.addAll(newItems)
@@ -52,8 +51,8 @@ class NewSiteCreationSegmentsAdapter(
     }
 
     private class SegmentsDiffUtils(
-        val oldItems: List<ItemUiState>,
-        val newItems: List<ItemUiState>
+        val oldItems: List<SegmentsItemUiState>,
+        val newItems: List<SegmentsItemUiState>
     ) : DiffUtil.Callback() {
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldItems[oldItemPosition]

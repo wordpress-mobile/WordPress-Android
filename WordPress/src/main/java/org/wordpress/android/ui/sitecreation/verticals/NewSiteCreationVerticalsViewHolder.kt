@@ -70,7 +70,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
         private fun addRetryCompoundDrawable() {
             val drawable = itemView.context.getDrawable(drawable.retry_icon)
             drawable.setTint(ContextCompat.getColor(itemView.context, color.wp_blue))
-            retry.setCompoundDrawables(drawable, null, null, null)
+            retry.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         }
 
         override fun onBind(uiState: VerticalsListItemUiState) {

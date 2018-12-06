@@ -6,17 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/margin_extra_extra_medium_large">
 
     <TextView
-        android:id="@+id/error_text"
+        android:id="@+id/error_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="TODO"/>
+        android:gravity="center"
+        android:textColor="@color/wp_grey_darken_10"
+        android:textSize="@dimen/text_sz_extra_large"
+        tools:text="No internet connection"/>
+
+
+    <TextView
+        android:id="@+id/error_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:gravity="center"
+        android:textColor="@color/wp_grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="Error communicating with the server, please try again"/>
 
     <Button
         android:id="@+id/error_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        style="@style/WordPress.Button.Primary"
         android:text="@string/retry"/>
 </LinearLayout>

@@ -354,6 +354,7 @@ public class PublicizeListActivity extends AppCompatActivity
 
     @Override
     public void onButtonPrefsClicked() {
+        AnalyticsUtils.trackWithSiteDetails(Stat.OPENED_SHARING_BUTTON_MANAGEMENT, mSite);
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, fragment)

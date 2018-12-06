@@ -113,7 +113,8 @@ public class AppPrefs {
         NEWS_CARD_DISMISSED_VERSION,
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
-        AVATAR_VERSION
+        AVATAR_VERSION,
+        GUTENBERG_EDITOR_ENABLED
     }
 
     /**
@@ -180,7 +181,10 @@ public class AppPrefs {
         IS_QUICK_START_DISABLED,
 
         // used to indicate that we already obtained and tracked the installation referrer
-        IS_INSTALLATION_REFERRER_OBTAINED
+        IS_INSTALLATION_REFERRER_OBTAINED,
+
+        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
+        IS_GUTENBERG_WARNING_DIALOG_DISABLED
     }
 
     private static SharedPreferences prefs() {
@@ -621,6 +625,14 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.VIDEO_OPTIMIZE_ENABLED, optimize);
     }
 
+    public static boolean isGutenbergEditorEnabled() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, false);
+    }
+
+    public static void enableGutenbergEditor(boolean enabled) {
+        setBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, enabled);
+    }
+
     public static void setVideoOptimizeWidth(int width) {
         setInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, width);
     }
@@ -800,5 +812,13 @@ public class AppPrefs {
 
     public static void setAvatarVersion(int version) {
         setInt(DeletablePrefKey.AVATAR_VERSION, version);
+    }
+
+    public static void setGutenbergWarningDialogDisabled(Boolean isDisabled) {
+        setBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, isDisabled);
+    }
+
+    public static boolean isGutenbergWarningDialogDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_GUTENBERG_WARNING_DIALOG_DISABLED, false);
     }
 }
