@@ -464,7 +464,7 @@
     <style name="QuickStartDivider">
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:background">@color/grey_lighten_20</item>
+        <item name="android:background">@color/grey_lighten_30</item>
         <item name="android:layout_height">@dimen/list_divider_height</item>
         <item name="android:layout_width">match_parent</item>
     </style>
