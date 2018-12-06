@@ -60,8 +60,6 @@ private val SECOND_MODEL =
         )
 
 private val PROGRESS_STATE = SegmentsContentUiState(listOf(HeaderUiState, ProgressUiState))
-private val GENERIC_ERROR_STATE = SegmentsErrorUiState.SegmentsGenericErrorUiState
-private val NO_CONNECTION_ERROR_STATE = SegmentsErrorUiState.SegmentsConnectionErrorUiState
 private val HEADER_AND_FIRST_ITEM_STATE = SegmentsContentUiState(
         listOf(
                 HeaderUiState,
@@ -162,7 +160,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
-            verify(uiStateObserver).onChanged(GENERIC_ERROR_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsGenericErrorUiState)
             verifyNoMoreInteractions()
         }
     }
@@ -176,7 +174,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
-            verify(uiStateObserver).onChanged(GENERIC_ERROR_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsGenericErrorUiState)
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
             verify(uiStateObserver).onChanged(HEADER_AND_SECOND_ITEM_STATE)
             verifyNoMoreInteractions()
@@ -212,7 +210,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
-            verify(uiStateObserver).onChanged(NO_CONNECTION_ERROR_STATE)
+            verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsConnectionErrorUiState)
             verifyNoMoreInteractions()
         }
     }
