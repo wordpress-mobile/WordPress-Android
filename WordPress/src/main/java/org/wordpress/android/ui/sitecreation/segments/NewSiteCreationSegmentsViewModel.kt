@@ -30,7 +30,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
-private const val FAKE_DELAY = 1000
+private const val SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY = 1000
 
 class NewSiteCreationSegmentsViewModel
 @Inject constructor(
@@ -91,7 +91,7 @@ class NewSiteCreationSegmentsViewModel
             updateUiStateToContent(ListState.Loading(listState))
             launch {
                 // We show the loading screen for a bit so the user has some feedback when they press the retry button
-                delay(FAKE_DELAY)
+                delay(SHOW_LOADING_TO_PROVIDE_FEEDBACK_ARTIFICIAL_DELAY)
                 withContext(MAIN) {
                     updateUiStateToError(
                             ListState.Error(listState, null),
