@@ -255,14 +255,16 @@ sealed class BlockListItemViewHolder(
     ) {
         private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout)
 
-        fun bind(item: TabsItem) {
+        fun bind(item: TabsItem, tabChanged: Boolean) {
             tabLayout.clearOnTabSelectedListeners()
-            tabLayout.removeAllTabs()
-            item.tabs.forEach { tabItem ->
-                tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+            if (!tabChanged) {
+                tabLayout.removeAllTabs()
+                item.tabs.forEach { tabItem ->
+                    tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+                }
             }
-
             tabLayout.getTabAt(item.selectedTabPosition)?.select()
+
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }

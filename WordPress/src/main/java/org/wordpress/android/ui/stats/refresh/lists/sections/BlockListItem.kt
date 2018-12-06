@@ -99,7 +99,10 @@ sealed class BlockListItem(val type: Type) {
     data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
-            BlockListItem(TABS)
+            BlockListItem(TABS) {
+        override val itemId: Int
+            get() = tabs.hashCode()
+    }
 
     data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
 

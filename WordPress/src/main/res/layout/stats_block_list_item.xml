@@ -97,7 +97,7 @@
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:background="@color/blue_wordpress"
+        android:background="@color/grey_lighten_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/icon"
