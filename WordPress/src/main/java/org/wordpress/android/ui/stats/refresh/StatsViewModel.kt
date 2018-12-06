@@ -48,11 +48,11 @@ class StatsViewModel
 
     private fun loadStats() {
         loadData {
-            insightsUseCase.refreshInsightItems(site)
-            dayStatsUseCase.refreshInsightItems(site)
-            weekStatsUseCase.refreshInsightItems(site)
-            monthStatsUseCase.refreshInsightItems(site)
-            yearStatsUseCase.refreshInsightItems(site)
+            insightsUseCase.loadInsightItems(site)
+            dayStatsUseCase.loadInsightItems(site)
+            weekStatsUseCase.loadInsightItems(site)
+            monthStatsUseCase.loadInsightItems(site)
+            yearStatsUseCase.loadInsightItems(site)
         }
     }
 

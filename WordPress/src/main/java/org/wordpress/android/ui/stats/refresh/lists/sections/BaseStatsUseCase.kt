@@ -44,13 +44,14 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param forced is true when we want to get fresh data and skip the cache
      */
     suspend fun fetch(site: SiteModel, refresh: Boolean, forced: Boolean) {
-        if (liveData.value == null) {
+        val emptyData = domainModel.value == null || domainModel.value !is Data
+        if (emptyData) {
             withContext(mainDispatcher) {
                 this@BaseStatsUseCase.domainModel.value = State.Loading()
             }
             loadCachedData(site)
         }
-        if (refresh) {
+        if (refresh || emptyData) {
             fetchRemoteData(site, forced)
         }
     }
