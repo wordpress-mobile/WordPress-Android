@@ -422,11 +422,11 @@ class NewSiteCreationVerticalsViewModelTest {
     }
 
     private fun verifyGenericFullscreenErrorShown(uiState: VerticalsFullscreenErrorUiState) {
-        assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.createGenericErrorUiState())
+        assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
     }
 
     private fun verifyNoConnectionFullscreenErrorShown(uiState: VerticalsFullscreenErrorUiState) {
-        assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.createConnectionErrorUiState())
+        assertThat(uiState).isEqualTo(VerticalsUiState.VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
     }
 
     private fun verifyFullscreenProgressShown(uiState: VerticalsFullscreenProgressUiState) {

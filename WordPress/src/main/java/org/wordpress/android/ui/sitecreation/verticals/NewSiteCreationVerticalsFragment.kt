@@ -186,24 +186,15 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
+                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+
                 when (uiState) {
-                    is VerticalsContentUiState -> {
-                        updateVisibility(fullscreenProgressLayout, false)
-                        updateVisibility(contentLayout, true)
-                        updateVisibility(fullscreenErrorLayout, false)
-                        updateContentLayout(uiState)
+                    is VerticalsContentUiState -> updateContentLayout(uiState)
+                    is VerticalsFullscreenProgressUiState -> { // no action
                     }
-                    is VerticalsFullscreenProgressUiState -> {
-                        updateVisibility(fullscreenProgressLayout, true)
-                        updateVisibility(contentLayout, false)
-                        updateVisibility(fullscreenErrorLayout, false)
-                    }
-                    is VerticalsFullscreenErrorUiState -> {
-                        updateVisibility(fullscreenProgressLayout, false)
-                        updateVisibility(contentLayout, false)
-                        updateVisibility(fullscreenErrorLayout, true)
-                        updateErrorLayout(errorLayout, uiState)
-                    }
+                    is VerticalsFullscreenErrorUiState -> updateErrorLayout(errorLayout, uiState)
                 }
             }
         })

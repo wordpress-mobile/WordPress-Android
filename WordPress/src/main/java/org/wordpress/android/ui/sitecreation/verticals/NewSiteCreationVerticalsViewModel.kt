@@ -11,7 +11,6 @@ import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
 import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
 import org.wordpress.android.fluxc.model.vertical.VerticalModel
@@ -110,14 +109,14 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(FAKE_DELAY)
             withContext(MAIN) {
-                updateUiState(VerticalsFullscreenErrorUiState.createConnectionErrorUiState())
+                updateUiState(VerticalsFullscreenErrorUiState.VerticalsConnectionErrorUiState)
             }
         }
     }
 
     private fun onSegmentsPromptFetched(event: OnSegmentPromptFetched) {
         if (event.isError) {
-            updateUiState(VerticalsFullscreenErrorUiState.createGenericErrorUiState())
+            updateUiState(VerticalsFullscreenErrorUiState.VerticalsGenericErrorUiState)
         } else {
             segmentPrompt = event.prompt!!
             updateUiStateToContent("", ListState.Ready(emptyList()))
@@ -271,28 +270,44 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         )
     }
 
-    sealed class VerticalsUiState {
+    sealed class VerticalsUiState(
+        val fullscreenProgressLayoutVisibility: Boolean,
+        val contentLayoutVisibility: Boolean,
+        val fullscreenErrorLayoutVisibility: Boolean
+    ) {
         data class VerticalsContentUiState(
             val searchInputUiState: VerticalsSearchInputUiState,
             val headerUiState: VerticalsHeaderUiState?,
             val showSkipButton: Boolean,
             val items: List<VerticalsListItemUiState>
-        ) : VerticalsUiState()
+        ) : VerticalsUiState(
+                fullscreenProgressLayoutVisibility = false,
+                contentLayoutVisibility = true,
+                fullscreenErrorLayoutVisibility = false
+        )
 
-        object VerticalsFullscreenProgressUiState : VerticalsUiState()
-        data class VerticalsFullscreenErrorUiState constructor(
+        object VerticalsFullscreenProgressUiState : VerticalsUiState(
+                fullscreenProgressLayoutVisibility = true,
+                contentLayoutVisibility = false,
+                fullscreenErrorLayoutVisibility = false
+        )
+
+        sealed class VerticalsFullscreenErrorUiState constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null
-        ) : VerticalsUiState() {
-            companion object {
-                fun createGenericErrorUiState() = VerticalsFullscreenErrorUiState(
-                        string.site_creation_error_generic_title,
-                        string.site_creation_error_generic_subtitle
-                )
+        ) : VerticalsUiState(
+                fullscreenProgressLayoutVisibility = false,
+                contentLayoutVisibility = false,
+                fullscreenErrorLayoutVisibility = true
+        ) {
+            object VerticalsGenericErrorUiState : VerticalsFullscreenErrorUiState(
+                    R.string.site_creation_error_generic_title,
+                    R.string.site_creation_error_generic_subtitle
+            )
 
-                fun createConnectionErrorUiState() =
-                        VerticalsFullscreenErrorUiState(R.string.site_creation_error_connection_title)
-            }
+            object VerticalsConnectionErrorUiState : VerticalsFullscreenErrorUiState(
+                    R.string.site_creation_error_connection_title
+            )
         }
     }
 
