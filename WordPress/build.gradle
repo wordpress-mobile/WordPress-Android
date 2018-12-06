@@ -25,6 +25,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
+apply from: 'gutenberg-tasks.gradle'
+
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
@@ -41,12 +43,19 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-133"
-        versionCode 631
+        versionName "alpha-141"
+        versionCode 650
         minSdkVersion 21
         targetSdkVersion 26
 
         multiDexEnabled true
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'x86'
+        }
+
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
         buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "false"
@@ -57,18 +66,20 @@ android {
     productFlavors {
         vanilla { // used for release and beta
             dimension "buildType"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "REVISIONS_ENABLED", "true"
+            buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         }
     }
 
@@ -176,6 +187,20 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestCompile 'tools.fastlane:screengrab:1.2.0',  {
+        exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
+    }
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
@@ -309,7 +334,7 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android {
         signingConfigs {
             release {
-                storeFile = file(project.storeFile)
+                storeFile = file(project.storeFile.replaceFirst("^~", System.getProperty("user.home")))
                 storePassword = project.storePassword
                 keyAlias = project.keyAlias
                 keyPassword = project.keyPassword

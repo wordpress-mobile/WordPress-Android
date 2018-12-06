@@ -117,6 +117,10 @@ public class Note {
     }
 
     public Boolean isLikeType() {
+        return isPostLikeType() || isCommentLikeType();
+    }
+
+    public Boolean isPostLikeType() {
         return isType(NOTE_LIKE_TYPE);
     }
 
@@ -138,7 +142,7 @@ public class Note {
     }
 
     public Boolean isUserList() {
-        return isLikeType() || isCommentLikeType() || isFollowType() || isReblogType();
+        return isLikeType() || isFollowType() || isReblogType();
     }
 
     /*

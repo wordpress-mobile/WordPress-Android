@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 20:35:17+0000
+Translation-Revision-Date: 2018-11-22 13:33:16+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -140,7 +140,6 @@ Language: cs_CZ
     <string name="content_description_person_reading_device_notification">Čtecí zařízení s upozorněním</string>
     <string name="content_description_people_looking_charts">Lidé, kteří se dívají na grafy</string>
     <string name="comment_title">%s na %s</string>
-    <string name="dialog_confirm_delete_permanently_page">Opravdu chcete tuto stránku smazat?</string>
     <string name="dialog_confirm_delete_permanently_post">Opravdu chcete tento příspěvek smazat?</string>
     <string name="notification_site_creation_title_in_progress">Vytváření webu … Může to trvat několik minut.</string>
     <string name="notification_channel_important_title">Důležité</string>
@@ -289,7 +288,6 @@ Language: cs_CZ
     <string name="dialog_confirm_publish_message_page">Tato stránka bude publikována okamžitě.</string>
     <string name="dialog_confirm_publish_message_post">Tento příspěvek bude publikován okamžitě.</string>
     <string name="dialog_confirm_publish_title">Připraveno k publikování?</string>
-    <string name="dialog_confirm_delete_page">Tato stránka bude smazána a přesunuta do koše.</string>
     <string name="dialog_confirm_delete_post">Tento příspěvek bude smazán a přesunut do koše.</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d příspěvků / stránek se nenahrálo</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránek se nenahrálo</string>
@@ -491,7 +489,6 @@ Language: cs_CZ
     <string name="login_text_otp_another">Pošlete mi nový kód.</string>
     <string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
     <string name="error_generic_error">Akci se nepodařilo vykonat</string>
-    <string name="error_media_recover_page">Nepodařilo se nahrát média této stránky</string>
     <string name="error_media_recover_post">Nepodařilo se nahrát média tohoto příspěvku</string>
     <string name="image_size">Velikost</string>
     <string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
@@ -579,7 +576,6 @@ Language: cs_CZ
     <string name="notification_settings_master_status_on">Zapnuto</string>
     <string name="max_video_resolution">Maximální velikost videa</string>
     <string name="max_thumbnail_px_size">Maximální velikost obrázku</string>
-    <string name="error_page_does_not_exist">Zvolená stránka už neexistuje</string>
     <string name="error_upload_post_media_param">Při nahrávání média k příspěvku se vyskytla chyba: %s.</string>
     <string name="error_upload_post_param">Při nahrávání příspěvku se vyskytla chyba: %s.</string>
     <string name="add_media_progress">Přidání média</string>
@@ -1258,8 +1254,6 @@ Language: cs_CZ
     <string name="notification_settings_item_other_account_emails_summary">Budeme vždy odesílat důležité emaily týkající se vašeho účtu, ale můžete také získat některé zajímavé bonusy.</string>
     <string name="stats_insights_latest_post_trend">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován…</string>
     <string name="stats_insights_latest_post_summary">Přehled posledních příspěvků</string>
-    <string name="yesterday">Včera</string>
-    <string name="days_ago">před %d dny</string>
     <string name="connectionbar_no_connection">Bez připojení</string>
     <string name="button_publish">Publikovat</string>
     <string name="button_edit">Upravit</string>
@@ -1267,12 +1261,10 @@ Language: cs_CZ
     <string name="button_preview">Náhled</string>
     <string name="button_trash">Koš</string>
     <string name="button_stats">Statistiky</string>
-    <string name="page_deleted">Stránka byla odstraněna</string>
     <string name="button_back">Zpět</string>
     <string name="stats_no_activity_this_period">Žádná aktivita v tomto období</string>
     <string name="post_trashed">Příspěvek byl přesunut do koše</string>
     <string name="post_deleted">Příspěvek byl odstraněn</string>
-    <string name="page_trashed">Stránka byla přesunuta do koše</string>
     <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
     <string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
     <string name="undo">Zpět</string>
@@ -1407,7 +1399,6 @@ Language: cs_CZ
     <string name="ssl_certificate_details">Detaily</string>
     <string name="cab_selected">%d vybráno</string>
     <string name="signing_out">Odhlašuji…</string>
-    <string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
     <string name="comment_reply_to_user">Odpovědět uživateli %s</string>
     <string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
     <string name="comment_trashed">Komentář byl přesunut do koše</string>
@@ -1467,7 +1458,6 @@ Language: cs_CZ
     <string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
     <string name="error_deleting_post">Nastala chyba při mazání příspěvku</string>
     <string name="notifications_empty_list">Žádná oznámení</string>
-    <string name="invalid_url_message">Zkontrolujte platnost zadané adresy webu</string>
     <string name="stats_bar_graph_empty">Statistika není dostupná</string>
     <string name="stats_empty_comments">Žádné komentáře</string>
     <string name="sdcard_message">Pro nahrání media musí být připojená SD karta</string>
@@ -1485,7 +1475,6 @@ Language: cs_CZ
     <string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
     <string name="error_blog_hidden">Tento web je skrytý a proto nemohl být načten. Zpřístupněte jej v nastavení a zkuste to znovu.</string>
     <string name="error_refresh_media">Média se nepodařilo obnovit</string>
-    <string name="error_deleting_page">Při mazání stránky se vyskytla chyba.</string>
     <string name="wordpress_blog">WordPress web</string>
     <string name="image_settings">Vlastnosti obrázku</string>
     <string name="local_changes">Místní změny</string>
@@ -1638,7 +1627,6 @@ Language: cs_CZ
     <string name="immediately">Okamžitě</string>
     <string name="quickpress_add_alert_title">Nastavit název zkráceného odkazu</string>
     <string name="settings">Nastavení</string>
-    <string name="today">Dnes</string>
     <string name="quickpress_add_error">Název zkráceného odkazu nemůže být prázdný</string>
     <string name="quickpress_window_title">Vyberte web pro zkrácený odkaz QuickPress</string>
     <string name="pages_private">Soukromé</string>

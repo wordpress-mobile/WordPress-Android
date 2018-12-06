@@ -1,0 +1,169 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+########################################################################
+# Sreenshot Lanes
+########################################################################
+  #####################################################################################
+  # screenshots
+  # -----------------------------------------------------------------------------------
+  # This lane takes screenshots for the WordPress app across the three device types:
+  # phone, sevenInch and tenInch. If device serials are not provided these avds will be
+  # used: fastlane_screenshots_phone, fastlane_screenshots_seven_inch,
+  # fastlane_screenshots_ten_inch
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane screenshots phone_serial:<serial> sevenInch_serial:<serial> tenInch_serial:<serial>
+  #
+  # Example:
+  # fastlane screenshots
+  # fastlane screenshots phone_serial:emulator-5444 sevenInch_serial:emulator-5446 tenInch_serial:emulator-5448
+  #####################################################################################
+  desc "Build and capture screenshots"
+  lane :screenshots do |options|
+    gradle(task: "assembleVanillaDebug assembleVanillaDebugAndroidTest")
+    take_screenshots(options)
+  end
+
+  desc "Capture screenshots"
+  lane :take_screenshots do |options|
+    screenshot_devices = [
+      {
+        screenshot_type: 'phone',
+        device_name: 'fastlane_screenshots_phone',
+        device_serial: options[:phone_serial],
+      },
+      {
+        screenshot_type: 'sevenInch',
+        device_name: 'fastlane_screenshots_seven_inch',
+        device_serial: options[:sevenInch_serial],
+      },
+      {
+        screenshot_type: 'tenInch',
+        device_name: 'fastlane_screenshots_ten_inch',
+        device_serial: options[:tenInch_serial],
+      }
+    ]
+
+    screenshot_options = {
+      output_directory: "fastlane/metadata/android",
+      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
+      use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
+      reinstall_app: false,
+      clear_previous_screenshots: true,
+      locales: SUPPORTED_LOCALES.map { |hsh| hsh[:google_play] }
+    }
+
+    take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
+    fix_obsolete_locales_for_screenshots(locales: [{source_id:'in', target_id:'id'}], output_directory: "metadata/android")
+  end
+
+  #####################################################################################
+  # download_promo_strings
+  # -----------------------------------------------------------------------------------
+  # This lane download the translated promo strings from the translation system
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane download_promo_strings 
+  #
+  # Example:
+  # fastlane download_promo_strings
+  #####################################################################################
+  desc "Downloads translated promo strings from the translation system"
+  lane :download_promo_strings do |options| 
+    files = {
+      "play_store_screenshot_1" => {desc: "play_store_screenshot_2.txt"},
+      "play_store_screenshot_2" => {desc: "play_store_screenshot_1.txt"},
+      "play_store_screenshot_3" => {desc: "play_store_screenshot_3.txt"},
+      "play_store_screenshot_4" => {desc: "play_store_screenshot_5.txt"},
+      "play_store_screenshot_5" => {desc: "play_store_screenshot_4.txt"},
+    }
+
+    download_metadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
+      target_files: files, 
+      locales: SUPPORTED_LOCALES,
+      download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
+  end 
+
+  #####################################################################################
+  # create_promo_screenshots
+  # -----------------------------------------------------------------------------------
+  # This lane download creates the promo screenshot from the original ones that
+  # are taken by the screenshot lane
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # fastlane create_promo_screenshots 
+  #
+  # Example:
+  # fastlane create_promo_screenshots
+  #####################################################################################
+  desc "Creates promo screenshots"
+  lane :create_promo_screenshots do |options| 
+    config_data = [
+      {device: "phoneScreenshots", template: File.join(Dir.pwd, "playstoreres/assets/android-phone-template.png"), comp_size: "840x1478", comp_offset: "+121+532"},
+      {device: "sevenInchScreenshots", template: File.join(Dir.pwd, "playstoreres/assets/android-tab7-template.png"), comp_size: "910x1458", comp_offset: "+145+552"},
+      {device: "tenInchScreenshots", template: File.join(Dir.pwd, "playstoreres/assets/android-tab10-template.png"), comp_size: "1242x1516", comp_offset: "+148+622", text_offset: 40}
+    ]
+
+    output_folder = File.join(Dir.pwd, "/metadata/android/")
+    orig_folder= File.join(Dir.pwd, "/screenshots_orig")
+
+    # Set up folders
+    if (File.exists?(output_folder) && !File.exists?(orig_folder)) then
+      if UI.confirm("Do you want to use the files in #{output_folder} as originals?")
+        android_promo_screenshot_init(orig_folder: output_folder, target_folder: orig_folder)
+      end
+    end 
+
+    # Run screenshots generator tool 
+    android_promo_screenshot(orig_folder: orig_folder,
+      output_folder: output_folder,
+      locales: SUPPORTED_LOCALES.map do |hash| { google_play: hash[:google_play], promo_config: hash[:promo_config] } end,
+      device_config: config_data,
+      default_locale: "en-US", 
+      metadata_folder: File.join(Dir.pwd, "playstoreres/metadata"))  
+  end 
+
+
+  #####################################################################################
+  # Private lanes
+  #####################################################################################
+  #####################################################################################
+  # fix_obsolete_locales_for_screenshots
+  # -----------------------------------------------------------------------------------
+  # This lane copies screenshots from the obsolete locale folder to the expected one
+  # -----------------------------------------------------------------------------------
+  #####################################################################################
+  private_lane :fix_obsolete_locales_for_screenshots do | options |
+    options[:locales].each do | locale |
+      UI.message ("Copying #{locale[:source_id]} to #{locale[:target_id]}...")
+      source_folder = File.join(options[:output_directory], locale[:source_id])
+      dest_folder = File.join(options[:output_directory], locale[:target_id])
+
+      puts source_folder
+      puts dest_folder
+
+      FileUtils.mkdir_p(dest_folder)
+
+      FileUtils.copy_entry(source_folder, dest_folder) if File.directory?(source_folder)
+      UI.message ("Done.")
+    end
+  end
+
+end

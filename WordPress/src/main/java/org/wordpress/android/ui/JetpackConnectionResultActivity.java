@@ -65,8 +65,12 @@ public class JetpackConnectionResultActivity extends AppCompatActivity {
 
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
+        String host = "";
+        if (uri != null) {
+            host = uri.getHost();
+        }
         if (Intent.ACTION_VIEW.equals(action)) {
-            AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
+            AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, host, uri);
         }
 
         // check if this intent is started via custom scheme link

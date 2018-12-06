@@ -7,6 +7,7 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
+import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
@@ -18,6 +19,7 @@ import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
 import org.wordpress.android.viewmodel.plugins.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.posts.PostListViewModel;
 import org.wordpress.android.viewmodel.quickstart.QuickStartViewModel;
 
 import dagger.Binds;
@@ -93,8 +95,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(NewSiteCreationSiteInfoViewModel.class)
+    abstract ViewModel siteCreationSiteInfoViewModel(NewSiteCreationSiteInfoViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(NewSiteCreationMainVM.class)
     abstract ViewModel newSiteCreationMainVM(NewSiteCreationMainVM viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostListViewModel.class)
+    abstract ViewModel postListViewModel(PostListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

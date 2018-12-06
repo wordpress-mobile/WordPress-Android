@@ -1,7 +1,8 @@
 #!/bin/sh
 
-LANG_FILE=../tools/exported-language-codes.csv
-RESDIR=../WordPress/src/main/res/
+SCRIPT_DIR=$(dirname "$0")
+LANG_FILE="${SCRIPT_DIR}/../tools/exported-language-codes.csv"
+RESDIR="${SCRIPT_DIR}/../WordPress/src/main/res/"
 
 # Language definitions resource file
 HEADER=\<?xml\ version=\"1.0\"\ encoding=\"UTF-8\"?\>\\n\<!--Warning:\ Auto-generated\ file,\ don\'t\ edit\ it.--\>\\n\<resources\>\\n\<string-array\ name=\"available_languages\"\ translatable=\"false\"\>
