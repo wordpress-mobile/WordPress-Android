@@ -96,7 +96,7 @@ constructor(
                 items.add(
                         Link(
                                 text = string.stats_insights_view_more,
-                                navigateAction = create(statsGranularity, this::onViewMoreClick)
+                                navigateAction = create(statsGranularity, this::onViewMoreClicked)
                         )
                 )
             }
@@ -104,7 +104,7 @@ constructor(
         return items
     }
 
-    private fun onViewMoreClick(statsGranularity: StatsGranularity) {
+    private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
         navigateTo(ViewReferrers(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
