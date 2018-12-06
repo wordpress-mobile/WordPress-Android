@@ -67,12 +67,12 @@ private val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
 
 private val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FIRST_MODEL_QUERY,
-        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID)),
+        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID, isNewUserVertical = false)),
         null
 )
 private val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         SECOND_MODEL_QUERY,
-        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID)),
+        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID, isNewUserVertical = false)),
         null
 )
 private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(

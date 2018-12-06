@@ -12,11 +12,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -28,6 +30,8 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var viewModel: NewSiteCreationSegmentsViewModel
 
     private lateinit var errorLayout: ViewGroup
+    private lateinit var errorTitle: TextView
+    private lateinit var errorSubtitle: TextView
 
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -50,10 +54,16 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // important for accessibility - talkback
         activity!!.setTitle(R.string.new_site_creation_segments_title)
-        errorLayout = rootView.findViewById(R.id.error_layout)
+        initErrorLayout(rootView)
         initRecyclerView(rootView)
         initViewModel()
         initRetryButton(rootView)
+    }
+
+    private fun initErrorLayout(rootView: ViewGroup) {
+        errorLayout = rootView.findViewById(R.id.error_layout)
+        errorTitle = errorLayout.findViewById(R.id.error_title)
+        errorSubtitle = errorLayout.findViewById(R.id.error_subtitle)
     }
 
     private fun initRecyclerView(rootView: ViewGroup) {
@@ -73,20 +83,43 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSegmentsViewModel::class.java)
 
-        viewModel.uiState.observe(this, Observer { state ->
-            state?.let {
-                recyclerView.visibility = if (state.showContent) View.VISIBLE else View.GONE
-                errorLayout.visibility = if (state.showError) View.VISIBLE else View.GONE
-                updateSegments(state.items)
+        viewModel.segmentsUiState.observe(this, Observer { state ->
+            state?.let { uiState ->
+                when (uiState) {
+                    is SegmentsContentUiState -> {
+                        recyclerView.visibility = View.VISIBLE
+                        errorLayout.visibility = View.GONE
+                        updateContentLayout(uiState)
+                    }
+                    is SegmentsErrorUiState -> {
+                        recyclerView.visibility = View.GONE
+                        errorLayout.visibility = View.VISIBLE
+                        updateErrorLayout(uiState)
+                    }
+                }
             }
         })
-        viewModel.segmentSelected.observe(this, Observer { it?.let { segmentsScreenListener.onSegmentSelected(it) } })
+        viewModel.segmentSelected.observe(
+                this,
+                Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
         viewModel.start()
+    }
+
+    private fun updateErrorLayout(errorUiStateState: SegmentsErrorUiState) {
+        setTextOrHide(errorTitle, errorUiStateState.titleResId)
+        setTextOrHide(errorSubtitle, errorUiStateState.subtitleResId)
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
+        }
     }
 
     private fun initRetryButton(rootView: ViewGroup) {
         val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { view -> viewModel.onRetryClicked() }
+        retryBtn.setOnClickListener { viewModel.onRetryClicked() }
     }
 
     override fun onHelp() {
@@ -112,12 +145,12 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
-    private fun updateSegments(segments: List<ItemUiState>) {
-        (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments)
+    private fun updateContentLayout(segments: SegmentsContentUiState) {
+        (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments.items)
     }
 
     companion object {
-        val TAG = "site_creation_segment_fragment_tag"
+        const val TAG = "site_creation_segment_fragment_tag"
 
         fun newInstance(): NewSiteCreationSegmentsFragment {
             return NewSiteCreationSegmentsFragment()

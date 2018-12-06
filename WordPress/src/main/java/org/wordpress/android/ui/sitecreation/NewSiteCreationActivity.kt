@@ -70,13 +70,14 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(
-                R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-        )
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag)
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) != null) {
             fragmentTransaction.addToBackStack(null)
+        } else {
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                    R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+            )
         }
         fragmentTransaction.commit()
     }

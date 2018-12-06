@@ -10,16 +10,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.HeaderUiState
-import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel.ItemUiState.SegmentUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.HeaderUiState
+import org.wordpress.android.ui.sitecreation.segments.SegmentsItemUiState.SegmentUiState
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.IMAGE
 
 sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
-    abstract fun onBind(uiState: ItemUiState)
+    abstract fun onBind(uiState: SegmentsItemUiState)
 
     class SegmentsItemViewHolder(
         parentView: ViewGroup,
@@ -31,7 +30,7 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
         private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
-        override fun onBind(uiState: ItemUiState) {
+        override fun onBind(uiState: SegmentsItemUiState) {
             uiState as SegmentUiState
             title.text = uiState.title
             subtitle.text = uiState.subtitle
@@ -55,7 +54,7 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
         private val title = itemView.findViewById<TextView>(R.id.title)
         private val subtitle = itemView.findViewById<TextView>(R.id.subtitle)
 
-        override fun onBind(uiState: ItemUiState) {
+        override fun onBind(uiState: SegmentsItemUiState) {
             uiState as HeaderUiState
             title.text = parent.context.getText(uiState.titleResId)
             subtitle.text = parent.context.getText(uiState.subtitleResId)
@@ -65,6 +64,6 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
     class SegmentsProgressViewHolder(
         parentView: ViewGroup
     ) : NewSiteCreationSegmentViewHolder(parentView, R.layout.new_site_creation_segments_progress) {
-        override fun onBind(uiState: ItemUiState) {}
+        override fun onBind(uiState: SegmentsItemUiState) {}
     }
 }
