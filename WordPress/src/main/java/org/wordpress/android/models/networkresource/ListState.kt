@@ -1,5 +1,12 @@
 package org.wordpress.android.models.networkresource
 
+import android.support.annotation.StringRes
+import org.wordpress.android.models.networkresource.ListState.Error
+import org.wordpress.android.models.networkresource.ListState.Init
+import org.wordpress.android.models.networkresource.ListState.Loading
+import org.wordpress.android.models.networkresource.ListState.Ready
+import org.wordpress.android.models.networkresource.ListState.Success
+
 /**
  * ListState aims to give a highly structured and easy to use way to manage any list's state.
  *
@@ -81,8 +88,7 @@ sealed class ListState<T>(val data: List<T>) {
      * @param loadingMore flag is used to indicate whether the first page or more data is being fetched. It's default
      * value is `false` which should be useful in situations where pagination is not available.
      */
-    class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean)
-        : ListState<T>(data) {
+    class Loading<T> private constructor(data: List<T>, val loadingMore: Boolean) : ListState<T>(data) {
         constructor(previous: ListState<T>, loadingMore: Boolean = false)
                 : this(previous.data, loadingMore)
 
@@ -98,8 +104,7 @@ sealed class ListState<T>(val data: List<T>) {
      * can be fetched. It's default value is `false` which should be useful in situations where pagination is not
      * available.
      */
-    class Success<T>(data: List<T>, val canLoadMore: Boolean = false)
-        : ListState<T>(data) {
+    class Success<T>(data: List<T>, val canLoadMore: Boolean = false) : ListState<T>(data) {
         override fun transform(transformFunc: (List<T>) -> List<T>) =
                 Success(transformFunc(data), canLoadMore)
     }
@@ -111,15 +116,18 @@ sealed class ListState<T>(val data: List<T>) {
      * It's initialized either from the previous state or from the transformed data using
      * [ListState.transform].
      *
-     * @param errorMessage will be the error string received from the API. It can also be used to show connection errors
-     * where the network is not available.
+     * @param errorMessage will be the error string received from the API.
+     * @param errorMessageResId can be used to propagate error resourceIds from ViewModels to Views.
      */
-    class Error<T> private constructor(data: List<T>, val errorMessage: String?)
-        : ListState<T>(data) {
-        constructor(previous: ListState<T>, errorMessage: String?)
-                : this(previous.data, errorMessage)
+    class Error<T> private constructor(
+        data: List<T>,
+        val errorMessage: String? = null,
+        @StringRes val errorMessageResId: Int? = null
+    ) : ListState<T>(data) {
+        constructor(previous: ListState<T>, errorMessage: String? = null, @StringRes errorMessageResId: Int? = null)
+                : this(previous.data, errorMessage, errorMessageResId)
 
         override fun transform(transformFunc: (List<T>) -> List<T>) =
-                Error(transformFunc(data), errorMessage)
+                Error(transformFunc(data), errorMessage, errorMessageResId)
     }
 }
