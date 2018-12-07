@@ -17,28 +17,28 @@ import javax.inject.Singleton
 @Singleton
 class TimeStatsSqlUtils
 @Inject constructor(private val statsSqlUtils: StatsSqlUtils) {
-    fun insert(site: SiteModel, data: PostAndPageViewsResponse, period: StatsGranularity) {
-        statsSqlUtils.insert(site, POSTS_AND_PAGES_VIEWS, period.toStatsType(), data)
+    fun insert(site: SiteModel, data: PostAndPageViewsResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, POSTS_AND_PAGES_VIEWS, granularity.toStatsType(), data)
     }
 
-    fun insert(site: SiteModel, data: ReferrersResponse, period: StatsGranularity) {
-        statsSqlUtils.insert(site, REFERRERS, period.toStatsType(), data)
+    fun insert(site: SiteModel, data: ReferrersResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, REFERRERS, granularity.toStatsType(), data)
     }
 
-    fun selectPostAndPageViews(site: SiteModel, period: StatsGranularity): PostAndPageViewsResponse? {
+    fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
                 POSTS_AND_PAGES_VIEWS,
-                period.toStatsType(),
+                granularity.toStatsType(),
                 PostAndPageViewsResponse::class.java
         )
     }
 
-    fun selectReferrers(site: SiteModel, period: StatsGranularity): ReferrersResponse? {
+    fun selectReferrers(site: SiteModel, granularity: StatsGranularity): ReferrersResponse? {
         return statsSqlUtils.select(
                 site,
                 REFERRERS,
-                period.toStatsType(),
+                granularity.toStatsType(),
                 ReferrersResponse::class.java
         )
     }
