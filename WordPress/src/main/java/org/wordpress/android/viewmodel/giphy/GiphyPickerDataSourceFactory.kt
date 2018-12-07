@@ -1,9 +1,13 @@
 package org.wordpress.android.viewmodel.giphy
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.arch.paging.DataSource
 import android.arch.paging.DataSource.Factory
 import com.giphy.sdk.core.network.api.GPHApiClient
 import org.wordpress.android.BuildConfig
+import org.wordpress.android.viewmodel.Event
 
 /**
  * Creates instances of [GiphyPickerDataSource]
@@ -30,21 +34,22 @@ class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
     var searchQuery: String = ""
         set(value) {
             field = value
-            dataSource?.invalidate()
+            dataSource.value?.invalidate()
         }
-
-    val initialLoadError: Throwable? get() = dataSource?.initialLoadError
 
     /**
      * The last [dataSource] that was created
      *
      * We retain this so we can invalidate it later when [searchQuery] is changed.
      */
-    private var dataSource: GiphyPickerDataSource? = null
+    private val dataSource = MutableLiveData<GiphyPickerDataSource>()
+
+    val initialLoadError: Throwable? get() = dataSource.value?.initialLoadError
+    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
         val dataSource = GiphyPickerDataSource(apiClient, searchQuery)
-        this.dataSource = dataSource
+        this.dataSource.postValue(dataSource)
         return dataSource
     }
 }

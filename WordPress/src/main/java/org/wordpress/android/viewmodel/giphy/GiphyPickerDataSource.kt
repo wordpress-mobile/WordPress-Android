@@ -1,9 +1,12 @@
 package org.wordpress.android.viewmodel.giphy
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.paging.PositionalDataSource
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.core.models.enums.MediaType.gif
 import com.giphy.sdk.core.network.api.GPHApiClient
+import org.wordpress.android.viewmodel.Event
 
 /**
  * The PagedListDataSource that is created and managed by [GiphyPickerDataSourceFactory]
@@ -18,6 +21,9 @@ class GiphyPickerDataSource(
 
     var initialLoadError: Throwable? = null
         private set
+
+    private val _rangeLoadErrorEvent = MutableLiveData<Event<Throwable>>()
+    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = _rangeLoadErrorEvent
 
     /**
      * Always the load the first page (startingPosition = 0) from the Giphy API
@@ -34,6 +40,7 @@ class GiphyPickerDataSource(
         val startPosition = 0
 
         initialLoadError = null
+        _rangeLoadErrorEvent.postValue(null)
 
         // Do not do any API call if the [searchQuery] is empty
         if (searchQuery.isBlank()) {
@@ -55,9 +62,16 @@ class GiphyPickerDataSource(
      * Load a given range of items ([params]) from the Giphy API
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
-        apiClient.search(searchQuery, gif, params.loadSize, params.startPosition, null, null) { response, _ ->
+        apiClient.search(searchQuery, gif, params.loadSize, params.startPosition, null, null) { response, error ->
             if (response != null) {
                 callback.onResult(response.data.toGiphyMediaViewModels())
+            } else {
+                // Do not replace the error if we already dispatched one. This makes the UI better since loadRange()
+                // gets called every time we load a part in the endless scroll. The user would be seeing an endless
+                // stream of error messages if we don't throttle it here.
+                if (_rangeLoadErrorEvent.value == null) {
+                    _rangeLoadErrorEvent.value = Event(error)
+                }
             }
         }
     }

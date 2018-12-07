@@ -8,6 +8,7 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
 import org.wordpress.android.util.getDistinct
+import org.wordpress.android.viewmodel.Event
 
 /**
  * Holds the data for [GiphyPickerActivity]
@@ -49,6 +50,8 @@ class GiphyPickerViewModel(
      */
     val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
+    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = dataSourceFactory.rangeLoadErrorEvent
+
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
      * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
@@ -71,7 +74,7 @@ class GiphyPickerViewModel(
     }
 
     /**
-     * Update the [emptyDisplayMode] depending on the number of API search results
+     * Update the [emptyDisplayMode] depending on the number of API search results or whether there was an error.
      */
     private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
         override fun onZeroItemsLoaded() {

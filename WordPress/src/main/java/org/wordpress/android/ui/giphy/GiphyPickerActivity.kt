@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
@@ -60,6 +61,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeSearchView()
         initializeSelectionBar()
         initializeEmptyView()
+        initializeRangeLoadErrorEventHandlers()
     }
 
     /**
@@ -194,6 +196,14 @@ class GiphyPickerActivity : AppCompatActivity() {
                         subtitle.visibility = View.GONE
                     }
                 }
+            }
+        })
+    }
+
+    private fun initializeRangeLoadErrorEventHandlers() {
+        viewModel.rangeLoadErrorEvent.observe(this, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                ToastUtils.showToast(this@GiphyPickerActivity, R.string.no_network_message)
             }
         })
     }
