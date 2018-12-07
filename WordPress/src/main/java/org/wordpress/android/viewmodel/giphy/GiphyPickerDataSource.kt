@@ -45,6 +45,11 @@ class GiphyPickerDataSource(
      */
     val rangeLoadErrorEvent: LiveData<Throwable> = _rangeLoadErrorEvent
 
+    /**
+     * A list of [RangeLoadArguments] from failed [loadRange] calls.
+     *
+     * This will be used for retrying them in [retryAllFailedRangeLoads].
+     */
     private val failedRangeLoadArguments = mutableListOf<RangeLoadArguments>()
 
     /**
