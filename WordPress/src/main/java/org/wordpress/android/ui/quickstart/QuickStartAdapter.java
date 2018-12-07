@@ -84,6 +84,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
             }
+
+            headerViewHolder.mTopSpacing.setVisibility(mTasksUncompleted.isEmpty() ? View.GONE : View.VISIBLE);
             return;
         }
 
@@ -210,11 +212,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     public class CompletedHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView mChevron;
         TextView mTitle;
+        View mTopSpacing;
 
         CompletedHeaderViewHolder(final View inflate) {
             super(inflate);
             mChevron = inflate.findViewById(R.id.completed_tasks_list_chevron);
             mTitle = inflate.findViewById(R.id.complete_tasks_header_label);
+            mTopSpacing = inflate.findViewById(R.id.top_spacing);
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override

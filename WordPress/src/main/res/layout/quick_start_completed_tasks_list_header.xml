@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <View
+        android:id="@+id/top_spacing"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/margin_extra_large"
         android:background="@color/grey_lighten_30"/>
