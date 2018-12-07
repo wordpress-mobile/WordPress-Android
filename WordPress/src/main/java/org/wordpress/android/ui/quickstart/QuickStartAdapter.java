@@ -31,7 +31,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     private boolean mIsCompletedTaskListExpanded;
 
     private static final int VIEW_TYPE_TASK = 0;
-    private static final int VIEW_TYPE_COMPLETE_TASKS_HEADER = 1;
+    private static final int VIEW_TYPE_COMPLETED_TASKS_HEADER = 1;
 
     QuickStartAdapter(Context context, List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted,
                       boolean isCompletedTasksListExpanded) {
@@ -58,7 +58,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             case VIEW_TYPE_TASK:
                 return new TaskViewHolder(
                         inflater.inflate(R.layout.quick_start_list_item, viewGroup, false));
-            case VIEW_TYPE_COMPLETE_TASKS_HEADER:
+            case VIEW_TYPE_COMPLETED_TASKS_HEADER:
                 return new CompletedHeaderViewHolder(
                         inflater.inflate(R.layout.quick_start_completed_tasks_list_header, viewGroup, false));
             default:
@@ -70,7 +70,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         int viewType = getItemViewType(position);
 
-        if (viewType == VIEW_TYPE_COMPLETE_TASKS_HEADER) {
+        if (viewType == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
             CompletedHeaderViewHolder headerViewHolder = (CompletedHeaderViewHolder) viewHolder;
             headerViewHolder.mTitle.setText(mContext.getString(R.string.quick_start_complete_tasks_header,
                     mTaskCompleted.size()));
@@ -166,7 +166,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override public int getItemViewType(int position) {
         if (position == mTasksUncompleted.size()) {
-            return VIEW_TYPE_COMPLETE_TASKS_HEADER;
+            return VIEW_TYPE_COMPLETED_TASKS_HEADER;
         } else {
             return VIEW_TYPE_TASK;
         }
