@@ -225,7 +225,6 @@ Language: gd_GB
     <string name="blog_not_found">Thachair mearachd fhad ’s a bha sinn ag inntrigeadh a’ bhloga seo</string>
     <string name="theme_fetch_failed">Cha b’ urrainn dhuinn na h-ùrlaran fhaighinn dhut</string>
     <string name="no_network_message">Chan eil lìonra ri làimh</string>
-    <string name="invalid_url_message">Dèan cinnteach gu bheil an URL seo dligheach</string>
     <string name="reader_toast_err_add_tag">Cha ghabh an taga seo a chur ris</string>
     <string name="reader_toast_err_remove_tag">Cha ghabh an taga seo a thoirt air falbh</string>
     <string name="reader_title_applog">Loga na h-aplacaid</string>

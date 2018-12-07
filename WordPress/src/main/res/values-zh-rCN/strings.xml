@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 14:54:07+0000
+Translation-Revision-Date: 2018-11-28 08:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="change_password_dialog_message">正在更改密码…</string>
+    <string name="change_password_dialog_hint">密码不得少于 6 个字符。要提高密码强度，请使用大小写字母、数字和 ! \" ? $ % ^ &amp; ) 等符号。</string>
+    <string name="change_password_confirmation">已成功修改密码</string>
+    <string name="change_password">修改密码</string>
+    <string name="support_identity_input_dialog_name_label">名称</string>
+    <string name="history_no_title">（无标题）</string>
+    <string name="history_preview_html">HTML 预览</string>
+    <string name="history_preview_visual">视觉预览</string>
     <string name="history_detail_title">修订版本</string>
     <string name="history_detail_button_previous">上一个</string>
     <string name="history_detail_button_next">下一个</string>
@@ -1179,7 +1187,6 @@ Language: zh_CN
     <string name="detail_approve_manual">每个人的评论都需要进行人工审核。</string>
     <string name="days_quantity_other">%d 天</string>
     <string name="days_quantity_one">1 天</string>
-    <string name="web_address">网页地址</string>
     <string name="primary_site">主站点</string>
     <string name="pending_email_change_snackbar">单击发送给 %1$s 的电子邮件中的验证链接以确认您的新地址</string>
     <string name="editor_toast_uploading_please_wait">您目前正在上传媒体。请等待，直到此任务完成。</string>
@@ -1600,7 +1607,6 @@ Language: zh_CN
     <string name="error_refresh_posts">现在不能刷新文章</string>
     <string name="error_deleting_post">删除文章时出现错误</string>
     <string name="notifications_empty_list">没有通知</string>
-    <string name="invalid_url_message">请检查输入的 URL 是否有效</string>
     <string name="stats_bar_graph_empty">还没有评论</string>
     <string name="stats_empty_comments">现在没有评论</string>
     <string name="sdcard_message">上传媒体需要已装载的 SD 卡</string>

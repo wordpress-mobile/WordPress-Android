@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-07 11:07:17+0000
+Translation-Revision-Date: 2018-11-22 10:20:22+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="change_password_dialog_message">Смена пароля…</string>
+    <string name="change_password_dialog_hint">Ваш пароль должен быть не менее шести символов. Для усиления пароля используйте верхний и нижний регистры, числа и символы типа ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Пароль успешно изменен</string>
+    <string name="change_password">Сменить пароль</string>
+    <string name="support_identity_input_dialog_name_label">Имя</string>
+    <string name="history_no_title">(без названия)</string>
+    <string name="history_preview_html">HTML просмотр</string>
+    <string name="history_preview_visual">Визуальный просмотр</string>
     <string name="history_detail_title">Редакция</string>
     <string name="history_detail_button_previous">Предыдущая</string>
     <string name="history_detail_button_next">Следующая</string>
@@ -1606,7 +1614,6 @@ Language: ru
     <string name="error_refresh_posts">Пост не может быть обновлен в данный момент</string>
     <string name="error_deleting_post">Произошла ошибка при удалении записи</string>
     <string name="notifications_empty_list">Нет уведомлений</string>
-    <string name="invalid_url_message">Убедитесь, что введен допустимый URL-адрес</string>
     <string name="stats_bar_graph_empty">Статистика недоступна</string>
     <string name="stats_empty_comments">Нет комментариев</string>
     <string name="sdcard_message">Для загрузки медиа нужно подключить SD карту</string>
