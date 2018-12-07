@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostDetailStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAndPages
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublicizeStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -188,7 +189,20 @@ class StatsListFragment : DaggerFragment() {
                     ActivityLauncher.viewPublicizeStats(activity, site)
                 }
                 is ViewPostsAndPages -> {
-                    ActivityLauncher.viewPostsAndPagesStats(activity, site, it.statsGranularity.toStatsTimeFrame())
+                    ActivityLauncher.viewPostsAndPagesStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
+                }
+                is ViewReferrers -> {
+                    ActivityLauncher.viewReferrersStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
                 }
             }
             true
@@ -228,7 +242,8 @@ sealed class NavigationTarget : Event() {
     class ViewTagsAndCategoriesStats : NavigationTarget()
     class ViewPublicizeStats : NavigationTarget()
     data class ViewTag(val link: String) : NavigationTarget()
-    data class ViewPostsAndPages(val statsGranularity: StatsGranularity) : NavigationTarget()
+    data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
 }
 
 fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
