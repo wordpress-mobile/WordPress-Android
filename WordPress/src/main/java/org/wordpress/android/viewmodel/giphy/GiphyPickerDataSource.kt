@@ -71,6 +71,8 @@ class GiphyPickerDataSource(
         apiClient.search(searchQuery, gif, params.loadSize, params.startPosition, null, null) { response, error ->
             if (response != null) {
                 callback.onResult(response.data.toGiphyMediaViewModels())
+
+                retryAllFailedRangeLoads()
             } else {
                 failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
 
