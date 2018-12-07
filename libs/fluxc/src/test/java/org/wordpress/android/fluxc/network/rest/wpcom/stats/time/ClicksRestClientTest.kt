@@ -44,12 +44,14 @@ class ClicksRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var statsUtils: StatsUtils
     private val gson: Gson = GsonBuilder().create()
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var restClient: ClicksRestClient
     private val siteId: Long = 12
     private val pageSize = 5
+    private val currentDate = "2018-10-10"
 
     @Before
     fun setUp() {
@@ -62,8 +64,10 @@ class ClicksRestClientTest {
                 requestQueue,
                 accessToken,
                 userAgent,
-                gson
+                gson,
+                statsUtils
         )
+        whenever(statsUtils.getCurrentDateTZ(site)).thenReturn(currentDate)
     }
 
     @Test
@@ -164,7 +168,8 @@ class ClicksRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
-                        "period" to period.toString()
+                        "period" to period.toString(),
+                        "date" to currentDate
                 )
         )
     }

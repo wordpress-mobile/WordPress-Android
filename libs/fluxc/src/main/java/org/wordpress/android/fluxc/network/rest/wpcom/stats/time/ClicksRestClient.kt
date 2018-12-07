@@ -31,7 +31,8 @@ class ClicksRestClient
     @param:Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
-    val gson: Gson
+    val gson: Gson,
+    private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchClicks(
         site: SiteModel,
@@ -42,7 +43,8 @@ class ClicksRestClient
         val url = WPCOMREST.sites.site(site.siteId).stats.clicks.urlV1_1
         val params = mapOf(
                 "period" to period.toString(),
-                "max" to pageSize.toString()
+                "max" to pageSize.toString(),
+                "date" to statsUtils.getCurrentDateTZ(site)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
