@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.wellsql.generated.PostModelTable;
 import com.yarolegovich.wellsql.SelectQuery;
@@ -390,8 +391,8 @@ public class PostStore extends Store {
      */
     public PostModel getPostByLocalPostId(int localId) {
         List<PostModel> result = WellSql.select(PostModel.class)
-                .where().equals(PostModelTable.ID, localId).endWhere()
-                .getAsModel();
+                                        .where().equals(PostModelTable.ID, localId).endWhere()
+                                        .getAsModel();
 
         if (result.isEmpty()) {
             return null;
@@ -472,6 +473,7 @@ public class PostStore extends Store {
         }
         return PostSqlUtils.getLocalPostsForFilter(postListDescriptor.getSite(), false, searchQuery, orderBy, order);
     }
+
     /**
      * returns the total number of posts with local changes across all sites
      */
@@ -524,6 +526,12 @@ public class PostStore extends Store {
             case DELETED_POST:
                 handleDeletePostCompleted((RemotePostPayload) action.getPayload());
                 break;
+            case RESTORE_POST:
+                handleRestorePost((RemotePostPayload) action.getPayload());
+                break;
+            case RESTORED_POST:
+                handleRestorePostCompleted((RemotePostPayload) action.getPayload(), false);
+                break;
             case REMOVE_POST:
                 removePost((PostModel) action.getPayload());
                 break;
@@ -545,6 +553,19 @@ public class PostStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mPostXMLRPCClient.deletePost(payload.post, payload.site);
+        }
+    }
+
+    private void handleRestorePost(RemotePostPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.restorePost(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            PostModel postToRestore = payload.post;
+            if (PostStatus.fromPost(postToRestore) == PostStatus.TRASHED) {
+                postToRestore.setStatus(PostStatus.PUBLISHED.toString());
+            }
+            mPostXMLRPCClient.restorePost(postToRestore, payload.site);
         }
     }
 
@@ -684,6 +705,9 @@ public class PostStore extends Store {
             }
             emitChange(onPostUploaded);
             return;
+        } else if (payload.origin == PostAction.RESTORE_POST) {
+            handleRestorePostCompleted(payload, true);
+            return;
         }
 
         if (payload.isError()) {
@@ -717,12 +741,36 @@ public class PostStore extends Store {
         }
     }
 
+    private void handleRestorePostCompleted(RemotePostPayload payload, boolean syncingNonWpComPost) {
+        if (payload.isError()) {
+            OnPostChanged event = new OnPostChanged(
+                    new CauseOfOnPostChanged.RestorePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+            event.error = payload.error;
+            emitChange(event);
+        } else {
+            if (payload.site.isUsingWpComRestApi() || syncingNonWpComPost) {
+                restorePost(payload.post);
+            } else {
+                // XML-RPC responds to post restore request with status boolean
+                // Update the post locally to reflect its published state, and request a fresh copy
+                // from the server to ensure local copy matches server
+                PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
+                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.RESTORE_POST);
+            }
+        }
+    }
+
     private void pushPost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mPostRestClient.pushPost(payload.post, payload.site);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
-            mPostXMLRPCClient.pushPost(payload.post, payload.site);
+            PostModel postToPush = payload.post;
+            // empty status indicates that the post is new
+            if (TextUtils.isEmpty(postToPush.getStatus())) {
+                postToPush.setStatus(PostStatus.PUBLISHED.toString());
+            }
+            mPostXMLRPCClient.pushPost(postToPush, payload.site);
         }
     }
 
@@ -757,6 +805,17 @@ public class PostStore extends Store {
         int rowsAffected = PostSqlUtils.deleteAllPosts();
         OnPostChanged event = new OnPostChanged(RemoveAllPosts.INSTANCE, rowsAffected);
         emitChange(event);
+    }
+
+    private void restorePost(PostModel postModel) {
+        int rowsAffected = PostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        CauseOfOnPostChanged causeOfChange =
+                new CauseOfOnPostChanged.RestorePost(postModel.getId(), postModel.getRemotePostId());
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        emitChange(onPostChanged);
+
+        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
+                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId()))));
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {
