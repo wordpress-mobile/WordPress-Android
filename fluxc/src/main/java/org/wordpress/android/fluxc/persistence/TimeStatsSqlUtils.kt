@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -10,6 +11,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
@@ -29,6 +31,10 @@ class TimeStatsSqlUtils
 
     fun insert(site: SiteModel, data: ClicksResponse, granularity: StatsGranularity) {
         statsSqlUtils.insert(site, CLICKS, granularity.toStatsType(), data)
+    }
+
+    fun insert(site: SiteModel, data: AuthorsResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, AUTHORS, granularity.toStatsType(), data)
     }
 
     fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity): PostAndPageViewsResponse? {
@@ -55,6 +61,15 @@ class TimeStatsSqlUtils
                 CLICKS,
                 granularity.toStatsType(),
                 ClicksResponse::class.java
+        )
+    }
+
+    fun selectAuthors(site: SiteModel, period: StatsGranularity): AuthorsResponse? {
+        return statsSqlUtils.select(
+                site,
+                AUTHORS,
+                period.toStatsType(),
+                AuthorsResponse::class.java
         )
     }
 
