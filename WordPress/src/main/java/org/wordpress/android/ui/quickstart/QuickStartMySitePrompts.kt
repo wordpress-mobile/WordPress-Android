@@ -2,8 +2,6 @@ package org.wordpress.android.ui.quickstart
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 
 /**
  * Static data about initial tutorial prompts you see when selecting one from Quick Start task list
@@ -99,7 +97,7 @@ enum class QuickStartMySitePrompts constructor(
 
         @JvmStatic
         fun isTargetingBottomNavBar(task: QuickStartTask): Boolean {
-            return task == FOLLOW_SITE || task == PUBLISH_POST
+            return task == QuickStartTask.FOLLOW_SITE || task == QuickStartTask.PUBLISH_POST
         }
     }
 }
