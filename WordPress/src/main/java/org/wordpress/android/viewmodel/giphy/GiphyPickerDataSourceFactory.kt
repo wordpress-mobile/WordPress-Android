@@ -33,12 +33,14 @@ class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
             dataSource?.invalidate()
         }
 
+    val initialLoadError: Throwable? get() = dataSource?.initialLoadError
+
     /**
      * The last [dataSource] that was created
      *
-     * We retain this so we can invalidate it later in [setSearchQuery]
+     * We retain this so we can invalidate it later when [searchQuery] is changed.
      */
-    private var dataSource: DataSource<Int, GiphyMediaViewModel>? = null
+    private var dataSource: GiphyPickerDataSource? = null
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
         val dataSource = GiphyPickerDataSource(apiClient, searchQuery)

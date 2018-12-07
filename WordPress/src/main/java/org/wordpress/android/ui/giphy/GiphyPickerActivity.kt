@@ -187,6 +187,13 @@ class GiphyPickerActivity : AppCompatActivity() {
                         subtitle.visibility = View.VISIBLE
                     }
                 }
+                EmptyDisplayMode.VISIBLE_NETWORK_ERROR -> {
+                    with(emptyView) {
+                        visibility = View.VISIBLE
+                        title.setText(R.string.no_network_message)
+                        subtitle.visibility = View.GONE
+                    }
+                }
             }
         })
     }

@@ -15,6 +15,10 @@ class GiphyPickerDataSource(
     private val apiClient: GPHApiClient,
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
+
+    var initialLoadError: Throwable? = null
+        private set
+
     /**
      * Always the load the first page (startingPosition = 0) from the Giphy API
      *
@@ -29,15 +33,20 @@ class GiphyPickerDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<GiphyMediaViewModel>) {
         val startPosition = 0
 
+        initialLoadError = null
+
         // Do not do any API call if the [searchQuery] is empty
         if (searchQuery.isBlank()) {
             callback.onResult(emptyList(), startPosition, 0)
             return
         }
 
-        apiClient.search(searchQuery, gif, params.requestedLoadSize, startPosition, null, null) { response, _ ->
+        apiClient.search(searchQuery, gif, params.requestedLoadSize, startPosition, null, null) { response, error ->
             if (response != null) {
                 callback.onResult(response.data.toGiphyMediaViewModels(), startPosition, response.pagination.totalCount)
+            } else {
+                initialLoadError = error
+                callback.onResult(emptyList(), startPosition, 0)
             }
         }
     }
