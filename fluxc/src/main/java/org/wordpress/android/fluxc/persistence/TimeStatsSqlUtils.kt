@@ -19,41 +19,41 @@ import javax.inject.Singleton
 @Singleton
 class TimeStatsSqlUtils
 @Inject constructor(private val statsSqlUtils: StatsSqlUtils) {
-    fun insert(site: SiteModel, data: PostAndPageViewsResponse, period: StatsGranularity) {
-        statsSqlUtils.insert(site, POSTS_AND_PAGES_VIEWS, period.toStatsType(), data)
+    fun insert(site: SiteModel, data: PostAndPageViewsResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, POSTS_AND_PAGES_VIEWS, granularity.toStatsType(), data)
     }
 
-    fun insert(site: SiteModel, data: ReferrersResponse, period: StatsGranularity) {
-        statsSqlUtils.insert(site, REFERRERS, period.toStatsType(), data)
+    fun insert(site: SiteModel, data: ReferrersResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, REFERRERS, granularity.toStatsType(), data)
     }
 
-    fun insert(site: SiteModel, data: ClicksResponse, period: StatsGranularity) {
-        statsSqlUtils.insert(site, CLICKS, period.toStatsType(), data)
+    fun insert(site: SiteModel, data: ClicksResponse, granularity: StatsGranularity) {
+        statsSqlUtils.insert(site, CLICKS, granularity.toStatsType(), data)
     }
 
-    fun selectPostAndPageViews(site: SiteModel, period: StatsGranularity): PostAndPageViewsResponse? {
+    fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
                 POSTS_AND_PAGES_VIEWS,
-                period.toStatsType(),
+                granularity.toStatsType(),
                 PostAndPageViewsResponse::class.java
         )
     }
 
-    fun selectReferrers(site: SiteModel, period: StatsGranularity): ReferrersResponse? {
+    fun selectReferrers(site: SiteModel, granularity: StatsGranularity): ReferrersResponse? {
         return statsSqlUtils.select(
                 site,
                 REFERRERS,
-                period.toStatsType(),
+                granularity.toStatsType(),
                 ReferrersResponse::class.java
         )
     }
 
-    fun selectClicks(site: SiteModel, period: StatsGranularity): ClicksResponse? {
+    fun selectClicks(site: SiteModel, granularity: StatsGranularity): ClicksResponse? {
         return statsSqlUtils.select(
                 site,
                 CLICKS,
-                period.toStatsType(),
+                granularity.toStatsType(),
                 ClicksResponse::class.java
         )
     }
