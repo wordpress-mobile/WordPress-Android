@@ -25,21 +25,21 @@ class PostAndPageViewsStore
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
         pageSize: Int,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, period, pageSize + 1, forced)
+        val payload = restClient.fetchPostAndPageViews(site, granularity, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period)
+                sqlUtils.insert(site, payload.response, granularity)
                 OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getPostAndPageViews(site: SiteModel, period: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, period)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getPostAndPageViews(site: SiteModel, granularity: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
+        return sqlUtils.selectPostAndPageViews(site, granularity)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }

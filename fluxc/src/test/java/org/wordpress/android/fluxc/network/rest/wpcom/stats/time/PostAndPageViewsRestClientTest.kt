@@ -105,11 +105,11 @@ class PostAndPageViewsRestClientTest {
         testErrorResponse(YEARS)
     }
 
-    private suspend fun testSuccessResponse(period: StatsGranularity) {
+    private suspend fun testSuccessResponse(granularity: StatsGranularity) {
         val response = mock<PostAndPageViewsResponse>()
         initAllTimeResponse(response)
 
-        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
+        val responseModel = restClient.fetchPostAndPageViews(site, granularity, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -118,13 +118,13 @@ class PostAndPageViewsRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
-                        "period" to period.toString(),
+                        "period" to granularity.toString(),
                         "date" to currentDate
                 )
         )
     }
 
-    private suspend fun testErrorResponse(period: StatsGranularity) {
+    private suspend fun testErrorResponse(granularity: StatsGranularity) {
         val errorMessage = "message"
         initAllTimeResponse(
                 error = WPComGsonNetworkError(
@@ -136,7 +136,7 @@ class PostAndPageViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostAndPageViews(site, period, pageSize, false)
+        val responseModel = restClient.fetchPostAndPageViews(site, granularity, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

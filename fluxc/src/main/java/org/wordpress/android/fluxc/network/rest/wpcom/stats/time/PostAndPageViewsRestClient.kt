@@ -33,13 +33,13 @@ class PostAndPageViewsRestClient
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<PostAndPageViewsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.top_posts.urlV1_1
         val params = mapOf(
-                "period" to period.toString(),
+                "period" to granularity.toString(),
                 "max" to pageSize.toString(),
                 "date" to statsUtils.getCurrentDateTZ(site)
         )
