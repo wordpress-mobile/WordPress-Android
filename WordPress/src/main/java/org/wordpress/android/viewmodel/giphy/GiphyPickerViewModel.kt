@@ -37,7 +37,9 @@ class GiphyPickerViewModel(
          * Visible because the user has performed a search but there are no search results
          */
         VISIBLE_NO_SEARCH_RESULTS,
-
+        /**
+         * Visible because there was a network error on the first page load.
+         */
         VISIBLE_NETWORK_ERROR
     }
 
@@ -49,6 +51,11 @@ class GiphyPickerViewModel(
      */
     val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
+    /**
+     * Errors that happened during page loads.
+     *
+     * @see [GiphyPickerDataSource.rangeLoadErrorEvent]
+    */
     val rangeLoadErrorEvent: LiveData<Throwable> = dataSourceFactory.rangeLoadErrorEvent
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
@@ -147,5 +154,10 @@ class GiphyPickerViewModel(
         }
     }
 
+    /**
+     * Retries all previously failed page loads.
+     *
+     * @see [GiphyPickerDataSource.retryAllFailedRangeLoads]
+     */
     fun retryAllFailedRangeLoads() = dataSourceFactory.retryAllFailedRangeLoads()
 }

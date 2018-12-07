@@ -17,16 +17,32 @@ class GiphyPickerDataSource(
     private val apiClient: GPHApiClient,
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
-
+    /**
+     * The data structure used for storing failed [loadRange] calls so they can be retried later.
+     */
     private data class RangeLoadArguments(
         val params: LoadRangeParams,
         val callback: LoadRangeCallback<GiphyMediaViewModel>
     )
 
+    /**
+     * The error received when [loadInitial] fails.
+     *
+     * Unlike [rangeLoadErrorEvent], this is not a [LiveData] because the consumer of this method
+     * [GiphyPickerViewModel] simply uses it to check for null values and reacts to a different event.
+     *
+     * This is cleared when [loadInitial] is started.
+     */
     var initialLoadError: Throwable? = null
         private set
 
     private val _rangeLoadErrorEvent = MutableLiveData<Throwable>()
+    /**
+     * Contains errors received during [loadRange].
+     *
+     * If this already contains a [Throwable], it will not be replaced until it is cleared during [loadInitial] or
+     * [retryAllFailedRangeLoads].
+     */
     val rangeLoadErrorEvent: LiveData<Throwable> = _rangeLoadErrorEvent
 
     private val failedRangeLoadArguments = mutableListOf<RangeLoadArguments>()
@@ -65,7 +81,10 @@ class GiphyPickerDataSource(
     }
 
     /**
-     * Load a given range of items ([params]) from the Giphy API
+     * Load a given range of items ([params]) from the Giphy API.
+     *
+     * Errors are dispatched to [rangeLoadErrorEvent]. If successful, previously failed calls of this method are
+     * automatically retried using [retryAllFailedRangeLoads].
      */
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<GiphyMediaViewModel>) {
         apiClient.search(searchQuery, gif, params.loadSize, params.startPosition, null, null) { response, error ->
@@ -86,6 +105,12 @@ class GiphyPickerDataSource(
         }
     }
 
+    /**
+     * Retry all previously failed [loadRange] calls.
+     *
+     * This is not done automatically by the Paging Library for us so we implement our own system in here. This is
+     * automatically called after every successful [loadRange]. Manually calling this is also fine.
+     */
     fun retryAllFailedRangeLoads() {
         _rangeLoadErrorEvent.postValue(null)
 

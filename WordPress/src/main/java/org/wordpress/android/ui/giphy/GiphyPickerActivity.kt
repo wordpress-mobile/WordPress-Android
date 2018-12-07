@@ -83,6 +83,8 @@ class GiphyPickerActivity : AppCompatActivity() {
                     if (mediaViewModel != null) {
                         viewModel.toggleSelected(mediaViewModel)
                     } else {
+                        // The user clicked on an empty GIF. That GIF may have failed to load during a network error.
+                        // Let's retry all the previously failed page loads.
                         viewModel.retryAllFailedRangeLoads()
                     }
                 }
@@ -206,10 +208,13 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Show a Toast message for errors during page loads.
+     */
     private fun initializeRangeLoadErrorEventHandlers() {
         viewModel.rangeLoadErrorEvent.observe(this, Observer { event ->
             event ?: return@Observer
-           
+
             ToastUtils.showToast(
                     this@GiphyPickerActivity,
                     R.string.giphy_picker_endless_scroll_network_error,

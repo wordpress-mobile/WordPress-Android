@@ -43,9 +43,20 @@ class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
      */
     private val dataSource = MutableLiveData<GiphyPickerDataSource>()
 
+    /**
+     * The [GiphyPickerDataSource.initialLoadError] of the current [dataSource]
+     */
     val initialLoadError: Throwable? get() = dataSource.value?.initialLoadError
+    /**
+     * The [GiphyPickerDataSource.rangeLoadErrorEvent] of the current [dataSource]
+     */
     val rangeLoadErrorEvent: LiveData<Throwable> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
 
+    /**
+     * Retries all previously failed page loads.
+     *
+     * @see [GiphyPickerDataSource.retryAllFailedRangeLoads]
+     */
     fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {

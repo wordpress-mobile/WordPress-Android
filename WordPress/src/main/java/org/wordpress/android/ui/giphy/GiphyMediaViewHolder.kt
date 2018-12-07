@@ -32,6 +32,8 @@ class GiphyMediaViewHolder(
     private val imageManager: ImageManager,
     /**
      * A function that is called when the thumbnail is clicked.
+     *
+     * If there is no bound [mediaViewModel], this can mean that there was an API error or this is just a placeholder.
      */
     private val onClickListener: (GiphyMediaViewModel?) -> Unit,
     itemView: View,
