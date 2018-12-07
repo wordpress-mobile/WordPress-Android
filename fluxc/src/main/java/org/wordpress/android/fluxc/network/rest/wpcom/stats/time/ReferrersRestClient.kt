@@ -33,7 +33,8 @@ class ReferrersRestClient
     @param:Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
-    val gson: Gson
+    val gson: Gson,
+    val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchReferrers(
         site: SiteModel,
@@ -44,7 +45,8 @@ class ReferrersRestClient
         val url = WPCOMREST.sites.site(site.siteId).stats.referrers.urlV1_1
         val params = mapOf(
                 "period" to period.toString(),
-                "max" to pageSize.toString()
+                "max" to pageSize.toString(),
+                "date" to statsUtils.getCurrentDateTZ(site)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
