@@ -458,7 +458,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         // Ensure that this check happens when mPost is set
-        mShowGutenbergEditor = shouldShowGutenbergEditor();
+        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
 
         // Ensure we have a valid post
         if (mPost == null) {
@@ -2058,11 +2058,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private boolean shouldShowGutenbergEditor() {
-        return AppPrefs.isGutenbergEditorEnabled()
-               && (mIsNewPost || GutenbergEditorFragment.contentContainsGutenbergBlocks(mPost.getContent()));
-    }
-
     // Moved from EditPostContentFragment
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     public static final String NEW_MEDIA_POST_EXTRA_IDS = "NEW_MEDIA_POST_EXTRA_IDS";
@@ -3354,7 +3349,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
-        fillContentEditorFields();
+        refreshEditorContent();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
             mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);
