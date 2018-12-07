@@ -200,17 +200,6 @@ public class ReleaseNetworkModule {
 
     @Singleton
     @Provides
-    public PostAndPageViewsRestClient providePostAndPageViewsRestClient(
-            Context appContext, Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
-            AccessToken token, UserAgent userAgent,
-            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new PostAndPageViewsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
-    }
-
-    @Singleton
-    @Provides
     public JetpackRestClient provideJetpackRestClient(Context appContext, Dispatcher dispatcher,
                                                       @Named("regular") RequestQueue requestQueue,
                                                       AccessToken token, UserAgent userAgent,

@@ -34,7 +34,7 @@ class ReferrersRestClient
     accessToken: AccessToken,
     userAgent: UserAgent,
     val gson: Gson,
-    val statsUtils: StatsUtils
+    private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchReferrers(
         site: SiteModel,
