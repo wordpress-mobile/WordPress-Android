@@ -167,11 +167,11 @@ class ReferrersRestClientTest {
         }
     }
 
-    private suspend fun testSuccessResponse(period: StatsGranularity) {
+    private suspend fun testSuccessResponse(granularity: StatsGranularity) {
         val response = mock<ReferrersResponse>()
         initReferrersResponse(response)
 
-        val responseModel = restClient.fetchReferrers(site, period, pageSize, false)
+        val responseModel = restClient.fetchReferrers(site, granularity, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -180,13 +180,13 @@ class ReferrersRestClientTest {
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
-                        "period" to period.toString(),
+                        "period" to granularity.toString(),
                         "date" to currentDate
                 )
         )
     }
 
-    private suspend fun testErrorResponse(period: StatsGranularity) {
+    private suspend fun testErrorResponse(granularity: StatsGranularity) {
         val errorMessage = "message"
         initReferrersResponse(
                 error = WPComGsonNetworkError(
@@ -198,7 +198,7 @@ class ReferrersRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchReferrers(site, period, pageSize, false)
+        val responseModel = restClient.fetchReferrers(site, granularity, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
