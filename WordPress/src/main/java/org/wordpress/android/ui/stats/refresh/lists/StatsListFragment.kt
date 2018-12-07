@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
@@ -205,6 +206,14 @@ class StatsListFragment : DaggerFragment() {
                             it.selectedDate
                     )
                 }
+                is ViewClicks -> {
+                    ActivityLauncher.viewClicksStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
+                }
             }
             true
         }
@@ -245,6 +254,7 @@ sealed class NavigationTarget : Event() {
     data class ViewTag(val link: String) : NavigationTarget()
     data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
     data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewClicks(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
 }
 
 fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
