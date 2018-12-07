@@ -24,7 +24,12 @@ class TimeStatsMapper
                     null
                 }
             }
-            type?.let { ViewsModel(item.id, item.title, item.views, type, item.href) }
+            type?.let {
+                if (item.id == null || item.title == null || item.href == null) {
+                    AppLog.e(STATS, "PostAndPageViewsResponse.type: Non-nullable fields are null - $item")
+                }
+                ViewsModel(item.id ?: 0, item.title ?: "", item.views ?: 0, type, item.href ?: "")
+            }
         }
         return PostAndPageViewsModel(stats, postViews.size > pageSize)
     }
