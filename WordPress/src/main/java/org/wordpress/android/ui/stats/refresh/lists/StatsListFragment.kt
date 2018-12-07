@@ -42,7 +42,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsList
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
@@ -96,7 +95,12 @@ class StatsListFragment : DaggerFragment() {
 
         linearLayoutManager = layoutManager
         recyclerView.layoutManager = linearLayoutManager
-        recyclerView.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 5)))
+        recyclerView.addItemDecoration(
+                RecyclerItemDecoration(
+                        resources.getDimensionPixelSize(R.dimen.margin_medium),
+                        resources.getDimensionPixelSize(R.dimen.margin_medium)
+                )
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

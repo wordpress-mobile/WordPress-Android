@@ -99,8 +99,6 @@
     <!-- Stats Refresh -->
 
     <style name="StatsBlock">
-        <item name="android:layout_marginEnd">8dp</item>
-        <item name="android:layout_marginStart">8dp</item>
         <item name="android:background">@color/white</item>
         <item name="android:minHeight">96dp</item>
     </style>
