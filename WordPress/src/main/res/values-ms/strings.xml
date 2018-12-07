@@ -557,7 +557,6 @@ Language: ms
     <string name="detail_approve_manual">Perlukan kelulusan manual bagi ulasan semua orang.</string>
     <string name="days_quantity_other">%d hari</string>
     <string name="days_quantity_one">1 hari</string>
-    <string name="web_address">Alamat Web</string>
     <string name="primary_site">Laman utama</string>
     <string name="pending_email_change_snackbar">Klik pautan pengesahan dalam emel yang dihantar ke %1$s untuk mengesahkan alamat baharu anda</string>
     <string name="editor_toast_uploading_please_wait">Anda sedang memuatnaik media. Sila tunggu sehingga selesai.</string>
@@ -953,7 +952,6 @@ Language: ms
     <string name="error_refresh_posts">Kiriman tidak dapat disegar semula pada masa ini</string>
     <string name="error_deleting_post">Ralat berlaku apabila sedang menghapuskan kiriman</string>
     <string name="notifications_empty_list">Tiada notifikasi</string>
-    <string name="invalid_url_message">Periksa sama ada URL yang dimasukkan adalah sah</string>
     <string name="stats_bar_graph_empty">Tiada statistik tersedia</string>
     <string name="stats_empty_comments">Belum ada ulasan</string>
     <string name="sdcard_message">Kad SD yang dipasang diperlukan untuk memuat naik media</string>
