@@ -60,7 +60,7 @@ constructor(
     data class PostAndPageViewsResponse(
         @SerializedName("date") var date: Date? = null,
         @SerializedName("days") val days: Map<String, ViewsResponse>,
-        @SerializedName("period") val period: String
+        @SerializedName("period") val statsGranularity: String
     ) {
         data class ViewsResponse(
             @SerializedName("postviews") val postViews: List<PostViewsResponse>,

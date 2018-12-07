@@ -66,7 +66,7 @@ class ReferrersRestClient
     }
 
     data class ReferrersResponse(
-        @SerializedName("period") val period: String?,
+        @SerializedName("period") val statsGranularity: String?,
         @SerializedName("days") val groups: Map<String, Groups>
     ) {
         data class Groups(
