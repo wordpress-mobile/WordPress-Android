@@ -2,9 +2,9 @@ package org.wordpress.android.fluxc.store.stats.time
 
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
+import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
@@ -15,20 +15,20 @@ import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
 
 @Singleton
-class PostAndPageViewsStore
+class ReferrersStore
 @Inject constructor(
-    private val restClient: PostAndPageViewsRestClient,
+    private val restClient: ReferrersRestClient,
     private val sqlUtils: TimeStatsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
-    suspend fun fetchPostAndPageViews(
+    suspend fun fetchReferrers(
         site: SiteModel,
         pageSize: Int,
         granularity: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, granularity, pageSize + 1, forced)
+        val payload = restClient.fetchReferrers(site, granularity, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
@@ -39,7 +39,7 @@ class PostAndPageViewsStore
         }
     }
 
-    fun getPostAndPageViews(site: SiteModel, granularity: StatsGranularity, pageSize: Int): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, granularity)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getReferrers(site: SiteModel, granularity: StatsGranularity, pageSize: Int): ReferrersModel? {
+        return sqlUtils.selectReferrers(site, granularity)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }
