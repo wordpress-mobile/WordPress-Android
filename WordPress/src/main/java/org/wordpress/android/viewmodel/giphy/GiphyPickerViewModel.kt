@@ -8,7 +8,6 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
 import org.wordpress.android.util.getDistinct
-import org.wordpress.android.viewmodel.Event
 
 /**
  * Holds the data for [GiphyPickerActivity]
@@ -50,7 +49,7 @@ class GiphyPickerViewModel(
      */
     val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
-    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = dataSourceFactory.rangeLoadErrorEvent
+    val rangeLoadErrorEvent: LiveData<Throwable> = dataSourceFactory.rangeLoadErrorEvent
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**

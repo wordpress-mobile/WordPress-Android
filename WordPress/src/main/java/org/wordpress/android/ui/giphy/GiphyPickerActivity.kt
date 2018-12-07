@@ -208,13 +208,13 @@ class GiphyPickerActivity : AppCompatActivity() {
 
     private fun initializeRangeLoadErrorEventHandlers() {
         viewModel.rangeLoadErrorEvent.observe(this, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                ToastUtils.showToast(
-                        this@GiphyPickerActivity,
-                        R.string.giphy_picker_endless_scroll_network_error,
-                        ToastUtils.Duration.LONG
-                )
-            }
+            event ?: return@Observer
+           
+            ToastUtils.showToast(
+                    this@GiphyPickerActivity,
+                    R.string.giphy_picker_endless_scroll_network_error,
+                    ToastUtils.Duration.LONG
+            )
         })
     }
 

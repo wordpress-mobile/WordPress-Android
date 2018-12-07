@@ -7,7 +7,6 @@ import android.arch.paging.DataSource
 import android.arch.paging.DataSource.Factory
 import com.giphy.sdk.core.network.api.GPHApiClient
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.viewmodel.Event
 
 /**
  * Creates instances of [GiphyPickerDataSource]
@@ -45,7 +44,7 @@ class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
     private val dataSource = MutableLiveData<GiphyPickerDataSource>()
 
     val initialLoadError: Throwable? get() = dataSource.value?.initialLoadError
-    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
+    val rangeLoadErrorEvent: LiveData<Throwable> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
 
     fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
 

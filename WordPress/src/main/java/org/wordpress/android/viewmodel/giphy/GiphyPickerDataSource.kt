@@ -6,7 +6,6 @@ import android.arch.paging.PositionalDataSource
 import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.core.models.enums.MediaType.gif
 import com.giphy.sdk.core.network.api.GPHApiClient
-import org.wordpress.android.viewmodel.Event
 
 /**
  * The PagedListDataSource that is created and managed by [GiphyPickerDataSourceFactory]
@@ -27,8 +26,8 @@ class GiphyPickerDataSource(
     var initialLoadError: Throwable? = null
         private set
 
-    private val _rangeLoadErrorEvent = MutableLiveData<Event<Throwable>>()
-    val rangeLoadErrorEvent: LiveData<Event<Throwable>> = _rangeLoadErrorEvent
+    private val _rangeLoadErrorEvent = MutableLiveData<Throwable>()
+    val rangeLoadErrorEvent: LiveData<Throwable> = _rangeLoadErrorEvent
 
     private val failedRangeLoadArguments = mutableListOf<RangeLoadArguments>()
 
@@ -79,7 +78,7 @@ class GiphyPickerDataSource(
                 // gets called every time we load a part in the endless scroll. The user would be seeing an endless
                 // stream of error messages if we don't throttle it here.
                 if (_rangeLoadErrorEvent.value == null) {
-                    _rangeLoadErrorEvent.value = Event(error)
+                    _rangeLoadErrorEvent.value = error
                 }
             }
         }
