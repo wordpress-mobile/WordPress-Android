@@ -33,13 +33,13 @@ class PostAndPageViewsRestClient
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<PostAndPageViewsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.top_posts.urlV1_1
         val params = mapOf(
-                "period" to period.toString(),
+                "period" to granularity.toString(),
                 "max" to pageSize.toString(),
                 "date" to statsUtils.getCurrentDateTZ(site)
         )
@@ -64,18 +64,18 @@ class PostAndPageViewsRestClient
     data class PostAndPageViewsResponse(
         @SerializedName("date") var date: Date? = null,
         @SerializedName("days") val days: Map<String, ViewsResponse>,
-        @SerializedName("period") val statsGranularity: String
+        @SerializedName("period") val statsGranularity: String?
     ) {
         data class ViewsResponse(
             @SerializedName("postviews") val postViews: List<PostViewsResponse>,
-            @SerializedName("total_views") val totalViews: Int
+            @SerializedName("total_views") val totalViews: Int?
         ) {
             data class PostViewsResponse(
-                @SerializedName("id") val id: Long,
-                @SerializedName("title") val title: String,
-                @SerializedName("type") val type: String,
-                @SerializedName("href") val href: String,
-                @SerializedName("views") val views: Int
+                @SerializedName("id") val id: Long?,
+                @SerializedName("title") val title: String?,
+                @SerializedName("type") val type: String?,
+                @SerializedName("href") val href: String?,
+                @SerializedName("views") val views: Int?
             )
         }
     }

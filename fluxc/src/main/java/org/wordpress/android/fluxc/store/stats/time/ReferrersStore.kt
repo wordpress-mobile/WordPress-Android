@@ -25,21 +25,21 @@ class ReferrersStore
     suspend fun fetchReferrers(
         site: SiteModel,
         pageSize: Int,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchReferrers(site, period, pageSize + 1, forced)
+        val payload = restClient.fetchReferrers(site, granularity, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period)
+                sqlUtils.insert(site, payload.response, granularity)
                 OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
 
-    fun getReferrers(site: SiteModel, period: StatsGranularity, pageSize: Int): ReferrersModel? {
-        return sqlUtils.selectReferrers(site, period)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getReferrers(site: SiteModel, granularity: StatsGranularity, pageSize: Int): ReferrersModel? {
+        return sqlUtils.selectReferrers(site, granularity)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }
