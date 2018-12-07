@@ -15,10 +15,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
@@ -82,11 +83,12 @@ class CommentsUseCase
         if (authors.isNotEmpty()) {
             mutableItems.add(Label(R.string.stats_comments_author_label, R.string.stats_comments_label))
             mutableItems.addAll(authors.take(PAGE_SIZE).mapIndexed { index, author ->
-                UserItem(
-                        author.gravatar,
-                        author.name,
-                        author.comments.toFormattedString(),
-                        index < authors.size - 1
+                ListItemWithIcon(
+                        iconUrl = author.gravatar,
+                        iconStyle = CIRCLE,
+                        text = author.name,
+                        value = author.comments.toFormattedString(),
+                        showDivider = index < authors.size - 1
                 )
             })
         } else {

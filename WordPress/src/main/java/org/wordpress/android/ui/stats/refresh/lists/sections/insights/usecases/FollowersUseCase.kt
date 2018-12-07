@@ -19,10 +19,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -120,13 +121,14 @@ class FollowersUseCase
         return mutableItems
     }
 
-    private fun List<FollowerModel>.toUserItems(): List<UserItem> {
+    private fun List<FollowerModel>.toUserItems(): List<ListItemWithIcon> {
         return this.mapIndexed { index, follower ->
-            UserItem(
-                    follower.avatar,
-                    follower.label,
-                    statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed),
-                    index < this.size - 1
+            ListItemWithIcon(
+                    iconUrl = follower.avatar,
+                    iconStyle = CIRCLE,
+                    text = follower.label,
+                    value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed),
+                    showDivider = index < this.size - 1
             )
         }
     }
