@@ -42,7 +42,7 @@ class AuthorsRestClient
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<AuthorsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.referrers.urlV1_1
+        val url = WPCOMREST.sites.site(site.siteId).stats.top_authors.urlV1_1
         val params = mapOf(
                 "period" to period.toString(),
                 "max" to pageSize.toString(),
