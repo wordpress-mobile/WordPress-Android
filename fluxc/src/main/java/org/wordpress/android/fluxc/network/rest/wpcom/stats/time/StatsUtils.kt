@@ -32,8 +32,7 @@ class StatsUtils
         */
 
         var timezoneNormalized: String
-        if (TextUtils.isEmpty(blogTimeZoneOption) || blogTimeZoneOption == "0"
-                || blogTimeZoneOption == "0.0") {
+        if (TextUtils.isEmpty(blogTimeZoneOption) || blogTimeZoneOption == "0" || blogTimeZoneOption == "0.0") {
             timezoneNormalized = "GMT"
         } else {
             val timezoneSplitted = org.apache.commons.lang3.StringUtils.split(blogTimeZoneOption, ".")
@@ -41,13 +40,13 @@ class StatsUtils
             if (timezoneSplitted.size > 1 && timezoneSplitted[1] == "5") {
                 timezoneNormalized += ":30"
             }
-            if (timezoneNormalized.startsWith("-")) {
-                timezoneNormalized = "GMT$timezoneNormalized"
+            timezoneNormalized = if (timezoneNormalized.startsWith("-")) {
+                "GMT$timezoneNormalized"
             } else {
                 if (timezoneNormalized.startsWith("+")) {
-                    timezoneNormalized = "GMT$timezoneNormalized"
+                    "GMT$timezoneNormalized"
                 } else {
-                    timezoneNormalized = "GMT+$timezoneNormalized"
+                    "GMT+$timezoneNormalized"
                 }
             }
         }
