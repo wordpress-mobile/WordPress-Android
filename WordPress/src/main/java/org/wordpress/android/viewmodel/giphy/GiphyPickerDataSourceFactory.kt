@@ -47,6 +47,8 @@ class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
     val initialLoadError: Throwable? get() = dataSource.value?.initialLoadError
     val rangeLoadErrorEvent: LiveData<Event<Throwable>> = Transformations.switchMap(dataSource) { it.rangeLoadErrorEvent }
 
+    fun retryAllFailedRangeLoads() = dataSource.value?.retryAllFailedRangeLoads()
+
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
         val dataSource = GiphyPickerDataSource(apiClient, searchQuery)
         this.dataSource.postValue(dataSource)

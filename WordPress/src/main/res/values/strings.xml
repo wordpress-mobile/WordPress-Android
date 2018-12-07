@@ -2006,6 +2006,7 @@
     <string name="giphy_picker_initial_empty_text">Search to find free GIFs to add to your Media Library</string>
     <string name="giphy_picker_initial_empty_subtext">GIFs provided by %s</string>
     <string name="giphy_picker_empty_search_list">No GIFs matching your search</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some GIFs failed to load due to a network error.</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>

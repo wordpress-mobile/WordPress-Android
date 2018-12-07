@@ -19,11 +19,18 @@ class GiphyPickerDataSource(
     private val searchQuery: String
 ) : PositionalDataSource<GiphyMediaViewModel>() {
 
+    private data class RangeLoadArguments(
+        val params: LoadRangeParams,
+        val callback: LoadRangeCallback<GiphyMediaViewModel>
+    )
+
     var initialLoadError: Throwable? = null
         private set
 
     private val _rangeLoadErrorEvent = MutableLiveData<Event<Throwable>>()
     val rangeLoadErrorEvent: LiveData<Event<Throwable>> = _rangeLoadErrorEvent
+
+    private val failedRangeLoadArguments = mutableListOf<RangeLoadArguments>()
 
     /**
      * Always the load the first page (startingPosition = 0) from the Giphy API
@@ -66,6 +73,8 @@ class GiphyPickerDataSource(
             if (response != null) {
                 callback.onResult(response.data.toGiphyMediaViewModels())
             } else {
+                failedRangeLoadArguments.add(RangeLoadArguments(params, callback))
+
                 // Do not replace the error if we already dispatched one. This makes the UI better since loadRange()
                 // gets called every time we load a part in the endless scroll. The user would be seeing an endless
                 // stream of error messages if we don't throttle it here.
@@ -73,6 +82,16 @@ class GiphyPickerDataSource(
                     _rangeLoadErrorEvent.value = Event(error)
                 }
             }
+        }
+    }
+
+    fun retryAllFailedRangeLoads() {
+        _rangeLoadErrorEvent.postValue(null)
+
+        // Use toList() to operate on a copy of failedRangeLoadArguments and prevent concurrency issues.
+        failedRangeLoadArguments.toList().forEach { args ->
+            loadRange(args.params, args.callback)
+            failedRangeLoadArguments.remove(args)
         }
     }
 

@@ -33,7 +33,7 @@ class GiphyMediaViewHolder(
     /**
      * A function that is called when the thumbnail is clicked.
      */
-    private val onClickListener: (GiphyMediaViewModel) -> Unit,
+    private val onClickListener: (GiphyMediaViewModel?) -> Unit,
     itemView: View,
     /**
      * The dimensions used for the ImageView
@@ -52,7 +52,7 @@ class GiphyMediaViewHolder(
             layoutParams.width = thumbnailViewDimensions.width
             layoutParams.height = thumbnailViewDimensions.height
 
-            setOnClickListener { mediaViewModel?.let(onClickListener) }
+            setOnClickListener { onClickListener(mediaViewModel) }
         }
     }
 
@@ -125,7 +125,7 @@ class GiphyMediaViewHolder(
          */
         fun create(
             imageManager: ImageManager,
-            onClickListener: (GiphyMediaViewModel) -> Unit,
+            onClickListener: (GiphyMediaViewModel?) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
         ): GiphyMediaViewHolder {

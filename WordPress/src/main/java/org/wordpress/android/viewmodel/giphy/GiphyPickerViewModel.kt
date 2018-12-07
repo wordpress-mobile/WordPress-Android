@@ -147,4 +147,6 @@ class GiphyPickerViewModel(
             (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
         }
     }
+
+    fun retryAllFailedRangeLoads() = dataSourceFactory.retryAllFailedRangeLoads()
 }

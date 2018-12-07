@@ -79,7 +79,13 @@ class GiphyPickerActivity : AppCompatActivity() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
-                onMediaViewClickListener = viewModel::toggleSelected
+                onMediaViewClickListener = { mediaViewModel ->
+                    if (mediaViewModel != null) {
+                        viewModel.toggleSelected(mediaViewModel)
+                    } else {
+                        viewModel.retryAllFailedRangeLoads()
+                    }
+                }
         )
 
         recycler.apply {
@@ -203,7 +209,11 @@ class GiphyPickerActivity : AppCompatActivity() {
     private fun initializeRangeLoadErrorEventHandlers() {
         viewModel.rangeLoadErrorEvent.observe(this, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                ToastUtils.showToast(this@GiphyPickerActivity, R.string.no_network_message)
+                ToastUtils.showToast(
+                        this@GiphyPickerActivity,
+                        R.string.giphy_picker_endless_scroll_network_error,
+                        ToastUtils.Duration.LONG
+                )
             }
         })
     }
