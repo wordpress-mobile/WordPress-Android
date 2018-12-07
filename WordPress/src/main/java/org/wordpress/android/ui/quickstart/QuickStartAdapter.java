@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.quickstart;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
@@ -8,10 +10,8 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -76,13 +76,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
+                headerViewHolder.mChevron.setImageResource(R.drawable.ic_chevron_down_blue_wordpress_24dp);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
-                headerViewHolder.mChevron.setRotation(180);
             } else {
+                headerViewHolder.mChevron.setImageResource(R.drawable.ic_chevron_up_blue_wordpress_24dp);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
-                headerViewHolder.mChevron.setRotation(0);
             }
             return;
         }
@@ -210,35 +210,6 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         ImageView mChevron;
         TextView mTitle;
 
-
-        private Animation getChevronRotationAnimation(boolean isCompletedTaskListExpanded) {
-            RotateAnimation rotateAnimation;
-
-            if (isCompletedTaskListExpanded) {
-                rotateAnimation = new RotateAnimation(0, -180, Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF, 0.5f);
-            } else {
-                rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f,
-                        Animation.RELATIVE_TO_SELF, 0.5f);
-            }
-
-            rotateAnimation.setDuration(Duration.SHORT.toMillis(mContext));
-            rotateAnimation.setFillAfter(true);
-            rotateAnimation.setInterpolator(new LinearInterpolator());
-            rotateAnimation.setAnimationListener(new AnimationListener() {
-                @Override public void onAnimationStart(Animation animation) {
-                }
-
-                @Override public void onAnimationEnd(Animation animation) {
-                    notifyItemChanged(getAdapterPosition());
-                }
-
-                @Override public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            return rotateAnimation;
-        }
-
         CompletedTasksHeaderViewHolder(final View inflate) {
             super(inflate);
             mChevron = inflate.findViewById(R.id.completed_tasks_list_chevron);
@@ -247,25 +218,44 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mIsCompletedTaskListExpanded) {
-                        mIsCompletedTaskListExpanded = false;
-                        int from = mTasks.size() + 1 - mTaskCompleted.size();
-                        int to = mTasks.size();
-                        mTasks.removeAll(mTaskCompleted);
-                        mChevron.startAnimation(getChevronRotationAnimation(true));
-                        notifyItemRangeRemoved(from, to);
-                    } else {
-                        mIsCompletedTaskListExpanded = true;
-                        int from = mTasks.size() + 1;
-                        int to = mTasks.size() + 1 + mTaskCompleted.size();
-                        mTasks.addAll(mTaskCompleted);
-                        mChevron.startAnimation(getChevronRotationAnimation(false));
-                        notifyItemRangeInserted(from, to);
-                    }
+                    toggleCompletedTasksList();
                 }
             };
 
             itemView.setOnClickListener(listener);
+        }
+
+        private void toggleCompletedTasksList() {
+            ViewPropertyAnimator viewPropertyAnimator =
+                    mChevron.animate()
+                            .rotation(mIsCompletedTaskListExpanded ? 0f : 180f)
+                            .setInterpolator(new LinearInterpolator())
+                            .setDuration(Duration.SHORT.toMillis(mContext));
+
+            viewPropertyAnimator.setListener(new AnimatorListener() {
+                @Override public void onAnimationStart(Animator animation) {
+                    itemView.setClickable(false);
+                }
+
+                @Override public void onAnimationEnd(Animator animation) {
+                    if (mIsCompletedTaskListExpanded) {
+                        mTasks.removeAll(mTaskCompleted);
+                        notifyItemRangeRemoved(getAdapterPosition() + 1, mTaskCompleted.size());
+                    } else {
+                        mTasks.addAll(mTaskCompleted);
+                        notifyItemRangeInserted(getAdapterPosition() + 1, mTaskCompleted.size());
+                    }
+                    mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
+                    itemView.setClickable(true);
+                }
+
+                @Override public void onAnimationCancel(Animator animation) {
+                    itemView.setClickable(true);
+                }
+
+                @Override public void onAnimationRepeat(Animator animation) {
+                }
+            });
         }
     }
 

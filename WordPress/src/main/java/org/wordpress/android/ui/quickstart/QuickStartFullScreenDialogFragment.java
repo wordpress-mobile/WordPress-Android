@@ -113,9 +113,28 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onTaskTapped(QuickStartTask task) {
-        Bundle result = new Bundle();
-        result.putSerializable(RESULT_TASK, task);
-        mDialogController.confirm(result);
+        // TODO: Quick Start - Remove switch statement after new tutorials are added.
+        switch (task) {
+            case CREATE_SITE:
+                mDialogController.dismiss();
+                break;
+            case CHOOSE_THEME:
+            case CUSTOMIZE_SITE:
+            case VIEW_SITE:
+            case ENABLE_POST_SHARING:
+            case PUBLISH_POST:
+            case FOLLOW_SITE:
+                Bundle result = new Bundle();
+                result.putSerializable(RESULT_TASK, task);
+                mDialogController.confirm(result);
+                break;
+            case UPLOAD_SITE_ICON:
+            case CREATE_NEW_PAGE:
+            case CHECK_STATS:
+            case EXPLORE_PLANS:
+                mDialogController.dismiss();
+                break;
+        }
     }
 
     @Override public void onSaveInstanceState(@NonNull Bundle outState) {
