@@ -63,7 +63,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             type = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
         }
 
-        RecyclerView recyclerView = rootView.findViewById(R.id.list);
+        RecyclerView list = rootView.findViewById(R.id.list);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
@@ -83,14 +83,14 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
                 break;
         }
 
-        boolean isCompletedTasksListExpaned = savedInstanceState != null
+        boolean isCompletedTasksListExpanded = savedInstanceState != null
                                               && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
         mQuickStartAdapter =
-                new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted, isCompletedTasksListExpaned);
+                new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded);
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        recyclerView.setAdapter(mQuickStartAdapter);
+        list.setLayoutManager(new LinearLayoutManager(requireContext()));
+        list.setAdapter(mQuickStartAdapter);
 
         return rootView;
     }
@@ -140,7 +140,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     @Override public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mQuickStartAdapter != null) {
-            outState.putBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED, mQuickStartAdapter.isCompletedTaskListExpanded());
+            outState.putBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED, mQuickStartAdapter.isCompletedTasksListExpanded());
         }
     }
 }

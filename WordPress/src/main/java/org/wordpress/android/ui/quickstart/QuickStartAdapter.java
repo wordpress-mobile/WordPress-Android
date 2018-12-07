@@ -39,7 +39,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         mTasks = new ArrayList<>();
         mTasks.addAll(tasksUncompleted);
         if (!tasksCompleted.isEmpty()) {
-            mTasks.add(null);
+            mTasks.add(null); // adding null where the complete tasks header simplifies a lot of logic for us
         }
         mIsCompletedTaskListExpanded = isCompletedTasksListExpanded;
         if (mIsCompletedTaskListExpanded) {
@@ -59,7 +59,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                 return new TaskViewHolder(
                         inflater.inflate(R.layout.quick_start_list_item, viewGroup, false));
             case VIEW_TYPE_COMPLETE_TASKS_HEADER:
-                return new CompletedTasksHeaderViewHolder(
+                return new CompletedHeaderViewHolder(
                         inflater.inflate(R.layout.quick_start_completed_tasks_list_header, viewGroup, false));
             default:
                 throw new IllegalArgumentException("Unexpected view type");
@@ -71,7 +71,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_COMPLETE_TASKS_HEADER) {
-            CompletedTasksHeaderViewHolder headerViewHolder = (CompletedTasksHeaderViewHolder) viewHolder;
+            CompletedHeaderViewHolder headerViewHolder = (CompletedHeaderViewHolder) viewHolder;
             headerViewHolder.mTitle.setText(mContext.getString(R.string.quick_start_complete_tasks_header,
                     mTaskCompleted.size()));
 
@@ -98,6 +98,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             taskViewHolder.mTitle.setPaintFlags(taskViewHolder.mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
+        // hide divider for the task before completed header
         if (position == mTasksUncompleted.size() - 1) {
             taskViewHolder.mDivider.setVisibility(View.INVISIBLE);
         } else {
@@ -206,11 +207,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    public class CompletedTasksHeaderViewHolder extends RecyclerView.ViewHolder {
+    public class CompletedHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView mChevron;
         TextView mTitle;
 
-        CompletedTasksHeaderViewHolder(final View inflate) {
+        CompletedHeaderViewHolder(final View inflate) {
             super(inflate);
             mChevron = inflate.findViewById(R.id.completed_tasks_list_chevron);
             mTitle = inflate.findViewById(R.id.complete_tasks_header_label);
@@ -263,7 +264,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         void onTaskTapped(QuickStartTask task);
     }
 
-    public boolean isCompletedTaskListExpanded() {
+    public boolean isCompletedTasksListExpanded() {
         return mIsCompletedTaskListExpanded;
     }
 }
