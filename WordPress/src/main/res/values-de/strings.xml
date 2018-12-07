@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 08:54:06+0000
+Translation-Revision-Date: 2018-11-29 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: de
 -->
 <resources>
+    <string name="change_password_dialog_message">Passwort wird geändert …</string>
+    <string name="change_password_dialog_hint">Dein Passwort muss aus mindestens sechs Zeichen bestehen. Verwende zur Erhöhung der Sicherheit Groß- und Kleinbuchstaben, Zahlen und Sonderzeichen wie ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Passwort erfolgreich geändert</string>
+    <string name="change_password">Passwort ändern</string>
+    <string name="support_identity_input_dialog_name_label">Name</string>
+    <string name="history_no_title">(kein Titel)</string>
+    <string name="history_preview_html">HTML-Vorschau</string>
+    <string name="history_preview_visual">Visuelle Vorschau</string>
     <string name="history_detail_title">Revision</string>
     <string name="history_detail_button_previous">Zurück</string>
     <string name="history_detail_button_next">Weiter</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Erfahre mehr</string>
     <string name="dialog_gutenberg_compatibility_dont_show_again">Nicht erneut anzeigen</string>
     <string name="dialog_gutenberg_compatibility_no_go_back">Zurück</string>
     <string name="dialog_gutenberg_compatibility_yes_edit_page">Seite bearbeiten</string>
@@ -1184,7 +1193,6 @@ Language: de
     <string name="detail_approve_manual">Alle Kommentare müssen manuell genehmigt werden.</string>
     <string name="days_quantity_other">%d Tage</string>
     <string name="days_quantity_one">1 Tag</string>
-    <string name="web_address">Web-Adresse</string>
     <string name="primary_site">Primäre Website</string>
     <string name="pending_email_change_snackbar">Klicke auf den Bestätigungslink in der E-Mail, die an %1$s gesendet wurde, um deine neue Adresse zu bestätigen.</string>
     <string name="editor_toast_uploading_please_wait">Medien werden hochgeladen … Bitte warte, bis der Vorgang abgeschlossen ist.</string>
@@ -1605,7 +1613,6 @@ Language: de
     <string name="error_refresh_posts">Beiträge konnten nicht aktualisiert werden</string>
     <string name="error_deleting_post">Beim Löschen des Beitrags ist ein Fehler aufgetreten</string>
     <string name="notifications_empty_list">Keine Benachrichtigungen</string>
-    <string name="invalid_url_message">Überprüfe ob die eingegebene Blog-URL gültig ist</string>
     <string name="stats_bar_graph_empty">Keine Statistiken verfügbar</string>
     <string name="stats_empty_comments">Bisher keine Kommentare</string>
     <string name="sdcard_message">Eine angeschlossene SD-Karte wird für den Medienupload benötigt</string>
@@ -1784,7 +1791,7 @@ Language: de
     <string name="title">Titel</string>
     <string name="dlg_deleting_comments">Lösche Kommentare</string>
     <string name="sdcard_title">SD-Karte benötigt</string>
-    <string name="media">Media</string>
+    <string name="media">Medien</string>
     <string name="approve">Genehmigen</string>
     <string name="delete">Löschen</string>
     <string name="none">Nichts</string>

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-18 19:50:28+0000
+Translation-Revision-Date: 2018-12-03 09:56:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="change_password_dialog_message">Endrer passord…</string>
+    <string name="change_password_dialog_hint">Ditt passord bør være minst seks tegn langt. for å gjøre det sterkere, bruk store og små bokstaver, tall og symboler som ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Passord vellykket endret</string>
+    <string name="change_password">Endre passord</string>
+    <string name="support_identity_input_dialog_name_label">Navn</string>
+    <string name="history_no_title">(ingen tittel)</string>
+    <string name="history_preview_html">Forhåndsvisning av HTML</string>
+    <string name="history_preview_visual">Visuell forhåndsvisning</string>
     <string name="history_detail_title">Revisjon</string>
     <string name="history_detail_button_previous">Forrige</string>
     <string name="history_detail_button_next">Neste</string>
@@ -37,6 +45,7 @@ Language: nb_NO
     <string name="async_promo_schedule_now">Planlegg nå</string>
     <string name="async_promo_title_schedule">Planlegg med tillit</string>
     <string name="pages_pending">Venter på gennomgang</string>
+    <string name="pages_open_page_error">Den valgte siden er ikke tilgjengelig</string>
     <string name="news_card_announcement_action_sample_announcement">[Les mer]</string>
     <string name="news_card_announcement_content_sample_announcement">[Ikke tid til å lese akkurat nå? Ikke noe problem: Lagre innlegg til når du har tid.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Ny egenskap/funksjon tilgjengelig]</string>
@@ -191,12 +200,14 @@ Language: nb_NO
     <string name="my_site_icon_dialog_title">Nettstedsikon</string>
     <string name="reader_followed_blog_notifications_this">dette nettstedet</string>
     <string name="reader_followed_blog_notifications_action">Aktiver</string>
+    <string name="reader_followed_blog_notifications">Aktiver varsler for %1$s%2$s%3$s?</string>
     <string name="reader_btn_notifications_on">Skru på varsler for nettstedet</string>
     <string name="reader_btn_notifications_off">Skru av varsler for nettstedet</string>
     <string name="rewind">Tilbakestill</string>
     <string name="activity_log_event">Hendelse</string>
     <string name="activity_log">Aktivitetslogg</string>
     <string name="activity">Aktivitet</string>
+    <string name="privacy_policy_read">Les personvernerklæringen</string>
     <string name="privacy_policy_learn_more_header">Personvernerklæring</string>
     <string name="preference_privacy_settings">Innstillinger for personvern</string>
     <string name="preference_collect_information">Samle informasjon</string>
@@ -211,14 +222,17 @@ Language: nb_NO
     <string name="notification_settings_followed_dialog_email_posts_instantly">Øyeblikkelig</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Daglig</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Nye innlegg</string>
+    <string name="notification_settings_followed_dialog_notification_posts_description">Motta varsler om nye innlegg fra dette nettstedet</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">Send meg nye innlegg via epost</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Alle nettstteder jeg følger</string>
-    <string name="notification_settings_category_followed_sites">Nettsteder jeg følger</string>
+    <string name="notification_settings_category_followed_sites">Fulgte nettsteder</string>
     <string name="comment_title">%s på %s</string>
     <string name="notification_channel_important_title">Viktig</string>
     <string name="notification_channel_general_title">Generelt</string>
     <string name="photo_picker_use_photo">Bruk dette bildet</string>
     <string name="media_preview_title">%1$d av %2$d</string>
+    <string name="stock_media_picker_search_hint">Søk i gratis fotobibliotek</string>
+    <string name="photo_picker_stock_media">Velg fra gratis fotobibliotek</string>
     <string name="error_save_empty_draft">Kan ikke lagre en tom kladd</string>
     <string name="preview_count">Forhåndsvis %d</string>
     <string name="add_count">Legg til %d</string>
@@ -228,6 +242,9 @@ Language: nb_NO
     <string name="stats_comments_many_desc">%d kommentarer</string>
     <string name="stats_comments_one_desc">én kommentar</string>
     <string name="stats_comments_zero_desc">ingen kommentarer</string>
+    <string name="stats_plays_many_desc">%d avspillinger</string>
+    <string name="stats_plays_one_desc">én avspilling</string>
+    <string name="stats_plays_zero_desc">ingen avspillinger</string>
     <string name="stats_clicks_many_desc">%d klikk</string>
     <string name="stats_clicks_one_desc">ett klikk</string>
     <string name="stats_clicks_zero_desc">ingen klikk</string>
@@ -315,6 +332,20 @@ Language: nb_NO
     <string name="publisher_with_company_param">Utgiver: %s</string>
     <string name="async_promo_publish_now">Publiser nå</string>
     <string name="stats_views_with_date_param">Visninger: %s</string>
+    <string name="uploading_subtitle_pages_posts">%1$d sider / innlegg gjenstår</string>
+    <string name="uploading_subtitle_pages_only_one">1 side gjenstår</string>
+    <string name="uploading_subtitle_pages_only_plural">%1$d sider gjenstår</string>
+    <string name="uploading_subtitle_posts_only_plural">%1$d innlegg gjenstår</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_one">%1$d sider / innlegg og 1 fil gjenstår</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_one">%1$d innlegg og 1 fil gjenstår</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_one">%1$d sider og 1 fil gjenstår</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_one">1 innlegg og 1 fil gjenstår</string>
+    <string name="uploading_subtitle_mixed_page_singular_media_one">1 side og 1 fil gjenstår</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_plural">%1$d sider / innlegg og %2$d av %3$d filer gjenstår</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_plural">%1$d innlegg og %2$d av %3$d filer gjenstår</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d sider og %2$d av %3$d filer gjenstår</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_plural">1 innlegg og %1$d av %2$d filer gjenstår</string>
+    <string name="uploading_subtitle_mixed_page_singular_media_plural">1 side og %1$d av %2$d filer gjenstår</string>
     <string name="dialog_confirm_publish_yes">Publiser nå</string>
     <string name="dialog_confirm_publish_message_page">Denn siden vil bli publsert straks.</string>
     <string name="dialog_confirm_publish_message_post">Dette innlegget vil bli publsert straks.</string>
@@ -338,6 +369,7 @@ Language: nb_NO
     <string name="site_creation_title_blog">Start med en blogg</string>
     <string name="site_creation_label_category">Hva slags nettsted trenger du?\nVelg et alternativ nedenfor:</string>
     <string name="site_creation_title">Opprett nytt nettsted</string>
+    <string name="notification_site_creation_created">Trykk for å fortsette.</string>
     <string name="notification_site_creation_title_success">Nettsted opprettet!</string>
     <string name="username_changer_title">Endre brukernavn</string>
     <string name="username_changer_hint">Skriv videre for å få flere forslag</string>
@@ -351,6 +383,7 @@ Language: nb_NO
     <string name="signup_with_email_button">Registrer deg med epost</string>
     <string name="signup_user_exists">Epost-adressen finnes allerede påWordPress.com.\nFortsett med innlogging.</string>
     <string name="signup_updating_account">Oppdaterer konto…</string>
+    <string name="signup_terms_of_service_text">Ved å registrere deg aksepterer du %1$stjenestebetingelsene%2$s.</string>
     <string name="signup_magic_link_progress">Sender epost</string>
     <string name="signup_magic_link_message">Vi sendte deg en magisk registreringslenke! Sjekk din e-post på denne enheten og trykk på lenken i e-posten for å avslutte registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Prøv igjen</string>
@@ -442,11 +475,13 @@ Language: nb_NO
     <string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
     <string name="notification_error_wrong_password">Vennligst dobbeltsjekk passordet ditt for å fortsette.</string>
     <string name="notification_login_title_stopped">Innlogging avsluttet</string>
+    <string name="notification_logging_in">Vennligst vent mens innlogging skjer.</string>
     <string name="notification_login_title_in_progress">Logger inn…</string>
     <string name="notification_logged_in">Trykk for å fortsette.</string>
     <string name="notification_login_title_success">Innlogget!</string>
     <string name="login_empty_password">Vennligst skriv inn et passord</string>
     <string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
+    <string name="enter_verification_code_sms">Vi sendte en tekstmelding til telefonnummeret som slutter på %s. Vennligst oppgi bekreftelseskoden o SMS-en.</string>
     <string name="image_size">Størrelse</string>
     <string name="uploading_subtitle_media_only_one">1 fil igjen</string>
     <string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
@@ -456,9 +491,12 @@ Language: nb_NO
     <string name="media_all_files_uploaded_successfully">%d filer lastet opp</string>
     <string name="media_files_uploaded_successfully">, %d vellykket lastet opp</string>
     <string name="media_file_uploaded">1 fil er lastet opp</string>
+    <string name="media_files_uploaded">%d filer lastet opp</string>
     <string name="remove_image_from_post">Fjern fra innlegg</string>
     <string name="confirm_remove_media_image">Fjern dette bildet fra innlegget?</string>
     <string name="media_edit_customize_card_caption">Tilpass</string>
+    <string name="media_edit_file_details_card_caption">Fildetaljer</string>
+    <string name="login_error_suffix">\nKanskje prøve en annen brukerkonto?</string>
     <string name="login_error_button">Lukk</string>
     <string name="login_google_button_suffix">Logg inn med Google.</string>
     <string name="post_settings_remove_featured_image">Fjern fremhevet bilde</string>
@@ -1387,7 +1425,7 @@ Language: nb_NO
     <string name="reader_toast_err_get_blog_info">Klarte ikke å vise dette nettstedet</string>
     <string name="reader_label_followed_blog">Nettstdedet ble fulgt</string>
     <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et stikkord for å følge</string>
-    <string name="reader_page_followed_blogs">Fulgte sider</string>
+    <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
     <string name="reader_page_followed_tags">Fulgte stikkord</string>
     <string name="reader_title_subs">Stikkord &amp; nettsteder</string>
     <string name="reader_title_tag_preview">Leser-stikkord</string>
@@ -1410,7 +1448,6 @@ Language: nb_NO
     <string name="error_refresh_posts">Innlegg kunne ikke bli oppfrisket for øyeblikket</string>
     <string name="error_deleting_post">En feil oppstod under sletting av dette innlegget</string>
     <string name="notifications_empty_list">Ingen notifikasjoner</string>
-    <string name="invalid_url_message">Sjekk at nettadressen som er skrevet inn er gyldig</string>
     <string name="stats_bar_graph_empty">Ingen statistikk tilgjengelig</string>
     <string name="stats_empty_comments">Ingen kommentarer enda</string>
     <string name="sdcard_message">Et montert SD-kort er påkrevd for å kunne laste opp medier</string>
