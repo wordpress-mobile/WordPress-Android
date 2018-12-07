@@ -66,11 +66,12 @@ class BlockDiffCallback(
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
-        if (newItem is ExpandableItem && oldItem is ExpandableItem && oldItem.isExpanded != newItem.isExpanded) {
-            return EXPAND_CHANGED
-        } else if (newItem is TabsItem && oldItem is TabsItem && oldItem.selectedTabPosition != newItem.selectedTabPosition) {
-            return TAB_CHANGED
+        return when {
+            newItem is ExpandableItem && oldItem is ExpandableItem && oldItem.isExpanded != newItem.isExpanded ->
+                EXPAND_CHANGED
+            newItem is TabsItem && oldItem is TabsItem && oldItem.selectedTabPosition != newItem.selectedTabPosition ->
+                TAB_CHANGED
+            else -> null
         }
-        return null
     }
 }
