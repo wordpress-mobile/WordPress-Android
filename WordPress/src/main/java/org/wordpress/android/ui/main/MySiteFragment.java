@@ -1060,7 +1060,6 @@ public class MySiteFragment extends Fragment implements
                     @Override public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
                         quickStartTarget.setPressed(mActiveTutorialPrompt.getTask() != QuickStartTask.UPLOAD_SITE_ICON);
-
                     }
                 });
             }
