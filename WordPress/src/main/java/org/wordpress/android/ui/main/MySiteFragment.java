@@ -325,8 +325,8 @@ public class MySiteFragment extends Fragment implements
                             showChangeSiteIconDialog();
                         } else {
                             showAddSiteIconDialog();
-                            completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
                         }
+                        completeQuickStarTask(QuickStartTask.UPLOAD_SITE_ICON);
                     } else {
                         showEditingSiteIconRequiresPermissionDialog(
                                 hasIcon ? getString(R.string.my_site_icon_dialog_change_requires_permission_message)
@@ -656,7 +656,7 @@ public class MySiteFragment extends Fragment implements
     public void onConfirm(@Nullable Bundle result) {
         if (result != null) {
             QuickStartTask task = (QuickStartTask) result.getSerializable(RESULT_TASK);
-            if (task == QuickStartTask.CREATE_SITE) {
+            if (task == null || task == QuickStartTask.CREATE_SITE) {
                 return;
             }
 
@@ -1059,7 +1059,8 @@ public class MySiteFragment extends Fragment implements
                 mScrollView.post(new Runnable() {
                     @Override public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
-                        quickStartTarget.setPressed(true);
+                        quickStartTarget.setPressed(mActiveTutorialPrompt.getTask() != QuickStartTask.UPLOAD_SITE_ICON);
+
                     }
                 });
             }

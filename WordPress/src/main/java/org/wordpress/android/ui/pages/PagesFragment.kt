@@ -436,10 +436,10 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         EventBus.getDefault().removeStickyEvent(event)
         quickStartEvent = event
 
-        if (quickStartEvent!!.task == QuickStartTask.CREATE_NEW_PAGE) {
+        if (quickStartEvent?.task == QuickStartTask.CREATE_NEW_PAGE) {
             view?.post {
                 val title = QuickStartUtils.stylizeQuickStartPrompt(
-                        activity!!,
+                        requireActivity(),
                         R.string.quick_start_dialog_create_new_page_message_short_pages,
                         R.drawable.ic_create_white_24dp
                 )
@@ -447,7 +447,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
                 WPDialogSnackbar.make(
                         view!!.findViewById(R.id.coordinatorLayout), title,
                         AccessibilityUtils.getSnackbarDuration(
-                                activity!!,
+                                requireActivity(),
                                 resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                         )
                 ).show()
