@@ -68,7 +68,8 @@
     <issue id="UnusedAttribute" severity="error" />
     <issue id="IconXmlAndPng" severity="error" />
     <issue id="RtlSymmetry" severity="error" />
-
+    <issue id="ExportedReceiver" severity="error" />
+    <issue id="ExportedService" severity="error" />
 
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />

@@ -702,6 +702,7 @@
         </receiver>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
+            android:permission="android.permission.INSTALL_PACKAGES"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -720,14 +721,15 @@
             android:exported="false" />
 
         <service
-            android:name=".push.GCMMessageService">
+            android:name=".push.GCMMessageService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".push.InstanceIDService"
-            >
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
