@@ -25,14 +25,14 @@ class ClicksStore
     suspend fun fetchClicks(
         site: SiteModel,
         pageSize: Int,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchClicks(site, period, pageSize + 1, forced)
+        val payload = restClient.fetchClicks(site, granularity, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
-                sqlUtils.insert(site, payload.response, period)
+                sqlUtils.insert(site, payload.response, granularity)
                 OnStatsFetched(timeStatsMapper.map(payload.response, pageSize))
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
