@@ -10,13 +10,15 @@ import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 
-class SearchInputWithHeader(rootView: View, onClear: () -> Unit, onTextChanged: (String) -> Unit) {
+class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
     private val headerLayout = rootView.findViewById<ViewGroup>(R.id.header_layout)
     private val headerTitle = rootView.findViewById<TextView>(R.id.title)
     private val headerSubtitle = rootView.findViewById<TextView>(R.id.subtitle)
     private val searchInput = rootView.findViewById<EditText>(R.id.input)
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
     private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
+
+    var onTextChanged: ((String) -> Unit)? = null
 
     init {
         val context = rootView.context
@@ -35,7 +37,7 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit, onTextChanged: 
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                onTextChanged(s?.toString() ?: "")
+                onTextChanged?.invoke(s?.toString() ?: "")
             }
         })
     }

@@ -79,8 +79,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         errorLayout = rootView.findViewById(R.id.error_layout)
         searchInputWithHeader = SearchInputWithHeader(
                 rootView = rootView,
-                onClear = { viewModel.onClearTextBtnClicked() },
-                onTextChanged = { viewModel.updateQuery(it) }
+                onClear = { viewModel.onClearTextBtnClicked() }
         )
         initRecyclerView(rootView)
         initRetryButton(rootView)
@@ -108,6 +107,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
+        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
+        // is called when the system sets the restored value to the EditText which results in an unnecessary request
+        searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
     }
 
     private fun initRecyclerView(rootView: ViewGroup) {
