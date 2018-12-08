@@ -15,6 +15,7 @@ import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.getDistinct
@@ -165,6 +166,8 @@ class GiphyPickerViewModel @Inject constructor(
 
             _selectedMediaViewModelList.postValue(LinkedHashMap())
             dataSourceFactory.setSearchQuery(query)
+
+            AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_SEARCHED)
         } else {
             searchQueryChannel.send(query)
         }
