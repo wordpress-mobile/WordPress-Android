@@ -2789,9 +2789,14 @@ public class EditPostActivity extends AppCompatActivity implements
                             mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
                         }
 
-                        startUploadService(mediaModels);
+                        if (isModernEditor()) {
+                            startUploadService(mediaModels);
+                        }
 
                         for (MediaModel mediaModel : mediaModels) {
+                            mediaModel.setLocalPostId(mPost.getId());
+                            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+
                             MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
                             mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
                         }
