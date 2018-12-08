@@ -17,6 +17,7 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
@@ -183,6 +184,9 @@ class GiphyPickerActivity : AppCompatActivity() {
         viewModel.downloadResult.observe(this, Observer { result ->
             if (result?.mediaModels != null) {
                 val mediaLocalIds = result.mediaModels.map { it.id }.toIntArray()
+
+                trackDownloadedMedia(mediaLocalIds)
+
                 val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -227,6 +231,15 @@ class GiphyPickerActivity : AppCompatActivity() {
             // The Add text should not be View.GONE because the progress bar relies on its layout to position itself
             text_add.visibility = if (isDownloading) View.INVISIBLE else View.VISIBLE
         })
+    }
+
+    private fun trackDownloadedMedia(mediaLocalIds: IntArray) {
+        if (mediaLocalIds.isEmpty()) {
+            return
+        }
+
+        val properties = mapOf("number_of_media_selected" to mediaLocalIds.size)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_DOWNLOADED, properties)
     }
 
     /**
