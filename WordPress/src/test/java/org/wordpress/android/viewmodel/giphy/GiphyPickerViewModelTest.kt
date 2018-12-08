@@ -106,7 +106,9 @@ class GiphyPickerViewModelTest {
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
-        viewModel.search("dummy")
+        runBlocking {
+            viewModel.search(query = "dummy", immediately = true).join()
+        }
 
         // Assert
         assertThat(viewModel.selectedMediaViewModelList.value).isEmpty()
