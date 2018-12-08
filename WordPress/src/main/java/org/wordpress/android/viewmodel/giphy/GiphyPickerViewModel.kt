@@ -6,6 +6,12 @@ import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.channels.consumeEach
+import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.MediaModel
@@ -94,6 +100,20 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
+     * Receives the query strings submitted in [search]
+     *
+     * This is the [ReceiveChannel] used to [debounce] on.
+     */
+    private val searchQueryChannel = Channel<String>()
+
+    init {
+        // Register a [searchQueryChannel] callback which gets called after a set number of time has elapsed.
+        launch {
+            searchQueryChannel.debounce().consumeEach { search(query = it, immediately = true) }
+        }
+    }
+
+    /**
      * Perform additional initialization for this ViewModel
      *
      * The [site] usually comes from this ViewModel's corresponding Activity
@@ -103,18 +123,28 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Set the current search query
+     * Set the current search query.
+     *
+     * The search will not be executed until a short amount of time has elapsed. This enables us to keep receiving
+     * queries from a text field without unnecessarily launching API requests. API requests will only be executed
+     * when, presumably, the user has stopped typing.
      *
      * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
      * currently selected [GiphyMediaViewModel] if the new search query results are different.
+     *
+     * @param immediately If `true`, bypasses the timeout and immediately executes API requests
      */
-    fun search(searchQuery: String) {
-        if (_state.value != State.IDLE) {
-            return
-        }
+    fun search(query: String, immediately: Boolean = false) = launch {
+        if (immediately) {
+            if (_state.value != State.IDLE) {
+                return@launch
+            }
 
-        _selectedMediaViewModelList.postValue(LinkedHashMap())
-        dataSourceFactory.setSearchQuery(searchQuery)
+            _selectedMediaViewModelList.postValue(LinkedHashMap())
+            dataSourceFactory.setSearchQuery(query)
+        } else {
+            searchQueryChannel.send(query)
+        }
     }
 
     /**
@@ -195,6 +225,25 @@ class GiphyPickerViewModel @Inject constructor(
     private fun rebuildSelectionNumbers(mediaList: LinkedHashMap<String, GiphyMediaViewModel>) {
         mediaList.values.forEachIndexed { index, mediaViewModel ->
             (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
+        }
+    }
+
+    /**
+     * Creates a new [ReceiveChannel] which only produces values after the [timeout] has elapsed and no new values
+     * have been received from self ([ReceiveChannel]).
+     *
+     * This works like Rx's [Debounce operator](http://reactivex.io/documentation/operators/debounce.html).
+     */
+    private fun <T> ReceiveChannel<T>.debounce(timeout: Int = 300): ReceiveChannel<T> = produce {
+        var job: Job? = null
+
+        consumeEach {
+            job?.cancel()
+
+            job = launch {
+                delay(timeout)
+                send(it)
+            }
         }
     }
 }

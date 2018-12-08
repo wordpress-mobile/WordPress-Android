@@ -108,11 +108,11 @@ class GiphyPickerActivity : AppCompatActivity() {
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 search_view.clearFocus()
-                viewModel.search(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.search(newText)
                 return true
             }
         })
