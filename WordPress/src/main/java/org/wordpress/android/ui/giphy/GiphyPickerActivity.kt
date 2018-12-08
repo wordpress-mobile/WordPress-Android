@@ -120,6 +120,9 @@ class GiphyPickerActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Show the progress bar in the center of the page if we are performing an initial page load.
+     */
     private fun initializeSearchProgressBar() {
         viewModel.isPerformingInitialLoad.getDistinct().observe(this, Observer {
             val isPerformingInitialLoad = it ?: return@Observer
