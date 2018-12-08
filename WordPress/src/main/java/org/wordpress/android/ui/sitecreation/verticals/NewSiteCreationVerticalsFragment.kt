@@ -26,9 +26,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
+import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
@@ -234,7 +234,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         }
     }
 
-    private fun updateHeader(uiState: VerticalsHeaderUiState?) {
+    private fun updateHeader(uiState: SiteCreationHeaderUiState?) {
         uiState?.let {
             if (headerLayout.visibility == View.VISIBLE) {
                 if (contentLayout.layoutTransition == null) {
@@ -250,7 +250,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         } ?: updateVisibility(headerLayout, false)
     }
 
-    private fun updateSearchInput(uiState: VerticalsSearchInputUiState) {
+    private fun updateSearchInput(uiState: SiteCreationSearchInputUiState) {
         searchEditText.hint = uiState.hint
         updateVisibility(searchEditTextProgressBar, uiState.showProgress)
         updateVisibility(clearAllButton, uiState.showClearButton)
