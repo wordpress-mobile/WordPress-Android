@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
+import android.arch.paging.PagedList.BoundaryCallback
 import kotlinx.coroutines.experimental.CancellationException
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.Channel
@@ -91,12 +92,32 @@ class GiphyPickerViewModel @Inject constructor(
     val selectionBarIsVisible: LiveData<Boolean> =
             Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
 
+    private val _isPerformingInitialLoad = MutableLiveData<Boolean>()
+    /**
+     * Returns `true` if we are (or going to) perform an initial load due to a [search] call.
+     *
+     * This will be `false` when the initial load has been executed and completed.
+     */
+    val isPerformingInitialLoad: LiveData<Boolean> = _isPerformingInitialLoad
+
     /**
      * The [PagedList] that should be displayed in the RecyclerView
      */
     val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
         val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
-        LivePagedListBuilder(dataSourceFactory, pagedListConfig).build()
+        LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(pagedListBoundaryCallback).build()
+    }
+
+    private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
+        override fun onZeroItemsLoaded() {
+            _isPerformingInitialLoad.postValue(false)
+            super.onZeroItemsLoaded()
+        }
+
+        override fun onItemAtFrontLoaded(itemAtFront: GiphyMediaViewModel) {
+            _isPerformingInitialLoad.postValue(false)
+            super.onItemAtFrontLoaded(itemAtFront)
+        }
     }
 
     /**
@@ -135,6 +156,8 @@ class GiphyPickerViewModel @Inject constructor(
      * @param immediately If `true`, bypasses the timeout and immediately executes API requests
      */
     fun search(query: String, immediately: Boolean = false) = launch {
+        _isPerformingInitialLoad.postValue(true)
+
         if (immediately) {
             if (_state.value != State.IDLE) {
                 return@launch

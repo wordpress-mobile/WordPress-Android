@@ -22,6 +22,7 @@ import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensio
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
@@ -65,6 +66,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeToolbar()
         initializeRecyclerView()
         initializeSearchView()
+        initializeSearchProgressBar()
         initializeSelectionBar()
         initializeDownloadHandlers()
         initializeStateChangeHandlers()
@@ -115,6 +117,13 @@ class GiphyPickerActivity : AppCompatActivity() {
                 viewModel.search(newText)
                 return true
             }
+        })
+    }
+
+    private fun initializeSearchProgressBar() {
+        viewModel.isPerformingInitialLoad.getDistinct().observe(this, Observer {
+            val isPerformingInitialLoad = it ?: return@Observer
+            progress.visibility = if (isPerformingInitialLoad) View.VISIBLE else View.GONE
         })
     }
 
