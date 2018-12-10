@@ -15,6 +15,8 @@ import android.widget.Button
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
@@ -102,6 +104,17 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         viewModel.segmentSelected.observe(
                 this,
                 Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
+        viewModel.onHelpClicked.observe(
+                this,
+                Observer {
+                    ActivityLauncher.viewHelpAndSupport(
+                            activity!!,
+                            HelpActivity.Origin.NEW_SITE_CREATION_SEGMENTS,
+                            null,
+                            null
+                    )
+                }
+        )
         viewModel.start()
     }
 
@@ -123,9 +136,7 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

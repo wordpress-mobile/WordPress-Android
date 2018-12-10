@@ -23,6 +23,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
@@ -206,6 +208,16 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
         })
         viewModel.skipBtnClicked.observe(this, Observer { skipClickedListener.onSkipClicked() })
+        viewModel.onHelpClicked.observe(
+                this,
+                Observer {
+                    ActivityLauncher.viewHelpAndSupport(
+                            activity!!,
+                            HelpActivity.Origin.NEW_SITE_CREATION_VERTICALS,
+                            null,
+                            null
+                    )
+                })
         viewModel.start(segmentId)
     }
 
@@ -229,9 +241,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     private fun updateHeader(uiState: VerticalsHeaderUiState?) {

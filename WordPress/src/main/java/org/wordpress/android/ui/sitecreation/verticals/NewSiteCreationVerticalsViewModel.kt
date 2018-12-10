@@ -61,14 +61,17 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     private var segmentId: Long? = null
 
-    private val _clearBtnClicked = SingleLiveEvent<Void>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit>()
     val clearBtnClicked = _clearBtnClicked
 
     private val _verticalSelected = SingleLiveEvent<String>()
     val verticalSelected: LiveData<String> = _verticalSelected
 
-    private val _skipBtnClicked = SingleLiveEvent<Void>()
-    val skipBtnClicked: LiveData<Void> = _skipBtnClicked
+    private val _skipBtnClicked = SingleLiveEvent<Unit>()
+    val skipBtnClicked: LiveData<Unit> = _skipBtnClicked
+
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
     init {
         dispatcher.register(fetchVerticalsUseCase)
@@ -134,6 +137,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
 
     fun onSkipStepBtnClicked() {
         _skipBtnClicked.call()
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
     }
 
     fun updateQuery(query: String) {

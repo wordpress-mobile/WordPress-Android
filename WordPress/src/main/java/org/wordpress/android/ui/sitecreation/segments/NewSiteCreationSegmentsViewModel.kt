@@ -54,6 +54,9 @@ class NewSiteCreationSegmentsViewModel
     private val _segmentSelected = SingleLiveEvent<Long>()
     val segmentSelected: LiveData<Long> = _segmentSelected
 
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
     fun start() {
         if (isStarted) return
         isStarted = true
@@ -115,6 +118,10 @@ class NewSiteCreationSegmentsViewModel
 
     fun onRetryClicked() {
         fetchCategories()
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
     }
 
     private fun onSegmentSelected(segmentId: Long) {
