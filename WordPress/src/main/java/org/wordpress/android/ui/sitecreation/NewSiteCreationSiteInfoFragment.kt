@@ -14,6 +14,8 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import javax.inject.Inject
 
@@ -83,12 +85,21 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             }
         })
+
+        viewModel.onHelpClicked.observe(
+                this,
+                Observer {
+                    ActivityLauncher.viewHelpAndSupport(
+                            activity!!,
+                            HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO,
+                            null,
+                            null
+                    )
+                })
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     companion object {

@@ -8,6 +8,7 @@ import android.support.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -24,8 +25,15 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
     init {
         _uiState.value = currentUiState
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
     }
 
     fun updateBusinessName(businessName: String) {
