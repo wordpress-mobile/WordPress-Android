@@ -25,6 +25,7 @@ import javax.inject.Inject
 class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
+        SiteInfoScreenListener,
         OnSkipClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
@@ -60,7 +61,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSkipClicked()
     }
 
-    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
+    override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
         mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
     }
 

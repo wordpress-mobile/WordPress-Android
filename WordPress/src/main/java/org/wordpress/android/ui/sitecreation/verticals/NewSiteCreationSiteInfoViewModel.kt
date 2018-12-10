@@ -8,6 +8,7 @@ import android.support.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -24,6 +25,12 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
+    private val _skipBtnClicked = SingleLiveEvent<Unit>()
+    val skipBtnClicked: LiveData<Unit> = _skipBtnClicked
+
+    private val _nextBtnClicked = SingleLiveEvent<SiteInfoUiState>()
+    val nextBtnClicked: LiveData<SiteInfoUiState> = _nextBtnClicked
+
     init {
         _uiState.value = currentUiState
     }
@@ -37,6 +44,13 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     fun updateTagLine(tagLine: String) {
         if (currentUiState.tagLine != tagLine) {
             currentUiState = currentUiState.copy(tagLine = tagLine)
+        }
+    }
+
+    fun onSkipNextClicked() {
+        when (currentUiState.skipButtonState) {
+            SKIP -> _skipBtnClicked.call()
+            NEXT -> _nextBtnClicked.value = currentUiState
         }
     }
 
