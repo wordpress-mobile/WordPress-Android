@@ -83,7 +83,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSiteInfoViewModel::class.java)
         viewModel.uiState.observe(this, Observer {
             it?.let { state ->
