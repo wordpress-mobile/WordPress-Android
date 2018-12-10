@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.CLICKS
 import org.wordpress.android.fluxc.store.stats.time.ClicksStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
@@ -37,15 +39,18 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<ClicksModel, SelectedClicksGroup>(CLICKS, mainDispatcher, SelectedClicksGroup()) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = store.getClicks(site, statsGranularity,
+        val dbModel = store.getClicks(
+                site, statsGranularity,
                 PAGE_SIZE
         )
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = store.fetchClicks(site,
-                PAGE_SIZE, statsGranularity, forced)
+        val response = store.fetchClicks(
+                site,
+                PAGE_SIZE, statsGranularity, forced
+        )
         val model = response.model
         val error = response.error
 
@@ -69,7 +74,8 @@ constructor(
                         iconUrl = group.icon,
                         text = group.name,
                         value = group.views?.toFormattedString(),
-                        showDivider = index < domainModel.groups.size - 1
+                        showDivider = index < domainModel.groups.size - 1,
+                        navigationAction = group.url?.let { NavigationAction.create(it, this::onItemClick) }
                 )
                 if (group.clicks.isEmpty()) {
                     items.add(headerItem)
@@ -84,7 +90,8 @@ constructor(
                                     iconUrl = click.icon,
                                     text = click.name,
                                     value = click.views.toFormattedString(),
-                                    showDivider = false
+                                    showDivider = false,
+                                    navigationAction = click.url?.let { NavigationAction.create(it, this::onItemClick) }
                             )
                         })
                         items.add(Divider)
@@ -106,6 +113,10 @@ constructor(
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
         navigateTo(ViewClicks(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+    }
+
+    private fun onItemClick(url: String) {
+        navigateTo(ViewUrl(url))
     }
 
     data class SelectedClicksGroup(val group: ClicksModel.Group? = null)
