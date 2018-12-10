@@ -14,7 +14,7 @@ import kotlin.properties.Delegates
 class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
-                    businessName = "",
+                    siteTitle = "",
                     tagLine = ""
             )
     ) { _, _, newValue ->
@@ -28,9 +28,9 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
         _uiState.value = currentUiState
     }
 
-    fun updateBusinessName(businessName: String) {
-        if (currentUiState.businessName != businessName) {
-            currentUiState = currentUiState.copy(businessName = businessName)
+    fun updateSiteTitle(siteTitle: String) {
+        if (currentUiState.siteTitle != siteTitle) {
+            currentUiState = currentUiState.copy(siteTitle = siteTitle)
         }
     }
 
@@ -41,7 +41,7 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     }
 
     data class SiteInfoUiState(
-        val businessName: String,
+        val siteTitle: String,
         val tagLine: String
     ) {
         enum class SkipNextButtonState(
@@ -61,6 +61,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
             )
         }
 
-        val skipButtonState = if (businessName.isEmpty() && tagLine.isEmpty()) SKIP else NEXT
+        val skipButtonState = if (siteTitle.isEmpty() && tagLine.isEmpty()) SKIP else NEXT
     }
 }

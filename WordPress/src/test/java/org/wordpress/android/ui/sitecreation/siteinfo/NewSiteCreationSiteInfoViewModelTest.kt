@@ -12,10 +12,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState
 
-private const val BUSINESS_NAME = "Test Business Name"
+private const val SITE_TITLE = "Test Site Title"
 private const val TAG_LINE = "Test Tag Line"
 
-private val EMPTY_UI_STATE = SiteInfoUiState(businessName = "", tagLine = "")
+private val EMPTY_UI_STATE = SiteInfoUiState(siteTitle = "", tagLine = "")
 
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationSiteInfoViewModelTest {
@@ -37,9 +37,9 @@ class NewSiteCreationSiteInfoViewModelTest {
     }
 
     @Test
-    fun verifyUpdateBusinessName() {
-        viewModel.updateBusinessName(BUSINESS_NAME)
-        val updatedUiState = EMPTY_UI_STATE.copy(businessName = BUSINESS_NAME)
+    fun verifyUpdateSiteTitle() {
+        viewModel.updateSiteTitle(SITE_TITLE)
+        val updatedUiState = EMPTY_UI_STATE.copy(siteTitle = SITE_TITLE)
         assertThat(viewModel.uiState.value).isEqualToComparingFieldByField(updatedUiState)
     }
 

@@ -24,7 +24,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var viewModel: NewSiteCreationSiteInfoViewModel
 
     private lateinit var skipNextButton: AppCompatButton
-    private lateinit var businessNameEditText: TextInputEditText
+    private lateinit var siteTitleEditText: TextInputEditText
     private lateinit var tagLineEditText: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +41,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     override fun setupContent(rootView: ViewGroup) {
         // TODO: Get the title from the main VM
         skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
-        businessNameEditText = rootView.findViewById(R.id.site_info_business_name)
+        siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
         tagLineEditText = rootView.findViewById(R.id.site_info_tag_line)
         initViewModel()
         initTextWatchers()
@@ -57,7 +57,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             })
         }
-        addTextWatcher(businessNameEditText) { viewModel.updateBusinessName(it) }
+        addTextWatcher(siteTitleEditText) { viewModel.updateSiteTitle(it) }
         addTextWatcher(tagLineEditText) { viewModel.updateTagLine(it) }
     }
 
@@ -72,7 +72,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                         editText.setText(value)
                     }
                 }
-                updateEditTextIfDifferent(businessNameEditText, state.businessName)
+                updateEditTextIfDifferent(siteTitleEditText, state.siteTitle)
                 updateEditTextIfDifferent(tagLineEditText, state.tagLine)
                 state.skipButtonState.let { buttonState ->
                     skipNextButton.apply {
