@@ -52,8 +52,6 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        // important for accessibility - talkback
-        activity!!.setTitle(R.string.new_site_creation_segments_title)
         initErrorLayout(rootView)
         initRecyclerView(rootView)
         initViewModel()
@@ -152,8 +150,12 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     companion object {
         const val TAG = "site_creation_segment_fragment_tag"
 
-        fun newInstance(): NewSiteCreationSegmentsFragment {
-            return NewSiteCreationSegmentsFragment()
+        fun newInstance(screenTitle: String): NewSiteCreationSegmentsFragment {
+            val fragment = NewSiteCreationSegmentsFragment()
+            val bundle = Bundle()
+            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }

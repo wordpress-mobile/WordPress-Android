@@ -2,6 +2,8 @@ package org.wordpress.android.ui.sitecreation
 
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.StringRes
+import org.wordpress.android.R
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -58,4 +60,13 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
     fun onSkipClicked() {
         wizardManager.showNextStep()
     }
+
+    fun screenTitleForWizardStep(step: SiteCreationStep): ScreenTitle =
+            ScreenTitle(
+                    R.string.new_site_creation_screen_title,
+                    wizardManager.stepsCount(),
+                    wizardManager.stepPosition(step)
+            )
+
+    data class ScreenTitle(@StringRes val resId: Int, val stepsCount: Int, val stepPosition: Int)
 }

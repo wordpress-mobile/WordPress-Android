@@ -60,12 +60,20 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val fragment = when (target.wizardStep) {
-            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
+            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance(getScreenTitle(target.wizardStep))
             VERTICALS ->
-                NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
-            DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
+                NewSiteCreationVerticalsFragment.newInstance(
+                        getScreenTitle(target.wizardStep),
+                        target.wizardState.segmentId!!
+                )
+            DOMAINS -> NewSiteCreationDomainFragment.newInstance(getScreenTitle(target.wizardStep), "Test site")
         }
         slideInFragment(fragment, target.wizardStep.toString())
+    }
+
+    private fun getScreenTitle(step: SiteCreationStep): String {
+        val screenTitleData = mainViewModel.screenTitleForWizardStep(step)
+        return getString(screenTitleData.resId, screenTitleData.stepPosition, screenTitleData.stepsCount)
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {

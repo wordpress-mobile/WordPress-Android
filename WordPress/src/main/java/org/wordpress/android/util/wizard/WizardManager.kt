@@ -25,6 +25,19 @@ class WizardManager<T : WizardStep>(
     private fun isIndexValid(currentStepIndex: Int): Boolean {
         return currentStepIndex >= 0 && currentStepIndex < steps.size
     }
+
+    fun stepsCount(): Int = steps.size
+
+    /**
+     * Returns position of the step (starting from 1) or -1 if the step is not present.
+     */
+    fun stepPosition(T: WizardStep): Int {
+        return if (steps.contains(T)) {
+            steps.indexOf(T) + 1
+        } else {
+            -1
+        }
+    }
 }
 
 /**

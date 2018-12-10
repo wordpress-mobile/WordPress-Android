@@ -51,10 +51,11 @@ public class NewSiteCreationDomainFragment extends NewSiteCreationBaseFormFragme
 
     @Inject SiteStore mSiteStore;
 
-    public static NewSiteCreationDomainFragment newInstance(String siteTitle) {
+    public static NewSiteCreationDomainFragment newInstance(String screenTitle, String siteTitle) {
         NewSiteCreationDomainFragment
                 fragment = new NewSiteCreationDomainFragment();
         Bundle args = new Bundle();
+        args.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle);
         args.putString(ARG_SITE_TITLE, siteTitle);
         fragment.setArguments(args);
         return fragment;
@@ -67,8 +68,6 @@ public class NewSiteCreationDomainFragment extends NewSiteCreationBaseFormFragme
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        // important for accessibility - talkback
-        getActivity().setTitle(R.string.site_creation_domain_selection_title);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mSiteCreationDomainAdapter);

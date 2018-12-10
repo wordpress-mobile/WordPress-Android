@@ -2370,6 +2370,7 @@
     <!-- END (News Card) -->
 
     <!-- Site Creation -->
+    <string name="new_site_creation_screen_title">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
@@ -2381,7 +2382,6 @@
     <string name="new_site_creation_business_name_hint">Business Name</string>
     <string name="new_site_creation_optional_tag_line_hint">Optional Tagline</string>
     <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
     <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
