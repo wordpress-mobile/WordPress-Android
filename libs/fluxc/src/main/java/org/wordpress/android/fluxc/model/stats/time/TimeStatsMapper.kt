@@ -1,9 +1,11 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.util.AppLog
@@ -49,5 +51,26 @@ class TimeStatsMapper
             ReferrersModel.Group(group.groupId, group.name, group.icon, group.url, group.total, children ?: listOf())
         }
         return ReferrersModel(first.otherViews ?: 0, first.totalViews ?: 0, groups, first.groups.size > groups.size)
+    }
+
+    fun map(response: ClicksResponse, pageSize: Int): ClicksModel {
+        val first = response.groups.values.first()
+        val groups = first.clicks.take(pageSize).map { group ->
+            val children = group.clicks?.mapNotNull { result ->
+                if (result.name != null && result.views != null) {
+                    Click(result.name, result.views, result.icon, result.url)
+                } else {
+                    AppLog.e(STATS, "ClicksResponse.type: Missing fields on a Click object")
+                    null
+                }
+            }
+            ClicksModel.Group(group.groupId, group.name, group.icon, group.url, group.views, children ?: listOf())
+        }
+        return ClicksModel(
+                first.otherClicks ?: 0,
+                first.totalClicks ?: 0,
+                groups,
+                first.clicks.size > groups.size
+        )
     }
 }
