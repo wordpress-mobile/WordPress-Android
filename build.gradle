@@ -25,6 +25,7 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+        maven { url "https://jitpack.io" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
             maven {
@@ -38,11 +39,11 @@ allprojects {
         } else {
             maven {
                 // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "https://unpkg.com/react-native@0.57.5/android"
+                url "https://cdn.jsdelivr.net/npm/react-native@0.57.5/android"
             }
             maven {
                 // Local Maven repo containing AARs with JSC library built for Android
-                url "https://unpkg.com/jsc-android@224109.1.0/dist/"
+                url "https://cdn.jsdelivr.net/npm/jsc-android@224109.1.0/dist/"
             }
         }
     }
