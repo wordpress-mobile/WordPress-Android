@@ -244,9 +244,12 @@ class NotificationSqlUtilsTest {
             NotificationApiResponse.notificationResponseToNotificationModel(it, siteId!!.toInt())
         } ?: emptyList()
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
-        assertEquals(5, inserted)
+        assertEquals(6, inserted)
 
-        // Get notifications of type "store_order"
+        // Get notifications of type "store_order".
+        //
+        // Note: TWO store_order notifications were inserted into the db, but they belong to two
+        // different sites so only 1 should be returned.
         val newOrderNotifications = notificationSqlUtils.getNotificationsForSite(
                 site,
                 filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()))
@@ -256,13 +259,13 @@ class NotificationSqlUtilsTest {
         val storeReviewNotifications = notificationSqlUtils.getNotificationsForSite(
                 site,
                 filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
-        assertEquals(1, storeReviewNotifications.size)
+        assertEquals(2, storeReviewNotifications.size)
 
         // Get notifications of type "store_order" or subtype "store_review"
         val combinedNotifications = notificationSqlUtils.getNotificationsForSite(
                 site,
                 filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()),
                 filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
-        assertEquals(2, combinedNotifications.size)
+        assertEquals(3, combinedNotifications.size)
     }
 }
