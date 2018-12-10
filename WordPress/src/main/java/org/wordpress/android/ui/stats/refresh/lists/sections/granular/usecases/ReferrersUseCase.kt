@@ -36,6 +36,8 @@ constructor(
     private val referrersStore: ReferrersStore,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<ReferrersModel, SelectedGroup>(REFERRERS, mainDispatcher, SelectedGroup()) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_referrers))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = referrersStore.getReferrers(site, statsGranularity,
                 PAGE_SIZE
