@@ -12,6 +12,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
@@ -58,12 +60,18 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSkipClicked()
     }
 
+    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
+        mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
+    }
+
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val fragment = when (target.wizardStep) {
             SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
             VERTICALS ->
                 NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
             DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
+            SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance()
+            SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance()
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }
