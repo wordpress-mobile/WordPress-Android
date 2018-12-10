@@ -50,12 +50,13 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
     }
 
     fun updateHeader(uiState: SiteCreationHeaderUiState?) {
+        val headerShouldBeVisible = uiState != null
+        if (!headerShouldBeVisible && headerLayout.visibility == View.VISIBLE) {
+            headerLayout.animate().translationY(-headerLayout.height.toFloat())
+        } else if (headerShouldBeVisible && headerLayout.visibility == View.GONE) {
+            headerLayout.animate().translationY(0f)
+        }
         uiState?.let {
-            if (headerLayout.visibility == View.VISIBLE) {
-                headerLayout.animate().translationY(-headerLayout.height.toFloat())
-            } else if (headerLayout.visibility == View.GONE) {
-                headerLayout.animate().translationY(0f)
-            }
             updateVisibility(headerLayout, true)
             headerTitle.text = uiState.title
             headerSubtitle.text = uiState.subtitle
