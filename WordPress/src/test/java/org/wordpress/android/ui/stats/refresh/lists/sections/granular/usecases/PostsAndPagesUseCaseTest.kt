@@ -31,20 +31,31 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 
 private const val pageSize = 6
 private val statsGranularity = DAYS
+private val currentDate = Date(10)
 
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostAndPageViewsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: PostsAndPagesUseCase
     @Before
     fun setUp() {
-        useCase = PostsAndPagesUseCase(statsGranularity, Dispatchers.Unconfined, store, statsDateFormatter)
+        useCase = PostsAndPagesUseCase(
+                statsGranularity,
+                Dispatchers.Unconfined,
+                store,
+                statsDateFormatter,
+                selectedDateProvider
+        )
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(currentDate)
     }
 
     @Test
@@ -57,6 +68,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
@@ -78,6 +90,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(emptyModel))
@@ -104,6 +117,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -136,6 +150,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -168,6 +183,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -199,6 +215,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -230,6 +247,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
+                        currentDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))

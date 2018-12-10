@@ -6,11 +6,17 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -23,7 +29,8 @@ class StatsViewModel
     @Named(WEEK_STATS_USE_CASE) private val weekStatsUseCase: BaseListUseCase,
     @Named(MONTH_STATS_USE_CASE) private val monthStatsUseCase: BaseListUseCase,
     @Named(YEAR_STATS_USE_CASE) private val yearStatsUseCase: BaseListUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    selectedDateProvider: SelectedDateProvider
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
 
@@ -34,6 +41,8 @@ class StatsViewModel
 
     private val _showSnackbarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val showSnackbarMessage: LiveData<SnackbarMessageHolder> = _showSnackbarMessage
+
+    val selectedDateChanged = selectedDateProvider.selectedDateChanged
 
     fun start(site: SiteModel) {
         // Check if VM is not already initialized
@@ -82,6 +91,17 @@ class StatsViewModel
             weekStatsUseCase.refreshData(site, true)
             monthStatsUseCase.refreshData(site, true)
             yearStatsUseCase.refreshData(site, true)
+        }
+    }
+
+    fun onSelectedDateChange(statsGranularity: StatsGranularity) {
+        loadData {
+            when (statsGranularity) {
+                DAYS -> dayStatsUseCase.loadData(site)
+                WEEKS -> weekStatsUseCase.loadData(site)
+                MONTHS -> monthStatsUseCase.loadData(site)
+                YEARS -> yearStatsUseCase.loadData(site)
+            }
         }
     }
 }
