@@ -85,7 +85,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
 
-        fun newInstance(): NewSiteCreationPreviewFragment{
+        fun newInstance(): NewSiteCreationPreviewFragment {
             return NewSiteCreationPreviewFragment()
         }
     }
