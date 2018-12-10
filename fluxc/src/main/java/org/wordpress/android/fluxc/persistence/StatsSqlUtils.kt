@@ -83,6 +83,7 @@ class StatsSqlUtils
         TAGS_AND_CATEGORIES_INSIGHTS,
         POSTS_AND_PAGES_VIEWS,
         REFERRERS,
+        CLICKS,
         PUBLICIZE_INSIGHTS
     }
 }
