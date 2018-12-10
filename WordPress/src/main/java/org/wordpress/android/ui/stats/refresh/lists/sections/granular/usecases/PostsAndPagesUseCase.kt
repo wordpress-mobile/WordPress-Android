@@ -36,6 +36,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore
 ) : StatelessUseCase<PostAndPageViewsModel>(POSTS_AND_PAGES, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(site, statsGranularity, PAGE_SIZE)
         dbModel?.let { onModel(it) }
