@@ -9,8 +9,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.posts.PostListAction
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -40,15 +38,18 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<AuthorsModel, SelectedAuthor>(AUTHORS, mainDispatcher, SelectedAuthor()) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = authorsStore.getAuthors(site, statsGranularity,
+        val dbModel = authorsStore.getAuthors(
+                site, statsGranularity,
                 PAGE_SIZE
         )
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = authorsStore.fetchAuthors(site,
-                PAGE_SIZE, statsGranularity, forced)
+        val response = authorsStore.fetchAuthors(
+                site,
+                PAGE_SIZE, statsGranularity, forced
+        )
         val model = response.model
         val error = response.error
 
@@ -88,7 +89,7 @@ constructor(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = create(post.url, )
+                                    navigationAction = post.url?.let { create(it, this::onPostClicked)}
                             )
                         })
                         items.add(Divider)
@@ -113,7 +114,7 @@ constructor(
     }
 
     private fun onPostClicked(url: String) {
-        navigationTarget(View())
+//        navigationTarget(View())
     }
 
     data class SelectedAuthor(val author: AuthorsModel.Author? = null)

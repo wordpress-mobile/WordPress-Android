@@ -17,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 
 class BlockDiffCallback(
     private val oldList: List<BlockListItem>,
@@ -34,7 +33,6 @@ class BlockDiffCallback(
             val type = oldItem.type
             when (type) {
                 LIST_ITEM_WITH_ICON,
-                USER_ITEM,
                 EXPANDABLE_ITEM,
                 LIST_ITEM -> oldItem.itemId == newItem.itemId
                 BAR_CHART,
