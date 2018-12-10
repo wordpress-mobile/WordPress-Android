@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -74,7 +73,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
-        contentLayout.layoutTransition = LayoutTransition() // animate layout changes
 
         errorLayout = rootView.findViewById(R.id.error_layout)
         searchInputWithHeader = SearchInputWithHeader(
