@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
@@ -20,8 +20,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases.ClicksUseCase.SelectedClicksGroup
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.SelectedClicksGroup
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -37,12 +37,15 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<ClicksModel, SelectedClicksGroup>(CLICKS, mainDispatcher, SelectedClicksGroup()) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = store.getClicks(site, statsGranularity, PAGE_SIZE)
+        val dbModel = store.getClicks(site, statsGranularity,
+                PAGE_SIZE
+        )
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = store.fetchClicks(site, PAGE_SIZE, statsGranularity, forced)
+        val response = store.fetchClicks(site,
+                PAGE_SIZE, statsGranularity, forced)
         val model = response.model
         val error = response.error
 
@@ -114,6 +117,11 @@ constructor(
         private val statsDateFormatter: StatsDateFormatter
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
-                ClicksUseCase(granularity, mainDispatcher, store, statsDateFormatter)
+                ClicksUseCase(
+                        granularity,
+                        mainDispatcher,
+                        store,
+                        statsDateFormatter
+                )
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.dwmy.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
@@ -53,14 +53,21 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private val group = Group("group2", "Group 2", "group2.jpg", "group2.com", secondGroupViews, listOf(click))
     @Before
     fun setUp() {
-        useCase = ClicksUseCase(statsGranularity, Dispatchers.Unconfined, store, statsDateFormatter)
+        useCase = ClicksUseCase(
+                statsGranularity,
+                Dispatchers.Unconfined,
+                store,
+                statsDateFormatter
+        )
     }
 
     @Test
     fun `maps clicks to UI model`() = test {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick, group), false)
-        whenever(store.fetchClicks(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchClicks(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -111,7 +118,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ClicksModel(10, 15, listOf(singleClick), true)
-        whenever(store.fetchClicks(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchClicks(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -136,7 +145,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty clicks to UI model`() = test {
         val forced = false
-        whenever(store.fetchClicks(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchClicks(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(ClicksModel(0, 0, listOf(), false))
         )
 
@@ -154,7 +165,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchClicks(site, pageSize, statsGranularity, forced)).thenReturn(
+        whenever(store.fetchClicks(site,
+                pageSize,
+                statsGranularity, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

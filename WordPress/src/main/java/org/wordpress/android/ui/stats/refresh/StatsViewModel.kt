@@ -48,11 +48,11 @@ class StatsViewModel
 
     private fun loadStats() {
         loadData {
-            insightsUseCase.refreshInsightItems(site)
-            dayStatsUseCase.refreshInsightItems(site)
-            weekStatsUseCase.refreshInsightItems(site)
-            monthStatsUseCase.refreshInsightItems(site)
-            yearStatsUseCase.refreshInsightItems(site)
+            insightsUseCase.loadData(site)
+            dayStatsUseCase.loadData(site)
+            weekStatsUseCase.loadData(site)
+            monthStatsUseCase.loadData(site)
+            yearStatsUseCase.loadData(site)
         }
     }
 
@@ -77,11 +77,11 @@ class StatsViewModel
 
     fun onPullToRefresh() {
         loadData {
-            insightsUseCase.refreshInsightItems(site, true)
-            dayStatsUseCase.refreshInsightItems(site, true)
-            weekStatsUseCase.refreshInsightItems(site, true)
-            monthStatsUseCase.refreshInsightItems(site, true)
-            yearStatsUseCase.refreshInsightItems(site, true)
+            insightsUseCase.refreshData(site, true)
+            dayStatsUseCase.refreshData(site, true)
+            weekStatsUseCase.refreshData(site, true)
+            monthStatsUseCase.refreshData(site, true)
+            yearStatsUseCase.refreshData(site, true)
         }
     }
 }

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -54,7 +55,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
 
         block.fetch(site, false, false)
 
-        assertThat(result).containsOnly(Loading(ALL_TIME_STATS))
+        assertThat(result).startsWith(Loading(ALL_TIME_STATS))
     }
 
     @Test
@@ -80,6 +81,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         block.clear()
 
         assertThat(block.liveData.value).isEqualTo(Loading(ALL_TIME_STATS))
+    }
+
+    @After
+    fun tearDown() {
+        block.clear()
     }
 
     private fun assertData(position: Int, data: String) {
