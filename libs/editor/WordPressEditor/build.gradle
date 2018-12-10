@@ -21,6 +21,9 @@ repositories {
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/38557f55d0a3be9605c82b1df9ced4c846fd3aea/submoduleGitHash.gradle'
 
+// import the `waitJitpack()` function
+apply from: 'https://gist.githubusercontent.com/hypest/f526fe0775dedce0ce0133f1400d22a4/raw/0008b271a0d28fc79957fd3c2a027f57e98f796a/wait-jitpack.gradle'
+
 android {
     compileSdkVersion 27
     buildToolsVersion '27.0.3'
@@ -63,7 +66,7 @@ dependencies {
     if (rootProject.ext.buildGutenbergFromSource) {
         implementation project(':react-native-gutenberg-bridge')
     } else {
-        implementation ('com.github.wordpress-mobile:gutenberg-mobile:' + submoduleGitHash('../../../', 'libs/gutenberg-mobile'))
+        implementation (waitJitpack('com.github.wordpress-mobile', 'gutenberg-mobile', submoduleGitHash('../../../', 'libs/gutenberg-mobile')))
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
