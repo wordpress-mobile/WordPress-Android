@@ -4,6 +4,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 private const val STATS_INPUT_FORMAT = "yyyy-MM-dd"
@@ -18,5 +19,9 @@ class StatsDateFormatter
         } catch (e: ParseException) {
             throw RuntimeException("Unexpected date format")
         }
+    }
+
+    fun todaysDateInStatsFormat(): String {
+        return inputFormat.format(Date())
     }
 }

@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsTypes
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.mergeNotNull
 
@@ -47,6 +48,9 @@ constructor(
 
     private suspend fun loadData(site: SiteModel, refresh: Boolean, forced: Boolean) {
         withContext(bgDispatcher) {
+            if (PackageUtils.isDebugBuild() && useCases.distinctBy { it.type }.size < useCases.size) {
+                throw RuntimeException("Duplicate stats type in a use case")
+            }
             useCases.forEach { block -> launch { block.fetch(site, refresh, forced) } }
             val items = getStatsTypes()
             withContext(mainDispatcher) {

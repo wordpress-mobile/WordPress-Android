@@ -24,6 +24,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,7 +35,8 @@ class PostsAndPagesUseCase
 constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val postsAndPageViewsStore: PostAndPageViewsStore
+    private val postsAndPageViewsStore: PostAndPageViewsStore,
+    private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<PostAndPageViewsModel>(POSTS_AND_PAGES, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
 
@@ -91,7 +93,7 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        navigateTo(ViewPostsAndPages(statsGranularity))
+        navigateTo(ViewPostsAndPages(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
@@ -111,9 +113,10 @@ constructor(
     class PostsAndPagesUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-        private val postsAndPageViewsStore: PostAndPageViewsStore
+        private val postsAndPageViewsStore: PostAndPageViewsStore,
+        private val statsDateFormatter: StatsDateFormatter
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
-                PostsAndPagesUseCase(granularity, mainDispatcher, postsAndPageViewsStore)
+                PostsAndPagesUseCase(granularity, mainDispatcher, postsAndPageViewsStore, statsDateFormatter)
     }
 }
