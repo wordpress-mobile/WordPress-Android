@@ -10,6 +10,8 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
@@ -73,7 +75,14 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     private fun getScreenTitle(step: SiteCreationStep): String {
         val screenTitleData = mainViewModel.screenTitleForWizardStep(step)
-        return getString(screenTitleData.resId, screenTitleData.stepPosition, screenTitleData.stepsCount)
+        return when (screenTitleData) {
+            is ScreenTitleStepCount -> getString(
+                    screenTitleData.resId,
+                    screenTitleData.stepPosition,
+                    screenTitleData.stepsCount
+            )
+            is ScreenTitleGeneral -> getString(screenTitleData.resId)
+        }
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {

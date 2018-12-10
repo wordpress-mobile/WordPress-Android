@@ -4,6 +4,8 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -61,12 +63,24 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
         wizardManager.showNextStep()
     }
 
-    fun screenTitleForWizardStep(step: SiteCreationStep): ScreenTitle =
-            ScreenTitle(
-                    R.string.new_site_creation_screen_title,
-                    wizardManager.stepsCount(),
-                    wizardManager.stepPosition(step)
+    fun screenTitleForWizardStep(step: SiteCreationStep): NewSiteCreationScreenTitle {
+        val stepPosition = wizardManager.stepPosition(step)
+        return if (stepPosition == 1) {
+            ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
+        } else {
+            ScreenTitleStepCount(
+                    R.string.new_site_creation_screen_title_step_count,
+                    wizardManager.stepsCount() - 1, // -1 -> first item has general title - Create Site
+                    stepPosition - 1 // -1 -> first item has general title - Create Site
             )
+        }
+    }
 
-    data class ScreenTitle(@StringRes val resId: Int, val stepsCount: Int, val stepPosition: Int)
+    sealed class NewSiteCreationScreenTitle {
+        data class ScreenTitleStepCount(@StringRes val resId: Int, val stepsCount: Int, val stepPosition: Int) :
+                NewSiteCreationScreenTitle()
+
+        data class ScreenTitleGeneral(@StringRes val resId: Int) :
+                NewSiteCreationScreenTitle()
+    }
 }
