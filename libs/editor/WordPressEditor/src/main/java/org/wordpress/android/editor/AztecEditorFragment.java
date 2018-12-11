@@ -554,6 +554,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mSource.displayStyledAndFormattedHtml(postContent);
         mContent.fromHtml(postContent, true);
 
+        // if a copy of remote has been fetched, we need to clear history and start over.
+        mContent.getHistory().clearHistory();
+
         updateFailedAndUploadingMedia();
 
         mAztecReady = true;
