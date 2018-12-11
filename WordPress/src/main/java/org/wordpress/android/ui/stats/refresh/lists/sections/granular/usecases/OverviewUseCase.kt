@@ -1,37 +1,31 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
-import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.OVERVIEW
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VisitsAndViewsUseCase.UiState
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val PAGE_SIZE = 15
 
-class VisitsAndViewsUseCase
+class OverviewUseCase
 constructor(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
+    private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
     override suspend fun loadCachedData(site: SiteModel) {
@@ -65,70 +59,17 @@ constructor(
         val items = mutableListOf<BlockListItem>()
         val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
                 ?: domainModel.dates.lastOrNull()
-        items.add(buildTitle(selectedItem?.period, uiState.selectedDate, domainModel.period))
-        items.add(buildChart(domainModel, uiState))
-        items.add(buildColumns(selectedItem, uiState))
-        return items
-    }
-
-    private fun buildTitle(
-        selectedItemPeriod: String?,
-        dateFromUiState: String?,
-        fallbackDate: String
-    ): Title {
-        val selectedDate = selectedItemPeriod ?: dateFromUiState
-        val titleText = if (selectedDate != null) {
-            statsDateFormatter.printGranularDate(
-                    selectedDate,
-                    statsGranularity
-            )
-        } else {
-            statsDateFormatter.printDate(fallbackDate)
-        }
-        return Title(text = titleText)
-    }
-
-    private fun buildColumns(
-        selectedItem: PeriodData?,
-        uiState: UiState
-    ): Columns {
-        return Columns(
-                listOf(
-                        string.stats_views,
-                        string.stats_visitors,
-                        string.stats_likes,
-                        string.stats_comments
-                ),
-                listOf(
-                        selectedItem?.views?.toFormattedString() ?: "0",
-                        selectedItem?.visitors?.toFormattedString() ?: "0",
-                        selectedItem?.likes?.toFormattedString() ?: "0",
-                        selectedItem?.comments?.toFormattedString() ?: "0"
-                ),
-                uiState.selectedPosition,
-                this::onColumnSelected
+        items.add(
+                overviewMapper.buildTitle(
+                        selectedItem?.period,
+                        uiState.selectedDate,
+                        domainModel.period,
+                        statsGranularity
+                )
         )
-    }
-
-    private fun buildChart(
-        domainModel: VisitsAndViewsModel,
-        uiState: UiState
-    ): BarChartItem {
-        val chartItems = domainModel.dates.map {
-            val value = when (uiState.selectedPosition) {
-                0 -> it.views
-                1 -> it.visitors
-                2 -> it.likes
-                3 -> it.comments
-                else -> 0L
-            }
-            Bar(
-                    statsDateFormatter.printGranularDate(it.period, statsGranularity),
-                    it.period,
-                    value.toInt()
-            )
-        }
-        return BarChartItem(chartItems, selectedItem = uiState.selectedDate, onBarSelected = this::onBarSelected)
+        items.add(overviewMapper.buildChart(domainModel, uiState, statsGranularity, this::onBarSelected))
+        items.add(overviewMapper.buildColumns(selectedItem, uiState, this::onColumnSelected))
+        return items
     }
 
     private fun onBarSelected(period: String?) {
@@ -155,14 +96,16 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
+        private val overviewMapper: OverviewMapper,
         private val visitsAndViewsStore: VisitsAndViewsStore
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
-                VisitsAndViewsUseCase(
+                OverviewUseCase(
                         granularity,
                         visitsAndViewsStore,
                         selectedDateProvider,
                         statsDateFormatter,
+                        overviewMapper,
                         mainDispatcher
                 )
     }
