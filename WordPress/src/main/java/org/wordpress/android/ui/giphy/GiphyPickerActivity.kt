@@ -162,8 +162,6 @@ class GiphyPickerActivity : AppCompatActivity() {
             image.setImageResource(R.drawable.img_illustration_media_105dp)
             bottomImage.setImageResource(R.drawable.giphy_attribution_100dp)
             bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
-
-            updateLayoutForSearch(true, 0)
         }
 
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
@@ -173,6 +171,8 @@ class GiphyPickerActivity : AppCompatActivity() {
                 }
                 EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS -> {
                     with(emptyView) {
+                        updateLayoutForSearch(isSearching = true, topMargin = 0)
+
                         visibility = View.VISIBLE
                         title.setText(R.string.giphy_picker_empty_search_list)
                         image.visibility = View.GONE
@@ -181,6 +181,8 @@ class GiphyPickerActivity : AppCompatActivity() {
                 }
                 EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY -> {
                     with(emptyView) {
+                        updateLayoutForSearch(isSearching = false, topMargin = 0)
+
                         visibility = View.VISIBLE
                         title.setText(R.string.giphy_picker_initial_empty_text)
                         image.visibility = View.VISIBLE
