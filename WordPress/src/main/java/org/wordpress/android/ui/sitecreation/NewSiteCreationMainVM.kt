@@ -70,7 +70,7 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
         } else {
             ScreenTitleStepCount(
                     R.string.new_site_creation_screen_title_step_count,
-                    wizardManager.stepsCount() - 1, // -1 -> first item has general title - Create Site
+                    wizardManager.stepsCount - 1, // -1 -> first item has general title - Create Site
                     stepPosition - 1 // -1 -> first item has general title - Create Site
             )
         }
