@@ -13,6 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
@@ -78,9 +79,10 @@ class StatsModule {
     @Named(GRANULAR_USE_CASE_FACTORIES)
     fun provideGranularUseCaseFactories(
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        referrersUseCaseFactory: ReferrersUseCaseFactory
+        referrersUseCaseFactory: ReferrersUseCaseFactory,
+        clicksUseCaseFactory: ClicksUseCaseFactory
     ): List<@JvmSuppressWildcards UseCaseFactory> {
-        return listOf(postsAndPagesUseCaseFactory, referrersUseCaseFactory)
+        return listOf(postsAndPagesUseCaseFactory, referrersUseCaseFactory, clicksUseCaseFactory)
     }
 
     /**
