@@ -27,7 +27,9 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
             listOf(
                     SiteCreationStep.fromString("site_creation_segments"),
                     SiteCreationStep.fromString("site_creation_verticals"),
-                    SiteCreationStep.fromString("site_creation_domains")
+                    SiteCreationStep.fromString("site_creation_site_info"),
+                    SiteCreationStep.fromString("site_creation_domains"),
+                    SiteCreationStep.fromString("site_creation_site_preview")
             )
     )
     private var isStarted = false
@@ -56,6 +58,11 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
 
     fun onVerticalsScreenFinished(verticalId: String) {
         siteCreationState = siteCreationState.copy(verticalId = verticalId)
+        wizardManager.showNextStep()
+    }
+
+    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
+        siteCreationState = siteCreationState.copy(siteTitle = siteTitle, siteTagLine = tagLine)
         wizardManager.showNextStep()
     }
 

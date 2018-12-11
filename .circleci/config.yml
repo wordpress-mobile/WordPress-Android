@@ -1,0 +1,86 @@
+android_config: &android_config
+  docker:
+    - image: circleci/android:api-27-alpha
+  environment:
+    GRADLE: "./gradlew --build-cache --stacktrace -PdisablePreDex -PjavaMaxHeapSize=2g"
+
+copy_gradle_properties: &copy_gradle_properties
+  run:
+    name: Setup gradle.properties
+    command: cp gradle.properties-example gradle.properties && cp libs/login/gradle.properties-example libs/login/gradle.properties
+
+version: 2.0
+jobs:
+  build_and_test:
+    <<: *android_config
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-
+            - wordpress-android-gradle-build-cache-
+      - <<: *copy_gradle_properties
+      - run:
+          name: Validate login strings
+          command: ./tools/validate-login-strings.sh
+      - run:
+          name: Build
+          command: $GRADLE assembleVanillaRelease
+      - run:
+          name: Test
+          command: $GRADLE testVanillaRelease
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+  lint:
+    <<: *android_config
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-
+            - wordpress-android-gradle-lint-cache-
+      - <<: *copy_gradle_properties
+      - run:
+          name: Checkstyle
+          command: $GRADLE checkstyle
+      - run:
+          name: ktlint
+          command: $GRADLE ktlint
+      - run:
+          name: Lint
+          command: $GRADLE lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+  danger:
+    docker:
+      - image: circleci/ruby:2.3-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - wordpress-android-gems-{{ checksum "Gemfile.lock" }}
+            - wordpress-android-gems-
+      - run:
+          name: Bundle install
+          command: bundle install --path=vendor/bundle
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: wordpress-android-gems-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Danger
+          command: bundle exec danger --fail-on-errors=true
+
+workflows:
+  version: 2
+  wordpress_android:
+    jobs:
+      - build_and_test
+      - lint
+      - danger

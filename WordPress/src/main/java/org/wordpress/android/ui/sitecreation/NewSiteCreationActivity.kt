@@ -14,6 +14,8 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreati
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
@@ -25,6 +27,7 @@ import javax.inject.Inject
 class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
+        SiteInfoScreenListener,
         OnSkipClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
@@ -60,6 +63,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSkipClicked()
     }
 
+    override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
+        mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
+    }
+
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
@@ -70,6 +77,8 @@ class NewSiteCreationActivity : AppCompatActivity(),
                         target.wizardState.segmentId!!
                 )
             DOMAINS -> NewSiteCreationDomainFragment.newInstance(screenTitle, "Test site")
+            SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
+            SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle)
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }

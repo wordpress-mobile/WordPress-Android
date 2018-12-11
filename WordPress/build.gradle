@@ -34,7 +34,7 @@ android {
 
     dexOptions {
         jumboMode = true
-        javaMaxHeapSize = "6g"
+        javaMaxHeapSize = project.properties.getOrDefault("javaMaxHeapSize", "6g")
         dexInProcess = true
     }
 
