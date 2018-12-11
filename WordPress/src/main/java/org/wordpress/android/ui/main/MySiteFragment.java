@@ -1057,7 +1057,8 @@ public class MySiteFragment extends Fragment implements
             // highlight MySite row and scroll to it
             if (!QuickStartMySitePrompts.isTargetingBottomNavBar(mActiveTutorialPrompt.getTask())) {
                 mScrollView.post(new Runnable() {
-                    @Override public void run() {
+                    @Override
+                    public void run() {
                         mScrollView.smoothScrollTo(0, quickStartTarget.getTop());
                         quickStartTarget.setPressed(mActiveTutorialPrompt.getTask() != QuickStartTask.UPLOAD_SITE_ICON);
                     }
@@ -1154,8 +1155,7 @@ public class MySiteFragment extends Fragment implements
                 R.drawable.img_illustration_checkmark_280dp,
                 "",
                 "",
-                ""
-                              );
+                "");
 
         if (getFragmentManager() != null) {
             promoDialog.show(getFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG);
