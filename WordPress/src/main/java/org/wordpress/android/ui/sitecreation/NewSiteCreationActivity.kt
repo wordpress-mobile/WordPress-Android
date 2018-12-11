@@ -10,6 +10,7 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
@@ -92,6 +93,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
                     screenTitleData.stepsCount
             )
             is ScreenTitleGeneral -> getString(screenTitleData.resId)
+            is ScreenTitleEmpty -> screenTitleData.screenTitle
         }
     }
 

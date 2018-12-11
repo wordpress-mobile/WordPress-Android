@@ -4,6 +4,7 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.util.wizard.WizardManager
@@ -72,12 +73,16 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
 
     fun screenTitleForWizardStep(step: SiteCreationStep): NewSiteCreationScreenTitle {
         val stepPosition = wizardManager.stepPosition(step)
-        return if (stepPosition == 1) {
-            ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
-        } else {
-            ScreenTitleStepCount(
+        val stepCount = wizardManager.stepsCount
+        val firstStep = stepPosition == 1
+        val lastStep = stepPosition == stepCount
+
+        return when {
+            firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
+            lastStep -> ScreenTitleEmpty
+            else -> ScreenTitleStepCount(
                     R.string.new_site_creation_screen_title_step_count,
-                    wizardManager.stepsCount - 1, // -1 -> first item has general title - Create Site
+                    stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title
                     stepPosition - 1 // -1 -> first item has general title - Create Site
             )
         }
@@ -89,5 +94,9 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
 
         data class ScreenTitleGeneral(@StringRes val resId: Int) :
                 NewSiteCreationScreenTitle()
+
+        object ScreenTitleEmpty : NewSiteCreationScreenTitle() {
+            const val screenTitle = ""
+        }
     }
 }
