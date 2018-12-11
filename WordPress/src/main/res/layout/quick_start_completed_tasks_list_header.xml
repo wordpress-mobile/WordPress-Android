@@ -20,13 +20,14 @@
 
         <TextView
             android:id="@+id/complete_tasks_header_label"
+            style="@style/QuickStartTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/completed_tasks_list_chevron"
+            android:enabled="false"
             android:text="@string/quick_start_complete_tasks_header"/>
-
 
         <ImageView
             android:id="@+id/completed_tasks_list_chevron"
