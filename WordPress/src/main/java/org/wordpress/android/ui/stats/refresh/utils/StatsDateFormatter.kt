@@ -22,16 +22,28 @@ class StatsDateFormatter
     private val inputFormat = SimpleDateFormat(STATS_INPUT_FORMAT, localeManagerWrapper.getLocale())
     private val outputFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, localeManagerWrapper.getLocale())
 
-    fun parseDate(text: String): String {
+    fun printDate(text: String): String {
+        return printDate(inputFormat.parse(text))
+    }
+
+    fun printDate(date: Date): String {
         try {
-            return outputFormat.format(inputFormat.parse(text))
+            return outputFormat.format(date)
         } catch (e: ParseException) {
             throw RuntimeException("Unexpected date format")
         }
     }
 
-    fun parseGranularDate(date: String, granularity: StatsGranularity): String {
-        val parsedDate = when (granularity) {
+    fun printGranularDate(date: String, granularity: StatsGranularity): String {
+        val parsedDate = parseStatsDate(granularity, date)
+        return printDate(parsedDate)
+    }
+
+    fun parseStatsDate(
+        granularity: StatsGranularity,
+        date: String
+    ): Date {
+        return when (granularity) {
             DAYS -> inputFormat.parse(date)
             WEEKS -> {
                 // first four digits are the year
@@ -70,7 +82,6 @@ class StatsDateFormatter
                 calendar.time
             }
         }
-        return outputFormat.format(parsedDate)
     }
 
     fun todaysDateInStatsFormat(): String {

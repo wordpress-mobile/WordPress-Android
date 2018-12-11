@@ -128,7 +128,7 @@ class LatestPostSummaryMapperTest {
         val unparsedDate = "2018-01-01"
         val parsedDate = "Jan 1, 2018"
         val dayViews = listOf(unparsedDate to 50)
-        whenever(statsDateFormatter.parseDate(unparsedDate)).thenReturn(parsedDate)
+        whenever(statsDateFormatter.printDate(unparsedDate)).thenReturn(parsedDate)
 
         val barChartItem = mapper.buildBarChartItem(dayViews)
 

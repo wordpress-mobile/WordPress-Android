@@ -37,7 +37,11 @@ fun BarChart.draw(
     }
     val maxYValue = cut.maxBy { it.value }!!.value
     val dataSet = getDataSet(context, mappedEntries)
-    data = BarData(dataSet)
+    data = if (item.onBarSelected != null) {
+        BarData(dataSet, getHighlightDataSet(context, mappedEntries))
+    } else {
+        BarData(dataSet)
+    }
     val greyColor = ContextCompat.getColor(
             context,
             color.wp_grey
@@ -99,15 +103,16 @@ fun BarChart.draw(
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 item.onBarSelected?.invoke(null)
-                highlightValue(0f, -1, false)
+                highlightValue(null, false)
                 highlightedItem = null
             }
 
-            override fun onValueSelected(e: Entry?, h: Highlight?) {
+            override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
                 if (highlightedItem != null && highlightedItem == value) {
                     onNothingSelected()
                 } else {
+                    highlightColumn(e.x.toInt())
                     item.onBarSelected?.invoke(value)
                 }
                 highlightedItem = null
@@ -126,14 +131,20 @@ fun BarChart.draw(
     if (item.selectedItem != null) {
         val index = cut.indexOfFirst { it.id == item.selectedItem }
         if (index >= 0) {
-            val high = Highlight(index.toFloat(), 0, 0)
-            high.dataIndex = index
-            highlightValue(high, false)
+            highlightColumn(index)
         } else {
-            highlightValue(0f, -1, false)
+            highlightValue(null, false)
         }
     }
     invalidate()
+}
+
+private fun BarChart.highlightColumn(index: Int) {
+    val high = Highlight(index.toFloat(), 0, 0)
+    val high2 = Highlight(index.toFloat(), 1, 0)
+    high.dataIndex = index
+    high2.dataIndex = index
+    highlightValues(arrayOf(high2, high))
 }
 
 private fun getDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
@@ -149,6 +160,27 @@ private fun getDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
             context,
             color.orange_active
     )
+    dataSet.highLightAlpha = 255
+    return dataSet
+}
+
+private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataSet? {
+    val maxEntry = cut.maxBy { it.y } ?: return null
+    val highlightedDataSet = cut.map {
+        BarEntry(it.x, maxEntry.y, it.data)
+    }
+    val dataSet = BarDataSet(highlightedDataSet, "Highlight")
+    dataSet.color = ContextCompat.getColor(
+            context,
+            color.transparent
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_highlight
+    )
+    dataSet.setDrawValues(false)
     dataSet.highLightAlpha = 255
     return dataSet
 }

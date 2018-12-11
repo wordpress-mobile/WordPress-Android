@@ -22,7 +22,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
     fun `parses a date`() {
         val unparsedDate = "2018-11-25"
 
-        val parsedDate = statsDateFormatter.parseDate(unparsedDate)
+        val parsedDate = statsDateFormatter.printDate(unparsedDate)
 
         assertThat(parsedDate).isEqualTo("Nov 25, 2018")
     }

@@ -179,7 +179,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
-        whenever(statsDateFormatter.parseDate(bestDay)).thenReturn(bestDayTransformed)
+        whenever(statsDateFormatter.printDate(bestDay)).thenReturn(bestDayTransformed)
 
         val result = loadAllTimeInsights(refresh, forced)
 
