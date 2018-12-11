@@ -33,6 +33,9 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int VIEW_TYPE_TASK = 0;
     private static final int VIEW_TYPE_COMPLETED_TASKS_HEADER = 1;
 
+    private static final float EXPANDED_CHEVRON_ROTATION = -180;
+    private static final float COLLAPSED_CHEVRON_ROTATION = 0;
+
     QuickStartAdapter(Context context, List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted,
                       boolean isCompletedTasksListExpanded) {
         mContext = context;
@@ -76,11 +79,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
-                headerViewHolder.mChevron.setImageResource(R.drawable.ic_chevron_down_blue_wordpress_24dp);
+                headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
             } else {
-                headerViewHolder.mChevron.setImageResource(R.drawable.ic_chevron_up_blue_wordpress_24dp);
+                headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
             }
@@ -234,7 +237,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         private void toggleCompletedTasksList() {
             ViewPropertyAnimator viewPropertyAnimator =
                     mChevron.animate()
-                            .rotation(mIsCompletedTaskListExpanded ? 0f : 180f)
+                            .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION
+                                    : EXPANDED_CHEVRON_ROTATION)
                             .setInterpolator(new LinearInterpolator())
                             .setDuration(Duration.SHORT.toMillis(mContext));
 
