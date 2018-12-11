@@ -15,7 +15,7 @@ import kotlin.properties.Delegates
 class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
-                    businessName = "",
+                    siteTitle = "",
                     tagLine = ""
             )
     ) { _, _, newValue ->
@@ -28,6 +28,12 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
+    private val _skipBtnClicked = SingleLiveEvent<Unit>()
+    val skipBtnClicked: LiveData<Unit> = _skipBtnClicked
+
+    private val _nextBtnClicked = SingleLiveEvent<SiteInfoUiState>()
+    val nextBtnClicked: LiveData<SiteInfoUiState> = _nextBtnClicked
+
     init {
         _uiState.value = currentUiState
     }
@@ -36,9 +42,9 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
         _onHelpClicked.call()
     }
 
-    fun updateBusinessName(businessName: String) {
-        if (currentUiState.businessName != businessName) {
-            currentUiState = currentUiState.copy(businessName = businessName)
+    fun updateSiteTitle(siteTitle: String) {
+        if (currentUiState.siteTitle != siteTitle) {
+            currentUiState = currentUiState.copy(siteTitle = siteTitle)
         }
     }
 
@@ -48,8 +54,15 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onSkipNextClicked() {
+        when (currentUiState.skipButtonState) {
+            SKIP -> _skipBtnClicked.call()
+            NEXT -> _nextBtnClicked.value = currentUiState
+        }
+    }
+
     data class SiteInfoUiState(
-        val businessName: String,
+        val siteTitle: String,
         val tagLine: String
     ) {
         enum class SkipNextButtonState(
@@ -69,6 +82,6 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
             )
         }
 
-        val skipButtonState = if (businessName.isEmpty() && tagLine.isEmpty()) SKIP else NEXT
+        val skipButtonState = if (siteTitle.isEmpty() && tagLine.isEmpty()) SKIP else NEXT
     }
 }

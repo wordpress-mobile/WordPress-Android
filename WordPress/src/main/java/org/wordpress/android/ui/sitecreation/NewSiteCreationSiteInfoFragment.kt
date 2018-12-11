@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.TextInputEditText
@@ -26,8 +27,23 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var viewModel: NewSiteCreationSiteInfoViewModel
 
     private lateinit var skipNextButton: AppCompatButton
-    private lateinit var businessNameEditText: TextInputEditText
+    private lateinit var siteTitleEditText: TextInputEditText
     private lateinit var tagLineEditText: TextInputEditText
+
+    private lateinit var skipClickedListener: OnSkipClickedListener
+    private lateinit var siteInfoScreenListener: SiteInfoScreenListener
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is OnSkipClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
+        }
+        if (context !is SiteInfoScreenListener) {
+            throw IllegalStateException("Parent activity must implement SiteInfoScreenListener.")
+        }
+        skipClickedListener = context
+        siteInfoScreenListener = context
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +58,16 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
 
     override fun setupContent(rootView: ViewGroup) {
         // TODO: Get the title from the main VM
-        skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
-        businessNameEditText = rootView.findViewById(R.id.site_info_business_name)
+        initSkipNextButton(rootView)
+        siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
         tagLineEditText = rootView.findViewById(R.id.site_info_tag_line)
         initViewModel()
         initTextWatchers()
+    }
+
+    private fun initSkipNextButton(rootView: ViewGroup) {
+        skipNextButton = rootView.findViewById(R.id.site_info_skip_or_next_button)
+        skipNextButton.setOnClickListener { viewModel.onSkipNextClicked() }
     }
 
     private fun initTextWatchers() {
@@ -59,12 +80,12 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             })
         }
-        addTextWatcher(businessNameEditText) { viewModel.updateBusinessName(it) }
+        addTextWatcher(siteTitleEditText) { viewModel.updateSiteTitle(it) }
         addTextWatcher(tagLineEditText) { viewModel.updateTagLine(it) }
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationSiteInfoViewModel::class.java)
         viewModel.uiState.observe(this, Observer {
             it?.let { state ->
@@ -74,7 +95,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                         editText.setText(value)
                     }
                 }
-                updateEditTextIfDifferent(businessNameEditText, state.businessName)
+                updateEditTextIfDifferent(siteTitleEditText, state.siteTitle)
                 updateEditTextIfDifferent(tagLineEditText, state.tagLine)
                 state.skipButtonState.let { buttonState ->
                     skipNextButton.apply {
@@ -85,7 +106,6 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             }
         })
-
         viewModel.onHelpClicked.observe(
                 this,
                 Observer {
@@ -96,6 +116,14 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                             null
                     )
                 })
+        viewModel.skipBtnClicked.observe(this, Observer {
+            skipClickedListener.onSkipClicked()
+        })
+        viewModel.nextBtnClicked.observe(this, Observer { uiState ->
+            uiState?.let {
+                siteInfoScreenListener.onSiteInfoFinished(uiState.siteTitle, uiState.tagLine)
+            }
+        })
     }
 
     override fun onHelp() {

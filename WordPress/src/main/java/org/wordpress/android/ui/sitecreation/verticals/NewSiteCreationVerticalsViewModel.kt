@@ -22,6 +22,8 @@ import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
+import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchSegmentPromptUseCase
 import org.wordpress.android.ui.sitecreation.usecases.FetchVerticalsUseCase
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState.VerticalsCustomModelUiState
@@ -273,16 +275,16 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
     private fun createHeaderUiState(
         isVisible: Boolean,
         segmentsPrompt: SegmentPromptModel
-    ): VerticalsHeaderUiState? {
-        return if (isVisible) VerticalsHeaderUiState(segmentsPrompt.title, segmentsPrompt.subtitle) else null
+    ): SiteCreationHeaderUiState? {
+        return if (isVisible) SiteCreationHeaderUiState(segmentsPrompt.title, segmentsPrompt.subtitle) else null
     }
 
     private fun createSearchInputUiState(
         query: String,
         showProgress: Boolean,
         hint: String
-    ): VerticalsSearchInputUiState {
-        return VerticalsSearchInputUiState(
+    ): SiteCreationSearchInputUiState {
+        return SiteCreationSearchInputUiState(
                 hint,
                 showProgress,
                 showClearButton = !StringUtils.isEmpty(query)
@@ -295,8 +297,8 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         val fullscreenErrorLayoutVisibility: Boolean
     ) {
         data class VerticalsContentUiState(
-            val searchInputUiState: VerticalsSearchInputUiState,
-            val headerUiState: VerticalsHeaderUiState?,
+            val searchInputUiState: SiteCreationSearchInputUiState,
+            val headerUiState: SiteCreationHeaderUiState?,
             val showSkipButton: Boolean,
             val items: List<VerticalsListItemUiState>
         ) : VerticalsUiState(
@@ -329,14 +331,6 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
             )
         }
     }
-
-    data class VerticalsSearchInputUiState(
-        val hint: String,
-        val showProgress: Boolean,
-        val showClearButton: Boolean
-    )
-
-    data class VerticalsHeaderUiState(val title: String, val subtitle: String)
 
     sealed class VerticalsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
