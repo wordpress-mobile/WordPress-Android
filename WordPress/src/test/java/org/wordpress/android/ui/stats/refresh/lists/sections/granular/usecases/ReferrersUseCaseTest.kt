@@ -42,7 +42,7 @@ import java.util.Date
 
 private const val pageSize = 6
 private val statsGranularity = DAYS
-private val currentDate = Date(10)
+private val selectedDate = Date(0)
 
 class ReferrersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: ReferrersStore
@@ -64,14 +64,14 @@ class ReferrersUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 selectedDateProvider
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(currentDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 
     @Test
     fun `maps referrers to UI model`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer, group), false)
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, currentDate, forced)).thenReturn(
+        whenever(store.fetchReferrers(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -122,7 +122,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = ReferrersModel(10, 15, listOf(singleReferrer), true)
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, currentDate, forced)).thenReturn(
+        whenever(store.fetchReferrers(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -147,7 +147,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty referrers to UI model`() = test {
         val forced = false
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, currentDate, forced)).thenReturn(
+        whenever(store.fetchReferrers(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(ReferrersModel(0, 0, listOf(), false))
         )
 
@@ -165,7 +165,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchReferrers(site, pageSize, statsGranularity, currentDate, forced)).thenReturn(
+        whenever(store.fetchReferrers(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )

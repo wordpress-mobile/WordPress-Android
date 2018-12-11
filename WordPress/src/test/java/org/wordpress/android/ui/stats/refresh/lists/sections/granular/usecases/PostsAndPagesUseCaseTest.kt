@@ -38,7 +38,7 @@ import java.util.Date
 
 private const val pageSize = 6
 private val statsGranularity = DAYS
-private val currentDate = Date(10)
+private val selectedDate = Date(0)
 
 class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: PostAndPageViewsStore
@@ -55,7 +55,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 statsDateFormatter,
                 selectedDateProvider
         )
-        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(currentDate)
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 
     @Test
@@ -68,7 +68,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
@@ -90,7 +90,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(emptyModel))
@@ -117,7 +117,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -150,7 +150,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -183,7 +183,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -215,7 +215,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
@@ -247,7 +247,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                         site,
                         pageSize,
                         statsGranularity,
-                        currentDate,
+                        selectedDate,
                         forced
                 )
         ).thenReturn(OnStatsFetched(model))
