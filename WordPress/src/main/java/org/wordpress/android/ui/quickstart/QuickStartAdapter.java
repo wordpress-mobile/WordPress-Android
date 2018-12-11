@@ -100,8 +100,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             taskViewHolder.mTitle.setPaintFlags(taskViewHolder.mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        // hide divider for the task before completed header
-        if (position == mTasksUncompleted.size() - 1) {
+        // Hide divider for tasks before header and end of list.
+        if (position == mTasksUncompleted.size() - 1 || position == mTasks.size() - 1) {
             taskViewHolder.mDivider.setVisibility(View.INVISIBLE);
         } else {
             taskViewHolder.mDivider.setVisibility(View.VISIBLE);
