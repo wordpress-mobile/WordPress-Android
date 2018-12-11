@@ -13,7 +13,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -31,7 +30,7 @@ constructor(
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = visitsAndViewsStore.getVisits(
                 site,
-                Date(),
+                selectedDateProvider.getCurrentDate(),
                 statsGranularity
         )
         dbModel?.let { onModel(it) }
@@ -41,7 +40,7 @@ constructor(
         val response = visitsAndViewsStore.fetchVisits(
                 site,
                 PAGE_SIZE,
-                Date(),
+                selectedDateProvider.getCurrentDate(),
                 statsGranularity,
                 forced
         )

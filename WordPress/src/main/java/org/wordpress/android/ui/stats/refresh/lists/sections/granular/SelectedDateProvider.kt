@@ -30,4 +30,5 @@ class SelectedDateProvider
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity) = mutableDates[statsGranularity] ?: Date()
+    fun getCurrentDate() = Date()
 }

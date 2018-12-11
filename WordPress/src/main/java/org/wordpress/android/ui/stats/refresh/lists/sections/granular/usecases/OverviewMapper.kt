@@ -36,7 +36,7 @@ class OverviewMapper
     fun buildColumns(
         selectedItem: PeriodData?,
         uiState: UiState,
-        onColumnSelected: ((position: Int) -> Unit)
+        onColumnSelected: (position: Int) -> Unit
     ): Columns {
         return Columns(
                 listOf(
@@ -60,7 +60,7 @@ class OverviewMapper
         domainModel: VisitsAndViewsModel,
         uiState: UiState,
         statsGranularity: StatsGranularity,
-        onBarSelected: ((String?) -> Unit)
+        onBarSelected: (String?) -> Unit
     ): BarChartItem {
         val chartItems = domainModel.dates.map {
             val value = when (uiState.selectedPosition) {
