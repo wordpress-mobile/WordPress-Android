@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -37,6 +38,7 @@ class ClicksRestClient
     suspend fun fetchClicks(
         site: SiteModel,
         granularity: StatsGranularity,
+        date: Date,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<ClicksResponse> {
@@ -44,7 +46,7 @@ class ClicksRestClient
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getCurrentDateTZ(site)
+                "date" to statsUtils.getFormattedDate(site, granularity, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
