@@ -147,6 +147,14 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         (recyclerView.adapter as NewSiteCreationSegmentsAdapter).update(segments.items)
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_segment_fragment_tag"
 

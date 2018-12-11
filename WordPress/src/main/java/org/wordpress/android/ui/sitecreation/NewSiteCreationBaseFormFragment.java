@@ -85,13 +85,7 @@ public abstract class NewSiteCreationBaseFormFragment<SiteCreationListenerType> 
         }
     }
 
-    private String getScreenTitle() {
-        Bundle arguments = getArguments();
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw new IllegalStateException("Required argument screen title is missing.");
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE);
-    }
+    protected abstract String getScreenTitle();
 
     protected void showHomeButton(boolean visible, boolean isCloseButton) {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();

@@ -82,7 +82,23 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         }
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
+
+        fun newInstance(screenTitle: String): NewSiteCreationPreviewFragment {
+            val fragment = NewSiteCreationPreviewFragment()
+            val bundle = Bundle()
+            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }

@@ -374,4 +374,8 @@ public class NewSiteCreationCreatingFragment extends NewSiteCreationBaseFormFrag
         }
         getView().announceForAccessibility(statusAnnouncement);
     }
+
+    @Override protected String getScreenTitle() {
+        return "";
+    }
 }

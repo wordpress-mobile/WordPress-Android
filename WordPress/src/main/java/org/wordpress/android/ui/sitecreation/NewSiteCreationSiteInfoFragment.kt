@@ -91,11 +91,23 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_site_info_fragment_tag"
 
-        fun newInstance(): NewSiteCreationSiteInfoFragment {
-            return NewSiteCreationSiteInfoFragment()
+        fun newInstance(screenTitle: String): NewSiteCreationSiteInfoFragment {
+            val fragment = NewSiteCreationSiteInfoFragment()
+            val bundle = Bundle()
+            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }

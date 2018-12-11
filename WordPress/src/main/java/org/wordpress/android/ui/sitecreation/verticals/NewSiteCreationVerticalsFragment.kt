@@ -262,6 +262,14 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_verticals_fragment_tag"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
