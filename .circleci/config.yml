@@ -11,7 +11,7 @@ copy_gradle_properties: &copy_gradle_properties
 
 version: 2.0
 jobs:
-  build_and_test:
+  test:
     <<: *android_config
     steps:
       - checkout
@@ -24,9 +24,6 @@ jobs:
       - run:
           name: Validate login strings
           command: ./tools/validate-login-strings.sh
-      - run:
-          name: Build
-          command: $GRADLE assembleVanillaRelease
       - run:
           name: Test
           command: $GRADLE testVanillaRelease
@@ -86,6 +83,6 @@ workflows:
   version: 2
   wordpress_android:
     jobs:
-      - build_and_test
+      - test
       - lint
       - danger
