@@ -1057,23 +1057,7 @@ public class EditPostActivity extends AppCompatActivity implements
             settingsMenuItem.setVisible(showMenuItems);
         }
 
-        if (discardChanges != null) {
-            if (mPost != null && showMenuItems) {
-                boolean showDiscardChanges = mPost.isLocallyChanged();
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
-                        && ((AztecEditorFragment) mEditorFragment).canUndo()) {
-                        showDiscardChanges = true;
-                    } else {
-                        // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
-                    }
-                }
-                discardChanges.setVisible(showDiscardChanges);
-            } else {
-                discardChanges.setVisible(false);
-            }
-        }
+        showHideDiscardLocalChangesMenuOption(showMenuItems, discardChanges);
 
         // Set text of the save button in the ActionBar
         if (mPost != null) {
@@ -1085,6 +1069,34 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showHideDiscardLocalChangesMenuOption(boolean showMenuItems, MenuItem discardChanges) {
+        if (discardChanges != null) {
+            if (mIsNewPost) {
+                // if this is a new Post, then there aren't any local changes to discard yet.
+                discardChanges.setVisible(false);
+                return;
+            }
+
+            if (mPost != null && showMenuItems) {
+                // don't show Discard Local Changes option if it's a completely local draft
+                boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
+                        && ((AztecEditorFragment) mEditorFragment).canUndo()
+                            && !mPost.isLocalDraft()) {
+                        showDiscardChanges = true;
+                    } else {
+                        // we don't have history, so hide/show depending on the original post flag value
+                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                    }
+                }
+                discardChanges.setVisible(showDiscardChanges);
+            } else {
+                discardChanges.setVisible(false);
+            }
+        }
     }
 
     @Override
