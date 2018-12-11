@@ -6,20 +6,19 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.SearchView.OnQueryTextListener
-import android.text.Html
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.WPLinkMovementMethod
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
@@ -168,11 +167,16 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Set up showing and hiding of the empty view depending on the search results
      */
     private fun initializeEmptyView() {
+        val emptyView: ActionableEmptyView = actionable_empty_view
+        emptyView.run {
+            image.setImageResource(R.drawable.img_illustration_media_105dp)
+            bottomImage.setImageResource(R.drawable.giphy_attribution_100dp)
+            bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
+
+            updateLayoutForSearch(true, 0)
+        }
+
         viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
-            val emptyView: ActionableEmptyView = actionable_empty_view
-
-            emptyView.updateLayoutForSearch(true, 0)
-
             when (emptyDisplayMode) {
                 EmptyDisplayMode.HIDDEN -> {
                     emptyView.visibility = View.GONE
@@ -181,20 +185,16 @@ class GiphyPickerActivity : AppCompatActivity() {
                     with(emptyView) {
                         visibility = View.VISIBLE
                         title.setText(R.string.giphy_picker_empty_search_list)
-                        subtitle.visibility = View.GONE
+                        image.visibility = View.GONE
+                        bottomImage.visibility = View.GONE
                     }
                 }
                 EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY -> {
-                    // Leave span with hard-coded #0087be to override jazzy orange until accent color is blue_wordpress.
-                    val link = "<span style=\"color:#0087be\"><a href='https://giphy.com/'>Giphy</a></span>"
-                    val html = Html.fromHtml(getString(R.string.giphy_picker_initial_empty_subtext, link))
-
                     with(emptyView) {
                         visibility = View.VISIBLE
                         title.setText(R.string.giphy_picker_initial_empty_text)
-                        subtitle.text = html
-                        subtitle.movementMethod = WPLinkMovementMethod.getInstance()
-                        subtitle.visibility = View.VISIBLE
+                        image.visibility = View.VISIBLE
+                        bottomImage.visibility = View.VISIBLE
                     }
                 }
                 EmptyDisplayMode.VISIBLE_NETWORK_ERROR -> {
