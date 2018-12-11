@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.sitecreation.verticals
 
-import android.animation.LayoutTransition
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -9,16 +8,11 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
 import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
@@ -26,9 +20,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsHeaderUiState
+import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
-import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsSearchInputUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
@@ -49,13 +42,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var contentLayout: ViewGroup
     private lateinit var errorLayout: ViewGroup
     private lateinit var skipButton: Button
-
-    private lateinit var headerLayout: ViewGroup
-    private lateinit var headerTitle: TextView
-    private lateinit var headerSubtitle: TextView
-    private lateinit var searchEditText: EditText
-    private lateinit var searchEditTextProgressBar: View
-    private lateinit var clearAllButton: View
+    private lateinit var searchInputWithHeader: SearchInputWithHeader
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
     private lateinit var skipClickedListener: OnSkipClickedListener
@@ -86,10 +73,12 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
+
         errorLayout = rootView.findViewById(R.id.error_layout)
-        initSearchEditText(rootView)
-        initClearTextButton(rootView)
-        initHeader(rootView)
+        searchInputWithHeader = SearchInputWithHeader(
+                rootView = rootView,
+                onClear = { viewModel.onClearTextBtnClicked() }
+        )
         initRecyclerView(rootView)
         initRetryButton(rootView)
         initSkipButton(rootView)
@@ -116,35 +105,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
             linearLayoutManager.onRestoreInstanceState(it)
         }
-        // we need to init the text watcher after the viewState has been restored otherwise the viewModel.updateQuery
+        // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
-        initTextWatcher()
-    }
-
-    private fun initHeader(rootView: ViewGroup) {
-        headerLayout = rootView.findViewById(R.id.header_layout)
-        headerTitle = headerLayout.findViewById(R.id.title)
-        headerSubtitle = headerLayout.findViewById(R.id.subtitle)
-    }
-
-    private fun initSearchEditText(rootView: ViewGroup) {
-        searchEditText = rootView.findViewById(R.id.input)
-        searchEditTextProgressBar = rootView.findViewById(R.id.progress_bar)
-        val drawable = AppCompatResources.getDrawable(nonNullActivity, R.drawable.ic_search_white_24dp)
-        drawable?.setTint(ContextCompat.getColor(nonNullActivity, R.color.grey))
-        searchEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
-    }
-
-    private fun initClearTextButton(rootView: ViewGroup) {
-        clearAllButton = rootView.findViewById(R.id.clear_all_btn)
-        val drawable = AppCompatResources.getDrawable(nonNullActivity, R.drawable.ic_close_white_24dp)
-        drawable?.setTint(ContextCompat.getColor(nonNullActivity, R.color.grey))
-        clearAllButton.background = drawable
-
-        val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
-        clearAllLayout.setOnClickListener {
-            viewModel.onClearTextBtnClicked()
-        }
+        searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
     }
 
     private fun initRecyclerView(rootView: ViewGroup) {
@@ -170,16 +133,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         skipButton.setOnClickListener { viewModel.onSkipStepBtnClicked() }
     }
 
-    private fun initTextWatcher() {
-        searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.updateQuery(s?.toString() ?: "")
-            }
-        })
-    }
-
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSiteCreationVerticalsViewModel::class.java)
@@ -199,7 +152,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
-            searchEditText.setText("")
+            searchInputWithHeader.setInputText("")
         })
 
         viewModel.verticalSelected.observe(this, Observer { verticalId ->
@@ -211,8 +164,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
         updateVisibility(skipButton, uiState.showSkipButton)
-        updateHeader(uiState.headerUiState)
-        updateSearchInput(uiState.searchInputUiState)
+        searchInputWithHeader.updateHeader(uiState.headerUiState)
+        searchInputWithHeader.updateSearchInput(uiState.searchInputUiState)
         updateSuggestions(uiState.items)
     }
 
@@ -232,28 +185,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         if (mSiteCreationListener != null) {
             mSiteCreationListener.helpCategoryScreen()
         }
-    }
-
-    private fun updateHeader(uiState: VerticalsHeaderUiState?) {
-        uiState?.let {
-            if (headerLayout.visibility == View.VISIBLE) {
-                if (contentLayout.layoutTransition == null) {
-                    contentLayout.layoutTransition = LayoutTransition() // animate layout changes
-                }
-                headerLayout.animate().translationY(-headerLayout.height.toFloat())
-            } else if (headerLayout.visibility == View.GONE) {
-                headerLayout.animate().translationY(0f)
-            }
-            updateVisibility(headerLayout, true)
-            headerTitle.text = uiState.title
-            headerSubtitle.text = uiState.subtitle
-        } ?: updateVisibility(headerLayout, false)
-    }
-
-    private fun updateSearchInput(uiState: VerticalsSearchInputUiState) {
-        searchEditText.hint = uiState.hint
-        updateVisibility(searchEditTextProgressBar, uiState.showProgress)
-        updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
