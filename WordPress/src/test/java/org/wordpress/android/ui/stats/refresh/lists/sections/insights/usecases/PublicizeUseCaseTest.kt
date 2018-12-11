@@ -140,7 +140,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).text).isEqualTo(R.string.stats_view_publicize)
+        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_publicize)
     }
 
     private fun assertLink(item: BlockListItem) {

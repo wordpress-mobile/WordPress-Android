@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -134,14 +135,16 @@ class LatestPostSummaryMapperTest {
 
         barChartItem.entries.apply {
             assertThat(this).hasSize(1)
-            assertThat(this[0].first).isEqualTo(parsedDate)
-            assertThat(this[0].second).isEqualTo(50)
+            assertThat(this[0].label).isEqualTo(parsedDate)
+            assertThat(this[0].id).isEqualTo(unparsedDate)
+            assertThat(this[0].value).isEqualTo(50)
         }
     }
 
     @Test
     fun `builds chart item with only last 30 dates`() {
         val dayViews = mutableListOf<Pair<String, Int>>()
+        whenever(statsDateFormatter.printDate(any<String>())).thenReturn("mapped date")
 
         for (month in 10..12) {
             for (day in 10..30) {

@@ -251,7 +251,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).text).isEqualTo(R.string.stats_view_comments)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_comments)
     }
 
     private suspend fun loadComments(refresh: Boolean, forced: Boolean): StatsBlock {

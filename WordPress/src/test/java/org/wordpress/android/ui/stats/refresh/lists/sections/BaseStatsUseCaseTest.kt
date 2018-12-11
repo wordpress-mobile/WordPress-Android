@@ -99,9 +99,10 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         private val remoteDataProvider: Provider<String?>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
-            Dispatchers.Unconfined
+            Dispatchers.Unconfined,
+            0
     ) {
-        override fun buildUiModel(domainModel: String, nullableUiState: Int?): List<BlockListItem> {
+        override fun buildUiModel(domainModel: String, uiState: Int): List<BlockListItem> {
             return listOf(Text(domainModel))
         }
 

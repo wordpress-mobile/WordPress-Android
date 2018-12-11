@@ -79,7 +79,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is Empty)
     }
 
@@ -103,7 +103,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_posts_grey_dark_24dp)
@@ -131,7 +131,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_visible_on_grey_dark_24dp)
@@ -159,7 +159,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_user_grey_dark_24dp)
@@ -188,7 +188,7 @@ class AllTimeStatsUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertEquals(items.size, 2)
         assertTrue(items[0] is Title)
-        assertEquals((items[0] as Title).text, R.string.stats_insights_all_time_stats)
+        assertEquals((items[0] as Title).textResource, R.string.stats_insights_all_time_stats)
         assertTrue(items[1] is ListItemWithIcon)
         val item = items[1] as ListItemWithIcon
         assertEquals(item.icon, R.drawable.ic_trophy_grey_dark_24dp)
