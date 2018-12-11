@@ -18,16 +18,9 @@ repositories {
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://jitpack.io" }
 
-    if (rootProject.ext.buildGutenbergFromSource) {
-        maven {
-            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-            url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
-        }
-        maven {
-            // Local Maven repo containing AARs with JSC library built for Android
-            url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
-        }
-    } else {
+    if (!rootProject.ext.buildGutenbergFromSource) {
+        // When building from binaries, add the RN maven repos here instead of the top level, to minimize false negatives
+        //  when gradle tries to get artifacts we know don't exist in the NPM CDNS (example: Zendesk artifacts)
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "https://cdn.jsdelivr.net/npm/react-native@0.57.5/android"
