@@ -225,4 +225,13 @@ public class NewSiteCreationDomainFragment extends NewSiteCreationBaseFormFragme
 
         updateFinishButton();
     }
+
+    @Override
+    protected String getScreenTitle() {
+        Bundle arguments = getArguments();
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw new IllegalStateException("Required argument screen title is missing.");
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE);
+    }
 }
