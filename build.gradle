@@ -25,33 +25,6 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
-        maven { url "https://jitpack.io" }
-
-        if (rootProject.ext.buildGutenbergFromSource) {
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
-            }
-            maven {
-                // Local Maven repo containing AARs with JSC library built for Android
-                url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
-            }
-        } else {
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "https://cdn.jsdelivr.net/npm/react-native@0.57.5/android"
-            }
-            maven {
-                // Local Maven repo containing AARs with JSC library built for Android
-                url "https://cdn.jsdelivr.net/npm/jsc-android@224109.1.0/dist/"
-            }
-        }
-    }
-
-    configurations.all {
-        resolutionStrategy {
-            force 'org.webkit:android-jsc:r224109'
-        }
     }
 
     task checkstyle(type: Checkstyle) {
