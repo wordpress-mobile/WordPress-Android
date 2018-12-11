@@ -166,7 +166,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override
+    public int getItemViewType(int position) {
         if (position == mTasksUncompleted.size()) {
             return VIEW_TYPE_COMPLETED_TASKS_HEADER;
         } else {
@@ -238,11 +239,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                             .setDuration(Duration.SHORT.toMillis(mContext));
 
             viewPropertyAnimator.setListener(new AnimatorListener() {
-                @Override public void onAnimationStart(Animator animation) {
+                @Override
+                public void onAnimationStart(Animator animation) {
                     itemView.setClickable(false);
                 }
 
-                @Override public void onAnimationEnd(Animator animation) {
+                @Override
+                public void onAnimationEnd(Animator animation) {
                     if (mIsCompletedTaskListExpanded) {
                         mTasks.removeAll(mTaskCompleted);
                         notifyItemRangeRemoved(getAdapterPosition() + 1, mTaskCompleted.size());
@@ -254,11 +257,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     itemView.setClickable(true);
                 }
 
-                @Override public void onAnimationCancel(Animator animation) {
+                @Override
+                public void onAnimationCancel(Animator animation) {
                     itemView.setClickable(true);
                 }
 
-                @Override public void onAnimationRepeat(Animator animation) {
+                @Override
+                public void onAnimationRepeat(Animator animation) {
                 }
             });
         }
