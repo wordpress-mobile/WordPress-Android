@@ -137,7 +137,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         }
     }
 
-    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mQuickStartAdapter != null) {
             outState.putBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED, mQuickStartAdapter.isCompletedTasksListExpanded());
