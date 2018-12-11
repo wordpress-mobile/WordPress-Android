@@ -21,7 +21,8 @@ import org.wordpress.android.util.merge
  */
 abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     val type: StatsTypes,
-    private val mainDispatcher: CoroutineDispatcher
+    private val mainDispatcher: CoroutineDispatcher,
+    private val defaultUiState: UI_STATE
 ) {
     private val domainModel = MutableLiveData<State<DOMAIN_MODEL>>()
     private val uiState = MutableLiveData<UI_STATE>()
@@ -29,7 +30,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         when (data) {
             is State.Loading -> Loading(type)
             is State.Error -> createFailedItem(data.error)
-            is Data -> createDataItem(buildUiModel(data.model, uiState))
+            is Data -> createDataItem(buildUiModel(data.model, uiState ?: defaultUiState))
             is Empty, null -> null
         }
     }
@@ -94,6 +95,18 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     }
 
     /**
+     * Trigger this method when updating only a part of UI state.
+     * @param update function
+     */
+    fun updateUiState(update: (UI_STATE) -> UI_STATE) {
+        val previousState = uiState.value ?: defaultUiState
+        val updatedState = update(previousState)
+        if (previousState != updatedState) {
+            uiState.value = updatedState
+        }
+    }
+
+    /**
      * Clears the LiveData value when we switch the current Site so we don't show the old data for a new site
      */
     fun clear() {
@@ -124,10 +137,10 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     /**
      * Transforms given domain model and ui state into the UI model
      * @param domainModel domain model coming from FluxC
-     * @param nullableUiState contains UI specific data
+     * @param uiState contains UI specific data
      * @return a list of block list items
      */
-    protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: UI_STATE?): List<BlockListItem>
+    protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem>
 
     private fun createFailedItem(message: String): Error {
         return Error(type, message)
@@ -153,9 +166,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         type: StatsTypes,
         mainDispatcher: CoroutineDispatcher,
         private val defaultUiState: UI_STATE
-    ) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher) {
-        final override fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: UI_STATE?): List<BlockListItem> {
-            return buildStatefulUiModel(domainModel, nullableUiState ?: defaultUiState)
+    ) : BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(type, mainDispatcher, defaultUiState) {
+        final override fun buildUiModel(domainModel: DOMAIN_MODEL, uiState: UI_STATE): List<BlockListItem> {
+            return buildStatefulUiModel(domainModel, uiState)
         }
 
         /**
@@ -174,7 +187,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     abstract class StatelessUseCase<DOMAIN_MODEL>(
         type: StatsTypes,
         mainDispatcher: CoroutineDispatcher
-    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher) {
+    ) : BaseStatsUseCase<DOMAIN_MODEL, NotUsedUiState>(type, mainDispatcher, NotUsedUiState) {
         /**
          * Transforms given domain model into the UI model
          * @param domainModel domain model coming from FluxC
@@ -184,7 +197,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
 
         final override fun buildUiModel(
             domainModel: DOMAIN_MODEL,
-            nullableUiState: NotUsedUiState?
+            uiState: NotUsedUiState
         ): List<BlockListItem> {
             return buildUiModel(domainModel)
         }

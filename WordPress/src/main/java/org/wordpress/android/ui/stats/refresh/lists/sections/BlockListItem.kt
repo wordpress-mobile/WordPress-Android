@@ -41,7 +41,7 @@ sealed class BlockListItem(val type: Type) {
         DIVIDER
     }
 
-    data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
+    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
 
     data class ListItem(
         val text: String,
@@ -87,7 +87,15 @@ sealed class BlockListItem(val type: Type) {
         )
     }
 
-    data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
+    data class Columns(
+        val headers: List<Int>,
+        val values: List<String>,
+        val selectedColumn: Int? = null,
+        val onColumnSelected: ((position: Int) -> Unit)? = null
+    ) : BlockListItem(COLUMNS) {
+        override val itemId: Int
+            get() = headers.hashCode()
+    }
 
     data class Link(
         @DrawableRes val icon: Int? = null,
@@ -96,7 +104,16 @@ sealed class BlockListItem(val type: Type) {
     ) :
             BlockListItem(LINK)
 
-    data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
+    data class BarChartItem(
+        val entries: List<Bar>,
+        val selectedItem: String? = null,
+        val onBarSelected: ((String?) -> Unit)? = null
+    ) : BlockListItem(BAR_CHART) {
+        data class Bar(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS)
@@ -125,6 +142,7 @@ sealed class BlockListItem(val type: Type) {
             fun create(action: () -> Unit): NavigationAction {
                 return NoParams(action)
             }
+
             fun <T> create(data: T, action: (T) -> Unit): NavigationAction {
                 return OneParam(data, action)
             }

@@ -11,9 +11,12 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.util.DisplayUtils
 import kotlin.math.round
 
@@ -25,8 +28,15 @@ fun BarChart.draw(
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(columnNumber, item)
-    val maxYValue = cut.maxBy { it.y }!!.y
-    val dataSet = getDataSet(context, cut)
+    val mappedEntries = cut.mapIndexed { index, pair ->
+        BarEntry(
+                index.toFloat(),
+                pair.value.toFloat(),
+                pair.id
+        )
+    }
+    val maxYValue = cut.maxBy { it.value }!!.value
+    val dataSet = getDataSet(context, mappedEntries)
     data = BarData(dataSet)
     val greyColor = ContextCompat.getColor(
             context,
@@ -36,7 +46,6 @@ fun BarChart.draw(
             context,
             color.wp_grey_lighten_30
     )
-
     axisLeft.apply {
         valueFormatter = object : LargeValueFormatter() {
             override fun getFormattedValue(value: Float, axis: AxisBase?): String {
@@ -77,18 +86,53 @@ fun BarChart.draw(
         setDrawGridLines(false)
         setDrawLabels(false)
     }
-    labelStart.text = cut.first().data.toString()
-    labelEnd.text = cut.last().data.toString()
+    labelStart.text = cut.first().label
+    labelEnd.text = cut.last().label
     setPinchZoom(false)
     setScaleEnabled(false)
     legend.isEnabled = false
     setDrawBorders(false)
-    isHighlightFullBarEnabled = false
+    var highlightedItem = item.selectedItem
+
+    val isClickable = item.onBarSelected != null
+    if (isClickable) {
+        setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                item.onBarSelected?.invoke(null)
+                highlightValue(0f, -1, false)
+                highlightedItem = null
+            }
+
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                val value = (e as? BarEntry)?.data as? String
+                if (highlightedItem != null && highlightedItem == value) {
+                    onNothingSelected()
+                } else {
+                    item.onBarSelected?.invoke(value)
+                }
+                highlightedItem = null
+            }
+        })
+    } else {
+        setOnChartValueSelectedListener(null)
+    }
+    isHighlightFullBarEnabled = isClickable
     isHighlightPerDragEnabled = false
-    isHighlightPerTapEnabled = false
+    isHighlightPerTapEnabled = isClickable
     val description = Description()
     description.text = ""
     this.description = description
+
+    if (item.selectedItem != null) {
+        val index = cut.indexOfFirst { it.id == item.selectedItem }
+        if (index >= 0) {
+            val high = Highlight(index.toFloat(), 0, 0)
+            high.dataIndex = index
+            highlightValue(high, false)
+        } else {
+            highlightValue(0f, -1, false)
+        }
+    }
     invalidate()
 }
 
@@ -100,24 +144,23 @@ private fun getDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     )
     dataSet.formLineWidth = 0f
     dataSet.setDrawValues(false)
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_active
+    )
+    dataSet.highLightAlpha = 255
     return dataSet
 }
 
 private fun cutEntries(
     count: Int,
     item: BarChartItem
-): List<BarEntry> {
-    val sublist = if (count < item.entries.size) item.entries.subList(
+): List<Bar> {
+    return if (count < item.entries.size) item.entries.subList(
             item.entries.size - count,
             item.entries.size
     ) else {
         item.entries
-    }
-    return sublist.mapIndexed { index, pair ->
-        BarEntry(
-                index.toFloat(),
-                pair.second.toFloat(),
-                pair.first
-        )
     }
 }

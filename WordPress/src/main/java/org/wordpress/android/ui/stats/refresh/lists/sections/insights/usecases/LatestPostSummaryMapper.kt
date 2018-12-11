@@ -70,7 +70,7 @@ class LatestPostSummaryMapper
 
     fun buildBarChartItem(dayViews: List<Pair<String, Int>>): BarChartItem {
         val barEntries = dayViews.subList(Math.max(0, dayViews.size - 30), dayViews.size)
-                .map { pair -> statsDateFormatter.parseDate(pair.first) to pair.second }
+                .map { pair -> BarChartItem.Bar(statsDateFormatter.parseDate(pair.first), pair.first, pair.second) }
         return BarChartItem(barEntries)
     }
 }
