@@ -80,7 +80,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        // TODO receive title from the MainVM
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
