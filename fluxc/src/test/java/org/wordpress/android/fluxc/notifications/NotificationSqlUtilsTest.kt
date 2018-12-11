@@ -44,7 +44,16 @@ class NotificationSqlUtilsTest {
 
         // Test inserting notifications
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
-        assertEquals(5, inserted)
+        assertEquals(6, inserted)
+
+        // Test updating notifications
+        val newNote = notesList[0].copy(noteId = -1, remoteNoteId = 333)
+        val dbList = notificationSqlUtils.getNotifications().toMutableList()
+        dbList.add(newNote)
+        val updated = dbList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(7, updated)
+        val updatedList = notificationSqlUtils.getNotifications()
+        assertEquals(7, updatedList.size)
     }
 
     @Test
@@ -58,11 +67,11 @@ class NotificationSqlUtilsTest {
             NotificationApiResponse.notificationResponseToNotificationModel(it, 0)
         } ?: emptyList()
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
-        assertEquals(5, inserted)
+        assertEquals(6, inserted)
 
         // Get notifications
         val notifications = notificationSqlUtils.getNotifications(SelectQuery.ORDER_DESCENDING)
-        assertEquals(5, notifications.size)
+        assertEquals(6, notifications.size)
     }
 
     @Test
@@ -78,11 +87,11 @@ class NotificationSqlUtilsTest {
             NotificationApiResponse.notificationResponseToNotificationModel(it, siteId!!.toInt())
         } ?: emptyList()
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
-        assertEquals(5, inserted)
+        assertEquals(6, inserted)
 
         // Get notifications
         val notifications = notificationSqlUtils.getNotificationsForSite(site, SelectQuery.ORDER_DESCENDING)
-        assertEquals(2, notifications.size)
+        assertEquals(3, notifications.size)
     }
 
     @Test
@@ -213,7 +222,7 @@ class NotificationSqlUtilsTest {
             NotificationApiResponse.notificationResponseToNotificationModel(it, 0)
         } ?: emptyList()
         val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
-        assertEquals(5, inserted)
+        assertEquals(6, inserted)
 
         // Get notifications of type "store_order"
         val newOrderNotifications = notificationSqlUtils.getNotifications(
@@ -223,13 +232,13 @@ class NotificationSqlUtilsTest {
         // Get notifications of subtype "store_review"
         val storeReviewNotifications = notificationSqlUtils.getNotifications(
                 filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
-        assertEquals(1, storeReviewNotifications.size)
+        assertEquals(2, storeReviewNotifications.size)
 
         // Get notifications of type "store_order" or subtype "store_review"
         val combinedNotifications = notificationSqlUtils.getNotifications(
                 filterByType = listOf(NotificationModel.Kind.STORE_ORDER.toString()),
                 filterBySubtype = listOf(NotificationModel.Subkind.STORE_REVIEW.toString()))
-        assertEquals(3, combinedNotifications.size)
+        assertEquals(4, combinedNotifications.size)
     }
 
     @Test
