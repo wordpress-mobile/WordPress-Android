@@ -2,6 +2,7 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://dl.bintray.com/android/android-tools' }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -58,7 +59,7 @@ android {
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
 
         buildConfigField "boolean", "REVISIONS_ENABLED", "false"
-        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "false"
+        buildConfigField "boolean", "NEW_SITE_CREATION_ENABLED", "true"
     }
 
     flavorDimensions "buildType"
