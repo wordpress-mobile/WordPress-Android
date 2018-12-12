@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.vertical
 
 import android.content.Context
 import com.android.volley.RequestQueue
-import kotlinx.coroutines.experimental.delay
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.vertical.SegmentPromptModel
@@ -28,7 +27,7 @@ private const val PARAM_VERTICAL_SEARCH_QUERY = "search"
 private const val PARAM_VERTICAL_SEARCH_LIMIT = "limit"
 
 private class FetchSegmentsResponse : ArrayList<VerticalSegmentModel>()
-private class FetchVerticalsResponse: ArrayList<VerticalModel>()
+private class FetchVerticalsResponse : ArrayList<VerticalModel>()
 
 @Singleton
 class VerticalRestClient
