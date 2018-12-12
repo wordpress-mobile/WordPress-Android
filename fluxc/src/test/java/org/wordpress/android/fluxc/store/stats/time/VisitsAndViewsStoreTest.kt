@@ -11,8 +11,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -54,13 +54,13 @@ class VisitsAndViewsStoreTest {
         whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
-        val model = mock<ClicksModel>()
-        whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        val model = mock<VisitsAndViewsModel>()
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(model)
 
         val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS, DATE)
+        verify(sqlUtils).insert(site, VISITS_AND_VIEWS_RESPONSE, DAYS, DATE)
     }
 
     @Test
@@ -81,9 +81,9 @@ class VisitsAndViewsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.selectClicks(site, DAYS, DATE)).thenReturn(CLICKS_RESPONSE)
-        val model = mock<ClicksModel>()
-        whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
+        whenever(sqlUtils.selectVisitsAndViews(site, DAYS, DATE)).thenReturn(VISITS_AND_VIEWS_RESPONSE)
+        val model = mock<VisitsAndViewsModel>()
+        whenever(mapper.map(VISITS_AND_VIEWS_RESPONSE)).thenReturn(model)
 
         val result = store.getVisits(site, DATE, DAYS)
 
