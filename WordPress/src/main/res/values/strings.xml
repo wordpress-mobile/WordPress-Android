@@ -2274,14 +2274,10 @@
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
 
-    <string name="content_description_done">Done</string>
     <string name="content_description_more">More</string>
     <string name="quick_start_button_negative" tools:ignore="UnusedResources">Not now</string>
     <string name="quick_start_button_negative_short" tools:ignore="UnusedResources">Cancel</string>
     <string name="quick_start_button_positive" tools:ignore="UnusedResources">Go</string>
-    <string name="quick_start_button_skip">Skip all</string>
-    <string name="quick_start_button_skip_negative">Cancel</string>
-    <string name="quick_start_button_skip_positive">Skip</string>
     <string name="quick_start_dialog_browse_themes_message">Explore dozens of layout options and find your perfect fit.</string>
     <string name="quick_start_dialog_browse_themes_message_short" tools:ignore="UnusedResources">Tap %1$s Themes %2$s to discover new themes</string>
     <string name="quick_start_dialog_browse_themes_title">Browse themes</string>
@@ -2322,8 +2318,6 @@
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts &#8211; your site will automatically share new posts.</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
-    <string name="quick_start_dialog_skip_message">The quick tour will guide you through building a basic site.  Are you sure you want to skip?</string>
-    <string name="quick_start_dialog_skip_title">Skip Quick Start</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
@@ -2333,10 +2327,6 @@
     <string name="quick_start_list_browse_themes_title" translatable="false">@string/quick_start_dialog_browse_themes_title</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title" translatable="false">@string/quick_start_dialog_check_stats_title</string>
-    <string name="quick_start_list_choose_theme_subtitle" translatable="false">@string/quick_start_dialog_choose_theme_message</string>
-    <string name="quick_start_list_choose_theme_title" translatable="false">@string/quick_start_dialog_choose_theme_title</string>
-    <string name="quick_start_list_complete_subtitle">doesn\'t it feel good to cross things off a list?</string>
-    <string name="quick_start_list_complete_title">Congrats on finishing Quick Start</string>
     <string name="quick_start_list_create_page_subtitle" translatable="false">@string/quick_start_dialog_create_page_message</string>
     <string name="quick_start_list_create_page_title" translatable="false">@string/quick_start_dialog_create_page_title</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
@@ -2351,8 +2341,6 @@
     <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
     <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
     <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_share_site_subtitle" translatable="false">@string/quick_start_dialog_share_site_message</string>
-    <string name="quick_start_list_share_site_title" translatable="false">@string/quick_start_dialog_share_site_title</string>
     <string name="quick_start_list_upload_icon_subtitle" translatable="false">@string/quick_start_dialog_upload_icon_message</string>
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>

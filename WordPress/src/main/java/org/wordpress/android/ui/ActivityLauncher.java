@@ -60,7 +60,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.quickstart.QuickStartActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -232,12 +231,6 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
-    }
-
-    public static void viewQuickStartForResult(Activity activity) {
-        Intent intent = new Intent(activity, QuickStartActivity.class);
-        activity.startActivityForResult(intent, RequestCodes.QUICK_START);
-        AnalyticsTracker.track(Stat.QUICK_START_LIST_VIEWED);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {
