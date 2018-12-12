@@ -105,7 +105,7 @@
 
     <style name="StatsBlockLine">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">@dimen/margin_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">

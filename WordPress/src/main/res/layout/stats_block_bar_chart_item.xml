@@ -5,8 +5,8 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/margin_extra_large"
               android:orientation="vertical"
-              android:paddingEnd="@dimen/margin_large"
-              android:paddingStart="@dimen/margin_large">
+              android:paddingEnd="@dimen/margin_extra_large"
+              android:paddingStart="@dimen/margin_extra_large">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
