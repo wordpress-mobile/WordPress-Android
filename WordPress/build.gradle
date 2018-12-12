@@ -15,9 +15,28 @@ repositories {
     jcenter()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
+    maven { url "https://jitpack.io" }
+
+    if (!rootProject.ext.buildGutenbergFromSource) {
+        // When building from binaries, add the RN maven repos here instead of the top level, to minimize false negatives
+        //  when gradle tries to get artifacts we know don't exist in the NPM CDNS (example: Zendesk artifacts)
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url "https://cdn.jsdelivr.net/npm/react-native@0.57.5/android"
+        }
+        maven {
+            // Local Maven repo containing AARs with JSC library built for Android
+            url "https://cdn.jsdelivr.net/npm/jsc-android@224109.1.0/dist/"
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r224109'
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -35,7 +54,7 @@ android {
 
     dexOptions {
         jumboMode = true
-        javaMaxHeapSize = "6g"
+        javaMaxHeapSize = project.properties.getOrDefault("javaMaxHeapSize", "6g")
         dexInProcess = true
     }
 
@@ -44,8 +63,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-138"
-        versionCode 644
+        versionName "alpha-142"
+        versionCode 653
         minSdkVersion 21
         targetSdkVersion 26
 

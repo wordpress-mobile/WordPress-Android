@@ -29,7 +29,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.source.SourceViewEditText;
-import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -47,7 +46,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private EditTextWithKeyBackListener mTitle;
     private SourceViewEditText mSource;
-    private AztecToolbar mFormattingToolbar;
 
     private Handler mInvalidateOptionsHandler;
     private Runnable mInvalidateOptionsRunnable;
@@ -134,18 +132,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         // We need to intercept the "Enter" key on the title field, and replace it with a space instead
         mSource.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
-
-        mFormattingToolbar = view.findViewById(R.id.formatting_toolbar);
-        mFormattingToolbar.setExpanded(mIsToolbarExpanded);
-
-        mTitle.setOnFocusChangeListener(
-                new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean hasFocus) {
-                        mFormattingToolbar.enableFormatButtons(!hasFocus);
-                    }
-                }
-        );
 
         setHasOptionsMenu(true);
 

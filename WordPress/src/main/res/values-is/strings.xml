@@ -258,7 +258,6 @@ Language: is
     <string name="detail_approve_manual">Allar athugasemdir verða að vera samþykktar handvirkt.</string>
     <string name="days_quantity_other">%d dagar</string>
     <string name="days_quantity_one">1 dagur</string>
-    <string name="web_address">Vefslóð</string>
     <string name="primary_site">Aðalvefur</string>
     <string name="pending_email_change_snackbar">Smelltu á staðfestingartengil í tölvupósti sem sendur var á %1$s til þess að staðfesta nýja netfangið þitt</string>
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
@@ -644,7 +643,6 @@ Language: is
     <string name="adding_cat_success">Flokki bætt við</string>
     <string name="blog_not_found">Villa kom upp við að tengjast við þetta blogg</string>
     <string name="adding_cat_failed">Tókst ekki að bæta við flokki</string>
-    <string name="invalid_url_message">Athugaðu hvort að uppgefin vefslóð (URL) bloggs sé gild</string>
     <string name="cat_name_required">Nafn flokks er krafist</string>
     <string name="email_invalid">Sláðu inn gilt netfang</string>
     <string name="error_downloading_image">Villa kom upp við niðurhal á mynd</string>

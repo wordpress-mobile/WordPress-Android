@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-18 20:35:17+0000
+Translation-Revision-Date: 2018-11-22 13:33:16+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
@@ -1458,7 +1458,6 @@ Language: cs_CZ
     <string name="error_refresh_posts">Články momentálně nemohly být obnoveny</string>
     <string name="error_deleting_post">Nastala chyba při mazání příspěvku</string>
     <string name="notifications_empty_list">Žádná oznámení</string>
-    <string name="invalid_url_message">Zkontrolujte platnost zadané adresy webu</string>
     <string name="stats_bar_graph_empty">Statistika není dostupná</string>
     <string name="stats_empty_comments">Žádné komentáře</string>
     <string name="sdcard_message">Pro nahrání media musí být připojená SD karta</string>
