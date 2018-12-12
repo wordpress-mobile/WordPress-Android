@@ -26,12 +26,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -88,7 +88,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private fun BlockList.assertNonExpandedList(): ExpandableItem {
         assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
-        assertLabel(this.items[1])
+        assertHeader(this.items[1])
         assertSingleItem(
                 this.items[2],
                 singleClick.name!!,
@@ -101,7 +101,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
     private fun BlockList.assertExpandedList(): ExpandableItem {
         assertThat(this.items).hasSize(6)
         assertTitle(this.items[0])
-        assertLabel(this.items[1])
+        assertHeader(this.items[1])
         assertSingleItem(
                 this.items[2],
                 singleClick.name!!,
@@ -131,7 +131,7 @@ class ClicksUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            assertLabel(this.items[1])
+            assertHeader(this.items[1])
             assertSingleItem(
                     this.items[2],
                     singleClick.name!!,
@@ -186,9 +186,9 @@ class ClicksUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).text).isEqualTo(R.string.stats_clicks)
     }
 
-    private fun assertLabel(item: BlockListItem) {
-        assertThat(item.type).isEqualTo(LABEL)
-        assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_clicks_link_label)
+    private fun assertHeader(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_clicks_link_label)
         assertThat(item.rightLabel).isEqualTo(R.string.stats_clicks_label)
     }
 
