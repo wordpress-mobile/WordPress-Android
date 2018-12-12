@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
 import com.android.volley.RequestQueue
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -30,7 +29,6 @@ class VisitAndViewsRestClient
     @param:Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
-    val gson: Gson,
     private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchVisits(
