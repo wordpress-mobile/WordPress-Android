@@ -11,8 +11,9 @@ import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
 import org.wordpress.android.fluxc.annotations.action.Action
-import org.wordpress.android.fluxc.model.NotificationModel
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.notification.NoteIdSet
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.notifications.NotificationRestClient
 import org.wordpress.android.fluxc.persistence.NotificationSqlUtils
@@ -189,6 +190,13 @@ constructor(
         filterBySubtype: List<String>? = null
     ): List<NotificationModel> =
             notificationSqlUtils.getNotificationsForSite(site, ORDER_DESCENDING, filterByType, filterBySubtype)
+
+    /**
+     * Fetch the first notification matching the parameters specified in [NoteIdSet].
+     *
+     * @param idSet A [NoteIdSet] containing the localSiteId, remoteNoteId, and localNoteId
+     */
+    fun getNotificationByIdSet(idSet: NoteIdSet) = notificationSqlUtils.getNotificationByIdSet(idSet)
 
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()

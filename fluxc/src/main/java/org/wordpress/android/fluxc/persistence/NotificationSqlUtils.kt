@@ -9,8 +9,10 @@ import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
-import org.wordpress.android.fluxc.model.NotificationModel
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.notification.NoteIdSet
+import org.wordpress.android.fluxc.model.notification.NotificationModel.Kind
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
 import org.wordpress.android.fluxc.tools.FormattableMeta
@@ -115,6 +117,21 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         return emptyList()
     }
 
+    fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
+        val (id, remoteNoteId, localSiteId) = idSet
+        return WellSql.select(NotificationModelBuilder::class.java)
+                .where().beginGroup()
+                .equals(NotificationModelTable.ID, id)
+                .or()
+                .beginGroup()
+                .equals(NotificationModelTable.LOCAL_SITE_ID, localSiteId)
+                .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
+                .endGroup()
+                .endGroup().endWhere()
+                .asModel
+                .firstOrNull()?.build(formattableContentMapper)
+    }
+
     fun deleteNotifications(): Int {
         return WellSql.delete(NotificationModelBuilder::class.java).execute()
     }
@@ -181,7 +198,7 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                     remoteNoteId,
                     localSiteId,
                     noteHash,
-                    NotificationModel.Kind.fromString(type),
+                    Kind.fromString(type),
                     subkind,
                     read,
                     icon,
@@ -191,7 +208,8 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                     title,
                     body,
                     subject,
-                    meta)
+                    meta
+            )
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model
+package org.wordpress.android.fluxc.model.notification
 
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMeta
@@ -36,7 +36,8 @@ data class NotificationModel(
         UNKNOWN;
 
         companion object {
-            private val reverseMap = Kind.values().associateBy(Kind::name)
+            private val reverseMap = Kind.values().associateBy(
+                    Kind::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
         }
     }
@@ -47,7 +48,8 @@ data class NotificationModel(
         UNKNOWN;
 
         companion object {
-            private val reverseMap = Subkind.values().associateBy(Subkind::name)
+            private val reverseMap = Subkind.values().associateBy(
+                    Subkind::name)
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
         }
     }
