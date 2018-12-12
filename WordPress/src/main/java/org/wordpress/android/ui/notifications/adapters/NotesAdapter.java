@@ -89,7 +89,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mDataLoadedListener = dataLoadedListener;
         mOnLoadMoreListener = onLoadMoreListener;
 
-        setHasStableIds(true);
+        // this is on purpose - we don't show more than a hundred or so notifications at a time so no need to set
+        // stable IDs. This helps prevent crashes in case a note comes with no ID (we've code checking for that
+        // elsewhere, but telling the RecyclerView.Adapter the notes have stable Ids and then failing to provide them
+        // will make things go south as in https://github.com/wordpress-mobile/WordPress-Android/issues/8741
+        setHasStableIds(false);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.notifications_avatar_sz);
         mColorRead = context.getResources().getColor(R.color.white);
@@ -191,16 +195,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @Override
     public int getItemCount() {
         return mFilteredNotes.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        Note note = getNoteAtPosition(position);
-        if (note == null) {
-            return 0;
-        }
-
-        return Long.valueOf(note.getId());
     }
 
     @Override
