@@ -32,8 +32,6 @@ public class NewSiteCreationSiteDetailsFragment extends NewSiteCreationBaseFormF
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        // important for accessibility - talkback
-        getActivity().setTitle(R.string.site_creation_site_details_title);
         mScrollView = rootView.findViewById(R.id.scroll_view);
 
         mSiteTitleInput = rootView.findViewById(R.id.site_creation_site_title_row);
@@ -136,5 +134,9 @@ public class NewSiteCreationSiteDetailsFragment extends NewSiteCreationBaseFormF
                 mScrollView.requestChildRectangleOnScreen(view, rect, false);
             }
         });
+    }
+
+    @Override protected String getScreenTitle() {
+        return getString(R.string.site_creation_site_details_title);
     }
 }

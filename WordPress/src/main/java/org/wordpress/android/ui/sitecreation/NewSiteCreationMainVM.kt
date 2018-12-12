@@ -2,6 +2,11 @@ package org.wordpress.android.ui.sitecreation
 
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.support.annotation.StringRes
+import org.wordpress.android.R
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -57,12 +62,41 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
         wizardManager.showNextStep()
     }
 
+    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
+        siteCreationState = siteCreationState.copy(siteTitle = siteTitle, siteTagLine = tagLine)
+        wizardManager.showNextStep()
+    }
+
     fun onSkipClicked() {
         wizardManager.showNextStep()
     }
 
-    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
-        siteCreationState = siteCreationState.copy(siteTitle = siteTitle, siteTagLine = tagLine)
-        wizardManager.showNextStep()
+    fun screenTitleForWizardStep(step: SiteCreationStep): NewSiteCreationScreenTitle {
+        val stepPosition = wizardManager.stepPosition(step)
+        val stepCount = wizardManager.stepsCount
+        val firstStep = stepPosition == 1
+        val lastStep = stepPosition == stepCount
+
+        return when {
+            firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
+            lastStep -> ScreenTitleEmpty
+            else -> ScreenTitleStepCount(
+                    R.string.new_site_creation_screen_title_step_count,
+                    stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title
+                    stepPosition - 1 // -1 -> first item has general title - Create Site
+            )
+        }
+    }
+
+    sealed class NewSiteCreationScreenTitle {
+        data class ScreenTitleStepCount(@StringRes val resId: Int, val stepsCount: Int, val stepPosition: Int) :
+                NewSiteCreationScreenTitle()
+
+        data class ScreenTitleGeneral(@StringRes val resId: Int) :
+                NewSiteCreationScreenTitle()
+
+        object ScreenTitleEmpty : NewSiteCreationScreenTitle() {
+            const val screenTitle = ""
+        }
     }
 }

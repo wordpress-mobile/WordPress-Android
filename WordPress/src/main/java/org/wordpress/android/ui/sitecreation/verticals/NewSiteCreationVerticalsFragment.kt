@@ -74,9 +74,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        // TODO receive title from the MainVM
-        // important for accessibility - talkback
-        nonNullActivity.setTitle(R.string.new_site_creation_verticals_title)
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
@@ -203,13 +200,22 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_verticals_fragment_tag"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(segmentId: Long): NewSiteCreationVerticalsFragment {
+        fun newInstance(screenTitle: String, segmentId: Long): NewSiteCreationVerticalsFragment {
             val fragment = NewSiteCreationVerticalsFragment()
             val bundle = Bundle()
+            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
             bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
             fragment.arguments = bundle
             return fragment
