@@ -45,7 +45,7 @@ class ClicksSqlUtilsTest {
     }
 
     @Test
-    fun `returns referrers from stats utils`() {
+    fun `returns data from stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
 
             whenever(statsSqlUtils.select(site, CLICKS, statsType, ClicksResponse::class.java, DATE_VALUE))
@@ -60,7 +60,7 @@ class ClicksSqlUtilsTest {
     }
 
     @Test
-    fun `inserts referrers to stats utils`() {
+    fun `inserts data to stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
             timeStatsSqlUtils.insert(site, CLICKS_RESPONSE, dbGranularity, DATE)
 
