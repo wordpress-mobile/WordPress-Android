@@ -90,7 +90,7 @@ constructor(
         val selectedDate: String? = null
     )
 
-    class VisitsAndViewsUseCaseFactory
+    class OverviewUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val selectedDateProvider: SelectedDateProvider,
