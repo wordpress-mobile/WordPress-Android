@@ -34,6 +34,7 @@ class PostAndPageViewsRestClient
     suspend fun fetchPostAndPageViews(
         site: SiteModel,
         granularity: StatsGranularity,
+        date: Date,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<PostAndPageViewsResponse> {
@@ -41,7 +42,7 @@ class PostAndPageViewsRestClient
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getCurrentDateTZ(site)
+                "date" to statsUtils.getFormattedDate(site, granularity, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

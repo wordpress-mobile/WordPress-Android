@@ -21,10 +21,12 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 private const val PAGE_SIZE = 8
+private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
 class ClicksStoreTest {
@@ -49,16 +51,16 @@ class ClicksStoreTest {
                 CLICKS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchClicks(site, DAYS, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchClicks(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<ClicksModel>()
         whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, forced)
+        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS)
+        verify(sqlUtils).insert(site, CLICKS_RESPONSE, DAYS, DATE)
     }
 
     @Test
@@ -67,9 +69,9 @@ class ClicksStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<ClicksResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchClicks(site, DAYS, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchClicks(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, forced)
+        val responseModel = store.fetchClicks(site, PAGE_SIZE, DAYS, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -79,11 +81,11 @@ class ClicksStoreTest {
 
     @Test
     fun `returns clicks from db`() {
-        whenever(sqlUtils.selectClicks(site, DAYS)).thenReturn(CLICKS_RESPONSE)
+        whenever(sqlUtils.selectClicks(site, DAYS, DATE)).thenReturn(CLICKS_RESPONSE)
         val model = mock<ClicksModel>()
         whenever(mapper.map(CLICKS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getClicks(site, DAYS, PAGE_SIZE)
+        val result = store.getClicks(site, DAYS, PAGE_SIZE, DATE)
 
         assertThat(result).isEqualTo(model)
     }
