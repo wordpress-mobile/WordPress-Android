@@ -22,11 +22,15 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
 
     init {
         val context = rootView.context
+        val greyColor = ContextCompat.getColor(context, R.color.grey)
 
-        val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_search_white_24dp)
-        drawable?.setTint(ContextCompat.getColor(context, R.color.grey))
-        searchInput.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
-        clearAllButton.background = drawable
+        val inputDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_search_white_24dp)
+        inputDrawable?.setTint(greyColor)
+        searchInput.setCompoundDrawablesRelativeWithIntrinsicBounds(inputDrawable, null, null, null)
+
+        val clearButtonDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_close_white_24dp)
+        clearButtonDrawable?.setTint(greyColor)
+        clearAllButton.background = clearButtonDrawable
 
         val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
         clearAllLayout.setOnClickListener {

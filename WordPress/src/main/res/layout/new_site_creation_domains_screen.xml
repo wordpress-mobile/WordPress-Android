@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_input_layout"/>
+        app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
 
     <FrameLayout
         android:id="@+id/domain_list_empty_view"
@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recycler_view">
+        app:layout_constraintTop_toTopOf="@+id/recycler_view">
 
         <TextView
             style="@style/ActionableEmptyStateTitle"
