@@ -9,7 +9,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.AUTHORS
 import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
@@ -62,12 +63,12 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        items.add(Title(R.string.stats_referrers))
+        items.add(Title(R.string.stats_authors))
 
         if (domainModel.authors.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(R.string.stats_referrer_label, R.string.stats_referrer_views_label))
+            items.add(Label(R.string.stats_author_label, R.string.stats_author_views_label))
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatar,
@@ -110,11 +111,11 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        navigateTo(ViewReferrers(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewAuthors(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onPostClicked(url: String) {
-//        navigationTarget(View())
+        navigateTo(ViewUrl(url))
     }
 
     data class SelectedAuthor(val author: AuthorsModel.Author? = null)
