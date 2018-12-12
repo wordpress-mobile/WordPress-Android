@@ -2370,10 +2370,11 @@
     <!-- END (News Card) -->
 
     <!-- Site Creation -->
+    <string name="new_site_creation_screen_title_general">Create Site</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="new_site_creation_segments_title">Create Site</string>
     <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
     <string name="new_site_creation_site_info_header_title">Basic Information</string>
@@ -2381,7 +2382,6 @@
     <string name="new_site_creation_site_title_hint">Site Title</string>
     <string name="new_site_creation_optional_tag_line_hint">Optional Tagline</string>
     <string name="new_site_creation_optional_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_verticals_title">TODO</string>
     <string name="new_site_creation_button_skip">Skip</string>
     <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
