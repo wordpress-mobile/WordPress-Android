@@ -51,7 +51,7 @@ class VisitsAndViewsStoreTest {
                 VISITS_AND_VIEWS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<VisitsAndViewsModel>()
@@ -69,7 +69,7 @@ class VisitsAndViewsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitsAndViewsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchVisits(site, DATE, DAYS, PAGE_SIZE, forced)).thenReturn(errorPayload)
 
         val responseModel = store.fetchVisits(site, PAGE_SIZE, DATE, DAYS, forced)
 
