@@ -2283,8 +2283,6 @@
     <string name="quick_start_dialog_browse_themes_title">Browse themes</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_choose_theme_message">Browse all our themes to find your perfect fit.</string>
-    <string name="quick_start_dialog_choose_theme_title">Choose a theme</string>
     <string name="quick_start_dialog_create_page_message">Add a page for key content — an \"About\" page is a great start.</string>
     <string name="quick_start_dialog_create_page_title">Create a new page</string>
     <string name="quick_start_dialog_customize_site_message">Tweak fonts, add images, and more.</string>
@@ -2316,7 +2314,6 @@
     <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Site Pages %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
-    <string name="quick_start_dialog_share_site_message">Connect to your social media accounts &#8211; your site will automatically share new posts.</string>
     <string name="quick_start_dialog_share_site_title">Share your site</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
