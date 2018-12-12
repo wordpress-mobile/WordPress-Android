@@ -57,7 +57,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 overviewMapper,
                 Dispatchers.Unconfined
         )
-        whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(currentDate)
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), isNull(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any())).thenReturn(barChartItem)
