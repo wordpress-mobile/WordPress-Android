@@ -1,3 +1,9 @@
 package org.wordpress.android.fluxc.model.vertical
 
-data class SegmentPromptModel(val title: String, val subtitle: String, val hint: String)
+import com.google.gson.annotations.SerializedName
+
+data class SegmentPromptModel(
+    @SerializedName("site_topic_header") val title: String,
+    @SerializedName("site_topic_subheader") val subtitle: String,
+    @SerializedName("site_topic_placeholder") val hint: String
+)
