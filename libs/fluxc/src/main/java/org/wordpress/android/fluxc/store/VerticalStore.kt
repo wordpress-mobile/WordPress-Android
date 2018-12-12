@@ -105,7 +105,13 @@ class VerticalStore @Inject constructor(
             this.error = error
         }
     }
-    class FetchedSegmentPromptPayload(val prompt: SegmentPromptModel?) : Payload<FetchSegmentPromptError>()
+
+    class FetchedSegmentPromptPayload internal constructor(val prompt: SegmentPromptModel?) :
+            Payload<FetchSegmentPromptError>() {
+        constructor(error: FetchSegmentPromptError) : this(null) {
+            this.error = error
+        }
+    }
     class FetchedVerticalsPayload(val verticalList: List<VerticalModel>) : Payload<FetchVerticalsError>()
 
     class FetchSegmentsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
