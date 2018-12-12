@@ -9,3 +9,5 @@
 /sites/$site/stats/top-earners
 
 /users/username/suggestions/
+
+/segments
