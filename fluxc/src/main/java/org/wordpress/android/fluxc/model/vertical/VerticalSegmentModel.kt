@@ -1,9 +1,11 @@
 package org.wordpress.android.fluxc.model.vertical
 
+import com.google.gson.annotations.SerializedName
+
 data class VerticalSegmentModel(
-    val title: String,
-    val subtitle: String,
-    val iconUrl: String,
-    val iconColor: String,
-    val segmentId: Long
+    @SerializedName("segment_type_title") val title: String,
+    @SerializedName("segment_type_subtitle") val subtitle: String,
+    @SerializedName("icon_URL") val iconUrl: String,
+    @SerializedName("icon_color") val iconColor: String,
+    @SerializedName("id") val segmentId: String
 )
