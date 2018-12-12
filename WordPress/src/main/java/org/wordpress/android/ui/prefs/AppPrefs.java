@@ -113,7 +113,8 @@ public class AppPrefs {
         NEWS_CARD_DISMISSED_VERSION,
         // Store a version of the last shown News Card
         NEWS_CARD_SHOWN_VERSION,
-        AVATAR_VERSION
+        AVATAR_VERSION,
+        GUTENBERG_EDITOR_ENABLED
     }
 
     /**
@@ -622,6 +623,14 @@ public class AppPrefs {
 
     public static void setVideoOptimize(boolean optimize) {
         setBoolean(DeletablePrefKey.VIDEO_OPTIMIZE_ENABLED, optimize);
+    }
+
+    public static boolean isGutenbergEditorEnabled() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, false);
+    }
+
+    public static void enableGutenbergEditor(boolean enabled) {
+        setBoolean(DeletablePrefKey.GUTENBERG_EDITOR_ENABLED, enabled);
     }
 
     public static void setVideoOptimizeWidth(int width) {
