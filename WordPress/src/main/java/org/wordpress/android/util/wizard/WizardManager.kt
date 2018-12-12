@@ -6,6 +6,8 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 class WizardManager<T : WizardStep>(
     private val steps: List<T>
 ) {
+    val stepsCount = steps.size
+
     private val _navigatorLiveData = SingleLiveEvent<T>()
     val navigatorLiveData: LiveData<T> = _navigatorLiveData
     private var currentStepIndex: Int = -1
@@ -24,6 +26,14 @@ class WizardManager<T : WizardStep>(
 
     private fun isIndexValid(currentStepIndex: Int): Boolean {
         return currentStepIndex >= 0 && currentStepIndex < steps.size
+    }
+
+    fun stepPosition(T: WizardStep): Int {
+        return if (steps.contains(T)) {
+            steps.indexOf(T) + 1
+        } else {
+            throw IllegalStateException("Step $T is not present.")
+        }
     }
 }
 

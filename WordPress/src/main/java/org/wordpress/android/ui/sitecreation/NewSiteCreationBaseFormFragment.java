@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import org.wordpress.android.R;
 
 public abstract class NewSiteCreationBaseFormFragment<SiteCreationListenerType> extends Fragment {
+    public static final String EXTRA_SCREEN_TITLE = "extra_screen_title";
     private Button mPrimaryButton;
     private Button mSecondaryButton;
 
@@ -48,38 +50,42 @@ public abstract class NewSiteCreationBaseFormFragment<SiteCreationListenerType> 
 
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.site_creation_form_screen, container, false);
-        ViewStub formContainer = ((ViewStub) rootView.findViewById(R.id.site_creation_form_content_stub));
+        ViewStub formContainer = (rootView.findViewById(R.id.site_creation_form_content_stub));
         formContainer.setLayoutResource(getContentLayout());
         formContainer.inflate();
         return rootView;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
 
         setupContent(rootView);
 
-        mPrimaryButton = (Button) rootView.findViewById(R.id.primary_button);
-        mSecondaryButton = (Button) rootView.findViewById(R.id.secondary_button);
+        mPrimaryButton = rootView.findViewById(R.id.primary_button);
+        mSecondaryButton = rootView.findViewById(R.id.secondary_button);
         setupBottomButtons(mSecondaryButton, mPrimaryButton);
 
         return rootView;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.site_creation_title);
+            actionBar.setTitle(getScreenTitle());
+            // important for accessibility
+            getActivity().setTitle(getScreenTitle());
         }
     }
+
+    protected abstract String getScreenTitle();
 
     protected void showHomeButton(boolean visible, boolean isCloseButton) {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();

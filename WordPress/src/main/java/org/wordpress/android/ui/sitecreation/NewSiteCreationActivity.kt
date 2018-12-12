@@ -10,8 +10,13 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
+import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
+import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
@@ -23,6 +28,7 @@ import javax.inject.Inject
 class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
+        SiteInfoScreenListener,
         OnSkipClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
@@ -58,14 +64,37 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onSkipClicked()
     }
 
+    override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
+        mainViewModel.onInfoScreenFinished(siteTitle, tagLine)
+    }
+
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
+        val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
-            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance()
+            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance(screenTitle)
             VERTICALS ->
-                NewSiteCreationVerticalsFragment.newInstance(target.wizardState.segmentId!!)
-            DOMAINS -> NewSiteCreationDomainFragment.newInstance("Test title")
+                NewSiteCreationVerticalsFragment.newInstance(
+                        screenTitle,
+                        target.wizardState.segmentId!!
+                )
+            DOMAINS -> NewSiteCreationDomainFragment.newInstance(screenTitle, "Test site")
+            SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
+            SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle)
         }
         slideInFragment(fragment, target.wizardStep.toString())
+    }
+
+    private fun getScreenTitle(step: SiteCreationStep): String {
+        val screenTitleData = mainViewModel.screenTitleForWizardStep(step)
+        return when (screenTitleData) {
+            is ScreenTitleStepCount -> getString(
+                    screenTitleData.resId,
+                    screenTitleData.stepPosition,
+                    screenTitleData.stepsCount
+            )
+            is ScreenTitleGeneral -> getString(screenTitleData.resId)
+            is ScreenTitleEmpty -> screenTitleData.screenTitle
+        }
     }
 
     private fun slideInFragment(fragment: Fragment?, tag: String) {

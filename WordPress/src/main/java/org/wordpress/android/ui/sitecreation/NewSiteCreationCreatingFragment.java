@@ -155,7 +155,7 @@ public class NewSiteCreationCreatingFragment extends NewSiteCreationBaseFormFrag
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         showHomeButton(!isInModalMode(), false);
@@ -373,5 +373,9 @@ public class NewSiteCreationCreatingFragment extends NewSiteCreationBaseFormFrag
                 break;
         }
         getView().announceForAccessibility(statusAnnouncement);
+    }
+
+    @Override protected String getScreenTitle() {
+        return "";
     }
 }

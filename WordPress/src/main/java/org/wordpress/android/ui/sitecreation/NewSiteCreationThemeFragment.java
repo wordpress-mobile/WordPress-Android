@@ -48,8 +48,6 @@ public class NewSiteCreationThemeFragment extends NewSiteCreationBaseFormFragmen
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        // important for accessibility - talkback
-        getActivity().setTitle(R.string.site_creation_theme_selection_title);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mNewSiteCreationThemeAdapter);
@@ -120,5 +118,9 @@ public class NewSiteCreationThemeFragment extends NewSiteCreationBaseFormFragmen
                 mNewSiteCreationThemeAdapter.setData(false, getThemes(), 0);
                 break;
         }
+    }
+
+    @Override protected String getScreenTitle() {
+        return getString(R.string.site_creation_theme_selection_title);
     }
 }
