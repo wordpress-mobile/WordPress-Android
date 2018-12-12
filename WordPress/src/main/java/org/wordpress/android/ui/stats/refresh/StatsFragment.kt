@@ -109,6 +109,12 @@ class StatsFragment : DaggerFragment() {
                 }
             }
         })
+
+        viewModel.selectedDateChanged.observe(this, Observer { statsGranularity ->
+            statsGranularity?.let {
+                viewModel.onSelectedDateChange(statsGranularity)
+            }
+        })
     }
 }
 

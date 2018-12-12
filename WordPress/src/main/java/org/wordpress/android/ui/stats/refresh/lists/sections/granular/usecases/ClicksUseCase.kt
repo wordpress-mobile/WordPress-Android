@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.SelectedClicksGroup
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -36,12 +37,15 @@ constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: ClicksStore,
+    private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<ClicksModel, SelectedClicksGroup>(CLICKS, mainDispatcher, SelectedClicksGroup()) {
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = store.getClicks(
-                site, statsGranularity,
-                PAGE_SIZE
+                site,
+                statsGranularity,
+                PAGE_SIZE,
+                selectedDateProvider.getSelectedDate(statsGranularity)
         )
         dbModel?.let { onModel(it) }
     }
@@ -49,7 +53,10 @@ constructor(
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = store.fetchClicks(
                 site,
-                PAGE_SIZE, statsGranularity, forced
+                PAGE_SIZE,
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity),
+                forced
         )
         val model = response.model
         val error = response.error
@@ -125,6 +132,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: ClicksStore,
+        private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -132,6 +140,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         store,
+                        selectedDateProvider,
                         statsDateFormatter
                 )
     }
