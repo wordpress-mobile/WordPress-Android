@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 13:54:09+0000
+Translation-Revision-Date: 2018-11-27 09:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="change_password_dialog_message">מחליף סיסמה…</string>
+    <string name="change_password_dialog_hint">על הסיסמה להיות באורך שישה תווים לפחות. כדי להפוך אותה קשה יותר לפיצוח, כדאי להשתמש באותיות קטנות וגדולות, מספרים וסמלים כגון ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">שינוי הסיסמה בוצע בהצלחה</string>
+    <string name="change_password">החלפת סיסמה</string>
+    <string name="support_identity_input_dialog_name_label">שם</string>
+    <string name="history_no_title">(חסרה כותרת)</string>
+    <string name="history_preview_html">תצוגה מקדימה של HTML</string>
+    <string name="history_preview_visual">תצוגה מקדימה חזותית</string>
     <string name="history_detail_title">גרסה</string>
     <string name="history_detail_button_previous">הקודם</string>
     <string name="history_detail_button_next">לשלב הבא</string>
@@ -1185,7 +1193,6 @@ Language: he_IL
     <string name="detail_approve_manual">אישור ידני דרוש לתגובות מכולם.</string>
     <string name="days_quantity_other">%d ימים</string>
     <string name="days_quantity_one">יום אחד</string>
-    <string name="web_address">כתובת URL</string>
     <string name="primary_site">אתר ראשי</string>
     <string name="pending_email_change_snackbar">יש ללחוץ על הקישור לאימות באימייל שנשלח לכתובת %1$s כדי לאשר את כתובתך החדשה</string>
     <string name="editor_toast_uploading_please_wait">מתבצעת כרגע העלאת מדיה על-ידך. יש להמתין להשלמת הפעולה.</string>
@@ -1606,7 +1613,6 @@ Language: he_IL
     <string name="error_refresh_posts">לא ניתן לרענן רשומות כעת</string>
     <string name="error_deleting_post">אירעה שגיאה בזמן מחיקת הפוסט</string>
     <string name="notifications_empty_list">אין הודעות</string>
-    <string name="invalid_url_message">ודא שכתובת האתר שהוזנה תקפה</string>
     <string name="stats_bar_graph_empty">הנתונים הסטטיסטיים לא זמינים</string>
     <string name="stats_empty_comments">עדיין אין תגובות</string>
     <string name="sdcard_message">יש לטעון כרטיס SD כדי להעלות קבצים</string>
