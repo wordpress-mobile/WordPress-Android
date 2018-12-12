@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -39,6 +40,7 @@ class ReferrersRestClient
     suspend fun fetchReferrers(
         site: SiteModel,
         granularity: StatsGranularity,
+        date: Date,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<ReferrersResponse> {
@@ -46,7 +48,7 @@ class ReferrersRestClient
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getCurrentDateTZ(site)
+                "date" to statsUtils.getFormattedDate(site, granularity, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
