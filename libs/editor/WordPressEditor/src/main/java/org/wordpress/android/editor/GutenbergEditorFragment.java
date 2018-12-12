@@ -37,12 +37,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
         EditorMediaUploadListener,
         IHistoryListener {
+    private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
+
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
     private static boolean mIsToolbarExpanded = false;
 
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
+    private boolean mHtmlModeEnabled;
 
     private EditTextWithKeyBackListener mTitle;
     private SourceViewEditText mSource;
@@ -76,6 +79,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
+
+        if (savedInstanceState != null) {
+            mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
+        }
     }
 
     @Override
@@ -85,6 +92,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mTitle = view.findViewById(R.id.title);
         mWPAndroidGlueCode.onCreateView(
                 view.findViewById(R.id.gutenberg),
+                mHtmlModeEnabled,
                 new OnMediaLibraryButtonListener() {
                     @Override public void onMediaLibraryButtonClick() {
                         onToolbarMediaButtonClicked();
@@ -192,6 +200,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_gutenberg, menu);
     }
@@ -276,6 +289,22 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mWPAndroidGlueCode.setContent(postContent);
     }
 
+    public void onToggleHtmlMode() {
+        if (!isAdded()) {
+            return;
+        }
+
+        toggleHtmlMode();
+    }
+
+    private void toggleHtmlMode() {
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+        mEditorFragmentListener.onHtmlModeToggledInToolbar();
+
+        mHtmlModeEnabled = !mHtmlModeEnabled;
+
+        mWPAndroidGlueCode.toggleEditorMode();
+    }
 
     /*
         Note the way we detect we're in presence of Gutenberg blocks logic is taken from
