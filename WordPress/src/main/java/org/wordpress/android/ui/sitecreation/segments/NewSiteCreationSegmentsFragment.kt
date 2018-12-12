@@ -15,10 +15,10 @@ import android.widget.Button
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsContentUiState
 import org.wordpress.android.ui.sitecreation.segments.SegmentsUiState.SegmentsErrorUiState
 import org.wordpress.android.util.image.ImageManager
@@ -38,13 +38,18 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var segmentsScreenListener: SegmentsScreenListener
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        if (context !is OnHelpClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
+        }
         if (context !is SegmentsScreenListener) {
             throw IllegalStateException("Parent activity must implement SegmentsScreenListener.")
         }
+        helpClickedListener = context
         segmentsScreenListener = context
     }
 
@@ -104,17 +109,9 @@ class NewSiteCreationSegmentsFragment : NewSiteCreationBaseFormFragment<NewSiteC
         viewModel.segmentSelected.observe(
                 this,
                 Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
-        viewModel.onHelpClicked.observe(
-                this,
-                Observer {
-                    ActivityLauncher.viewHelpAndSupport(
-                            activity!!,
-                            HelpActivity.Origin.NEW_SITE_CREATION_SEGMENTS,
-                            null,
-                            null
-                    )
-                }
-        )
+        viewModel.onHelpClicked.observe(this, Observer {
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SEGMENTS)
+        })
         viewModel.start()
     }
 
