@@ -111,13 +111,21 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(suggestions)
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
 
-        // TODO: set the title
-        fun newInstance(): NewSiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String): NewSiteCreationDomainsFragment {
             val fragment = NewSiteCreationDomainsFragment()
             val bundle = Bundle()
+            bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
             fragment.arguments = bundle
             return fragment
         }

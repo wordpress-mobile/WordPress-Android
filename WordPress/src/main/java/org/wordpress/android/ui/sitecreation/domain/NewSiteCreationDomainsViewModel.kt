@@ -79,7 +79,6 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         resetUiState()
     }
 
-
     fun onClearTextBtnClicked() {
         _clearBtnClicked.call()
     }
