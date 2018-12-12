@@ -161,8 +161,8 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
         updateVisibility(skipButton, uiState.showSkipButton)
-        searchInputWithHeader.updateHeader(uiState.headerUiState)
-        searchInputWithHeader.updateSearchInput(uiState.searchInputUiState)
+        searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
+        searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
         updateSuggestions(uiState.items)
     }
 

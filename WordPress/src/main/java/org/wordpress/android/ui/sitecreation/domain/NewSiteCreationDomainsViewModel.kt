@@ -27,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewMo
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -205,8 +206,10 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private fun createHeaderUiState(
         isVisible: Boolean
     ): SiteCreationHeaderUiState? {
-        // TODO: We need to pass in a resource for the title and subtitle
-        return if (isVisible) SiteCreationHeaderUiState("title", "subtitle") else null
+        return if (isVisible) SiteCreationHeaderUiState(
+                UiStringRes(R.string.new_site_creation_domain_header_title),
+                UiStringRes(R.string.new_site_creation_domain_header_subtitle)
+        ) else null
     }
 
     private fun createSearchInputUiState(
@@ -214,7 +217,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         showProgress: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
-                "hint", // TODO: We need to pass in resource
+                UiStringRes(R.string.new_site_creation_search_domain_input_hint),
                 showProgress,
                 showClearButton = !StringUtils.isEmpty(query)
         )

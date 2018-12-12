@@ -86,8 +86,8 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                searchInputWithHeader.updateHeader(uiState.headerUiState)
-                searchInputWithHeader.updateSearchInput(uiState.searchInputUiState)
+                searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
+                searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
             }
         })
