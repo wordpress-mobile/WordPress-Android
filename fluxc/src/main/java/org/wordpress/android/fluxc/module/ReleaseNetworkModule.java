@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.InsightsRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TaxonomyRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
@@ -196,17 +195,6 @@ public class ReleaseNetworkModule {
                                                      AccessToken token, UserAgent userAgent,
                                                      WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new InsightsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
-    }
-
-    @Singleton
-    @Provides
-    public PostAndPageViewsRestClient providePostAndPageViewsRestClient(
-            Context appContext, Dispatcher dispatcher,
-            @Named("regular") RequestQueue requestQueue,
-            AccessToken token, UserAgent userAgent,
-            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new PostAndPageViewsRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
                 userAgent);
     }
 

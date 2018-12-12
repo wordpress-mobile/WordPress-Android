@@ -2,6 +2,9 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
@@ -21,7 +24,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class PostAndPageViewsRestClient
+class ClicksRestClient
 @Inject constructor(
     dispatcher: Dispatcher,
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
@@ -29,16 +32,17 @@ class PostAndPageViewsRestClient
     @param:Named("regular") requestQueue: RequestQueue,
     accessToken: AccessToken,
     userAgent: UserAgent,
+    val gson: Gson,
     private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchPostAndPageViews(
+    suspend fun fetchClicks(
         site: SiteModel,
         granularity: StatsGranularity,
         date: Date,
         pageSize: Int,
         forced: Boolean
-    ): FetchStatsPayload<PostAndPageViewsResponse> {
-        val url = WPCOMREST.sites.site(site.siteId).stats.top_posts.urlV1_1
+    ): FetchStatsPayload<ClicksResponse> {
+        val url = WPCOMREST.sites.site(site.siteId).stats.clicks.urlV1_1
         val params = mapOf(
                 "period" to granularity.toString(),
                 "max" to pageSize.toString(),
@@ -48,12 +52,17 @@ class PostAndPageViewsRestClient
                 this,
                 url,
                 params,
-                PostAndPageViewsResponse::class.java,
+                ClicksResponse::class.java,
                 enableCaching = false,
                 forced = forced
         )
         return when (response) {
             is Success -> {
+                response.data.groups.values.forEach {
+                    it.clicks.forEach { group ->
+                        group.build(gson)
+                    }
+                }
                 FetchStatsPayload(response.data)
             }
             is Error -> {
@@ -62,22 +71,42 @@ class PostAndPageViewsRestClient
         }
     }
 
-    data class PostAndPageViewsResponse(
-        @SerializedName("date") var date: Date? = null,
-        @SerializedName("days") val days: Map<String, ViewsResponse>,
-        @SerializedName("period") val statsGranularity: String?
+    data class ClicksResponse(
+        @SerializedName("period") val granularity: String?,
+        @SerializedName("days") val groups: Map<String, Groups>
     ) {
-        data class ViewsResponse(
-            @SerializedName("postviews") val postViews: List<PostViewsResponse>,
-            @SerializedName("total_views") val totalViews: Int?
+        data class Groups(
+            @SerializedName("other_clicks") val otherClicks: Int?,
+            @SerializedName("total_clicks") val totalClicks: Int?,
+            @SerializedName("clicks") val clicks: List<ClickGroup>
+        )
+
+        data class ClickGroup(
+            @SerializedName("group") val groupId: String?,
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("views") val views: Int?,
+            @SerializedName("children") val children: JsonElement?,
+            @SerializedName("clicks") var clicks: List<Click>? = null
         ) {
-            data class PostViewsResponse(
-                @SerializedName("id") val id: Long?,
-                @SerializedName("title") val title: String?,
-                @SerializedName("type") val type: String?,
-                @SerializedName("href") val href: String?,
-                @SerializedName("views") val views: Int?
-            )
+            fun build(gson: Gson) {
+                when (this.children) {
+                    is JsonArray -> this.clicks = this.children.map {
+                        gson.fromJson<Click>(
+                                it,
+                                Click::class.java
+                        )
+                    }
+                }
+            }
         }
+
+        data class Click(
+            @SerializedName("name") val name: String?,
+            @SerializedName("icon") val icon: String?,
+            @SerializedName("url") val url: String?,
+            @SerializedName("views") val views: Int?
+        )
     }
 }

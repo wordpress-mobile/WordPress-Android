@@ -2,9 +2,9 @@ package org.wordpress.android.fluxc.store.stats.time
 
 import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
+import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
@@ -16,21 +16,21 @@ import javax.inject.Singleton
 import kotlin.coroutines.experimental.CoroutineContext
 
 @Singleton
-class PostAndPageViewsStore
+class ClicksStore
 @Inject constructor(
-    private val restClient: PostAndPageViewsRestClient,
+    private val restClient: ClicksRestClient,
     private val sqlUtils: TimeStatsSqlUtils,
     private val timeStatsMapper: TimeStatsMapper,
     private val coroutineContext: CoroutineContext
 ) {
-    suspend fun fetchPostAndPageViews(
+    suspend fun fetchClicks(
         site: SiteModel,
         pageSize: Int,
         granularity: StatsGranularity,
         date: Date,
         forced: Boolean = false
     ) = withContext(coroutineContext) {
-        val payload = restClient.fetchPostAndPageViews(site, granularity, date, pageSize + 1, forced)
+        val payload = restClient.fetchClicks(site, granularity, date, pageSize + 1, forced)
         return@withContext when {
             payload.isError -> OnStatsFetched(payload.error)
             payload.response != null -> {
@@ -41,12 +41,7 @@ class PostAndPageViewsStore
         }
     }
 
-    fun getPostAndPageViews(
-        site: SiteModel,
-        granularity: StatsGranularity,
-        date: Date,
-        pageSize: Int
-    ): PostAndPageViewsModel? {
-        return sqlUtils.selectPostAndPageViews(site, granularity, date)?.let { timeStatsMapper.map(it, pageSize) }
+    fun getClicks(site: SiteModel, period: StatsGranularity, pageSize: Int, date: Date): ClicksModel? {
+        return sqlUtils.selectClicks(site, period, date)?.let { timeStatsMapper.map(it, pageSize) }
     }
 }

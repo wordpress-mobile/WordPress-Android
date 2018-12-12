@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stats.time
 
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.nhaarman.mockito_kotlin.KArgumentCaptor
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
@@ -24,7 +26,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse.ClickGroup
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -35,7 +38,7 @@ import org.wordpress.android.fluxc.test
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class PostAndPageViewsRestClientTest {
+class ClicksRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
@@ -43,28 +46,30 @@ class PostAndPageViewsRestClientTest {
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
     @Mock private lateinit var statsUtils: StatsUtils
+    private val gson: Gson = GsonBuilder().create()
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var restClient: PostAndPageViewsRestClient
+    private lateinit var restClient: ClicksRestClient
     private val siteId: Long = 12
     private val pageSize = 5
-    private val currentStringDate = "2018-10-10"
+    private val currentDateValue = "2018-10-10"
     private val currentDate = Date(0)
 
     @Before
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        restClient = PostAndPageViewsRestClient(
+        restClient = ClicksRestClient(
                 dispatcher,
                 wpComGsonRequestBuilder,
                 null,
                 requestQueue,
                 accessToken,
                 userAgent,
+                gson,
                 statsUtils
         )
-        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(currentDate))).thenReturn(currentStringDate)
+        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(currentDate))).thenReturn(currentDateValue)
     }
 
     @Test
@@ -107,28 +112,73 @@ class PostAndPageViewsRestClientTest {
         testErrorResponse(YEARS)
     }
 
-    private suspend fun testSuccessResponse(granularity: StatsGranularity) {
-        val response = mock<PostAndPageViewsResponse>()
-        initAllTimeResponse(response)
+    @Test
+    fun `maps group with clicks`() {
+        val icon = "icon.jpg"
+        val name = "Name"
+        val views = 5
+        val firstUrl = "firstUrl.com"
+        val firstChildName = "First name"
+        val firstChildViews = 3
+        val secondUrl = "secondUrl.com"
+        val secondChildName = "Second name"
+        val secondChildViews = 2
+        val group = "{\"icon\":\"$icon\",\n" +
+                "\"url\":null,\n" +
+                "\"name\":\"$name\",\n" +
+                "\"views\":$views,\n" +
+                "\"children\":[\n" +
+                "{\"url\":\"$firstUrl\",\n" +
+                "\"name\":\"$firstChildName\",\n" +
+                "\"views\":$firstChildViews}," +
+                "{\"url\":\"$secondUrl\",\n" +
+                "\"name\":\"$secondChildName\",\n" +
+                "\"views\":$secondChildViews}" +
+                "]}"
+        val parsedGroup = gson.fromJson<ClickGroup>(group, ClickGroup::class.java)
 
-        val responseModel = restClient.fetchPostAndPageViews(site, granularity, currentDate, pageSize, false)
+        parsedGroup.build(gson)
+
+        assertThat(parsedGroup.name).isEqualTo(name)
+        assertThat(parsedGroup.views).isEqualTo(views)
+        assertThat(parsedGroup.icon).isEqualTo(icon)
+        assertThat(parsedGroup.clicks).hasSize(2)
+        parsedGroup.clicks?.get(0)?.apply {
+            assertThat(this.name).isEqualTo(firstChildName)
+            assertThat(this.url).isEqualTo(firstUrl)
+            assertThat(this.views).isEqualTo(firstChildViews)
+            assertThat(this.icon).isNull()
+        }
+        parsedGroup.clicks?.get(1)?.apply {
+            assertThat(this.name).isEqualTo(secondChildName)
+            assertThat(this.url).isEqualTo(secondUrl)
+            assertThat(this.views).isEqualTo(secondChildViews)
+            assertThat(this.icon).isNull()
+        }
+    }
+
+    private suspend fun testSuccessResponse(period: StatsGranularity) {
+        val response = mock<ClicksResponse>()
+        initClicksResponse(response)
+
+        val responseModel = restClient.fetchClicks(site, period, currentDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/top-posts/")
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/clicks/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
-                        "period" to granularity.toString(),
-                        "date" to currentStringDate
+                        "period" to period.toString(),
+                        "date" to currentDateValue
                 )
         )
     }
 
-    private suspend fun testErrorResponse(granularity: StatsGranularity) {
+    private suspend fun testErrorResponse(period: StatsGranularity) {
         val errorMessage = "message"
-        initAllTimeResponse(
+        initClicksResponse(
                 error = WPComGsonNetworkError(
                         BaseNetworkError(
                                 NETWORK_ERROR,
@@ -138,18 +188,18 @@ class PostAndPageViewsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchPostAndPageViews(site, granularity, currentDate, pageSize, false)
+        val responseModel = restClient.fetchClicks(site, period, currentDate, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)
         assertThat(responseModel.error.message).isEqualTo(errorMessage)
     }
 
-    private suspend fun initAllTimeResponse(
-        data: PostAndPageViewsResponse? = null,
+    private suspend fun initClicksResponse(
+        data: ClicksResponse? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<PostAndPageViewsResponse> {
-        return initResponse(PostAndPageViewsResponse::class.java, data ?: mock(), error)
+    ): Response<ClicksResponse> {
+        return initResponse(ClicksResponse::class.java, data ?: mock(), error)
     }
 
     private suspend fun <T> initResponse(
