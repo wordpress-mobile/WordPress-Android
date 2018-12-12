@@ -11,3 +11,4 @@
 /users/username/suggestions/
 
 /segments
+/verticals/prompt
