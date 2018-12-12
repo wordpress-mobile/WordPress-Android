@@ -1003,10 +1003,10 @@
     <string name="notifications_empty_comments">No comments yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
     <string name="notifications_empty_likes">No likes yet</string>
-    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
+    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow</string>
-    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
@@ -2232,6 +2232,8 @@
     <string name="reader_blavatar_desc">site icon</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
+    <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
+    <string name="quick_start_completed_tasks_header_chevron_collapse_desc">collapse</string>
 
 
     <!-- Site Creation -->
@@ -2317,6 +2319,7 @@
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
+    <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_browse_themes_subtitle" translatable="false">@string/quick_start_dialog_browse_themes_message</string>
     <string name="quick_start_list_browse_themes_title" translatable="false">@string/quick_start_dialog_browse_themes_title</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
