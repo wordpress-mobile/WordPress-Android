@@ -44,5 +44,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"/>
+
+    <FrameLayout
+        android:id="@+id/domain_list_empty_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/wp_grey_lighten_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recycler_view">
+
+        <TextView
+            style="@style/ActionableEmptyStateTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+            android:text="@string/new_site_creation_empty_domain_list_message"
+            android:textSize="@dimen/text_sz_extra_large"/>
+    </FrameLayout>
 </android.support.constraint.ConstraintLayout>

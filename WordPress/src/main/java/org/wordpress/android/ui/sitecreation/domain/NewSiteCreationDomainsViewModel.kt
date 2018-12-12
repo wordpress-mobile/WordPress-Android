@@ -18,12 +18,14 @@ import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
 import org.wordpress.android.models.networkresource.ListState.Ready
+import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -143,18 +145,29 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                                 query,
                                 showProgress = state is Loading
                         ),
-                        items = createSuggestionsUiStates(
-                                onRetry = { updateQuery(query) },
-                                data = state.data,
-                                errorFetchingSuggestions = state is Error,
-                                errorResId = if (state is Error) state.errorMessageResId else null
-                        )
+                        contentState = createDomainsUiContentState(query, state)
                 )
         )
     }
 
     private fun updateUiState(uiState: DomainsUiState) {
         _uiState.value = uiState
+    }
+
+    private fun createDomainsUiContentState(query: String, state: ListState<String>): DomainsUiContentState {
+        val items = createSuggestionsUiStates(
+                onRetry = { updateQuery(query) },
+                data = state.data,
+                errorFetchingSuggestions = state is Error,
+                errorResId = if (state is Error) state.errorMessageResId else null
+        )
+        return if (items.isEmpty()) {
+            if (query.isNotBlank() && (state is Success || state is Ready)) {
+                DomainsUiContentState.Empty
+            } else DomainsUiContentState.Initial
+        } else {
+            DomainsUiContentState.VisibleItems(items)
+        }
     }
 
     private fun createSuggestionsUiStates(
@@ -210,8 +223,28 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
-        val items: List<DomainsListItemUiState>
-    )
+        val contentState: DomainsUiContentState = DomainsUiContentState.Initial
+    ) {
+        sealed class DomainsUiContentState(
+            val emptyViewVisibility: Boolean,
+            val items: List<DomainsListItemUiState>
+        ) {
+            object Initial : DomainsUiContentState(
+                    emptyViewVisibility = false,
+                    items = emptyList()
+            )
+
+            object Empty : DomainsUiContentState(
+                    emptyViewVisibility = true,
+                    items = emptyList()
+            )
+
+            class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
+                    emptyViewVisibility = false,
+                    items = items
+            )
+        }
+    }
 
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null

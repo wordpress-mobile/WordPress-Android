@@ -9,13 +9,14 @@ import android.support.annotation.LayoutRes
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState
+import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import javax.inject.Inject
 
 private const val KEY_LIST_STATE = "list_state"
@@ -23,10 +24,10 @@ private const val KEY_LIST_STATE = "list_state"
 class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private lateinit var nonNullActivity: FragmentActivity
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var searchInputWithHeader: SearchInputWithHeader
+    private lateinit var emptyView: View
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
-
-    private lateinit var searchInputWithHeader: SearchInputWithHeader
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -40,6 +41,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
+        emptyView = rootView.findViewById(R.id.domain_list_empty_view)
         initRecyclerView(rootView)
         initViewModel()
     }
@@ -86,7 +88,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
             uiState?.let {
                 searchInputWithHeader.updateHeader(uiState.headerUiState)
                 searchInputWithHeader.updateSearchInput(uiState.searchInputUiState)
-                updateSuggestions(uiState.items)
+                updateContentUiState(uiState.contentState)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
@@ -107,8 +109,13 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         }
     }
 
-    private fun updateSuggestions(suggestions: List<DomainsListItemUiState>) {
-        (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(suggestions)
+    private fun updateContentUiState(contentState: DomainsUiContentState) {
+        updateVisibility(emptyView, contentState.emptyViewVisibility)
+        (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(contentState.items)
+    }
+
+    private fun updateVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun getScreenTitle(): String {
