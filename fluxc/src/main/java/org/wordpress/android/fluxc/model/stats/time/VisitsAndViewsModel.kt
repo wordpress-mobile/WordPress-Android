@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.model.stats.time
 
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
-
 data class VisitsAndViewsModel(val period: String, val dates: List<PeriodData>) {
     data class PeriodData(
         val period: String,
