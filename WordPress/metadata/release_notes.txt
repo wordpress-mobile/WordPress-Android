@@ -1,3 +1,4 @@
-* The Post Revision screen now shows a visual preview of each revision, so you can see exactly what the older versions looked like and find the one you need quicker.
-* If you used the mobile (i.e., browser) version of WordPress.com and clicked on a banner suggesting that you view something in the app, but then didn’t actually end up on the right page in the app? Those links are a lot more accurate now.
-* Found and squashed some bugs around changing your password and media storage limits.
+This release takes care of a pair of pesky bugs:
+
+* If your site had no title set, you’d see an empty field where the title would ordinarily go. Now, you’ll see “WordPress” there. (Also: you should give your site a title! It’s good for SEO.)
+* Sometimes the History screens for pages and posts wouldn’t actually show the differences between revisions, making the screen a little pointless. That’s fixed, so the History screen is once again useful.

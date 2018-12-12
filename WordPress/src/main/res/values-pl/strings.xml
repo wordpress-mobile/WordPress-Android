@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-01 05:40:37+0000
+Translation-Revision-Date: 2018-11-23 14:24:51+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="change_password_dialog_message">Zmiana hasła…</string>
+    <string name="change_password_dialog_hint">Twoje hasło powinno zawierać co najmniej 6 znaków. Aby było to silne hasło, użyj małych i wielkich liter, cyfr oraz znaków specjalnych takich jak  ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Zmiana hasła zakończona powodzeniem</string>
+    <string name="change_password">Zmień hasło</string>
+    <string name="support_identity_input_dialog_name_label">Nazwa</string>
+    <string name="history_no_title">(brak tytułu)</string>
+    <string name="history_preview_html">Podgląd HTML</string>
+    <string name="history_preview_visual">Podgląd wizualny</string>
+    <string name="history_detail_title">Wydanie</string>
+    <string name="history_detail_button_previous">Poprzednie</string>
+    <string name="history_detail_button_next">Następne</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Dowiedz się więcej</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Nie pokazuj więcej</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Powrót</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Edytuj Stronę </string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Edytuj Wpis</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Pracujemy nad nowym WordPressowym edytorem. Możesz edytować ta stronę, ale zalecane jest włączenie podglądu przed publikacją. </string>
+    <string name="dialog_gutenberg_compatibility_message">Pracujemy nad nowym WordPressowym edytorem. Możesz edytować ten wpis, ale zalecane jest włączenie podglądu przed publikacją.</string>
+    <string name="dialog_gutenberg_compatibility_title">Zanim przejdziesz dalej</string>
+    <string name="media_space_used">%1$s wykorzystano</string>
+    <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Proszę wprowadzić witrynę WordPress.com lub witrynę z własnym hostingiem z podłączonym Jetpackiem.</string>
     <string name="history_loading_revision">Wczytywanie rewizji</string>
     <string name="history_loaded_revision">Rewizja wczytana</string>
@@ -1172,7 +1193,7 @@ Language: pl
     <string name="detail_approve_manual">Wymagaj ręcznego zatwierdzenia wszystkich komentarzy</string>
     <string name="days_quantity_other">%d dniach</string>
     <string name="days_quantity_one">1 dzień</string>
-    <string name="web_address">Adres internetowy</string>
+    <string name="web_address">Adres w sieci Web</string>
     <string name="primary_site">Główna witryna</string>
     <string name="pending_email_change_snackbar">Kliknij na odnośnik weryfikujący wewnątrz e-maila przesłanego do %1$s w celu potwierdzenia Twojego nowego adresu</string>
     <string name="editor_toast_uploading_please_wait">Aktualnie przesyłasz media. Poczekaj aż proces się zakończy.</string>
@@ -1593,7 +1614,6 @@ Language: pl
     <string name="error_refresh_posts">W tej chwili nie można odświeżyć wpisów</string>
     <string name="error_deleting_post">Wystąpił błąd podczas usuwania wpisu</string>
     <string name="notifications_empty_list">Brak powiadomień</string>
-    <string name="invalid_url_message">Sprawdź, czy wprowadzony adres URL jest poprawny</string>
     <string name="stats_bar_graph_empty">Statystyki nie są dostępne</string>
     <string name="stats_empty_comments">Brak komentarzy</string>
     <string name="sdcard_message">Do wysyłania mediów niezbędne jest podłączenie karty SD</string>
