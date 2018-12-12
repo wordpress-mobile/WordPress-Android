@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.store.StatsStore.InsightsTypes.MOST_POPULAR_D
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -47,7 +47,7 @@ class MostPopularInsightsUseCase
     override fun buildUiModel(domainModel: InsightsMostPopularModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_popular))
-        items.add(Label(
+        items.add(Header(
                 R.string.stats_insights_most_popular_day_and_hour_label,
                 R.string.stats_insights_most_popular_views_label)
         )

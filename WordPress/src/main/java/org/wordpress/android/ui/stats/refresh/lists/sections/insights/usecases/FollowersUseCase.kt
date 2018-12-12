@@ -17,7 +17,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
@@ -114,7 +114,7 @@ class FollowersUseCase
                             )
                     )
             )
-            mutableItems.add(Label(R.string.stats_follower_label, R.string.stats_follower_since_label))
+            mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
             model.followers.toUserItems().let { mutableItems.addAll(it) }
         } else {
             mutableItems.add(Empty)

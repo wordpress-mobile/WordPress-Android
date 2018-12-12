@@ -25,7 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -67,9 +67,9 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(3)
             assertTitle(this.items[0])
-            val label = this.items[1] as Label
-            assertThat(label.leftLabel).isEqualTo(R.string.stats_publicize_service_label)
-            assertThat(label.rightLabel).isEqualTo(R.string.stats_publicize_followers_label)
+            val header = this.items[1] as Header
+            assertThat(header.leftLabel).isEqualTo(R.string.stats_publicize_service_label)
+            assertThat(header.rightLabel).isEqualTo(R.string.stats_publicize_followers_label)
             assertThat(this.items[2]).isEqualTo(mockedItem)
         }
     }
@@ -95,9 +95,9 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            val label = this.items[1] as Label
-            assertThat(label.leftLabel).isEqualTo(R.string.stats_publicize_service_label)
-            assertThat(label.rightLabel).isEqualTo(R.string.stats_publicize_followers_label)
+            val header = this.items[1] as Header
+            assertThat(header.leftLabel).isEqualTo(R.string.stats_publicize_service_label)
+            assertThat(header.rightLabel).isEqualTo(R.string.stats_publicize_followers_label)
             assertThat(this.items[2]).isEqualTo(mockedItem)
             assertLink(this.items[3])
         }

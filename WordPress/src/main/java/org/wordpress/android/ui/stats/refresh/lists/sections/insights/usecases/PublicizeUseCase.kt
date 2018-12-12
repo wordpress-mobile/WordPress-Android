@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublici
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -60,7 +60,7 @@ class PublicizeUseCase
         if (domainModel.services.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
+            items.add(Header(string.stats_publicize_service_label, string.stats_publicize_followers_label))
             items.addAll(domainModel.services.let { mapper.map(it) })
             if (domainModel.hasMore) {
                 items.add(

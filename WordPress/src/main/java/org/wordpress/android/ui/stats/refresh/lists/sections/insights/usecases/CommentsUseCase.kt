@@ -12,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewComment
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
@@ -82,7 +82,7 @@ class CommentsUseCase
     private fun buildAuthorsTab(authors: List<CommentsModel.Author>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (authors.isNotEmpty()) {
-            mutableItems.add(Label(R.string.stats_comments_author_label, R.string.stats_comments_label))
+            mutableItems.add(Header(R.string.stats_comments_author_label, R.string.stats_comments_label))
             mutableItems.addAll(authors.take(PAGE_SIZE).mapIndexed { index, author ->
                 UserItem(
                         author.gravatar,
@@ -100,7 +100,7 @@ class CommentsUseCase
     private fun buildPostsTab(posts: List<CommentsModel.Post>): List<BlockListItem> {
         val mutableItems = mutableListOf<BlockListItem>()
         if (posts.isNotEmpty()) {
-            mutableItems.add(Label(R.string.stats_comments_title_label, R.string.stats_comments_label))
+            mutableItems.add(Header(R.string.stats_comments_title_label, R.string.stats_comments_label))
             mutableItems.addAll(posts.take(PAGE_SIZE).mapIndexed { index, post ->
                 ListItem(
                         post.name,
