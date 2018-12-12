@@ -1010,6 +1010,9 @@
     <string name="stats_referrers">Referrers</string>
     <string name="stats_referrer_label">Referrer</string>
     <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_clicks">Clicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks_label">Clicks</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>

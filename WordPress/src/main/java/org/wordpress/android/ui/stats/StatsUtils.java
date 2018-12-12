@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.NetworkResponse;
@@ -377,9 +378,10 @@ public class StatsUtils {
         return model;
     }
 
-    public static void openPostInReaderOrInAppWebview(Context ctx, final long remoteBlogID,
+    public static void openPostInReaderOrInAppWebview(Context ctx,
+                                                      final long remoteBlogID,
                                                       final String remoteItemID,
-                                                      final String itemType,
+                                                      @Nullable final String itemType,
                                                       final String itemURL) {
         final long blogID = remoteBlogID;
         final long itemID = Long.parseLong(remoteItemID);

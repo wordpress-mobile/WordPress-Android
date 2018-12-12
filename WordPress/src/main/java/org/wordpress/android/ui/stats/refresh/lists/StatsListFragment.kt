@@ -22,12 +22,14 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowersStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPost
@@ -37,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublici
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewReferrers
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTag
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewTagsAndCategoriesStats
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel
@@ -208,6 +211,17 @@ class StatsListFragment : DaggerFragment() {
                             it.selectedDate
                     )
                 }
+                is ViewClicks -> {
+                    ActivityLauncher.viewClicksStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
+                }
+                is ViewUrl -> {
+                    WPWebViewActivity.openURL(activity, it.url)
+                }
             }
             true
         }
@@ -248,6 +262,8 @@ sealed class NavigationTarget : Event() {
     data class ViewTag(val link: String) : NavigationTarget()
     data class ViewPostsAndPages(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
     data class ViewReferrers(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewClicks(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewUrl(val url: String) : NavigationTarget()
 }
 
 fun StatsGranularity.toStatsTimeFrame(): StatsTimeframe {
