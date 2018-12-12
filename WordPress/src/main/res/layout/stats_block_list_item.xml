@@ -12,7 +12,7 @@
         style="@style/StatsBlockItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_large"
         android:minHeight="@dimen/margin_extra_large"
         android:ellipsize="end"
@@ -28,6 +28,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginBottom="@dimen/margin_large"
         app:layout_goneMarginStart="@dimen/margin_extra_large"
+        app:layout_goneMarginEnd="@dimen/margin_extra_large"
         tools:text="@string/unknown"/>
 
     <ImageView
@@ -53,6 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/expand_button"
         app:layout_constraintHorizontal_chainStyle="packed"
