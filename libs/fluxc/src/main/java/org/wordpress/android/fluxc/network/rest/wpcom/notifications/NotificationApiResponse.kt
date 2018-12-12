@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.notifications
 
-import org.wordpress.android.fluxc.model.NotificationModel
+import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableMeta
@@ -48,7 +48,8 @@ class NotificationApiResponse : Response {
                     title = response.title,
                     body = response.body,
                     subject = response.subject,
-                    meta = response.meta)
+                    meta = response.meta
+            )
         }
 
         fun getRemoteSiteId(response: NotificationApiResponse): Long? = response.meta?.ids?.site
