@@ -101,7 +101,7 @@ class VerticalStore @Inject constructor(
     class FetchSegmentPromptPayload(val segmentId: Long)
 
     class FetchedSegmentsPayload(val segmentList: List<VerticalSegmentModel>) : Payload<FetchSegmentsError>() {
-        constructor(error: FetchSegmentsError): this(emptyList()) {
+        constructor(error: FetchSegmentsError) : this(emptyList()) {
             this.error = error
         }
     }
@@ -112,7 +112,12 @@ class VerticalStore @Inject constructor(
             this.error = error
         }
     }
-    class FetchedVerticalsPayload(val verticalList: List<VerticalModel>) : Payload<FetchVerticalsError>()
+
+    class FetchedVerticalsPayload(val verticalList: List<VerticalModel>) : Payload<FetchVerticalsError>() {
+        constructor(error: FetchVerticalsError) : this(emptyList()) {
+            this.error = error
+        }
+    }
 
     class FetchSegmentsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
     class FetchVerticalsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError

@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentPromptError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchSegmentsError
+import org.wordpress.android.fluxc.store.VerticalStore.FetchVerticalsError
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedSegmentPromptPayload
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedSegmentsPayload
 import org.wordpress.android.fluxc.store.VerticalStore.FetchedVerticalsPayload
@@ -23,8 +24,11 @@ import org.wordpress.android.fluxc.store.VerticalStore.VerticalErrorType.GENERIC
 import javax.inject.Singleton
 
 private const val PARAM_SEGMENT_ID = "segment_id"
+private const val PARAM_VERTICAL_SEARCH_QUERY = "search"
+private const val PARAM_VERTICAL_SEARCH_LIMIT = "limit"
 
-class FetchSegmentsResponse : ArrayList<VerticalSegmentModel>()
+private class FetchSegmentsResponse : ArrayList<VerticalSegmentModel>()
+private class FetchVerticalsResponse: ArrayList<VerticalModel>()
 
 @Singleton
 class VerticalRestClient
@@ -57,15 +61,14 @@ constructor(
     }
 
     suspend fun fetchVerticals(searchQuery: String, limit: Int): FetchedVerticalsPayload {
-        // TODO: Implement the actual call
-        delay(1000)
-        val verticalList = (1..limit).map {
-            VerticalModel(
-                    name = "name-$it",
-                    verticalId = "vertical-id-$it",
-                    isNewUserVertical = it == limit
-            )
+        val url = WPCOMV2.verticals.url
+        val params = HashMap<String, String>()
+        params[PARAM_VERTICAL_SEARCH_QUERY] = searchQuery
+        params[PARAM_VERTICAL_SEARCH_LIMIT] = limit.toString()
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, FetchVerticalsResponse::class.java)
+        return when (response) {
+            is Success -> FetchedVerticalsPayload(response.data)
+            is Error -> FetchedVerticalsPayload(FetchVerticalsError(GENERIC_ERROR))
         }
-        return FetchedVerticalsPayload(verticalList)
     }
 }
