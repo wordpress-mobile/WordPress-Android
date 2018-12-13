@@ -36,6 +36,13 @@ class GiphyMediaViewHolder(
      * If there is no bound [mediaViewModel], this can mean that there was an API error or this is just a placeholder.
      */
     private val onClickListener: (GiphyMediaViewModel?) -> Unit,
+    /**
+     * A function that is called when the user performs a long press on the thumbnail
+     */
+    private val onLongClickListener: (GiphyMediaViewModel) -> Unit,
+    /**
+     * The view used for this `ViewHolder`.
+     */
     itemView: View,
     /**
      * The dimensions used for the ImageView
@@ -55,6 +62,11 @@ class GiphyMediaViewHolder(
             layoutParams.height = thumbnailViewDimensions.height
 
             setOnClickListener { onClickListener(mediaViewModel) }
+            setOnLongClickListener {
+                val mediaViewModel = mediaViewModel ?: return@setOnLongClickListener false
+                onLongClickListener(mediaViewModel)
+                true
+            }
         }
     }
 
@@ -62,7 +74,8 @@ class GiphyMediaViewHolder(
      * Update the views to use the given [GiphyMediaViewModel]
      *
      * The [mediaViewModel] is optional because we enable placeholders in the paged list created by
-     * [GiphyPickerViewModel]. This causes null values to be bound to [GiphyMediaViewHolder] instances.
+     * [org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel]. This causes null values to be bound to
+     * [GiphyMediaViewHolder] instances.
      */
     override fun bind(item: GiphyMediaViewModel?) {
         super.bind(item)
@@ -128,6 +141,7 @@ class GiphyMediaViewHolder(
         fun create(
             imageManager: ImageManager,
             onClickListener: (GiphyMediaViewModel?) -> Unit,
+            onLongClickListener: (GiphyMediaViewModel) -> Unit,
             parent: ViewGroup,
             thumbnailViewDimensions: ThumbnailViewDimensions
         ): GiphyMediaViewHolder {
@@ -137,6 +151,7 @@ class GiphyMediaViewHolder(
             return GiphyMediaViewHolder(
                     imageManager = imageManager,
                     onClickListener = onClickListener,
+                    onLongClickListener = onLongClickListener,
                     itemView = view,
                     thumbnailViewDimensions = thumbnailViewDimensions
             )

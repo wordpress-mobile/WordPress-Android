@@ -10,27 +10,40 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
+import java.util.Random
+import java.util.UUID
 
 class GiphyPickerViewModelTest {
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
     private lateinit var viewModel: GiphyPickerViewModel
 
+    private val dataSourceFactory = mock<GiphyPickerDataSourceFactory>()
+    private val mediaFetcher = mock<GiphyMediaFetcher>()
+
     @Before
-    fun setup() {
-        viewModel = GiphyPickerViewModel(dataSourceFactory = dataSourceFactory)
+    fun setUp() {
+        viewModel = GiphyPickerViewModel(dataSourceFactory = dataSourceFactory, mediaFetcher = mediaFetcher)
+        viewModel.setup(site = mock())
     }
 
     @Test
     fun `when setting a mediaViewModel as selected, it adds that to the selected list`() {
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createGiphyMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -42,7 +55,7 @@ class GiphyPickerViewModelTest {
 
     @Test
     fun `when setting a mediaViewModel as selected, it updates the isSelected and selectedNumber`() {
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createGiphyMediaViewModel()
 
         viewModel.toggleSelected(mediaViewModel)
 
@@ -53,7 +66,7 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when toggling an already selected mediaViewModel, it gets deselected and removed from the selected list`() {
         // Arrange
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createGiphyMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -69,10 +82,10 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when deselecting a mediaViewModel, it rebuilds the selectedNumbers so they are continuous`() {
         // Arrange
-        val alpha = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "alpha")
-        val bravo = MutableGiphyMediaViewModel(id = "02", thumbnailUri = mock(), title = "bravo")
-        val charlie = MutableGiphyMediaViewModel(id = "03", thumbnailUri = mock(), title = "charlie")
-        val delta = MutableGiphyMediaViewModel(id = "04", thumbnailUri = mock(), title = "delta")
+        val alpha = createGiphyMediaViewModel()
+        val bravo = createGiphyMediaViewModel()
+        val charlie = createGiphyMediaViewModel()
+        val delta = createGiphyMediaViewModel()
 
         listOf(alpha, bravo, charlie, delta).forEach(viewModel::toggleSelected)
 
@@ -99,7 +112,7 @@ class GiphyPickerViewModelTest {
     @Test
     fun `when the searchQuery is changed, it clears the selected mediaViewModel list`() {
         // Arrange
-        val mediaViewModel = MutableGiphyMediaViewModel(id = "01", thumbnailUri = mock(), title = "title")
+        val mediaViewModel = createGiphyMediaViewModel()
         viewModel.toggleSelected(mediaViewModel)
 
         // Act
@@ -173,4 +186,114 @@ class GiphyPickerViewModelTest {
 
         verify(dataSource, times(1)).loadInitial(any(), any())
     }
+
+    @Test
+    fun `when download is successful, it posts the saved MediaModel objects`() {
+        // Arrange
+        val expectedResult = listOf(createMediaModel(), createMediaModel())
+
+        runBlocking {
+            whenever(mediaFetcher.fetchAndSave(any(), any())).thenReturn(expectedResult)
+        }
+
+        // Act
+        runBlocking {
+            viewModel.downloadSelected().join()
+        }
+
+        // Assert
+        assertThat(viewModel.state.value).isEqualTo(State.FINISHED)
+
+        with(checkNotNull(viewModel.downloadResult.value)) {
+            assertThat(mediaModels).hasSize(expectedResult.size)
+            assertThat(mediaModels).isEqualTo(expectedResult)
+
+            assertThat(errorMessageStringResId).isNull()
+        }
+    }
+
+    @Test
+    fun `when download fails, it posts an error string resource id`() {
+        // Arrange
+        runBlocking {
+            whenever(mediaFetcher.fetchAndSave(any(), any())).then { throw Exception("Oh no!") }
+        }
+
+        // Act
+        runBlocking {
+            viewModel.downloadSelected().join()
+        }
+
+        // Assert
+        with(checkNotNull(viewModel.downloadResult.value)) {
+            assertThat(errorMessageStringResId).isNotNull()
+            assertThat(mediaModels).isNull()
+        }
+    }
+
+    @Test
+    fun `when download fails, it allows the user to try again`() {
+        // Arrange
+        runBlocking {
+            whenever(mediaFetcher.fetchAndSave(any(), any())).then { throw Exception("Oh no!") }
+        }
+
+        // Act
+        runBlocking {
+            viewModel.downloadSelected().join()
+        }
+
+        // Assert that State is sent back to IDLE because we'll allow the user to try again
+        assertThat(viewModel.state.value).isEqualTo(State.IDLE)
+    }
+
+    @Test
+    fun `when the State is already FINISHED, it no longer allows selecting new items`() {
+        // Arrange
+        runBlocking {
+            whenever(mediaFetcher.fetchAndSave(any(), any())).thenReturn(emptyList())
+        }
+
+        // Act
+        runBlocking {
+            viewModel.downloadSelected().join()
+        }
+        check(viewModel.state.value == State.FINISHED)
+
+        viewModel.toggleSelected(createGiphyMediaViewModel())
+
+        // Assert
+        assertThat(viewModel.selectedMediaViewModelList.value).isNull()
+    }
+
+    @Test
+    fun `when the State is already FINISHED, it no longer allows searching`() {
+        // Arrange
+        runBlocking {
+            whenever(mediaFetcher.fetchAndSave(any(), any())).thenReturn(emptyList())
+        }
+
+        // Act
+        runBlocking {
+            viewModel.downloadSelected().join()
+        }
+        check(viewModel.state.value == State.FINISHED)
+
+        viewModel.search("excalibur")
+
+        // Assert
+        assertThat(dataSourceFactory.searchQuery).isBlank()
+    }
+
+    private fun createMediaModel() = MediaModel().apply {
+        id = Random().nextInt()
+    }
+
+    private fun createGiphyMediaViewModel() = MutableGiphyMediaViewModel(
+            id = UUID.randomUUID().toString(),
+            thumbnailUri = mock(),
+            largeImageUri = mock(),
+            previewImageUri = mock(),
+            title = UUID.randomUUID().toString()
+    )
 }
