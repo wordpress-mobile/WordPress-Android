@@ -18,6 +18,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 class MutableGiphyMediaViewModel(
     override val id: String,
     override val thumbnailUri: Uri,
+    override val largeImageUri: Uri,
     override val title: String
 ) : GiphyMediaViewModel {
     /**
@@ -43,6 +44,7 @@ class MutableGiphyMediaViewModel(
     constructor(media: Media) : this(
             id = media.id,
             thumbnailUri = Uri.parse(media.images.fixedHeightDownsampled.gifUrl),
+            largeImageUri = Uri.parse(media.images.downsizedLarge.gifUrl),
             title = media.title
     )
 

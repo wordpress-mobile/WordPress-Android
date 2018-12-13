@@ -26,6 +26,12 @@ interface GiphyMediaViewModel {
      */
     val thumbnailUri: Uri
     /**
+     * The large image to download.
+     *
+     * This should be the `downsized_large` which is downsized to be under 8mb.
+     */
+    val largeImageUri: Uri
+    /**
      * The title that appears on giphy.com
      */
     val title: String
