@@ -1012,6 +1012,9 @@
     <string name="stats_clicks">Clicks</string>
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_country_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
