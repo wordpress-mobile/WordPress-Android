@@ -65,9 +65,9 @@ class CountryViewsRestClient
     }
 
     data class CountryViewsResponse(
-        @SerializedName("days") val groups: Map<String, Groups>
+        @SerializedName("days") val days: Map<String, Day>
     ) {
-        data class Groups(
+        data class Day(
             @SerializedName("other_views") val otherViews: Int?,
             @SerializedName("total_views") val totalViews: Int?,
             @SerializedName("country-info") val countryInfo: Map<String, CountryInfo>,
