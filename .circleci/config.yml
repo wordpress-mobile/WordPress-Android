@@ -17,9 +17,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
-            - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-
-            - wordpress-android-gradle-build-cache-
+            - wordpress-android-cache-v2-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+            - wordpress-android-cache-v2-gradle-build-cache-{{ checksum "build.gradle" }}-
+            - wordpress-android-cache-v2-gradle-build-cache-
       - <<: *copy_gradle_properties
       - run:
           name: Validate login strings
@@ -30,7 +30,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+          key: wordpress-android-cache-v2-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
       - store_test_results:
           path: WordPress/build/test-results/testVanillaReleaseUnitTest
   lint:
@@ -39,9 +39,9 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
-            - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-
-            - wordpress-android-gradle-lint-cache-
+            - wordpress-android-cache-v2-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+            - wordpress-android-cache-v2-gradle-lint-cache-{{ checksum "build.gradle" }}-
+            - wordpress-android-cache-v2-gradle-lint-cache-
       - <<: *copy_gradle_properties
       - run:
           name: Checkstyle
@@ -55,7 +55,7 @@ jobs:
       - save_cache:
           paths:
             - ~/.gradle
-          key: wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+          key: wordpress-android-cache-v2-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
       - store_artifacts:
           path: WordPress/build/reports
           destination: reports
@@ -66,15 +66,15 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - wordpress-android-gems-{{ checksum "Gemfile.lock" }}
-            - wordpress-android-gems-
+            - wordpress-android-cache-v2-gems-{{ checksum "Gemfile.lock" }}
+            - wordpress-android-cache-v2-gems-
       - run:
           name: Bundle install
           command: bundle install --path=vendor/bundle
       - save_cache:
           paths:
             - vendor/bundle
-          key: wordpress-android-gems-{{ checksum "Gemfile.lock" }}
+          key: wordpress-android-cache-v2-gems-{{ checksum "Gemfile.lock" }}
       - run:
           name: Danger
           command: bundle exec danger --fail-on-errors=true
