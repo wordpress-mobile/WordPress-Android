@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.getInt
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -38,15 +39,16 @@ class AuthorsRestClient
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchAuthors(
         site: SiteModel,
-        period: StatsGranularity,
+        granularity: StatsGranularity,
+        date: Date,
         pageSize: Int,
         forced: Boolean
     ): FetchStatsPayload<AuthorsResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.top_authors.urlV1_1
         val params = mapOf(
-                "period" to period.toString(),
+                "period" to granularity.toString(),
                 "max" to pageSize.toString(),
-                "date" to statsUtils.getCurrentDateTZ(site)
+                "date" to statsUtils.getFormattedDate(site, granularity, date)
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
