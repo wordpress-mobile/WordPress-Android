@@ -244,6 +244,152 @@
       "note_hash": 854333643
     },
     {
+      "id": 3675336239,
+      "type": "comment",
+      "subtype": "store_review",
+      "read": 0,
+      "noticon": "",
+      "timestamp": "2018-12-04T01:29:03+00:00",
+      "icon": "https://1.gravatar.com/avatar/4aa04cfcaaaa1045cfc6656c8449429c?s=256&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G",
+      "url": "https://testwooshop.mystagingwebsite.com/product/beanie-with-logo/#comment-2733",
+      "subject": [
+        {
+          "text": "Amanda Droid left a review on Beanie with Logo",
+          "ranges": [
+            {
+              "type": "user",
+              "indices": [
+                0,
+                12
+              ],
+              "email": "amanda.droid2014@gmail.com"
+            },
+            {
+              "type": "post",
+              "indices": [
+                30,
+                46
+              ],
+              "url": "https://testwooshop.mystagingwebsite.com/product/beanie-with-logo/",
+              "site_id": 153482281,
+              "id": 33
+            }
+          ]
+        },
+        {
+          "text": "Nice and warm\n",
+          "ranges": [
+            {
+              "type": "comment",
+              "indices": [
+                0,
+                14
+              ],
+              "url": "https://testwooshop.mystagingwebsite.com/product/beanie-with-logo/#comment-2733",
+              "site_id": 153482281,
+              "post_id": 33,
+              "id": 2733
+            }
+          ]
+        }
+      ],
+      "body": [
+        {
+          "text": "Amanda Droid",
+          "ranges": [
+            {
+              "email": "amanda.droid2014@gmail.com",
+              "type": "user",
+              "indices": [
+                0,
+                12
+              ]
+            }
+          ],
+          "media": [
+            {
+              "type": "image",
+              "indices": [
+                0,
+                0
+              ],
+              "height": "256",
+              "width": "256",
+              "url": "https://1.gravatar.com/avatar/4aa04cfcaaaa1045cfc6656c8449429c?s=256&d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D256&r=G"
+            }
+          ],
+          "meta": {
+            "links": {
+              "email": "amanda.droid2014@gmail.com"
+            }
+          },
+          "type": "user"
+        },
+        {
+          "text": "Nice and warm",
+          "actions": {
+            "spam-comment": false,
+            "trash-comment": false,
+            "approve-comment": true,
+            "edit-comment": true,
+            "replyto-comment": true
+          },
+          "meta": {
+            "ids": {
+              "comment": 2733,
+              "post": 33,
+              "site": 153482281
+            },
+            "links": {
+              "comment": "https://public-api.wordpress.com/rest/v1/comments/2733",
+              "post": "https://public-api.wordpress.com/rest/v1/posts/33",
+              "site": "https://public-api.wordpress.com/rest/v1/sites/153482281"
+            }
+          },
+          "type": "comment",
+          "nest_level": 0,
+          "edit_comment_link": "https://testwooshop.mystagingwebsite.com/wp-admin/comment.php?action=editcomment&c=2733"
+        },
+        {
+          "text": "Review for Beanie with Logo\n★ ★ ★ ★ ☆ ",
+          "ranges": [
+            {
+              "url": "https://testwooshop.mystagingwebsite.com/product/beanie-with-logo/",
+              "indices": [
+                28,
+                38
+              ],
+              "type": "link"
+            },
+            {
+              "url": "https://testwooshop.mystagingwebsite.com/product/beanie-with-logo/",
+              "indices": [
+                11,
+                27
+              ],
+              "type": "link"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "ids": {
+          "user": 0,
+          "comment": 2733,
+          "post": 33,
+          "site": 153482281
+        },
+        "links": {
+          "user": "https://public-api.wordpress.com/rest/v1/users/0",
+          "comment": "https://public-api.wordpress.com/rest/v1/comments/2733",
+          "post": "https://public-api.wordpress.com/rest/v1/posts/33",
+          "site": "https://public-api.wordpress.com/rest/v1/sites/153482281"
+        }
+      },
+      "title": "Product Review",
+      "note_hash": 2624601148
+    },
+    {
       "id": 3617558725,
       "type": "comment",
       "subtype": "store_review",

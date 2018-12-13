@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.CurrentDateUtils
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -20,7 +21,7 @@ class StatsUtilsTest {
     private lateinit var statsUtils: StatsUtils
     @Before
     fun setUp() {
-        statsUtils = StatsUtils(Locale.US, currentDateUtils)
+        statsUtils = StatsUtils(currentDateUtils)
     }
 
     @Test
@@ -30,7 +31,7 @@ class StatsUtilsTest {
         whenever(currentDateUtils.getCurrentDate()).thenReturn(cal.time)
         whenever(siteModel.timezone).thenReturn("+1.5")
 
-        val result = statsUtils.getCurrentDateTZ(siteModel)
+        val result = statsUtils.getFormattedDate(siteModel, DAYS)
 
         assertThat(result).isEqualTo("2018-11-11")
     }
@@ -42,7 +43,7 @@ class StatsUtilsTest {
         whenever(currentDateUtils.getCurrentDate()).thenReturn(cal.time)
         whenever(siteModel.timezone).thenReturn("+0.0")
 
-        val result = statsUtils.getCurrentDateTZ(siteModel)
+        val result = statsUtils.getFormattedDate(siteModel, DAYS)
 
         assertThat(result).isEqualTo("2018-11-10")
     }
@@ -54,7 +55,7 @@ class StatsUtilsTest {
         whenever(currentDateUtils.getCurrentDate()).thenReturn(cal.time)
         whenever(siteModel.timezone).thenReturn(null)
 
-        val result = statsUtils.getCurrentDateTZ(siteModel)
+        val result = statsUtils.getFormattedDate(siteModel, DAYS)
 
         assertThat(result).isEqualTo("2018-11-10")
     }
@@ -66,7 +67,7 @@ class StatsUtilsTest {
         whenever(currentDateUtils.getCurrentDate()).thenReturn(cal.time)
         whenever(siteModel.timezone).thenReturn("-0.5")
 
-        val result = statsUtils.getCurrentDateTZ(siteModel)
+        val result = statsUtils.getFormattedDate(siteModel, DAYS)
 
         assertThat(result).isEqualTo("2018-11-09")
     }

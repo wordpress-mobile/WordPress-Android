@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ReferrersRestClientTest {
@@ -51,7 +52,8 @@ class ReferrersRestClientTest {
     private lateinit var restClient: ReferrersRestClient
     private val siteId: Long = 12
     private val pageSize = 5
-    private val currentDate = "2018-10-10"
+    private val currentStringDate = "2018-10-10"
+    private val currentDate = Date(0)
 
     @Before
     fun setUp() {
@@ -67,7 +69,7 @@ class ReferrersRestClientTest {
                 gson,
                 statsUtils
         )
-        whenever(statsUtils.getCurrentDateTZ(site)).thenReturn(currentDate)
+        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(currentDate))).thenReturn(currentStringDate)
     }
 
     @Test
@@ -171,7 +173,7 @@ class ReferrersRestClientTest {
         val response = mock<ReferrersResponse>()
         initReferrersResponse(response)
 
-        val responseModel = restClient.fetchReferrers(site, granularity, pageSize, false)
+        val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -181,7 +183,7 @@ class ReferrersRestClientTest {
                 mapOf(
                         "max" to pageSize.toString(),
                         "period" to granularity.toString(),
-                        "date" to currentDate
+                        "date" to currentStringDate
                 )
         )
     }
@@ -198,7 +200,7 @@ class ReferrersRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchReferrers(site, granularity, pageSize, false)
+        val responseModel = restClient.fetchReferrers(site, granularity, currentDate, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

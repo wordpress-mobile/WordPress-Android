@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClien
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -15,61 +16,90 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TimeStatsSqlUtils
-@Inject constructor(private val statsSqlUtils: StatsSqlUtils) {
-    fun insert(site: SiteModel, data: PostAndPageViewsResponse, granularity: StatsGranularity) {
-        statsSqlUtils.insert(site, POSTS_AND_PAGES_VIEWS, granularity.toStatsType(), data)
+@Inject constructor(private val statsSqlUtils: StatsSqlUtils, private val statsUtils: StatsUtils) {
+    fun insert(site: SiteModel, data: PostAndPageViewsResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                POSTS_AND_PAGES_VIEWS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
     }
 
-    fun insert(site: SiteModel, data: ReferrersResponse, granularity: StatsGranularity) {
-        statsSqlUtils.insert(site, REFERRERS, granularity.toStatsType(), data)
+    fun insert(site: SiteModel, data: ReferrersResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                REFERRERS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
     }
 
-    fun insert(site: SiteModel, data: ClicksResponse, granularity: StatsGranularity) {
-        statsSqlUtils.insert(site, CLICKS, granularity.toStatsType(), data)
+    fun insert(site: SiteModel, data: ClicksResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                CLICKS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
     }
 
-    fun insert(site: SiteModel, data: AuthorsResponse, granularity: StatsGranularity) {
-        statsSqlUtils.insert(site, AUTHORS, granularity.toStatsType(), data)
+    fun insert(site: SiteModel, data: AuthorsResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                AUTHORS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
     }
 
-    fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity): PostAndPageViewsResponse? {
+    fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity, date: Date): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
                 POSTS_AND_PAGES_VIEWS,
                 granularity.toStatsType(),
-                PostAndPageViewsResponse::class.java
+                PostAndPageViewsResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
         )
     }
 
-    fun selectReferrers(site: SiteModel, granularity: StatsGranularity): ReferrersResponse? {
+    fun selectReferrers(site: SiteModel, granularity: StatsGranularity, date: Date): ReferrersResponse? {
         return statsSqlUtils.select(
                 site,
                 REFERRERS,
                 granularity.toStatsType(),
-                ReferrersResponse::class.java
+                ReferrersResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
         )
     }
 
-    fun selectClicks(site: SiteModel, granularity: StatsGranularity): ClicksResponse? {
+    fun selectClicks(site: SiteModel, granularity: StatsGranularity, date: Date): ClicksResponse? {
         return statsSqlUtils.select(
                 site,
                 CLICKS,
                 granularity.toStatsType(),
-                ClicksResponse::class.java
+                ClicksResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
         )
     }
 
-    fun selectAuthors(site: SiteModel, period: StatsGranularity): AuthorsResponse? {
+    fun selectAuthors(site: SiteModel, granularity: StatsGranularity, date: Date): AuthorsResponse? {
         return statsSqlUtils.select(
                 site,
                 AUTHORS,
                 period.toStatsType(),
-                AuthorsResponse::class.java
+                AuthorsResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
         )
     }
 
