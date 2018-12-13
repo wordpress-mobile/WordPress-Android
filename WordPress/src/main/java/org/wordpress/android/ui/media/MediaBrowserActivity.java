@@ -62,6 +62,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
@@ -470,6 +471,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK) {
                     reloadMediaGrid();
+                }
+                break;
+            case RequestCodes.GIPHY_PICKER:
+                if (resultCode == RESULT_OK && data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                    int[] mediaLocalIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                    ArrayList<MediaModel> mediaModels = new ArrayList<>();
+                    for (int localId : mediaLocalIds) {
+                        mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
+                    }
+
+                    addMediaToUploadService(mediaModels);
                 }
                 break;
         }
@@ -978,6 +990,13 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private void addMediaToUploadService(@NonNull MediaModel media) {
+        ArrayList<MediaModel> mediaList = new ArrayList<>();
+        mediaList.add(media);
+
+        addMediaToUploadService(mediaList);
+    }
+
+    private void addMediaToUploadService(@NonNull ArrayList<MediaModel> mediaModels) {
         // Start the upload service if it's not started and fill the media queue
         if (!NetworkUtils.isNetworkAvailable(this)) {
             AppLog.v(AppLog.T.MEDIA, "Unable to start UploadService, internet connection required.");
@@ -985,9 +1004,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             return;
         }
 
-        ArrayList<MediaModel> mediaList = new ArrayList<>();
-        mediaList.add(media);
-        UploadService.uploadMedia(this, mediaList);
+        UploadService.uploadMedia(this, mediaModels);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

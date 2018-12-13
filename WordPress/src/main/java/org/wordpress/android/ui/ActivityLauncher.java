@@ -145,7 +145,13 @@ public class ActivityLauncher {
     }
 
     public static void showGiphyPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("from", activity.getClass().getSimpleName());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_ACCESSED, properties);
+
         Intent intent = new Intent(activity, GiphyPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+
         activity.startActivityForResult(intent, requestCode);
     }
 
