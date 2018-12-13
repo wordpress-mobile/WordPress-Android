@@ -56,14 +56,14 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         whenever(dateUtils.getHour(hour)).thenReturn(hourString)
 
         whenever(resourceProvider.getString(
-                R.string.stats_insights_most_popular_percent_views,
+                R.string.stats_most_popular_percent_views,
                 highestDayPercent.roundToInt()
-        )).thenReturn("${highestDayPercent.roundToInt()}% of views")
+        )).thenReturn("${highestDayPercent.roundToInt()}%")
 
         whenever(resourceProvider.getString(
-                R.string.stats_insights_most_popular_percent_views,
+                R.string.stats_most_popular_percent_views,
                 highestHourPercent.roundToInt()
-        )).thenReturn("${highestHourPercent.roundToInt()}% of views")
+        )).thenReturn("${highestHourPercent.roundToInt()}%")
     }
 
     @Test
@@ -117,7 +117,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(dayString)
         assertThat(item.showDivider).isEqualTo(true)
-        assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}% of views")
+        assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}%")
     }
 
     private fun assertLabel(blockListItem: BlockListItem) {
@@ -132,7 +132,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(hourString)
         assertThat(item.showDivider).isEqualTo(false)
-        assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}% of views")
+        assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}%")
     }
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsBlock {
