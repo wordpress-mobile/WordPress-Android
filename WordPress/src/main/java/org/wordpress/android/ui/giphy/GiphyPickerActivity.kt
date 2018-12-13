@@ -1,27 +1,38 @@
 package org.wordpress.android.ui.giphy
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.SearchView
 import android.support.v7.widget.SearchView.OnQueryTextListener
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.getDistinct
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.ViewModelFactory
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import javax.inject.Inject
 
 /**
@@ -32,6 +43,7 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Used for loading images in [GiphyMediaViewHolder]
      */
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var viewModel: GiphyPickerViewModel
 
@@ -49,7 +61,10 @@ class GiphyPickerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
-        viewModel = ViewModelProviders.of(this).get(GiphyPickerViewModel::class.java)
+        val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GiphyPickerViewModel::class.java)
+        viewModel.setup(site)
 
         // We are intentionally reusing this layout since the UI is very similar.
         setContentView(R.layout.media_picker_activity)
@@ -59,6 +74,9 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeSearchView()
         initializeSelectionBar()
         initializeEmptyView()
+        initializePreviewHandlers()
+        initializeDownloadHandlers()
+        initializeStateChangeHandlers()
     }
 
     /**
@@ -76,7 +94,8 @@ class GiphyPickerActivity : AppCompatActivity() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
-                onMediaViewClickListener = viewModel::toggleSelected
+                onMediaViewClickListener = viewModel::toggleSelected,
+                onMediaViewLongClickListener = { showPreview(listOf(it)) }
         )
 
         recycler.apply {
@@ -194,6 +213,97 @@ class GiphyPickerActivity : AppCompatActivity() {
     }
 
     /**
+     * Set up listener for the Preview button
+     */
+    private fun initializePreviewHandlers() {
+        text_preview.setOnClickListener {
+            val mediaViewModels = viewModel.selectedMediaViewModelList.value?.values?.toList()
+            if (mediaViewModels != null && mediaViewModels.isNotEmpty()) {
+                showPreview(mediaViewModels)
+            }
+        }
+    }
+
+    /**
+     * Show the images of the given [mediaViewModels] in [MediaPreviewActivity]
+     *
+     * @param mediaViewModels A non-empty list
+     */
+    private fun showPreview(mediaViewModels: List<GiphyMediaViewModel>) {
+        check(mediaViewModels.isNotEmpty())
+
+        val uris = mediaViewModels.map { it.previewImageUri.toString() }
+        MediaPreviewActivity.showPreview(this, null, ArrayList(uris), uris.first())
+    }
+
+    /**
+     * Set up reacting to "Add" button presses and processing the result
+     */
+    private fun initializeDownloadHandlers() {
+        text_add.setOnClickListener { viewModel.downloadSelected() }
+
+        viewModel.downloadResult.observe(this, Observer { result ->
+            if (result?.mediaModels != null) {
+                val mediaLocalIds = result.mediaModels.map { it.id }.toIntArray()
+
+                trackDownloadedMedia(mediaLocalIds)
+
+                val intent = Intent().apply { putExtra(KEY_SAVED_MEDIA_MODEL_LOCAL_IDS, mediaLocalIds) }
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            } else if (result?.errorMessageStringResId != null) {
+                ToastUtils.showToast(
+                        this@GiphyPickerActivity,
+                        result.errorMessageStringResId,
+                        ToastUtils.Duration.SHORT
+                )
+            }
+        })
+    }
+
+    /**
+     * Set up enabling/disabling of controls depending on the current [GiphyPickerViewModel.State]:
+     *
+     * - [State.IDLE]: All normal functions are allowed
+     * - [State.DOWNLOADING] or [State.FINISHED]: "Add", "Preview", searching, and selecting are disabled
+     * - [State.DOWNLOADING]: The "Add" button is replaced with a progress bar
+     */
+    private fun initializeStateChangeHandlers() {
+        viewModel.state.observe(this, Observer { state ->
+            state ?: return@Observer
+
+            val searchClearButton =
+                    search_view.findViewById(android.support.v7.appcompat.R.id.search_close_btn) as ImageView
+            val searchEditText =
+                    search_view.findViewById(android.support.v7.appcompat.R.id.search_src_text)
+                            as SearchView.SearchAutoComplete
+
+            val isIdle = state == State.IDLE
+            val isDownloading = state == State.DOWNLOADING
+
+            // Disable all the controls if we are not idle
+            text_add.isEnabled = isIdle
+            text_preview.isEnabled = isIdle
+            searchClearButton.isEnabled = isIdle
+            searchEditText.isEnabled = isIdle
+
+            // Show the progress bar instead of the Add text if we are downloading
+            upload_progress.visibility = if (isDownloading) View.VISIBLE else View.GONE
+            // The Add text should not be View.GONE because the progress bar relies on its layout to position itself
+            text_add.visibility = if (isDownloading) View.INVISIBLE else View.VISIBLE
+        })
+    }
+
+    private fun trackDownloadedMedia(mediaLocalIds: IntArray) {
+        if (mediaLocalIds.isEmpty()) {
+            return
+        }
+
+        val properties = mapOf("number_of_media_selected" to mediaLocalIds.size)
+        AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_DOWNLOADED, properties)
+    }
+
+    /**
      * Close this Activity when the up button is pressed
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -203,5 +313,12 @@ class GiphyPickerActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        /**
+         * Added to this Activity's result as an Int array [org.wordpress.android.fluxc.model.MediaModel] `id` values.
+         */
+        const val KEY_SAVED_MEDIA_MODEL_LOCAL_IDS = "saved_media_model_local_ids"
     }
 }

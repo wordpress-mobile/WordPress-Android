@@ -3,27 +3,59 @@ package org.wordpress.android.viewmodel.giphy
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
+import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.getDistinct
+import org.wordpress.android.viewmodel.SingleLiveEvent
+import javax.inject.Inject
 
 /**
- * Holds the data for [GiphyPickerActivity]
+ * Holds the data for [org.wordpress.android.ui.giphy.GiphyPickerActivity]
  *
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GiphyMediaViewModel.selectionNumber] continuous.
+ *
+ * Calling [setup] is required before using this ViewModel.
  */
-class GiphyPickerViewModel(
+class GiphyPickerViewModel @Inject constructor(
+    private val mediaFetcher: GiphyMediaFetcher,
     /**
      * The [GiphyPickerDataSourceFactory] to use
      *
-     * This is only available in the constructor to allow for mocking with testing. The default value is generally
-     * what we want.
+     * This is only available in the constructor to allow mocking in tests.
      */
-    private val dataSourceFactory: GiphyPickerDataSourceFactory = GiphyPickerDataSourceFactory()
-) : ViewModel() {
+    private val dataSourceFactory: GiphyPickerDataSourceFactory
+) : CoroutineScopedViewModel() {
+    /**
+     * A result of [downloadSelected] observed using the [downloadResult] LiveData
+     */
+    data class DownloadResult(val mediaModels: List<MediaModel>? = null, val errorMessageStringResId: Int? = null)
+
+    enum class State {
+        /**
+         * The default state where interaction with the UI like selecting and searching is allowed
+         */
+        IDLE,
+        /**
+         * This is reached when the user chose some items and pressed the "Add" button
+         *
+         * We're actively downloading and saving in the background during this state.
+         */
+        DOWNLOADING,
+        /**
+         * Reached after [DOWNLOADING] was successful
+         *
+         * No UI interaction should be allowed during this state and the Activity should already be dismissed.
+         */
+        FINISHED
+    }
+
     /**
      * Describes how an empty view UI should be displayed
      */
@@ -47,6 +79,20 @@ class GiphyPickerViewModel(
      */
     val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
+    private lateinit var site: SiteModel
+
+    private val _state = MutableLiveData<State>().apply { value = State.IDLE }
+    /**
+     * Describes what state this ViewModel (and the corresponding Activity) is in.
+     */
+    val state: LiveData<State> = _state
+
+    private val _downloadResult = SingleLiveEvent<DownloadResult>()
+    /**
+     * Produces results whenever [downloadSelected] finishes
+     */
+    val downloadResult: LiveData<DownloadResult> = _downloadResult
+
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GiphyMediaViewModel>>()
     /**
      * A [Map] of the [GiphyMediaViewModel]s that were selected by the user
@@ -63,6 +109,9 @@ class GiphyPickerViewModel(
     val selectionBarIsVisible: LiveData<Boolean> =
             Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
 
+    /**
+     * The [PagedList] that should be displayed in the RecyclerView
+     */
     val mediaViewModelPagedList: LiveData<PagedList<GiphyMediaViewModel>> by lazy {
         val pagedListConfig = PagedList.Config.Builder().setEnablePlaceholders(true).setPageSize(30).build()
         LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(pagedListBoundaryCallback).build()
@@ -89,12 +138,25 @@ class GiphyPickerViewModel(
     }
 
     /**
+     * Perform additional initialization for this ViewModel
+     *
+     * The [site] usually comes from this ViewModel's corresponding Activity
+     */
+    fun setup(site: SiteModel) {
+        this.site = site
+    }
+
+    /**
      * Set the current search query
      *
      * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
      * currently selected [GiphyMediaViewModel] if the new search query results are different.
      */
     fun search(searchQuery: String) {
+        if (_state.value != State.IDLE) {
+            return
+        }
+
         _selectedMediaViewModelList.postValue(LinkedHashMap())
 
         // The empty view should be hidden while the user is searching
@@ -104,11 +166,52 @@ class GiphyPickerViewModel(
     }
 
     /**
+     * Downloads all the selected [GiphyMediaViewModel]
+     *
+     * When the process is finished, the results will be posted to [downloadResult].
+     *
+     * If [downloadSelected] is successful, the [DownloadResult.mediaModels] will be a non-null list. If not, the
+     * [DownloadResult.errorMessageStringResId] will be non-null and should be shown to the user.
+     *
+     * This also changes the [state] to:
+     *
+     * - [State.DOWNLOADING] while downloading
+     * - [State.FINISHED] if the download was successful
+     * - [State.IDLE] if the download failed
+     */
+    fun downloadSelected() = launch {
+        if (_state.value != State.IDLE) {
+            return@launch
+        }
+
+        _state.postValue(State.DOWNLOADING)
+
+        val result = try {
+            val giphyMediaViewModels = _selectedMediaViewModelList.value?.values?.toList() ?: emptyList()
+            val mediaModels = mediaFetcher.fetchAndSave(giphyMediaViewModels, site)
+            DownloadResult(mediaModels = mediaModels)
+        } catch (e: CancellationException) {
+            // We don't need to handle coroutine cancellations. The UI should just do nothing.
+            DownloadResult()
+        } catch (e: Exception) {
+            // No need to log the error because that is already logged by `fetchAndSave()`
+            DownloadResult(errorMessageStringResId = R.string.error_downloading_image)
+        }
+
+        _downloadResult.postValue(result)
+        _state.postValue(if (result.mediaModels != null) State.FINISHED else State.IDLE)
+    }
+
+    /**
      * Toggles a [GiphyMediaViewModel]'s `isSelected` property between true and false
      *
      * This also updates the [GiphyMediaViewModel.selectionNumber] of all the objects in [selectedMediaViewModelList].
      */
     fun toggleSelected(mediaViewModel: GiphyMediaViewModel) {
+        if (_state.value != State.IDLE) {
+            return
+        }
+
         assert(mediaViewModel is MutableGiphyMediaViewModel)
         mediaViewModel as MutableGiphyMediaViewModel
 

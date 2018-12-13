@@ -4,6 +4,7 @@ import android.arch.paging.DataSource
 import android.arch.paging.DataSource.Factory
 import com.giphy.sdk.core.network.api.GPHApiClient
 import org.wordpress.android.BuildConfig
+import javax.inject.Inject
 
 /**
  * Creates instances of [GiphyPickerDataSource]
@@ -14,7 +15,7 @@ import org.wordpress.android.BuildConfig
  * 2. The [LivePagedListBuilder] will create a new [GiphyPickerDataSource] by calling [create]
  * 3. The new [GiphyPickerDataSource] will start another paged API request
  */
-class GiphyPickerDataSourceFactory : Factory<Int, GiphyMediaViewModel>() {
+class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMediaViewModel>() {
     /**
      * The Giphy API client
      *
