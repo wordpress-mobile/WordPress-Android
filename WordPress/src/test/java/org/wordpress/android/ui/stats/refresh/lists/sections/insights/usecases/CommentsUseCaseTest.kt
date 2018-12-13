@@ -27,13 +27,14 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 
 class CommentsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
@@ -227,9 +228,10 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
         val userItem = this.items[3]
-        assertThat(userItem.type).isEqualTo(USER_ITEM)
-        assertThat((userItem as UserItem).avatarUrl).isEqualTo(avatar)
+        assertThat(userItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
+        assertThat((userItem as ListItemWithIcon).iconUrl).isEqualTo(avatar)
         assertThat(userItem.showDivider).isEqualTo(false)
+        assertThat(userItem.iconStyle).isEqualTo(CIRCLE)
         assertThat(userItem.text).isEqualTo(user)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
         return tabsItem
