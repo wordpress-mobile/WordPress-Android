@@ -981,7 +981,7 @@
     <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
-    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_popular">Most Popular Day and Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
@@ -1005,6 +1005,7 @@
     <string name="stats_insights_google_plus">Google+</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
     <string name="stats_insights_path">Path</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
 
     <string name="stats_posts_and_pages">Posts and Pages</string>
     <string name="stats_referrers">Referrers</string>

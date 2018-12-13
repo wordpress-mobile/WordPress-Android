@@ -54,7 +54,7 @@ class CommentsUseCase
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
-        if (model.authors.isNotEmpty() && model.posts.isNotEmpty()) {
+        if (model.authors.isNotEmpty() || model.posts.isNotEmpty()) {
             items.add(
                     TabsItem(
                             listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),

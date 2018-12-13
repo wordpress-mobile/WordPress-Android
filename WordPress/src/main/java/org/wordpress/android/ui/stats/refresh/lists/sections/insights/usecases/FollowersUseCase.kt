@@ -74,7 +74,7 @@ class FollowersUseCase
         val emailModel = domainModel.second
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
-        if (domainModel.first.followers.isNotEmpty() && domainModel.second.followers.isNotEmpty()) {
+        if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
                     TabsItem(
                             listOf(

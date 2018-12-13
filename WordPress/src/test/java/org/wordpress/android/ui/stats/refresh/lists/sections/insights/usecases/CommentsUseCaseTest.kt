@@ -86,7 +86,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
-                                listOf(),
+                                listOf(Post(postId, postTitle, totalCount, url)),
                                 listOf(),
                                 hasMorePosts = true,
                                 hasMoreAuthors = false
@@ -110,7 +110,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
-                                listOf(),
+                                listOf(Post(postId, postTitle, totalCount, url)),
                                 listOf(),
                                 hasMorePosts = false,
                                 hasMoreAuthors = true
@@ -167,7 +167,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmptyTab(0)
+        (result as BlockList).assertEmpty()
     }
 
     @Test
@@ -247,6 +247,12 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(this.items[2]).isEqualTo(Empty)
         return tabsItem
+    }
+
+    private fun BlockList.assertEmpty() {
+        assertThat(this.items).hasSize(2)
+        assertTitle(this.items[0])
+        assertThat(this.items[1]).isEqualTo(Empty)
     }
 
     private fun assertTitle(item: BlockListItem) {

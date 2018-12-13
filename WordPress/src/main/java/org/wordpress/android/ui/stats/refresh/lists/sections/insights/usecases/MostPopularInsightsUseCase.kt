@@ -55,7 +55,7 @@ class MostPopularInsightsUseCase
                 ListItem(
                         dateUtils.getWeekDay(domainModel.highestDayOfWeek),
                         resourceProvider.getString(
-                                R.string.stats_insights_most_popular_percent_views,
+                                R.string.stats_most_popular_percent_views,
                                 domainModel.highestDayPercent.roundToInt()
                         ),
                         true
@@ -65,7 +65,7 @@ class MostPopularInsightsUseCase
                 ListItem(
                         dateUtils.getHour(domainModel.highestHour),
                         resourceProvider.getString(
-                                R.string.stats_insights_most_popular_percent_views,
+                                R.string.stats_most_popular_percent_views,
                                 domainModel.highestHourPercent.roundToInt()
                         ),
                         false
