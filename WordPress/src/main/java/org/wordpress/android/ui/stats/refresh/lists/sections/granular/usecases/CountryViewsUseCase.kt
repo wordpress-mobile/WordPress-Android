@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -70,11 +71,16 @@ constructor(
         if (domainModel.countries.isEmpty()) {
             items.add(Empty)
         } else {
+            val stringBuilder = StringBuilder()
+            for (country in domainModel.countries) {
+                stringBuilder.append("['").append(country.fullName).append("',").append(country.views).append("],")
+            }
+            items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
             items.add(Label(R.string.stats_country_label, R.string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(
-                                iconUrl = group.flatFlagIconUrl,
+                                iconUrl = group.flagIconUrl,
                                 text = group.fullName,
                                 value = group.views.toFormattedString(),
                                 showDivider = index < domainModel.countries.size - 1
