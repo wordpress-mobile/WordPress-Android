@@ -181,7 +181,7 @@ sealed class BlockListItemViewHolder(
 
                 override fun updateDrawState(ds: TextPaint?) {
                     ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
-                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
+                    ds?.typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.NORMAL)
                     ds?.isUnderlineText = false
                 }
             }

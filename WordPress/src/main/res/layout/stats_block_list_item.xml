@@ -40,7 +40,6 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="6dp"
         android:contentDescription="@string/icon"
-        android:padding="2dp"
         android:scaleType="fitCenter"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

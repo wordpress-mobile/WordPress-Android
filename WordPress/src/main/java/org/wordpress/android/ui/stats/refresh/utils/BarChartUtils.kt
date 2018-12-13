@@ -30,7 +30,7 @@ fun BarChart.draw(
     val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.second > 0 }) {
         buildDataSet(context, cut)
     } else {
-        buildEmptyDataSet(context, columnNumber)
+        buildEmptyDataSet(context, cut.size)
     }
     data = BarData(dataSet)
     val greyColor = ContextCompat.getColor(
