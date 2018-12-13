@@ -18,15 +18,15 @@ import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
@@ -74,6 +74,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeSearchView()
         initializeSelectionBar()
         initializeEmptyView()
+        initializeRangeLoadErrorEventHandlers()
         initializePreviewHandlers()
         initializeDownloadHandlers()
         initializeStateChangeHandlers()
@@ -94,7 +95,15 @@ class GiphyPickerActivity : AppCompatActivity() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
-                onMediaViewClickListener = viewModel::toggleSelected,
+                onMediaViewClickListener = { mediaViewModel ->
+                    if (mediaViewModel != null) {
+                        viewModel.toggleSelected(mediaViewModel)
+                    } else {
+                        // The user clicked on an empty GIF. That GIF may have failed to load during a network error.
+                        // Let's retry all the previously failed page loads.
+                        viewModel.retryAllFailedRangeLoads()
+                    }
+                },
                 onMediaViewLongClickListener = { showPreview(listOf(it)) }
         )
 
@@ -208,7 +217,32 @@ class GiphyPickerActivity : AppCompatActivity() {
                         bottomImage.visibility = View.VISIBLE
                     }
                 }
+                EmptyDisplayMode.VISIBLE_NETWORK_ERROR -> {
+                    with(emptyView) {
+                        updateLayoutForSearch(isSearching = true, topMargin = 0)
+
+                        visibility = View.VISIBLE
+                        title.setText(R.string.no_network_message)
+                        image.visibility = View.GONE
+                        bottomImage.visibility = View.GONE
+                    }
+                }
             }
+        })
+    }
+
+    /**
+     * Show a Toast message for errors during page loads.
+     */
+    private fun initializeRangeLoadErrorEventHandlers() {
+        viewModel.rangeLoadErrorEvent.observe(this, Observer { event ->
+            event ?: return@Observer
+
+            ToastUtils.showToast(
+                    this@GiphyPickerActivity,
+                    R.string.giphy_picker_endless_scroll_network_error,
+                    ToastUtils.Duration.LONG
+            )
         })
     }
 
