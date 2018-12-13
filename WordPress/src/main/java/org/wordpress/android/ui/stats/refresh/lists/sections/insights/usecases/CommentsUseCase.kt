@@ -54,27 +54,30 @@ class CommentsUseCase
     override fun buildStatefulUiModel(model: CommentsModel, uiState: Int): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_comments))
-
-        items.add(
-                TabsItem(
-                        listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
-                        uiState
-                ) { selectedTabPosition -> onUiState(selectedTabPosition) }
-        )
-
-        if (uiState == 0) {
-            items.addAll(buildAuthorsTab(model.authors))
-        } else {
-            items.addAll(buildPostsTab(model.posts))
-        }
-
-        if (model.hasMoreAuthors || model.hasMorePosts) {
+        if (model.authors.isNotEmpty() && model.posts.isNotEmpty()) {
             items.add(
-                    Link(
-                            text = string.stats_insights_view_more,
-                            navigateAction = NavigationAction.create(this::onLinkClick)
-                    )
+                    TabsItem(
+                            listOf(R.string.stats_comments_authors, R.string.stats_comments_posts_and_pages),
+                            uiState
+                    ) { selectedTabPosition -> onUiState(selectedTabPosition) }
             )
+
+            if (uiState == 0) {
+                items.addAll(buildAuthorsTab(model.authors))
+            } else {
+                items.addAll(buildPostsTab(model.posts))
+            }
+
+            if (model.hasMoreAuthors || model.hasMorePosts) {
+                items.add(
+                        Link(
+                                text = string.stats_insights_view_more,
+                                navigateAction = NavigationAction.create(this::onLinkClick)
+                        )
+                )
+            }
+        } else {
+            items.add(Empty)
         }
         return items
     }

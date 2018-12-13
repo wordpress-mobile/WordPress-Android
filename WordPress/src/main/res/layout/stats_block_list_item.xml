@@ -89,6 +89,7 @@
         android:minHeight="@dimen/margin_extra_large"
         android:text="@string/unknown"
         android:visibility="gone"
+        android:textColor="@color/grey_darken_20"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintStart_toStartOf="@+id/text"
