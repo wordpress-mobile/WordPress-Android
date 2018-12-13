@@ -380,6 +380,8 @@ public class SiteRestClient extends BaseWPComRestClient {
         params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("vendor", "dot");
+
         params.put("quantity", String.valueOf(quantity));
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, params,
