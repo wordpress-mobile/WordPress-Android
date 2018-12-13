@@ -118,7 +118,7 @@ class AuthorsRestClientTest {
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
-                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/clicks/")
+                .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/stats/top-authors/")
         assertThat(paramsCaptor.lastValue).isEqualTo(
                 mapOf(
                         "max" to pageSize.toString(),
