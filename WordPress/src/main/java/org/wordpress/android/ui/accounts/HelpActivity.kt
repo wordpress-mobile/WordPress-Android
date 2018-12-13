@@ -150,7 +150,10 @@ class HelpActivity : AppCompatActivity() {
         SITE_CREATION_THEME("origin:site-create-site-theme"),
         SITE_CREATION_DETAILS("origin:site-create-site-details"),
         SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
-        SITE_CREATION_CREATING("origin:site-create-creating");
+        SITE_CREATION_CREATING("origin:site-create-creating"),
+        NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
+        NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
+        NEW_SITE_CREATION_SITE_INFO("origin:new-site-create-site-info");
 
         override fun toString(): String {
             return stringValue

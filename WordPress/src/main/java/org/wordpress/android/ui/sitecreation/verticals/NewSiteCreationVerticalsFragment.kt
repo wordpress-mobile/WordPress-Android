@@ -17,8 +17,10 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.OnSkipClickedListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsListItemUiState
@@ -45,6 +47,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var searchInputWithHeader: SearchInputWithHeader
 
     private lateinit var verticalsScreenListener: VerticalsScreenListener
+    private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var skipClickedListener: OnSkipClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -54,10 +57,14 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
         if (context !is VerticalsScreenListener) {
             throw IllegalStateException("Parent activity must implement VerticalsScreenListener.")
         }
+        if (context !is OnHelpClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
+        }
         if (context !is OnSkipClickedListener) {
             throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
         }
         verticalsScreenListener = context
+        helpClickedListener = context
         skipClickedListener = context
     }
 
@@ -156,6 +163,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
             verticalId?.let { verticalsScreenListener.onVerticalSelected(verticalId) }
         })
         viewModel.skipBtnClicked.observe(this, Observer { skipClickedListener.onSkipClicked() })
+        viewModel.onHelpClicked.observe(this, Observer {
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_VERTICALS)
+        })
         viewModel.start(segmentId)
     }
 
@@ -179,9 +189,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
