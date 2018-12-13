@@ -128,7 +128,7 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainAdapter;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainFragment;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationDomainLoaderFragment;
-import org.wordpress.android.ui.sitecreation.NewSiteCreationService;
+import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationSiteInfoFragment;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationThemeAdapter;
