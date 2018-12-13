@@ -373,16 +373,17 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
                                final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
-                               final int quantity) {
+                               final int quantity, final boolean includeVendorDot) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
         params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_dotblogsubdomain", "true");
-        params.put("vendor", "dot");
-
+        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
         params.put("quantity", String.valueOf(quantity));
+        if (includeVendorDot) {
+            params.put("vendor", "dot");
+        }
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, params,
                         new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
