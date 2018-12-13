@@ -77,8 +77,9 @@ class TimeStatsMapper
 
     fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
         val first = response.days.values.first()
+        val countriesInfo = response.countryInfo
         val groups = first.views.take(pageSize).mapNotNull { countryViews ->
-            val countryInfo = first.countryInfo[countryViews.countryCode]
+            val countryInfo = countriesInfo[countryViews.countryCode]
             if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
                 CountryViewsModel.Country(
                         countryViews.countryCode,

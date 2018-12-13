@@ -65,12 +65,12 @@ class CountryViewsRestClient
     }
 
     data class CountryViewsResponse(
+        @SerializedName("country-info") val countryInfo: Map<String, CountryInfo>,
         @SerializedName("days") val days: Map<String, Day>
     ) {
         data class Day(
             @SerializedName("other_views") val otherViews: Int?,
             @SerializedName("total_views") val totalViews: Int?,
-            @SerializedName("country-info") val countryInfo: Map<String, CountryInfo>,
             @SerializedName("views") val views: List<CountryView>
         )
 
@@ -82,6 +82,7 @@ class CountryViewsRestClient
         data class CountryInfo(
             @SerializedName("flag_icon") val flagIcon: String?,
             @SerializedName("flat_flag_icon") val flatFlagIcon: String?,
+            @SerializedName("map_region") val mapRegion: String?,
             @SerializedName("country_full") val countryFull: String?
         )
     }
