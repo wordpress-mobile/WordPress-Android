@@ -29,8 +29,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -181,7 +181,7 @@ sealed class BlockListItemViewHolder(
 
                 override fun updateDrawState(ds: TextPaint?) {
                     ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
-                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
                     ds?.isUnderlineText = false
                 }
             }
