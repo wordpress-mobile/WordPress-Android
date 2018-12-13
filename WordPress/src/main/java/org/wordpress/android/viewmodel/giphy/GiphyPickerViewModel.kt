@@ -87,7 +87,7 @@ class GiphyPickerViewModel @Inject constructor(
      * Errors that happened during page loads.
      *
      * @see [GiphyPickerDataSource.rangeLoadErrorEvent]
-    */
+     */
     val rangeLoadErrorEvent: LiveData<Throwable> = dataSourceFactory.rangeLoadErrorEvent
 
     private lateinit var site: SiteModel
