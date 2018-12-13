@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+plugins {
+  id 'com.gradle.build-scan' version '1.16'
+}
+
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
@@ -84,4 +88,13 @@ subprojects {
 
 ext {
     fluxCVersion = 'c452ef2e9059b0a29d77ea0a03026bacf79f46a9'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+    if (System.getenv('CI')) {
+        publishAlways()
+        tag 'CI'
+    }
 }
