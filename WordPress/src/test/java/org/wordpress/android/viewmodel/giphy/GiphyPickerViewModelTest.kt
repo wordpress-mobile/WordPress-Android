@@ -218,6 +218,7 @@ class GiphyPickerViewModelTest {
             id = UUID.randomUUID().toString(),
             thumbnailUri = mock(),
             largeImageUri = mock(),
+            previewImageUri = mock(),
             title = UUID.randomUUID().toString()
     )
 }

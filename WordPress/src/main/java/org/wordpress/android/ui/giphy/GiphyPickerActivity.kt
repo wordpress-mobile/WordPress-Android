@@ -20,11 +20,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
+import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
+import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import javax.inject.Inject
@@ -67,6 +69,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeRecyclerView()
         initializeSearchView()
         initializeSelectionBar()
+        initializePreviewHandlers()
         initializeDownloadHandlers()
         initializeStateChangeHandlers()
     }
@@ -86,7 +89,8 @@ class GiphyPickerActivity : AppCompatActivity() {
         val pagedListAdapter = GiphyPickerPagedListAdapter(
                 imageManager = imageManager,
                 thumbnailViewDimensions = thumbnailViewDimensions,
-                onMediaViewClickListener = viewModel::toggleSelected
+                onMediaViewClickListener = viewModel::toggleSelected,
+                onMediaViewLongClickListener = { showPreview(listOf(it)) }
         )
 
         recycler.apply {
@@ -161,6 +165,30 @@ class GiphyPickerActivity : AppCompatActivity() {
                 text_add.text = getString(R.string.add_count, selectedCount)
             }
         })
+    }
+
+    /**
+     * Set up listener for the Preview button
+     */
+    private fun initializePreviewHandlers() {
+        text_preview.setOnClickListener {
+            val mediaViewModels = viewModel.selectedMediaViewModelList.value?.values?.toList()
+            if (mediaViewModels != null && mediaViewModels.isNotEmpty()) {
+                showPreview(mediaViewModels)
+            }
+        }
+    }
+
+    /**
+     * Show the images of the given [mediaViewModels] in [MediaPreviewActivity]
+     *
+     * @param mediaViewModels A non-empty list
+     */
+    private fun showPreview(mediaViewModels: List<GiphyMediaViewModel>) {
+        check(mediaViewModels.isNotEmpty())
+
+        val uris = mediaViewModels.map { it.previewImageUri.toString() }
+        MediaPreviewActivity.showPreview(this, null, ArrayList(uris), uris.first())
     }
 
     /**

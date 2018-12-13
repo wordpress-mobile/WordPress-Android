@@ -13,12 +13,14 @@ import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 class GiphyPickerPagedListAdapter(
     private val imageManager: ImageManager,
     private val thumbnailViewDimensions: ThumbnailViewDimensions,
-    private val onMediaViewClickListener: (GiphyMediaViewModel) -> Unit
+    private val onMediaViewClickListener: (GiphyMediaViewModel) -> Unit,
+    private val onMediaViewLongClickListener: (GiphyMediaViewModel) -> Unit
 ) : PagedListAdapter<GiphyMediaViewModel, GiphyMediaViewHolder>(DIFF_CALLBACK) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GiphyMediaViewHolder {
         return GiphyMediaViewHolder.create(
                 imageManager = imageManager,
                 onClickListener = onMediaViewClickListener,
+                onLongClickListener = onMediaViewLongClickListener,
                 parent = parent,
                 thumbnailViewDimensions = thumbnailViewDimensions
         )
