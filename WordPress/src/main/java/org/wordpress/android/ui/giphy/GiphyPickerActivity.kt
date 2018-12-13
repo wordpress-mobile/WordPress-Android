@@ -16,18 +16,22 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.giphy.GiphyMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ViewModelFactory
 import org.wordpress.android.viewmodel.giphy.GiphyMediaViewModel
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import javax.inject.Inject
 
@@ -69,6 +73,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeRecyclerView()
         initializeSearchView()
         initializeSelectionBar()
+        initializeEmptyView()
         initializePreviewHandlers()
         initializeDownloadHandlers()
         initializeStateChangeHandlers()
@@ -108,7 +113,7 @@ class GiphyPickerActivity : AppCompatActivity() {
      * Configure the search view to execute search when the keyboard's Done button is pressed.
      */
     private fun initializeSearchView() {
-        search_view.queryHint = getString(R.string.giphy_search_hint)
+        search_view.queryHint = getString(R.string.giphy_picker_search_hint)
 
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -163,6 +168,46 @@ class GiphyPickerActivity : AppCompatActivity() {
             if (selectedCount > 0) {
                 text_preview.text = getString(R.string.preview_count, selectedCount)
                 text_add.text = getString(R.string.add_count, selectedCount)
+            }
+        })
+    }
+
+    /**
+     * Set up showing and hiding of the empty view depending on the search results
+     */
+    private fun initializeEmptyView() {
+        val emptyView: ActionableEmptyView = actionable_empty_view
+        emptyView.run {
+            image.setImageResource(R.drawable.img_illustration_media_105dp)
+            bottomImage.setImageResource(R.drawable.giphy_attribution_100dp)
+            bottomImage.contentDescription = getString(string.giphy_powered_by_giphy)
+        }
+
+        viewModel.emptyDisplayMode.getDistinct().observe(this, Observer { emptyDisplayMode ->
+            when (emptyDisplayMode) {
+                EmptyDisplayMode.HIDDEN -> {
+                    emptyView.visibility = View.GONE
+                }
+                EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS -> {
+                    with(emptyView) {
+                        updateLayoutForSearch(isSearching = true, topMargin = 0)
+
+                        visibility = View.VISIBLE
+                        title.setText(R.string.giphy_picker_empty_search_list)
+                        image.visibility = View.GONE
+                        bottomImage.visibility = View.GONE
+                    }
+                }
+                EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY -> {
+                    with(emptyView) {
+                        updateLayoutForSearch(isSearching = false, topMargin = 0)
+
+                        visibility = View.VISIBLE
+                        title.setText(R.string.giphy_picker_initial_empty_text)
+                        image.visibility = View.VISIBLE
+                        bottomImage.visibility = View.VISIBLE
+                    }
+                }
             }
         })
     }

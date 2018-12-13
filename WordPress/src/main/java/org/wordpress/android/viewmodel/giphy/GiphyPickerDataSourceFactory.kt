@@ -23,7 +23,16 @@ class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMed
      */
     private val apiClient: GPHApiClient by lazy { GPHApiClient(BuildConfig.GIPHY_API_KEY) }
 
-    private var searchQuery: String = ""
+    /**
+     * The active search query.
+     *
+     * When changed, the current [GiphyPickerDataSource] will be invalidated. A new API search will be performed.
+     */
+    var searchQuery: String = ""
+        set(value) {
+            field = value
+            dataSource?.invalidate()
+        }
 
     /**
      * The last [dataSource] that was created
@@ -31,14 +40,6 @@ class GiphyPickerDataSourceFactory @Inject constructor() : Factory<Int, GiphyMed
      * We retain this so we can invalidate it later in [setSearchQuery]
      */
     private var dataSource: DataSource<Int, GiphyMediaViewModel>? = null
-
-    /**
-     * Set the current [searchQuery] and invalidate the current [GiphyPickerDataSource]
-     */
-    fun setSearchQuery(searchQuery: String) {
-        this.searchQuery = searchQuery
-        dataSource?.invalidate()
-    }
 
     override fun create(): DataSource<Int, GiphyMediaViewModel> {
         val dataSource = GiphyPickerDataSource(apiClient, searchQuery)
