@@ -379,7 +379,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         params.put("query", query);
         params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("include_dotblogsubdomain", "true");
         params.put("vendor", "dot");
 
         params.put("quantity", String.valueOf(quantity));
