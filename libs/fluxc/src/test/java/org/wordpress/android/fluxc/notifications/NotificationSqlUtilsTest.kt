@@ -306,4 +306,31 @@ class NotificationSqlUtilsTest {
             assertEquals(it.localSiteId, site.id)
         }
     }
+
+    @Test
+    fun testGetNotificationByRemoteId() {
+        val noteId = 3616322875
+
+        // Insert notifications
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val site = SiteModel().apply { id = 153482281 }
+        val notesList = apiResponse.notes?.map {
+            val siteId = NotificationApiResponse.getRemoteSiteId(it)
+            NotificationApiResponse.notificationResponseToNotificationModel(it, siteId!!.toInt())
+        } ?: emptyList()
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(6, inserted)
+
+        // Fetch a single notification using the remoteNoteId
+        val notification = notificationSqlUtils.getNotificationByRemoteId(noteId)
+        assertNotNull(notification)
+
+        notification?.let {
+            assertEquals(it.remoteNoteId, noteId)
+            assertEquals(it.localSiteId, site.id)
+        }
+    }
 }
