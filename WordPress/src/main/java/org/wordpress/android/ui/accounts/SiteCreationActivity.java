@@ -180,7 +180,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteTitle = siteTitle;
         mSiteTagline = siteTagline;
 
-        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mSiteTitle);
+        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mSiteTitle, mCategory);
         slideInFragment(fragment, SiteCreationDomainFragment.TAG);
     }
 
