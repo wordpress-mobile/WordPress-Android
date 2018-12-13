@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -36,12 +37,15 @@ constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
+    private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<AuthorsModel, SelectedAuthor>(AUTHORS, mainDispatcher, SelectedAuthor()) {
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = authorsStore.getAuthors(
-                site, statsGranularity,
-                PAGE_SIZE
+                site,
+                statsGranularity,
+                PAGE_SIZE,
+                selectedDateProvider.getSelectedDate(statsGranularity)
         )
         dbModel?.let { onModel(it) }
     }
@@ -49,7 +53,10 @@ constructor(
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = authorsStore.fetchAuthors(
                 site,
-                PAGE_SIZE, statsGranularity, forced
+                PAGE_SIZE,
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity),
+                forced
         )
         val model = response.model
         val error = response.error
@@ -90,7 +97,7 @@ constructor(
                                     text = post.title,
                                     value = post.views.toFormattedString(),
                                     showDivider = false,
-                                    navigationAction = post.url?.let { create(it, this::onPostClicked)}
+                                    navigationAction = post.url?.let { create(it, this::onPostClicked) }
                             )
                         })
                         items.add(Divider)
@@ -124,6 +131,7 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
+        private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
@@ -131,6 +139,7 @@ constructor(
                         granularity,
                         mainDispatcher,
                         authorsStore,
+                        selectedDateProvider,
                         statsDateFormatter
                 )
     }

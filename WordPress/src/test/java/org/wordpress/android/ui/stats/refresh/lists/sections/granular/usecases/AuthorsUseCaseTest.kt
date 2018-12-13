@@ -36,16 +36,20 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 
 private const val pageSize = 6
 private val statsGranularity = DAYS
+private val selectedDate = Date(0)
 
 class AuthorsUseCaseTest : BaseUnitTest() {
     @Mock lateinit var store: AuthorsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
+    @Mock lateinit var selectedDateProvider: SelectedDateProvider
     private lateinit var useCase: AuthorsUseCase
     private val firstAuthorViews = 50
     private val secondAuthorViews = 30
@@ -58,17 +62,17 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 statsGranularity,
                 Dispatchers.Unconfined,
                 store,
+                selectedDateProvider,
                 statsDateFormatter
         )
+        whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 
     @Test
     fun `maps authors to UI model`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts, authorWithPosts), false)
-        whenever(store.fetchAuthors(site,
-                pageSize,
-                statsGranularity, forced)).thenReturn(
+        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -109,7 +113,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 authorWithoutPosts.views,
                 authorWithoutPosts.avatar
         )
-        val expandableItem = assertExpandableItem(this.items[3], authorWithPosts.name, authorWithPosts.views, authorWithPosts.avatar)
+        val expandableItem = assertExpandableItem(
+                this.items[3],
+                authorWithPosts.name,
+                authorWithPosts.views,
+                authorWithPosts.avatar
+        )
         assertSingleItem(this.items[4], post.title, post.views, null)
         Assertions.assertThat(this.items[5]).isEqualTo(Divider)
         return expandableItem
@@ -119,9 +128,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `adds view more button when hasMore`() = test {
         val forced = false
         val model = AuthorsModel(10, listOf(authorWithoutPosts), true)
-        whenever(store.fetchAuthors(site,
-                pageSize,
-                statsGranularity, forced)).thenReturn(
+        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(
                         model
                 )
@@ -146,9 +153,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty authors to UI model`() = test {
         val forced = false
-        whenever(store.fetchAuthors(site,
-                pageSize,
-                statsGranularity, forced)).thenReturn(
+        whenever(store.fetchAuthors(site, pageSize, statsGranularity, selectedDate, forced)).thenReturn(
                 OnStatsFetched(AuthorsModel(0, listOf(), false))
         )
 
@@ -166,9 +171,15 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val forced = false
         val message = "Generic error"
-        whenever(store.fetchAuthors(site,
-                pageSize,
-                statsGranularity, forced)).thenReturn(
+        whenever(
+                store.fetchAuthors(
+                        site,
+                        pageSize,
+                        statsGranularity,
+                        selectedDate,
+                        forced
+                )
+        ).thenReturn(
                 OnStatsFetched(
                         StatsError(GENERIC_ERROR, message)
                 )
