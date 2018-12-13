@@ -5,9 +5,14 @@ import android.animation.Animator.AnimatorListener;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -27,8 +32,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<QuickStartTask> mTasks;
     private List<QuickStartTask> mTasksUncompleted;
     private List<QuickStartTask> mTaskCompleted;
-    private OnTaskTappedListener mListener;
     private boolean mIsCompletedTaskListExpanded;
+    private OnTaskActionListener mListener;
 
     private static final int VIEW_TYPE_TASK = 0;
     private static final int VIEW_TYPE_COMPLETED_TASKS_HEADER = 1;
@@ -101,6 +106,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         if (!isEnabled) {
             taskViewHolder.mTitle.setPaintFlags(taskViewHolder.mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            taskViewHolder.itemView.setOnLongClickListener(null);
         }
 
         // Hide divider for tasks before header and end of list.
@@ -169,6 +175,39 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
+    void updateContent(QuickStartTask task, List<QuickStartTask> tasksUncompleted,
+                       List<QuickStartTask> tasksCompleted) {
+        List<QuickStartTask> newList = new ArrayList<>(tasksUncompleted);
+        if (!tasksCompleted.isEmpty()) {
+            newList.add(null);
+        }
+        if (mIsCompletedTaskListExpanded) {
+            newList.addAll(tasksCompleted);
+        }
+
+        mTaskCompleted.clear();
+        mTaskCompleted.addAll(tasksCompleted);
+
+        mTasksUncompleted.clear();
+        mTasksUncompleted.addAll(tasksUncompleted);
+
+        DiffUtil.DiffResult result =
+                DiffUtil.calculateDiff(new QuickStartTasksDiffCallback(mTasks, newList));
+
+        mTasks.clear();
+        mTasks.addAll(newList);
+
+        if (mIsCompletedTaskListExpanded) {
+            result.dispatchUpdatesTo(this);
+            notifyItemChanged(mTasks.indexOf(task));
+            notifyItemChanged(mTasks.indexOf(null));
+        } else {
+            notifyDataSetChanged();
+        }
+
+        notifyItemChanged(mTasks.indexOf(null));
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == mTasksUncompleted.size()) {
@@ -183,7 +222,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         return mTasks.size();
     }
 
-    public void setOnTaskTappedListener(OnTaskTappedListener listener) {
+    public void setOnTaskTappedListener(OnTaskActionListener listener) {
         mListener = listener;
     }
 
@@ -192,6 +231,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView mSubtitle;
         TextView mTitle;
         View mDivider;
+        View mPopupAnchor;
 
         TaskViewHolder(final View inflate) {
             super(inflate);
@@ -199,6 +239,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             mTitle = inflate.findViewById(R.id.title);
             mSubtitle = inflate.findViewById(R.id.subtitle);
             mDivider = inflate.findViewById(R.id.divider);
+            mPopupAnchor = inflate.findViewById(R.id.popup_anchor);
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -209,7 +250,32 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             };
 
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+                @Override public boolean onLongClick(View v) {
+                    PopupMenu popup = new PopupMenu(mContext, mPopupAnchor);
+
+                    popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                        @Override public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.quick_start_task_menu_skip) {
+                                if (mListener != null) {
+                                    mListener.onSkipTaskTapped(mTasks.get(getAdapterPosition()));
+                                }
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+
+                    popup.inflate(R.menu.quick_start_task_menu);
+                    popup.setGravity(Gravity.START);
+
+                    popup.show();
+                    return true;
+                }
+            };
+
             itemView.setOnClickListener(listener);
+            itemView.setOnLongClickListener(longClickListener);
         }
     }
 
@@ -273,8 +339,10 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    interface OnTaskTappedListener {
+    interface OnTaskActionListener {
         void onTaskTapped(QuickStartTask task);
+
+        void onSkipTaskTapped(QuickStartTask task);
     }
 
     public boolean isCompletedTasksListExpanded() {
