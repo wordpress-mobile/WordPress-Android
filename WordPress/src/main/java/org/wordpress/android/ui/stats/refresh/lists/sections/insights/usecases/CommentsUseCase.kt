@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -85,7 +85,7 @@ class CommentsUseCase
             mutableItems.addAll(authors.take(PAGE_SIZE).mapIndexed { index, author ->
                 ListItemWithIcon(
                         iconUrl = author.gravatar,
-                        iconStyle = CIRCLE,
+                        iconStyle = AVATAR,
                         text = author.name,
                         value = author.comments.toFormattedString(),
                         showDivider = index < authors.size - 1

@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.experimental.Dispatchers
@@ -34,8 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -70,18 +70,18 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
+    open class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val subtext = itemView.findViewById<TextView>(R.id.subtext)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: ListItemWithIcon) {
-            icon.setImageOrLoad(item, imageManager, item.iconStyle)
+            iconContainer.setIconOrAvatar(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
             subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
@@ -274,7 +274,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
@@ -285,7 +285,7 @@ sealed class BlockListItemViewHolder(
             expandChanged: Boolean
         ) {
             val header = expandableItem.header
-            icon.setImageOrLoad(header, imageManager)
+            iconContainer.setIconOrAvatar(header, imageManager)
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
@@ -319,10 +319,9 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    internal fun ImageView.setImageOrLoad(
+    private fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
-        imageManager: ImageManager,
-        iconStyle: IconStyle = NORMAL
+        imageManager: ImageManager
     ) {
         when {
             item.icon != null -> {
@@ -331,12 +330,47 @@ sealed class BlockListItemViewHolder(
             }
             item.iconUrl != null -> {
                 this.visibility = View.VISIBLE
-                when (iconStyle) {
-                    NORMAL -> imageManager.load(this, IMAGE, item.iconUrl)
-                    CIRCLE -> imageManager.loadIntoCircle(this, AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
-                }
+                imageManager.load(this, IMAGE, item.iconUrl)
             }
             else -> this.visibility = View.GONE
+        }
+    }
+
+    private fun ImageView.setAvatarOrLoad(
+        item: ListItemWithIcon,
+        imageManager: ImageManager
+    ) {
+        when {
+            item.icon != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.load(this, item.icon)
+            }
+            item.iconUrl != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.loadIntoCircle(this, AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
+            }
+            else -> this.visibility = View.GONE
+        }
+    }
+
+    internal fun LinearLayout.setIconOrAvatar(item: ListItemWithIcon, imageManager: ImageManager) {
+        val avatar = findViewById<ImageView>(R.id.avatar)
+        val icon = findViewById<ImageView>(R.id.icon)
+        val hasIcon = item.icon != null || item.iconUrl != null
+        if (hasIcon) {
+            this.visibility = View.VISIBLE
+            when (item.iconStyle) {
+                NORMAL -> {
+                    findViewById<ImageView>(R.id.avatar).visibility = GONE
+                    icon.setImageOrLoad(item, imageManager)
+                }
+                AVATAR -> {
+                    icon.visibility = GONE
+                    avatar.setAvatarOrLoad(item, imageManager)
+                }
+            }
+        } else {
+            this.visibility = View.GONE
         }
     }
 }

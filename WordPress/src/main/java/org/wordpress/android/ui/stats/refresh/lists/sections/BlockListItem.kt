@@ -68,7 +68,7 @@ sealed class BlockListItem(val type: Type) {
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
 
         enum class IconStyle {
-            NORMAL, CIRCLE
+            NORMAL, AVATAR
         }
     }
 

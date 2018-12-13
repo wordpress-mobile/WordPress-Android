@@ -19,7 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
@@ -72,7 +72,7 @@ constructor(
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatar,
-                        iconStyle = CIRCLE,
+                        iconStyle = AVATAR,
                         text = author.name,
                         value = author.views.toFormattedString(),
                         showDivider = index < domainModel.authors.size - 1

@@ -28,7 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
@@ -231,7 +231,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(userItem.type).isEqualTo(LIST_ITEM_WITH_ICON)
         assertThat((userItem as ListItemWithIcon).iconUrl).isEqualTo(avatar)
         assertThat(userItem.showDivider).isEqualTo(false)
-        assertThat(userItem.iconStyle).isEqualTo(CIRCLE)
+        assertThat(userItem.iconStyle).isEqualTo(AVATAR)
         assertThat(userItem.text).isEqualTo(user)
         assertThat(userItem.value).isEqualTo(totalCount.toString())
         return tabsItem

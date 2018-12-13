@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Infor
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.CIRCLE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -125,7 +125,7 @@ class FollowersUseCase
         return this.mapIndexed { index, follower ->
             ListItemWithIcon(
                     iconUrl = follower.avatar,
-                    iconStyle = CIRCLE,
+                    iconStyle = AVATAR,
                     text = follower.label,
                     value = statsUtilsWrapper.getSinceLabelLowerCase(follower.dateSubscribed),
                     showDivider = index < this.size - 1
