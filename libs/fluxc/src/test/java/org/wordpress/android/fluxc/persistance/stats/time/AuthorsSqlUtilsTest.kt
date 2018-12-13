@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.persistance.stats.time
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Before
@@ -9,6 +11,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
@@ -21,30 +24,36 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
 import org.wordpress.android.fluxc.store.stats.time.AUTHORS_RESPONSE
+import java.util.Date
 import kotlin.test.assertEquals
+
+private val DATE = Date(0)
+private const val STRING_DATE = "2018-10-10"
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthorsSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var statsUtils: StatsUtils
     private lateinit var timeStatsSqlUtils: TimeStatsSqlUtils
     private val mappedTypes = mapOf(DAY to DAYS, WEEK to WEEKS, MONTH to MONTHS, YEAR to YEARS)
 
     @Before
     fun setUp() {
-        timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils)
+        timeStatsSqlUtils = TimeStatsSqlUtils(statsSqlUtils, statsUtils)
+        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(DATE))).thenReturn(STRING_DATE)
     }
 
     @Test
     fun `returns data from stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
 
-            whenever(statsSqlUtils.select(site, AUTHORS, statsType, AuthorsResponse::class.java))
+            whenever(statsSqlUtils.select(site, AUTHORS, statsType, AuthorsResponse::class.java, STRING_DATE))
                     .thenReturn(
                             AUTHORS_RESPONSE
                     )
 
-            val result = timeStatsSqlUtils.selectAuthors(site, dbGranularity)
+            val result = timeStatsSqlUtils.selectAuthors(site, dbGranularity, DATE)
 
             assertEquals(result, AUTHORS_RESPONSE)
         }
@@ -53,9 +62,9 @@ class AuthorsSqlUtilsTest {
     @Test
     fun `inserts data to stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
-            timeStatsSqlUtils.insert(site, AUTHORS_RESPONSE, dbGranularity)
+            timeStatsSqlUtils.insert(site, AUTHORS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, AUTHORS, statsType, AUTHORS_RESPONSE)
+            verify(statsSqlUtils).insert(site, AUTHORS, statsType, AUTHORS_RESPONSE, STRING_DATE)
         }
     }
 }

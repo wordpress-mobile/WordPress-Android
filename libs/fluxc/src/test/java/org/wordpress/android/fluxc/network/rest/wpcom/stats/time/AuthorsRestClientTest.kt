@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthorsRestClientTest {
@@ -50,7 +51,8 @@ class AuthorsRestClientTest {
     private lateinit var restClient: AuthorsRestClient
     private val siteId: Long = 12
     private val pageSize = 5
-    private val currentDate = "2018-10-10"
+    private val stringDate = "2018-10-10"
+    private val requestedDate = Date(0)
 
     @Before
     fun setUp() {
@@ -66,7 +68,7 @@ class AuthorsRestClientTest {
                 gson,
                 statsUtils
         )
-        whenever(statsUtils.getCurrentDateTZ(site)).thenReturn(currentDate)
+        whenever(statsUtils.getFormattedDate(eq(site), any(), eq(requestedDate))).thenReturn(stringDate)
     }
 
     @Test
@@ -113,7 +115,7 @@ class AuthorsRestClientTest {
         val response = mock<AuthorsResponse>()
         initAuthorsResponse(response)
 
-        val responseModel = restClient.fetchAuthors(site, period, pageSize, false)
+        val responseModel = restClient.fetchAuthors(site, period, requestedDate, pageSize, false)
 
         assertThat(responseModel.response).isNotNull()
         assertThat(responseModel.response).isEqualTo(response)
@@ -123,7 +125,7 @@ class AuthorsRestClientTest {
                 mapOf(
                         "max" to pageSize.toString(),
                         "period" to period.toString(),
-                        "date" to currentDate
+                        "date" to stringDate
                 )
         )
     }
@@ -140,7 +142,7 @@ class AuthorsRestClientTest {
                 )
         )
 
-        val responseModel = restClient.fetchAuthors(site, period, pageSize, false)
+        val responseModel = restClient.fetchAuthors(site, period, requestedDate, pageSize, false)
 
         assertThat(responseModel.error).isNotNull()
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

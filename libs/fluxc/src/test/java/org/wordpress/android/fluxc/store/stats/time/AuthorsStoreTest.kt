@@ -21,10 +21,12 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 private const val PAGE_SIZE = 8
+private val DATE = Date(0)
 
 @RunWith(MockitoJUnitRunner::class)
 class AuthorsStoreTest {
@@ -49,16 +51,16 @@ class AuthorsStoreTest {
                 AUTHORS_RESPONSE
         )
         val forced = true
-        whenever(restClient.fetchAuthors(site, DAYS, PAGE_SIZE + 1, forced)).thenReturn(
+        whenever(restClient.fetchAuthors(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<AuthorsModel>()
         whenever(mapper.map(AUTHORS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, forced)
+        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, DATE, forced)
 
         assertThat(responseModel.model).isEqualTo(model)
-        verify(sqlUtils).insert(site, AUTHORS_RESPONSE, DAYS)
+        verify(sqlUtils).insert(site, AUTHORS_RESPONSE, DAYS, DATE)
     }
 
     @Test
@@ -67,9 +69,9 @@ class AuthorsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<AuthorsResponse>(StatsError(type, message))
         val forced = true
-        whenever(restClient.fetchAuthors(site, DAYS, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
+        whenever(restClient.fetchAuthors(site, DAYS, DATE, PAGE_SIZE + 1, forced)).thenReturn(errorPayload)
 
-        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, forced)
+        val responseModel = store.fetchAuthors(site, PAGE_SIZE, DAYS, DATE, forced)
 
         assertNotNull(responseModel.error)
         val error = responseModel.error!!
@@ -79,11 +81,11 @@ class AuthorsStoreTest {
 
     @Test
     fun `returns data from db`() {
-        whenever(sqlUtils.selectAuthors(site, DAYS)).thenReturn(AUTHORS_RESPONSE)
+        whenever(sqlUtils.selectAuthors(site, DAYS, DATE)).thenReturn(AUTHORS_RESPONSE)
         val model = mock<AuthorsModel>()
         whenever(mapper.map(AUTHORS_RESPONSE, PAGE_SIZE)).thenReturn(model)
 
-        val result = store.getAuthors(site, DAYS, PAGE_SIZE)
+        val result = store.getAuthors(site, DAYS, PAGE_SIZE, DATE)
 
         assertThat(result).isEqualTo(model)
     }
