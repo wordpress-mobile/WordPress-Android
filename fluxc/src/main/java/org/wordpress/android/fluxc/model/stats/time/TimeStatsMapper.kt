@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsM
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.util.AppLog
@@ -71,6 +72,31 @@ class TimeStatsMapper
                 first.totalClicks ?: 0,
                 groups,
                 first.clicks.size > groups.size
+        )
+    }
+
+    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+        val first = response.days.values.first()
+        val groups = first.views.take(pageSize).mapNotNull { countryViews ->
+            val countryInfo = first.countryInfo[countryViews.countryCode]
+            if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
+                CountryViewsModel.Country(
+                        countryViews.countryCode,
+                        countryInfo.countryFull,
+                        countryViews.views ?: 0,
+                        countryInfo.flagIcon,
+                        countryInfo.flatFlagIcon
+                )
+            } else {
+                AppLog.e(STATS, "CountryViewsResponse: Missing fields on a CountryViews object")
+                null
+            }
+        }
+        return CountryViewsModel(
+                first.otherViews ?: 0,
+                first.totalViews ?: 0,
+                groups,
+                first.views.size > groups.size
         )
     }
 }
