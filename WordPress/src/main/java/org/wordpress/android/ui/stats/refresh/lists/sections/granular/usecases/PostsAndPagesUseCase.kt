@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -36,15 +37,27 @@ constructor(
     private val statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val postsAndPageViewsStore: PostAndPageViewsStore,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val selectedDateProvider: SelectedDateProvider
 ) : StatelessUseCase<PostAndPageViewsModel>(POSTS_AND_PAGES, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
-        val dbModel = postsAndPageViewsStore.getPostAndPageViews(site, statsGranularity, PAGE_SIZE)
+        val dbModel = postsAndPageViewsStore.getPostAndPageViews(
+                site,
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity),
+                PAGE_SIZE
+        )
         dbModel?.let { onModel(it) }
     }
 
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        val response = postsAndPageViewsStore.fetchPostAndPageViews(site, PAGE_SIZE, statsGranularity, forced)
+        val response = postsAndPageViewsStore.fetchPostAndPageViews(
+                site,
+                PAGE_SIZE,
+                statsGranularity,
+                selectedDateProvider.getSelectedDate(statsGranularity),
+                forced
+        )
         val model = response.model
         val error = response.error
 
@@ -112,9 +125,16 @@ constructor(
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val postsAndPageViewsStore: PostAndPageViewsStore,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val selectedDateProvider: SelectedDateProvider
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
-                PostsAndPagesUseCase(granularity, mainDispatcher, postsAndPageViewsStore, statsDateFormatter)
+                PostsAndPagesUseCase(
+                        granularity,
+                        mainDispatcher,
+                        postsAndPageViewsStore,
+                        statsDateFormatter,
+                        selectedDateProvider
+                )
     }
 }
