@@ -10,6 +10,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse.SearchTerm
 import org.wordpress.android.fluxc.store.stats.DATE
 import org.wordpress.android.fluxc.store.stats.POST_COUNT
 
@@ -115,3 +117,6 @@ val GROUP = Group(GROUP_ID, "Group 1", "icon.jpg", "url.com", 50, null, referrer
 val REFERRERS_RESPONSE = ReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))
 val CLICK_GROUP = ClickGroup(GROUP_ID, "Click name", "click.jpg", "click.com", 20, null)
 val CLICKS_RESPONSE = ClicksResponse(null, mapOf("2018-10-10" to ClicksResponse.Groups(10, 15, listOf(CLICK_GROUP))))
+val SEARCH_TERMS_RESPONSE = SearchTermsResponse("day", mapOf("2018-10-10" to SearchTermsResponse.Day(10, 15, 20, listOf(
+        SearchTerm("search term", 20)
+))))
