@@ -81,13 +81,14 @@ class TimeStatsMapper
             if (searchTerm.term != null) {
                 SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
             } else {
-                AppLog.e(STATS, "ClicksResponse.type: Missing fields on a Click object")
+                AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
                 null
             }
         }.take(pageSize)
         return SearchTermsModel(
                 first.otherSearchTerms ?: 0,
                 first.totalSearchTimes ?: 0,
+                first.encryptedSearchTerms ?: 0,
                 groups,
                 first.searchTerms.size > groups.size
         )
