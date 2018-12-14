@@ -347,30 +347,28 @@ sealed class BlockListItemViewHolder(
                 // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
                 // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
                 // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-                val htmlPage = ("<html>"
-                        + "<head>"
-                        + "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>"
-                        + "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
-                        + "<script type=\"text/javascript\">"
-                        + " google.charts.load('42', {'packages':['geochart']});"
-                        + " google.charts.setOnLoadCallback(drawRegionsMap);"
-                        + " function drawRegionsMap() {"
-                        + " var data = google.visualization.arrayToDataTable("
-                        + " ["
-                        + " ['Country', '" + itemView.resources.getString(item.label) + "'],"
-                        + item.mapData
-                        + " ]);"
-                        + " var options = {keepAspectRatio: true, region: 'world', colorAxis:"
-                        + " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: true};"
-                        + " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));"
-                        + " chart.draw(data, options);"
-                        + " }"
-                        + "</script>"
-                        + "</head>"
-                        + "<body>"
-                        + "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>"
-                        + "</body>"
-                        + "</html>")
+                val htmlPage = ("<html>" +
+                        "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
+                        "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
+                        "<script type=\"text/javascript\">" +
+                        " google.charts.load('42', {'packages':['geochart']});" +
+                        " google.charts.setOnLoadCallback(drawRegionsMap);" +
+                        " function drawRegionsMap() {" +
+                        " var data = google.visualization.arrayToDataTable(" +
+                        " [" +
+                        " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
+                        " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
+                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: true};" +
+                        " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                        " chart.draw(data, options);" +
+                        " }" +
+                        "</script>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
+                        "</body>" +
+                        "</html>")
 
                 val width = itemView.width
                 val height = width * 3 / 4
