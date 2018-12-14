@@ -1123,6 +1123,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "account_settings_language_changed";
             case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
                 return "site_creation_background_service_update";
+            case NEW_SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
+                return "new_site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:

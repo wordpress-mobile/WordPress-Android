@@ -2386,4 +2386,7 @@
     <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
+    <string name="notification_new_site_creation_title">Create Site</string>
+    <string name="notification_new_site_creation_failed">There was a problem</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
 </resources>
