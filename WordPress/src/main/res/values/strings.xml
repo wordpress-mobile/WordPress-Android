@@ -2005,6 +2005,7 @@
     <string name="giphy_picker_search_hint">Search Giphy</string>
     <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
     <string name="giphy_picker_empty_search_list">No media matching your search</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
     <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
 
     <!-- E-mail verification reminder dialog -->
