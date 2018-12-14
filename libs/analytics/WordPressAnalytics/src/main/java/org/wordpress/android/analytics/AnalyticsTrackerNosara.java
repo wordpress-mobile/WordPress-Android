@@ -1229,6 +1229,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case GIPHY_PICKER_SEARCHED:
+                return "giphy_picker_searched";
             case GIPHY_PICKER_ACCESSED:
                 return "giphy_picker_accessed";
             case GIPHY_PICKER_DOWNLOADED:

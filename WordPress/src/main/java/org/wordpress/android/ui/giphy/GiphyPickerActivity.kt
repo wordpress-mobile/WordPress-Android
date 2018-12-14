@@ -72,6 +72,7 @@ class GiphyPickerActivity : AppCompatActivity() {
         initializeToolbar()
         initializeRecyclerView()
         initializeSearchView()
+        initializeSearchProgressBar()
         initializeSelectionBar()
         initializeEmptyView()
         initializeRangeLoadErrorEventHandlers()
@@ -127,13 +128,23 @@ class GiphyPickerActivity : AppCompatActivity() {
         search_view.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 search_view.clearFocus()
-                viewModel.search(query)
                 return true
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.search(newText)
                 return true
             }
+        })
+    }
+
+    /**
+     * Show the progress bar in the center of the page if we are performing an initial page load.
+     */
+    private fun initializeSearchProgressBar() {
+        viewModel.isPerformingInitialLoad.getDistinct().observe(this, Observer {
+            val isPerformingInitialLoad = it ?: return@Observer
+            progress.visibility = if (isPerformingInitialLoad) View.VISIBLE else View.GONE
         })
     }
 

@@ -7,8 +7,15 @@ import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.arch.paging.PagedList.BoundaryCallback
 import kotlinx.coroutines.experimental.CancellationException
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.channels.ReceiveChannel
+import kotlinx.coroutines.experimental.channels.consumeEach
+import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.getDistinct
@@ -120,6 +127,14 @@ class GiphyPickerViewModel @Inject constructor(
     val selectionBarIsVisible: LiveData<Boolean> =
             Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
 
+    private val _isPerformingInitialLoad = MutableLiveData<Boolean>()
+    /**
+     * Returns `true` if we are (or going to) perform an initial load due to a [search] call.
+     *
+     * This will be `false` when the initial load has been executed and completed.
+     */
+    val isPerformingInitialLoad: LiveData<Boolean> = _isPerformingInitialLoad
+
     /**
      * The [PagedList] that should be displayed in the RecyclerView
      */
@@ -133,6 +148,8 @@ class GiphyPickerViewModel @Inject constructor(
      */
     private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
         override fun onZeroItemsLoaded() {
+            _isPerformingInitialLoad.postValue(false)
+
             val displayMode = when {
                 dataSourceFactory.initialLoadError != null -> EmptyDisplayMode.VISIBLE_NETWORK_ERROR
                 dataSourceFactory.searchQuery.isBlank() -> EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
@@ -143,8 +160,23 @@ class GiphyPickerViewModel @Inject constructor(
         }
 
         override fun onItemAtFrontLoaded(itemAtFront: GiphyMediaViewModel) {
+            _isPerformingInitialLoad.postValue(false)
             _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
             super.onItemAtFrontLoaded(itemAtFront)
+        }
+    }
+
+    /**
+     * Receives the query strings submitted in [search]
+     *
+     * This is the [ReceiveChannel] used to [debounce] on.
+     */
+    private val searchQueryChannel = Channel<String>()
+
+    init {
+        // Register a [searchQueryChannel] callback which gets called after a set number of time has elapsed.
+        launch {
+            searchQueryChannel.debounce().consumeEach { search(query = it, immediately = true) }
         }
     }
 
@@ -158,22 +190,42 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Set the current search query
+     * Set the current search query.
+     *
+     * The search will not be executed until a short amount of time has elapsed. This enables us to keep receiving
+     * queries from a text field without unnecessarily launching API requests. API requests will only be executed
+     * when, presumably, the user has stopped typing.
      *
      * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
      * currently selected [GiphyMediaViewModel] if the new search query results are different.
+     *
+     * Searching is disabled if downloading or the [query] is the same as the last one.
+     *
+     * @param immediately If `true`, bypasses the timeout and immediately executes API requests
      */
-    fun search(searchQuery: String) {
-        if (_state.value != State.IDLE) {
-            return
+    fun search(query: String, immediately: Boolean = false) = launch {
+        if (immediately) {
+            if (_state.value != State.IDLE) {
+                return@launch
+            }
+            // Do not search if the same. This prevents searching to be re-executed after configuration changes.
+            if (dataSourceFactory.searchQuery == query) {
+                return@launch
+            }
+
+            _isPerformingInitialLoad.postValue(true)
+
+            _selectedMediaViewModelList.postValue(LinkedHashMap())
+
+            // The empty view should be hidden while the user is searching
+            _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
+
+            dataSourceFactory.searchQuery = query
+
+            AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_SEARCHED)
+        } else {
+            searchQueryChannel.send(query)
         }
-
-        _selectedMediaViewModelList.postValue(LinkedHashMap())
-
-        // The empty view should be hidden while the user is searching
-        _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
-
-        dataSourceFactory.searchQuery = searchQuery
     }
 
     /**
@@ -254,6 +306,25 @@ class GiphyPickerViewModel @Inject constructor(
     private fun rebuildSelectionNumbers(mediaList: LinkedHashMap<String, GiphyMediaViewModel>) {
         mediaList.values.forEachIndexed { index, mediaViewModel ->
             (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
+        }
+    }
+
+    /**
+     * Creates a new [ReceiveChannel] which only produces values after the [timeout] has elapsed and no new values
+     * have been received from self ([ReceiveChannel]).
+     *
+     * This works like Rx's [Debounce operator](http://reactivex.io/documentation/operators/debounce.html).
+     */
+    private fun <T> ReceiveChannel<T>.debounce(timeout: Int = 300): ReceiveChannel<T> = produce {
+        var job: Job? = null
+
+        consumeEach {
+            job?.cancel()
+
+            job = launch {
+                delay(timeout)
+                send(it)
+            }
         }
     }
 
