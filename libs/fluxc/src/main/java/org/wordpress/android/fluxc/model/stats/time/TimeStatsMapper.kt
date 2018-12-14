@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
@@ -71,6 +72,24 @@ class TimeStatsMapper
                 first.totalClicks ?: 0,
                 groups,
                 first.clicks.size > groups.size
+        )
+    }
+
+    fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
+        val first = response.days.values.first()
+        val groups = first.plays.take(pageSize).mapNotNull { result ->
+                if (result.postId != null && result.title != null) {
+                    VideoPlaysModel.VideoPlays(result.postId, result.title, result.url, result.plays ?: 0)
+                } else {
+                    AppLog.e(STATS, "VideoPlaysResponse: Missing fields on a Video plays object")
+                    null
+                }
+        }
+        return VideoPlaysModel(
+                first.otherPlays ?: 0,
+                first.totalPlays ?: 0,
+                groups,
+                first.plays.size > groups.size
         )
     }
 }
