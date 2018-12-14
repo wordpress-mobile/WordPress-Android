@@ -9,18 +9,13 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.EmptyDisplayMode
 import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel.State
 import java.util.Random
 import java.util.UUID
@@ -156,6 +151,32 @@ class GiphyPickerViewModelTest {
 
         // Assert
         assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS)
+
+        verify(dataSource, times(1)).loadInitial(any(), any())
+    }
+
+    @Test
+    fun `when the initial load fails, the empty view should show a network error`() {
+        // Arrange
+        val dataSource = mock<GiphyPickerDataSource>()
+
+        whenever(dataSourceFactory.create()).thenReturn(dataSource)
+        whenever(dataSourceFactory.searchQuery).thenReturn("dummy")
+        whenever(dataSourceFactory.initialLoadError).thenReturn(mock())
+
+        val callbackCaptor = argumentCaptor<LoadInitialCallback<GiphyMediaViewModel>>()
+        doNothing().whenever(dataSource).loadInitial(any(), callbackCaptor.capture())
+
+        // Observe mediaViewModelPagedList so the DataSourceFactory will be activated and perform API requests
+        viewModel.mediaViewModelPagedList.observeForever { }
+
+        // Act
+        viewModel.search("dummy")
+        // Along with mocking initialLoadError above, this emulate that the API responded with an error
+        callbackCaptor.lastValue.onResult(emptyList(), 0, 0)
+
+        // Assert
+        assertThat(viewModel.emptyDisplayMode.value).isEqualTo(EmptyDisplayMode.VISIBLE_NETWORK_ERROR)
 
         verify(dataSource, times(1)).loadInitial(any(), any())
     }

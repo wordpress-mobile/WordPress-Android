@@ -68,7 +68,11 @@ class GiphyPickerViewModel @Inject constructor(
         /**
          * Visible because the user has performed a search but there are no search results
          */
-        VISIBLE_NO_SEARCH_RESULTS
+        VISIBLE_NO_SEARCH_RESULTS,
+        /**
+         * Visible because there was a network error on the first page load.
+         */
+        VISIBLE_NETWORK_ERROR
     }
 
     private val _emptyDisplayMode = MutableLiveData<EmptyDisplayMode>().apply {
@@ -78,6 +82,13 @@ class GiphyPickerViewModel @Inject constructor(
      * Describes how the empty view UI should be displayed
      */
     val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
+
+    /**
+     * Errors that happened during page loads.
+     *
+     * @see [GiphyPickerDataSource.rangeLoadErrorEvent]
+     */
+    val rangeLoadErrorEvent: LiveData<Throwable> = dataSourceFactory.rangeLoadErrorEvent
 
     private lateinit var site: SiteModel
 
@@ -118,16 +129,16 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * Update the [emptyDisplayMode] depending on the number of API search results
+     * Update the [emptyDisplayMode] depending on the number of API search results or whether there was an error.
      */
     private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
         override fun onZeroItemsLoaded() {
-            val visibility = if (dataSourceFactory.searchQuery.isBlank()) {
-                EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
-            } else {
-                EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS
+            val displayMode = when {
+                dataSourceFactory.initialLoadError != null -> EmptyDisplayMode.VISIBLE_NETWORK_ERROR
+                dataSourceFactory.searchQuery.isBlank() -> EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
+                else -> EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS
             }
-            _emptyDisplayMode.postValue(visibility)
+            _emptyDisplayMode.postValue(displayMode)
             super.onZeroItemsLoaded()
         }
 
@@ -245,4 +256,11 @@ class GiphyPickerViewModel @Inject constructor(
             (mediaViewModel as MutableGiphyMediaViewModel).postSelectionNumber(index + 1)
         }
     }
+
+    /**
+     * Retries all previously failed page loads.
+     *
+     * @see [GiphyPickerDataSource.retryAllFailedRangeLoads]
+     */
+    fun retryAllFailedRangeLoads() = dataSourceFactory.retryAllFailedRangeLoads()
 }
