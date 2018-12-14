@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
@@ -71,6 +72,24 @@ class TimeStatsMapper
                 first.totalClicks ?: 0,
                 groups,
                 first.clicks.size > groups.size
+        )
+    }
+
+    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+        val first = response.days.values.first()
+        val groups = first.searchTerms.mapNotNull { searchTerm ->
+            if (searchTerm.term != null) {
+                SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
+            } else {
+                AppLog.e(STATS, "ClicksResponse.type: Missing fields on a Click object")
+                null
+            }
+        }.take(pageSize)
+        return SearchTermsModel(
+                first.otherSearchTerms ?: 0,
+                first.totalSearchTimes ?: 0,
+                groups,
+                first.searchTerms.size > groups.size
         )
     }
 }
