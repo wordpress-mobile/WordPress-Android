@@ -5,21 +5,21 @@ import org.wordpress.android.fluxc.tools.FormattableMeta
 import java.util.Locale
 
 data class NotificationModel(
-    val noteId: Int,
-    val remoteNoteId: Long,
-    val localSiteId: Int,
-    val noteHash: Long,
-    val type: Kind,
-    val subtype: Subkind?,
-    val read: Boolean,
-    val icon: String?,
-    val noticon: String?,
-    val timestamp: String?,
-    val url: String?,
-    val title: String?,
-    val body: List<FormattableContent>?,
-    val subject: List<FormattableContent>?,
-    val meta: FormattableMeta?
+    val noteId: Int = 0,
+    val remoteNoteId: Long = 0L,
+    val localSiteId: Int = 0,
+    val noteHash: Long = 0L,
+    val type: Kind = NotificationModel.Kind.STORE_ORDER,
+    val subtype: Subkind? = null,
+    var read: Boolean = false,
+    val icon: String? = null,
+    val noticon: String? = null,
+    val timestamp: String? = null,
+    val url: String? = null,
+    val title: String? = null,
+    val body: List<FormattableContent>? = null,
+    val subject: List<FormattableContent>? = null,
+    val meta: FormattableMeta? = null
 ) {
     enum class Kind {
         AUTOMATTCHER,
