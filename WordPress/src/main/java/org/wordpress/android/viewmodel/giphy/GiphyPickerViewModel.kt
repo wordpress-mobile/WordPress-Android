@@ -39,6 +39,11 @@ class GiphyPickerViewModel @Inject constructor(
      */
     private val dataSourceFactory: GiphyPickerDataSourceFactory
 ) : CoroutineScopedViewModel() {
+    /**
+     * A result of [downloadSelected] observed using the [downloadResult] LiveData
+     */
+    data class DownloadResult(val mediaModels: List<MediaModel>? = null, val errorMessageStringResId: Int? = null)
+
     enum class State {
         /**
          * The default state where interaction with the UI like selecting and searching is allowed
@@ -59,9 +64,27 @@ class GiphyPickerViewModel @Inject constructor(
     }
 
     /**
-     * A result of [downloadSelected] observed using the [downloadResult] LiveData
+     * Describes how an empty view UI should be displayed
      */
-    data class DownloadResult(val mediaModels: List<MediaModel>? = null, val errorMessageStringResId: Int? = null)
+    enum class EmptyDisplayMode {
+        HIDDEN,
+        /**
+         * Visible because the user has not performed a search or the search string is blank.
+         */
+        VISIBLE_NO_SEARCH_QUERY,
+        /**
+         * Visible because the user has performed a search but there are no search results
+         */
+        VISIBLE_NO_SEARCH_RESULTS
+    }
+
+    private val _emptyDisplayMode = MutableLiveData<EmptyDisplayMode>().apply {
+        value = EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
+    }
+    /**
+     * Describes how the empty view UI should be displayed
+     */
+    val emptyDisplayMode: LiveData<EmptyDisplayMode> = _emptyDisplayMode
 
     private lateinit var site: SiteModel
 
@@ -109,14 +132,25 @@ class GiphyPickerViewModel @Inject constructor(
         LivePagedListBuilder(dataSourceFactory, pagedListConfig).setBoundaryCallback(pagedListBoundaryCallback).build()
     }
 
+    /**
+     * Update the [emptyDisplayMode] depending on the number of API search results
+     */
     private val pagedListBoundaryCallback = object : BoundaryCallback<GiphyMediaViewModel>() {
         override fun onZeroItemsLoaded() {
             _isPerformingInitialLoad.postValue(false)
+
+            val visibility = if (dataSourceFactory.searchQuery.isBlank()) {
+                EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
+            } else {
+                EmptyDisplayMode.VISIBLE_NO_SEARCH_RESULTS
+            }
+            _emptyDisplayMode.postValue(visibility)
             super.onZeroItemsLoaded()
         }
 
         override fun onItemAtFrontLoaded(itemAtFront: GiphyMediaViewModel) {
             _isPerformingInitialLoad.postValue(false)
+            _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
             super.onItemAtFrontLoaded(itemAtFront)
         }
     }
@@ -157,15 +191,19 @@ class GiphyPickerViewModel @Inject constructor(
      * @param immediately If `true`, bypasses the timeout and immediately executes API requests
      */
     fun search(query: String, immediately: Boolean = false) = launch {
-        _isPerformingInitialLoad.postValue(true)
-
         if (immediately) {
             if (_state.value != State.IDLE) {
                 return@launch
             }
 
+            _isPerformingInitialLoad.postValue(true)
+
             _selectedMediaViewModelList.postValue(LinkedHashMap())
-            dataSourceFactory.setSearchQuery(query)
+
+            // The empty view should be hidden while the user is searching
+            _emptyDisplayMode.postValue(EmptyDisplayMode.HIDDEN)
+
+            dataSourceFactory.searchQuery = query
 
             AnalyticsTracker.track(AnalyticsTracker.Stat.GIPHY_PICKER_SEARCHED)
         } else {
