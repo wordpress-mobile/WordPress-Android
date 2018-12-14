@@ -66,7 +66,7 @@ class VideoPlaysRestClient
 
     data class VideoPlaysResponse(
         @SerializedName("period") val granularity: String?,
-        @SerializedName("days") val groups: Map<String, Days>
+        @SerializedName("days") val days: Map<String, Days>
     ) {
         data class Days(
             @SerializedName("other_plays") val otherPlays: Int?,
