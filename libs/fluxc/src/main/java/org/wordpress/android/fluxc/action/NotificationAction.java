@@ -5,6 +5,8 @@ import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload;
+import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationReadPayload;
+import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationReadResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsSeenPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.RegisterDevicePayload;
@@ -22,6 +24,8 @@ public enum NotificationAction implements IAction {
     FETCH_NOTIFICATIONS, // Fetch notifications
     @Action(payloadType = MarkNotificationsSeenPayload.class)
     MARK_NOTIFICATIONS_SEEN, // Mark last notification time seen
+    @Action(payloadType = MarkNotificationReadPayload.class)
+    MARK_NOTIFICATION_READ, // Mark notification as read by user
 
     // Remote responses
     @Action(payloadType = RegisterDeviceResponsePayload.class)
@@ -31,7 +35,9 @@ public enum NotificationAction implements IAction {
     @Action(payloadType = FetchNotificationsResponsePayload.class)
     FETCHED_NOTIFICATIONS, // Response to fetching notifications
     @Action(payloadType = MarkNotificationSeenResponsePayload.class)
-    MARKED_NOTIFICATIONS_SEEN // Response to marking a notification as seen
+    MARKED_NOTIFICATIONS_SEEN, // Response to marking a notification as seen
+    @Action(payloadType = MarkNotificationReadResponsePayload.class)
+    MARKED_NOTIFICATION_READ // Response to marking a notification as read
 
     // Local actions
 }
