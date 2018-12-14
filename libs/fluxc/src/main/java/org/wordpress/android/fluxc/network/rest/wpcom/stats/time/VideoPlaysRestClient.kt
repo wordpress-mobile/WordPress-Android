@@ -33,7 +33,7 @@ class VideoPlaysRestClient
     val gson: Gson,
     private val statsUtils: StatsUtils
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchVideos(
+    suspend fun fetchVideoPlays(
         site: SiteModel,
         granularity: StatsGranularity,
         date: Date,

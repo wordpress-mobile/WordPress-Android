@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClien
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
@@ -13,6 +14,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VIDEO_PLAYS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
 import java.util.Date
 import javax.inject.Inject
@@ -51,6 +53,16 @@ class TimeStatsSqlUtils
         )
     }
 
+    fun insert(site: SiteModel, data: VideoPlaysResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                VIDEO_PLAYS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
     fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity, date: Date): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
@@ -77,6 +89,16 @@ class TimeStatsSqlUtils
                 CLICKS,
                 granularity.toStatsType(),
                 ClicksResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
+    fun selectVideoPlays(site: SiteModel, granularity: StatsGranularity, date: Date): VideoPlaysResponse? {
+        return statsSqlUtils.select(
+                site,
+                VIDEO_PLAYS,
+                granularity.toStatsType(),
+                VideoPlaysResponse::class.java,
                 statsUtils.getFormattedDate(site, granularity, date)
         )
     }
