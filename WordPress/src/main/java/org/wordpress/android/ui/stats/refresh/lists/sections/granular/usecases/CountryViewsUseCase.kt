@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.COUNTRIES
 import org.wordpress.android.fluxc.store.stats.time.CountryViewsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCountries
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -101,7 +101,7 @@ constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        navigateTo(ViewClicks(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
+        navigateTo(ViewCountries(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     class CountryViewsUseCaseFactory
