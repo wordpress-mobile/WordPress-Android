@@ -199,11 +199,17 @@ class GiphyPickerViewModel @Inject constructor(
      * This also clears the [selectedMediaViewModelList]. This makes sense because the user will not be seeing the
      * currently selected [GiphyMediaViewModel] if the new search query results are different.
      *
+     * Searching is disabled if downloading or the [query] is the same as the last one.
+     *
      * @param immediately If `true`, bypasses the timeout and immediately executes API requests
      */
     fun search(query: String, immediately: Boolean = false) = launch {
         if (immediately) {
             if (_state.value != State.IDLE) {
+                return@launch
+            }
+            // Do not search if the same. This prevents searching to be re-executed after configuration changes.
+            if (dataSourceFactory.searchQuery == query) {
                 return@launch
             }
 
