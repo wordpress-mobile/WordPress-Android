@@ -71,6 +71,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         mWPAndroidGlueCode.onCreate(getContext());
 
