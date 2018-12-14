@@ -94,6 +94,7 @@ class StatsSqlUtils
         POSTS_AND_PAGES_VIEWS,
         REFERRERS,
         CLICKS,
+        VIDEO_PLAYS,
         PUBLICIZE_INSIGHTS
     }
 }
