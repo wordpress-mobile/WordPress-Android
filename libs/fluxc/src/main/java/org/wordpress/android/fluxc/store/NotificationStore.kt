@@ -95,6 +95,16 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
+    class FetchNotificationPayload(
+        val remoteNoteId: Long
+    ) : Payload<BaseNetworkError>()
+
+    class FetchNotificationResponsePayload(
+        val notification: NotificationModel? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
     class MarkNotificationsSeenPayload(
         val lastSeenTime: Long
     ) : Payload<BaseNetworkError>()
@@ -150,6 +160,7 @@ constructor(
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
             NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications()
+            NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
             NotificationAction.MARK_NOTIFICATION_READ ->
@@ -162,6 +173,8 @@ constructor(
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
             NotificationAction.FETCHED_NOTIFICATIONS ->
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATION ->
+                handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
             NotificationAction.MARKED_NOTIFICATION_READ ->
@@ -302,6 +315,25 @@ constructor(
             causeOfChange = FETCH_NOTIFICATIONS
         }
 
+        emitChange(onNotificationChanged)
+    }
+
+    private fun fetchNotification(payload: FetchNotificationPayload) {
+        notificationRestClient.fetchNotification(payload.remoteNoteId)
+    }
+
+    private fun handleFetchNotificationCompleted(payload: FetchNotificationResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+                OnNotificationChanged(0).also { it.error = payload.error }
+        } else {
+            // Update the localSiteId
+            val rows = payload.notification?.let {
+                val remoteSiteId = it.getRemoteSiteId() ?: 0
+                it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
+                notificationSqlUtils.insertOrUpdateNotification(it)
+            } ?: 0
+            OnNotificationChanged(rows)
+        }
         emitChange(onNotificationChanged)
     }
 
