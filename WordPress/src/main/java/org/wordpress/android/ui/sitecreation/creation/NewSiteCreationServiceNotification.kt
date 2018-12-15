@@ -14,7 +14,7 @@ object NewSiteCreationServiceNotification {
         return AutoForegroundNotification.progress(
                 context,
                 context.getString(channelResId),
-                NewSiteCreationServiceState.NewSiteCreationStep.NEW_SITE.progressPercent,
+                NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE.progressPercent,
                 R.string.notification_new_site_creation_title,
                 R.string.notification_new_site_creation_creating_site_subtitle,
                 drawableResId,

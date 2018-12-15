@@ -2,9 +2,9 @@ package org.wordpress.android.ui.sitecreation.creation
 
 import org.wordpress.android.util.AutoForeground
 
-class NewSiteCreationServiceState internal constructor(
+data class NewSiteCreationServiceState internal constructor(
     val step: NewSiteCreationStep,
-    val payload: Any?
+    val payload: Any? = null
 ) : AutoForeground.ServiceState {
     override fun isIdle(): Boolean {
         return step == NewSiteCreationStep.IDLE
@@ -28,7 +28,7 @@ class NewSiteCreationServiceState internal constructor(
 
     enum class NewSiteCreationStep(val progressPercent: Int = 0) {
         IDLE,
-        NEW_SITE(25),
+        CREATE_SITE(25),
         SUCCESS,
         FAILURE;
 

@@ -1,36 +1,50 @@
 package org.wordpress.android.ui.sitecreation.creation
 
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.analytics.AnalyticsTracker
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
-import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
-import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
+import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep
+import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.NEW_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
+import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
 
-class NewSiteCreationServiceManager constructor(
+class NewSiteCreationServiceManager @Inject constructor(
+    private val createSiteUseCase: CreateSiteUseCase,
     private val dispatcher: Dispatcher,
-    private val serviceListener: NewSiteCreationServiceManagerListener,
-    private val languageWordPressId: String
-) {
+    private val tracker: NewSiteCreationTracker,
+    @Named(IO_DISPATCHER) private val IO: CoroutineContext
+) : CoroutineScope {
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = IO + job
+
     private lateinit var siteData: NewSiteCreationServiceData
+    private lateinit var languageId: String
+    private lateinit var serviceListener: NewSiteCreationServiceManagerListener
     private var isRetry by Delegates.notNull<Boolean>()
-    private var newSiteRemoteId: Long? = null
+    private var newSiteRemoteId by Delegates.notNull<Long>()
 
     fun onStart(
+        languageWordPressId: String,
         previousState: String?,
-        data: NewSiteCreationServiceData
+        data: NewSiteCreationServiceData,
+        listener: NewSiteCreationServiceManagerListener
     ) {
-        executePhase(IDLE)
+        languageId = languageWordPressId
         siteData = data
+        serviceListener = listener
+
+        executePhase(IDLE)
+
         isRetry = previousState != null
 
         val phaseToExecute = if (isRetry) {
@@ -46,18 +60,22 @@ class NewSiteCreationServiceManager constructor(
         }
     }
 
+    fun onCreate() {
+        dispatcher.register(createSiteUseCase)
+    }
+
+    fun onDestroy() {
+        dispatcher.unregister(createSiteUseCase)
+    }
+
     private fun executePhase(phase: NewSiteCreationStep) {
         when (phase) {
-            NEW_SITE -> dispatchCreateNewSiteAction()
-            SUCCESS -> {
-                if (newSiteRemoteId != null) {
-                    updateServiceState(SUCCESS, newSiteRemoteId)
-                } else {
-                    serviceListener.logError("Move to the success state failed - newSiteRemoteId is required.")
-                    updateServiceState(FAILURE, null)
-                }
+            IDLE -> updateServiceState(IDLE)
+            CREATE_SITE -> {
+                updateServiceState(CREATE_SITE)
+                createSite()
             }
-            IDLE -> updateServiceState(IDLE, null)
+            SUCCESS -> updateServiceState(SUCCESS, newSiteRemoteId)
             FAILURE -> {
                 val currentState = serviceListener.getCurrentState()
                 serviceListener.logError(
@@ -68,20 +86,28 @@ class NewSiteCreationServiceManager constructor(
         }
     }
 
-    private fun dispatchCreateNewSiteAction() {
-        updateServiceState(NEW_SITE, null)
+    private fun createSite() {
+        launch {
+            serviceListener.logInfo(
+                    "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.siteSlug}"
+            )
+            val createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
 
-        val newSitePayload = NewSitePayload(
-                siteData.siteSlug,
-                siteData.siteTitle ?: "",
-                languageWordPressId,
-                PUBLIC,
-                false
-        )
-        serviceListener.logInfo(
-                "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.siteSlug}"
-        )
-        dispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload))
+            newSiteRemoteId = createSiteEvent.newSiteRemoteId
+            serviceListener.logInfo(createSiteEvent.toString())
+            if (createSiteEvent.isError) {
+                if (isRetry && createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
+                    // just move to the next step. The site was already created on the server by our previous attempt.
+                    serviceListener.logWarning("WPCOM site already created but we are in retrying mode so, just move on.")
+                    executePhase(CREATE_SITE.nextPhase())
+                } else {
+                    executePhase(FAILURE)
+                }
+            } else {
+                tracker.trackSiteCreated()
+                executePhase(CREATE_SITE.nextPhase())
+            }
+        }
     }
 
     /**
@@ -90,26 +116,8 @@ class NewSiteCreationServiceManager constructor(
      * @param step    The step of the new state
      * @param payload The payload to attach to the new state
      */
-    private fun updateServiceState(step: NewSiteCreationStep, payload: Any?) {
+    private fun updateServiceState(step: NewSiteCreationStep, payload: Any? = null) {
         serviceListener.updateState(NewSiteCreationServiceState(step, payload))
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onNewSiteCreated(event: OnNewSiteCreated) {
-        newSiteRemoteId = event.newSiteRemoteId
-        serviceListener.logInfo(event.toString())
-        if (event.isError) {
-            if (isRetry && event.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
-                // just move to the next step. The site was already created on the server by our previous attempt.
-                serviceListener.logWarning("WPCOM site already created but we are in retrying mode so, just move on.")
-                executePhase(NEW_SITE.nextPhase())
-                return
-            }
-            executePhase(FAILURE)
-        } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE)
-            executePhase(NEW_SITE.nextPhase())
-        }
     }
 
     interface NewSiteCreationServiceManagerListener {

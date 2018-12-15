@@ -4,19 +4,17 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import org.greenrobot.eventbus.EventBusException
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceManager.NewSiteCreationServiceManagerListener
+import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.FAILURE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
-import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.NEW_SITE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.AppLog.T.NUX
 import org.wordpress.android.util.AutoForeground
 import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
@@ -24,14 +22,14 @@ import javax.inject.Inject
 
 class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE, null)),
         NewSiteCreationServiceManagerListener {
-    private lateinit var manager: NewSiteCreationServiceManager
+    @Inject lateinit var manager: NewSiteCreationServiceManager
 
     @Inject lateinit var dispatcher: Dispatcher
 
     override fun onCreate() {
         super.onCreate()
         (application as WordPress).component().inject(this)
-        manager = NewSiteCreationServiceManager(dispatcher, this, LocaleManager.getLanguageWordPressId(this))
+        manager.onCreate()
         AppLog.i(T.MAIN, "NewSiteCreationService > Created")
     }
 
@@ -41,29 +39,31 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
         }
 
         val data = intent.getParcelableExtra<NewSiteCreationServiceData>(ARG_DATA)!!
-        manager.onStart(intent.getStringExtra(ARG_RESUME_PHASE), data)
+        manager.onStart(
+                LocaleManager.getLanguageWordPressId(this),
+                intent.getStringExtra(ARG_RESUME_PHASE),
+                data,
+                this
+        )
 
         return Service.START_REDELIVER_INTENT
     }
 
     override fun onProgressStart() {
-        AppLog.i(T.NUX, "NewSiteCreationService registering on EventBus")
-        registerManagerToDispatcher()
     }
 
     override fun onProgressEnd() {
-        AppLog.i(T.NUX, "NewSiteCreationService deregistering from EventBus")
-        unregisterManagerFromDispatcher()
     }
 
     override fun onDestroy() {
+        manager.onDestroy()
         AppLog.i(T.MAIN, "NewSiteCreationService > Destroyed")
         super.onDestroy()
     }
 
     public override fun getNotification(state: NewSiteCreationServiceState): Notification? {
         return when (state.step) {
-            NEW_SITE -> NewSiteCreationServiceNotification.createCreatingSiteNotification(this)
+            CREATE_SITE -> NewSiteCreationServiceNotification.createCreatingSiteNotification(this)
             SUCCESS -> NewSiteCreationServiceNotification.createSuccessNotification(this)
             FAILURE -> NewSiteCreationServiceNotification.createFailureNotification(this)
             IDLE -> null
@@ -96,21 +96,6 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
 
     override fun logWarning(message: String) {
         AppLog.w(T.NUX, message)
-    }
-
-    private fun registerManagerToDispatcher() {
-        try {
-            // it seems that for some users, the Service tries to register more than once. Let's guard to collect info
-            //  on this. Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7353
-            dispatcher.register(manager)
-        } catch (e: EventBusException) {
-            AppLog.w(NUX, "Registering NewSiteCreationService to EventBus failed! " + e.message)
-            CrashlyticsUtils.logException(e, NUX)
-        }
-    }
-
-    private fun unregisterManagerFromDispatcher() {
-        dispatcher.unregister(manager)
     }
 
     companion object {
