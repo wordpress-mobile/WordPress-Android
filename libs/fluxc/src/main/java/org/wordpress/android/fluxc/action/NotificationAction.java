@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.notification.NotificationModel;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
@@ -34,4 +35,6 @@ public enum NotificationAction implements IAction {
     MARKED_NOTIFICATIONS_SEEN // Response to marking a notification as seen
 
     // Local actions
+    @Action(payloadType = NotificationModel.class)
+    UPDATE_NOTIFICATION // Save updates to db
 }
