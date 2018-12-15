@@ -41,10 +41,27 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/create_site_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_input_layout"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/create_site_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:background="@color/wp_blue_medium"
+        android:padding="@dimen/margin_medium"
+        android:text="@string/new_site_creation_create_site_button"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+        app:layout_constraintVertical_bias="1"/>
 
     <FrameLayout
         android:id="@+id/domain_list_empty_view"
