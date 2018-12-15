@@ -7,7 +7,7 @@ import java.util.Locale
 data class NotificationModel(
     val noteId: Int = 0,
     val remoteNoteId: Long = 0L,
-    val localSiteId: Int = 0,
+    var localSiteId: Int = 0,
     val noteHash: Long = 0L,
     val type: Kind = NotificationModel.Kind.STORE_ORDER,
     val subtype: Subkind? = null,
@@ -53,4 +53,6 @@ data class NotificationModel(
             fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
         }
     }
+
+    fun getRemoteSiteId(): Long? = meta?.ids?.site
 }

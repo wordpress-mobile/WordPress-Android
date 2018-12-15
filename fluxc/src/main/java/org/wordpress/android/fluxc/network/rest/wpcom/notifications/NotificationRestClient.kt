@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErr
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationReadResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload
@@ -132,6 +133,34 @@ class NotificationRestClient constructor(
                                 networkError.message)
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationsAction(payload))
+                })
+        add(request)
+    }
+
+    /**
+     * Fetch a single notification by it's remote note_id.
+     *
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    fun fetchNotification(remoteNoteId: Long) {
+        val url = WPCOMREST.notifications.note(remoteNoteId).urlV1_1
+        val params = mapOf(
+                "fields" to NOTIFICATION_DEFAULT_FIELDS)
+        val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
+                { response ->
+                    val notification = response?.notes?.first()?.let {
+                        NotificationApiResponse.notificationResponseToNotificationModel(it)
+                    }
+                    val payload = FetchNotificationResponsePayload(notification)
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationAction(payload))
+                },
+                { networkError ->
+                    val payload = FetchNotificationResponsePayload().apply {
+                        error = NotificationError(
+                                NotificationErrorType.fromString(networkError.apiError),
+                                networkError.message)
+                    }
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationAction(payload))
                 })
         add(request)
     }
