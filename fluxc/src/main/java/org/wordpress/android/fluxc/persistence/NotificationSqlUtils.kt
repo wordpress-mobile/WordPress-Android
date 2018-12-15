@@ -132,6 +132,15 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .firstOrNull()?.build(formattableContentMapper)
     }
 
+    fun getNotificationByRemoteId(remoteNoteId: Long): NotificationModel? {
+        return WellSql.select(NotificationModelBuilder::class.java)
+                .where()
+                .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
+                .endWhere()
+                .asModel
+                .firstOrNull()?.build(formattableContentMapper)
+    }
+
     fun deleteNotifications(): Int {
         return WellSql.delete(NotificationModelBuilder::class.java).execute()
     }
