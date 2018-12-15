@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.usecases
 
+import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -9,23 +10,26 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
  * Transforms newSuggestDomainsAction EventBus event to a coroutine.
+ *
+ * The client may dispatch multiple requests, but we want to accept only the latest one and ignore all others.
+ * We can't rely just on job.cancel() as the OnSuggestedDomains may have already been dispatched and FluxC will
+ * return a result.
  */
 class FetchDomainsUseCase @Inject constructor(
     val dispatcher: Dispatcher,
     @Suppress("unused") val siteStore: SiteStore
 ) {
-    private var continuation: Continuation<OnSuggestedDomains>? = null
+    /**
+     * Query - Continuation pair
+     */
+    private var pair: Pair<String, Continuation<OnSuggestedDomains>>? = null
 
     suspend fun fetchDomains(payload: SuggestDomainsPayload): OnSuggestedDomains {
-        if (continuation != null) {
-            throw IllegalStateException("Fetch already in progress.")
-        }
-        return suspendCoroutine { cont ->
-            continuation = cont
+        return suspendCancellableCoroutine { cont ->
+            pair = Pair(payload.query, cont)
             dispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload))
         }
     }
@@ -33,7 +37,11 @@ class FetchDomainsUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onSuggestedDomains(event: OnSuggestedDomains) {
-        continuation?.resume(event)
-        continuation = null
+        pair?.let {
+            if (event.query == it.first) {
+                it.second.resume(event)
+                pair = null
+            }
+        }
     }
 }
