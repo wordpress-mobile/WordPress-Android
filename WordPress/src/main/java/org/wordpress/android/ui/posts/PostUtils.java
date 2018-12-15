@@ -369,6 +369,8 @@ public class PostUtils {
 
     public static boolean shouldShowGutenbergEditor(boolean isNewPost, PostModel post) {
         return AppPrefs.isGutenbergEditorEnabled()
-               && (isNewPost || contentContainsGutenbergBlocks(post.getContent()));
+               && (isNewPost
+                   || contentContainsGutenbergBlocks(post.getContent())
+                   || TextUtils.isEmpty(post.getContent()));
     }
 }
