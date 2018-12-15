@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.color
@@ -20,11 +21,17 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
 
     class DomainSuggestionItemViewHolder(
         parentView: ViewGroup
-            // TODO: Rename the resource
-    ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_verticals_suggestion_item) {
+    ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_domains_item) {
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
-        private val suggestion = itemView.findViewById<TextView>(R.id.suggestion)
+        private val suggestion = itemView.findViewById<RadioButton>(R.id.domain_suggestion)
         private val divider = itemView.findViewById<View>(R.id.divider)
+
+        init {
+            suggestion.buttonTintList = ContextCompat.getColorStateList(
+                    parentView.context,
+                    R.color.grey_blue_radio_button_state_list
+            )
+        }
 
         override fun onBind(uiState: DomainsListItemUiState) {
             uiState as DomainsModelUiState
