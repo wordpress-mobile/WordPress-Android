@@ -26,8 +26,8 @@
             android:text="@string/new_site_creation_site_info_header_title"
             android:textColor="@color/wp_grey_dark"
             android:textSize="@dimen/text_sz_large"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
@@ -40,8 +40,8 @@
             android:text="@string/new_site_creation_site_info_header_subtitle"
             android:textColor="@color/wp_grey_darken_20"
             android:textSize="@dimen/text_sz_large"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/site_info_header_title"/>
 
         <android.support.design.widget.TextInputLayout
@@ -92,8 +92,8 @@
             android:id="@+id/site_info_tag_line_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:text="@string/new_site_creation_optional_tag_line_description"
             android:textColor="@color/wp_grey_darken_20"
             android:textSize="@dimen/text_sz_medium"
@@ -110,7 +110,7 @@
             android:text="@string/new_site_creation_button_skip"
             android:theme="@style/WordPress.Button"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/site_info_tag_line_description"
             app:layout_constraintVertical_bias="1"/>
     </android.support.constraint.ConstraintLayout>
