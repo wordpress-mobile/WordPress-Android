@@ -33,6 +33,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
+import kotlin.properties.Delegates
 
 private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
 private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
@@ -57,13 +58,16 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
+    private var currentQuery: String = ""
     private var listState: ListState<String> = ListState.Init()
+    private var selectedDomain by Delegates.observable<String?>(null) { _, old, new ->
+        if (old != new) {
+            updateUiStateToContent(currentQuery, listState)
+        }
+    }
 
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
-
-    private val _domainSelected = SingleLiveEvent<String>()
-    val domainSelected: LiveData<String> = _domainSelected
 
     init {
         dispatcher.register(fetchDomainsUseCase)
@@ -87,6 +91,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
+        currentQuery = query
+        selectedDomain = null
         fetchDomainsJob?.cancel() // cancel any previous requests
         if (query.isNotEmpty()) {
             fetchDomains(query)
@@ -190,9 +196,10 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             data.forEachIndexed { index, domainName ->
                     val itemUiState = DomainsModelUiState(
                             domainName,
-                            showDivider = index != lastItemIndex
+                            showDivider = index != lastItemIndex,
+                            checked = domainName == selectedDomain
                     )
-                    itemUiState.onItemTapped = { _domainSelected.value = itemUiState.name }
+                    itemUiState.onItemTapped = { selectedDomain = domainName }
                     items.add(itemUiState)
             }
         }
@@ -252,7 +259,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     sealed class DomainsListItemUiState {
         var onItemTapped: (() -> Unit)? = null
 
-        data class DomainsModelUiState(val name: String, val showDivider: Boolean) :
+        data class DomainsModelUiState(val name: String, val showDivider: Boolean, val checked: Boolean) :
                 DomainsListItemUiState()
 
         data class DomainsFetchSuggestionsErrorUiState(

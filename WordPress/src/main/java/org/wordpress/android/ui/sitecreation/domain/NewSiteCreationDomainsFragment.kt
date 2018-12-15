@@ -95,11 +95,6 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
             searchInputWithHeader.setInputText("")
         })
 
-        viewModel.domainSelected.observe(this, Observer { domainName ->
-            domainName?.let {
-                // TODO: Add a listener for domain selected
-            }
-        })
         viewModel.start()
     }
 

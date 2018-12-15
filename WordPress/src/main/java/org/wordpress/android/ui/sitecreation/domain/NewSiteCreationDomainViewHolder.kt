@@ -25,28 +25,38 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
         private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val suggestion = itemView.findViewById<RadioButton>(R.id.domain_suggestion)
         private val divider = itemView.findViewById<View>(R.id.divider)
+        private var onDomainSelected: (() -> Unit)? = null
 
         init {
             suggestion.buttonTintList = ContextCompat.getColorStateList(
                     parentView.context,
                     R.color.grey_blue_radio_button_state_list
             )
+            // We need to trigger `onDomainSelected` for both the radio button and the container because otherwise
+            // some parts of the layout will not be clickable.
+            container.setOnClickListener {
+                onDomainSelected?.invoke()
+            }
+            suggestion.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    onDomainSelected?.invoke()
+                }
+            }
         }
 
         override fun onBind(uiState: DomainsListItemUiState) {
             uiState as DomainsModelUiState
+            onDomainSelected = requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
             suggestion.text = uiState.name
+            suggestion.isChecked = uiState.checked
             divider.visibility = if (uiState.showDivider) View.VISIBLE else View.GONE
-            requireNotNull(uiState.onItemTapped) { "OnItemTapped is required." }
-            container.setOnClickListener {
-                uiState.onItemTapped!!.invoke()
-            }
         }
     }
 
     class DomainSuggestionErrorViewHolder(
         parentView: ViewGroup
             // TODO: Rename the resource
+            // TODO: Handle errors
     ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_verticals_error_item) {
         private val text = itemView.findViewById<TextView>(R.id.error_text)
         private val retry = itemView.findViewById<TextView>(R.id.retry)

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.domain
 
+import android.support.annotation.MainThread
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class NewSiteCreationDomainsAdapter : Adapter<NewSiteCreationDomainViewHolder>()
         holder.onBind(items[position])
     }
 
+    @MainThread
     fun update(newItems: List<DomainsListItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(DomainsDiffUtils(items.toList(), newItems))
         items.clear()
