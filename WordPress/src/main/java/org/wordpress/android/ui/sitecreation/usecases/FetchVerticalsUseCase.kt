@@ -34,7 +34,7 @@ class FetchVerticalsUseCase @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onVerticalsFetched(event: OnVerticalsFetched) {
         pair?.let {
