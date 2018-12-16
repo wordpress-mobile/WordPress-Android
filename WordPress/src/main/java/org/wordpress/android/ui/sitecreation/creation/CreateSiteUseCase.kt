@@ -12,6 +12,9 @@ import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 
+/**
+ * Transforms OnNewSiteCreated EventBus event to a coroutine.
+ */
 class CreateSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore

@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSiteCreationTracker
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep
@@ -37,11 +38,11 @@ class NewSiteCreationServiceManager @Inject constructor(
         languageWordPressId: String,
         previousState: String?,
         data: NewSiteCreationServiceData,
-        listener: NewSiteCreationServiceManagerListener
+        serviceListener: NewSiteCreationServiceManagerListener
     ) {
         languageId = languageWordPressId
         siteData = data
-        serviceListener = listener
+        this.serviceListener = serviceListener
 
         executePhase(IDLE)
 
@@ -54,7 +55,7 @@ class NewSiteCreationServiceManager @Inject constructor(
         }
 
         if (NewSiteCreationServiceState(phaseToExecute, null).isTerminal) {
-            serviceListener.logError("Internal inconsistency: NewSiteCreationService can't resume a terminal step!")
+            this.serviceListener.logError("Internal inconsistency: NewSiteCreationService can't resume a terminal step!")
         } else {
             executePhase(phaseToExecute)
         }
@@ -91,7 +92,14 @@ class NewSiteCreationServiceManager @Inject constructor(
             serviceListener.logInfo(
                     "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.siteSlug}"
             )
-            val createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
+            val createSiteEvent: OnNewSiteCreated
+            try {
+                createSiteEvent = createSiteUseCase.createSite(siteData, languageId)
+            } catch (e: IllegalStateException) {
+                serviceListener.logError(e.message ?: "Unexpected error.")
+                executePhase(FAILURE)
+                return@launch
+            }
 
             newSiteRemoteId = createSiteEvent.newSiteRemoteId
             serviceListener.logInfo(createSiteEvent.toString())

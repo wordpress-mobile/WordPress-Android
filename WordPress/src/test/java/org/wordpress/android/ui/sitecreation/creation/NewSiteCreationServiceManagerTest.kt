@@ -179,6 +179,19 @@ class NewSiteCreationServiceManagerTest {
         }
     }
 
+    @Test
+    fun verifyIllegalStateExceptionInUseCaseResultsInServiceErrorState() = test {
+        whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
+                .thenThrow(IllegalStateException("Error"))
+        startFlow()
+        argumentCaptor<NewSiteCreationServiceState>().apply {
+            verify(serviceListener, times(3)).updateState(capture())
+            assertThat(allValues[0]).isEqualTo(IDLE_STATE)
+            assertThat(allValues[1]).isEqualTo(CREATE_SITE_STATE)
+            assertThat(allValues[2]).isEqualTo(NewSiteCreationServiceState(FAILURE))
+        }
+    }
+
     private fun startFlow() {
         manager.onStart(LANGUAGE_ID, null, DUMMY_SITE_DATA, serviceListener)
     }

@@ -43,7 +43,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
                 LocaleManager.getLanguageWordPressId(this),
                 intent.getStringExtra(ARG_RESUME_PHASE),
                 data,
-                this
+                serviceListener = this
         )
 
         return Service.START_REDELIVER_INTENT
