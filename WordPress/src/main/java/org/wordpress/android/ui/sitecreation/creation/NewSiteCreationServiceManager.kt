@@ -134,7 +134,7 @@ class NewSiteCreationServiceManager @Inject constructor(
     /**
      * Helper method to create a new State object and set it as the new state.
      *
-     * @param step    The step of the new state
+     * @param step The step of the new state
      * @param payload The payload to attach to the new state
      */
     private fun updateServiceState(step: NewSiteCreationStep, payload: Any? = null) {
