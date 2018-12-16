@@ -29,7 +29,8 @@
         <View
             android:id="@+id/list_margin_view"
             android:layout_height="@dimen/margin_extra_large"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            tools:ignore="InconsistentLayout" >
         </View>
 
         <FrameLayout
