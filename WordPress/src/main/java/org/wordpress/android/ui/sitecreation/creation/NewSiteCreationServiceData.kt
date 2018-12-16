@@ -10,4 +10,4 @@ data class NewSiteCreationServiceData(
     val siteTitle: String?,
     val siteTagLine: String?,
     val siteSlug: String
-): Parcelable
+) : Parcelable

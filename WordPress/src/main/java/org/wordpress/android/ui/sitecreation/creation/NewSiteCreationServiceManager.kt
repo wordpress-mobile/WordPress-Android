@@ -119,7 +119,7 @@ class NewSiteCreationServiceManager @Inject constructor(
                          */
                         val errorMsg = "Site already exists - seems like an issue with domain suggestions endpoint"
                         serviceListener.logError(errorMsg)
-                        throw IllegalStateException (errorMsg)
+                        throw IllegalStateException(errorMsg)
                     }
                 } else {
                     executePhase(FAILURE)
