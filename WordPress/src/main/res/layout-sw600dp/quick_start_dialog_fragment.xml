@@ -3,18 +3,19 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center_horizontal"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent" >
+    android:layout_width="@dimen/quick_start_card_width_maximum" >
 
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical" >
 
-        <FrameLayout
+        <android.support.v7.widget.CardView
             android:id="@+id/list_uncompleted_container"
-            android:background="@color/white"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_width="match_parent" >
 
             <android.support.v7.widget.RecyclerView
@@ -24,18 +25,17 @@
                 tools:listitem="@layout/quick_start_list_item" >
             </android.support.v7.widget.RecyclerView>
 
-        </FrameLayout>
+        </android.support.v7.widget.CardView>
 
         <View
-            android:id="@+id/list_margin_view"
             android:layout_height="@dimen/margin_extra_large"
             android:layout_width="match_parent">
         </View>
 
-        <FrameLayout
+        <android.support.v7.widget.CardView
             android:id="@+id/list_completed_container"
-            android:background="@color/white"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_width="match_parent" >
 
             <android.support.v7.widget.RecyclerView
@@ -45,7 +45,7 @@
                 tools:listitem="@layout/quick_start_list_item" >
             </android.support.v7.widget.RecyclerView>
 
-        </FrameLayout>
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 
