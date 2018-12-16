@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.sitecreation
 
-import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
@@ -12,24 +9,17 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
-import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
-import org.wordpress.android.util.URLFilteredWebViewClient
-import javax.inject.Inject
 
-class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>(),
-        PageFullyLoadedListener {
+class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
     private val url: String = "https://en.blog.wordpress.com"
     private val urlShort: String = "en.blog.wordpress.com"
     private val subdomainSpan: Pair<Int, Int> = Pair(0, "en.blog".length)
     private val domainSpan: Pair<Int, Int> = Pair(Math.min(subdomainSpan.second, urlShort.length), urlShort.length)
-
-    private lateinit var viewModel: NewSitePreviewViewModel
-
-    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -38,23 +28,14 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     override fun setupContent(rootView: ViewGroup) {
         val sitePreviewWebView = rootView.findViewById<WebView>(R.id.sitePreviewWebView)
-        sitePreviewWebView.webViewClient = PreviewWebViewClient(this, url)
+        sitePreviewWebView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                return true
+            }
+        }
         sitePreviewWebView.loadUrl(url)
         val sitePreviewWebUrlTitle = rootView.findViewById<TextView>(R.id.sitePreviewWebUrlTitle)
         sitePreviewWebUrlTitle.text = createSpannableUrl(rootView.context, urlShort, subdomainSpan, domainSpan)
-
-        initViewModel()
-    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(NewSitePreviewViewModel::class.java)
-        viewModel.start()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
     }
 
     /**
@@ -95,26 +76,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
     }
 
-    override fun onPageFullyLoaded() {
-        val view = view
-        if (view != null) {
-            // TODO go through VM
-            hideGetStartedBar(view.findViewById(R.id.sitePreviewWebView))
-        }
-    }
-
-    // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
-    // Ideally we would hide "get started" bar on server side
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun hideGetStartedBar(webView: WebView) {
-        webView.settings.javaScriptEnabled = true
-        val javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n" + "document.getElementById('wpadminbar').style.display = 'none';\n"
-
-        webView.evaluateJavascript(
-                javascript
-        ) { webView.settings.javaScriptEnabled = false }
-    }
-
     override fun onHelp() {
         if (mSiteCreationListener != null) {
             mSiteCreationListener.helpCategoryScreen()
@@ -139,19 +100,5 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
             fragment.arguments = bundle
             return fragment
         }
-    }
-}
-
-private class PreviewWebViewClient internal constructor(
-    val pageLoadedListener: PageFullyLoadedListener,
-    siteAddress: String
-) : URLFilteredWebViewClient(siteAddress) {
-    interface PageFullyLoadedListener {
-        fun onPageFullyLoaded()
-    }
-
-    override fun onPageFinished(view: WebView, url: String) {
-        super.onPageFinished(view, url)
-        pageLoadedListener.onPageFullyLoaded()
     }
 }
