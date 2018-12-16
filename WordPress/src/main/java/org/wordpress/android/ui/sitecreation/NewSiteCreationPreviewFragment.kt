@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
@@ -49,6 +50,11 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSitePreviewViewModel::class.java)
         viewModel.start()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        (activity!!.application as WordPress).component().inject(this)
     }
 
     /**
