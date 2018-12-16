@@ -64,7 +64,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             mTasksType = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
         }
 
-        RecyclerView list = rootView.findViewById(R.id.list);
+        RecyclerView listUncompleted = rootView.findViewById(R.id.list_uncompleted);
+        RecyclerView listCompleted = rootView.findViewById(R.id.list_completed);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
@@ -87,11 +88,23 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
-        mQuickStartAdapter = new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted,
+        QuickStartAdapter quickStartAdapter = new QuickStartAdapter(
+                requireContext(),
+                tasksUncompleted,
+                new ArrayList<QuickStartTask>(),
+                isCompletedTasksListExpanded);
+        quickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
+        listUncompleted.setLayoutManager(new LinearLayoutManager(requireContext()));
+        listUncompleted.setAdapter(quickStartAdapter);
+
+        mQuickStartAdapter = new QuickStartAdapter(
+                requireContext(),
+                new ArrayList<QuickStartTask>(),
+                tasksCompleted,
                 isCompletedTasksListExpanded);
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
-        list.setLayoutManager(new LinearLayoutManager(requireContext()));
-        list.setAdapter(mQuickStartAdapter);
+        listCompleted.setLayoutManager(new LinearLayoutManager(requireContext()));
+        listCompleted.setAdapter(mQuickStartAdapter);
 
         return rootView;
     }
