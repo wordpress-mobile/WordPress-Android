@@ -50,6 +50,12 @@
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
     <dimen name="content_margin">@dimen/content_margin_normal</dimen>
+    <dimen name="content_margin_site_row_end">@dimen/margin_extra_large</dimen>
+    <dimen name="content_margin_site_row_end_tablet">@dimen/content_margin_tablet</dimen>
+    <dimen name="content_margin_site_row_end_tablet_big">@dimen/content_margin_tablet_big</dimen>
+    <dimen name="content_margin_site_row_start">@dimen/my_site_list_row_padding_left</dimen>
+    <dimen name="content_margin_site_row_start_tablet">60dp</dimen>
+    <dimen name="content_margin_site_row_start_tablet_big">108dp</dimen>
 
     <!--
         native reader dimens
