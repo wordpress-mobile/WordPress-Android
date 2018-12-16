@@ -105,19 +105,23 @@ class NewSiteCreationServiceManager @Inject constructor(
             serviceListener.logInfo(createSiteEvent.toString())
             if (createSiteEvent.isError) {
                 if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
-                    if(isRetry) {
+                    if (isRetry) {
                         // Move to the next step. The site was already created on the server by our previous attempt.
                         serviceListener.logWarning(
                                 "WPCOM site already created but we are in retrying mode so, just move on."
                         )
                         executePhase(CREATE_SITE.nextPhase())
                     } else {
-                        serviceListener.logError(
-                                "WPCOM site already exists - seems like an issue on domain suggestions endpoint."
-                        )
-                        executePhase(FAILURE)
+                        /**
+                         * This state should not happen in production unless the domain suggestion endpoint is broken.
+                         * There is a very low chance two users picked the same domain at the same time and only
+                         * the first got it.
+                         */
+                        val errorMsg = "Site already exists - seems like an issue with domain suggestions endpoint"
+                        serviceListener.logError(errorMsg)
+                        throw IllegalStateException (errorMsg)
                     }
-                } else{
+                } else {
                     executePhase(FAILURE)
                 }
             } else {
