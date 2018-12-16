@@ -55,7 +55,7 @@ class NewSiteCreationServiceManager @Inject constructor(
         }
 
         if (NewSiteCreationServiceState(phaseToExecute, null).isTerminal) {
-            this.serviceListener.logError("Internal inconsistency: NewSiteCreationService can't resume a terminal step!")
+            this.serviceListener.logError("IllegalState: NewSiteCreationService can't resume a terminal step!")
         } else {
             executePhase(phaseToExecute)
         }
@@ -104,11 +104,20 @@ class NewSiteCreationServiceManager @Inject constructor(
             newSiteRemoteId = createSiteEvent.newSiteRemoteId
             serviceListener.logInfo(createSiteEvent.toString())
             if (createSiteEvent.isError) {
-                if (isRetry && createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
-                    // just move to the next step. The site was already created on the server by our previous attempt.
-                    serviceListener.logWarning("WPCOM site already created but we are in retrying mode so, just move on.")
-                    executePhase(CREATE_SITE.nextPhase())
-                } else {
+                if (createSiteEvent.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
+                    if(isRetry) {
+                        // Move to the next step. The site was already created on the server by our previous attempt.
+                        serviceListener.logWarning(
+                                "WPCOM site already created but we are in retrying mode so, just move on."
+                        )
+                        executePhase(CREATE_SITE.nextPhase())
+                    } else {
+                        serviceListener.logError(
+                                "WPCOM site already exists - seems like an issue on domain suggestions endpoint."
+                        )
+                        executePhase(FAILURE)
+                    }
+                } else{
                     executePhase(FAILURE)
                 }
             } else {
