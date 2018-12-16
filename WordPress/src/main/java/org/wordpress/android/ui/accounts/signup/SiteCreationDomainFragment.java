@@ -192,7 +192,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                             // fallback to using the provided site title as query if text is empty
                             mQueryString = TextUtils.isEmpty(keywords.trim()) ? mSiteTitle : keywords;
 
-                            getLoaderFragment().load(mQueryString);
+                            getLoaderFragment().load(mQueryString, mSiteCategory);
                         }
 
                         @Override

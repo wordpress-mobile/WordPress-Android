@@ -99,7 +99,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
 
         postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
-        boolean isBlog = siteCategory.equals(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG)
+        boolean isBlog = siteCategory.equals(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG);
 
         SuggestDomainsPayload payload = new SuggestDomainsPayload(keywords, true, true, isBlog, 20, isBlog);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
