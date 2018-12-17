@@ -105,7 +105,13 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
     fun `adds unknown item when there are encrypted terms`() = test {
         val forced = false
         val unknownSearchCount = 500
-        val model = SearchTermsModel(0, 0, unknownSearchCount, listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm), false)
+        val model = SearchTermsModel(
+                0,
+                0,
+                unknownSearchCount,
+                listOf(searchTerm, searchTerm, searchTerm, searchTerm, searchTerm, searchTerm),
+                false
+        )
         whenever(
                 store.fetchSearchTerms(site, pageSize, statsGranularity, selectedDate, forced)
         ).thenReturn(
