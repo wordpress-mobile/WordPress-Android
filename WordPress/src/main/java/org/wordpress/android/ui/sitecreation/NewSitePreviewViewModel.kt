@@ -36,6 +36,9 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _preloadPreview: MutableLiveData<String> = SingleLiveEvent()
     val preloadPreview: LiveData<String> = _preloadPreview
 
+    private val _hideGetStartedBar: MutableLiveData<Unit> = SingleLiveEvent()
+    val hideGetStartedBar: LiveData<Unit> = _hideGetStartedBar
+
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) {
             return

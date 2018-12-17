@@ -82,6 +82,9 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 sitePreviewWebView.loadUrl(url)
             }
         })
+        viewModel.hideGetStartedBar.observe(this, Observer<Unit> {
+            hideGetStartedBar(sitePreviewWebView)
+        })
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
     }
 
@@ -149,11 +152,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     override fun onPageFullyLoaded() {
-        val view = view
-        if (view != null) {
-            // TODO go through VM
-            hideGetStartedBar(view.findViewById(R.id.sitePreviewWebView))
-        }
         viewModel.onUrlLoaded()
     }
 
