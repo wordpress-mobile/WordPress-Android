@@ -3,6 +3,9 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.notification.NotificationModel;
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationPayload;
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
@@ -20,6 +23,8 @@ public enum NotificationAction implements IAction {
     UNREGISTER_DEVICE, // Unregister device for push notifications with WordPress.com
     @Action(payloadType = FetchNotificationsPayload.class)
     FETCH_NOTIFICATIONS, // Fetch notifications
+    @Action(payloadType = FetchNotificationPayload.class)
+    FETCH_NOTIFICATION, // Fetch a single notification
     @Action(payloadType = MarkNotificationsSeenPayload.class)
     MARK_NOTIFICATIONS_SEEN, // Mark last notification time seen
 
@@ -30,8 +35,12 @@ public enum NotificationAction implements IAction {
     UNREGISTERED_DEVICE, // Response to device unregistration
     @Action(payloadType = FetchNotificationsResponsePayload.class)
     FETCHED_NOTIFICATIONS, // Response to fetching notifications
+    @Action(payloadType = FetchNotificationResponsePayload.class)
+    FETCHED_NOTIFICATION, // Response to fetching a single notification
     @Action(payloadType = MarkNotificationSeenResponsePayload.class)
-    MARKED_NOTIFICATIONS_SEEN // Response to marking a notification as seen
+    MARKED_NOTIFICATIONS_SEEN, // Response to marking a notification as seen
 
     // Local actions
+    @Action(payloadType = NotificationModel.class)
+    UPDATE_NOTIFICATION // Save updates to db
 }
