@@ -45,7 +45,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
                 serviceListener = this
         )
 
-        return Service.START_REDELIVER_INTENT
+        return Service.START_NOT_STICKY
     }
 
     override fun onProgressStart() {
