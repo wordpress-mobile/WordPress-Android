@@ -333,9 +333,11 @@ constructor(
 
     private fun handleMarkedNotificationRead(payload: MarkNotificationReadResponsePayload) {
         // Update the notification in the database
-        payload.notification?.let {
-            it.read = true // Just in case it wasn't set by the calling client
-            if (payload.success) notificationSqlUtils.insertOrUpdateNotification(it)
+        if (payload.success) {
+            payload.notification?.let {
+                it.read = true // Just in case it wasn't set by the calling client
+                notificationSqlUtils.insertOrUpdateNotification(it)
+            }
         }
 
         // Create an dispatch result
