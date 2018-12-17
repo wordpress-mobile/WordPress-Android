@@ -23,6 +23,7 @@
 /me/username/
 
 /notifications/
+/notifications/$note_id
 /notifications/seen/
 
 /read/feed/
