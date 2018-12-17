@@ -95,6 +95,7 @@ class StatsSqlUtils
         REFERRERS,
         CLICKS,
         VISITS_AND_VIEWS,
+        COUNTRY_VIEWS,
         PUBLICIZE_INSIGHTS
     }
 }
