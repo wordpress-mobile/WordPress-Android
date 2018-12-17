@@ -85,4 +85,8 @@ workflows:
     jobs:
       - test
       - lint
-      - danger
+      - danger:
+        filters:
+          branches:
+            # only from forks
+            only: /^pull\/.*$/
