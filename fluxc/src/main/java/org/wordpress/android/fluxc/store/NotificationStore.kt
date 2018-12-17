@@ -94,6 +94,16 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
+    class FetchNotificationPayload(
+        val remoteNoteId: Long
+    ) : Payload<BaseNetworkError>()
+
+    class FetchNotificationResponsePayload(
+        val notification: NotificationModel? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
     class MarkNotificationsSeenPayload(
         val lastSeenTime: Long
     ) : Payload<BaseNetworkError>()
@@ -286,6 +296,25 @@ constructor(
             causeOfChange = FETCH_NOTIFICATIONS
         }
 
+        emitChange(onNotificationChanged)
+    }
+
+    private fun fetchNotification(payload: FetchNotificationPayload) {
+        notificationRestClient.fetchNotification(payload.remoteNoteId)
+    }
+
+    private fun handleFetchNotificationCompleted(payload: FetchNotificationResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+            OnNotificationChanged(0).also { it.error = payload.error }
+        } else {
+            // Update the localSiteId
+            val rows = payload.notification?.let {
+                val remoteSiteId = it.getRemoteSiteId() ?: 0
+                it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
+                notificationSqlUtils.insertOrUpdateNotification(it)
+            } ?: 0
+            OnNotificationChanged(rows)
+        }
         emitChange(onNotificationChanged)
     }
 
