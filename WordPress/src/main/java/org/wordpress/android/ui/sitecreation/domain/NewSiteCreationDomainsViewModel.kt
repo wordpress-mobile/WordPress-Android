@@ -66,6 +66,9 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
+    private val _createSiteBtnClicked = SingleLiveEvent<String>()
+    val createSiteBtnClicked: LiveData<String> = _createSiteBtnClicked
+
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
 
@@ -87,6 +90,13 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         }
         isStarted = true
         resetUiState()
+    }
+
+    fun createSiteBtnClicked() {
+        requireNotNull(selectedDomain) {
+            "Create site button should not be visible if a domain is not selected"
+        }
+        _createSiteBtnClicked.value = selectedDomain
     }
 
     fun onClearTextBtnClicked() {

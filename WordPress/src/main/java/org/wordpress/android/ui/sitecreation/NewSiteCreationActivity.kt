@@ -20,6 +20,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
+import org.wordpress.android.ui.sitecreation.domain.DomainsScreenListener
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
@@ -31,6 +32,7 @@ import javax.inject.Inject
 class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
+        DomainsScreenListener,
         SiteInfoScreenListener,
         OnSkipClickedListener,
         OnHelpClickedListener {
@@ -62,6 +64,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     override fun onVerticalSelected(verticalId: String) {
         mainViewModel.onVerticalsScreenFinished(verticalId)
+    }
+
+    override fun onDomainSelected(domain: String) {
+        mainViewModel.onDomainsScreenFinished(domain)
     }
 
     override fun onSkipClicked() {

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
 import android.support.v4.app.FragmentActivity
+import android.support.v7.widget.AppCompatButton
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -33,15 +34,20 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var createSiteButtonContainer: View
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
 
+    private lateinit var domainsScreenListener: DomainsScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        if (context !is DomainsScreenListener) {
+            throw IllegalStateException("Parent activity must implement DomainsScreenListener.")
+        }
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
+        domainsScreenListener = context
         helpClickedListener = context
     }
 
@@ -57,6 +63,9 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         )
         emptyView = rootView.findViewById(R.id.domain_list_empty_view)
         createSiteButtonContainer = rootView.findViewById(R.id.create_site_button_container)
+        rootView.findViewById<AppCompatButton>(R.id.create_site_button).setOnClickListener {
+            viewModel.createSiteBtnClicked()
+        }
         initRecyclerView(rootView)
         initViewModel()
     }
@@ -121,6 +130,9 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         })
         viewModel.clearBtnClicked.observe(this, Observer {
             searchInputWithHeader.setInputText("")
+        })
+        viewModel.createSiteBtnClicked.observe(this, Observer { domain ->
+            domain?.let { domainsScreenListener.onDomainSelected(domain) }
         })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
