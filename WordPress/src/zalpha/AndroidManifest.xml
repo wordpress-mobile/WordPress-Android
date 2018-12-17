@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="org.wordpress.android"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="auto">
+
+    <application
+        android:name=".WordPress"
+        tools:node="merge"
+        >
+
+        <!-- Posts activities -->
+        <activity
+            android:name=".ui.posts.EditPostActivity"
+            tools:node="merge"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+    </application>
+</manifest>
