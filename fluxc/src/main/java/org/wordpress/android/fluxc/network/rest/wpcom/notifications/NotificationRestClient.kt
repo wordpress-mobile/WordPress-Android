@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.NotificationActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
@@ -17,8 +16,8 @@ import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErr
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload
-import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationReadResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationAppKey
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationError
@@ -137,6 +136,34 @@ class NotificationRestClient constructor(
     }
 
     /**
+     * Fetch a single notification by it's remote note_id.
+     *
+     * https://developer.wordpress.com/docs/api/1/get/notifications/%s
+     */
+    fun fetchNotification(remoteNoteId: Long) {
+        val url = WPCOMREST.notifications.note(remoteNoteId).urlV1_1
+        val params = mapOf(
+                "fields" to NOTIFICATION_DEFAULT_FIELDS)
+        val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
+                { response ->
+                    val notification = response?.notes?.first()?.let {
+                        NotificationApiResponse.notificationResponseToNotificationModel(it)
+                    }
+                    val payload = FetchNotificationResponsePayload(notification)
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationAction(payload))
+                },
+                { networkError ->
+                    val payload = FetchNotificationResponsePayload().apply {
+                        error = NotificationError(
+                                NotificationErrorType.fromString(networkError.apiError),
+                                networkError.message)
+                    }
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationAction(payload))
+                })
+        add(request)
+    }
+
+    /**
      * Send the timestamp of the last notification seen to update the last set of notifications seen
      * on the server.
      *
@@ -158,31 +185,6 @@ class NotificationRestClient constructor(
                         )
                     }
                     dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationsSeenAction(payload))
-                })
-        add(request)
-    }
-
-    /**
-     * Mark a notification as read
-     * Decrement the unread count for a notification. Key=note_ID, Value=decrement amount.
-     *
-     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
-     */
-    fun markNotificationRead(notification: NotificationModel) {
-        val url = WPCOMREST.notifications.read.urlV1_1
-        val params = mapOf("counts[${notification.remoteNoteId}]" to "9999") // Just like WPAndroid
-        val request = WPComGsonRequest.buildPostRequest(url, params, NotificationReadApiResponse::class.java,
-                { response ->
-                    val payload = MarkNotificationReadResponsePayload(notification, response.success)
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationReadAction(payload))
-                },
-                { networkError ->
-                    val payload = MarkNotificationReadResponsePayload().apply {
-                        error = NotificationError(
-                                NotificationErrorType.fromString(networkError.apiError),
-                                networkError.message)
-                    }
-                    dispatcher.dispatch(NotificationActionBuilder.newMarkedNotificationReadAction(payload))
                 })
         add(request)
     }
