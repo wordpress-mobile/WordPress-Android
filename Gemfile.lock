@@ -36,6 +36,11 @@ GEM
       no_proxy_fix
       octokit (~> 4.7)
       terminal-table (~> 1)
+    danger-checkstyle_format (0.1.1)
+      danger-plugin-api (~> 1.0)
+      ox (~> 2.0)
+    danger-plugin-api (1.0.0)
+      danger (> 2.0)
     declarative (0.0.10)
     declarative-option (0.1.0)
     domain_name (0.5.20180417)
@@ -129,6 +134,7 @@ GEM
       sawyer (~> 0.8.0, >= 0.5.3)
     open4 (1.3.4)
     os (1.0.0)
+    ox (2.10.0)
     plist (3.4.0)
     public_suffix (2.0.5)
     representable (3.0.4)
@@ -180,6 +186,7 @@ PLATFORMS
 
 DEPENDENCIES
   danger!
+  danger-checkstyle_format!
   fastlane (= 2.107.0)!
   fastlane-plugin-wpmreleasetoolkit!
 
