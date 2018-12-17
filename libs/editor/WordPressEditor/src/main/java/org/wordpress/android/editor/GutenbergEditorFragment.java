@@ -38,7 +38,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
-
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
 
     private static boolean mIsToolbarExpanded = false;
