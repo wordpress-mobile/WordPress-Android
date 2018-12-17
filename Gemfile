@@ -2,6 +2,7 @@
 
 source "https://rubygems.org" do 
   gem 'danger'
+  gem 'danger-checkstyle_format'
   gem 'fastlane', "2.107.0"
 end
 
