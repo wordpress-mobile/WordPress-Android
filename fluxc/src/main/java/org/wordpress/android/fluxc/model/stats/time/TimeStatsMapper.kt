@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsT
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
@@ -113,5 +114,31 @@ class TimeStatsMapper
             val stringValue = this[it]
             stringValue?.toLong()
         } ?: 0
+    }
+
+    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+        val first = response.days.values.first()
+        val countriesInfo = response.countryInfo
+        val groups = first.views.take(pageSize).mapNotNull { countryViews ->
+            val countryInfo = countriesInfo[countryViews.countryCode]
+            if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
+                CountryViewsModel.Country(
+                        countryViews.countryCode,
+                        countryInfo.countryFull,
+                        countryViews.views ?: 0,
+                        countryInfo.flagIcon,
+                        countryInfo.flatFlagIcon
+                )
+            } else {
+                AppLog.e(STATS, "CountryViewsResponse: Missing fields on a CountryViews object")
+                null
+            }
+        }
+        return CountryViewsModel(
+                first.otherViews ?: 0,
+                first.totalViews ?: 0,
+                groups,
+                first.views.size > groups.size
+        )
     }
 }
