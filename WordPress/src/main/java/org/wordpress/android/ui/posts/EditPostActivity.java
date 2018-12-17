@@ -2397,7 +2397,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mMediaInsertedOnCreation) {
             mMediaInsertedOnCreation = false;
             contentChanged = true;
-        } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+        } else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
             contentChanged = true;
         } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
@@ -2422,7 +2422,7 @@ public class EditPostActivity extends AppCompatActivity implements
       * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
       * URLs will have been replaced with the remote ones.
      */
-    private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
+    private boolean isCurrentMediaMarkedUploadingDifferentToOriginal(String newContent) {
         // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
         if (!mShowAztecEditor) {
             return false;
