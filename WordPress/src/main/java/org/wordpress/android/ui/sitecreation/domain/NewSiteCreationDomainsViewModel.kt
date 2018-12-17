@@ -152,7 +152,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                                 query,
                                 showProgress = state is Loading
                         ),
-                        contentState = createDomainsUiContentState(query, state)
+                        contentState = createDomainsUiContentState(query, state),
+                        createSiteButtonContainerVisibility = selectedDomain != null
                 )
         )
     }
@@ -194,13 +195,13 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, domainName ->
-                    val itemUiState = DomainsModelUiState(
-                            domainName,
-                            showDivider = index != lastItemIndex,
-                            checked = domainName == selectedDomain
-                    )
-                    itemUiState.onItemTapped = { selectedDomain = domainName }
-                    items.add(itemUiState)
+                val itemUiState = DomainsModelUiState(
+                        domainName,
+                        showDivider = index != lastItemIndex,
+                        checked = domainName == selectedDomain
+                )
+                itemUiState.onItemTapped = { selectedDomain = domainName }
+                items.add(itemUiState)
             }
         }
         return items
@@ -233,7 +234,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
         val searchInputUiState: SiteCreationSearchInputUiState,
-        val contentState: DomainsUiContentState = DomainsUiContentState.Initial
+        val contentState: DomainsUiContentState = DomainsUiContentState.Initial,
+        val createSiteButtonContainerVisibility: Boolean
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,

@@ -27,6 +27,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var searchInputWithHeader: SearchInputWithHeader
     private lateinit var emptyView: View
     private lateinit var recyclerView: RecyclerView
+    private lateinit var createSiteButtonContainer: View
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -42,6 +43,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
         emptyView = rootView.findViewById(R.id.domain_list_empty_view)
+        createSiteButtonContainer = rootView.findViewById(R.id.create_site_button_container)
         initRecyclerView(rootView)
         initViewModel()
     }
@@ -89,6 +91,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
                 searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
+                updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
