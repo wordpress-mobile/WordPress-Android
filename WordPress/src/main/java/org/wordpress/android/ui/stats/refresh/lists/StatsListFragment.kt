@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView.LayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +63,7 @@ class StatsListFragment : DaggerFragment() {
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
 
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private var layoutManager: LayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -82,7 +84,7 @@ class StatsListFragment : DaggerFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        linearLayoutManager?.let {
+        layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -95,13 +97,18 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val columns = resources.getInteger(R.integer.stats_number_of_columns)
+        val layoutManager: LayoutManager = if (columns == 1) {
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        } else {
+            StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
+        }
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
-        linearLayoutManager = layoutManager
-        recyclerView.layoutManager = linearLayoutManager
+        this.layoutManager = layoutManager
+        recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
                 RecyclerItemDecoration(
                         resources.getDimensionPixelSize(R.dimen.margin_medium),

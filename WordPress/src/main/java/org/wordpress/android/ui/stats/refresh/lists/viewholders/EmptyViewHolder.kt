@@ -9,10 +9,11 @@ import org.wordpress.android.ui.stats.refresh.lists.Empty
 class EmptyViewHolder(
     parent: ViewGroup,
     private val onActionButtonClicked: () -> Unit = {}
-) : BaseStatsViewHolder(parent, R.layout.stats_empty_view) {
+) : BaseStatsViewHolder<Empty>(parent, R.layout.stats_empty_view) {
     private val emptyView = itemView.findViewById<ActionableEmptyView>(R.id.actionable_empty_view)
 
-    fun bind(item: Empty) {
+    override fun bind(item: Empty) {
+        super.bind(item)
         if (item.isButtonVisible) {
             emptyView.button.setOnClickListener {
                 onActionButtonClicked()

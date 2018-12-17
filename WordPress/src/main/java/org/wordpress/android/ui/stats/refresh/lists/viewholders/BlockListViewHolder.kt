@@ -9,12 +9,13 @@ import org.wordpress.android.ui.stats.refresh.lists.BlockList
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.util.image.ImageManager
 
-class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder(
+class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder<BlockList>(
         parent,
         layout.stats_list_block
 ) {
     private val list: RecyclerView = itemView.findViewById(R.id.stats_block_list)
-    fun bind(item: BlockList) {
+    override fun bind(item: BlockList) {
+        super.bind(item)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
             list.layoutManager = LinearLayoutManager(list.context, LinearLayoutManager.VERTICAL, false)
