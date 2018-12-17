@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationPayload;
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload;
