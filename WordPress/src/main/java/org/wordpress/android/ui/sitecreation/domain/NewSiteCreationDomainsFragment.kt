@@ -3,6 +3,7 @@ package org.wordpress.android.ui.sitecreation.domain
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.LayoutRes
@@ -13,8 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
+import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import javax.inject.Inject
@@ -30,7 +33,17 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var createSiteButtonContainer: View
     private lateinit var viewModel: NewSiteCreationDomainsViewModel
 
+    private lateinit var helpClickedListener: OnHelpClickedListener
+
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is OnHelpClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
+        }
+        helpClickedListener = context
+    }
 
     @LayoutRes
     override fun getContentLayout(): Int {
@@ -97,14 +110,14 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.clearBtnClicked.observe(this, Observer {
             searchInputWithHeader.setInputText("")
         })
-
+        viewModel.onHelpClicked.observe(this, Observer {
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
+        })
         viewModel.start()
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {

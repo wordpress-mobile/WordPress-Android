@@ -69,6 +69,9 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _clearBtnClicked = SingleLiveEvent<Void>()
     val clearBtnClicked = _clearBtnClicked
 
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
     init {
         dispatcher.register(fetchDomainsUseCase)
     }
@@ -88,6 +91,10 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
 
     fun onClearTextBtnClicked() {
         _clearBtnClicked.call()
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
     }
 
     fun updateQuery(query: String) {
