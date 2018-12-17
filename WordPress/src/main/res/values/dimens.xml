@@ -319,6 +319,7 @@
     <dimen name="quick_start_focus_point_size">40dp</dimen>
     <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
     <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
+    <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>

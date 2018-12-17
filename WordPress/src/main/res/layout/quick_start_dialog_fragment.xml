@@ -15,11 +15,4 @@
         tools:listitem="@layout/quick_start_list_item" >
     </android.support.v7.widget.RecyclerView>
 
-    <View
-        android:background="@color/white"
-        android:layout_gravity="bottom"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" >
-    </View>
-
 </FrameLayout>
