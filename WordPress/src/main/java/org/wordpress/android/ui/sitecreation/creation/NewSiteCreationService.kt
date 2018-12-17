@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
@@ -83,11 +82,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
 
     override fun logError(message: String) {
         AppLog.e(T.NUX, message)
-        if (BuildConfig.DEBUG) {
-            throw IllegalStateException(message)
-        } else {
-            CrashlyticsUtils.log(message)
-        }
+        CrashlyticsUtils.log(message)
     }
 
     override fun logInfo(message: String) {
@@ -120,7 +115,7 @@ class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSi
             context.startService(intent)
         }
 
-        private fun clearSiteCreationServiceState() {
+        fun clearSiteCreationServiceState() {
             AutoForeground.clearServiceState(NewSiteCreationServiceState::class.java)
         }
     }
