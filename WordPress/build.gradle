@@ -13,7 +13,6 @@ buildscript {
 repositories {
     google()
     jcenter()
-    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://jitpack.io" }
