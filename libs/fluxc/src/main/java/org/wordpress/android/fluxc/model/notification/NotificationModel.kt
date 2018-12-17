@@ -9,7 +9,7 @@ data class NotificationModel(
     val remoteNoteId: Long = 0L,
     var localSiteId: Int = 0,
     val noteHash: Long = 0L,
-    val type: Kind = NotificationModel.Kind.STORE_ORDER,
+    val type: Kind = NotificationModel.Kind.UNKNOWN,
     val subtype: Subkind? = null,
     var read: Boolean = false,
     val icon: String? = null,
