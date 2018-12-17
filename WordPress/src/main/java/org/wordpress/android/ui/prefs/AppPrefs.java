@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
@@ -790,23 +789,6 @@ public class AppPrefs {
 
     public static boolean hasQuickStartMigrationDialogShown() {
         return getBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, false);
-    }
-
-    public static int getNumberOfTimesQuickStartDialogShown() {
-        return getInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, 0);
-    }
-
-    public static void setNumberOfTimesQuickStartDialogShown(int value) {
-        setInt(DeletablePrefKey.NUMBER_OF_TIMES_QUICK_START_DIALOG_SHOWN, value);
-    }
-
-    @Nullable
-    public static String getPromptedQuickStartTask() {
-        return getString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, null);
-    }
-
-    public static void setPromptedQuickStartTask(@Nullable String task) {
-        setString(DeletablePrefKey.PROMPTED_QUICK_START_TASK, task);
     }
 
     public static void setInstallationReferrerObtained(Boolean isObtained) {
