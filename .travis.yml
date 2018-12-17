@@ -40,12 +40,8 @@ env:
 
 matrix:
   include:
-    - name: "Lint"
-      env: GRADLE_TASKS="checkstyle ktlint lintVanillaRelease"
-    - name: "Build & Test"
-      env: GRADLE_TASKS="assembleVanillaRelease testVanillaRelease"
-    - name: "Danger & Check Login Strings"
-      env: GRADLE_TASKS=""
+    - name: "Lint & Danger"
+      env: GRADLE_TASKS="checkstyle ktlint lintVanillaRelease" EXEC_DANGER=true
       language: ruby
       rvm: 2.3.4
       cache:
@@ -53,9 +49,13 @@ matrix:
           - vendor/bundle/
       install:
         - bundle install
+    - name: "Build & Test"
+      env: GRADLE_TASKS="assembleVanillaRelease testVanillaRelease"
+    - name: "Check Login Strings"
+      env: GRADLE_TASKS=""
       script:
         - ./tools/validate-login-strings.sh
-        - bundle exec danger --fail-on-errors=true
+        
 
 install:
   # Setup gradle.properties
@@ -64,3 +64,4 @@ install:
 
 script:
   - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
+  -  if [ -z "$EXEC_DANGER" ]; then bundle exec danger --fail-on-errors=true; fi
