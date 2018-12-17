@@ -1003,10 +1003,10 @@
     <string name="notifications_empty_comments">No comments yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
     <string name="notifications_empty_likes">No likes yet</string>
-    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
-    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
+    <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
+    <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow</string>
-    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
+    <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">Go to Reader</string>
     <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
@@ -2283,8 +2283,6 @@
     <string name="quick_start_dialog_browse_themes_title">Browse themes</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_continue_setup_message">Time to finish setting up your site!  Our checklist walks you through the next steps.</string>
-    <string name="quick_start_dialog_continue_setup_title">Continue with site setup</string>
     <string name="quick_start_dialog_create_page_message">Add a page for key content — an \"About\" page is a great start.</string>
     <string name="quick_start_dialog_create_page_title">Create a new page</string>
     <string name="quick_start_dialog_customize_site_message">Tweak fonts, add images, and more.</string>
@@ -2311,6 +2309,11 @@
     <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
     <string name="quick_start_dialog_publish_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create Post %2$s to create a new post</string>
     <string name="quick_start_dialog_publish_post_title">Publish a post</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
+    <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
+    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Site Pages %2$s to continue.</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
+    <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_upload_icon_title">Upload a site icon</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
