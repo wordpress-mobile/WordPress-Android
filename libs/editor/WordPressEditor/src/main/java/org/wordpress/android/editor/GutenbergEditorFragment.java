@@ -297,10 +297,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void toggleHtmlMode() {
+        mHtmlModeEnabled = !mHtmlModeEnabled;
+
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
         mEditorFragmentListener.onHtmlModeToggledInToolbar();
-
-        mHtmlModeEnabled = !mHtmlModeEnabled;
 
         mWPAndroidGlueCode.toggleEditorMode();
     }
