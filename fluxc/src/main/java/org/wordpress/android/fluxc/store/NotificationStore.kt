@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATION_READ
+import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -95,6 +96,16 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
+    class FetchNotificationPayload(
+        val remoteNoteId: Long
+    ) : Payload<BaseNetworkError>()
+
+    class FetchNotificationResponsePayload(
+        val notification: NotificationModel? = null
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
     class MarkNotificationsSeenPayload(
         val lastSeenTime: Long
     ) : Payload<BaseNetworkError>()
@@ -140,6 +151,7 @@ constructor(
         var causeOfChange: NotificationAction? = null
         var lastSeenTime: Long? = null
         var success: Boolean = true
+        val changedNotificationLocalIds = mutableListOf<Int>()
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -162,10 +174,15 @@ constructor(
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
             NotificationAction.FETCHED_NOTIFICATIONS ->
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATION ->
+                handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
             NotificationAction.MARKED_NOTIFICATION_READ ->
                 handleMarkedNotificationRead(action.payload as MarkNotificationReadResponsePayload)
+
+            // local actions
+            NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
         }
     }
 
@@ -305,6 +322,25 @@ constructor(
         emitChange(onNotificationChanged)
     }
 
+    private fun fetchNotification(payload: FetchNotificationPayload) {
+        notificationRestClient.fetchNotification(payload.remoteNoteId)
+    }
+
+    private fun handleFetchNotificationCompleted(payload: FetchNotificationResponsePayload) {
+        val onNotificationChanged = if (payload.isError) {
+                OnNotificationChanged(0).also { it.error = payload.error }
+        } else {
+            // Update the localSiteId
+            val rows = payload.notification?.let {
+                val remoteSiteId = it.getRemoteSiteId() ?: 0
+                it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
+                notificationSqlUtils.insertOrUpdateNotification(it)
+            } ?: 0
+            OnNotificationChanged(rows)
+        }
+        emitChange(onNotificationChanged)
+    }
+
     private fun markNotificationSeen(payload: MarkNotificationsSeenPayload) {
         notificationRestClient.markNotificationsSeen(payload.lastSeenTime)
     }
@@ -352,6 +388,16 @@ constructor(
             }
         }.apply {
             causeOfChange = MARK_NOTIFICATION_READ
+        }
+        emitChange(onNotificationChanged)
+    }
+
+    private fun updateNotification(payload: NotificationModel) {
+        // save notification to the db
+        val rowsAffected = notificationSqlUtils.insertOrUpdateNotification(payload)
+        val onNotificationChanged = OnNotificationChanged(rowsAffected).apply {
+            changedNotificationLocalIds.add(payload.noteId)
+            causeOfChange = UPDATE_NOTIFICATION
         }
         emitChange(onNotificationChanged)
     }
