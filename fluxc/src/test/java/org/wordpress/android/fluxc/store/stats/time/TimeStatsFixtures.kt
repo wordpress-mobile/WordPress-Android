@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Group
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse.Play
 import org.wordpress.android.fluxc.store.stats.DATE
@@ -117,6 +118,12 @@ val GROUP = Group(GROUP_ID, "Group 1", "icon.jpg", "url.com", 50, null, referrer
 val REFERRERS_RESPONSE = ReferrersResponse(null, mapOf("2018-10-10" to Groups(10, 20, listOf(GROUP))))
 val CLICK_GROUP = ClickGroup(GROUP_ID, "Click name", "click.jpg", "click.com", 20, null)
 val CLICKS_RESPONSE = ClicksResponse(null, mapOf("2018-10-10" to ClicksResponse.Groups(10, 15, listOf(CLICK_GROUP))))
+val VISITS_AND_VIEWS_RESPONSE = VisitsAndViewsResponse(
+        "2018-10-10",
+        listOf("period", "views", "likes", "comments", "visitors"),
+        listOf(listOf("2018-10-09", "10", "15", "20", "25")),
+        "day"
+)
 val PLAY = Play("post1", "Post 1", "post1.com", 50)
 val VIDEO_PLAYS_RESPONSE = VideoPlaysResponse(
         "day",

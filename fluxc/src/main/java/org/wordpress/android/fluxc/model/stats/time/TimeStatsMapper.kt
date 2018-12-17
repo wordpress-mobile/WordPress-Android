@@ -5,9 +5,11 @@ import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -73,6 +75,45 @@ class TimeStatsMapper
                 groups,
                 first.clicks.size > groups.size
         )
+    }
+
+    fun map(response: VisitsAndViewsResponse): VisitsAndViewsModel {
+        val periodIndex = response.fields?.indexOf("period")
+        val viewsIndex = response.fields?.indexOf("views")
+        val visitorsIndex = response.fields?.indexOf("visitors")
+        val likesIndex = response.fields?.indexOf("likes")
+        val reblogsIndex = response.fields?.indexOf("reblogs")
+        val commentsIndex = response.fields?.indexOf("comments")
+        val postsIndex = response.fields?.indexOf("posts")
+        val dataPerPeriod = response.data?.mapNotNull { periodData ->
+            periodData?.let {
+                val period = periodIndex?.let { periodData[it] }
+                if (period != null) {
+                    PeriodData(
+                            period,
+                            periodData.getLongOrZero(viewsIndex),
+                            periodData.getLongOrZero(visitorsIndex),
+                            periodData.getLongOrZero(likesIndex),
+                            periodData.getLongOrZero(reblogsIndex),
+                            periodData.getLongOrZero(commentsIndex),
+                            periodData.getLongOrZero(postsIndex)
+                    )
+                } else {
+                    null
+                }
+            }
+        }
+        if (response.data == null) {
+            AppLog.e(STATS, "VisitsAndViewsResponse: Date field should never be null")
+        }
+        return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
+    }
+
+    private fun List<String?>.getLongOrZero(itemIndex: Int?): Long {
+        return itemIndex?.let {
+            val stringValue = this[it]
+            stringValue?.toLong()
+        } ?: 0
     }
 
     fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
