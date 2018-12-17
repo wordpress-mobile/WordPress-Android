@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.sitecreation
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.os.Parcelable
 import android.support.annotation.StringRes
+import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
@@ -13,12 +16,14 @@ import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.SingleEventObservable
 import javax.inject.Inject
 
+@Parcelize
+@SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val segmentId: Long? = null,
     val verticalId: String? = null,
     val siteTitle: String? = null,
     val siteTagLine: String? = null
-) : WizardState
+) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 

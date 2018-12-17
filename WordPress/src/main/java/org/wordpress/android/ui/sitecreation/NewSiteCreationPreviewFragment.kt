@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -11,23 +12,32 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
 
+private const val ARG_DATA = "arg_site_creation_data"
+
 class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>(),
         PageFullyLoadedListener {
-    private val url: String = "https://en.blog.wordpress.com"
-    private val urlShort: String = "en.blog.wordpress.com"
-    private val subdomainSpan: Pair<Int, Int> = Pair(0, "en.blog".length)
-    private val domainSpan: Pair<Int, Int> = Pair(Math.min(subdomainSpan.second, urlShort.length), urlShort.length)
-
     private lateinit var viewModel: NewSitePreviewViewModel
+
+    private lateinit var fullscreenErrorLayout: ViewGroup
+    private lateinit var fullscreenProgressLayout: ViewGroup
+    private lateinit var contentLayout: ViewGroup
+    private lateinit var errorLayout: ViewGroup
+    private lateinit var sitePreviewWebView: WebView
+    private lateinit var sitePreviewWebUrlTitle: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -37,19 +47,62 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        val sitePreviewWebView = rootView.findViewById<WebView>(R.id.sitePreviewWebView)
-        sitePreviewWebView.webViewClient = PreviewWebViewClient(this, url)
-        sitePreviewWebView.loadUrl(url)
-        val sitePreviewWebUrlTitle = rootView.findViewById<TextView>(R.id.sitePreviewWebUrlTitle)
-        sitePreviewWebUrlTitle.text = createSpannableUrl(rootView.context, urlShort, subdomainSpan, domainSpan)
-
+        fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
+        fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
+        contentLayout = rootView.findViewById(R.id.content_layout)
+        errorLayout = rootView.findViewById(R.id.error_layout)
+        sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
+        sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         initViewModel()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(NewSitePreviewViewModel::class.java)
-        viewModel.start()
+        viewModel.uiState.observe(this, Observer { uiState ->
+            uiState?.let {
+                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+
+                when (uiState) {
+                    is SitePreviewContentUiState -> {
+                        updateContentLayout(uiState)
+                    }
+                    is SitePreviewFullscreenProgressUiState -> {
+                        // no action
+                    }
+                    is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
+                }
+            }
+        })
+        viewModel.preloadPreview.observe(this, Observer { url ->
+            url?.let {
+                sitePreviewWebView.webViewClient = PreviewWebViewClient(this@NewSiteCreationPreviewFragment, url)
+                sitePreviewWebView.loadUrl(url)
+            }
+        })
+        viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
+    }
+
+    private fun updateContentLayout(uiState: SitePreviewContentUiState) {
+        uiState.data.apply {
+            sitePreviewWebUrlTitle.text = createSpannableUrl(activity!!, shortUrl, subDomainIndices, domainIndices)
+        }
+    }
+
+    private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
+        errorUiStateState.apply {
+            setTextOrHide(errorLayout.error_title, titleResId)
+            setTextOrHide(errorLayout.error_subtitle, subtitleResId)
+        }
+    }
+
+    private fun setTextOrHide(textView: TextView, resId: Int?) {
+        textView.visibility = if (resId == null) View.GONE else View.VISIBLE
+        resId?.let {
+            textView.text = resources.getString(resId)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +154,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
             // TODO go through VM
             hideGetStartedBar(view.findViewById(R.id.sitePreviewWebView))
         }
+        viewModel.onUrlLoaded()
     }
 
     // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
@@ -129,13 +183,21 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         return arguments.getString(EXTRA_SCREEN_TITLE)
     }
 
+    private fun updateVisibility(view: View, visible: Boolean) {
+        view.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
 
-        fun newInstance(screenTitle: String): NewSiteCreationPreviewFragment {
+        fun newInstance(
+            screenTitle: String,
+            siteCreationData: SiteCreationState
+        ): NewSiteCreationPreviewFragment {
             val fragment = NewSiteCreationPreviewFragment()
             val bundle = Bundle()
             bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            bundle.putParcelable(ARG_DATA, siteCreationData)
             fragment.arguments = bundle
             return fragment
         }

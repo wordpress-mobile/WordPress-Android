@@ -5,80 +5,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/wp_grey_lighten_30"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/sitePreviewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_extra_medium_large"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
-        android:paddingEnd="@dimen/margin_large"
-        android:paddingStart="@dimen/margin_large"
-        android:text="@string/new_site_creation_preview_title"
-        android:textColor="@color/wp_grey_dark"
-        android:textSize="@dimen/text_sz_extra_large"/>
+    <include
+        layout="@layout/site_creation_error_with_retry"
+        tools:visibility="gone"/>
 
-    <android.support.v7.widget.CardView
+    <include
+        layout="@layout/new_site_creation_progress"
+        tools:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/sitePreviewOkButtonContainer"
-        android:layout_below="@id/sitePreviewTitle"
-        android:layout_marginLeft="@dimen/new_site_creation_preview_web_view_side_margin"
-        android:layout_marginRight="@dimen/new_site_creation_preview_web_view_side_margin"
-        android:layout_marginBottom="@dimen/negative_margin_medium"
-        app:cardBackgroundColor="@color/white"
-        app:cardElevation="@dimen/card_elevation">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/sitePreviewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/margin_extra_medium_large"
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:paddingEnd="@dimen/margin_large"
+            android:paddingStart="@dimen/margin_large"
+            android:text="@string/new_site_creation_preview_title"
+            android:textColor="@color/wp_grey_dark"
+            android:textSize="@dimen/text_sz_extra_large"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/webviewContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_above="@+id/sitePreviewOkButtonContainer"
+            android:layout_below="@id/sitePreviewTitle"
+            android:layout_marginBottom="@dimen/negative_margin_medium"
+            android:layout_marginLeft="@dimen/new_site_creation_preview_web_view_side_margin"
+            android:layout_marginRight="@dimen/new_site_creation_preview_web_view_side_margin"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/card_elevation">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/wp_grey_lighten_30_rounded_bg"
-                android:paddingBottom="@dimen/margin_medium"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_medium">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/sitePreviewWebUrlTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/wp_grey_darken_20"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="example.wordpress.com"/>
-            </LinearLayout>
+                    android:layout_margin="@dimen/margin_medium"
+                    android:background="@drawable/wp_grey_lighten_30_rounded_bg"
+                    android:paddingBottom="@dimen/margin_medium"
+                    android:paddingEnd="@dimen/margin_extra_large"
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:paddingTop="@dimen/margin_medium">
 
-            <WebView
-                android:id="@+id/sitePreviewWebView"
+                    <TextView
+                        android:id="@+id/sitePreviewWebUrlTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/wp_grey_darken_20"
+                        android:textSize="@dimen/text_sz_medium"
+                        tools:text="example.wordpress.com"/>
+                </LinearLayout>
+
+                <WebView
+                    android:id="@+id/sitePreviewWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:scrollbarStyle="insideInset"/>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/sitePreviewOkButtonContainer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/new_site_creation_preview_ok_button_container_height"
+            android:layout_alignParentBottom="true"
+            app:cardBackgroundColor="@color/wp_grey_lighten_30"
+            app:cardElevation="@dimen/new_site_creation_preview_ok_button_container_elevation">
+
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:scrollbarStyle="insideInset"/>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/sitePreviewOkButtonContainer"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/new_site_creation_preview_ok_button_container_height"
-        android:layout_alignParentBottom="true"
-        app:cardBackgroundColor="@color/wp_grey_lighten_30"
-        app:cardElevation="@dimen/new_site_creation_preview_ok_button_container_elevation">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/margin_extra_large"
-            android:background="@color/wp_blue_medium"
-            android:text="@string/dialog_button_ok"
-            android:textColor="@color/white"/>
-    </android.support.v7.widget.CardView>
+                android:layout_margin="@dimen/margin_extra_large"
+                android:background="@color/wp_blue_medium"
+                android:text="@string/dialog_button_ok"
+                android:textColor="@color/white"/>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
 </RelativeLayout>
