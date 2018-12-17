@@ -535,9 +535,11 @@ public class EditPostActivity extends AppCompatActivity implements
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-            Collections.sort(mMediaMarkedUploadingOnStartIds);
+            if (mShowAztecEditor) {
+                mMediaMarkedUploadingOnStartIds =
+                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+                Collections.sort(mMediaMarkedUploadingOnStartIds);
+            }
             mIsPage = mPost.isPage();
 
             EventBus.getDefault().postSticky(
@@ -1598,9 +1600,11 @@ public class EditPostActivity extends AppCompatActivity implements
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
 
-        // update the list of uploading ids
-        mMediaMarkedUploadingOnStartIds =
-                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+        if (mShowAztecEditor) {
+            // update the list of uploading ids
+            mMediaMarkedUploadingOnStartIds =
+                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+        }
     }
 
     @Override
@@ -2419,6 +2423,10 @@ public class EditPostActivity extends AppCompatActivity implements
       * URLs will have been replaced with the remote ones.
      */
     private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
+        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
+        if (!mShowAztecEditor) {
+            return false;
+        }
         List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
         Collections.sort(currentUploadingMedia);
         return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
