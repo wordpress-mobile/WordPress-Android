@@ -123,7 +123,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 }
             }
         } else {
-            // TODO: What do we do if the network is not available
+            updateUiStateToContent(query, ListState.Error(listState, errorMessageResId = R.string.no_network_message))
         }
     }
 
