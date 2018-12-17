@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
+import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -138,6 +139,7 @@ constructor(
         var causeOfChange: NotificationAction? = null
         var lastSeenTime: Long? = null
         var success: Boolean = true
+        val changedNotificationLocalIds = mutableListOf<Int>()
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -160,6 +162,9 @@ constructor(
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
+
+            // local actions
+            NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
         }
     }
 
@@ -338,6 +343,16 @@ constructor(
             causeOfChange = MARK_NOTIFICATIONS_SEEN
         }
 
+        emitChange(onNotificationChanged)
+    }
+
+    private fun updateNotification(payload: NotificationModel) {
+        // save notification to the db
+        val rowsAffected = notificationSqlUtils.insertOrUpdateNotification(payload)
+        val onNotificationChanged = OnNotificationChanged(rowsAffected).apply {
+            changedNotificationLocalIds.add(payload.noteId)
+            causeOfChange = UPDATE_NOTIFICATION
+        }
         emitChange(onNotificationChanged)
     }
 }
