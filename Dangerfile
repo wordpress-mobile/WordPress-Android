@@ -10,4 +10,4 @@ warn("PR is not assigned to a milestone.", sticky: false) unless has_milestone
 
 # KtLint
 checkstyle_format.base_path = Dir.pwd
-checkstyle_format.report 'app/build/reports/ktlint/ktlint-main.xml'
+checkstyle_format.report 'WordPress/build/reports/lint-results-vanillaRelease-fatal.xml'
