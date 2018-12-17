@@ -21,6 +21,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment
+import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
 import org.wordpress.android.ui.sitecreation.verticals.VerticalsScreenListener
@@ -78,14 +79,13 @@ class NewSiteCreationActivity : AppCompatActivity(),
     private fun showStep(target: WizardNavigationTarget<SiteCreationStep, SiteCreationState>) {
         val screenTitle = getScreenTitle(target.wizardStep)
         val fragment = when (target.wizardStep) {
-//            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance(screenTitle)
-            SEGMENTS -> NewSiteCreationDomainsFragment.newInstance(screenTitle)
+            SEGMENTS -> NewSiteCreationSegmentsFragment.newInstance(screenTitle)
             VERTICALS ->
                 NewSiteCreationVerticalsFragment.newInstance(
                         screenTitle,
                         target.wizardState.segmentId!!
                 )
-            DOMAINS -> NewSiteCreationDomainFragment.newInstance(screenTitle, "Test site")
+            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(screenTitle)
             SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
             SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle)
         }

@@ -61,6 +61,18 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         initViewModel()
     }
 
+    override fun getScreenTitle(): String {
+        val arguments = arguments
+        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
+            throw IllegalStateException("Required argument screen title is missing.")
+        }
+        return arguments.getString(EXTRA_SCREEN_TITLE)
+    }
+
+    override fun onHelp() {
+        viewModel.onHelpClicked()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         nonNullActivity = activity!!
@@ -116,10 +128,6 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.start()
     }
 
-    override fun onHelp() {
-        viewModel.onHelpClicked()
-    }
-
     private fun updateContentUiState(contentState: DomainsUiContentState) {
         updateVisibility(emptyView, contentState.emptyViewVisibility)
         (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(contentState.items)
@@ -127,14 +135,6 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     private fun updateVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    override fun getScreenTitle(): String {
-        val arguments = arguments
-        if (arguments == null || !arguments.containsKey(EXTRA_SCREEN_TITLE)) {
-            throw IllegalStateException("Required argument screen title is missing.")
-        }
-        return arguments.getString(EXTRA_SCREEN_TITLE)
     }
 
     companion object {
