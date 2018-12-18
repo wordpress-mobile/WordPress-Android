@@ -77,7 +77,7 @@ jobs:
           key: wordpress-android-gems-{{ checksum "Gemfile.lock" }}
       - run:
           name: Danger
-          command: bundle exec danger --fail-on-errors=true
+          command: if [ -n "$DANGER_GITHUB_API_TOKEN" ]; then bundle exec danger --fail-on-errors=true echo "Not running danger because $DANGER_GITHUB_API_TOKEN is not found" fi
 
 workflows:
   version: 2
@@ -85,8 +85,4 @@ workflows:
     jobs:
       - test
       - lint
-      - danger:
-        filters:
-          branches:
-            # only from forks
-            only: /^pull\/.*$/
+      - danger
