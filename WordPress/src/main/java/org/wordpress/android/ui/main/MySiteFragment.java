@@ -15,7 +15,6 @@ import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -519,7 +518,7 @@ public class MySiteFragment extends Fragment implements
         PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMenuButton);
         quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.quick_start_menu_remove_next_steps) {
+                if (item.getItemId() == R.id.quick_start_card_menu_remove) {
                     showRemoveNextStepsDialog();
                     return true;
                 }

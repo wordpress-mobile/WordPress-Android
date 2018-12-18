@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/quick_start_menu_remove_next_steps"
+        android:id="@+id/quick_start_card_menu_remove"
         android:title="@string/quick_start_remove_next_steps_menu_title"/>
 
 </menu>
