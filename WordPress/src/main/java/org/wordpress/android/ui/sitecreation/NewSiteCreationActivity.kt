@@ -91,7 +91,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
                         screenTitle,
                         target.wizardState.segmentId!!
                 )
-            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(screenTitle)
+            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(screenTitle, target.wizardState.siteTitle)
             SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
             SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle)
         }

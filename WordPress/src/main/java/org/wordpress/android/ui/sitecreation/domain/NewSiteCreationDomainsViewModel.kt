@@ -84,12 +84,17 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start() {
+    fun start(siteTitle: String?) {
         if (isStarted) {
             return
         }
         isStarted = true
-        resetUiState()
+        // isNullOrBlank not smart-casting for some reason..
+        if (siteTitle == null || siteTitle.isBlank()) {
+            resetUiState()
+        } else {
+            updateQuery(siteTitle)
+        }
     }
 
     fun createSiteBtnClicked() {

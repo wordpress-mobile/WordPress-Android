@@ -137,7 +137,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
         })
-        viewModel.start()
+        viewModel.start(getSiteTitleFromArguments())
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
@@ -149,13 +149,19 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    private fun getSiteTitleFromArguments(): String? {
+        return arguments?.getString(EXTRA_SITE_TITLE)
+    }
+
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
+        const val EXTRA_SITE_TITLE = "extra_site_title"
 
-        fun newInstance(screenTitle: String): NewSiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, siteTitle: String?): NewSiteCreationDomainsFragment {
             val fragment = NewSiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(NewSiteCreationBaseFormFragment.EXTRA_SCREEN_TITLE, screenTitle)
+            siteTitle?.let { bundle.putString(EXTRA_SITE_TITLE, siteTitle) }
             fragment.arguments = bundle
             return fragment
         }
