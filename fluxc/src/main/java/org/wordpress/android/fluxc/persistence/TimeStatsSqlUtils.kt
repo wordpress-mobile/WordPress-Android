@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClien
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_V
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SEARCH_TERMS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
 import java.util.Date
 import javax.inject.Inject
@@ -87,6 +89,16 @@ class TimeStatsSqlUtils
         )
     }
 
+    fun insert(site: SiteModel, data: SearchTermsResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                SEARCH_TERMS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
     fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity, date: Date): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
@@ -143,6 +155,16 @@ class TimeStatsSqlUtils
                 AUTHORS,
                 granularity.toStatsType(),
                 AuthorsResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
+    fun selectSearchTerms(site: SiteModel, granularity: StatsGranularity, date: Date): SearchTermsResponse? {
+        return statsSqlUtils.select(
+                site,
+                SEARCH_TERMS,
+                granularity.toStatsType(),
+                SearchTermsResponse::class.java,
                 statsUtils.getFormattedDate(site, granularity, date)
         )
     }
