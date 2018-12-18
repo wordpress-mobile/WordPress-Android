@@ -27,6 +27,13 @@ constructor(
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(overviewMapper.buildTitle(
+            null,
+            null,
+            statsDateFormatter.printDate(selectedDateProvider.getCurrentDate()),
+            statsGranularity
+    ))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = visitsAndViewsStore.getVisits(
                 site,

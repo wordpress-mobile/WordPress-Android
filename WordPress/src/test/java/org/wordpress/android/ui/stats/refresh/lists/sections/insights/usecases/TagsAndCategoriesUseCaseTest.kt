@@ -166,7 +166,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).text).isEqualTo(R.string.stats_insights_tags_and_categories)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_tags_and_categories)
     }
 
     private fun assertSingleTag(

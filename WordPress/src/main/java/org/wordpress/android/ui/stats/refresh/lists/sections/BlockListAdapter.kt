@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.view.ViewGroup
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.EXPAND_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_BAR_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
@@ -113,8 +114,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is TextViewHolder -> holder.bind(item as Text)
             is ColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is LinkViewHolder -> holder.bind(item as Link)
-            is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(TAB_CHANGED))
-            is TabsViewHolder -> holder.bind(item as TabsItem)
+            is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(SELECTED_BAR_CHANGED))
+            is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))
             is InformationViewHolder -> holder.bind(item as Information)
             is HeaderViewHolder -> holder.bind(item as Header)
             is ExpandableItemViewHolder -> holder.bind(
