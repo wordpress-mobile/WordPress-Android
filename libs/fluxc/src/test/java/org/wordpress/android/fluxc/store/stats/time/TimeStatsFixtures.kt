@@ -1,5 +1,8 @@
 package org.wordpress.android.fluxc.store.stats.time
 
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Author
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Post
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse.ClickGroup
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
@@ -136,3 +139,10 @@ val COUNTRY_VIEWS_RESPONSE = CountryViewsResponse(
         )
 )
 )
+val AUTHOR = Author(
+        "John", 5, "avatar.jpg", null, listOf(
+        Post("15", "Post 1", 100, "post.com")
+)
+)
+val AUTHORS_GROUP = AuthorsResponse.Groups(10, listOf(AUTHOR))
+val AUTHORS_RESPONSE = AuthorsResponse("day", mapOf("2018-10-10" to AUTHORS_GROUP))

@@ -96,6 +96,7 @@ class StatsSqlUtils
         CLICKS,
         VISITS_AND_VIEWS,
         COUNTRY_VIEWS,
+        AUTHORS,
         PUBLICIZE_INSIGHTS
     }
 }
