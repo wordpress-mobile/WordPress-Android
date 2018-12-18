@@ -388,6 +388,9 @@ constructor(
                 success = true
             }
         }.apply {
+            payload.notification?.let {
+                changedNotificationLocalIds.add(it.noteId)
+            }
             causeOfChange = MARK_NOTIFICATION_READ
         }
         emitChange(onNotificationChanged)
