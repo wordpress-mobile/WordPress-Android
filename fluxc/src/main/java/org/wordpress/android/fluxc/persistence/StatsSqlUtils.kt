@@ -98,6 +98,7 @@ class StatsSqlUtils
         COUNTRY_VIEWS,
         AUTHORS,
         SEARCH_TERMS,
+        VIDEO_PLAYS,
         PUBLICIZE_INSIGHTS
     }
 }
