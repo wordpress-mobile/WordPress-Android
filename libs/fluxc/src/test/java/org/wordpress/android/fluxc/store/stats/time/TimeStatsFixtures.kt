@@ -18,6 +18,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse.SearchTerm
 import org.wordpress.android.fluxc.store.stats.DATE
 import org.wordpress.android.fluxc.store.stats.POST_COUNT
 
@@ -146,3 +148,6 @@ val AUTHOR = Author(
 )
 val AUTHORS_GROUP = AuthorsResponse.Groups(10, listOf(AUTHOR))
 val AUTHORS_RESPONSE = AuthorsResponse("day", mapOf("2018-10-10" to AUTHORS_GROUP))
+val SEARCH_TERMS_RESPONSE = SearchTermsResponse("day", mapOf("2018-10-10" to SearchTermsResponse.Day(10, 15, 20, listOf(
+        SearchTerm("search term", 20)
+))))
