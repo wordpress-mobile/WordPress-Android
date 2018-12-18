@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-28 07:54:06+0000
+Translation-Revision-Date: 2018-12-11 08:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="menu_debug">除錯選單</string>
+    <string name="preference_experimental">*實驗性*</string>
+    <string name="site_settings_enable_gutenberg_summary">這仍是 Gutenberg 的實驗版本</string>
+    <string name="site_settings_enable_gutenberg">啟用 Gutenberg</string>
     <string name="change_password_dialog_message">正在變更密碼…</string>
     <string name="change_password_dialog_hint">密碼必須至少包含 6 個字元。若要提升密碼強度，可使用大小寫字母、數字，以及 ! \" ? $ % ^ &amp; ) 等符號。</string>
     <string name="change_password_confirmation">密碼已成功變更</string>
