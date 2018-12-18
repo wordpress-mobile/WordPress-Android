@@ -11,12 +11,14 @@ import kotlinx.coroutines.experimental.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.creation.FetchSiteByUrlUseCase
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
@@ -30,8 +32,12 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
+private const val FETCH_SITE_NUMBER_OF_RETRIES = 5
+private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
 
 class NewSitePreviewViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val fetchSiteUseCase: FetchSiteByUrlUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
@@ -67,6 +73,16 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _onOkButtonClicked = SingleLiveEvent<Int?>()
     val onOkButtonClicked: LiveData<Int?> = _onOkButtonClicked
 
+    init {
+        dispatcher.register(fetchSiteUseCase)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(fetchSiteUseCase)
+        job.cancel()
+    }
+
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) {
             return
@@ -99,8 +115,10 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onOkButtonClicked() {
-        // TODO newlyCreatedSiteLocalId might be null if the fetchSite request failed or haven't finished yet
-        // -> we'll handle this case in an another PR
+        /**
+         * newlyCreatedSiteLocalId might be null if the fetchSite request failed or haven't finished yet.
+         * The observer should handle this accordingly.
+         */
         _onOkButtonClicked.value = newlyCreatedSiteLocalId
     }
 
@@ -129,10 +147,29 @@ class NewSitePreviewViewModel @Inject constructor(
         when (event.step) {
             IDLE, CREATE_SITE -> {
             }// do nothing
-            SUCCESS -> startPreloadingWebView()
+            SUCCESS -> {
+                startPreloadingWebView()
+                fetchNewlyCreatedSiteModel()
+            }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
                 updateUiStateAsync(SitePreviewGenericErrorUiState(this::onHelpClicked))
+            }
+        }
+    }
+
+    /**
+     * Fetch newly created site model - supports retry with linear backoff.
+     */
+    private fun fetchNewlyCreatedSiteModel() {
+        launch {
+            repeat(FETCH_SITE_NUMBER_OF_RETRIES) { attemptNumber ->
+                val onSiteFetched = fetchSiteUseCase.fetchSite(getShortUrlFromSlug(slug))
+                if (!onSiteFetched.isError) {
+                    newlyCreatedSiteLocalId = onSiteFetched.site?.id
+                    return@launch
+                }
+                delay((attemptNumber + 1) * FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS) // +1 -> starts from 0
             }
         }
     }
@@ -177,7 +214,9 @@ class NewSitePreviewViewModel @Inject constructor(
                 fullscreenProgressLayoutVisibility = true,
                 contentLayoutVisibility = false,
                 fullscreenErrorLayoutVisibility = false
-        )
+        ) {
+            const val loadingTextResId = R.string.notification_new_site_creation_creating_site_subtitle
+        }
 
         sealed class SitePreviewFullscreenErrorUiState constructor(
             val titleResId: Int,

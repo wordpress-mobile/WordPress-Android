@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Button
 import android.widget.TextView
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -46,7 +45,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var fullscreenErrorLayout: ViewGroup
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
-    private lateinit var errorLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
     private lateinit var sitePreviewWebUrlTitle: TextView
 
@@ -86,7 +84,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
-        errorLayout = rootView.findViewById(R.id.error_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         initViewModel()
@@ -108,7 +105,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                         updateContentLayout(uiState)
                     }
                     is SitePreviewFullscreenProgressUiState -> {
-                        // no action
+                        updateLoadingLayout(uiState)
                     }
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
@@ -142,7 +139,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun initRetryButton() {
-        val retryBtn = errorLayout.findViewById<Button>(R.id.error_retry)
+        val retryBtn = fullscreenErrorLayout.findViewById<Button>(R.id.error_retry)
         retryBtn.setOnClickListener { viewModel.retry() }
     }
 
@@ -157,11 +154,17 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         }
     }
 
+    private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
+        progressUiState.apply {
+            setTextOrHide(fullscreenProgressLayout.findViewById(R.id.progress_text), loadingTextResId)
+        }
+    }
+
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            setTextOrHide(errorLayout.findViewById(R.id.error_title), titleResId)
-            setTextOrHide(errorLayout.findViewById(R.id.error_subtitle), subtitleResId)
-            setOnClickListenerOrHide(errorLayout.findViewById(R.id.contact_support), onContactSupportTapped)
+            setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
+            setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
+            setOnClickListenerOrHide(fullscreenErrorLayout.findViewById(R.id.contact_support), onContactSupportTapped)
         }
     }
 
