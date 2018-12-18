@@ -88,6 +88,7 @@
             app:cardElevation="@dimen/new_site_creation_preview_ok_button_container_elevation">
 
             <Button
+                android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/margin_extra_large"

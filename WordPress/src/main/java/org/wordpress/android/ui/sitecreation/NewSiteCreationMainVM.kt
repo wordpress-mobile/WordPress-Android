@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.os.Parcelable
@@ -14,6 +15,7 @@ import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.SingleEventObservable
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 @Parcelize
@@ -46,6 +48,9 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
                 WizardNavigationTarget(it, siteCreationState)
             }
     )
+
+    private val _wizardFinishedObservable = SingleLiveEvent<Int?>()
+    val wizardFinishedObservable: LiveData<Int?> = _wizardFinishedObservable
 
     fun start() {
         if (isStarted) return
@@ -91,6 +96,10 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
                     stepPosition - 1 // -1 -> first item has general title - Create Site
             )
         }
+    }
+
+    fun onSitePreviewScreenFinished(newSiteLocalId: Int?) {
+        _wizardFinishedObservable.value = newSiteLocalId
     }
 
     sealed class NewSiteCreationScreenTitle {

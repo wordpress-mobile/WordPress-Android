@@ -44,6 +44,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private lateinit var siteCreationState: SiteCreationState
     private var lastReceivedServiceState: NewSiteCreationServiceState? = null
     private var serviceStateForRetry: NewSiteCreationServiceState? = null
+    private var newlyCreatedSiteLocalId: Int? = null
 
     // TODO remove and use slug from siteCreationState
     private val slug = ('a'..'z').map { it }.shuffled().subList(0, 26).joinToString("")
@@ -59,6 +60,12 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private val _hideGetStartedBar: SingleLiveEvent<Unit> = SingleLiveEvent()
     val hideGetStartedBar: LiveData<Unit> = _hideGetStartedBar
+
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
+    private val _onOkButtonClicked = SingleLiveEvent<Int?>()
+    val onOkButtonClicked: LiveData<Int?> = _onOkButtonClicked
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) {
@@ -85,6 +92,16 @@ class NewSitePreviewViewModel @Inject constructor(
     fun retry() {
         updateUiState(SitePreviewFullscreenProgressUiState)
         startCreateSiteService(serviceStateForRetry)
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
+    }
+
+    fun onOkButtonClicked() {
+        // TODO newlyCreatedSiteLocalId might be null if the fetchSite request failed or haven't finished yet
+        // -> we'll handle this case in an another PR
+        _onOkButtonClicked.value = newlyCreatedSiteLocalId
     }
 
     private fun showFullscreenErrorWithDelay() {
@@ -115,7 +132,7 @@ class NewSitePreviewViewModel @Inject constructor(
             SUCCESS -> startPreloadingWebView()
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
-                updateUiStateAsync(SitePreviewGenericErrorUiState)
+                updateUiStateAsync(SitePreviewGenericErrorUiState(this::onHelpClicked))
             }
         }
     }
@@ -164,16 +181,19 @@ class NewSitePreviewViewModel @Inject constructor(
 
         sealed class SitePreviewFullscreenErrorUiState constructor(
             val titleResId: Int,
-            val subtitleResId: Int? = null
+            val subtitleResId: Int? = null,
+            open val onContactSupportTapped: (() -> Unit)? = null
         ) : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = false,
                 fullscreenErrorLayoutVisibility = true
         ) {
-            object SitePreviewGenericErrorUiState : SitePreviewFullscreenErrorUiState(
-                    R.string.site_creation_error_generic_title,
-                    R.string.site_creation_error_generic_subtitle
-            )
+            data class SitePreviewGenericErrorUiState(override val onContactSupportTapped: (() -> Unit)) :
+                    SitePreviewFullscreenErrorUiState(
+                            R.string.site_creation_error_generic_title,
+                            R.string.site_creation_error_generic_subtitle,
+                            onContactSupportTapped
+                    )
 
             object SitePreviewConnectionErrorUiState : SitePreviewFullscreenErrorUiState(
                     R.string.no_network_message

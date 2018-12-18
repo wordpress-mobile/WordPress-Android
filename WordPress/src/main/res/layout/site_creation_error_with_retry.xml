@@ -31,9 +31,20 @@
 
     <Button
         android:id="@+id/error_retry"
+        style="@style/WordPress.Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
-        style="@style/WordPress.Button.Primary"
         android:text="@string/retry"/>
+
+    <TextView
+        android:id="@+id/contact_support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:textAllCaps="true"
+        android:visibility="gone"
+        android:textColor="@color/wp_blue_medium"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/contact_support"/>
 </LinearLayout>

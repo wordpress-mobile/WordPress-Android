@@ -20,11 +20,13 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService
+import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
@@ -50,6 +52,21 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
+    private lateinit var helpClickedListener: OnHelpClickedListener
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context !is SitePreviewScreenListener) {
+            throw IllegalStateException("Parent activity must implement SitePreviewScreenListener.")
+        }
+        if (context !is OnHelpClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
+        }
+        sitePreviewScreenListener = context
+        helpClickedListener = context
+    }
+
     override fun onResume() {
         super.onResume()
         mServiceEventConnection = ServiceEventConnection(activity!!, NewSiteCreationService::class.java, viewModel)
@@ -74,6 +91,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         initViewModel()
         initRetryButton()
+        initOkButton()
     }
 
     private fun initViewModel() {
@@ -114,12 +132,23 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 )
             }
         })
+        viewModel.onHelpClicked.observe(this, Observer {
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+        })
+        viewModel.onOkButtonClicked.observe(this, Observer { newSiteLocalId ->
+            sitePreviewScreenListener.onSitePreviewScreenDismissed(newSiteLocalId)
+        })
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {
         val retryBtn = errorLayout.findViewById<Button>(R.id.error_retry)
         retryBtn.setOnClickListener { viewModel.retry() }
+    }
+
+    private fun initOkButton() {
+        val okBtn = contentLayout.findViewById<Button>(R.id.okButton)
+        okBtn.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
     private fun updateContentLayout(uiState: SitePreviewContentUiState) {
@@ -130,8 +159,9 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            setTextOrHide(errorLayout.error_title, titleResId)
-            setTextOrHide(errorLayout.error_subtitle, subtitleResId)
+            setTextOrHide(errorLayout.findViewById(R.id.error_title), titleResId)
+            setTextOrHide(errorLayout.findViewById(R.id.error_subtitle), subtitleResId)
+            setOnClickListenerOrHide(errorLayout.findViewById(R.id.contact_support), onContactSupportTapped)
         }
     }
 
@@ -142,10 +172,17 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         }
     }
 
+    private fun setOnClickListenerOrHide(view: View, onItemClicked: (() -> Unit)?) {
+        view.visibility = if (onItemClicked == null) View.GONE else View.VISIBLE
+        onItemClicked?.let {
+            view.setOnClickListener { onItemClicked.invoke() }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             // we need to manually clear the NewSiteCreationService state so we don't for example receive sticky events
             // from the previous run of the SiteCreation flow.
             NewSiteCreationService.clearSiteCreationServiceState()
