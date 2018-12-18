@@ -131,7 +131,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            SiteCreationDomainLoaderFragment loaderFragment = SiteCreationDomainLoaderFragment.newInstance(mSiteTitle, mSiteCategory);
+            SiteCreationDomainLoaderFragment loaderFragment =
+                    SiteCreationDomainLoaderFragment.newInstance(mSiteTitle, mSiteCategory);
             loaderFragment.setRetainInstance(true);
             fragmentTransaction.add(loaderFragment, SiteCreationDomainLoaderFragment.TAG);
             fragmentTransaction.commitNow();
