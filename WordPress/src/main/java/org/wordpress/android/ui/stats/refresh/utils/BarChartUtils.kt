@@ -21,6 +21,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.util.DisplayUtils
 import kotlin.math.round
 
+private const val MIN_COLUMN_COUNT = 5
+private const val MIN_VALUE = 5f
+
 fun BarChart.draw(
     item: BarChartItem,
     labelStart: TextView,
@@ -28,7 +31,7 @@ fun BarChart.draw(
 ) {
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
-    val cut = cutEntries(columnNumber, item)
+    val cut = cutEntries(if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT, item)
     val mappedEntries = cut.mapIndexed { index, pair ->
         BarEntry(
                 index.toFloat(),
@@ -75,8 +78,8 @@ fun BarChart.draw(
         setDrawAxisLine(false)
         granularity = 1f
         axisMinimum = 0f
-        if (maxYValue < 5f) {
-            axisMaximum = 5f
+        if (maxYValue < MIN_VALUE) {
+            axisMaximum = MIN_VALUE
         }
         textColor = greyColor
         gridColor = lightGreyColor
