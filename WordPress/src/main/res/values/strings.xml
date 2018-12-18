@@ -1020,6 +1020,9 @@
     <string name="stats_videos">Videos</string>
     <string name="stats_videos_title_label">Title</string>
     <string name="stats_videos_views_label">Views</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
