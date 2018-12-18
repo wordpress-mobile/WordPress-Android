@@ -27,9 +27,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
     private val uiState = MutableLiveData<UI_STATE>()
     val liveData: LiveData<StatsBlock> = merge(domainModel, uiState) { data, uiState ->
         when (data) {
-            is State.Loading -> Loading(type)
-            is State.Error -> createFailedItem(data.error)
-            is Data -> createDataItem(buildUiModel(data.model, uiState))
+            is State.Loading -> Loading(type, buildLoadingItem())
+            is State.Error -> Error(type, data.error)
+            is Data -> BlockList(type, buildUiModel(data.model, uiState))
             is Empty, null -> null
         }
     }
@@ -129,13 +129,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      */
     protected abstract fun buildUiModel(domainModel: DOMAIN_MODEL, nullableUiState: UI_STATE?): List<BlockListItem>
 
-    private fun createFailedItem(message: String): Error {
-        return Error(type, message)
-    }
-
-    private fun createDataItem(data: List<BlockListItem>): BlockList {
-        return BlockList(type, data)
-    }
+    protected abstract fun buildLoadingItem(): List<BlockListItem>
 
     private sealed class State<DOMAIN_MODEL> {
         data class Error<DOMAIN_MODEL>(val error: String) : State<DOMAIN_MODEL>()

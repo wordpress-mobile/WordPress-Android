@@ -34,7 +34,7 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
             BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
             ERROR -> ErrorViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
-            LOADING -> LoadingViewHolder(parent)
+            LOADING -> LoadingViewHolder(parent, imageManager)
         }
     }
 
@@ -48,6 +48,7 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as BlockList)
+            is LoadingViewHolder -> holder.bind(item as Loading)
             is ErrorViewHolder -> holder.bind(item as Error)
             is EmptyViewHolder -> holder.bind(item as Empty)
         }

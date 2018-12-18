@@ -16,8 +16,8 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewFollowe
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
@@ -64,38 +64,44 @@ class FollowersUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_followers))
+
     override fun buildStatefulUiModel(
-        model: Pair<FollowersModel, FollowersModel>,
+        domainModel: Pair<FollowersModel, FollowersModel>,
         uiState: Int
     ): List<BlockListItem> {
-        val wpComModel = model.first
-        val emailModel = model.second
+        val wpComModel = domainModel.first
+        val emailModel = domainModel.second
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_followers))
-        items.add(
-                TabsItem(
-                        listOf(
-                                R.string.stats_followers_wordpress_com,
-                                R.string.stats_followers_email
-                        ),
-                        uiState
-                ) {
-                    onUiState(it)
-                }
-        )
-        if (uiState == 0) {
-            items.addAll(buildTab(wpComModel, R.string.stats_followers_wordpress_com))
-        } else {
-            items.addAll(buildTab(emailModel, R.string.stats_followers_email))
-        }
-
-        if (wpComModel.hasMore || emailModel.hasMore) {
+        if (domainModel.first.followers.isNotEmpty() || domainModel.second.followers.isNotEmpty()) {
             items.add(
-                    Link(
-                            text = string.stats_insights_view_more,
-                            navigateAction = NavigationAction.create(this::onLinkClick)
-                    )
+                    TabsItem(
+                            listOf(
+                                    R.string.stats_followers_wordpress_com,
+                                    R.string.stats_followers_email
+                            ),
+                            uiState
+                    ) {
+                        onUiState(it)
+                    }
             )
+            if (uiState == 0) {
+                items.addAll(buildTab(wpComModel, R.string.stats_followers_wordpress_com))
+            } else {
+                items.addAll(buildTab(emailModel, R.string.stats_followers_email))
+            }
+
+            if (wpComModel.hasMore || emailModel.hasMore) {
+                items.add(
+                        Link(
+                                text = string.stats_insights_view_more,
+                                navigateAction = NavigationAction.create(this::onLinkClick)
+                        )
+                )
+            }
+        } else {
+            items.add(Empty)
         }
         return items
     }
@@ -112,7 +118,7 @@ class FollowersUseCase
                             )
                     )
             )
-            mutableItems.add(Label(R.string.stats_follower_label, R.string.stats_follower_since_label))
+            mutableItems.add(Header(R.string.stats_follower_label, R.string.stats_follower_since_label))
             model.followers.toUserItems().let { mutableItems.addAll(it) }
         } else {
             mutableItems.add(Empty)

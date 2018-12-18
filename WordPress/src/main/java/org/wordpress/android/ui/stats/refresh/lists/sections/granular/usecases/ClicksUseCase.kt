@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
@@ -40,6 +40,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<ClicksModel, SelectedClicksGroup>(CLICKS, mainDispatcher, SelectedClicksGroup()) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_clicks))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = store.getClicks(
                 site,
@@ -75,7 +77,7 @@ constructor(
         if (domainModel.groups.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
+            items.add(Header(R.string.stats_clicks_link_label, R.string.stats_clicks_label))
             domainModel.groups.forEachIndexed { index, group ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = group.icon,
