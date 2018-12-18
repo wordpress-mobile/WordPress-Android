@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-27 10:54:07+0000
+Translation-Revision-Date: 2018-12-11 07:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="menu_debug">Menu Debug</string>
+    <string name="preference_experimental">*PERCOBAAN*</string>
+    <string name="site_settings_enable_gutenberg_summary">Ini masih versi percobaan dari Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Aktifkan Gutenberg</string>
     <string name="change_password_dialog_message">Mengganti kata sandi…</string>
     <string name="change_password_dialog_hint">Kata sandi Anda setidaknya harus berisi enam karakter. Agar lebih kuat, gunakan huruf besar dan kecil, angka, dan simbol seperti ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Penggantian kata sandi berhasil</string>
