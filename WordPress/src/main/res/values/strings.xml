@@ -1017,6 +1017,9 @@
     <string name="stats_countries">Countries</string>
     <string name="stats_country_label">Country</string>
     <string name="stats_country_views_label">Views</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_videos_title_label">Title</string>
+    <string name="stats_videos_views_label">Views</string>
     <string name="stats_search_terms">Search Terms</string>
     <string name="stats_search_terms_label">Search Term</string>
     <string name="stats_search_terms_views_label">Views</string>
