@@ -142,7 +142,9 @@ class NewSiteCreationActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        mainViewModel.onBackPressed()
-        super.onBackPressed()
+        if (!mainViewModel.shouldSuppressBackPress()) {
+            mainViewModel.onBackPressed()
+            super.onBackPressed()
+        }
     }
 }

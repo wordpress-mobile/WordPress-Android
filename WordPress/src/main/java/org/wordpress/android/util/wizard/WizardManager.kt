@@ -28,6 +28,10 @@ class WizardManager<T : WizardStep>(
         return currentStepIndex >= 0 && currentStepIndex < steps.size
     }
 
+    fun isLastStep(): Boolean {
+        return !isIndexValid(currentStepIndex + 1)
+    }
+
     fun stepPosition(T: WizardStep): Int {
         return if (steps.contains(T)) {
             steps.indexOf(T) + 1

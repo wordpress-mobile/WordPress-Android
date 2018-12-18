@@ -63,6 +63,8 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
         wizardManager.showNextStep()
     }
 
+    fun shouldSuppressBackPress(): Boolean = wizardManager.isLastStep()
+
     fun onBackPressed() {
         wizardManager.onBackPressed()
     }
