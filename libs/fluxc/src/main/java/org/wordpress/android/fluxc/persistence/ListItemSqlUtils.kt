@@ -59,6 +59,21 @@ class ListItemSqlUtils @Inject constructor() {
      * This function deletes [ListItemModel]s for [remoteItemIds] in every lists with [listIds]
      */
     fun deleteItemsFromLists(listIds: List<Int>, remoteItemIds: List<Long>) {
+
+        /// This check fixes a bug caused by WellSQL. In `ConditionClauseBuilder` (the location where `isIn()` is
+        /// declared), the code iterates through the items in the provided list argument, appending "?," to each.
+        /// It then removes the very last character from the created query. The issue is, if there are no items
+        /// to iterate through, removing the last character removes the opening "(" in the query. This results in a
+        //  query that looks like:
+        //
+        //  DELETE FROM ListItemModel WHERE LIST_ID IN ) AND REMOTE_ITEM_ID IN (?)
+        //
+        //  When SQLite tries to run this query, it crashes attempting to compile it with an SQLiteException.
+        
+        if(listIds.isEmpty() || remoteItemIds.isEmpty()) {
+            return
+        }
+
         WellSql.delete(ListItemModel::class.java)
                 .where()
                 .isIn(ListItemModelTable.LIST_ID, listIds)
