@@ -25,11 +25,11 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -75,7 +75,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
             assertTitle(this.items[0])
-            assertLabel(this.items[1])
+            assertHeader(this.items[1])
             assertItem(this.items[2], searchTerm.text, searchTerm.views)
         }
     }
@@ -125,7 +125,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             Assertions.assertThat(this.items).hasSize(8)
             assertTitle(this.items[0])
-            assertLabel(this.items[1])
+            assertHeader(this.items[1])
             assertItem(this.items[2], searchTerm.text, searchTerm.views)
             assertItem(this.items[3], searchTerm.text, searchTerm.views)
             assertItem(this.items[4], searchTerm.text, searchTerm.views)
@@ -181,9 +181,9 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
         Assertions.assertThat((item as Title).text).isEqualTo(R.string.stats_search_terms)
     }
 
-    private fun assertLabel(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(LABEL)
-        Assertions.assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_search_terms_label)
+    private fun assertHeader(item: BlockListItem) {
+        Assertions.assertThat(item.type).isEqualTo(HEADER)
+        Assertions.assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_search_terms_label)
         Assertions.assertThat(item.rightLabel).isEqualTo(R.string.stats_search_terms_views_label)
     }
 

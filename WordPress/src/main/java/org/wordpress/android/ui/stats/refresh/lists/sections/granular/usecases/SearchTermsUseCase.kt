@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewSearchT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
@@ -35,6 +35,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = store.getSearchTerms(
                 site,
@@ -70,7 +72,7 @@ constructor(
         if (domainModel.searchTerms.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(R.string.stats_search_terms_label, R.string.stats_search_terms_views_label))
+            items.add(Header(string.stats_search_terms_label, string.stats_search_terms_views_label))
             val hasEncryptedCount = domainModel.unknownSearchCount > 0
             val mappedSearchTerms = domainModel.searchTerms.mapIndexed { index, searchTerm ->
                 ListItemWithIcon(
