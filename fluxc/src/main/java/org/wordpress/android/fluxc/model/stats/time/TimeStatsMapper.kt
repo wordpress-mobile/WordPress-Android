@@ -1,14 +1,14 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
-import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
+import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
@@ -128,10 +128,10 @@ class TimeStatsMapper
                     null
                 }
             }
-            if (author.name == null || author.views == null || author.avatar == null) {
+            if (author.name == null || author.views == null || author.avatarUrl == null) {
                 AppLog.e(STATS, "AuthorsResponse: Missing fields on an author")
             }
-            AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatar, posts ?: listOf())
+            AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatarUrl, posts ?: listOf())
         }
         return AuthorsModel(first.otherViews ?: 0, authors, first.authors.size > authors.size)
     }
