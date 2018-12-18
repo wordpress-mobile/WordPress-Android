@@ -458,7 +458,8 @@ public class MySiteFragment extends Fragment implements
         });
 
         mQuickStartMenuButton.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 showQuickStartCardMenu();
             }
         });
@@ -517,7 +518,8 @@ public class MySiteFragment extends Fragment implements
     private void showQuickStartCardMenu() {
         PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMenuButton);
         quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.quick_start_card_menu_remove) {
                     showRemoveNextStepsDialog();
                     return true;

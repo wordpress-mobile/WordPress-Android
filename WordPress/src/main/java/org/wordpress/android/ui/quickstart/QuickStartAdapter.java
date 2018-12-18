@@ -253,10 +253,12 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             };
 
             View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-                @Override public boolean onLongClick(View v) {
+                @Override
+                public boolean onLongClick(View v) {
                     PopupMenu popup = new PopupMenu(mContext, mPopupAnchor);
                     popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                        @Override public boolean onMenuItemClick(MenuItem item) {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.quick_start_task_menu_skip) {
                                 if (mListener != null) {
                                     mListener.onSkipTaskTapped(mTasks.get(getAdapterPosition()));
