@@ -495,12 +495,10 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-
         mQuickStartMoreButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(requireContext(), mQuickStartMoreButton);
-
-                popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+                PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMoreButton);
+                quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
                     @Override public boolean onMenuItemClick(MenuItem item) {
                         if (item.getItemId() == R.id.quick_start_menu_remove_next_steps) {
                             showRemoveNextStepsDialog();
@@ -510,10 +508,10 @@ public class MySiteFragment extends Fragment implements
                     }
                 });
 
-                popup.inflate(R.menu.quick_start_remove_next_steps_menu);
-                popup.setGravity(Gravity.START);
+                quickStartPopupMenu.inflate(R.menu.quick_start_remove_next_steps_menu);
+                quickStartPopupMenu.setGravity(Gravity.START);
 
-                popup.show();
+                quickStartPopupMenu.show();
             }
         });
     }
@@ -1024,14 +1022,7 @@ public class MySiteFragment extends Fragment implements
                 // TODO: Quick Start - Add analytics for migration dialog positive tapped.
                 break;
             case TAG_REMOVE_NEXT_STEPS_DIALOG:
-
-                for (QuickStartTask quickStartTask : QuickStartTask.values()) {
-                    mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), quickStartTask, true);
-                }
-
-                mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
-                // skipping all tasks means no achievement notification, so we mark it as received
-                mQuickStartStore.setQuickStartNotificationReceived(AppPrefs.getSelectedSite(), true);
+                skipQuickStart();
                 updateQuickStartContainer();
                 clearActiveQuickStart();
                 break;
@@ -1039,6 +1030,16 @@ public class MySiteFragment extends Fragment implements
                 AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
                 throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
         }
+    }
+
+    private void skipQuickStart() {
+        for (QuickStartTask quickStartTask : QuickStartTask.values()) {
+            mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), quickStartTask, true);
+        }
+
+        mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
+        // skipping all tasks means no achievement notification, so we mark it as received
+        mQuickStartStore.setQuickStartNotificationReceived(AppPrefs.getSelectedSite(), true);
     }
 
     private void startQuickStart() {

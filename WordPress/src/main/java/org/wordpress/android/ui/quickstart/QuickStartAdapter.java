@@ -33,7 +33,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<QuickStartTask> mTasksUncompleted;
     private List<QuickStartTask> mTaskCompleted;
     private boolean mIsCompletedTaskListExpanded;
-    private OnTaskActionListener mListener;
+    private OnQuickStartAdapterActionListener mListener;
 
     private static final int VIEW_TYPE_TASK = 0;
     private static final int VIEW_TYPE_COMPLETED_TASKS_HEADER = 1;
@@ -219,7 +219,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         return mTasks.size();
     }
 
-    public void setOnTaskTappedListener(OnTaskActionListener listener) {
+    public void setOnTaskTappedListener(OnQuickStartAdapterActionListener listener) {
         mListener = listener;
     }
 
@@ -336,13 +336,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    interface OnTaskActionListener {
+    interface OnQuickStartAdapterActionListener {
         void onTaskTapped(QuickStartTask task);
 
         void onSkipTaskTapped(QuickStartTask task);
     }
 
-    public boolean isCompletedTasksListExpanded() {
+    boolean isCompletedTasksListExpanded() {
         return mIsCompletedTaskListExpanded;
     }
 }

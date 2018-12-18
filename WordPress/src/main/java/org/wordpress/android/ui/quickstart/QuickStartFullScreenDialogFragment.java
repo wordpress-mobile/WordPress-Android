@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnTaskActionListener;
+import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 
 public class QuickStartFullScreenDialogFragment extends Fragment implements FullScreenDialogContent,
-        OnTaskActionListener {
+        OnQuickStartAdapterActionListener {
     private FullScreenDialogController mDialogController;
     private QuickStartAdapter mQuickStartAdapter;
 
