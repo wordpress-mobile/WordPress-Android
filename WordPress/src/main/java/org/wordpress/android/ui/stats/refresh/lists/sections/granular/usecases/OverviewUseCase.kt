@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
@@ -27,12 +28,8 @@ constructor(
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(overviewMapper.buildTitle(
-            null,
-            null,
-            statsDateFormatter.printDate(selectedDateProvider.getCurrentDate()),
-            statsGranularity
-    ))
+    override fun buildLoadingItem(): List<BlockListItem> =
+            listOf(Title(text = statsDateFormatter.printDate(selectedDateProvider.getCurrentDate())))
 
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = visitsAndViewsStore.getVisits(
