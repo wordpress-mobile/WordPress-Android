@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -37,6 +38,7 @@ sealed class BlockListItem(val type: Type) {
         BAR_CHART,
         TABS,
         HEADER,
+        MAP,
         EXPANDABLE_ITEM,
         DIVIDER
     }
@@ -133,6 +135,8 @@ sealed class BlockListItem(val type: Type) {
         override val itemId: Int
             get() = header.itemId
     }
+
+    data class MapItem(val mapData: String, @StringRes val label: Int) : BlockListItem(MAP)
 
     object Empty : BlockListItem(EMPTY)
 
