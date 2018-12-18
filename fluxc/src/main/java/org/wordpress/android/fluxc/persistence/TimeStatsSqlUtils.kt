@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
@@ -12,6 +13,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
@@ -75,6 +77,16 @@ class TimeStatsSqlUtils
         )
     }
 
+    fun insert(site: SiteModel, data: AuthorsResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                AUTHORS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
     fun selectPostAndPageViews(site: SiteModel, granularity: StatsGranularity, date: Date): PostAndPageViewsResponse? {
         return statsSqlUtils.select(
                 site,
@@ -121,6 +133,16 @@ class TimeStatsSqlUtils
                 COUNTRY_VIEWS,
                 granularity.toStatsType(),
                 CountryViewsResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
+    fun selectAuthors(site: SiteModel, granularity: StatsGranularity, date: Date): AuthorsResponse? {
+        return statsSqlUtils.select(
+                site,
+                AUTHORS,
+                granularity.toStatsType(),
+                AuthorsResponse::class.java,
                 statsUtils.getFormattedDate(site, granularity, date)
         )
     }
