@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCountri
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
@@ -36,6 +36,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<CountryViewsModel>(COUNTRIES, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_countries))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = store.getCountryViews(
                 site,
@@ -76,7 +78,7 @@ constructor(
                 stringBuilder.append("['").append(country.fullName).append("',").append(country.views).append("],")
             }
             items.add(MapItem(stringBuilder.toString(), R.string.stats_country_views_label))
-            items.add(Label(R.string.stats_country_label, R.string.stats_country_views_label))
+            items.add(Header(string.stats_country_label, string.stats_country_views_label))
             domainModel.countries.forEachIndexed { index, group ->
                 items.add(
                         ListItemWithIcon(

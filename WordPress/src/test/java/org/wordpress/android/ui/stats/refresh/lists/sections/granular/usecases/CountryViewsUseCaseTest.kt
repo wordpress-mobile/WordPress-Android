@@ -25,12 +25,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -149,8 +149,8 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertLabel(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(LABEL)
-        Assertions.assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_country_label)
+        Assertions.assertThat(item.type).isEqualTo(HEADER)
+        Assertions.assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_country_label)
         Assertions.assertThat(item.rightLabel).isEqualTo(R.string.stats_country_views_label)
     }
 
@@ -169,6 +169,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
         }
         Assertions.assertThat(item.iconUrl).isEqualTo(icon)
     }
+
     private fun assertLink(item: BlockListItem) {
         Assertions.assertThat(item.type).isEqualTo(LINK)
         Assertions.assertThat((item as Link).text).isEqualTo(R.string.stats_insights_view_more)
