@@ -38,6 +38,8 @@ class TodayStatsUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_today_stats))
+
     override fun buildUiModel(domainModel: VisitsModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(R.string.stats_insights_today_stats))

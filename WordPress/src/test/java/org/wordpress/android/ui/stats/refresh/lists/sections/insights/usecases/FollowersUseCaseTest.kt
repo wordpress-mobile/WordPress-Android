@@ -28,8 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
@@ -162,7 +162,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         val result = loadFollowers(refresh, forced)
 
         Assertions.assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmptyTabSelected(0)
+        (result as BlockList).assertEmpty()
     }
 
     @Test
@@ -242,7 +242,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
         assertThat(this.items[2]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this.items[3]).isEqualTo(
-                Label(
+                Header(
                         string.stats_follower_label,
                         string.stats_follower_since_label
                 )
@@ -265,5 +265,11 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_followers_email)
         assertThat(this.items[2]).isEqualTo(Empty)
         return tabsItem
+    }
+
+    private fun BlockList.assertEmpty() {
+        assertThat(this.items).hasSize(2)
+        assertTitle(this.items[0])
+        assertThat(this.items[1]).isEqualTo(Empty)
     }
 }

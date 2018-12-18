@@ -27,12 +27,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -100,7 +100,12 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 authorWithoutPosts.views,
                 authorWithoutPosts.avatarUrl
         )
-        return assertExpandableItem(this.items[3], authorWithPosts.name, authorWithPosts.views, authorWithPosts.avatarUrl)
+        return assertExpandableItem(
+                this.items[3],
+                authorWithPosts.name,
+                authorWithPosts.views,
+                authorWithPosts.avatarUrl
+        )
     }
 
     private fun BlockList.assertExpandedList(): ExpandableItem {
@@ -199,8 +204,8 @@ class AuthorsUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertLabel(item: BlockListItem) {
-        Assertions.assertThat(item.type).isEqualTo(LABEL)
-        Assertions.assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_author_label)
+        Assertions.assertThat(item.type).isEqualTo(HEADER)
+        Assertions.assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_author_label)
         Assertions.assertThat(item.rightLabel).isEqualTo(R.string.stats_author_views_label)
     }
 

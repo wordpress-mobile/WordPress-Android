@@ -12,13 +12,13 @@
         style="@style/StatsBlockItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:ellipsize="end"
         android:lines="1"
-        android:minHeight="16dp"
-        android:textSize="16sp"
+        android:minHeight="@dimen/margin_extra_large"
+        android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toTopOf="@+id/subtext"
         app:layout_constraintEnd_toStartOf="@+id/value"
         app:layout_constraintHorizontal_bias="0.5"
@@ -27,8 +27,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed"
-        app:layout_goneMarginBottom="12dp"
-        app:layout_goneMarginStart="16dp"
+        app:layout_goneMarginBottom="@dimen/margin_large"
+        app:layout_goneMarginStart="@dimen/margin_extra_large"
         tools:text="@string/unknown"/>
 
     <LinearLayout
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         android:visibility="gone"
@@ -47,15 +47,16 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/stats_block_icon_size"
+            android:layout_height="@dimen/stats_block_icon_size"
             android:contentDescription="@string/icon"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_share_blue_medium_24dp"/>
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@string/reader_avatar_desc"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"/>
@@ -72,14 +73,14 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/text"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_goneMarginEnd="16dp"
+        app:layout_goneMarginEnd="@dimen/margin_extra_large"
         tools:text="@string/unknown"/>
 
     <ImageView
         android:id="@+id/expand_button"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="4dp"
         android:contentDescription="@string/icon"
         android:visibility="gone"
@@ -95,8 +96,8 @@
         android:id="@+id/subtext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:minHeight="16dp"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:minHeight="@dimen/margin_extra_large"
         android:text="@string/unknown"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

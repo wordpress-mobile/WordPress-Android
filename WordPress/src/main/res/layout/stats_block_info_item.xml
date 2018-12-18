@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               style="@style/StatsBlockLine"
-              android:paddingStart="16dp"
-              android:paddingEnd="16dp"
+              android:paddingStart="@dimen/margin_extra_large"
+              android:paddingEnd="@dimen/margin_extra_large"
               android:orientation="horizontal">
 
     <TextView

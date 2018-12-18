@@ -3,8 +3,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               style="@style/StatsBlockLine"
               android:layout_width="match_parent"
-              android:layout_marginBottom="16dp"
-              android:layout_marginEnd="16dp"
+              android:layout_marginBottom="@dimen/margin_extra_large"
+              android:layout_marginEnd="@dimen/margin_extra_large"
               android:orientation="vertical">
 
     <LinearLayout

@@ -40,6 +40,8 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val selectedDateProvider: SelectedDateProvider
 ) : StatelessUseCase<PostAndPageViewsModel>(POSTS_AND_PAGES, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_posts_and_pages))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = postsAndPageViewsStore.getPostAndPageViews(
                 site,

@@ -30,8 +30,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
@@ -162,7 +162,7 @@ sealed class BlockListItemViewHolder(
 
                 override fun updateDrawState(ds: TextPaint?) {
                     ds?.color = ContextCompat.getColor(context, R.color.blue_wordpress)
-                    ds?.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                    ds?.typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.NORMAL)
                     ds?.isUnderlineText = false
                 }
             }
@@ -236,14 +236,16 @@ sealed class BlockListItemViewHolder(
     ) {
         private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout)
 
-        fun bind(item: TabsItem) {
+        fun bind(item: TabsItem, tabChanged: Boolean) {
             tabLayout.clearOnTabSelectedListeners()
-            tabLayout.removeAllTabs()
-            item.tabs.forEach { tabItem ->
-                tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+            if (!tabChanged) {
+                tabLayout.removeAllTabs()
+                item.tabs.forEach { tabItem ->
+                    tabLayout.addTab(tabLayout.newTab().setText(tabItem))
+                }
             }
-
             tabLayout.getTabAt(item.selectedTabPosition)?.select()
+
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabReselected(tab: Tab) {
                 }
@@ -258,13 +260,13 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class LabelViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+    class HeaderViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_label_item
+            R.layout.stats_block_header_item
     ) {
         private val leftLabel = itemView.findViewById<TextView>(R.id.left_label)
         private val rightLabel = itemView.findViewById<TextView>(R.id.right_label)
-        fun bind(item: Label) {
+        fun bind(item: Header) {
             leftLabel.setText(item.leftLabel)
             rightLabel.setText(item.rightLabel)
         }

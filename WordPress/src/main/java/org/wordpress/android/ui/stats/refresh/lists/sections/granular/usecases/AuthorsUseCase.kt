@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
@@ -40,6 +40,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatefulUseCase<AuthorsModel, SelectedAuthor>(AUTHORS, mainDispatcher, SelectedAuthor()) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = authorsStore.getAuthors(
                 site,
@@ -75,7 +77,7 @@ constructor(
         if (domainModel.authors.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(R.string.stats_author_label, R.string.stats_author_views_label))
+            items.add(Header(R.string.stats_author_label, R.string.stats_author_views_label))
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
                         iconUrl = author.avatarUrl,

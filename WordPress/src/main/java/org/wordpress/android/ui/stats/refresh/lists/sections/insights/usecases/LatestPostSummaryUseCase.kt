@@ -45,6 +45,8 @@ class LatestPostSummaryUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_latest_post_summary))
+
     override fun buildUiModel(domainModel: InsightsLatestPostModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_insights_latest_post_summary))
