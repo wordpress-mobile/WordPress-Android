@@ -1014,6 +1014,9 @@
     <string name="stats_clicks">Clicks</string>
     <string name="stats_clicks_link_label">Link</string>
     <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_country_views_label">Views</string>
     <string name="stats_authors">Authors</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_author_views_label">Views</string>

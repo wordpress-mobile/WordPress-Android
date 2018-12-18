@@ -14,6 +14,7 @@ import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
@@ -82,9 +83,16 @@ class StatsModule {
         postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
         referrersUseCaseFactory: ReferrersUseCaseFactory,
         clicksUseCaseFactory: ClicksUseCaseFactory,
+        countryViewsUseCaseFactory: CountryViewsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory
     ): List<@JvmSuppressWildcards UseCaseFactory> {
-        return listOf(postsAndPagesUseCaseFactory, referrersUseCaseFactory, clicksUseCaseFactory, authorsUseCaseFactory)
+        return listOf(
+                postsAndPagesUseCaseFactory,
+                referrersUseCaseFactory,
+                clicksUseCaseFactory,
+                countryViewsUseCaseFactory,
+                authorsUseCaseFactory
+        )
     }
 
     /**

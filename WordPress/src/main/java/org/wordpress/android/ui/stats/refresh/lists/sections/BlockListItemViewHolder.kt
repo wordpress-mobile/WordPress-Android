@@ -2,12 +2,14 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.content.Context
 import android.graphics.Typeface
+import android.net.http.SslError
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.design.widget.TabLayout
 import android.support.design.widget.TabLayout.OnTabSelectedListener
 import android.support.design.widget.TabLayout.Tab
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.Spannable
 import android.text.SpannableString
@@ -18,6 +20,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import android.webkit.SslErrorHandler
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,6 +35,7 @@ import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
@@ -35,6 +46,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Infor
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
@@ -302,6 +314,80 @@ sealed class BlockListItemViewHolder(
             itemView.isClickable = true
             itemView.setOnClickListener {
                 expandableItem.onExpandClicked(!expandableItem.isExpanded)
+            }
+        }
+    }
+
+    class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_web_view_item
+    ) {
+        val webView = itemView.findViewById<WebView>(R.id.web_view)
+        fun bind(item: MapItem) {
+            GlobalScope.launch {
+                delay(100)
+                // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
+                // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
+                // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
+                val htmlPage = ("<html>" +
+                        "<head>" +
+                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
+                        "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
+                        "<script type=\"text/javascript\">" +
+                        " google.charts.load('42', {'packages':['geochart']});" +
+                        " google.charts.setOnLoadCallback(drawRegionsMap);" +
+                        " function drawRegionsMap() {" +
+                        " var data = google.visualization.arrayToDataTable(" +
+                        " [" +
+                        " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
+                        " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
+                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: true};" +
+                        " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                        " chart.draw(data, options);" +
+                        " }" +
+                        "</script>" +
+                        "</head>" +
+                        "<body>" +
+                        "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
+                        "</body>" +
+                        "</html>")
+
+                val width = itemView.width
+                val height = width * 3 / 4
+
+                val params = webView.layoutParams as FrameLayout.LayoutParams
+                val wrapperParams = itemView.layoutParams as RecyclerView.LayoutParams
+                params.width = LayoutParams.MATCH_PARENT
+                params.height = height
+                wrapperParams.width = LayoutParams.MATCH_PARENT
+                wrapperParams.height = height
+
+                launch(Dispatchers.Main) {
+                    webView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
+
+                    webView.layoutParams = params
+                    itemView.layoutParams = wrapperParams
+
+                webView.webViewClient = object : WebViewClient() {
+                    override fun onReceivedError(
+                        view: WebView?,
+                        request: WebResourceRequest?,
+                        error: WebResourceError
+                    ) {
+                        super.onReceivedError(view, request, error)
+                        itemView.visibility = View.GONE
+                    }
+
+                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                        super.onReceivedSslError(view, handler, error)
+                        itemView.visibility = View.GONE
+                    }
+                }
+                    webView.settings.javaScriptEnabled = true
+                    webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+                    webView.loadData(htmlPage, "text/html", "UTF-8")
+                }
             }
         }
     }
