@@ -23,11 +23,11 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -73,7 +73,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
             assertTitle(this.items[0])
-            assertLabel(this.items[1])
+            assertHeader(this.items[1])
             assertItem(this.items[2], videoPlay.title, videoPlay.plays)
         }
     }
@@ -95,7 +95,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            assertLabel(this.items[1])
+            assertHeader(this.items[1])
             assertItem(this.items[2], videoPlay.title, videoPlay.plays)
             assertLink(this.items[3])
         }
@@ -145,9 +145,9 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
         assertThat((item as Title).text).isEqualTo(R.string.stats_videos)
     }
 
-    private fun assertLabel(item: BlockListItem) {
-        assertThat(item.type).isEqualTo(LABEL)
-        assertThat((item as Label).leftLabel).isEqualTo(R.string.stats_videos_title_label)
+    private fun assertHeader(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_videos_title_label)
         assertThat(item.rightLabel).isEqualTo(R.string.stats_videos_views_label)
     }
 

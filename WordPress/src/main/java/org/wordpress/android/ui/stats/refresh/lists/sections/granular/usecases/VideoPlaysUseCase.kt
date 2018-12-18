@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewVideoPl
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
@@ -35,6 +35,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = store.getVideoPlays(
                 site,
@@ -70,7 +72,7 @@ constructor(
         if (domainModel.plays.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(string.stats_videos_title_label, string.stats_videos_views_label))
+            items.add(Header(string.stats_videos_title_label, string.stats_videos_views_label))
             items.addAll(domainModel.plays.mapIndexed { index, videoPlays ->
                 ListItemWithIcon(
                         text = videoPlays.title,
