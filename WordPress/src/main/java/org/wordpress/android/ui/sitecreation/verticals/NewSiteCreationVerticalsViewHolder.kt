@@ -59,7 +59,7 @@ sealed class NewSiteCreationVerticalsViewHolder(internal val parent: ViewGroup, 
 
     class VerticalsErrorViewHolder(
         parentView: ViewGroup
-    ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_verticals_error_item) {
+    ) : NewSiteCreationVerticalsViewHolder(parentView, R.layout.new_site_creation_suggestions_error_item) {
         private val text = itemView.findViewById<TextView>(R.id.error_text)
         private val retry = itemView.findViewById<TextView>(R.id.retry)
 

@@ -55,9 +55,7 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
 
     class DomainSuggestionErrorViewHolder(
         parentView: ViewGroup
-            // TODO: Rename the resource
-            // TODO: Handle errors
-    ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_verticals_error_item) {
+    ) : NewSiteCreationDomainViewHolder(parentView, R.layout.new_site_creation_suggestions_error_item) {
         private val text = itemView.findViewById<TextView>(R.id.error_text)
         private val retry = itemView.findViewById<TextView>(R.id.retry)
 
