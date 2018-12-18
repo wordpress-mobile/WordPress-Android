@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-07 11:06:45+0000
+Translation-Revision-Date: 2018-12-05 01:42:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+    <string name="menu_debug">Debug Menu</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">This is still an experimental version of Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Enable Gutenberg</string>
+    <string name="change_password_dialog_message">Changing password…</string>
+    <string name="change_password_dialog_hint">Your password should be at least six characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Password changed successfully</string>
+    <string name="change_password">Change password</string>
+    <string name="support_identity_input_dialog_name_label">Name</string>
+    <string name="history_no_title">(no title)</string>
+    <string name="history_preview_html">HTML preview</string>
+    <string name="history_preview_visual">Visual preview</string>
     <string name="history_detail_title">Revision</string>
     <string name="history_detail_button_previous">Previous</string>
     <string name="history_detail_button_next">Next</string>
@@ -1185,7 +1197,7 @@ Language: en_AU
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="days_quantity_other">%d days</string>
     <string name="days_quantity_one">1 day</string>
-    <string name="web_address">Web Address</string>
+    <string name="web_address">Web address</string>
     <string name="primary_site">Primary site</string>
     <string name="pending_email_change_snackbar">Click the verification link in the email sent to %1$s to confirm your new address</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
@@ -1606,7 +1618,6 @@ Language: en_AU
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
     <string name="error_deleting_post">An error occurred while deleting the post</string>
     <string name="notifications_empty_list">No notifications</string>
-    <string name="invalid_url_message">Check that the URL entered is valid</string>
     <string name="stats_bar_graph_empty">No stats available</string>
     <string name="stats_empty_comments">No comments yet</string>
     <string name="sdcard_message">A mounted SD card is required to upload media</string>

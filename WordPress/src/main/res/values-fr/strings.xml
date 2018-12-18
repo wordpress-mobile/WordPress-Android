@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 13:54:13+0000
+Translation-Revision-Date: 2018-12-11 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="menu_debug">Menu de débogage</string>
+    <string name="preference_experimental">*EXPÉRIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Il s\'agit toujours d\'une version expérimentale de Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activer Gutenberg</string>
+    <string name="change_password_dialog_message">Modification du mot de passe…</string>
+    <string name="change_password_dialog_hint">Votre mot de passe doit contenir au moins 6 caractères. Pour le rendre plus dur à découvrir, utiliser des lettres majuscules et minuscules, des chiffres et des symboles comme ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Le mot de passe a bien été changé.</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="support_identity_input_dialog_name_label">Nom</string>
+    <string name="history_no_title">(sans titre)</string>
+    <string name="history_preview_html">Aperçu HTML</string>
+    <string name="history_preview_visual">Aperçu visuel</string>
     <string name="history_detail_title">Révision</string>
     <string name="history_detail_button_previous">Précédent</string>
     <string name="history_detail_button_next">Suivant</string>
@@ -1606,7 +1618,6 @@ Language: fr
     <string name="error_refresh_posts">Les articles ne peuvent pas être actualisés pour l\'instant</string>
     <string name="error_deleting_post">Une erreur s\'est produite lors de la suppression de l\'article</string>
     <string name="notifications_empty_list">Aucune notifications</string>
-    <string name="invalid_url_message">Vérifiez que l\'URL du blog est valide</string>
     <string name="stats_bar_graph_empty">Aucune statistique disponible</string>
     <string name="stats_empty_comments">Aucun commentaire</string>
     <string name="sdcard_message">Une carte SD est nécessaire pour téléverser les médias</string>

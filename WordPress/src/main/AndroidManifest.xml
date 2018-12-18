@@ -76,26 +76,6 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
 
-            <intent-filter>
-                <data
-                    android:host="stats"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="read"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="post"
-                    android:scheme="wordpress" />
-                <data
-                    android:host="notifications"
-                    android:scheme="wordpress" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
@@ -268,6 +248,12 @@
             android:label="@string/post_settings_tags"
             android:theme="@style/CalypsoTheme" />
 
+        <!-- History -->
+        <activity
+            android:name=".ui.history.HistoryDetailActivity"
+            android:label="@string/history_detail_title"
+            android:theme="@style/CalypsoTheme" />
+
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
                   android:theme="@style/Calypso.NoActionBar"
@@ -361,6 +347,18 @@
 
                 <data
                     android:host="viewpost"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="stats"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="read"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="post"
+                    android:scheme="wordpress" />
+                <data
+                    android:host="notifications"
                     android:scheme="wordpress" />
             </intent-filter>
         </activity>
@@ -694,6 +692,7 @@
         </receiver>
         <receiver
             android:name=".util.analytics.receiver.InstallationReferrerReceiver"
+            android:permission="android.permission.INSTALL_PACKAGES"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
@@ -712,14 +711,15 @@
             android:exported="false" />
 
         <service
-            android:name=".push.GCMMessageService">
+            android:name=".push.GCMMessageService"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".push.InstanceIDService"
-            >
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>

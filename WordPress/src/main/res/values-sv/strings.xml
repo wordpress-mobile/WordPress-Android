@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-07 12:08:41+0000
+Translation-Revision-Date: 2018-12-04 13:01:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="menu_debug">Felsökningsmeny</string>
+    <string name="preference_experimental">*EXPERIMENTELL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Detta är fortfarande en experimentell version av Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Aktivera Gutenberg</string>
+    <string name="change_password_dialog_message">Ändrar lösenord…</string>
+    <string name="change_password_dialog_hint">Ditt lösenord bör innehålla minst sex tecken. Du kan göra det starkare genom att använda både stora och små bokstäver, siffror och olika symboler, såsom ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Lösenordet ändrat</string>
+    <string name="change_password">Ändra lösenord</string>
+    <string name="support_identity_input_dialog_name_label">Namn</string>
+    <string name="history_no_title">(ingen rubrik)</string>
+    <string name="history_preview_html">HTML-förhandsvisning</string>
+    <string name="history_preview_visual">Visuell förhandsgranskning</string>
     <string name="history_detail_title">Version</string>
     <string name="history_detail_button_previous">Föregående</string>
     <string name="history_detail_button_next">Nästa</string>
@@ -1606,7 +1618,6 @@ Language: sv_SE
     <string name="error_refresh_posts">Inläggen kunde inte uppdateras just nu</string>
     <string name="error_deleting_post">Ett fel uppstod när inlägget skulle raderas</string>
     <string name="notifications_empty_list">Inga notifieringar</string>
-    <string name="invalid_url_message">Kontrollera att URL:en är giltig</string>
     <string name="stats_bar_graph_empty">Ingen statistik tillgänglig</string>
     <string name="stats_empty_comments">Inga kommentarer ännu</string>
     <string name="sdcard_message">Ett SD-kort är nödvändigt för att ladda upp media</string>

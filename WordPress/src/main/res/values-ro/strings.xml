@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-08 08:02:18+0000
+Translation-Revision-Date: 2018-12-04 16:40:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="menu_debug">Meniu de depanare</string>
+    <string name="preference_experimental">*EXPERIMENTALĂ*</string>
+    <string name="site_settings_enable_gutenberg_summary">Aceasta este totuși o versiune experimentală pentru Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activează Gutenberg</string>
+    <string name="change_password_dialog_message">Schimb parola…</string>
+    <string name="change_password_dialog_hint">Parola ar trebui să aibă cel puțin șase caractere. Pentru a o face mai puternică, folosește majuscule și minuscule, cifre și simboluri, cum ar fi ! \" ? $ % ^ &amp;amp; ).</string>
+    <string name="change_password_confirmation">Parolă schimbată cu succes</string>
+    <string name="change_password">Schimbă parola</string>
+    <string name="support_identity_input_dialog_name_label">Nume</string>
+    <string name="history_no_title">(fără titlu)</string>
+    <string name="history_preview_html">Previzualizare ca HTML</string>
+    <string name="history_preview_visual">Previzualizare ca vizual</string>
     <string name="history_detail_title">Revizie</string>
     <string name="history_detail_button_previous">Anterioare</string>
     <string name="history_detail_button_next">Următoare</string>
@@ -1606,7 +1618,6 @@ Language: ro
     <string name="error_refresh_posts">Articolele n-au putut fi reîmprospătate în acest moment</string>
     <string name="error_deleting_post">A apărut o eroare în timpul ștergerii articolului</string>
     <string name="notifications_empty_list">Nicio notificare</string>
-    <string name="invalid_url_message">Verifică dacă URL-ul introdus este valid</string>
     <string name="stats_bar_graph_empty">Nicio statistică disponibilă</string>
     <string name="stats_empty_comments">Niciun comentariu până acum</string>
     <string name="sdcard_message">Este necesar un card SD montat pentru a încărca media</string>

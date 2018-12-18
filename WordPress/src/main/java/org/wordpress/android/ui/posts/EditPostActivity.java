@@ -68,6 +68,7 @@ import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
+import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
@@ -107,11 +108,9 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
-import org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -186,7 +185,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.history.HistoryDetailFullScreenDialogFragment.KEY_REVISION;
+import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -203,9 +202,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PromoDialogClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
-        HistoryListFragment.HistoryItemClickInterface,
-        FullScreenDialogFragment.OnConfirmListener,
-        FullScreenDialogFragment.OnDismissListener {
+        HistoryListFragment.HistoryItemClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -254,6 +251,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
+    private boolean mShowGutenbergEditor;
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
@@ -280,7 +278,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PostModel mOriginalPost;
     private boolean mOriginalPostHadLocalChangesOnOpen;
 
-    private FullScreenDialogFragment mFullScreenDialogFragment;
     private Revision mRevision;
 
     private EditorFragmentAbstract mEditorFragment;
@@ -324,6 +321,10 @@ public class EditPostActivity extends AppCompatActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
+    private boolean isModernEditor() {
+        return mShowNewEditor || mShowAztecEditor || mShowGutenbergEditor;
+    }
+
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -352,13 +353,6 @@ public class EditPostActivity extends AppCompatActivity implements
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mFullScreenDialogFragment = (FullScreenDialogFragment)
-                    getSupportFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
-
-            if (mFullScreenDialogFragment != null) {
-                mFullScreenDialogFragment.setOnConfirmListener(EditPostActivity.this);
-                mFullScreenDialogFragment.setOnDismissListener(EditPostActivity.this);
-            }
         }
 
         // Check whether to show the visual editor
@@ -463,16 +457,23 @@ public class EditPostActivity extends AppCompatActivity implements
             mEditorFragment.setImageLoader(mImageLoader);
         }
 
+        // Ensure that this check happens when mPost is set
+        mShowGutenbergEditor = PostUtils.shouldShowGutenbergEditor(mIsNewPost, mPost);
+
         // Ensure we have a valid post
         if (mPost == null) {
             showErrorAndFinish(R.string.post_not_found);
             return;
         }
 
+        if (savedInstanceState == null) {
+            // Bump the stat the first time the editor is opened.
+            PostUtils.trackOpenPostAnalytics(mPost, mSite);
+        }
+
         if (mIsNewPost) {
             trackEditorCreatedPost(action, getIntent());
         } else {
-            PostUtils.trackOpenPostAnalytics(mPost, mSite);
             // if we are opening a Post for which an error notification exists, we need to remove
             // it from the dashboard to prevent the user from tapping RETRY on a Post that is
             // being currently edited
@@ -1004,7 +1005,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (mShowNewEditor || mShowAztecEditor) {
+        if (isModernEditor()) {
             inflater.inflate(R.menu.edit_post, menu);
         } else {
             inflater.inflate(R.menu.edit_post_legacy, menu);
@@ -1019,6 +1020,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             showMenuItems = false;
         }
+
 
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
@@ -1041,7 +1043,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
+            viewHtmlModeMenuItem.setVisible(((mEditorFragment instanceof AztecEditorFragment)
+                                             || (mEditorFragment instanceof GutenbergEditorFragment)) && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
@@ -1109,15 +1112,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean handleBackPressed() {
-        if (mFullScreenDialogFragment != null && mFullScreenDialogFragment.isVisible()) {
-            Fragment contentFragment = mFullScreenDialogFragment.getContent();
-            if (contentFragment instanceof HistoryDetailFullScreenDialogFragment) {
-                AnalyticsTracker.track(Stat.REVISIONS_DETAIL_CANCELLED);
-            }
-            mFullScreenDialogFragment.dismiss();
-            return false;
-        }
-
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 ImageSettingsDialogFragment.IMAGE_SETTINGS_DIALOG_TAG);
         if (fragment != null && fragment.isVisible()) {
@@ -1167,7 +1161,8 @@ public class EditPostActivity extends AppCompatActivity implements
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if (!mShowAztecEditor && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
+            if (!(mShowAztecEditor || mShowGutenbergEditor)
+                        && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
                 return false;
             }
@@ -1221,17 +1216,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
-                            mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
-                                    : R.string.menu_visual_mode_done_snackbar,
-                            R.string.menu_undo_snackbar_action,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // switch back
-                                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                                }
-                            });
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+                        }
+                    });
+                } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                        }
+                    });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
                 AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
@@ -1243,6 +1243,14 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         return false;
+    }
+
+    private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
+        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+                mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
+                        : R.string.menu_visual_mode_done_snackbar,
+                R.string.menu_undo_snackbar_action,
+                onUndoClickListener);
     }
 
     private void refreshEditorContent() {
@@ -1397,7 +1405,7 @@ public class EditPostActivity extends AppCompatActivity implements
         // Update post object from fragment fields
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
-            if (mShowNewEditor || mShowAztecEditor) {
+            if (isModernEditor()) {
                 postTitleOrContentChanged =
                         updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
                                 (String) mEditorFragment.getContent(mPost.getContent()));
@@ -1605,39 +1613,7 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(Stat.REVISIONS_DETAIL_VIEWED_FROM_LIST);
         mRevision = revision;
 
-        Bundle bundle = HistoryDetailFullScreenDialogFragment.newBundle(mRevision, revisions);
-
-        mFullScreenDialogFragment = new FullScreenDialogFragment.Builder(EditPostActivity.this)
-                .setTitle(R.string.history_detail_title)
-                .setSubtitle(revision.getTimeSpan())
-                .setToolbarColor(R.color.status_bar_tint)
-                .setAction(R.string.history_load_dialog_button_positive)
-                .setOnConfirmListener(EditPostActivity.this)
-                .setOnDismissListener(EditPostActivity.this)
-                .setContent(HistoryDetailFullScreenDialogFragment.class, bundle)
-                .setHideActivityBar(true)
-                .build();
-
-        mFullScreenDialogFragment.show(getSupportFragmentManager(), FullScreenDialogFragment.TAG);
-    }
-
-    @Override
-    public void onConfirm(@Nullable Bundle result) {
-        mViewPager.setCurrentItem(PAGE_CONTENT);
-
-        if (result != null && result.getParcelable(KEY_REVISION) != null) {
-            mRevision = result.getParcelable(KEY_REVISION);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override public void run() {
-                    loadRevision();
-                }
-            }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
-        }
-    }
-
-    @Override
-    public void onDismiss() {
+        ActivityLauncher.viewHistoryDetailForResult(this, mRevision, revisions);
     }
 
     private void loadRevision() {
@@ -1704,7 +1680,7 @@ public class EditPostActivity extends AppCompatActivity implements
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
+            UploadService.setLegacyMode(!isModernEditor());
             if (mIsFirstTimePublish) {
                 UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
@@ -1743,7 +1719,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (mShowNewEditor || mShowAztecEditor) {
+                if (isModernEditor()) {
                     // Update the post object directly, without re-fetching the fields from the EditorFragment
                     updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
                 }
@@ -2028,7 +2004,10 @@ public class EditPostActivity extends AppCompatActivity implements
             switch (position) {
                 case 0:
                     // TODO: Remove editor options after testing.
-                    if (mShowAztecEditor) {
+                    if (mShowGutenbergEditor) {
+                        return GutenbergEditorFragment.newInstance("", "",
+                                AppPrefs.isAztecEditorToolbarExpanded());
+                    } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
@@ -2199,7 +2178,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mPost != null) {
             if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (mPost.isLocalDraft() && !mShowNewEditor && !mShowAztecEditor) {
+                if (mPost.isLocalDraft() && !isModernEditor()) {
                     // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
                     // Load local post content in the background, as it may take time to generate images
                     new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
@@ -2629,7 +2608,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
-            } else if (mShowNewEditor || mShowAztecEditor) {
+            } else if (isModernEditor()) {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
@@ -2664,7 +2643,7 @@ public class EditPostActivity extends AppCompatActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mShowNewEditor || mShowAztecEditor) {
+                    if (isModernEditor()) {
                         addMediaVisualEditor(mediaUri, path);
                     } else {
                         addMediaLegacyEditor(mediaUri, isVideo);
@@ -2810,6 +2789,18 @@ public class EditPostActivity extends AppCompatActivity implements
                             addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
                         savePostAsync(null);
+                    }
+                    break;
+                case RequestCodes.HISTORY_DETAIL:
+                    if (data.hasExtra(KEY_REVISION)) {
+                        mViewPager.setCurrentItem(PAGE_CONTENT);
+
+                        mRevision = data.getParcelableExtra(KEY_REVISION);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                loadRevision();
+                            }
+                        }, getResources().getInteger(R.integer.full_screen_dialog_animation_duration));
                     }
                     break;
             }
@@ -3108,6 +3099,9 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onAddMediaClicked() {
         if (isPhotoPickerShowing()) {
             hidePhotoPicker();
+        } else if (mShowGutenbergEditor) {
+            // show the WP media library only since that's the only mode integrated currently from Gutenberg-mobile
+            ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             showPhotoPicker();
         } else {
@@ -3369,7 +3363,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
-        fillContentEditorFields();
+        refreshEditorContent();
         // Set the error listener
         if (mEditorFragment instanceof EditorFragment) {
             mEditorFragment.setDebugModeEnabled(BuildConfig.DEBUG);
@@ -3643,5 +3637,11 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
+    }
+
+
+    // External Access to the Image Loader
+    public AztecImageLoader getAztecImageLoader() {
+        return mAztecImageLoader;
     }
 }

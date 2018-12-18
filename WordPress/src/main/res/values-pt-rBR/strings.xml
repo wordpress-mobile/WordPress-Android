@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-10-29 13:32:27+0000
+Translation-Revision-Date: 2018-12-05 17:51:56+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="menu_debug">Menu de depuração</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Essa é uma versão experimental do Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Ativar o Gutenberg</string>
+    <string name="change_password_dialog_message">Trocando de senha…</string>
+    <string name="change_password_dialog_hint">Sua senha deve ter pelo menos seis caracteres. Para que ela seja forte, use letras maiúsculas e minúsculas, números e sinais como  ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Senha alterada com sucesso</string>
+    <string name="change_password">Trocar senha</string>
+    <string name="support_identity_input_dialog_name_label">Nome</string>
+    <string name="history_no_title">(sem título)</string>
+    <string name="history_preview_html">Visualizar a versão HTML</string>
+    <string name="history_preview_visual">Visualizar a versão visual</string>
+    <string name="history_detail_title">Revisão</string>
+    <string name="history_detail_button_previous">Anterior</string>
+    <string name="history_detail_button_next">Próximo</string>
+    <string name="dialog_gutenberg_compatibility_learn_more">Saiba mais</string>
+    <string name="dialog_gutenberg_compatibility_dont_show_again">Não mostrar mais</string>
+    <string name="dialog_gutenberg_compatibility_no_go_back">Voltar</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_page">Editar página</string>
+    <string name="dialog_gutenberg_compatibility_yes_edit_post">Editar post</string>
+    <string name="dialog_gutenberg_compatibility_message_page">Estamos trabalhando no novo editor do WordPress. Você já pode usá-lo para editar essa página mas recomendamos que visualize-a antes de publicá-la.</string>
+    <string name="dialog_gutenberg_compatibility_message">Estamos trabalhando no novo editor do WordPress. Você já pode usá-lo para editar esse post mas recomendamos que visualize-o antes de publicá-lo.</string>
+    <string name="dialog_gutenberg_compatibility_title">Antes de continuar</string>
+    <string name="media_space_used">%1$s usados</string>
     <string name="login_notification_channel_id">\@string/notification_channel_normal_id</string>
     <string name="enter_wpcom_or_jetpack_site">Informe um site feito no WordPress.com ou do feito com o WordPress.org e conectado ao Jetpack.</string>
     <string name="history_loading_revision">Carregando revisão</string>
@@ -20,7 +44,7 @@ Language: pt_BR
     <string name="async_promo_description_schedule_page">Agora você pode sair do editor e sua página será salva e agendada automaticamente. Teste agora!</string>
     <string name="async_promo_description_publish_post">Agora você pode sair do editor e seu post será salvo e agendado automaticamente. Teste agora!</string>
     <string name="async_promo_description_publish_page">Agora você pode sair do editor e sua página será salva e agendada automaticamente. Teste agora!</string>
-    <string name="image_size_full_label">Tamanho total</string>
+    <string name="image_size_full_label">Tamanho completo</string>
     <string name="image_size_large_label">Grande</string>
     <string name="image_size_medium_label">Médio</string>
     <string name="image_size_thumbnail_label">Miniatura</string>
@@ -1277,7 +1301,7 @@ Language: pt_BR
     <string name="site_settings_privacy_hidden_summary">Oculto</string>
     <string name="site_settings_privacy_public_summary">Público</string>
     <string name="site_settings_delete_site_title">Excluir site</string>
-    <string name="site_settings_blacklist_title">Lista negra</string>
+    <string name="site_settings_blacklist_title">Lista bloqueada</string>
     <string name="site_settings_moderation_hold_title">Aguardar moderação</string>
     <string name="site_settings_multiple_links_title">Links nos comentários</string>
     <string name="site_settings_whitelist_title">Aprovar automaticamente</string>
@@ -1594,7 +1618,6 @@ Language: pt_BR
     <string name="error_refresh_posts">Não foi possível atualizar os posts no momento</string>
     <string name="error_deleting_post">Ocorreu um erro durante a exclusão do post</string>
     <string name="notifications_empty_list">Sem notificações</string>
-    <string name="invalid_url_message">Verifique se a URL do blog inserida é válida</string>
     <string name="stats_bar_graph_empty">Nenhuma estatística disponível</string>
     <string name="stats_empty_comments">Nenhum comentário</string>
     <string name="sdcard_message">Um cartão SD montado é necessário para fazer upload de mídia</string>

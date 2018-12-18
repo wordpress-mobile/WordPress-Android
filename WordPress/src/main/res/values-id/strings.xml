@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 13:54:12+0000
+Translation-Revision-Date: 2018-12-11 07:54:06+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: id
 -->
 <resources>
+    <string name="menu_debug">Menu Debug</string>
+    <string name="preference_experimental">*PERCOBAAN*</string>
+    <string name="site_settings_enable_gutenberg_summary">Ini masih versi percobaan dari Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Aktifkan Gutenberg</string>
+    <string name="change_password_dialog_message">Mengganti kata sandi…</string>
+    <string name="change_password_dialog_hint">Kata sandi Anda setidaknya harus berisi enam karakter. Agar lebih kuat, gunakan huruf besar dan kecil, angka, dan simbol seperti ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Penggantian kata sandi berhasil</string>
+    <string name="change_password">Ganti kata sandi</string>
+    <string name="support_identity_input_dialog_name_label">Nama</string>
+    <string name="history_no_title">(tanpa judul)</string>
+    <string name="history_preview_html">Pratinjau HTML</string>
+    <string name="history_preview_visual">Pratinjau visual</string>
     <string name="history_detail_title">Revisi</string>
     <string name="history_detail_button_previous">Sebelumnya</string>
     <string name="history_detail_button_next">Selanjutnya</string>
@@ -1150,7 +1162,6 @@ Language: id
     <string name="detail_approve_manual">Wajibkan persetujuan manual untuk komentar semua orang.</string>
     <string name="days_quantity_other">%d hari</string>
     <string name="days_quantity_one">1 hari</string>
-    <string name="web_address">Alamat Web</string>
     <string name="primary_site">Situs Utama</string>
     <string name="pending_email_change_snackbar">Klik tautan verifikasi di email yang dikirimkan ke %1$s untuk mengonfirmasi alamat baru Anda</string>
     <string name="editor_toast_uploading_please_wait">Saat ini Anda sedang mengunggah media. Harap tunggu hingga selesai.</string>
@@ -1568,7 +1579,6 @@ Language: id
     <string name="error_refresh_posts">Pos tidak bisa disegarkan saat ini</string>
     <string name="error_deleting_post">Terjadi error saat menghapus pos</string>
     <string name="notifications_empty_list">Tak ada pemberitahuan</string>
-    <string name="invalid_url_message">Pastikan URL yang dimasukkan sudah valid</string>
     <string name="stats_bar_graph_empty">Belum ada statistik</string>
     <string name="stats_empty_comments">Belum ada tanggapan</string>
     <string name="sdcard_message">Kartu SD tambahan diperlukan untuk mengunggah media</string>

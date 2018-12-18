@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-14 09:54:13+0000
+Translation-Revision-Date: 2018-12-11 08:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="menu_debug">디버그 메뉴</string>
+    <string name="preference_experimental">*실험 버전*</string>
+    <string name="site_settings_enable_gutenberg_summary">아직은 Gutenberg의 실험 버전입니다.</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg 활성화</string>
+    <string name="change_password_dialog_message">비밀번호 변경 중…</string>
+    <string name="change_password_dialog_hint">비밀번호는 6자 이상이어야 합니다. 더 강력한 비밀번호를 만들려면 대소문자, 숫자, ! \" ? $ % ^ &amp; ) 등의 기호를 사용하세요.</string>
+    <string name="change_password_confirmation">비밀번호가 성공적으로 변경되었습니다.</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="support_identity_input_dialog_name_label">이름</string>
+    <string name="history_no_title">(제목 없음)</string>
+    <string name="history_preview_html">HTML 미리보기</string>
+    <string name="history_preview_visual">시각적 미리보기</string>
     <string name="history_detail_title">리비전</string>
     <string name="history_detail_button_previous">이전</string>
     <string name="history_detail_button_next">다음</string>
@@ -1185,7 +1197,6 @@ Language: ko_KR
     <string name="detail_approve_manual">모든 사람의 댓글에 수동 승인이 필요합니다.</string>
     <string name="days_quantity_other">%d일</string>
     <string name="days_quantity_one">1일</string>
-    <string name="web_address">웹 주소</string>
     <string name="primary_site">기본 사이트</string>
     <string name="pending_email_change_snackbar">새 주소를 확인하려면 %1$s(으)로 전송된 이메일에 있는 확인 링크를 클릭하세요.</string>
     <string name="editor_toast_uploading_please_wait">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
@@ -1606,7 +1617,6 @@ Language: ko_KR
     <string name="error_refresh_posts">게시물을 다시로드 할 수 없습니다.</string>
     <string name="error_deleting_post">를 삭제하는 동안 에러가 발생했습니다.</string>
     <string name="notifications_empty_list">알림이 없습니다.</string>
-    <string name="invalid_url_message">입력한 URL이 올바른지 확인합니다.</string>
     <string name="stats_bar_graph_empty">통계 정보가 없습니다.</string>
     <string name="stats_empty_comments">코멘트가 없습니다.</string>
     <string name="sdcard_message">미디어를 업로드하려면 SD카드가 필요합니다.</string>

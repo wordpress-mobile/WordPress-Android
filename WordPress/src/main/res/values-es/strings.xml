@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-07 16:27:29+0000
+Translation-Revision-Date: 2018-12-04 19:55:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="menu_debug">Menú de depuración</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Esta es todavía una versión experimental de Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activar Gutenberg</string>
+    <string name="change_password_dialog_message">Cambiando contraseña…</string>
+    <string name="change_password_dialog_hint">Tu contraseña debe tener al menos seis caracteres de longitud. Para hacerla más fuerte, use letras mayúsculas y minúsculas, números y símbolos como! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Contraseña cambiada con éxito</string>
+    <string name="change_password">Cambiar contraseña</string>
+    <string name="support_identity_input_dialog_name_label">Nombre</string>
+    <string name="history_no_title">(sin título)</string>
+    <string name="history_preview_html">Vista previa HTML</string>
+    <string name="history_preview_visual">Vista previa visual</string>
     <string name="history_detail_title">Revisión</string>
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Siguiente</string>
@@ -1606,7 +1618,6 @@ Language: es
     <string name="error_refresh_posts">Las entradas no pueden ser actualizadas en este momento</string>
     <string name="error_deleting_post">Ocurrió un error al eliminar la entrada</string>
     <string name="notifications_empty_list">Sin notificaciones</string>
-    <string name="invalid_url_message">Comprueba que la URL introducida sea válida</string>
     <string name="stats_bar_graph_empty">Estadísticas no disponibles.</string>
     <string name="stats_empty_comments">Aún sin comentarios</string>
     <string name="sdcard_message">Se necesita una tarjeta SD montada para subir medios</string>

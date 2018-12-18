@@ -1,4 +1,4 @@
-* Jump directly from WordPress.com in your browser to the same content in your WordPress for Android app via the banner at the bottom of WordPress.com pages!
-* Post revision history is now available in the app via the History entry in the editor menu.
-* The media library now displays the space you’ve used.
-* Bug fixes.
+This release takes care of a pair of pesky bugs:
+
+* If your site had no title set, you’d see an empty field where the title would ordinarily go. Now, you’ll see “WordPress” there. (Also: you should give your site a title! It’s good for SEO.)
+* Sometimes the History screens for pages and posts wouldn’t actually show the differences between revisions, making the screen a little pointless. That’s fixed, so the History screen is once again useful.
