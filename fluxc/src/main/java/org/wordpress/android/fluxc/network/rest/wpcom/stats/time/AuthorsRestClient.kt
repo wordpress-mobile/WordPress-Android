@@ -81,7 +81,7 @@ class AuthorsRestClient
         data class Author(
             @SerializedName("name") val name: String?,
             @SerializedName("views") var views: Int?,
-            @SerializedName("avatar") val avatar: String?,
+            @SerializedName("avatar") val avatarUrl: String?,
             @SerializedName("posts") val posts: JsonElement?,
             @SerializedName("mappedPosts") var mappedPosts: List<Post>? = null
         ) {
