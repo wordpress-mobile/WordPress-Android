@@ -102,9 +102,10 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock lateinit var fetchVerticalsUseCase: FetchVerticalsUseCase
     @Mock lateinit var fetchSegmentsPromptUseCase: FetchSegmentPromptUseCase
     @Mock private lateinit var uiStateObserver: Observer<VerticalsUiState>
-    @Mock private lateinit var clearBtnObserver: Observer<Void>
+    @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var verticalSelectedObserver: Observer<String?>
-    @Mock private lateinit var skipBtnClickedObservable: Observer<Void>
+    @Mock private lateinit var skipBtnClickedObservable: Observer<Unit>
+    @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
@@ -123,6 +124,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.clearBtnClicked.observeForever(clearBtnObserver)
         viewModel.verticalSelected.observeForever(verticalSelectedObserver)
         viewModel.skipBtnClicked.observeForever(skipBtnClickedObservable)
+        viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -375,11 +377,19 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyOnSkipIsPropagated() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
         viewModel.onSkipStepBtnClicked()
-        val captor = ArgumentCaptor.forClass(Void::class.java)
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
         verify(skipBtnClickedObservable).onChanged(captor.capture())
 
         assertThat(captor.allValues.size).isEqualTo(1)
-        assertThat(captor.lastValue).isNull()
+    }
+
+    @Test
+    fun verifyOnHelpClickedPropagated() = testWithSuccessResponses {
+        viewModel.onHelpClicked()
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
+        verify(onHelpClickedObserver).onChanged(captor.capture())
+
+        assertThat(captor.allValues.size).isEqualTo(1)
     }
 
     @Test

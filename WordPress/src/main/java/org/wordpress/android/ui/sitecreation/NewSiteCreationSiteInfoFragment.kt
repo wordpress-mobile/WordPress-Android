@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import javax.inject.Inject
 
@@ -29,6 +30,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     private lateinit var tagLineEditText: TextInputEditText
 
     private lateinit var skipClickedListener: OnSkipClickedListener
+    private lateinit var helpClickedListener: OnHelpClickedListener
     private lateinit var siteInfoScreenListener: SiteInfoScreenListener
 
     override fun onAttach(context: Context?) {
@@ -36,10 +38,14 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
         if (context !is OnSkipClickedListener) {
             throw IllegalStateException("Parent activity must implement OnSkipClickedListener.")
         }
+        if (context !is OnHelpClickedListener) {
+            throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
+        }
         if (context !is SiteInfoScreenListener) {
             throw IllegalStateException("Parent activity must implement SiteInfoScreenListener.")
         }
         skipClickedListener = context
+        helpClickedListener = context
         siteInfoScreenListener = context
     }
 
@@ -104,6 +110,9 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             }
         })
+        viewModel.onHelpClicked.observe(this, Observer {
+            helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO)
+        })
         viewModel.skipBtnClicked.observe(this, Observer {
             skipClickedListener.onSkipClicked()
         })
@@ -115,9 +124,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     override fun onHelp() {
-        if (mSiteCreationListener != null) {
-            mSiteCreationListener.helpCategoryScreen()
-        }
+        viewModel.onHelpClicked()
     }
 
     override fun getScreenTitle(): String {

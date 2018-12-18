@@ -2,6 +2,7 @@ package org.wordpress.android.ui.sitecreation.segments
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.nhaarman.mockito_kotlin.anyOrNull
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertFalse
@@ -105,6 +106,7 @@ class NewSiteCreationSegmentsViewModelTest {
 
     @Mock private lateinit var uiStateObserver: Observer<SegmentsUiState>
     @Mock private lateinit var segmentSelectedObserver: Observer<Long>
+    @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
 
     @Before
     fun setUp() {
@@ -117,6 +119,7 @@ class NewSiteCreationSegmentsViewModelTest {
         )
         viewModel.segmentsUiState.observeForever(uiStateObserver)
         viewModel.segmentSelected.observeForever(segmentSelectedObserver)
+        viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -211,6 +214,15 @@ class NewSiteCreationSegmentsViewModelTest {
         inOrder(uiStateObserver).apply {
             verify(uiStateObserver).onChanged(PROGRESS_STATE)
             verify(uiStateObserver).onChanged(SegmentsErrorUiState.SegmentsConnectionErrorUiState)
+            verifyNoMoreInteractions()
+        }
+    }
+
+    @Test
+    fun verifyOnHelpClickedPropagated() = test {
+        viewModel.onHelpClicked()
+        inOrder(onHelpClickedObserver).apply {
+            verify(onHelpClickedObserver).onChanged(anyOrNull())
             verifyNoMoreInteractions()
         }
     }

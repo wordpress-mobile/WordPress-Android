@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState
 
@@ -26,6 +27,7 @@ class NewSiteCreationSiteInfoViewModelTest {
     @Mock private lateinit var uiStateObserver: Observer<SiteInfoUiState>
     @Mock private lateinit var onSkipClickedObserver: Observer<Unit>
     @Mock private lateinit var onNextClickedObserver: Observer<SiteInfoUiState>
+    @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
 
     private lateinit var viewModel: NewSiteCreationSiteInfoViewModel
 
@@ -35,6 +37,7 @@ class NewSiteCreationSiteInfoViewModelTest {
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.skipBtnClicked.observeForever(onSkipClickedObserver)
         viewModel.nextBtnClicked.observeForever(onNextClickedObserver)
+        viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
     }
 
     @Test
@@ -76,5 +79,14 @@ class NewSiteCreationSiteInfoViewModelTest {
 
         assertThat(captor.allValues.size).isEqualTo(1)
         assertThat(captor.value).isEqualTo(updatedUiState)
+    }
+
+    @Test
+    fun verifyOnHelpClickedPropagated() = test {
+        viewModel.onHelpClicked()
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
+        verify(onHelpClickedObserver).onChanged(captor.capture())
+
+        assertThat(captor.allValues.size).isEqualTo(1)
     }
 }

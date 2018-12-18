@@ -25,6 +25,9 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
 
+    private val _onHelpClicked = SingleLiveEvent<Unit>()
+    val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
     private val _skipBtnClicked = SingleLiveEvent<Unit>()
     val skipBtnClicked: LiveData<Unit> = _skipBtnClicked
 
@@ -33,6 +36,10 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
 
     init {
         _uiState.value = currentUiState
+    }
+
+    fun onHelpClicked() {
+        _onHelpClicked.call()
     }
 
     fun updateSiteTitle(siteTitle: String) {
