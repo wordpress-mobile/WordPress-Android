@@ -11,58 +11,78 @@ enum class QuickStartMySitePrompts constructor(
     val parentContainerId: Int,
     val focusedContainerId: Int,
     val shortMessagePrompt: Int,
-    val iconId: Int,
-    val promptDialogTitleId: Int,
-    val promptDialogMessageId: Int
+    val iconId: Int
 ) {
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
             R.id.my_site_scroll_view_root,
             R.id.row_view_site,
             R.string.quick_start_dialog_view_site_message_short,
-            R.drawable.ic_globe_grey_24dp,
-            R.string.quick_start_dialog_view_site_title,
-            R.string.quick_start_dialog_view_site_message),
+            R.drawable.ic_globe_grey_24dp
+    ),
     CHOSE_THEME_TUTORIAL(
             QuickStartTask.CHOOSE_THEME,
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_browse_themes_message_short,
-            R.drawable.ic_themes_grey_24dp,
-            R.string.quick_start_dialog_browse_themes_title,
-            R.string.quick_start_dialog_browse_themes_message),
+            R.drawable.ic_themes_grey_24dp
+    ),
     CUSTOMIZE_SITE_TUTORIAL(
             QuickStartTask.CUSTOMIZE_SITE,
             R.id.my_site_scroll_view_root,
             R.id.row_themes,
             R.string.quick_start_dialog_customize_site_message_short_themes,
-            R.drawable.ic_themes_grey_24dp,
-            R.string.quick_start_dialog_customize_site_title,
-            R.string.quick_start_dialog_customize_site_message),
+            R.drawable.ic_themes_grey_24dp
+    ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
             R.id.my_site_scroll_view_root,
             R.id.row_sharing,
             R.string.quick_start_dialog_enable_sharing_message_short_sharing,
-            R.drawable.ic_share_white_24dp,
-            R.string.quick_start_dialog_enable_sharing_title,
-            R.string.quick_start_dialog_enable_sharing_message),
+            R.drawable.ic_share_white_24dp
+    ),
     PUBLISH_POST_TUTORIAL(
             QuickStartTask.PUBLISH_POST,
             R.id.root_view_main,
             R.id.bottom_nav_new_post_button,
             R.string.quick_start_dialog_publish_post_message_short,
-            R.drawable.ic_create_white_24dp,
-            R.string.quick_start_dialog_publish_post_title,
-            R.string.quick_start_dialog_publish_post_message),
+            R.drawable.ic_create_white_24dp
+    ),
     FOLLOW_SITES_TUTORIAL(
             QuickStartTask.FOLLOW_SITE,
             R.id.root_view_main,
             R.id.bottom_nav_reader_button,
             R.string.quick_start_dialog_follow_sites_message_short_reader,
-            R.drawable.ic_reader_white_32dp,
-            R.string.quick_start_dialog_follow_sites_title,
-            R.string.quick_start_dialog_follow_sites_message);
+            R.drawable.ic_reader_white_32dp
+    ),
+    UPLOAD_SITE_ICON(
+            QuickStartTask.UPLOAD_SITE_ICON,
+            R.id.my_site_scroll_view_root,
+            R.id.my_site_blavatar,
+            R.string.quick_start_dialog_upload_site_icon_message_short,
+            -1
+    ),
+    CREATE_NEW_PAGE(
+            QuickStartTask.CREATE_NEW_PAGE,
+            R.id.my_site_scroll_view_root,
+            R.id.row_pages,
+            R.string.quick_start_dialog_create_new_page_message_short,
+            -1
+    ),
+    CHECK_STATS(
+            QuickStartTask.CHECK_STATS,
+            R.id.my_site_scroll_view_root,
+            R.id.row_stats,
+            R.string.quick_start_dialog_check_stats_message_short,
+            R.drawable.ic_stats_alt_grey_24dp
+    ),
+    EXPLORE_PLANS(
+            QuickStartTask.EXPLORE_PLANS,
+            R.id.my_site_scroll_view_root,
+            R.id.row_plan,
+            R.string.quick_start_dialog_explore_plans_message_short,
+            R.drawable.ic_plans_grey_24dp
+    );
 
     companion object {
         const val KEY = "my_site_tutorial_prompts"

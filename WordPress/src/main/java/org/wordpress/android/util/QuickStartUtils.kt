@@ -71,7 +71,8 @@ class QuickStartUtils {
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                 val icon: Drawable? = try {
-                    ContextCompat.getDrawable(context, iconId)
+                    // .mutate() allows us to avoid sharing the state of drawables
+                    ContextCompat.getDrawable(context, iconId)?.mutate()
                 } catch (e: Resources.NotFoundException) {
                     null
                 }
