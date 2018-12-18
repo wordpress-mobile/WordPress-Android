@@ -99,14 +99,13 @@
     <!-- Stats Refresh -->
 
     <style name="StatsBlock">
-        <item name="android:layout_marginEnd">8dp</item>
-        <item name="android:layout_marginStart">8dp</item>
         <item name="android:background">@color/white</item>
+        <item name="android:minHeight">96dp</item>
     </style>
 
     <style name="StatsBlockLine">
         <item name="android:layout_height">@dimen/one_line_list_item_height</item>
-        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
@@ -130,8 +129,9 @@
     </style>
 
     <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/grey_darken_20</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
     <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
@@ -142,24 +142,26 @@
     <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/blue_wordpress</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
     <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">8dp</item>
-        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
-
+    <style name="StatsGraphLabel">
+        <item name="android:textColor">@color/wp_grey</item>
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
 </resources>

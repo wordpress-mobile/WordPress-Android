@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
@@ -11,7 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPublici
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
@@ -51,13 +52,15 @@ class PublicizeUseCase
         }
     }
 
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_publicize))
+
     override fun buildUiModel(domainModel: PublicizeModel): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         items.add(Title(string.stats_view_publicize))
         if (domainModel.services.isEmpty()) {
             items.add(Empty)
         } else {
-            items.add(Label(string.stats_publicize_service_label, string.stats_publicize_followers_label))
+            items.add(Header(string.stats_publicize_service_label, string.stats_publicize_followers_label))
             items.addAll(domainModel.services.let { mapper.map(it) })
             if (domainModel.hasMore) {
                 items.add(

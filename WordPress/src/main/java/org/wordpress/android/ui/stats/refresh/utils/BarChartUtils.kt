@@ -14,6 +14,7 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ViewPortHandler
+import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
@@ -36,7 +37,11 @@ fun BarChart.draw(
         )
     }
     val maxYValue = cut.maxBy { it.value }!!.value
-    val dataSet = getDataSet(context, mappedEntries)
+    val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.value > 0 }) {
+        buildDataSet(context, mappedEntries)
+    } else {
+        buildEmptyDataSet(context, cut.size)
+    }
     data = if (item.onBarSelected != null) {
         BarData(dataSet, getHighlightDataSet(context, mappedEntries))
     } else {
@@ -147,7 +152,24 @@ private fun BarChart.highlightColumn(index: Int) {
     highlightValues(arrayOf(high2, high))
 }
 
-private fun getDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
+private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
+    val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
+    val dataSet = BarDataSet(emptyValues, "Empty")
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.stats_bar_chart_gradient_start_color
+            ), ContextCompat.getColor(
+            context,
+            R.color.transparent
+    )
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.setDrawValues(false)
+    return dataSet
+}
+
+private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     val dataSet = BarDataSet(cut, "Data")
     dataSet.color = ContextCompat.getColor(
             context,

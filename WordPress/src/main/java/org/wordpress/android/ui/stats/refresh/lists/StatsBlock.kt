@@ -29,4 +29,7 @@ data class Error(override val statsTypes: StatsTypes, val errorMessage: String) 
 
 data class Empty(val isButtonVisible: Boolean = true) : StatsBlock(EMPTY, null)
 
-data class Loading(override val statsTypes: StatsTypes) : StatsBlock(LOADING, statsTypes)
+data class Loading(
+    override val statsTypes: StatsTypes,
+    val items: List<BlockListItem>
+) : StatsBlock(LOADING, statsTypes)

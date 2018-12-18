@@ -7,8 +7,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -36,7 +36,7 @@ sealed class BlockListItem(val type: Type) {
         LINK,
         BAR_CHART,
         TABS,
-        LABEL,
+        HEADER,
         EXPANDABLE_ITEM,
         DIVIDER
     }
@@ -116,9 +116,12 @@ sealed class BlockListItem(val type: Type) {
     }
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
-            BlockListItem(TABS)
+            BlockListItem(TABS) {
+        override val itemId: Int
+            get() = tabs.hashCode()
+    }
 
-    data class Label(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(LABEL)
+    data class Header(@StringRes val leftLabel: Int, @StringRes val rightLabel: Int) : BlockListItem(HEADER)
 
     data class ExpandableItem(
         val header: ListItemWithIcon,
