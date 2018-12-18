@@ -1,7 +1,14 @@
 package org.wordpress.android.fluxc.store.stats.time
 
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Author
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse.Post
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse.ClickGroup
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.CountryInfo
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.CountryView
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse.Day
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse.ViewsResponse.PostViewsResponse
@@ -11,6 +18,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse.Referrer
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse.SearchTerm
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse.Play
 import org.wordpress.android.fluxc.store.stats.DATE
@@ -124,6 +133,26 @@ val VISITS_AND_VIEWS_RESPONSE = VisitsAndViewsResponse(
         listOf(listOf("2018-10-09", "10", "15", "20", "25")),
         "day"
 )
+const val COUNTRY_CODE = "CZ"
+val COUNTRY_VIEWS_RESPONSE = CountryViewsResponse(
+        mapOf(COUNTRY_CODE to CountryInfo("flag.jpg", "flatFlag.jpg", "123", "Czech Republic")), days = mapOf(
+        "2018-10-10" to Day(
+                10, 20, listOf(
+                CountryView(COUNTRY_CODE, 150)
+        )
+        )
+)
+)
+val AUTHOR = Author(
+        "John", 5, "avatar.jpg", null, listOf(
+        Post("15", "Post 1", 100, "post.com")
+)
+)
+val AUTHORS_GROUP = AuthorsResponse.Groups(10, listOf(AUTHOR))
+val AUTHORS_RESPONSE = AuthorsResponse("day", mapOf("2018-10-10" to AUTHORS_GROUP))
+val SEARCH_TERMS_RESPONSE = SearchTermsResponse("day", mapOf("2018-10-10" to SearchTermsResponse.Day(10, 15, 20, listOf(
+        SearchTerm("search term", 20)
+))))
 val PLAY = Play("post1", "Post 1", "post1.com", 50)
 val VIDEO_PLAYS_RESPONSE = VideoPlaysResponse(
         "day",
