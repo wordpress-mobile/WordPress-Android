@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/StatsBlockLine"
               android:layout_width="match_parent"
-              android:layout_marginBottom="16dp"
+              android:layout_height="wrap_content"
+              android:minHeight="@dimen/one_line_list_item_height"
+              android:layout_marginBottom="@dimen/margin_extra_large"
               android:orientation="horizontal">
 
     <TextView
@@ -10,7 +12,7 @@
         style="@style/StatsBlockText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_gravity="center_vertical"
         android:text="@string/unknown"/>
 
