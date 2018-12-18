@@ -226,7 +226,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
 
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 }
 
 configurations.all {

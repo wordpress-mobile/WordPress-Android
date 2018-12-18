@@ -23,6 +23,8 @@ class AllTimeStatsUseCase
     private val insightsStore: InsightsStore,
     private val statsDateFormatter: StatsDateFormatter
 ) : StatelessUseCase<InsightsAllTimeModel>(ALL_TIME_STATS, mainDispatcher) {
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_insights_all_time_stats))
+
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getAllTimeInsights(site)
         dbModel?.let { onModel(it) }

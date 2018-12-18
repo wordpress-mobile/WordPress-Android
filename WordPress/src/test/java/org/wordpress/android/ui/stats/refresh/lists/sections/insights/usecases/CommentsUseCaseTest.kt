@@ -24,12 +24,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
@@ -86,7 +86,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
-                                listOf(),
+                                listOf(Post(postId, postTitle, totalCount, url)),
                                 listOf(),
                                 hasMorePosts = true,
                                 hasMoreAuthors = false
@@ -110,7 +110,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         whenever(insightsStore.fetchComments(site, pageSize, forced)).thenReturn(
                 OnStatsFetched(
                         CommentsModel(
-                                listOf(),
+                                listOf(Post(postId, postTitle, totalCount, url)),
                                 listOf(),
                                 hasMorePosts = false,
                                 hasMoreAuthors = true
@@ -167,7 +167,7 @@ class CommentsUseCaseTest : BaseUnitTest() {
         val result = loadComments(true, forced)
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
-        (result as BlockList).assertEmptyTab(0)
+        (result as BlockList).assertEmpty()
     }
 
     @Test
@@ -198,10 +198,10 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        val labelItem = this.items[2]
-        assertThat(labelItem.type).isEqualTo(LABEL)
-        assertThat((labelItem as Label).leftLabel).isEqualTo(R.string.stats_comments_title_label)
-        assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_comments_label)
+        val headerItem = this.items[2]
+        assertThat(headerItem.type).isEqualTo(HEADER)
+        assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_title_label)
+        assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
         val userItem = this.items[3]
         assertThat(userItem.type).isEqualTo(LIST_ITEM)
@@ -221,10 +221,10 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        val labelItem = this.items[2]
-        assertThat(labelItem.type).isEqualTo(LABEL)
-        assertThat((labelItem as Label).leftLabel).isEqualTo(R.string.stats_comments_author_label)
-        assertThat(labelItem.rightLabel).isEqualTo(R.string.stats_comments_label)
+        val headerItem = this.items[2]
+        assertThat(headerItem.type).isEqualTo(HEADER)
+        assertThat((headerItem as Header).leftLabel).isEqualTo(R.string.stats_comments_author_label)
+        assertThat(headerItem.rightLabel).isEqualTo(R.string.stats_comments_label)
 
         val userItem = this.items[3]
         assertThat(userItem.type).isEqualTo(USER_ITEM)
@@ -247,6 +247,12 @@ class CommentsUseCaseTest : BaseUnitTest() {
 
         assertThat(this.items[2]).isEqualTo(Empty)
         return tabsItem
+    }
+
+    private fun BlockList.assertEmpty() {
+        assertThat(this.items).hasSize(2)
+        assertTitle(this.items[0])
+        assertThat(this.items[1]).isEqualTo(Empty)
     }
 
     private fun assertTitle(item: BlockListItem) {

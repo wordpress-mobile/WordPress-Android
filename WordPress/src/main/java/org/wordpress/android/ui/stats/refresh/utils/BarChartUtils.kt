@@ -12,6 +12,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
 import com.github.mikephil.charting.utils.ViewPortHandler
+import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.util.DisplayUtils
@@ -26,7 +27,11 @@ fun BarChart.draw(
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(columnNumber, item)
     val maxYValue = cut.maxBy { it.y }!!.y
-    val dataSet = getDataSet(context, cut)
+    val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.second > 0 }) {
+        buildDataSet(context, cut)
+    } else {
+        buildEmptyDataSet(context, cut.size)
+    }
     data = BarData(dataSet)
     val greyColor = ContextCompat.getColor(
             context,
@@ -92,7 +97,24 @@ fun BarChart.draw(
     invalidate()
 }
 
-private fun getDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
+private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
+    val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
+    val dataSet = BarDataSet(emptyValues, "Empty")
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.stats_bar_chart_gradient_start_color
+            ), ContextCompat.getColor(
+            context,
+            R.color.transparent
+    )
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.setDrawValues(false)
+    return dataSet
+}
+
+private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     val dataSet = BarDataSet(cut, "Data")
     dataSet.color = ContextCompat.getColor(
             context,
