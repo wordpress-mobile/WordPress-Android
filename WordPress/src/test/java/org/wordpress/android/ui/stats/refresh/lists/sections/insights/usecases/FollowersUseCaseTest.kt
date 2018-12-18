@@ -30,10 +30,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -246,8 +247,9 @@ class FollowersUseCaseTest : BaseUnitTest() {
                         string.stats_follower_since_label
                 )
         )
-        val follower = this.items[4] as UserItem
-        assertThat(follower.avatarUrl).isEqualTo(avatar)
+        val follower = this.items[4] as ListItemWithIcon
+        assertThat(follower.iconUrl).isEqualTo(avatar)
+        assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.showDivider).isEqualTo(false)

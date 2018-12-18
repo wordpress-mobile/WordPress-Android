@@ -1023,6 +1023,9 @@
     <string name="stats_search_terms">Search Terms</string>
     <string name="stats_search_terms_label">Search Term</string>
     <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_author_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>

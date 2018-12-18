@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -16,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -29,7 +29,6 @@ sealed class BlockListItem(val type: Type) {
         TITLE,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
-        USER_ITEM,
         INFO,
         EMPTY,
         TEXT,
@@ -57,6 +56,7 @@ sealed class BlockListItem(val type: Type) {
     data class ListItemWithIcon(
         @DrawableRes val icon: Int? = null,
         val iconUrl: String? = null,
+        val iconStyle: IconStyle = NORMAL,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
         @StringRes val subTextResource: Int? = null,
@@ -68,16 +68,10 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
-    }
 
-    data class UserItem(
-        val avatarUrl: String,
-        val text: String,
-        val value: String,
-        val showDivider: Boolean = true
-    ) : BlockListItem(USER_ITEM) {
-        override val itemId: Int
-            get() = avatarUrl.hashCode() + text.hashCode()
+        enum class IconStyle {
+            NORMAL, AVATAR
+        }
     }
 
     data class Information(val text: String) : BlockListItem(INFO)
@@ -132,6 +126,7 @@ sealed class BlockListItem(val type: Type) {
             fun create(action: () -> Unit): NavigationAction {
                 return NoParams(action)
             }
+
             fun <T> create(data: T, action: (T) -> Unit): NavigationAction {
                 return OneParam(data, action)
             }
