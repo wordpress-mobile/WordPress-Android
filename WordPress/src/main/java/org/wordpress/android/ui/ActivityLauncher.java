@@ -345,6 +345,20 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewVideoPlays(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                          String selectedDate) {
+        Intent intent = new Intent(context, StatsViewAllActivity.class);
+        intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.VIDEO_PLAYS);
+        intent.putExtra(StatsAbstractFragment.ARGS_TIMEFRAME, statsTimeframe);
+        intent.putExtra(StatsAbstractFragment.ARGS_SELECTED_DATE, selectedDate);
+        intent.putExtra(StatsAbstractFragment.ARGS_IS_SINGLE_VIEW, true);
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, site.getId());
+
+        String title = context.getResources().getString(R.string.stats_view_videos);
+        intent.putExtra(StatsViewAllActivity.ARG_STATS_VIEW_ALL_TITLE, title);
+        context.startActivity(intent);
+    }
+
     public static void viewPublicizeStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsViewAllActivity.class);
         intent.putExtra(StatsAbstractFragment.ARGS_VIEW_TYPE, StatsViewType.PUBLICIZE);
