@@ -55,7 +55,7 @@ matrix:
         - bundle install
       script:
         - ./tools/validate-login-strings.sh
-        - bundle exec danger --fail-on-errors=true
+        - if [ -n "$DANGER_GITHUB_API_TOKEN" ]; then bundle exec danger --fail-on-errors=true; else echo "Not running danger because $DANGER_GITHUB_API_TOKEN is not found"; fi
 
 install:
   # Setup gradle.properties
