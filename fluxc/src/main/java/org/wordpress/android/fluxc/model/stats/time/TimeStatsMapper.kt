@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRes
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
@@ -161,5 +162,24 @@ class TimeStatsMapper
             AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatarUrl, posts ?: listOf())
         }
         return AuthorsModel(first.otherViews ?: 0, authors, first.authors.size > authors.size)
+    }
+
+    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+        val first = response.days.values.first()
+        val groups = first.searchTerms.mapNotNull { searchTerm ->
+            if (searchTerm.term != null) {
+                SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
+            } else {
+                AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
+                null
+            }
+        }.take(pageSize)
+        return SearchTermsModel(
+                first.otherSearchTerms ?: 0,
+                first.totalSearchTimes ?: 0,
+                first.encryptedSearchTerms ?: 0,
+                groups,
+                first.searchTerms.size > groups.size
+        )
     }
 }
