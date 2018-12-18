@@ -32,15 +32,8 @@ sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @La
                     parentView.context,
                     R.color.grey_blue_radio_button_state_list
             )
-            // We need to trigger `onDomainSelected` for both the radio button and the container because otherwise
-            // some parts of the layout will not be clickable.
             container.setOnClickListener {
                 onDomainSelected?.invoke()
-            }
-            suggestion.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    onDomainSelected?.invoke()
-                }
             }
         }
 
