@@ -59,9 +59,8 @@ class ListItemSqlUtils @Inject constructor() {
      * This function deletes [ListItemModel]s for [remoteItemIds] in every lists with [listIds]
      */
     fun deleteItemsFromLists(listIds: List<Int>, remoteItemIds: List<Long>) {
-
         // Prevent a crash caused by either of these lists being empty
-        if(listIds.isEmpty() || remoteItemIds.isEmpty()) {
+        if (listIds.isEmpty() || remoteItemIds.isEmpty()) {
             return
         }
 
