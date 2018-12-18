@@ -78,7 +78,7 @@ constructor(
             items.add(Label(R.string.stats_author_label, R.string.stats_author_views_label))
             domainModel.authors.forEachIndexed { index, author ->
                 val headerItem = ListItemWithIcon(
-                        iconUrl = author.avatar,
+                        iconUrl = author.avatarUrl,
                         iconStyle = AVATAR,
                         text = author.name,
                         value = author.views.toFormattedString(),

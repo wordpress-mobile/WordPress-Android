@@ -98,9 +98,9 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 this.items[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
-                authorWithoutPosts.avatar
+                authorWithoutPosts.avatarUrl
         )
-        return assertExpandableItem(this.items[3], authorWithPosts.name, authorWithPosts.views, authorWithPosts.avatar)
+        return assertExpandableItem(this.items[3], authorWithPosts.name, authorWithPosts.views, authorWithPosts.avatarUrl)
     }
 
     private fun BlockList.assertExpandedList(): ExpandableItem {
@@ -111,13 +111,13 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                 this.items[2],
                 authorWithoutPosts.name,
                 authorWithoutPosts.views,
-                authorWithoutPosts.avatar
+                authorWithoutPosts.avatarUrl
         )
         val expandableItem = assertExpandableItem(
                 this.items[3],
                 authorWithPosts.name,
                 authorWithPosts.views,
-                authorWithPosts.avatar
+                authorWithPosts.avatarUrl
         )
         assertSingleItem(this.items[4], post.title, post.views, null)
         Assertions.assertThat(this.items[5]).isEqualTo(Divider)
@@ -144,7 +144,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
                     this.items[2],
                     authorWithoutPosts.name,
                     authorWithoutPosts.views,
-                    authorWithoutPosts.avatar
+                    authorWithoutPosts.avatarUrl
             )
             assertLink(this.items[3])
         }
