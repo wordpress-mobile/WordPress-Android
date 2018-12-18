@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.AUTHORS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COUNTRY_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
@@ -59,6 +61,16 @@ class TimeStatsSqlUtils
         statsSqlUtils.insert(
                 site,
                 VISITS_AND_VIEWS,
+                granularity.toStatsType(),
+                data,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
+    fun insert(site: SiteModel, data: CountryViewsResponse, granularity: StatsGranularity, date: Date) {
+        statsSqlUtils.insert(
+                site,
+                COUNTRY_VIEWS,
                 granularity.toStatsType(),
                 data,
                 statsUtils.getFormattedDate(site, granularity, date)
@@ -111,6 +123,16 @@ class TimeStatsSqlUtils
                 VISITS_AND_VIEWS,
                 granularity.toStatsType(),
                 VisitsAndViewsResponse::class.java,
+                statsUtils.getFormattedDate(site, granularity, date)
+        )
+    }
+
+    fun selectCountryViews(site: SiteModel, granularity: StatsGranularity, date: Date): CountryViewsResponse? {
+        return statsSqlUtils.select(
+                site,
+                COUNTRY_VIEWS,
+                granularity.toStatsType(),
+                CountryViewsResponse::class.java,
                 statsUtils.getFormattedDate(site, granularity, date)
         )
     }
