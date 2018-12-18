@@ -142,7 +142,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).text).isEqualTo(R.string.stats_videos)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_videos)
     }
 
     private fun assertHeader(item: BlockListItem) {
