@@ -470,10 +470,8 @@ public class MySiteFragment extends Fragment implements
                         return false;
                     }
                 });
-
                 quickStartPopupMenu.inflate(R.menu.quick_start_remove_next_steps_menu);
                 quickStartPopupMenu.setGravity(Gravity.START);
-
                 quickStartPopupMenu.show();
             }
         });

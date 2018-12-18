@@ -108,7 +108,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
             taskViewHolder.mTitle.setPaintFlags(taskViewHolder.mTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-         taskViewHolder.itemView.setLongClickable(isEnabled);
+        taskViewHolder.itemView.setLongClickable(isEnabled);
 
         // Hide divider for tasks before header and end of list.
         if (position == mTasksUncompleted.size() - 1 || position == mTasks.size() - 1) {
@@ -219,8 +219,12 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         return mTasks.size();
     }
 
-    public void setOnTaskTappedListener(OnQuickStartAdapterActionListener listener) {
+    void setOnTaskTappedListener(OnQuickStartAdapterActionListener listener) {
         mListener = listener;
+    }
+
+    boolean isCompletedTasksListExpanded() {
+        return mIsCompletedTaskListExpanded;
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -340,9 +344,5 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         void onTaskTapped(QuickStartTask task);
 
         void onSkipTaskTapped(QuickStartTask task);
-    }
-
-    boolean isCompletedTasksListExpanded() {
-        return mIsCompletedTaskListExpanded;
     }
 }
