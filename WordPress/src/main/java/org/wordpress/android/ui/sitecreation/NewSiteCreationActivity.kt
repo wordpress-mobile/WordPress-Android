@@ -10,6 +10,8 @@ import android.view.MenuItem
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.accounts.HelpActivity.Origin
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
@@ -29,7 +31,8 @@ class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
         SiteInfoScreenListener,
-        OnSkipClickedListener {
+        OnSkipClickedListener,
+        OnHelpClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mainViewModel: NewSiteCreationMainVM
 
@@ -62,6 +65,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
     override fun onSkipClicked() {
         mainViewModel.onSkipClicked()
+    }
+
+    override fun onHelpClicked(origin: Origin) {
+        ActivityLauncher.viewHelpAndSupport(this, origin, null, null)
     }
 
     override fun onSiteInfoFinished(siteTitle: String, tagLine: String?) {
