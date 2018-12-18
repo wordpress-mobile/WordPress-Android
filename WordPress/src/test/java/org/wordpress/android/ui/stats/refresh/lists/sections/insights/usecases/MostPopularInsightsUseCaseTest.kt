@@ -21,10 +21,10 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Label
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LABEL
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -56,14 +56,14 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         whenever(dateUtils.getHour(hour)).thenReturn(hourString)
 
         whenever(resourceProvider.getString(
-                R.string.stats_insights_most_popular_percent_views,
+                R.string.stats_most_popular_percent_views,
                 highestDayPercent.roundToInt()
-        )).thenReturn("${highestDayPercent.roundToInt()}% of views")
+        )).thenReturn("${highestDayPercent.roundToInt()}%")
 
         whenever(resourceProvider.getString(
-                R.string.stats_insights_most_popular_percent_views,
+                R.string.stats_most_popular_percent_views,
                 highestHourPercent.roundToInt()
-        )).thenReturn("${highestHourPercent.roundToInt()}% of views")
+        )).thenReturn("${highestHourPercent.roundToInt()}%")
     }
 
     @Test
@@ -117,12 +117,12 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(dayString)
         assertThat(item.showDivider).isEqualTo(true)
-        assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}% of views")
+        assertThat(item.value).isEqualTo("${highestDayPercent.roundToInt()}%")
     }
 
     private fun assertLabel(blockListItem: BlockListItem) {
-        assertThat(blockListItem.type).isEqualTo(LABEL)
-        val item = blockListItem as Label
+        assertThat(blockListItem.type).isEqualTo(HEADER)
+        val item = blockListItem as Header
         assertThat(item.leftLabel).isEqualTo(R.string.stats_insights_most_popular_day_and_hour_label)
         assertThat(item.rightLabel).isEqualTo(R.string.stats_insights_most_popular_views_label)
     }
@@ -132,7 +132,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
         val item = blockListItem as ListItem
         assertThat(item.text).isEqualTo(hourString)
         assertThat(item.showDivider).isEqualTo(false)
-        assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}% of views")
+        assertThat(item.value).isEqualTo("${highestHourPercent.roundToInt()}%")
     }
 
     private suspend fun loadMostPopularInsights(refresh: Boolean, forced: Boolean): StatsBlock {

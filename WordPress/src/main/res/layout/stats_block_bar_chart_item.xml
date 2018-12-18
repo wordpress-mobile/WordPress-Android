@@ -3,15 +3,15 @@
               android:id="@+id/link_wrapper"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="16dp"
+              android:layout_marginBottom="@dimen/margin_extra_large"
               android:orientation="vertical"
-              android:paddingEnd="12dp"
-              android:paddingStart="12dp">
+              android:paddingEnd="@dimen/margin_extra_large"
+              android:paddingStart="@dimen/margin_extra_large">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="180dp"/>
+        android:layout_height="@dimen/stats_bar_chart_height"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@color/wp_grey"
-            android:textSize="12sp"/>
+            style="@style/StatsGraphLabel"/>
 
         <TextView
             android:id="@+id/label_end"
@@ -34,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/wp_grey"
-            android:textSize="12sp"/>
+            style="@style/StatsGraphLabel"/>
     </LinearLayout>
 </LinearLayout>

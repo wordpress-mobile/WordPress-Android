@@ -132,6 +132,7 @@
     <color name="stats_bar_graph_outer_highlight">#1Af0821e</color> <!-- 10% Opacity on orange_jazzy #f0821e -->
     <color name="stats_bar_graph_secondary_series">@color/blue_dark</color>
     <color name="stats_empty_placeholder_color">@color/grey_lighten_30_translucent_50</color>
+    <color name="stats_bar_chart_gradient_start_color">#260087be</color>
 
     <!-- Reader  -->
     <color name="reader_divider_grey">@color/grey_lighten_30</color>

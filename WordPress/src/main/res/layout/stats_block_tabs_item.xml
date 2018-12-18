@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.TabLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tab_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="top"
-    app:tabGravity="fill"
-    app:tabIndicatorColor="@color/wp_blue"
-    app:tabSelectedTextColor="@color/wp_blue"
-    app:tabTextColor="@color/wp_grey_darken_20"/>
+    android:orientation="vertical">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/wp_blue"
+        app:tabSelectedTextColor="@color/wp_blue"
+        app:tabTextColor="@color/wp_grey_darken_20"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_lighten_30"/>
+</LinearLayout>

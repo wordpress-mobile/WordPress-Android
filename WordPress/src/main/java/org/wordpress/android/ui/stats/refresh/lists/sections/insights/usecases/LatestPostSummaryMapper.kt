@@ -30,7 +30,11 @@ class LatestPostSummaryMapper
             return Text(resourceProvider.getString(string.stats_insights_latest_post_empty))
         }
         val sinceLabel = statsUtilsWrapper.getSinceLabelLowerCase(model.postDate)
-        val postTitle = StringEscapeUtils.unescapeHtml4(model.postTitle)
+        val postTitle = if (model.postTitle.isNotBlank()) {
+            StringEscapeUtils.unescapeHtml4(model.postTitle)
+        } else {
+            resourceProvider.getString(R.string.untitled_in_parentheses)
+        }
         val message = if (model.postViewsCount == 0 && model.postLikeCount == 0) {
             resourceProvider.getString(
                     string.stats_insights_latest_post_with_no_engagement,
