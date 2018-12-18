@@ -144,7 +144,7 @@ public class MySiteFragment extends Fragment implements
     private TextView mQuickStartGrowSubtitle;
     private TextView mQuickStartGrowTitle;
     private View mQuickStartGrowView;
-    private View mQuickStartMoreButton;
+    private View mQuickStartMenuButton;
 
     @Nullable
     private Toolbar mToolbar = null;
@@ -267,7 +267,7 @@ public class MySiteFragment extends Fragment implements
         mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon);
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle);
         mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title);
-        mQuickStartMoreButton = rootView.findViewById(R.id.quick_start_more);
+        mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more);
 
         setupClickListeners(rootView);
 
@@ -458,21 +458,9 @@ public class MySiteFragment extends Fragment implements
             }
         });
 
-        mQuickStartMoreButton.setOnClickListener(new OnClickListener() {
+        mQuickStartMenuButton.setOnClickListener(new OnClickListener() {
             @Override public void onClick(View v) {
-                PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMoreButton);
-                quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                    @Override public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getItemId() == R.id.quick_start_menu_remove_next_steps) {
-                            showRemoveNextStepsDialog();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                quickStartPopupMenu.inflate(R.menu.quick_start_remove_next_steps_menu);
-                quickStartPopupMenu.setGravity(Gravity.START);
-                quickStartPopupMenu.show();
+                showQuickStartCardMenu();
             }
         });
     }
@@ -525,6 +513,21 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickStartContainer.setVisibility(View.GONE);
         }
+    }
+
+    private void showQuickStartCardMenu() {
+        PopupMenu quickStartPopupMenu = new PopupMenu(requireContext(), mQuickStartMenuButton);
+        quickStartPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.quick_start_menu_remove_next_steps) {
+                    showRemoveNextStepsDialog();
+                    return true;
+                }
+                return false;
+            }
+        });
+        quickStartPopupMenu.inflate(R.menu.quick_start_card_menu);
+        quickStartPopupMenu.show();
     }
 
     private void showQuickStartList(QuickStartTaskType type) {
@@ -990,13 +993,13 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void skipQuickStart() {
+        int siteId = AppPrefs.getSelectedSite();
         for (QuickStartTask quickStartTask : QuickStartTask.values()) {
-            mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), quickStartTask, true);
+            mQuickStartStore.setDoneTask(siteId, quickStartTask, true);
         }
-
-        mQuickStartStore.setQuickStartCompleted(AppPrefs.getSelectedSite(), true);
+        mQuickStartStore.setQuickStartCompleted(siteId, true);
         // skipping all tasks means no achievement notification, so we mark it as received
-        mQuickStartStore.setQuickStartNotificationReceived(AppPrefs.getSelectedSite(), true);
+        mQuickStartStore.setQuickStartNotificationReceived(siteId, true);
     }
 
     private void startQuickStart() {

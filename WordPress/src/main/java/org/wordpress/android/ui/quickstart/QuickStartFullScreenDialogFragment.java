@@ -87,8 +87,8 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
-        mQuickStartAdapter =
-                new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded);
+        mQuickStartAdapter = new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted,
+                isCompletedTasksListExpanded);
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
         list.setLayoutManager(new LinearLayoutManager(requireContext()));
         list.setAdapter(mQuickStartAdapter);
@@ -131,8 +131,10 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
         if (mQuickStartAdapter != null) {
             int site = AppPrefs.getSelectedSite();
-            mQuickStartAdapter.updateContent(task, mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
-                    mQuickStartStore.getCompletedTasksByType(site, mTasksType));
+            mQuickStartAdapter.updateContent(
+                    mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
+                    mQuickStartStore.getCompletedTasksByType(site, mTasksType),
+                    task);
         }
     }
 }
