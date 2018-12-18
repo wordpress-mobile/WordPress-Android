@@ -1,11 +1,13 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
@@ -47,7 +49,7 @@ class TimeStatsMapper
                     val firstChildUrl = result.children?.firstOrNull()?.url
                     Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)
                 } else {
-                    AppLog.e(STATS, "ReferrersResponse.type: Missing fields on a referrer")
+                    AppLog.e(STATS, "ReferrersResponse: Missing fields on a referrer")
                     null
                 }
             }
@@ -140,5 +142,24 @@ class TimeStatsMapper
                 groups,
                 first.views.size > groups.size
         )
+    }
+
+    fun map(response: AuthorsResponse, pageSize: Int): AuthorsModel {
+        val first = response.groups.values.first()
+        val authors = first.authors.take(pageSize).map { author ->
+            val posts = author.mappedPosts?.mapNotNull { result ->
+                if (result.postId != null && result.title != null) {
+                    Post(result.postId, result.title, result.views ?: 0, result.url)
+                } else {
+                    AppLog.e(STATS, "AuthorsResponse: Missing fields on a post")
+                    null
+                }
+            }
+            if (author.name == null || author.views == null || author.avatarUrl == null) {
+                AppLog.e(STATS, "AuthorsResponse: Missing fields on an author")
+            }
+            AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatarUrl, posts ?: listOf())
+        }
+        return AuthorsModel(first.otherViews ?: 0, authors, first.authors.size > authors.size)
     }
 }
