@@ -1020,6 +1020,9 @@
     <string name="stats_videos">Videos</string>
     <string name="stats_videos_title_label">Title</string>
     <string name="stats_videos_views_label">Views</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms_views_label">Views</string>
     <string name="stats_authors">Authors</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_author_views_label">Views</string>
