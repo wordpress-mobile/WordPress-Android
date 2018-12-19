@@ -3,9 +3,13 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:clipToPadding="false"
+    android:clipChildren="false"
     android:layout_gravity="center_horizontal"
     android:layout_height="wrap_content"
-    android:layout_width="@dimen/quick_start_card_width_maximum" >
+    android:layout_width="@dimen/quick_start_card_width_maximum"
+    android:paddingEnd="@dimen/quick_start_card_padding_horizontal"
+    android:paddingStart="@dimen/quick_start_card_padding_horizontal" >
 
     <LinearLayout
         android:layout_height="match_parent"
