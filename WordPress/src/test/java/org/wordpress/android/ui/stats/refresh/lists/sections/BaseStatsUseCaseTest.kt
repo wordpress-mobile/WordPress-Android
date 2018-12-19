@@ -104,13 +104,14 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         private val loadingItems: List<BlockListItem>
     ) : BaseStatsUseCase<String, Int>(
             ALL_TIME_STATS,
-            Dispatchers.Unconfined
+            Dispatchers.Unconfined,
+            0
     ) {
         override fun buildLoadingItem(): List<BlockListItem> {
             return loadingItems
         }
 
-        override fun buildUiModel(domainModel: String, nullableUiState: Int?): List<BlockListItem> {
+        override fun buildUiModel(domainModel: String, uiState: Int): List<BlockListItem> {
             return listOf(Text(domainModel))
         }
 

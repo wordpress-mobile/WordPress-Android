@@ -97,8 +97,6 @@ import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -732,17 +730,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Turns out that when your app has no more visible UI, a callback is triggered.
      * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
      * <p>
-     * This class also uses ActivityLifecycleCallbacks and a timer used as guard,
+     * This class also uses ActivityLifecycleCallbacks
      * to make sure to detect the send to background event and not other events.
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
-        private static final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
 
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;
-        private Timer mActivityTransitionTimer;
-        private TimerTask mActivityTransitionTimerTask;
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
@@ -768,8 +763,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 case TRIM_MEMORY_RUNNING_LOW:
                     evictBitmaps = true;
                     break;
-                case TRIM_MEMORY_BACKGROUND:
                 case TRIM_MEMORY_UI_HIDDEN:
+                    // See https://goo.gl/DuKVfX
+                    onAppGoesToBackground();
+                    break;
+                case TRIM_MEMORY_BACKGROUND:
                 default:
                     break;
             }
@@ -806,35 +804,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
         }
 
-        /**
-         * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
-         * are used to track when the app goes to background.
-         * <p>
-         * Our implementation uses `onActivityPaused` and `onActivityResumed` of ApplicationLifecycleMonitor
-         * to start and stop the timer that detects when the app goes to background.
-         * <p>
-         * So when the user is simply navigating between the activities, the onActivityPaused()
-         * calls `startActivityTransitionTimer` and starts the timer, but almost immediately the new activity being
-         * entered, the ApplicationLifecycleMonitor cancels the timer in its onActivityResumed method, that in order
-         * calls `stopActivityTransitionTimer` and so mIsInBackground would be false.
-         * <p>
-         * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all
-         * the background logic is run.
-         */
-        private void startActivityTransitionTimer() {
-            this.mActivityTransitionTimer = new Timer();
-            this.mActivityTransitionTimerTask = new TimerTask() {
-                public void run() {
-                    onAppGoesToBackground();
-                }
-            };
-
-            this.mActivityTransitionTimer.schedule(mActivityTransitionTimerTask,
-                                                   MAX_ACTIVITY_TRANSITION_TIME_MS);
-        }
-
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
+            if (sAppIsInTheBackground) {
+                return;
+            }
             sAppIsInTheBackground = true;
             String lastActivityString = AppPrefs.getLastActivityStr();
             ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
@@ -860,18 +834,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     Crashlytics.logException(e);
                 }
             }
-        }
-
-        private void stopActivityTransitionTimer() {
-            if (this.mActivityTransitionTimerTask != null) {
-                this.mActivityTransitionTimerTask.cancel();
-            }
-
-            if (this.mActivityTransitionTimer != null) {
-                this.mActivityTransitionTimer.cancel();
-            }
-
-            sAppIsInTheBackground = false;
         }
 
         /**
@@ -937,7 +899,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // was in background before
                 onAppComesFromBackground(activity);
             }
-            stopActivityTransitionTimer();
 
             sAppIsInTheBackground = false;
             if (mFirstActivityResumed) {
@@ -957,7 +918,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         @Override
         public void onActivityPaused(Activity arg0) {
             mLastPingDate = new Date();
-            startActivityTransitionTimer();
         }
 
         @Override

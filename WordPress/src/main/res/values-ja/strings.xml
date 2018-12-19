@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-16 11:54:07+0000
+Translation-Revision-Date: 2018-12-14 13:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="menu_debug">デバッグメニュー</string>
+    <string name="preference_experimental">* 試験用 *</string>
+    <string name="site_settings_enable_gutenberg_summary">この Gutenberg はまだ試験用です</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg を有効にする</string>
+    <string name="change_password_dialog_message">パスワードを変更しています…</string>
+    <string name="change_password_dialog_hint">パスワードは6文字以上にする必要があります。さらに強力なパスワードを作成するには、大文字小文字、数字、! \" ? $ % ^ &amp; ) などの記号を使用してください。</string>
+    <string name="change_password_confirmation">パスワードを変更しました</string>
+    <string name="change_password">パスワードの変更</string>
+    <string name="support_identity_input_dialog_name_label">名前</string>
+    <string name="history_no_title">(タイトルなし)</string>
+    <string name="history_preview_html">HTML プレビュー</string>
+    <string name="history_preview_visual">ビジュアルプレビュー</string>
     <string name="history_detail_title">投稿リビジョン</string>
     <string name="history_detail_button_previous">前へ</string>
     <string name="history_detail_button_next">次へ</string>
@@ -1185,7 +1197,6 @@ Language: ja_JP
     <string name="detail_approve_manual">すべてのコメントで手動の承認が必要です。</string>
     <string name="days_quantity_other">%d日</string>
     <string name="days_quantity_one">1日</string>
-    <string name="web_address">ウェブアドレス</string>
     <string name="primary_site">基本のサイト</string>
     <string name="pending_email_change_snackbar">%1$s へ送信されたメール内の認証リンクをクリックして、新しいアドレスを承認してください。</string>
     <string name="editor_toast_uploading_please_wait">メディアをアップロードしています。完了するまで、しばらくお待ちください。</string>
@@ -1606,7 +1617,6 @@ Language: ja_JP
     <string name="error_refresh_posts">投稿を再読み込みできませんでした</string>
     <string name="error_deleting_post">投稿を削除する際にエラーが発生しました</string>
     <string name="notifications_empty_list">通知がありません</string>
-    <string name="invalid_url_message">入力したブログ URL が正しいか確認してください</string>
     <string name="stats_bar_graph_empty">統計情報がありません</string>
     <string name="stats_empty_comments">まだコメントがありません</string>
     <string name="sdcard_message">メディアをアップロードするには SD カードが必要です</string>

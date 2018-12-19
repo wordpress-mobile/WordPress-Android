@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-18 21:29:06+0000
+Translation-Revision-Date: 2018-12-04 18:24:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: it
 -->
 <resources>
+    <string name="menu_debug">Menu di debug</string>
+    <string name="preference_experimental">*SPERIMENTALE*</string>
+    <string name="site_settings_enable_gutenberg_summary">Questa è ancora una versione sperimentale di Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Abilita Gutenberg</string>
+    <string name="change_password_dialog_message">Sto modificando la password…</string>
+    <string name="change_password_dialog_hint">La password deve contenere almeno sei caratteri. Per renderla sicura, usa lettere maiuscole e minuscole, numeri e simboli come ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">La password è stata cambiata con successo</string>
+    <string name="change_password">Cambia la password</string>
+    <string name="support_identity_input_dialog_name_label">Nome</string>
+    <string name="history_no_title">(nessun titolo)</string>
+    <string name="history_preview_html">Anteprima HTML</string>
+    <string name="history_preview_visual">Anteprima visiva</string>
     <string name="history_detail_title">Revisione</string>
     <string name="history_detail_button_previous">Precedente</string>
     <string name="history_detail_button_next">Prossimo</string>
@@ -449,7 +461,7 @@ Language: it
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 pagina con 1 file non caricato</string>
     <string name="media_file_posts_plural_mixed_not_uploaded_one_file">%1$d post con 1 file non caricato</string>
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post con 1 file non caricato</string>
-    <string name="untitled_in_parentheses">(Senza titolo)</string>
+    <string name="untitled_in_parentheses">(senza titolo)</string>
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
@@ -466,7 +478,7 @@ Language: it
     <string name="site_creation_creating_laying_foundation">Disposizione della fondazione del sito…</string>
     <string name="site_creation_empty_site_title">Inserisci il titolo del sito</string>
     <string name="site_creation_tagline_helper">La tagline è una breve linea di testo mostrata proprio sotto il titolo in molti temi e funziona come metadato del sito sui motori di ricerca.</string>
-    <string name="site_creation_tagline_hint">Tagline del sito (opzionale)</string>
+    <string name="site_creation_tagline_hint">Tagline del sito (facoltativa)</string>
     <string name="site_creation_title_hint">Titolo sito</string>
     <string name="site_creation_domain_finish_button">Crea il sito</string>
     <string name="site_creation_domain_keywords_hint">Digita una parola chiave per ulteriori idee</string>
@@ -516,7 +528,7 @@ Language: it
     <string name="signup_magic_link_error">Si è verificato un errore durante l\'invio dell\'email. Puoi riprovare ora o chiudere e riprovare più tardi.</string>
     <string name="signup_epilogue_hint_username">Nome utente</string>
     <string name="signup_epilogue_hint_password_detail">Puoi sempre accedere con un link come quello che hai appena utilizzato, ma, se preferisci, puoi anche impostare una password.</string>
-    <string name="signup_epilogue_hint_password">Password (opzionale)</string>
+    <string name="signup_epilogue_hint_password">Password (facoltativa)</string>
     <string name="signup_epilogue_hint_display">Nome visualizzato</string>
     <string name="signup_epilogue_heading">Nuovo account</string>
     <string name="signup_epilogue_error_button_positive">Riprova</string>
@@ -1048,7 +1060,7 @@ Language: it
     <string name="format_bar_description_html">Modalità HTML</string>
     <string name="format_bar_description_ol">Lista numerata</string>
     <string name="format_bar_description_ul">Lista puntata</string>
-    <string name="format_bar_description_more">Leggi il resto</string>
+    <string name="format_bar_description_more">Leggi tutto</string>
     <string name="format_bar_description_quote">Citazione</string>
     <string name="format_bar_description_strike">Barrato</string>
     <string name="format_bar_description_underline">Sottolineato</string>
@@ -1073,7 +1085,7 @@ Language: it
     <string name="invite_error_invalid_usernames_multiple">Non è possibile inviare l\'email: ci sono dei nomi utente o degli indirizzi non validi.</string>
     <string name="invite_error_invalid_usernames_one">Non è possibile inviare l\'email: c\'è un nomi utente o un indirizzo non valido. </string>
     <string name="invite_error_no_usernames">Aggiungi almeno un nome utente</string>
-    <string name="invite_message_info">(Opzionale) Puoi inserire un messaggio personalizzato sino a 500 caratteri che verrà inserito nell\'invito a/agli utente/i.</string>
+    <string name="invite_message_info">(facoltativo) Puoi inserire un messaggio personalizzato di massimo 500 caratteri che verrà inserito nell\'invito a/agli utente/i.</string>
     <string name="invite_message_remaining_other">%d caratteri rimanenti</string>
     <string name="invite_message_remaining_one">1 carattere rimanente</string>
     <string name="invite_message_remaining_zero">0 caratteri rimanenti</string>
@@ -1242,7 +1254,7 @@ Language: it
     <string name="site_settings_paging_dialog_header">Commenti per pagina</string>
     <string name="site_settings_close_after_dialog_title">Chiudi commenti</string>
     <string name="site_settings_blacklist_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'email o nell\'IP, verrà contrassegnato come spam. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
-    <string name="site_settings_hold_for_moderation_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'e-mail o nell\'IP, verrà inserito nella coda di moderazione. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
+    <string name="site_settings_hold_for_moderation_description">Quando un commento contiene una di queste parole nel testo, nel nome, nell\'URL, nell\'email o nell\'IP, verrà inserito nella coda di moderazione. Puoi inserire parzialmente le parole, per cui \"press\" corrisponderà a \"WordPress\".</string>
     <string name="site_settings_list_editor_input_hint">Inserisci una parola o una frase</string>
     <string name="site_settings_list_editor_no_items_text">Nessun elemento</string>
     <string name="site_settings_learn_more_caption">Puoi sovrascrivere queste impostazioni per i singoli articoli.</string>
@@ -1606,7 +1618,6 @@ Language: it
     <string name="error_refresh_posts">Impossibile aggiornare gli articoli al momento</string>
     <string name="error_deleting_post">Si è verificato un errore durante l\'eliminazione dell\'articolo</string>
     <string name="notifications_empty_list">Nessuna notifica</string>
-    <string name="invalid_url_message">Verifica la validità dell\'URL inserita</string>
     <string name="stats_bar_graph_empty">Nessuna statistica disponibile</string>
     <string name="stats_empty_comments">Ancora nessun commento</string>
     <string name="sdcard_message">Occorre una scheda SD per caricare i file</string>
@@ -1671,7 +1682,7 @@ Language: it
     <string name="local_draft">Bozza locale</string>
     <string name="page_settings">Impostazioni pagina</string>
     <string name="create_a_link">Crea un link</string>
-    <string name="link_enter_url_text">Testo link (opzionale)</string>
+    <string name="link_enter_url_text">Testo link (facoltativo)</string>
     <string name="cannot_delete_multi_media_items">Impossibile eliminare il file al momento. Riprova in seguito.</string>
     <string name="media_error_no_permission">Non disponi dell\'autorizzazione a visualizzare la libreria multimediale</string>
     <string name="media_gallery_type_thumbnail_grid">Griglia miniatura</string>

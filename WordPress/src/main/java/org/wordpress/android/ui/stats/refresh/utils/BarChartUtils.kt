@@ -11,12 +11,18 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.LargeValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.ViewPortHandler
 import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.util.DisplayUtils
 import kotlin.math.round
+
+private const val MIN_COLUMN_COUNT = 5
+private const val MIN_VALUE = 5f
 
 fun BarChart.draw(
     item: BarChartItem,
@@ -25,14 +31,25 @@ fun BarChart.draw(
 ) {
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
-    val cut = cutEntries(columnNumber, item)
-    val maxYValue = cut.maxBy { it.y }!!.y
-    val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.second > 0 }) {
-        buildDataSet(context, cut)
+    val cut = cutEntries(if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT, item)
+    val mappedEntries = cut.mapIndexed { index, pair ->
+        BarEntry(
+                index.toFloat(),
+                pair.value.toFloat(),
+                pair.id
+        )
+    }
+    val maxYValue = cut.maxBy { it.value }!!.value
+    val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.value > 0 }) {
+        buildDataSet(context, mappedEntries)
     } else {
         buildEmptyDataSet(context, cut.size)
     }
-    data = BarData(dataSet)
+    data = if (item.onBarSelected != null) {
+        BarData(dataSet, getHighlightDataSet(context, mappedEntries))
+    } else {
+        BarData(dataSet)
+    }
     val greyColor = ContextCompat.getColor(
             context,
             color.wp_grey
@@ -41,7 +58,6 @@ fun BarChart.draw(
             context,
             color.wp_grey_lighten_30
     )
-
     axisLeft.apply {
         valueFormatter = object : LargeValueFormatter() {
             override fun getFormattedValue(value: Float, axis: AxisBase?): String {
@@ -62,8 +78,8 @@ fun BarChart.draw(
         setDrawAxisLine(false)
         granularity = 1f
         axisMinimum = 0f
-        if (maxYValue < 5f) {
-            axisMaximum = 5f
+        if (maxYValue < MIN_VALUE) {
+            axisMaximum = MIN_VALUE
         }
         textColor = greyColor
         gridColor = lightGreyColor
@@ -82,19 +98,61 @@ fun BarChart.draw(
         setDrawGridLines(false)
         setDrawLabels(false)
     }
-    labelStart.text = cut.first().data.toString()
-    labelEnd.text = cut.last().data.toString()
+    labelStart.text = cut.first().label
+    labelEnd.text = cut.last().label
     setPinchZoom(false)
     setScaleEnabled(false)
     legend.isEnabled = false
     setDrawBorders(false)
-    isHighlightFullBarEnabled = false
+    var highlightedItem = item.selectedItem
+
+    val isClickable = item.onBarSelected != null
+    if (isClickable) {
+        setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                item.onBarSelected?.invoke(null)
+                highlightValue(null, false)
+                highlightedItem = null
+            }
+
+            override fun onValueSelected(e: Entry, h: Highlight) {
+                val value = (e as? BarEntry)?.data as? String
+                if (highlightedItem != null && highlightedItem == value) {
+                    onNothingSelected()
+                } else {
+                    highlightColumn(e.x.toInt())
+                    item.onBarSelected?.invoke(value)
+                }
+                highlightedItem = null
+            }
+        })
+    } else {
+        setOnChartValueSelectedListener(null)
+    }
+    isHighlightFullBarEnabled = isClickable
     isHighlightPerDragEnabled = false
-    isHighlightPerTapEnabled = false
+    isHighlightPerTapEnabled = isClickable
     val description = Description()
     description.text = ""
     this.description = description
+
+    if (item.selectedItem != null) {
+        val index = cut.indexOfFirst { it.id == item.selectedItem }
+        if (index >= 0) {
+            highlightColumn(index)
+        } else {
+            highlightValue(null, false)
+        }
+    }
     invalidate()
+}
+
+private fun BarChart.highlightColumn(index: Int) {
+    val high = Highlight(index.toFloat(), 0, 0)
+    val high2 = Highlight(index.toFloat(), 1, 0)
+    high.dataIndex = index
+    high2.dataIndex = index
+    highlightValues(arrayOf(high2, high))
 }
 
 private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
@@ -122,24 +180,44 @@ private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     )
     dataSet.formLineWidth = 0f
     dataSet.setDrawValues(false)
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_active
+    )
+    dataSet.highLightAlpha = 255
+    return dataSet
+}
+
+private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataSet? {
+    val maxEntry = cut.maxBy { it.y } ?: return null
+    val highlightedDataSet = cut.map {
+        BarEntry(it.x, maxEntry.y, it.data)
+    }
+    val dataSet = BarDataSet(highlightedDataSet, "Highlight")
+    dataSet.color = ContextCompat.getColor(
+            context,
+            color.transparent
+    )
+    dataSet.formLineWidth = 0f
+    dataSet.isHighlightEnabled = true
+    dataSet.highLightColor = ContextCompat.getColor(
+            context,
+            color.orange_highlight
+    )
+    dataSet.setDrawValues(false)
+    dataSet.highLightAlpha = 255
     return dataSet
 }
 
 private fun cutEntries(
     count: Int,
     item: BarChartItem
-): List<BarEntry> {
-    val sublist = if (count < item.entries.size) item.entries.subList(
+): List<Bar> {
+    return if (count < item.entries.size) item.entries.subList(
             item.entries.size - count,
             item.entries.size
     ) else {
         item.entries
-    }
-    return sublist.mapIndexed { index, pair ->
-        BarEntry(
-                index.toFloat(),
-                pair.second.toFloat(),
-                pair.first
-        )
     }
 }

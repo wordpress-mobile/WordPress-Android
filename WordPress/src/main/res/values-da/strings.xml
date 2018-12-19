@@ -244,7 +244,6 @@ Language: da_DK
     <string name="error_refresh_pages">Sider kunne ikke genindlæses</string>
     <string name="error_refresh_posts">Indlæg kunne ikke genindlæses </string>
     <string name="notifications_empty_list">Ingen notifikationer</string>
-    <string name="invalid_url_message">Undersøg om den indtastede URL er gyldig</string>
     <string name="stats_bar_graph_empty">Ingen statistik er tilgængelig</string>
     <string name="stats_empty_comments">Ingen kommentarer endnu</string>
     <string name="sdcard_message">Et SD-kort skal være stukket ind og tilgængeligt for at kunne uploade medier</string>

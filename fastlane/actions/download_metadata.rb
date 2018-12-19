@@ -12,9 +12,11 @@ module Fastlane
         
         # Init
         require_relative '../helpers/metadata_download_helper.rb'
+        # Check download path
+        Dir.mkdir(params[:download_path]) unless File.exists?(params[:download_path])
 
         # Download
-        downloader = Fastlane::Helpers::MetadataDownloader.new(Dir.pwd + "/fastlane/metadata/android", params[:target_files])
+        downloader = Fastlane::Helpers::MetadataDownloader.new(params[:download_path], params[:target_files])
 
         params[:locales].each do | loc |
           puts "Downloading language: #{loc[:glotpress]}"
@@ -48,9 +50,13 @@ module Fastlane
                                         description: "The hash with the path to the target files and the key to use to extract their content",
                                         is_string: false),
           FastlaneCore::ConfigItem.new(key: :locales,
-                                          env_name: "FL_DOWNLOAD_METADATA_LOCALES",
-                                          description: "The hash with the GLotPress locale and the project locale association",
-                                          is_string: false)
+                                        env_name: "FL_DOWNLOAD_METADATA_LOCALES",
+                                        description: "The hash with the GLotPress locale and the project locale association",
+                                        is_string: false),
+          FastlaneCore::ConfigItem.new(key: :download_path,
+                                        env_name: "FL_DOWNLOAD_METADATA_DOWNLOAD_PATH",
+                                        description: "The path of the target files",
+                                        is_string: true)
         ]
       end
 

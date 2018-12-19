@@ -47,6 +47,9 @@
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
 
+    <!-- default strings -->
+    <string name="wordpress" translatable="false">WordPress</string>
+
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
@@ -560,6 +563,7 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <string name="site_settings_enable_gutenberg">Enable Gutenberg</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -615,6 +619,7 @@
     <string name="site_settings_whitelist_none_summary" translatable="false">@string/none</string>
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
+    <string name="site_settings_enable_gutenberg_summary">This is still an experimental version of Gutenberg</string>
 
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
@@ -754,6 +759,7 @@
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_editor">Editor</string>
     <string name="preference_editor_type">Set editor type</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
 
     <string name="preference_editor_beta" translatable="false">Beta</string>
     <string name="preference_editor_legacy">Legacy</string>
@@ -1023,6 +1029,9 @@
     <string name="stats_search_terms">Search Terms</string>
     <string name="stats_search_terms_label">Search Term</string>
     <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_author_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -1254,6 +1263,7 @@
 
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
+    <string name="menu_debug">Debug Menu</string>
 
     <string name="post_title">Title</string>
 
@@ -2303,7 +2313,7 @@
     <string name="site_creation_label_site_details_title">Step 3 of 4</string>
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
     <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
-    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
+    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
     <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_title_hint">Site title</string>

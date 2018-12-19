@@ -102,7 +102,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
-        assertThat((items[0] as Title).text).isEqualTo(R.string.stats_posts_and_pages)
+        assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
         assertThat(items[1] is Empty).isTrue()
     }
 
@@ -129,7 +129,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
-        assertThat((items[0] as Title).text).isEqualTo(R.string.stats_posts_and_pages)
+        assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
         assertThat(items[1] is ListItemWithIcon).isTrue()
         val item = items[1] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_posts_grey_dark_24dp)
@@ -162,7 +162,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
-        assertThat((items[0] as Title).text).isEqualTo(R.string.stats_posts_and_pages)
+        assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
         assertThat(items[1] is ListItemWithIcon).isTrue()
         val item = items[1] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)
@@ -195,7 +195,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         val items = (result as BlockList).items
         assertThat(items.size).isEqualTo(2)
         assertThat(items[0] is Title).isTrue()
-        assertThat((items[0] as Title).text).isEqualTo(R.string.stats_posts_and_pages)
+        assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
         assertThat(items[1] is ListItemWithIcon).isTrue()
         val item = items[1] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)

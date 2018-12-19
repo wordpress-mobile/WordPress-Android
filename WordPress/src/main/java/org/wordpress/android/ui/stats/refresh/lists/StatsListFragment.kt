@@ -31,6 +31,7 @@ import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
+import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewClicks
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCommentsStats
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewCountries
@@ -253,6 +254,14 @@ class StatsListFragment : DaggerFragment() {
                             it.selectedDate
                     )
                 }
+                is ViewAuthors -> {
+                    ActivityLauncher.viewAuthorsStats(
+                            activity,
+                            site,
+                            it.statsGranularity.toStatsTimeFrame(),
+                            it.selectedDate
+                    )
+                }
                 is ViewUrl -> {
                     WPWebViewActivity.openURL(activity, it.url)
                 }
@@ -300,6 +309,7 @@ sealed class NavigationTarget : Event() {
     data class ViewCountries(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
     data class ViewVideoPlays(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
     data class ViewSearchTerms(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
+    data class ViewAuthors(val statsGranularity: StatsGranularity, val selectedDate: String) : NavigationTarget()
     data class ViewUrl(val url: String) : NavigationTarget()
 }
 

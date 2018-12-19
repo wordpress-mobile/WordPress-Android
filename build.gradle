@@ -16,6 +16,7 @@ buildscript {
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false)
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -24,6 +25,19 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+
+        if (rootProject.ext.buildGutenbergFromSource) {
+            // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
+
+            maven {
+                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+                url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
+            }
+            maven {
+                // Local Maven repo containing AARs with JSC library built for Android
+                url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
+            }
+        }
     }
 
     task checkstyle(type: Checkstyle) {

@@ -29,6 +29,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
 import kotlinx.coroutines.experimental.Dispatchers
@@ -37,6 +38,8 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
@@ -46,10 +49,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.utils.draw
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -66,7 +70,7 @@ sealed class BlockListItemViewHolder(
     ) {
         private val text = itemView.findViewById<TextView>(R.id.text)
         fun bind(item: Title) {
-            text.setText(item.text)
+            text.setTextOrHide(item.textResource, item.text)
         }
     }
 
@@ -80,18 +84,18 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
+    open class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val subtext = itemView.findViewById<TextView>(R.id.subtext)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: ListItemWithIcon) {
-            icon.setImageOrLoad(item, imageManager)
+            iconContainer.setIconOrAvatar(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
             subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
@@ -108,27 +112,6 @@ sealed class BlockListItemViewHolder(
                 itemView.isClickable = false
                 itemView.background = null
                 itemView.setOnClickListener(null)
-            }
-        }
-    }
-
-    class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
-            parent,
-            R.layout.stats_block_user_item
-    ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
-        private val text = itemView.findViewById<TextView>(R.id.text)
-        private val value = itemView.findViewById<TextView>(R.id.value)
-        private val divider = itemView.findViewById<View>(R.id.divider)
-
-        fun bind(item: UserItem) {
-            imageManager.loadIntoCircle(icon, AVATAR_WITHOUT_BACKGROUND, item.avatarUrl)
-            text.text = item.text
-            value.text = item.value
-            divider.visibility = if (item.showDivider) {
-                View.VISIBLE
-            } else {
-                View.GONE
             }
         }
     }
@@ -210,21 +193,54 @@ sealed class BlockListItemViewHolder(
 
     class ColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
-            R.layout.stats_block_column_item
+            R.layout.stats_block_columns_item
     ) {
-        private val firstKey = itemView.findViewById<TextView>(R.id.first_key)
-        private val secondKey = itemView.findViewById<TextView>(R.id.second_key)
-        private val thirdKey = itemView.findViewById<TextView>(R.id.third_key)
-        private val firstValue = itemView.findViewById<TextView>(R.id.first_value)
-        private val secondValue = itemView.findViewById<TextView>(R.id.second_value)
-        private val thirdValue = itemView.findViewById<TextView>(R.id.third_value)
-        fun bind(columns: Columns) {
-            firstKey.setText(columns.headers[0])
-            secondKey.setText(columns.headers[1])
-            thirdKey.setText(columns.headers[2])
-            firstValue.text = columns.values[0]
-            secondValue.text = columns.values[1]
-            thirdValue.text = columns.values[2]
+        private val columnContainer = itemView.findViewById<LinearLayout>(R.id.column_container)
+        fun bind(
+            columns: Columns,
+            payloads: List<Any>
+        ) {
+            val inflater = LayoutInflater.from(itemView.context)
+            val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
+            val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
+            when {
+                tabSelected -> {
+                    for (index in 0 until columnContainer.childCount) {
+                        val parent = columnContainer.getChildAt(index)
+                        val key = parent.findViewById<TextView>(R.id.key)
+                        val isSelected = columns.selectedColumn == index
+                        key.isSelected = isSelected
+                        val value = parent.findViewById<TextView>(R.id.value)
+                        value.isSelected = isSelected
+                    }
+                }
+                valuesChanged -> {
+                    for (index in 0 until columnContainer.childCount) {
+                        columnContainer.getChildAt(index).findViewById<TextView>(R.id.value)
+                                .text = columns.values[index]
+                    }
+                }
+                else -> {
+                    columnContainer.removeAllViewsInLayout()
+                    for (index in 0 until columns.headers.size) {
+                        val item = inflater.inflate(R.layout.stats_block_column, columnContainer, false)
+                        columnContainer.addView(
+                                item,
+                                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1F)
+                        )
+                        item.setOnClickListener {
+                            columns.onColumnSelected?.invoke(index)
+                        }
+                        val isSelected = columns.selectedColumn == null || columns.selectedColumn == index
+                        val key = item.findViewById<TextView>(R.id.key)
+                        key.setText(columns.headers[index])
+                        key.isSelected = isSelected
+                        val value = item.findViewById<TextView>(R.id.value)
+                        value.text = columns.values[index]
+                        value.isSelected = isSelected
+                    }
+                }
+            }
         }
     }
 
@@ -254,9 +270,14 @@ sealed class BlockListItemViewHolder(
         private val labelStart = itemView.findViewById<TextView>(R.id.label_start)
         private val labelEnd = itemView.findViewById<TextView>(R.id.label_end)
 
-        fun bind(item: BarChartItem) {
-            GlobalScope.launch(Dispatchers.Main) {
-                chart.draw(item, labelStart, labelEnd)
+        fun bind(
+            item: BarChartItem,
+            barSelected: Boolean
+        ) {
+            if (!barSelected) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    chart.draw(item, labelStart, labelEnd)
+                }
             }
         }
     }
@@ -307,7 +328,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
@@ -318,7 +339,7 @@ sealed class BlockListItemViewHolder(
             expandChanged: Boolean
         ) {
             val header = expandableItem.header
-            icon.setImageOrLoad(header, imageManager)
+            iconContainer.setIconOrAvatar(header, imageManager)
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
@@ -426,7 +447,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    internal fun ImageView.setImageOrLoad(
+    private fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {
@@ -440,6 +461,44 @@ sealed class BlockListItemViewHolder(
                 imageManager.load(this, IMAGE, item.iconUrl)
             }
             else -> this.visibility = View.GONE
+        }
+    }
+
+    private fun ImageView.setAvatarOrLoad(
+        item: ListItemWithIcon,
+        imageManager: ImageManager
+    ) {
+        when {
+            item.icon != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.load(this, item.icon)
+            }
+            item.iconUrl != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.loadIntoCircle(this, AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
+            }
+            else -> this.visibility = View.GONE
+        }
+    }
+
+    internal fun LinearLayout.setIconOrAvatar(item: ListItemWithIcon, imageManager: ImageManager) {
+        val avatar = findViewById<ImageView>(R.id.avatar)
+        val icon = findViewById<ImageView>(R.id.icon)
+        val hasIcon = item.icon != null || item.iconUrl != null
+        if (hasIcon) {
+            this.visibility = View.VISIBLE
+            when (item.iconStyle) {
+                NORMAL -> {
+                    findViewById<ImageView>(R.id.avatar).visibility = GONE
+                    icon.setImageOrLoad(item, imageManager)
+                }
+                AVATAR -> {
+                    icon.visibility = GONE
+                    avatar.setAvatarOrLoad(item, imageManager)
+                }
+            }
+        } else {
+            this.visibility = View.GONE
         }
     }
 }

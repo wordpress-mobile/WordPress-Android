@@ -98,7 +98,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(BlockList::class.java)
         (result as BlockList).items.apply {
             val title = this[0] as Title
-            assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
+            assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
             val link = this[2] as Link
             assertThat(link.icon).isEqualTo(R.drawable.ic_share_blue_medium_24dp)
@@ -137,7 +137,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
         assertThat(result).isInstanceOf(BlockList::class.java)
         (result as BlockList).items.apply {
             val title = this[0] as Title
-            assertThat(title.text).isEqualTo(R.string.stats_insights_latest_post_summary)
+            assertThat(title.textResource).isEqualTo(R.string.stats_insights_latest_post_summary)
             assertThat(this[1]).isEqualTo(textItem)
             assertThat(this[2]).isEqualTo(columnItem)
             assertThat(this[3]).isEqualTo(chartItem)

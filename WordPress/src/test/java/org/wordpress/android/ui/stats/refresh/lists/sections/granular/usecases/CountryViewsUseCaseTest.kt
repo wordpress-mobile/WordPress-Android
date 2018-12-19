@@ -145,7 +145,7 @@ class CountryViewsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).text).isEqualTo(R.string.stats_countries)
+        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_countries)
     }
 
     private fun assertLabel(item: BlockListItem) {

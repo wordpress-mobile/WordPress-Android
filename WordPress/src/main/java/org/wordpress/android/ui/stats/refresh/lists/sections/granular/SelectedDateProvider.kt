@@ -9,7 +9,9 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SelectedDateProvider
 @Inject constructor() {
     private val mutableDates = mutableMapOf(
@@ -28,4 +30,5 @@ class SelectedDateProvider
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity) = mutableDates[statsGranularity] ?: Date()
+    fun getCurrentDate() = Date()
 }

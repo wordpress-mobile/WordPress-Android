@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
@@ -16,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.USER_ITEM
 
 sealed class BlockListItem(val type: Type) {
     fun id(): Int {
@@ -29,7 +29,6 @@ sealed class BlockListItem(val type: Type) {
         TITLE,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
-        USER_ITEM,
         INFO,
         EMPTY,
         TEXT,
@@ -43,7 +42,7 @@ sealed class BlockListItem(val type: Type) {
         DIVIDER
     }
 
-    data class Title(@StringRes val text: Int) : BlockListItem(TITLE)
+    data class Title(@StringRes val textResource: Int? = null, val text: String? = null) : BlockListItem(TITLE)
 
     data class ListItem(
         val text: String,
@@ -57,6 +56,7 @@ sealed class BlockListItem(val type: Type) {
     data class ListItemWithIcon(
         @DrawableRes val icon: Int? = null,
         val iconUrl: String? = null,
+        val iconStyle: IconStyle = NORMAL,
         @StringRes val textResource: Int? = null,
         val text: String? = null,
         @StringRes val subTextResource: Int? = null,
@@ -68,16 +68,10 @@ sealed class BlockListItem(val type: Type) {
     ) : BlockListItem(LIST_ITEM_WITH_ICON) {
         override val itemId: Int
             get() = (icon ?: 0) + (iconUrl?.hashCode() ?: 0) + (textResource ?: 0) + (text?.hashCode() ?: 0)
-    }
 
-    data class UserItem(
-        val avatarUrl: String,
-        val text: String,
-        val value: String,
-        val showDivider: Boolean = true
-    ) : BlockListItem(USER_ITEM) {
-        override val itemId: Int
-            get() = avatarUrl.hashCode() + text.hashCode()
+        enum class IconStyle {
+            NORMAL, AVATAR
+        }
     }
 
     data class Information(val text: String) : BlockListItem(INFO)
@@ -89,7 +83,15 @@ sealed class BlockListItem(val type: Type) {
         )
     }
 
-    data class Columns(val headers: List<Int>, val values: List<String>) : BlockListItem(COLUMNS)
+    data class Columns(
+        val headers: List<Int>,
+        val values: List<String>,
+        val selectedColumn: Int? = null,
+        val onColumnSelected: ((position: Int) -> Unit)? = null
+    ) : BlockListItem(COLUMNS) {
+        override val itemId: Int
+            get() = headers.hashCode()
+    }
 
     data class Link(
         @DrawableRes val icon: Int? = null,
@@ -98,7 +100,16 @@ sealed class BlockListItem(val type: Type) {
     ) :
             BlockListItem(LINK)
 
-    data class BarChartItem(val entries: List<Pair<String, Int>>) : BlockListItem(BAR_CHART)
+    data class BarChartItem(
+        val entries: List<Bar>,
+        val selectedItem: String? = null,
+        val onBarSelected: ((String?) -> Unit)? = null
+    ) : BlockListItem(BAR_CHART) {
+        data class Bar(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
 
     data class TabsItem(val tabs: List<Int>, val selectedTabPosition: Int, val onTabSelected: (position: Int) -> Unit) :
             BlockListItem(TABS) {
@@ -132,6 +143,7 @@ sealed class BlockListItem(val type: Type) {
             fun create(action: () -> Unit): NavigationAction {
                 return NoParams(action)
             }
+
             fun <T> create(data: T, action: (T) -> Unit): NavigationAction {
                 return OneParam(data, action)
             }
