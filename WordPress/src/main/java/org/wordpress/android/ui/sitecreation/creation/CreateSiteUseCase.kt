@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnNewSiteCreated
+import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility.PUBLIC
 import javax.inject.Inject
 import kotlin.coroutines.experimental.Continuation
@@ -21,7 +22,12 @@ class CreateSiteUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<OnNewSiteCreated>? = null
 
-    suspend fun createSite(siteData: NewSiteCreationServiceData, languageWordPressId: String): OnNewSiteCreated {
+    suspend fun createSite(
+        siteData: NewSiteCreationServiceData,
+        languageWordPressId: String,
+        siteVisibility: SiteVisibility = PUBLIC,
+        dryRun: Boolean = false
+    ): OnNewSiteCreated {
         if (continuation != null) {
             throw IllegalStateException("Create site request has already been sent.")
         }
@@ -30,8 +36,8 @@ class CreateSiteUseCase @Inject constructor(
                     siteData.siteSlug,
                     siteData.siteTitle ?: "",
                     languageWordPressId,
-                    PUBLIC,
-                    false
+                    siteVisibility,
+                    dryRun
             )
             continuation = cont
             dispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload))
