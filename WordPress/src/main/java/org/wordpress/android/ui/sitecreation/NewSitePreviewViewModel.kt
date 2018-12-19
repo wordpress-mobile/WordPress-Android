@@ -51,7 +51,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private var isStarted = false
 
     private lateinit var siteCreationState: SiteCreationState
-    private lateinit var nonNullDomain: String
+    private lateinit var urlWithoutScheme: String
     private var lastReceivedServiceState: NewSiteCreationServiceState? = null
     private var serviceStateForRetry: NewSiteCreationServiceState? = null
     private var newlyCreatedSiteLocalId: Int? = null
@@ -70,6 +70,9 @@ class NewSitePreviewViewModel @Inject constructor(
 
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
+
+    private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
+    val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
 
     private val _onOkButtonClicked = SingleLiveEvent<Int?>()
     val onOkButtonClicked: LiveData<Int?> = _onOkButtonClicked
@@ -91,7 +94,7 @@ class NewSitePreviewViewModel @Inject constructor(
         isStarted = true
         this.siteCreationState = siteCreationState
         requireNotNull(siteCreationState.domain)
-        nonNullDomain =  siteCreationState.domain!!
+        urlWithoutScheme = siteCreationState.domain!!
 
         updateUiState(SitePreviewFullscreenProgressUiState)
         startCreateSiteService()
@@ -105,7 +108,7 @@ class NewSitePreviewViewModel @Inject constructor(
                         verticalId,
                         siteTitle,
                         siteTagLine,
-                        nonNullDomain
+                        UrlUtils.extractSubDomain(urlWithoutScheme)
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
@@ -121,6 +124,10 @@ class NewSitePreviewViewModel @Inject constructor(
 
     fun onHelpClicked() {
         _onHelpClicked.call()
+    }
+
+    fun onCancelWizardClicked() {
+        _onCancelWizardClicked.call()
     }
 
     fun onOkButtonClicked() {
@@ -162,7 +169,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
-                updateUiStateAsync(SitePreviewGenericErrorUiState(this::onHelpClicked))
+                updateUiStateAsync(SitePreviewGenericErrorUiState)
             }
         }
     }
@@ -189,16 +196,27 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreloadingWebView() {
-        _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(nonNullDomain, true))
+        _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
     }
 
     fun onUrlLoaded() {
-        val urlShort = "$nonNullDomain.wordpress.com"
-        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(nonNullDomain, true)
-        val subDomainIndices: Pair<Int, Int> = Pair(0, nonNullDomain.length)
-        val domainIndices: Pair<Int, Int> = Pair(Math.min(subDomainIndices.second, urlShort.length), urlShort.length)
+        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
+        val subDomainIndices: Pair<Int, Int> = Pair(0, urlWithoutScheme.length)
+        val domainIndices: Pair<Int, Int> = Pair(
+                Math.min(subDomainIndices.second, urlWithoutScheme.length),
+                urlWithoutScheme.length
+        )
 
-        updateUiState(SitePreviewContentUiState(SitePreviewData(fullUrl, urlShort, subDomainIndices, domainIndices)))
+        updateUiState(
+                SitePreviewContentUiState(
+                        SitePreviewData(
+                                fullUrl,
+                                urlWithoutScheme,
+                                subDomainIndices,
+                                domainIndices
+                        )
+                )
+        )
         _hideGetStartedBar.call()
     }
 
@@ -232,17 +250,18 @@ class NewSitePreviewViewModel @Inject constructor(
         sealed class SitePreviewFullscreenErrorUiState constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null,
-            open val onContactSupportTapped: (() -> Unit)? = null
+            val showContactSupport: Boolean = false,
+            val showCancelWizardButton: Boolean = true
         ) : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = false,
                 fullscreenErrorLayoutVisibility = true
         ) {
-            data class SitePreviewGenericErrorUiState(override val onContactSupportTapped: (() -> Unit)) :
+            object SitePreviewGenericErrorUiState :
                     SitePreviewFullscreenErrorUiState(
                             R.string.site_creation_error_generic_title,
                             R.string.site_creation_error_generic_subtitle,
-                            onContactSupportTapped
+                            showContactSupport = true
                     )
 
             object SitePreviewConnectionErrorUiState : SitePreviewFullscreenErrorUiState(

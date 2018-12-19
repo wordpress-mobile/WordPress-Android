@@ -15,7 +15,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.widget.Button
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -89,6 +88,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         initViewModel()
         initRetryButton()
         initOkButton()
+        initCancelWizardButton()
+        initContactSupportButton()
     }
 
     private fun initViewModel() {
@@ -131,16 +132,30 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.onOkButtonClicked.observe(this, Observer { newSiteLocalId ->
             sitePreviewScreenListener.onSitePreviewScreenDismissed(newSiteLocalId)
         })
+        viewModel.onCancelWizardClicked.observe(this, Observer {
+            sitePreviewScreenListener.onSitePreviewScreenDismissed(null)
+        })
+
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {
-        val retryBtn = fullscreenErrorLayout.findViewById<Button>(R.id.error_retry)
+        val retryBtn = fullscreenErrorLayout.findViewById<View>(R.id.error_retry)
         retryBtn.setOnClickListener { viewModel.retry() }
     }
 
+    private fun initContactSupportButton() {
+        val contactSupport = fullscreenErrorLayout.findViewById<View>(R.id.contact_support)
+        contactSupport.setOnClickListener { viewModel.onHelpClicked() }
+    }
+
+    private fun initCancelWizardButton() {
+        val retryBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
+        retryBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
+    }
+
     private fun initOkButton() {
-        val okBtn = contentLayout.findViewById<Button>(R.id.okButton)
+        val okBtn = contentLayout.findViewById<View>(R.id.okButton)
         okBtn.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
@@ -160,7 +175,14 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         errorUiStateState.apply {
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
-            setOnClickListenerOrHide(fullscreenErrorLayout.findViewById(R.id.contact_support), onContactSupportTapped)
+            updateVisibility(
+                    fullscreenErrorLayout.findViewById(R.id.contact_support),
+                    errorUiStateState.showContactSupport
+            )
+            updateVisibility(
+                    fullscreenErrorLayout.findViewById(R.id.cancel_wizard_button),
+                    errorUiStateState.showCancelWizardButton
+            )
         }
     }
 
@@ -168,13 +190,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         textView.visibility = if (resId == null) View.GONE else View.VISIBLE
         resId?.let {
             textView.text = resources.getString(resId)
-        }
-    }
-
-    private fun setOnClickListenerOrHide(view: View, onItemClicked: (() -> Unit)?) {
-        view.visibility = if (onItemClicked == null) View.GONE else View.VISIBLE
-        onItemClicked?.let {
-            view.setOnClickListener { onItemClicked.invoke() }
         }
     }
 
