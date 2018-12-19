@@ -55,8 +55,8 @@ class NewSiteCreationServiceManagerTest {
     private lateinit var manager: NewSiteCreationServiceManager
 
     private val successEvent = OnNewSiteCreated()
-    private val genericErrorEvent= OnNewSiteCreated()
-    private val siteExistsErrorEvent= OnNewSiteCreated()
+    private val genericErrorEvent = OnNewSiteCreated()
+    private val siteExistsErrorEvent = OnNewSiteCreated()
 
     @Before
     fun setUp() {
