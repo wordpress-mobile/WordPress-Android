@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 private const val pageSize = 6
@@ -45,6 +46,7 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PostsAndPagesUseCase
     @Before
     fun setUp() {
@@ -53,7 +55,8 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 statsDateFormatter,
-                selectedDateProvider
+                selectedDateProvider,
+                tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }

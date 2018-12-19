@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel.FollowerModel
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,7 +37,8 @@ class FollowersUseCase
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
     private val statsUtilsWrapper: StatsUtilsWrapper,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<Pair<FollowersModel, FollowersModel>, Int>(
         FOLLOWERS,
         mainDispatcher,
@@ -140,6 +143,7 @@ class FollowersUseCase
     }
 
     private fun onLinkClick() {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_FOLLOWERS)
         navigateTo(ViewFollowersStats())
     }
 }

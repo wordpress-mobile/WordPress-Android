@@ -29,19 +29,22 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var latestPostSummaryMapper: LatestPostSummaryMapper
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: LatestPostSummaryUseCase
     @Before
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                latestPostSummaryMapper
+                latestPostSummaryMapper,
+                tracker
         )
         useCase.navigationTarget.observeForever {}
     }
