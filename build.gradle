@@ -37,6 +37,8 @@ allprojects {
                 // Local Maven repo containing AARs with JSC library built for Android
                 url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
             }
+        } else {
+            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
         }
     }
 
@@ -49,6 +51,12 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r224109'
     }
 }
 
