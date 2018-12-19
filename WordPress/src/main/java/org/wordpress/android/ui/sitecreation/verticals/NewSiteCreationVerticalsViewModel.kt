@@ -32,6 +32,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -276,7 +277,10 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         isVisible: Boolean,
         segmentsPrompt: SegmentPromptModel
     ): SiteCreationHeaderUiState? {
-        return if (isVisible) SiteCreationHeaderUiState(segmentsPrompt.title, segmentsPrompt.subtitle) else null
+        return if (isVisible) SiteCreationHeaderUiState(
+                UiStringText(segmentsPrompt.title),
+                UiStringText(segmentsPrompt.subtitle)
+        ) else null
     }
 
     private fun createSearchInputUiState(
@@ -285,7 +289,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         hint: String
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
-                hint,
+                UiStringText(hint),
                 showProgress,
                 showClearButton = !StringUtils.isEmpty(query)
         )

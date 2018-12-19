@@ -41,6 +41,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 private const val SEGMENT_ID = 1L
@@ -416,7 +417,7 @@ class NewSiteCreationVerticalsViewModelTest {
     private fun verifyEmptySearchInputVisible(uiState: VerticalsContentUiState) {
         assertThat(uiState.searchInputUiState.showProgress).isFalse()
         assertThat(uiState.searchInputUiState.showClearButton).isFalse()
-        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(UiStringText(DUMMY_HINT))
     }
 
     private fun verifyNonEmptySearchInputVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
@@ -426,13 +427,13 @@ class NewSiteCreationVerticalsViewModelTest {
     private fun verifyNonEmptySearchInputVisible(uiState: VerticalsContentUiState) {
         assertThat(uiState.searchInputUiState.showProgress).isFalse()
         assertThat(uiState.searchInputUiState.showClearButton).isTrue()
-        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(UiStringText(DUMMY_HINT))
     }
 
     private fun verifySearchInputWithProgressVisible(uiState: VerticalsContentUiState) {
         assertThat(uiState.searchInputUiState.showProgress).isTrue()
         assertThat(uiState.searchInputUiState.showClearButton).isTrue()
-        assertThat(uiState.searchInputUiState.hint).isEqualTo(DUMMY_HINT)
+        assertThat(uiState.searchInputUiState.hint).isEqualTo(UiStringText(DUMMY_HINT))
     }
 
     private fun verifyHeaderAndSkipButtonVisible(uiStateLiveData: LiveData<VerticalsUiState>) {
@@ -442,8 +443,8 @@ class NewSiteCreationVerticalsViewModelTest {
     private fun verifyHeaderAndSkipButtonVisible(uiState: VerticalsContentUiState) {
         assertThat(uiState.showSkipButton).isTrue()
         assertThat(uiState.headerUiState).isNotNull()
-        assertThat(uiState.headerUiState!!.title).isEqualTo(DUMMY_TITLE)
-        assertThat(uiState.headerUiState!!.subtitle).isEqualTo(DUMMY_SUBTITLE)
+        assertThat(uiState.headerUiState!!.title).isEqualTo(UiStringText(DUMMY_TITLE))
+        assertThat(uiState.headerUiState!!.subtitle).isEqualTo(UiStringText(DUMMY_SUBTITLE))
     }
 
     private fun verifyHeaderAndSkipButtonHidden(uiStateLiveData: LiveData<VerticalsUiState>) {
