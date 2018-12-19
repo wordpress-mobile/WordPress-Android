@@ -27,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceStat
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.SUCCESS
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -50,12 +51,10 @@ class NewSitePreviewViewModel @Inject constructor(
     private var isStarted = false
 
     private lateinit var siteCreationState: SiteCreationState
+    private lateinit var nonNullDomain: String
     private var lastReceivedServiceState: NewSiteCreationServiceState? = null
     private var serviceStateForRetry: NewSiteCreationServiceState? = null
     private var newlyCreatedSiteLocalId: Int? = null
-
-    // TODO remove and use slug from siteCreationState
-    private val slug = ('a'..'z').map { it }.shuffled().subList(0, 26).joinToString("")
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -91,6 +90,8 @@ class NewSitePreviewViewModel @Inject constructor(
         }
         isStarted = true
         this.siteCreationState = siteCreationState
+        requireNotNull(siteCreationState.domain)
+        nonNullDomain =  siteCreationState.domain!!
 
         updateUiState(SitePreviewFullscreenProgressUiState)
         startCreateSiteService()
@@ -99,7 +100,13 @@ class NewSitePreviewViewModel @Inject constructor(
     private fun startCreateSiteService(previousState: NewSiteCreationServiceState? = null) {
         if (networkUtils.isNetworkAvailable()) {
             siteCreationState.apply {
-                val serviceData = NewSiteCreationServiceData(segmentId, verticalId, siteTitle, siteTagLine, slug)
+                val serviceData = NewSiteCreationServiceData(
+                        segmentId,
+                        verticalId,
+                        siteTitle,
+                        siteTagLine,
+                        nonNullDomain
+                )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
             }
         } else {
@@ -182,21 +189,18 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreloadingWebView() {
-        _preloadPreview.postValue(getFullUrlFromSlug(slug))
+        _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(nonNullDomain, true))
     }
 
     fun onUrlLoaded() {
-        val urlShort = getShortUrlFromSlug(slug)
-        val fullUrl = getFullUrlFromSlug(slug)
-        val subDomainIndices: Pair<Int, Int> = Pair(0, slug.length)
+        val urlShort = "$nonNullDomain.wordpress.com"
+        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(nonNullDomain, true)
+        val subDomainIndices: Pair<Int, Int> = Pair(0, nonNullDomain.length)
         val domainIndices: Pair<Int, Int> = Pair(Math.min(subDomainIndices.second, urlShort.length), urlShort.length)
 
         updateUiState(SitePreviewContentUiState(SitePreviewData(fullUrl, urlShort, subDomainIndices, domainIndices)))
         _hideGetStartedBar.call()
     }
-
-    private fun getShortUrlFromSlug(slug: String) = "$slug.wordpress.com"
-    private fun getFullUrlFromSlug(slug: String) = "https://${getShortUrlFromSlug(slug)}"
 
     private fun updateUiState(uiState: SitePreviewUiState) {
         _uiState.value = uiState
