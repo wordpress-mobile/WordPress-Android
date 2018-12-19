@@ -12,13 +12,14 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
-import org.wordpress.android.ui.sitecreation.creation.FetchSiteByUrlUseCase
+import org.wordpress.android.ui.sitecreation.creation.FetchSiteUseCase
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
@@ -37,7 +38,8 @@ private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    private val fetchSiteUseCase: FetchSiteByUrlUseCase,
+    private val siteStore: SiteStore,
+    private val fetchSiteUseCase: FetchSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
@@ -149,7 +151,7 @@ class NewSitePreviewViewModel @Inject constructor(
             }// do nothing
             SUCCESS -> {
                 startPreloadingWebView()
-                fetchNewlyCreatedSiteModel()
+                fetchNewlyCreatedSiteModel(event.payload as Long)
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
@@ -161,12 +163,17 @@ class NewSitePreviewViewModel @Inject constructor(
     /**
      * Fetch newly created site model - supports retry with linear backoff.
      */
-    private fun fetchNewlyCreatedSiteModel() {
+    private fun fetchNewlyCreatedSiteModel(remoteSiteId: Long) {
         launch {
             repeat(FETCH_SITE_NUMBER_OF_RETRIES) { attemptNumber ->
-                val onSiteFetched = fetchSiteUseCase.fetchSite(getShortUrlFromSlug(slug))
+                val onSiteFetched = fetchSiteUseCase.fetchSite(remoteSiteId, isWpCom = true)
                 if (!onSiteFetched.isError) {
-                    newlyCreatedSiteLocalId = onSiteFetched.site?.id
+                    val siteBySiteId = siteStore.getSiteBySiteId(remoteSiteId)
+                    if (siteBySiteId != null) {
+                        newlyCreatedSiteLocalId = siteBySiteId.id
+                    } else {
+                        throw IllegalStateException("Site successfully fetched but has not been found in the local db.")
+                    }
                     return@launch
                 }
                 delay((attemptNumber + 1) * FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS) // +1 -> starts from 0

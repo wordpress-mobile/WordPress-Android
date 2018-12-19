@@ -101,12 +101,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 when (uiState) {
-                    is SitePreviewContentUiState -> {
-                        updateContentLayout(uiState)
-                    }
-                    is SitePreviewFullscreenProgressUiState -> {
-                        updateLoadingLayout(uiState)
-                    }
+                    is SitePreviewContentUiState -> updateContentLayout(uiState)
+                    is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
             }
