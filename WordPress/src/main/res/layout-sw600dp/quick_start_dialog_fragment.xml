@@ -26,6 +26,7 @@
                 android:id="@+id/list_uncompleted"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
+                tools:itemCount="5"
                 tools:listitem="@layout/quick_start_list_item" >
             </android.support.v7.widget.RecyclerView>
 
@@ -46,6 +47,7 @@
                 android:id="@+id/list_completed"
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
+                tools:itemCount="1"
                 tools:listitem="@layout/quick_start_list_item" >
             </android.support.v7.widget.RecyclerView>
 
