@@ -13,7 +13,6 @@ buildscript {
 repositories {
     google()
     jcenter()
-    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
     maven { url "https://giphy.bintray.com/giphy-sdk" }
@@ -63,8 +62,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-142"
-        versionCode 653
+        versionName "alpha-143"
+        versionCode 656
         minSdkVersion 21
         targetSdkVersion 26
 

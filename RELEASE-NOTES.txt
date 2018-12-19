@@ -1,1 +1,2 @@
-- #8627 Add Importing from Giphy in Editor and Media Library
+* Add Importing from Giphy in Editor and Media Library
+* Adds support for .blog subdomains on new sites.

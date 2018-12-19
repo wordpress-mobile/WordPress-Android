@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-30 13:54:07+0000
+Translation-Revision-Date: 2018-12-14 13:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="menu_debug">デバッグメニュー</string>
+    <string name="preference_experimental">* 試験用 *</string>
+    <string name="site_settings_enable_gutenberg_summary">この Gutenberg はまだ試験用です</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg を有効にする</string>
     <string name="change_password_dialog_message">パスワードを変更しています…</string>
     <string name="change_password_dialog_hint">パスワードは6文字以上にする必要があります。さらに強力なパスワードを作成するには、大文字小文字、数字、! \" ? $ % ^ &amp; ) などの記号を使用してください。</string>
     <string name="change_password_confirmation">パスワードを変更しました</string>
