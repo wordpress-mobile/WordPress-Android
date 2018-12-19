@@ -64,4 +64,4 @@ install:
 
 script:
   - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-  -  if [ -z "$EXEC_DANGER" ]; then bundle exec danger --fail-on-errors=true; fi
+  -  if [ -n "$EXEC_DANGER" ]; then bundle exec danger --fail-on-errors=true; fi
