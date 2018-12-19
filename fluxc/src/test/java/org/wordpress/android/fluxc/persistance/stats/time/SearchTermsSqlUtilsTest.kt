@@ -10,20 +10,20 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils
-import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.CLICKS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SEARCH_TERMS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.DAY
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.MONTH
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.WEEK
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType.YEAR
 import org.wordpress.android.fluxc.persistence.TimeStatsSqlUtils
-import org.wordpress.android.fluxc.store.stats.time.CLICKS_RESPONSE
+import org.wordpress.android.fluxc.store.stats.time.SEARCH_TERMS_RESPONSE
 import java.util.Date
 import kotlin.test.assertEquals
 
@@ -31,7 +31,7 @@ private val DATE = Date(0)
 private const val DATE_VALUE = "2018-10-10"
 
 @RunWith(MockitoJUnitRunner::class)
-class ClicksSqlUtilsTest {
+class SearchTermsSqlUtilsTest {
     @Mock lateinit var statsSqlUtils: StatsSqlUtils
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsUtils: StatsUtils
@@ -45,26 +45,26 @@ class ClicksSqlUtilsTest {
     }
 
     @Test
-    fun `returns data from stats utils`() {
+    fun `returns search terms from stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
 
-            whenever(statsSqlUtils.select(site, CLICKS, statsType, ClicksResponse::class.java, DATE_VALUE))
+            whenever(statsSqlUtils.select(site, SEARCH_TERMS, statsType, SearchTermsResponse::class.java, DATE_VALUE))
                     .thenReturn(
-                            CLICKS_RESPONSE
+                            SEARCH_TERMS_RESPONSE
                     )
 
-            val result = timeStatsSqlUtils.selectClicks(site, dbGranularity, DATE)
+            val result = timeStatsSqlUtils.selectSearchTerms(site, dbGranularity, DATE)
 
-            assertEquals(result, CLICKS_RESPONSE)
+            assertEquals(result, SEARCH_TERMS_RESPONSE)
         }
     }
 
     @Test
-    fun `inserts data to stats utils`() {
+    fun `inserts search terms to stats utils`() {
         mappedTypes.forEach { statsType, dbGranularity ->
-            timeStatsSqlUtils.insert(site, CLICKS_RESPONSE, dbGranularity, DATE)
+            timeStatsSqlUtils.insert(site, SEARCH_TERMS_RESPONSE, dbGranularity, DATE)
 
-            verify(statsSqlUtils).insert(site, CLICKS, statsType, CLICKS_RESPONSE, DATE_VALUE)
+            verify(statsSqlUtils).insert(site, SEARCH_TERMS, statsType, SEARCH_TERMS_RESPONSE, DATE_VALUE)
         }
     }
 }

@@ -1,13 +1,20 @@
 package org.wordpress.android.fluxc.model.stats.time
 
 import com.google.gson.Gson
+import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
+import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.PostAndPageViewsRestClient.PostAndPageViewsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ReferrersRestClient.ReferrersResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VisitAndViewsRestClient.VisitsAndViewsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.SearchTermsRestClient.SearchTermsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.VideoPlaysRestClient.VideoPlaysResponse
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
@@ -44,7 +51,7 @@ class TimeStatsMapper
                     val firstChildUrl = result.children?.firstOrNull()?.url
                     Referrer(result.name, result.views, result.icon, firstChildUrl ?: result.url)
                 } else {
-                    AppLog.e(STATS, "ReferrersResponse.type: Missing fields on a referrer")
+                    AppLog.e(STATS, "ReferrersResponse: Missing fields on a referrer")
                     null
                 }
             }
@@ -71,6 +78,127 @@ class TimeStatsMapper
                 first.totalClicks ?: 0,
                 groups,
                 first.clicks.size > groups.size
+        )
+    }
+
+    fun map(response: VisitsAndViewsResponse): VisitsAndViewsModel {
+        val periodIndex = response.fields?.indexOf("period")
+        val viewsIndex = response.fields?.indexOf("views")
+        val visitorsIndex = response.fields?.indexOf("visitors")
+        val likesIndex = response.fields?.indexOf("likes")
+        val reblogsIndex = response.fields?.indexOf("reblogs")
+        val commentsIndex = response.fields?.indexOf("comments")
+        val postsIndex = response.fields?.indexOf("posts")
+        val dataPerPeriod = response.data?.mapNotNull { periodData ->
+            periodData?.let {
+                val period = periodIndex?.let { periodData[it] }
+                if (period != null) {
+                    PeriodData(
+                            period,
+                            periodData.getLongOrZero(viewsIndex),
+                            periodData.getLongOrZero(visitorsIndex),
+                            periodData.getLongOrZero(likesIndex),
+                            periodData.getLongOrZero(reblogsIndex),
+                            periodData.getLongOrZero(commentsIndex),
+                            periodData.getLongOrZero(postsIndex)
+                    )
+                } else {
+                    null
+                }
+            }
+        }
+        if (response.data == null) {
+            AppLog.e(STATS, "VisitsAndViewsResponse: Date field should never be null")
+        }
+        return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
+    }
+
+    private fun List<String?>.getLongOrZero(itemIndex: Int?): Long {
+        return itemIndex?.let {
+            val stringValue = this[it]
+            stringValue?.toLong()
+        } ?: 0
+    }
+
+    fun map(response: CountryViewsResponse, pageSize: Int): CountryViewsModel {
+        val first = response.days.values.first()
+        val countriesInfo = response.countryInfo
+        val groups = first.views.take(pageSize).mapNotNull { countryViews ->
+            val countryInfo = countriesInfo[countryViews.countryCode]
+            if (countryViews.countryCode != null && countryInfo != null && countryInfo.countryFull != null) {
+                CountryViewsModel.Country(
+                        countryViews.countryCode,
+                        countryInfo.countryFull,
+                        countryViews.views ?: 0,
+                        countryInfo.flagIcon,
+                        countryInfo.flatFlagIcon
+                )
+            } else {
+                AppLog.e(STATS, "CountryViewsResponse: Missing fields on a CountryViews object")
+                null
+            }
+        }
+        return CountryViewsModel(
+                first.otherViews ?: 0,
+                first.totalViews ?: 0,
+                groups,
+                first.views.size > groups.size
+        )
+    }
+
+    fun map(response: AuthorsResponse, pageSize: Int): AuthorsModel {
+        val first = response.groups.values.first()
+        val authors = first.authors.take(pageSize).map { author ->
+            val posts = author.mappedPosts?.mapNotNull { result ->
+                if (result.postId != null && result.title != null) {
+                    Post(result.postId, result.title, result.views ?: 0, result.url)
+                } else {
+                    AppLog.e(STATS, "AuthorsResponse: Missing fields on a post")
+                    null
+                }
+            }
+            if (author.name == null || author.views == null || author.avatarUrl == null) {
+                AppLog.e(STATS, "AuthorsResponse: Missing fields on an author")
+            }
+            AuthorsModel.Author(author.name ?: "", author.views ?: 0, author.avatarUrl, posts ?: listOf())
+        }
+        return AuthorsModel(first.otherViews ?: 0, authors, first.authors.size > authors.size)
+    }
+
+    fun map(response: SearchTermsResponse, pageSize: Int): SearchTermsModel {
+        val first = response.days.values.first()
+        val groups = first.searchTerms.mapNotNull { searchTerm ->
+            if (searchTerm.term != null) {
+                SearchTermsModel.SearchTerm(searchTerm.term, searchTerm.views ?: 0)
+            } else {
+                AppLog.e(STATS, "SearchTermsResponse: Missing term field on a Search terms object")
+                null
+            }
+        }.take(pageSize)
+        return SearchTermsModel(
+                first.otherSearchTerms ?: 0,
+                first.totalSearchTimes ?: 0,
+                first.encryptedSearchTerms ?: 0,
+                groups,
+                first.searchTerms.size > groups.size
+        )
+    }
+
+    fun map(response: VideoPlaysResponse, pageSize: Int): VideoPlaysModel {
+        val first = response.days.values.first()
+        val groups = first.plays.take(pageSize).mapNotNull { result ->
+                if (result.postId != null && result.title != null) {
+                    VideoPlaysModel.VideoPlays(result.postId, result.title, result.url, result.plays ?: 0)
+                } else {
+                    AppLog.e(STATS, "VideoPlaysResponse: Missing fields on a Video plays object")
+                    null
+                }
+        }
+        return VideoPlaysModel(
+                first.otherPlays ?: 0,
+                first.totalPlays ?: 0,
+                groups,
+                first.plays.size > groups.size
         )
     }
 }
