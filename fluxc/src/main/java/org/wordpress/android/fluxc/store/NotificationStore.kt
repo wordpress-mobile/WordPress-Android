@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.NotificationAction
+import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATION
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
 import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
@@ -313,15 +314,23 @@ constructor(
 
     private fun handleFetchNotificationCompleted(payload: FetchNotificationResponsePayload) {
         val onNotificationChanged = if (payload.isError) {
-                OnNotificationChanged(0).also { it.error = payload.error }
+            OnNotificationChanged(0).also { it.error = payload.error }
         } else {
-            // Update the localSiteId
+            // Update the localSiteId and save to the db
             val rows = payload.notification?.let {
                 val remoteSiteId = it.getRemoteSiteId() ?: 0
                 it.localSiteId = siteStore.getLocalIdForRemoteSiteId(remoteSiteId)
                 notificationSqlUtils.insertOrUpdateNotification(it)
             } ?: 0
-            OnNotificationChanged(rows)
+            // Fetch inserted/updated local notification id
+            val dbNotification = payload.notification?.let {
+                notificationSqlUtils.getNotificationByRemoteId(it.remoteNoteId)
+            }
+            OnNotificationChanged(rows).apply {
+                dbNotification?.let { changedNotificationLocalIds.add(it.noteId) }
+            }
+        }.apply {
+            causeOfChange = FETCH_NOTIFICATION
         }
         emitChange(onNotificationChanged)
     }
