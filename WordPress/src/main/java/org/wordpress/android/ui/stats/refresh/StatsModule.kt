@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
@@ -88,6 +89,7 @@ class StatsModule {
         countryViewsUseCaseFactory: CountryViewsUseCaseFactory,
         videoPlaysUseCaseFactory: VideoPlaysUseCaseFactory,
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
+        authorsUseCaseFactory: AuthorsUseCaseFactory,
         overviewUseCaseFactory: OverviewUseCaseFactory
     ): List<@JvmSuppressWildcards UseCaseFactory> {
         return listOf(
@@ -97,6 +99,7 @@ class StatsModule {
                 countryViewsUseCaseFactory,
                 videoPlaysUseCaseFactory,
                 searchTermsUseCaseFactory,
+                authorsUseCaseFactory,
                 overviewUseCaseFactory
         )
     }

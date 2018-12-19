@@ -49,10 +49,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.UserItem
 import org.wordpress.android.ui.stats.refresh.utils.draw
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
@@ -83,18 +84,18 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
+    open class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val subtext = itemView.findViewById<TextView>(R.id.subtext)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
 
         fun bind(item: ListItemWithIcon) {
-            icon.setImageOrLoad(item, imageManager)
+            iconContainer.setIconOrAvatar(item, imageManager)
             text.setTextOrHide(item.textResource, item.text)
             subtext.setTextOrHide(item.subTextResource, item.subText)
             value.setTextOrHide(item.valueResource, item.value)
@@ -111,27 +112,6 @@ sealed class BlockListItemViewHolder(
                 itemView.isClickable = false
                 itemView.background = null
                 itemView.setOnClickListener(null)
-            }
-        }
-    }
-
-    class UserItemViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BlockListItemViewHolder(
-            parent,
-            R.layout.stats_block_user_item
-    ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
-        private val text = itemView.findViewById<TextView>(R.id.text)
-        private val value = itemView.findViewById<TextView>(R.id.value)
-        private val divider = itemView.findViewById<View>(R.id.divider)
-
-        fun bind(item: UserItem) {
-            imageManager.loadIntoCircle(icon, AVATAR_WITHOUT_BACKGROUND, item.avatarUrl)
-            text.text = item.text
-            value.text = item.value
-            divider.visibility = if (item.showDivider) {
-                View.VISIBLE
-            } else {
-                View.GONE
             }
         }
     }
@@ -348,7 +328,7 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_list_item
     ) {
-        private val icon = itemView.findViewById<ImageView>(R.id.icon)
+        private val iconContainer = itemView.findViewById<LinearLayout>(R.id.icon_container)
         private val text = itemView.findViewById<TextView>(R.id.text)
         private val value = itemView.findViewById<TextView>(R.id.value)
         private val divider = itemView.findViewById<View>(R.id.divider)
@@ -359,7 +339,7 @@ sealed class BlockListItemViewHolder(
             expandChanged: Boolean
         ) {
             val header = expandableItem.header
-            icon.setImageOrLoad(header, imageManager)
+            iconContainer.setIconOrAvatar(header, imageManager)
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
@@ -467,7 +447,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    internal fun ImageView.setImageOrLoad(
+    private fun ImageView.setImageOrLoad(
         item: ListItemWithIcon,
         imageManager: ImageManager
     ) {
@@ -481,6 +461,44 @@ sealed class BlockListItemViewHolder(
                 imageManager.load(this, IMAGE, item.iconUrl)
             }
             else -> this.visibility = View.GONE
+        }
+    }
+
+    private fun ImageView.setAvatarOrLoad(
+        item: ListItemWithIcon,
+        imageManager: ImageManager
+    ) {
+        when {
+            item.icon != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.load(this, item.icon)
+            }
+            item.iconUrl != null -> {
+                this.visibility = View.VISIBLE
+                imageManager.loadIntoCircle(this, AVATAR_WITHOUT_BACKGROUND, item.iconUrl)
+            }
+            else -> this.visibility = View.GONE
+        }
+    }
+
+    internal fun LinearLayout.setIconOrAvatar(item: ListItemWithIcon, imageManager: ImageManager) {
+        val avatar = findViewById<ImageView>(R.id.avatar)
+        val icon = findViewById<ImageView>(R.id.icon)
+        val hasIcon = item.icon != null || item.iconUrl != null
+        if (hasIcon) {
+            this.visibility = View.VISIBLE
+            when (item.iconStyle) {
+                NORMAL -> {
+                    findViewById<ImageView>(R.id.avatar).visibility = GONE
+                    icon.setImageOrLoad(item, imageManager)
+                }
+                AVATAR -> {
+                    icon.visibility = GONE
+                    avatar.setAvatarOrLoad(item, imageManager)
+                }
+            }
+        } else {
+            this.visibility = View.GONE
         }
     }
 }

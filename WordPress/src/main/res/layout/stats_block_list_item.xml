@@ -12,42 +12,55 @@
         style="@style/StatsBlockItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_large"
         android:layout_marginTop="@dimen/margin_large"
-        android:layout_marginStart="@dimen/margin_extra_medium_large"
-        android:minHeight="@dimen/margin_extra_large"
         android:ellipsize="end"
         android:lines="1"
+        android:minHeight="@dimen/margin_extra_large"
         android:textSize="@dimen/text_sz_large"
         app:layout_constraintBottom_toTopOf="@+id/subtext"
         app:layout_constraintEnd_toStartOf="@+id/value"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintStart_toStartOf="@+id/icon_container"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginBottom="@dimen/margin_large"
         app:layout_goneMarginStart="@dimen/margin_extra_large"
-        app:layout_goneMarginEnd="@dimen/margin_extra_large"
         tools:text="@string/unknown"/>
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/stats_block_icon_size"
-        android:layout_height="@dimen/stats_block_icon_size"
-        android:layout_marginBottom="6dp"
+    <LinearLayout
+        android:id="@+id/icon_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="6dp"
-        android:contentDescription="@string/icon"
-        android:scaleType="fitCenter"
-        android:visibility="visible"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:srcCompat="@drawable/ic_share_blue_medium_24dp"/>
+        app:layout_constraintVertical_bias="0.5">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/stats_block_icon_size"
+            android:layout_height="@dimen/stats_block_icon_size"
+            android:contentDescription="@string/icon"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_share_blue_medium_24dp"/>
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:contentDescription="@string/reader_avatar_desc"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/value"
@@ -55,7 +68,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/expand_button"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -88,7 +100,6 @@
         android:minHeight="@dimen/margin_extra_large"
         android:text="@string/unknown"
         android:visibility="gone"
-        android:textColor="@color/grey_darken_20"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintStart_toStartOf="@+id/text"
@@ -100,11 +111,9 @@
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/margin_extra_medium_large"
         android:background="@color/grey_lighten_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon"
-        app:layout_goneMarginStart="@dimen/margin_extra_large"/>
+        app:layout_constraintStart_toStartOf="@+id/text"/>
 
 </android.support.constraint.ConstraintLayout>
