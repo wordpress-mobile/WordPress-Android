@@ -15,6 +15,10 @@ jobs:
     <<: *android_config
     steps:
       - checkout
+      - run:
+          name: Log memory
+          command: free -h -s 10 >> /tmp/memory.log
+          background: true
       - restore_cache:
           keys:
             - wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
@@ -34,10 +38,17 @@ jobs:
           paths:
             - ~/.gradle
           key: wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+      - store_artifacts:
+          path: /tmp/memory.log
+          destination: memory
   lint:
     <<: *android_config
     steps:
       - checkout
+      - run:
+          name: Log memory
+          command: free -h -s 10 >> /tmp/memory.log
+          background: true
       - restore_cache:
           keys:
             - wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
@@ -57,11 +68,18 @@ jobs:
           paths:
             - ~/.gradle
           key: wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+      - store_artifacts:
+          path: /tmp/memory.log
+          destination: memory
   danger:
     docker:
       - image: circleci/ruby:2.3-browsers
     steps:
       - checkout
+      - run:
+          name: Log memory
+          command: free -h -s 10 >> /tmp/memory.log
+          background: true
       - restore_cache:
           keys:
             - wordpress-android-gems-{{ checksum "Gemfile.lock" }}
@@ -76,6 +94,9 @@ jobs:
       - run:
           name: Danger
           command: bundle exec danger --fail-on-errors=true
+      - store_artifacts:
+          path: /tmp/memory.log
+          destination: memory
 
 workflows:
   version: 2
