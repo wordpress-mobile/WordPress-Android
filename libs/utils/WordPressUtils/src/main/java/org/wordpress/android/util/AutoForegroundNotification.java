@@ -56,6 +56,14 @@ public class AutoForegroundNotification {
                 .build();
     }
 
+    public static Notification progressIndeterminate(Context context, String channelId, @StringRes int title,
+                                                     @StringRes int content, @DrawableRes int icon,
+                                                     @ColorRes int accentColor) {
+        return getNotificationBuilder(context, channelId, NOTIFICATION_ID_PROGRESS, title, content, icon, accentColor)
+                .setProgress(0, 0, true)
+                .build();
+    }
+
     public static Notification success(Context context, String channelId, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
         return getNotificationBuilder(context, channelId, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor)

@@ -153,6 +153,7 @@ class HelpActivity : AppCompatActivity() {
         SITE_CREATION_CREATING("origin:site-create-creating"),
         NEW_SITE_CREATION_SEGMENTS("origin:new-site-create-site-segments"),
         NEW_SITE_CREATION_VERTICALS("origin:new-site-create-site-verticals"),
+        NEW_SITE_CREATION_DOMAINS("origin:new-site-create-domains"),
         NEW_SITE_CREATION_SITE_INFO("origin:new-site-create-site-info");
 
         override fun toString(): String {

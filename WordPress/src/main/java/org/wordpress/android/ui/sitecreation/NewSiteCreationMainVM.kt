@@ -24,7 +24,8 @@ data class SiteCreationState(
     val segmentId: Long? = null,
     val verticalId: String? = null,
     val siteTitle: String? = null,
-    val siteTagLine: String? = null
+    val siteTagLine: String? = null,
+    val domain: String? = null
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
@@ -71,6 +72,11 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
 
     fun onVerticalsScreenFinished(verticalId: String) {
         siteCreationState = siteCreationState.copy(verticalId = verticalId)
+        wizardManager.showNextStep()
+    }
+
+    fun onDomainsScreenFinished(domain: String) {
+        siteCreationState = siteCreationState.copy(domain = domain)
         wizardManager.showNextStep()
     }
 

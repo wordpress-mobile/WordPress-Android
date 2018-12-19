@@ -36,9 +36,6 @@ private val DUMMY_SITE_DATA: NewSiteCreationServiceData = NewSiteCreationService
         "tagLine",
         "slug"
 )
-private val SUCCESS_EVENT = OnNewSiteCreated()
-private val GENERIC_ERROR_EVENT = OnNewSiteCreated()
-private val SITE_EXISTS_ERROR_EVENT = OnNewSiteCreated()
 
 private val IDLE_STATE = NewSiteCreationServiceState(IDLE)
 private val CREATE_SITE_STATE = NewSiteCreationServiceState(CREATE_SITE)
@@ -57,13 +54,17 @@ class NewSiteCreationServiceManagerTest {
 
     private lateinit var manager: NewSiteCreationServiceManager
 
+    private val successEvent = OnNewSiteCreated()
+    private val genericErrorEvent = OnNewSiteCreated()
+    private val siteExistsErrorEvent = OnNewSiteCreated()
+
     @Before
     fun setUp() {
         manager = NewSiteCreationServiceManager(useCase, dispatcher, tracker, TEST_DISPATCHER)
-        SUCCESS_EVENT.newSiteRemoteId = NEW_SITE_REMOTE_ID
-        SITE_EXISTS_ERROR_EVENT.newSiteRemoteId = NEW_SITE_REMOTE_ID
-        GENERIC_ERROR_EVENT.error = NewSiteError(GENERIC_ERROR, "")
-        SITE_EXISTS_ERROR_EVENT.error = NewSiteError(SITE_NAME_EXISTS, "")
+        successEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
+        siteExistsErrorEvent.newSiteRemoteId = NEW_SITE_REMOTE_ID
+        genericErrorEvent.error = NewSiteError(GENERIC_ERROR, "")
+        siteExistsErrorEvent.error = NewSiteError(SITE_NAME_EXISTS, "")
     }
 
     @Test
@@ -202,16 +203,16 @@ class NewSiteCreationServiceManagerTest {
 
     private suspend fun setSuccessfulResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
-                .thenReturn(SUCCESS_EVENT)
+                .thenReturn(successEvent)
     }
 
     private suspend fun setGenericErrorResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
-                .thenReturn(GENERIC_ERROR_EVENT)
+                .thenReturn(genericErrorEvent)
     }
 
     private suspend fun setSiteExistsErrorResponses() = test {
         whenever(useCase.createSite(DUMMY_SITE_DATA, LANGUAGE_ID))
-                .thenReturn(SITE_EXISTS_ERROR_EVENT)
+                .thenReturn(siteExistsErrorEvent)
     }
 }

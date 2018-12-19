@@ -11,10 +11,9 @@ object NewSiteCreationServiceNotification {
     private const val drawableResId = R.drawable.ic_my_sites_24dp
 
     fun createCreatingSiteNotification(context: Context): Notification {
-        return AutoForegroundNotification.progress(
+        return AutoForegroundNotification.progressIndeterminate(
                 context,
                 context.getString(channelResId),
-                NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE.progressPercent,
                 R.string.notification_new_site_creation_title,
                 R.string.notification_new_site_creation_creating_site_subtitle,
                 drawableResId,

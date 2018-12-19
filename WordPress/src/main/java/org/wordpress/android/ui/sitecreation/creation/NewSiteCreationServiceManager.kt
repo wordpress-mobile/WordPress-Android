@@ -51,10 +51,10 @@ class NewSiteCreationServiceManager @Inject constructor(
         val phaseToExecute = if (isRetry) {
             NewSiteCreationStep.valueOf(previousState!!)
         } else {
-            IDLE.nextPhase()
+            CREATE_SITE
         }
 
-        if (NewSiteCreationServiceState(phaseToExecute, null).isTerminal) {
+        if (NewSiteCreationServiceState(phaseToExecute).isTerminal) {
             this.serviceListener.logError("IllegalState: NewSiteCreationService can't resume a terminal step!")
         } else {
             executePhase(phaseToExecute)
@@ -110,7 +110,7 @@ class NewSiteCreationServiceManager @Inject constructor(
                         serviceListener.logWarning(
                                 "WPCOM site already created but we are in retrying mode so, just move on."
                         )
-                        executePhase(CREATE_SITE.nextPhase())
+                        executePhase(SUCCESS)
                     } else {
                         /**
                          * This state should not happen in production unless the domain suggestion endpoint is broken.
@@ -126,7 +126,7 @@ class NewSiteCreationServiceManager @Inject constructor(
                 }
             } else {
                 tracker.trackSiteCreated()
-                executePhase(CREATE_SITE.nextPhase())
+                executePhase(SUCCESS)
             }
         }
     }

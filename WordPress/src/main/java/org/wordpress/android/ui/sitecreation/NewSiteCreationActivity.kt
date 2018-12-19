@@ -24,6 +24,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
+import org.wordpress.android.ui.sitecreation.domain.DomainsScreenListener
+import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
@@ -34,6 +36,7 @@ import javax.inject.Inject
 class NewSiteCreationActivity : AppCompatActivity(),
         SegmentsScreenListener,
         VerticalsScreenListener,
+        DomainsScreenListener,
         SiteInfoScreenListener,
         SitePreviewScreenListener,
         OnSkipClickedListener,
@@ -74,6 +77,10 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onVerticalsScreenFinished(verticalId)
     }
 
+    override fun onDomainSelected(domain: String) {
+        mainViewModel.onDomainsScreenFinished(domain)
+    }
+
     override fun onSitePreviewScreenDismissed(newSiteLocalId: Int?) {
         mainViewModel.onSitePreviewScreenFinished(newSiteLocalId)
     }
@@ -99,7 +106,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
                         screenTitle,
                         target.wizardState.segmentId!!
                 )
-            DOMAINS -> NewSiteCreationDomainFragment.newInstance(screenTitle, "Test site")
+            DOMAINS -> NewSiteCreationDomainsFragment.newInstance(screenTitle, target.wizardState.siteTitle)
             SITE_INFO -> NewSiteCreationSiteInfoFragment.newInstance(screenTitle)
             SITE_PREVIEW -> NewSiteCreationPreviewFragment.newInstance(screenTitle, target.wizardState)
         }

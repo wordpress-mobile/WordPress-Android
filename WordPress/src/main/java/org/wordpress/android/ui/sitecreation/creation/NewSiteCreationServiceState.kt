@@ -26,12 +26,10 @@ data class NewSiteCreationServiceState internal constructor(
         return step.name
     }
 
-    enum class NewSiteCreationStep(val progressPercent: Int = 0) {
+    enum class NewSiteCreationStep {
         IDLE,
-        CREATE_SITE(25),
+        CREATE_SITE,
         SUCCESS,
         FAILURE;
-
-        fun nextPhase(): NewSiteCreationStep = values()[ordinal + 1]
     }
 }
