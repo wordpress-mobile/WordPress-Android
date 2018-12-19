@@ -7,5 +7,5 @@ data class VerticalSegmentModel(
     @SerializedName("segment_type_subtitle") val subtitle: String,
     @SerializedName("icon_URL") val iconUrl: String,
     @SerializedName("icon_color") val iconColor: String,
-    @SerializedName("id") val segmentId: String
+    @SerializedName("id") val segmentId: Long
 )
