@@ -238,6 +238,12 @@ constructor(
     fun getNotificationByRemoteId(remoteNoteId: Long) =
             notificationSqlUtils.getNotificationByRemoteId(remoteNoteId)
 
+    /**
+     * Fetch a notification from the database by it's local notification id.
+     */
+    fun getNotificationByLocalId(noteId: Int) =
+            notificationSqlUtils.getNotificationByIdSet(NoteIdSet(noteId, 0, 0))
+
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
 

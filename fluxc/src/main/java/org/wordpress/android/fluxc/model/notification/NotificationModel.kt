@@ -55,4 +55,9 @@ data class NotificationModel(
     }
 
     fun getRemoteSiteId(): Long? = meta?.ids?.site
+
+    fun toLogString(): String {
+        return "[id=$noteId, remoteNoteId=$remoteNoteId, read=$read, " +
+                "localSiteId=$localSiteId, type=${type.name}, subtype=${subtype?.name}, title=$title]"
+    }
 }
