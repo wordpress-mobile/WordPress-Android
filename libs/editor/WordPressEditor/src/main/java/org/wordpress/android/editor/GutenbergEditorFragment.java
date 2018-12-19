@@ -2,6 +2,7 @@ package org.wordpress.android.editor;
 
 import android.app.Activity;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.toolbox.ImageLoader;
 
@@ -39,6 +42,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         IHistoryListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
+    private static final String ARG_IS_NEW_POST = "param_is_new_post";
 
     private static boolean mIsToolbarExpanded = false;
 
@@ -60,12 +64,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mWPAndroidGlueCode = new WPAndroidGlueCode();
     }
 
-    public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded) {
+    public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded, boolean isNewPost) {
         mIsToolbarExpanded = isExpanded;
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
+        args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         fragment.setArguments(args);
         return fragment;
     }
@@ -154,6 +159,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
+        if (getArguments() != null) {
+            boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            if (isNewPost) {
+                mTitle.requestFocus();
+                showImplicitKeyboard();
+            }
+        }
+
         return view;
     }
 
@@ -163,6 +176,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorWasPaused = true;
 
         mWPAndroidGlueCode.onPause(getActivity());
+
+        // Reset soft input mode to default as we have change it in onResume()
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    private void setSoftInputMode(int mode) {
+        getActivity().getWindow().setSoftInputMode(mode);
+    }
+
+    private void showImplicitKeyboard() {
+        final InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
     }
 
     @Override
@@ -179,6 +204,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         mWPAndroidGlueCode.onResume(this, getActivity());
+
+        // In AndroidManifest for EditActivity we have set android:windowSoftInputMode="stateHidden|adjustResize"
+        // which doesn't allow us to present the keyboard programmatically.
+        // Ugly way to allow showing the keyboard would be to change soft input mode.
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
