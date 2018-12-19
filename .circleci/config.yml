@@ -11,7 +11,7 @@ copy_gradle_properties: &copy_gradle_properties
 
 version: 2.0
 jobs:
-  build_and_test:
+  test:
     <<: *android_config
     steps:
       - checkout
@@ -25,15 +25,14 @@ jobs:
           name: Validate login strings
           command: ./tools/validate-login-strings.sh
       - run:
-          name: Build
-          command: $GRADLE assembleVanillaRelease
-      - run:
           name: Test
           command: $GRADLE testVanillaRelease
       - save_cache:
           paths:
             - ~/.gradle
           key: wordpress-android-gradle-build-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+      - store_test_results:
+          path: WordPress/build/test-results/testVanillaReleaseUnitTest
   lint:
     <<: *android_config
     steps:
@@ -57,6 +56,9 @@ jobs:
           paths:
             - ~/.gradle
           key: wordpress-android-gradle-lint-cache-{{ checksum "build.gradle" }}-{{ checksum "WordPress/build.gradle" }}
+      - store_artifacts:
+          path: WordPress/build/reports
+          destination: reports
   danger:
     docker:
       - image: circleci/ruby:2.3-browsers
@@ -75,12 +77,12 @@ jobs:
           key: wordpress-android-gems-{{ checksum "Gemfile.lock" }}
       - run:
           name: Danger
-          command: bundle exec danger --fail-on-errors=true
+          command: if [ -n "$DANGER_GITHUB_API_TOKEN" ]; then bundle exec danger --fail-on-errors=true; else echo "Not running danger because $DANGER_GITHUB_API_TOKEN is not found"; fi
 
 workflows:
   version: 2
   wordpress_android:
     jobs:
-      - build_and_test
+      - test
       - lint
       - danger
