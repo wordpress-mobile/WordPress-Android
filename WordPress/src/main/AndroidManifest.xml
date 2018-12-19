@@ -668,7 +668,7 @@
             android:label="Site Creation Service" />
 
         <service
-            android:name=".ui.sitecreation.NewSiteCreationService"
+            android:name=".ui.sitecreation.creation.NewSiteCreationService"
             android:exported="false"
             android:label="Site Creation Service" />
 

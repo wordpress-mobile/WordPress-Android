@@ -2391,4 +2391,7 @@
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
+    <string name="notification_new_site_creation_title">Create Site</string>
+    <string name="notification_new_site_creation_failed">There was a problem</string>
+    <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
 </resources>
