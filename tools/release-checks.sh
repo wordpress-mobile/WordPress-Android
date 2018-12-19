@@ -74,44 +74,14 @@ function printVersion() {
   echo "$BUILDFILE version $gradle_version"
 }
 
-function checkGradleProperties() {
-  /bin/echo -n "Check gradle.properties..."
-  checksum=`cat gradle.properties | grep -v "^wp.debug." | grep "^wp."|tr "[A-Z]" "[a-z]" | sed "s/ //g" | sort | sha1sum | cut -d- -f1 | sed "s/ //g"`
-  known_checksum="0b736c33e6c9645b430550db08b09f513e2e8549"
-  if [ x$checksum != x$known_checksum ]; then
-    pFail
-    exit 5
-  fi
+function checkThatConfigurationFilesAreUpToDate() {
+  bundle exec fastlane run configure_validate
   pOk
-}
-
-function checkFileAgainstHash() {
-  filename=$1
-  known_checksum=$2
-  checksum=`sha1sum "$filename" | cut -d" " -f1`
-  if [ x$checksum != x$known_checksum ]; then
-    pFail
-    exit 6
-  fi
-  pOk
-}
-
-function checkKeystore() {
-  keystore=`cat gradle.properties | grep storeFile | cut -d= -f 2 | sed -e 's/^[ \t]*//'`
-  /bin/echo -n "Check Keystore..."
-  checkFileAgainstHash "WordPress/$keystore" 7b20577a43b217b668fa875693c006d693679c0c
-}
-
-function checkGoogleServiceConfig() {
-  /bin/echo -n "Check Google Services configuration..."
-  checkFileAgainstHash WordPress/google-services.json 73a065e71c9819e81ac6a7347b11c649c89e641c 
 }
 
 checkNewLanguages
 checkENStrings
-checkGradleProperties
-checkKeystore
-checkGoogleServiceConfig
+checkThatConfigurationFilesAreUpToDate
 printVersion
 # checkDeviceToTest
 # runConnectedTests

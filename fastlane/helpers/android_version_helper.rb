@@ -3,7 +3,9 @@ module Fastlane
     module AndroidVersionHelper
       MAJOR_NUMBER = 0
       MINOR_NUMBER = 1
+      HOTFIX_NUMBER = 2
       ALPHA_PREFIX = "alpha-"
+      RC_SUFFIX = "-rc"
 
       def self.get_version_name
         get_version_name_from_file("./WordPress/build.gradle")
@@ -15,6 +17,10 @@ module Fastlane
 
       def self.is_alpha_version(version)
         version.start_with?(ALPHA_PREFIX)
+      end
+
+      def self.is_beta_version(version)
+        version.include?(RC_SUFFIX)
       end
 
       def self.calc_next_alpha_version_name(version)
@@ -32,6 +38,12 @@ module Fastlane
         end
         
          "#{vp[MAJOR_NUMBER]}.#{vp[MINOR_NUMBER]}"
+      end
+
+      def self.is_hotfix(version)
+        return false if is_alpha_version(version)
+        vp = get_version_parts(version)
+        return (vp.length > 2) && (vp[HOTFIX_NUMBER] != 0)
       end
 
       # private 

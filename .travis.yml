@@ -1,7 +1,19 @@
 language: android
 jdk: oraclejdk8
 sudo: required
-rvm: 2.0.0
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+# disable the default submodule logic so the gutenberg-mobile submodule is not pulled. No need to pull it.
+git:
+  submodules: false
 
 notifications:
   # Slack notification on failure (secured token).
@@ -25,8 +37,25 @@ env:
   global:
     - MALLOC_ARENA_MAX=2
     - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
-    - ANDROID_SDKS=android-14
-    - ANDROID_TARGET=android-14
+
+matrix:
+  include:
+    - name: "Lint"
+      env: GRADLE_TASKS="checkstyle ktlint lintVanillaRelease"
+    - name: "Build & Test"
+      env: GRADLE_TASKS="assembleVanillaRelease testVanillaRelease"
+    - name: "Danger & Check Login Strings"
+      env: GRADLE_TASKS=""
+      language: ruby
+      rvm: 2.3.4
+      cache:
+        directories:
+          - vendor/bundle/
+      install:
+        - bundle install
+      script:
+        - ./tools/validate-login-strings.sh
+        - if [ -n "$DANGER_GITHUB_API_TOKEN" ]; then bundle exec danger --fail-on-errors=true; else echo "Not running danger because $DANGER_GITHUB_API_TOKEN is not found"; fi
 
 install:
   # Setup gradle.properties
@@ -34,7 +63,4 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
-  - ./tools/validate-login-strings.sh
-  - ./gradlew -PdisablePreDex checkstyle ktlint assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
-  - bundle install
-  - bundle exec danger --fail-on-errors=true  
+  - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)

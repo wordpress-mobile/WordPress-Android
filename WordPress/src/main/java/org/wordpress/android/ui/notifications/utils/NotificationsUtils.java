@@ -1,17 +1,16 @@
 package org.wordpress.android.ui.notifications.utils;
 
 import android.app.AlertDialog;
-import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -50,9 +49,6 @@ import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -478,33 +474,11 @@ public class NotificationsUtils {
         AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
     }
 
-    // Checks if global notifications toggle is enabled in the Android app settings
-    // See: https://code.google.com/p/android/issues/detail?id=38482#c15
-    @SuppressWarnings("unchecked")
+    /**
+     * Checks if global notifications toggle is enabled in the Android app settings
+     */
     public static boolean isNotificationsEnabled(Context context) {
-        AppOpsManager mAppOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        ApplicationInfo appInfo = context.getApplicationInfo();
-        String pkg = context.getApplicationContext().getPackageName();
-        int uid = appInfo.uid;
-
-        Class appOpsClass;
-        try {
-            appOpsClass = Class.forName(AppOpsManager.class.getName());
-
-            Method checkOpNoThrowMethod =
-                    appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
-
-            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
-            int value = (int) opPostNotificationValue.get(Integer.class);
-
-            return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
-        } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException
-                | IllegalAccessException | InvocationTargetException e) {
-            AppLog.e(T.NOTIFS, e.getMessage());
-        }
-
-        // Default to assuming notifications are enabled
-        return true;
+        return NotificationManagerCompat.from(context.getApplicationContext()).areNotificationsEnabled();
     }
 
     public static boolean buildNoteObjectFromBundleAndSaveIt(Bundle data) {
