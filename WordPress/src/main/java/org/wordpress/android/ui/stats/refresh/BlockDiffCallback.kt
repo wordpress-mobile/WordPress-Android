@@ -1,9 +1,14 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.support.v7.util.DiffUtil.Callback
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.EXPAND_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_BAR_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -26,7 +31,7 @@ class BlockDiffCallback(
     private val newList: List<BlockListItem>
 ) : Callback() {
     enum class BlockListPayload {
-        EXPAND_CHANGED, TAB_CHANGED
+        EXPAND_CHANGED, TAB_CHANGED, SELECTED_COLUMN_CHANGED, SELECTED_BAR_CHANGED, COLUMNS_VALUE_CHANGED
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
@@ -38,11 +43,11 @@ class BlockDiffCallback(
                 LIST_ITEM_WITH_ICON,
                 EXPANDABLE_ITEM,
                 TABS,
-                LIST_ITEM -> oldItem.itemId == newItem.itemId
+                COLUMNS,
                 BAR_CHART,
+                LIST_ITEM -> oldItem.itemId == newItem.itemId
                 LINK,
                 TEXT,
-                COLUMNS,
                 INFO,
                 HEADER,
                 TITLE,
@@ -71,6 +76,11 @@ class BlockDiffCallback(
                 EXPAND_CHANGED
             newItem is TabsItem && oldItem is TabsItem && oldItem.selectedTabPosition != newItem.selectedTabPosition ->
                 TAB_CHANGED
+            newItem is Columns && oldItem is Columns && oldItem.selectedColumn != newItem.selectedColumn ->
+                return SELECTED_COLUMN_CHANGED
+            newItem is Columns && oldItem is Columns && oldItem.values != newItem.values -> return COLUMNS_VALUE_CHANGED
+            newItem is BarChartItem && oldItem is BarChartItem && oldItem.selectedItem != newItem.selectedItem ->
+                return SELECTED_BAR_CHANGED
             else -> null
         }
     }

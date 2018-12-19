@@ -178,7 +178,7 @@ class SearchTermsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).text).isEqualTo(R.string.stats_search_terms)
+        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_search_terms)
     }
 
     private fun assertHeader(item: BlockListItem) {

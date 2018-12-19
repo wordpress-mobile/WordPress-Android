@@ -128,7 +128,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).text).isEqualTo(R.string.stats_insights_today_stats)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_today_stats)
     }
 
     private fun assertViews(blockListItem: BlockListItem, showDivider: Boolean = false) {

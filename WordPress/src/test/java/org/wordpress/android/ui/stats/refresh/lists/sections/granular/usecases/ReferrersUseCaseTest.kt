@@ -181,7 +181,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).text).isEqualTo(R.string.stats_referrers)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_referrers)
     }
 
     private fun assertLabel(item: BlockListItem) {

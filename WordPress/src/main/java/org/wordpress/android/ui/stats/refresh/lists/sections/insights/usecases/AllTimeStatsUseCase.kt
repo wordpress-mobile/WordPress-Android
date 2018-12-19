@@ -88,7 +88,7 @@ class AllTimeStatsUseCase
                         ListItemWithIcon(
                                 R.drawable.ic_trophy_grey_dark_24dp,
                                 textResource = R.string.stats_insights_best_ever,
-                                subText = statsDateFormatter.parseDate(domainModel.viewsBestDay),
+                                subText = statsDateFormatter.printDate(domainModel.viewsBestDay),
                                 value = domainModel.viewsBestDayTotal.toFormattedString(),
                                 showDivider = false
                         )

@@ -145,7 +145,7 @@
     </style>
 
     <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>
@@ -153,7 +153,7 @@
     </style>
 
     <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_marginStart">@dimen/margin_medium</item>

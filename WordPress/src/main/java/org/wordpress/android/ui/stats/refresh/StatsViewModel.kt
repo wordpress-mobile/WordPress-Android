@@ -97,10 +97,10 @@ class StatsViewModel
     fun onSelectedDateChange(statsGranularity: StatsGranularity) {
         loadData {
             when (statsGranularity) {
-                DAYS -> dayStatsUseCase.loadData(site)
-                WEEKS -> weekStatsUseCase.loadData(site)
-                MONTHS -> monthStatsUseCase.loadData(site)
-                YEARS -> yearStatsUseCase.loadData(site)
+                DAYS -> dayStatsUseCase.refreshData(site)
+                WEEKS -> weekStatsUseCase.refreshData(site)
+                MONTHS -> monthStatsUseCase.refreshData(site)
+                YEARS -> yearStatsUseCase.refreshData(site)
             }
         }
     }

@@ -200,7 +200,7 @@ class AuthorsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         Assertions.assertThat(item.type).isEqualTo(TITLE)
-        Assertions.assertThat((item as Title).text).isEqualTo(R.string.stats_authors)
+        Assertions.assertThat((item as Title).textResource).isEqualTo(R.string.stats_authors)
     }
 
     private fun assertLabel(item: BlockListItem) {
