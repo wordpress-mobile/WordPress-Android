@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.viewholders.ErrorViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
+class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder<*>>() {
     private var items: List<StatsBlock> = listOf()
     fun update(newItems: List<StatsBlock>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -29,7 +29,7 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder<*> {
         return when (values()[viewType]) {
             BLOCK_LIST -> BlockListViewHolder(parent, imageManager)
             ERROR -> ErrorViewHolder(parent)
@@ -44,17 +44,18 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int, payloads: List<Any>) {
+    override fun onBindViewHolder(holder: BaseStatsViewHolder<*>, position: Int, payloads: List<Any>) {
         val item = items[position]
         when (holder) {
             is BlockListViewHolder -> holder.bind(item as BlockList)
             is LoadingViewHolder -> holder.bind(item as Loading)
             is ErrorViewHolder -> holder.bind(item as Error)
             is EmptyViewHolder -> holder.bind(item as Empty)
+            is LoadingViewHolder -> holder.bind(item as Loading)
         }
     }
 
-    override fun onBindViewHolder(holder: BaseStatsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseStatsViewHolder<*>, position: Int) {
         onBindViewHolder(holder, position, listOf())
     }
 }

@@ -8,12 +8,15 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.FragmentActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView.LayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -27,6 +30,7 @@ import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
+import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
@@ -54,7 +58,6 @@ import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
-import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -62,7 +65,7 @@ class StatsListFragment : DaggerFragment() {
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: StatsListViewModel
 
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private var layoutManager: LayoutManager? = null
 
     private val listStateKey = "list_state"
 
@@ -83,7 +86,7 @@ class StatsListFragment : DaggerFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        linearLayoutManager?.let {
+        layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -96,17 +99,23 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun initializeViews(savedInstanceState: Bundle?) {
-        val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val columns = resources.getInteger(R.integer.stats_number_of_columns)
+        val layoutManager: LayoutManager = if (columns == 1) {
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        } else {
+            StaggeredGridLayoutManager(columns, StaggeredGridLayoutManager.VERTICAL)
+        }
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
 
-        linearLayoutManager = layoutManager
-        recyclerView.layoutManager = linearLayoutManager
+        this.layoutManager = layoutManager
+        recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
-                RecyclerItemDecoration(
-                        resources.getDimensionPixelSize(R.dimen.margin_medium),
-                        resources.getDimensionPixelSize(R.dimen.margin_medium)
+                StatsListItemDecoration(
+                        resources.getDimensionPixelSize(dimen.margin_small),
+                        resources.getDimensionPixelSize(dimen.margin_small),
+                        columns
                 )
         )
     }
