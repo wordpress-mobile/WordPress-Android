@@ -17,7 +17,12 @@ jobs:
       - checkout
       - run:
           name: Log memory
-          command: free -h -s 10 >> /tmp/memory.log
+          command: |
+            while :
+            do
+                ps aux >> /tmp/memory.log
+                sleep 10
+            done
           background: true
       - restore_cache:
           keys:
@@ -47,7 +52,12 @@ jobs:
       - checkout
       - run:
           name: Log memory
-          command: free -h -s 10 >> /tmp/memory.log
+          command: |
+            while :
+            do
+                ps aux >> /tmp/memory.log
+                sleep 10
+            done
           background: true
       - restore_cache:
           keys:
@@ -78,7 +88,12 @@ jobs:
       - checkout
       - run:
           name: Log memory
-          command: free -h -s 10 >> /tmp/memory.log
+          command: |
+            while :
+            do
+                ps aux >> /tmp/memory.log
+                sleep 10
+            done
           background: true
       - restore_cache:
           keys:
