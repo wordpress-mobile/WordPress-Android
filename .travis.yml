@@ -47,8 +47,6 @@ matrix:
       cache:
         directories:
           - vendor/bundle/
-      install:
-        - bundle install
     - name: "Build & Test"
       env: GRADLE_TASKS="assembleVanillaRelease testVanillaRelease"
     - name: "Check Login Strings"
@@ -61,6 +59,7 @@ install:
   # Setup gradle.properties
   - cp gradle.properties-example gradle.properties
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
+  - if [ -n "$EXEC_DANGER" ]; then bundle install; fi
 
 script:
   - ./gradlew --stacktrace -PdisablePreDex $GRADLE_TASKS || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
