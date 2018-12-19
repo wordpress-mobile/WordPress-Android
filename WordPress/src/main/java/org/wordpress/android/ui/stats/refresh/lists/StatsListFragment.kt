@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.stats.StatsConstants
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsUtils
 import org.wordpress.android.ui.stats.models.StatsPostModel
+import org.wordpress.android.ui.stats.refresh.StatsListItemDecoration
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.AddNewPost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.SharePost
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
@@ -56,7 +58,6 @@ import org.wordpress.android.util.Event
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.observeEvent
-import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
 
 class StatsListFragment : DaggerFragment() {
@@ -111,9 +112,10 @@ class StatsListFragment : DaggerFragment() {
         this.layoutManager = layoutManager
         recyclerView.layoutManager = this.layoutManager
         recyclerView.addItemDecoration(
-                RecyclerItemDecoration(
-                        resources.getDimensionPixelSize(R.dimen.margin_medium),
-                        resources.getDimensionPixelSize(R.dimen.margin_medium)
+                StatsListItemDecoration(
+                        resources.getDimensionPixelSize(dimen.margin_small),
+                        resources.getDimensionPixelSize(dimen.margin_small),
+                        columns
                 )
         )
     }
