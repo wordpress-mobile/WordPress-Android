@@ -29,7 +29,14 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
     override fun buildLoadingItem(): List<BlockListItem> =
-            listOf(Title(text = statsDateFormatter.printDate(selectedDateProvider.getCurrentDate())))
+            listOf(
+                    Title(
+                            text = statsDateFormatter.printGranularDate(
+                                    selectedDateProvider.getCurrentDate(),
+                                    statsGranularity
+                            )
+                    )
+            )
 
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = visitsAndViewsStore.getVisits(
