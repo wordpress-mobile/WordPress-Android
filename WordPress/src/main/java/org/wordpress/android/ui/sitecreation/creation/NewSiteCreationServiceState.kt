@@ -31,7 +31,5 @@ data class NewSiteCreationServiceState internal constructor(
         CREATE_SITE(25),
         SUCCESS,
         FAILURE;
-
-        fun nextPhase(): NewSiteCreationStep = values()[ordinal + 1]
     }
 }
