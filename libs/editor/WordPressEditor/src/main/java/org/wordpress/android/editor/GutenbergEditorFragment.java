@@ -60,6 +60,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
 
+    private boolean mIsNewPost;
+
     public GutenbergEditorFragment() {
         mWPAndroidGlueCode = new WPAndroidGlueCode();
     }
@@ -163,8 +165,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         if (getArguments() != null) {
-            boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-            if (isNewPost) {
+            mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            if (mIsNewPost) {
                 mTitle.requestFocus();
                 showImplicitKeyboard();
             }
@@ -186,7 +188,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void setSoftInputMode(int mode) {
-        getActivity().getWindow().setSoftInputMode(mode);
+        if (mIsNewPost && mTitle.hasFocus()) {
+            getActivity().getWindow().setSoftInputMode(mode);
+        }
     }
 
     private void showImplicitKeyboard() {
