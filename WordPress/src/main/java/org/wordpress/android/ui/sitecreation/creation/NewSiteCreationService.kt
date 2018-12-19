@@ -19,7 +19,7 @@ import org.wordpress.android.util.CrashlyticsUtils
 import org.wordpress.android.util.LocaleManager
 import javax.inject.Inject
 
-class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE, null)),
+class NewSiteCreationService : AutoForeground<NewSiteCreationServiceState>(NewSiteCreationServiceState(IDLE)),
         NewSiteCreationServiceManagerListener {
     @Inject lateinit var manager: NewSiteCreationServiceManager
 

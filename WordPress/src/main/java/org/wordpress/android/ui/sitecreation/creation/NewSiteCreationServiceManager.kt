@@ -54,7 +54,7 @@ class NewSiteCreationServiceManager @Inject constructor(
             IDLE.nextPhase()
         }
 
-        if (NewSiteCreationServiceState(phaseToExecute, null).isTerminal) {
+        if (NewSiteCreationServiceState(phaseToExecute).isTerminal) {
             this.serviceListener.logError("IllegalState: NewSiteCreationService can't resume a terminal step!")
         } else {
             executePhase(phaseToExecute)
