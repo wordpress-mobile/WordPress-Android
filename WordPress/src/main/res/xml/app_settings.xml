@@ -6,6 +6,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:key="@string/pref_key_app_settings_root">
 
+    <PreferenceCategory
+        android:key="@string/pref_key_experimental_section"
+        android:layout="@layout/wp_preference_category"
+        android:title="@string/preference_experimental">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_enable_gutenberg"
+            android:key="@string/pref_key_enable_gutenberg"
+            android:layout="@layout/wp_preference_layout"
+            android:summary="@string/site_settings_enable_gutenberg_summary"
+            android:title="@string/site_settings_enable_gutenberg"/>
+
+    </PreferenceCategory>
+
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
         android:layout="@layout/wp_preference_layout"
@@ -137,19 +151,4 @@
             android:title="@string/open_source_licenses"/>
 
     </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="@string/pref_key_experimental_section"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/preference_experimental">
-
-        <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:id="@+id/pref_enable_gutenberg"
-            android:key="@string/pref_key_enable_gutenberg"
-            android:layout="@layout/wp_preference_layout"
-            android:summary="@string/site_settings_enable_gutenberg_summary"
-            android:title="@string/site_settings_enable_gutenberg"/>
-
-    </PreferenceCategory>
-
 </PreferenceScreen>
