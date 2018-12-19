@@ -162,7 +162,7 @@ class NewSitePreviewViewModel @Inject constructor(
         lastReceivedServiceState = event
         when (event.step) {
             IDLE, CREATE_SITE -> {
-            }// do nothing
+            } // do nothing
             SUCCESS -> {
                 startPreloadingWebView()
                 fetchNewlyCreatedSiteModel(event.payload as Long)
@@ -200,8 +200,9 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
+        val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
         val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
-        val subDomainIndices: Pair<Int, Int> = Pair(0, urlWithoutScheme.length)
+        val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
         val domainIndices: Pair<Int, Int> = Pair(
                 Math.min(subDomainIndices.second, urlWithoutScheme.length),
                 urlWithoutScheme.length

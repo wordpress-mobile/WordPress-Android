@@ -250,7 +250,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     @SuppressLint("SetJavaScriptEnabled")
     private fun hideGetStartedBar(webView: WebView) {
         webView.settings.javaScriptEnabled = true
-        val javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n" + "document.getElementById('wpadminbar').style.display = 'none';\n"
+        val javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n" +
+                "document.getElementById('wpadminbar').style.display = 'none';\n"
 
         webView.evaluateJavascript(
                 javascript
