@@ -64,7 +64,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mWPAndroidGlueCode = new WPAndroidGlueCode();
     }
 
-    public static GutenbergEditorFragment newInstance(String title, String content, boolean isExpanded, boolean isNewPost) {
+    public static GutenbergEditorFragment newInstance(String title,
+                                                      String content,
+                                                      boolean isExpanded,
+                                                      boolean isNewPost) {
         mIsToolbarExpanded = isExpanded;
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
@@ -178,7 +181,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         mWPAndroidGlueCode.onPause(getActivity());
 
         // Reset soft input mode to default as we have change it in onResume()
-        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+                | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     private void setSoftInputMode(int mode) {
@@ -186,8 +190,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void showImplicitKeyboard() {
-        final InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,0);
+        InputMethodManager keyboard = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
     }
 
     @Override
