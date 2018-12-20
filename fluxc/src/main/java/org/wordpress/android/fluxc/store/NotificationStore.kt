@@ -383,7 +383,7 @@ constructor(
             }
         }
 
-        // Create an dispatch result
+        // Create and dispatch result
         val onNotificationChanged = if (payload.isError) {
             OnNotificationChanged(0).apply {
                 error = payload.error
