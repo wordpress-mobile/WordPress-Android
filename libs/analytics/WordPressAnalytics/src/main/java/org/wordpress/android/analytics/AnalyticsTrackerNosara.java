@@ -861,6 +861,42 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
+            case STATS_VIEW_ALL_FOLLOWERS:
+                return "stats_view_all_followers";
+            case STATS_VIEW_ALL_COMMENTS:
+                return "stats_view_all_comments";
+            case STATS_VIEW_ALL_TAGS_AND_CATEGORIES:
+                return "stats_view_all_tags_and_categories";
+            case STATS_VIEW_ALL_PUBLICIZE:
+                return "stats_view_all_publicize";
+            case STATS_VIEW_ALL_POSTS_AND_PAGES:
+                return "stats_view_all_posts_and_pages";
+            case STATS_VIEW_ALL_REFERRERS:
+                return "stats_view_all_referrers";
+            case STATS_VIEW_ALL_CLICKS:
+                return "stats_view_all_clicks";
+            case STATS_VIEW_ALL_COUNTRIES:
+                return "stats_view_all_countries";
+            case STATS_VIEW_ALL_VIDEO_PLAYS:
+                return "stats_view_all_video_plays";
+            case STATS_VIEW_ALL_SEARCH_TERMS:
+                return "stats_view_all_search_terms";
+            case STATS_VIEW_ALL_AUTHORS:
+                return "stats_view_all_authors";
+            case STATS_ADD_NEW_POST_TAPPED:
+                return "stats_add_new_post_tapped";
+            case STATS_SHARE_POST_TAPPED:
+                return "stats_share_post_tapped";
+            case STATS_VIEW_POST_DETAILS_TAPPED:
+                return "stats_view_post_details_tapped";
+            case STATS_VIEW_TAG_TAPPED:
+                return "stats_view_tag_tapped";
+            case STATS_VIEW_AUTHORS_POST:
+                return "stats_view_authors_post";
+            case STATS_VIEW_CLICK:
+                return "stats_view_click";
+            case STATS_VIEW_VIDEO:
+                return "stats_view_video";
             case STATS_SINGLE_POST_ACCESSED:
                 return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:
