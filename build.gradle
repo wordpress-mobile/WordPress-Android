@@ -42,6 +42,12 @@ allprojects {
         }
     }
 
+    configurations.all {
+        resolutionStrategy {
+            force 'org.webkit:android-jsc:r224109'
+        }
+    }
+
     task checkstyle(type: Checkstyle) {
         source 'src'
 
@@ -51,12 +57,6 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'org.webkit:android-jsc:r224109'
     }
 }
 
