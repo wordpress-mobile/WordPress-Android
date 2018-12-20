@@ -4,6 +4,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:animateLayoutChanges="false"
+                                    android:id="@+id/container"
                                     app:cardCornerRadius="@dimen/cardview_default_radius"
                                     app:cardElevation="@dimen/cardview_default_elevation"
                                     style="@style/StatsBlock">
