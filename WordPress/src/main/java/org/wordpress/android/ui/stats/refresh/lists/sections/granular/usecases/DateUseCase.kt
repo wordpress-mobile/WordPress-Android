@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
-import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
@@ -25,13 +25,8 @@ constructor(
     private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : StatelessUseCase<Date>(DATE, mainDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(
-            BackgroundInformation(
-                    statsDateFormatter.printDate(
-                            selectedDateProvider.getSelectedDate(statsGranularity)
-                    )
-            )
-    )
+    override fun buildLoadingItem(): List<BlockListItem> =
+            listOf(getUiModel(selectedDateProvider.getSelectedDate(statsGranularity)))
 
     override suspend fun loadCachedData(site: SiteModel) {
         onModel(selectedDateProvider.getSelectedDate(statsGranularity))
@@ -42,11 +37,16 @@ constructor(
     }
 
     override fun buildUiModel(domainModel: Date): List<BlockListItem> {
-        return listOf(
-                BackgroundInformation(
-                        resourceProvider.getString(
-                                R.string.stats_for,
-                                statsDateFormatter.printDate(domainModel)
+        return listOf(getUiModel(domainModel))
+    }
+
+    private fun getUiModel(domainModel: Date): BackgroundInformation {
+        return BackgroundInformation(
+                resourceProvider.getString(
+                        string.stats_for,
+                        statsDateFormatter.printGranularDate(
+                                domainModel,
+                                statsGranularity
                         )
                 )
         )
