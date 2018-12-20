@@ -354,7 +354,7 @@ sealed class BlockListItemViewHolder(
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
-            divider.setVisible(header.showDivider)
+            divider.setVisible(header.showDivider && !expandableItem.isExpanded)
 
             if (expandChanged) {
                 val rotationAngle = if (expandButton.rotation == 0F) 180 else 0
