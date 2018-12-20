@@ -199,7 +199,9 @@ class NotificationRestClient constructor(
      */
     fun markNotificationRead(notification: NotificationModel) {
         val url = WPCOMREST.notifications.read.urlV1_1
-        val params = mapOf("counts[${notification.remoteNoteId}]" to "9999") // Just like WPAndroid
+        // "9999" Ensures the "read" count of the notification is decremented enough so the notification
+        // is marked read across all devices (just like WPAndroid)
+        val params = mapOf("counts[${notification.remoteNoteId}]" to "9999")
         val request = WPComGsonRequest.buildFormPostRequest(url, params, NotificationReadApiResponse::class.java,
                 { response: NotificationReadApiResponse ->
                     val payload = MarkNotificationReadResponsePayload(notification, response.success)
