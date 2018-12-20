@@ -400,7 +400,7 @@ sealed class BlockListItemViewHolder(
                         " [" +
                         " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
                         " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
-                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: true};" +
+                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: false};" +
                         " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                         " chart.draw(data, options);" +
                         " }" +
