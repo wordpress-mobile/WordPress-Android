@@ -59,7 +59,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
 
-    private val _preloadPreview: SingleLiveEvent<String> = SingleLiveEvent()
+    private val _preloadPreview: MutableLiveData<String> = MutableLiveData()
     val preloadPreview: LiveData<String> = _preloadPreview
 
     private val _startCreateSiteService: SingleLiveEvent<SitePreviewStartServiceData> = SingleLiveEvent()
@@ -193,25 +193,31 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
-        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
-        val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
-        val domainIndices: Pair<Int, Int> = Pair(
-                Math.min(subDomainIndices.second, urlWithoutScheme.length),
-                urlWithoutScheme.length
-        )
-
-        updateUiState(
-                SitePreviewContentUiState(
-                        SitePreviewData(
-                                fullUrl,
-                                urlWithoutScheme,
-                                subDomainIndices,
-                                domainIndices
-                        )
-                )
-        )
         _hideGetStartedBar.call()
+        /**
+         * Update the ui state if the loading or error screen is being shown.
+         * In other words don't update it after a configuration change.
+         */
+        if (uiState.value !is SitePreviewContentUiState) {
+            val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
+            val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
+            val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
+            val domainIndices: Pair<Int, Int> = Pair(
+                    Math.min(subDomainIndices.second, urlWithoutScheme.length),
+                    urlWithoutScheme.length
+            )
+
+            updateUiState(
+                    SitePreviewContentUiState(
+                            SitePreviewData(
+                                    fullUrl,
+                                    urlWithoutScheme,
+                                    subDomainIndices,
+                                    domainIndices
+                            )
+                    )
+            )
+        }
     }
 
     private fun updateUiState(uiState: SitePreviewUiState) {
