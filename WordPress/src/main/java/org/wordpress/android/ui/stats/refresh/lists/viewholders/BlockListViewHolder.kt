@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.viewholders
 
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
@@ -22,7 +21,7 @@ class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : B
     override fun bind(item: BlockList) {
         super.bind(item)
         if (item.statsTypes == DATE) {
-            container.setCardBackgroundColor(Color.TRANSPARENT)
+            container.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.transparent))
             container.cardElevation = 0F
         } else {
             container.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.white))

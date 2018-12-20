@@ -72,7 +72,7 @@ constructor(
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         val selectedDate = uiState.selectedDate ?: domainModel.dates.lastOrNull()?.period
-        if (uiState.selectedDate == null && selectedDate != null) {
+        if (selectedDateProvider.getSelectedDate(statsGranularity) == null && selectedDate != null) {
             selectedDateProvider.selectDate(
                     statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
                     statsGranularity
