@@ -162,9 +162,7 @@ class StatsListFragment : DaggerFragment() {
 
         viewModel.navigationTarget.observeEvent(this) {
             when (it) {
-                is AddNewPost -> {
-                    ActivityLauncher.addNewPostForResult(activity, site, false)
-                }
+                is AddNewPost -> ActivityLauncher.addNewPostForResult(activity, site, false)
                 is ViewPost -> {
                     StatsUtils.openPostInReaderOrInAppWebview(
                             activity,

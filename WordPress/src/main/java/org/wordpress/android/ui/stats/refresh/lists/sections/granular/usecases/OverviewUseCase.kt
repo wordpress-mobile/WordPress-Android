@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,7 +28,8 @@ constructor(
     private val selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val overviewMapper: OverviewMapper,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(Title(text = statsDateFormatter.printDate(selectedDateProvider.getCurrentDate())))
@@ -76,6 +79,7 @@ constructor(
     }
 
     private fun onBarSelected(period: String?) {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART)
         updateUiState { previousState -> previousState.copy(selectedDate = period) }
         period?.let {
             selectedDateProvider.selectDate(
@@ -86,6 +90,7 @@ constructor(
     }
 
     private fun onColumnSelected(position: Int) {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_OVERVIEW_TYPE)
         updateUiState { previousState -> previousState.copy(selectedPosition = position) }
     }
 
@@ -100,7 +105,8 @@ constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val statsDateFormatter: StatsDateFormatter,
         private val overviewMapper: OverviewMapper,
-        private val visitsAndViewsStore: VisitsAndViewsStore
+        private val visitsAndViewsStore: VisitsAndViewsStore,
+        private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 OverviewUseCase(
@@ -109,7 +115,8 @@ constructor(
                         selectedDateProvider,
                         statsDateFormatter,
                         overviewMapper,
-                        mainDispatcher
+                        mainDispatcher,
+                        analyticsTracker
                 )
     }
 }

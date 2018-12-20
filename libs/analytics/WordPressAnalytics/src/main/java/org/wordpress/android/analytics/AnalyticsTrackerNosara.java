@@ -901,6 +901,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:
                 return "stats_bar_chart_tapped";
+            case STATS_TAPPED_OVERVIEW_TYPE:
+                return "stats_tapped_overview_type";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
             case STATS_WIDGET_ADDED:
