@@ -10,7 +10,7 @@ data class NotificationModel(
     var localSiteId: Int = 0,
     val noteHash: Long = 0L,
     val type: Kind = NotificationModel.Kind.UNKNOWN,
-    val subtype: Subkind? = null,
+    val subtype: Subkind? = NotificationModel.Subkind.NONE,
     var read: Boolean = false,
     val icon: String? = null,
     val noticon: String? = null,
@@ -45,12 +45,19 @@ data class NotificationModel(
     enum class Subkind {
         STORE_REVIEW,
         REWIND_BACKUP_INITIAL,
-        UNKNOWN;
+        UNKNOWN,
+        NONE;
 
         companion object {
             private val reverseMap = Subkind.values().associateBy(
                     Subkind::name)
-            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
+            fun fromString(type: String): Subkind {
+                return if (type.isEmpty()){
+                    NONE
+                } else {
+                    reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
+                }
+            }
         }
     }
 
