@@ -104,34 +104,20 @@ fun BarChart.draw(
     setScaleEnabled(false)
     legend.isEnabled = false
     setDrawBorders(false)
-    var highlightedItem = item.selectedItem
-
-    var index = cut.size - 1
-    if (item.selectedItem != null) {
-        index = cut.indexOfFirst { it.id == item.selectedItem }
-        if (index >= 0) {
-            highlightColumn(index)
-        } else {
-            highlightValue(null, false)
-        }
-    }
 
     val isClickable = item.onBarSelected != null
     if (isClickable) {
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
-                highlightColumn(index)
+                item.selectedItem
+                highlightColumn(cut.indexOfFirst { it.id == item.selectedItem })
+                item.onBarSelected?.invoke(item.selectedItem)
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {
                 val value = (e as? BarEntry)?.data as? String
-                if (highlightedItem != null && highlightedItem == value) {
-                    onNothingSelected()
-                } else {
-                    highlightColumn(e.x.toInt())
-                    item.onBarSelected?.invoke(value)
-                }
-                highlightedItem = null
+                highlightColumn(e.x.toInt())
+                item.onBarSelected?.invoke(value)
             }
         })
     } else {
@@ -143,6 +129,15 @@ fun BarChart.draw(
     val description = Description()
     description.text = ""
     this.description = description
+
+    if (item.selectedItem != null) {
+        val index = cut.indexOfFirst { it.id == item.selectedItem }
+        if (index >= 0) {
+            highlightColumn(index)
+        } else {
+            highlightValue(null, false)
+        }
+    }
     invalidate()
 }
 

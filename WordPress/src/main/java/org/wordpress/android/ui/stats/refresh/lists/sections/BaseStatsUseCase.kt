@@ -91,7 +91,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
      * @param newState
      */
     fun onUiState(newState: UI_STATE?) {
-        uiState.value = newState
+        uiState.value = newState ?: uiState.value
     }
 
     /**

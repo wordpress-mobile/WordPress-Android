@@ -88,24 +88,28 @@ constructor(
                         statsGranularity
                 )
         )
-        items.add(overviewMapper.buildChart(
-                domainModel,
-                statsGranularity,
-                this::onBarSelected,
-                uiState.selectedPosition,
-                selectedDate
-        ))
+        items.add(
+                overviewMapper.buildChart(
+                        domainModel,
+                        statsGranularity,
+                        this::onBarSelected,
+                        uiState.selectedPosition,
+                        selectedDate
+                )
+        )
         items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         return items
     }
 
     private fun onBarSelected(period: String?) {
-        updateUiState { previousState -> previousState.copy(selectedDate = period) }
-        period?.let {
+        if (period != null) {
+            updateUiState { previousState -> previousState.copy(selectedDate = period) }
             selectedDateProvider.selectDate(
                     statsDateFormatter.parseStatsDate(statsGranularity, period),
                     statsGranularity
             )
+        } else {
+            onUiState(null)
         }
     }
 
