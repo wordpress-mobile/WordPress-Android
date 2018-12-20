@@ -52,7 +52,7 @@ data class NotificationModel(
             private val reverseMap = Subkind.values().associateBy(
                     Subkind::name)
             fun fromString(type: String): Subkind {
-                return if (type.isEmpty()){
+                return if (type.isEmpty()) {
                     NONE
                 } else {
                     reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
