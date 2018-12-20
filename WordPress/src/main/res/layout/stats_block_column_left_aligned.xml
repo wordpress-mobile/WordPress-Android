@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/value"
-        style="@style/StatsBlockColumnValue"
+        style="@style/StatsBlockColumnSmallValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="10"/>
