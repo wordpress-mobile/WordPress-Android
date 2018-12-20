@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.isNull
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.Dispatchers
 import org.assertj.core.api.Assertions
@@ -58,7 +57,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
-        whenever(overviewMapper.buildTitle(any(), isNull(), any(), any())).thenReturn(title)
+        whenever(overviewMapper.buildTitle(any(), any(), any(), any())).thenReturn(title)
         whenever(overviewMapper.buildChart(any(), any(), any(), any(), any())).thenReturn(barChartItem)
         whenever(overviewMapper.buildColumns(any(), any(), any())).thenReturn(columns)
     }
