@@ -23,7 +23,7 @@ import org.wordpress.android.test
 
 private val DUMMY_SITE_DATA: NewSiteCreationServiceData = NewSiteCreationServiceData(
         123,
-        999,
+        "m1p2",
         "title",
         "tagLine",
         "slug"
@@ -66,7 +66,7 @@ class CreateSiteUseCaseTest {
         assertThat(captor.value.type).isEqualTo(SiteAction.CREATE_NEW_SITE)
         assertThat(captor.value.payload).isInstanceOf(NewSitePayload::class.java)
         val payload = captor.value.payload as NewSitePayload
-        assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.siteSlug)
+        assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
         assertThat(payload.siteTitle).isEqualTo(DUMMY_SITE_DATA.siteTitle)
         // TODO uncomment when the API is ready
 //        assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)

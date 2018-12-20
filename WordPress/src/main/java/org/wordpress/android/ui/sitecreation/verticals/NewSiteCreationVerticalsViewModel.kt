@@ -85,6 +85,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         super.onCleared()
         dispatcher.unregister(fetchVerticalsUseCase)
         dispatcher.unregister(fetchSegmentPromptUseCase)
+        job.cancel()
     }
 
     fun start(segmentId: Long) {

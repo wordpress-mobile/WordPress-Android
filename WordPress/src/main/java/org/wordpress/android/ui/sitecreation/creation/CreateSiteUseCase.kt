@@ -33,7 +33,7 @@ class CreateSiteUseCase @Inject constructor(
         }
         return suspendCoroutine { cont ->
             val newSitePayload = NewSitePayload(
-                    siteData.siteSlug,
+                    siteData.domain,
                     siteData.siteTitle ?: "",
                     languageWordPressId,
                     siteVisibility,

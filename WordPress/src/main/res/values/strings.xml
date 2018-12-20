@@ -2394,4 +2394,5 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+    <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
 </resources>

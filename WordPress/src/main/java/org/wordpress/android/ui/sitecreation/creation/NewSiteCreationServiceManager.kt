@@ -90,7 +90,7 @@ class NewSiteCreationServiceManager @Inject constructor(
     private fun createSite() {
         launch {
             serviceListener.logInfo(
-                    "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.siteSlug}"
+                    "Dispatching Create Site Action, title: ${siteData.siteTitle}, SiteName: ${siteData.domain}"
             )
             val createSiteEvent: OnNewSiteCreated
             try {
