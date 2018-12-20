@@ -197,10 +197,10 @@ private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataS
     dataSet.isHighlightEnabled = true
     dataSet.highLightColor = ContextCompat.getColor(
             context,
-            color.orange_highlight
+            color.orange_active
     )
     dataSet.setDrawValues(false)
-    dataSet.highLightAlpha = 255
+    dataSet.highLightAlpha = 51
     return dataSet
 }
 
