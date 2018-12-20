@@ -82,6 +82,12 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
                 wrapInBaseListener(errorListener));
     }
 
+    public static <T> WPComGsonRequest<T> buildFormPostRequest(String url, Map<String, String> params, Type type,
+                                                           Listener<T> listener, WPComErrorListener errorListener) {
+        return new WPComGsonRequest<>(Method.POST, url, params, null, null, type, listener,
+                wrapInBaseListener(errorListener));
+    }
+
     private static BaseErrorListener wrapInBaseListener(final WPComErrorListener wpComErrorListener) {
         return new BaseErrorListener() {
             @Override

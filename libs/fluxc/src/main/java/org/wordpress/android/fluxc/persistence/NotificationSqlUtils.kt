@@ -78,7 +78,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
-        return emptyList()
     }
 
     @SuppressLint("WrongConstant")
@@ -114,7 +113,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
-        return emptyList()
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
