@@ -319,12 +319,12 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun createWebViewContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlidInFromBottomAnimator(webviewContainer, contentHeight)
+            createSlideInFromBottomAnimator(webviewContainer, contentHeight)
 
     private fun createOkButtonContainerAnimator(contentHeight: Float): ObjectAnimator =
-            createSlidInFromBottomAnimator(sitePreviewOkButtonContainer, contentHeight)
+            createSlideInFromBottomAnimator(sitePreviewOkButtonContainer, contentHeight)
 
-    private fun createSlidInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
+    private fun createSlideInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
         return ObjectAnimator.ofFloat(
                 view,
                 "translationY",
