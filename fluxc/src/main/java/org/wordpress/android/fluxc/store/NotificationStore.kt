@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATION
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATION_READ
 import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.notification.NotificationModel
@@ -117,6 +118,17 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
+    class MarkNotificationReadPayload(
+        val notification: NotificationModel
+    ) : Payload<BaseNetworkError>()
+
+    class MarkNotificationReadResponsePayload(
+        val notification: NotificationModel? = null,
+        val success: Boolean = false
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
     class NotificationError(val type: NotificationErrorType, val message: String = "") : OnChangedError
 
     enum class NotificationErrorType {
@@ -154,6 +166,8 @@ constructor(
             NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
+            NotificationAction.MARK_NOTIFICATION_READ ->
+                markNotificationRead(action.payload as MarkNotificationReadPayload)
 
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
@@ -166,6 +180,8 @@ constructor(
                 handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
+            NotificationAction.MARKED_NOTIFICATION_READ ->
+                handleMarkedNotificationRead(action.payload as MarkNotificationReadResponsePayload)
 
             // local actions
             NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
@@ -222,6 +238,12 @@ constructor(
      */
     fun getNotificationByRemoteId(remoteNoteId: Long) =
             notificationSqlUtils.getNotificationByRemoteId(remoteNoteId)
+
+    /**
+     * Fetch a notification from the database by it's local notification id.
+     */
+    fun getNotificationByLocalId(noteId: Int) =
+            notificationSqlUtils.getNotificationByIdSet(NoteIdSet(noteId, 0, 0))
 
     private fun registerDevice(payload: RegisterDevicePayload) {
         val uuid = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null) ?: generateAndStoreUUID()
@@ -354,7 +376,39 @@ constructor(
         }.apply {
             causeOfChange = MARK_NOTIFICATIONS_SEEN
         }
+        emitChange(onNotificationChanged)
+    }
 
+    private fun markNotificationRead(payload: MarkNotificationReadPayload) {
+        notificationRestClient.markNotificationRead(payload.notification)
+    }
+
+    private fun handleMarkedNotificationRead(payload: MarkNotificationReadResponsePayload) {
+        // Update the notification in the database
+        var rowsAffected = 0
+        if (payload.success) {
+            payload.notification?.let {
+                it.read = true // Just in case it wasn't set by the calling client
+                rowsAffected = notificationSqlUtils.insertOrUpdateNotification(it)
+            }
+        }
+
+        // Create and dispatch result
+        val onNotificationChanged = if (payload.isError) {
+            OnNotificationChanged(rowsAffected).apply {
+                error = payload.error
+                success = false
+            }
+        } else {
+            OnNotificationChanged(rowsAffected).apply {
+                success = true
+            }
+        }.apply {
+            payload.notification?.let {
+                changedNotificationLocalIds.add(it.noteId)
+            }
+            causeOfChange = MARK_NOTIFICATION_READ
+        }
         emitChange(onNotificationChanged)
     }
 
