@@ -376,21 +376,22 @@ constructor(
 
     private fun handleMarkedNotificationRead(payload: MarkNotificationReadResponsePayload) {
         // Update the notification in the database
+        var rowsAffected = 0
         if (payload.success) {
             payload.notification?.let {
                 it.read = true // Just in case it wasn't set by the calling client
-                notificationSqlUtils.insertOrUpdateNotification(it)
+                rowsAffected = notificationSqlUtils.insertOrUpdateNotification(it)
             }
         }
 
         // Create and dispatch result
         val onNotificationChanged = if (payload.isError) {
-            OnNotificationChanged(0).apply {
+            OnNotificationChanged(rowsAffected).apply {
                 error = payload.error
                 success = false
             }
         } else {
-            OnNotificationChanged(1).apply {
+            OnNotificationChanged(rowsAffected).apply {
                 success = true
             }
         }.apply {
