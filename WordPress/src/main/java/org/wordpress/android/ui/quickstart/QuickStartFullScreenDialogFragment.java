@@ -129,6 +129,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
 
     @Override
     public void onSkipTaskTapped(QuickStartTask task) {
+        // TODO: Quick Start - Add analytics for skipping task.
         mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
         if (mQuickStartAdapter != null) {
             int site = AppPrefs.getSelectedSite();

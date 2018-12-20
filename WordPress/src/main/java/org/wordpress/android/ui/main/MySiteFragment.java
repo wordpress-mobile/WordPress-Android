@@ -983,6 +983,7 @@ public class MySiteFragment extends Fragment implements
                 // TODO: Quick Start - Add analytics for migration dialog positive tapped.
                 break;
             case TAG_REMOVE_NEXT_STEPS_DIALOG:
+                // TODO: Quick Start - Add analytics for remove next steps dialog positive tapped.
                 skipQuickStart();
                 updateQuickStartContainer();
                 clearActiveQuickStart();
