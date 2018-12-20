@@ -12,25 +12,25 @@ import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 
 /**
- * Transforms OnWPComSiteFetched EventBus event to a coroutine.
+ * Transforms FETCH_SITE -> UPDATE_SITE fluxC request-response pair to a coroutine.
  */
-class FetchSiteUseCase @Inject constructor(
+class FetchWpComSiteUseCase @Inject constructor(
     private val dispatcher: Dispatcher,
     @Suppress("unused") private val siteStore: SiteStore
 ) {
     private var continuation: Continuation<OnSiteChanged>? = null
 
-    suspend fun fetchSite(siteId: Long, isWpCom: Boolean): OnSiteChanged {
+    suspend fun fetchSite(siteId: Long): OnSiteChanged {
         return suspendCoroutine { cont ->
             continuation = cont
-            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(createWpComSiteModel(siteId, isWpCom)))
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(createSiteModel(siteId)))
         }
     }
 
-    private fun createWpComSiteModel(siteId: Long, isWpCom: Boolean): SiteModel {
+    private fun createSiteModel(siteId: Long): SiteModel {
         val siteModel = SiteModel()
         siteModel.siteId = siteId
-        siteModel.setIsWPCom(isWpCom)
+        siteModel.setIsWPCom(true)
         return siteModel
     }
 

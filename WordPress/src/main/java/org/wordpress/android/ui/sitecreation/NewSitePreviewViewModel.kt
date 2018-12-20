@@ -19,7 +19,7 @@ import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreview
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
-import org.wordpress.android.ui.sitecreation.creation.FetchSiteUseCase
+import org.wordpress.android.ui.sitecreation.creation.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState.NewSiteCreationStep.CREATE_SITE
@@ -40,7 +40,7 @@ private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val siteStore: SiteStore,
-    private val fetchSiteUseCase: FetchSiteUseCase,
+    private val fetchWpComSiteUseCase: FetchWpComSiteUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
     @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
@@ -78,12 +78,12 @@ class NewSitePreviewViewModel @Inject constructor(
     val onOkButtonClicked: LiveData<Int?> = _onOkButtonClicked
 
     init {
-        dispatcher.register(fetchSiteUseCase)
+        dispatcher.register(fetchWpComSiteUseCase)
     }
 
     override fun onCleared() {
         super.onCleared()
-        dispatcher.unregister(fetchSiteUseCase)
+        dispatcher.unregister(fetchWpComSiteUseCase)
         job.cancel()
     }
 
@@ -164,7 +164,7 @@ class NewSitePreviewViewModel @Inject constructor(
             IDLE, CREATE_SITE -> {
             } // do nothing
             SUCCESS -> {
-                startPreloadingWebView()
+                startPreLoadingWebView()
                 fetchNewlyCreatedSiteModel(event.payload as Long)
             }
             FAILURE -> {
@@ -180,7 +180,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private fun fetchNewlyCreatedSiteModel(remoteSiteId: Long) {
         launch {
             repeat(FETCH_SITE_NUMBER_OF_RETRIES) { attemptNumber ->
-                val onSiteFetched = fetchSiteUseCase.fetchSite(remoteSiteId, isWpCom = true)
+                val onSiteFetched = fetchWpComSiteUseCase.fetchSite(remoteSiteId)
                 if (!onSiteFetched.isError) {
                     val siteBySiteId = siteStore.getSiteBySiteId(remoteSiteId)
                     if (siteBySiteId != null) {
@@ -195,7 +195,7 @@ class NewSitePreviewViewModel @Inject constructor(
         }
     }
 
-    private fun startPreloadingWebView() {
+    private fun startPreLoadingWebView() {
         _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
     }
 
