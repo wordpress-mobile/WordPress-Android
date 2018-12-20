@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.store.stats.time.VideoPlaysStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewVideoPlays
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -18,10 +17,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -29,30 +30,30 @@ private const val PAGE_SIZE = 6
 
 class VideoPlaysUseCase
 constructor(
-    private val statsGranularity: StatsGranularity,
+    statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: VideoPlaysStore,
-    private val selectedDateProvider: SelectedDateProvider,
+    selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
-) : StatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher) {
+) : GranularStatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
 
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
         val dbModel = store.getVideoPlays(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
-                selectedDateProvider.getSelectedDate(statsGranularity)
+                selectedDate
         )
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
         val response = store.fetchVideoPlays(
                 site,
                 PAGE_SIZE,
                 statsGranularity,
-                selectedDateProvider.getSelectedDate(statsGranularity),
+                selectedDate,
                 forced
         )
         val model = response.model

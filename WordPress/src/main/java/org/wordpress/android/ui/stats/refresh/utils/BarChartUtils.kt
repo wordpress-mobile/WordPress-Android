@@ -110,9 +110,8 @@ fun BarChart.draw(
     if (isClickable) {
         setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
-                item.onBarSelected?.invoke(null)
-                highlightValue(null, false)
-                highlightedItem = null
+//                highlightValue(null, false)
+//                highlightedItem = null
             }
 
             override fun onValueSelected(e: Entry, h: Highlight) {

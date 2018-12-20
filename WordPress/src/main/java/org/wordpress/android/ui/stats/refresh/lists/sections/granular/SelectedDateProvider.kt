@@ -14,11 +14,11 @@ import javax.inject.Singleton
 @Singleton
 class SelectedDateProvider
 @Inject constructor() {
-    private val mutableDates = mutableMapOf(
-            DAYS to Date(),
-            WEEKS to Date(),
-            MONTHS to Date(),
-            YEARS to Date()
+    private val mutableDates = mutableMapOf<StatsGranularity, Date?>(
+            DAYS to null,
+            WEEKS to null,
+            MONTHS to null,
+            YEARS to null
     )
 
     private val mutableSelectedDateChanged = MutableLiveData<StatsGranularity>()
@@ -29,6 +29,6 @@ class SelectedDateProvider
         mutableSelectedDateChanged.value = statsGranularity
     }
 
-    fun getSelectedDate(statsGranularity: StatsGranularity) = mutableDates[statsGranularity] ?: Date()
+    fun getSelectedDate(statsGranularity: StatsGranularity) = mutableDates[statsGranularity]
     fun getCurrentDate() = Date()
 }

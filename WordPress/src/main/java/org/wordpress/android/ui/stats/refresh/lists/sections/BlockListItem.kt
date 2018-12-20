@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
@@ -91,10 +92,13 @@ sealed class BlockListItem(val type: Type) {
         val headers: List<Int>,
         val values: List<String>,
         val selectedColumn: Int? = null,
+        val alignment: Alignment = CENTER,
         val onColumnSelected: ((position: Int) -> Unit)? = null
     ) : BlockListItem(COLUMNS) {
         override val itemId: Int
             get() = headers.hashCode()
+
+        enum class Alignment { CENTER, LEFT }
     }
 
     data class Link(

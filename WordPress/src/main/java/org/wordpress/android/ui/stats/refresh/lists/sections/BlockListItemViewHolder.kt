@@ -38,11 +38,14 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.layout
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.LEFT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -214,6 +217,10 @@ sealed class BlockListItemViewHolder(
             val inflater = LayoutInflater.from(itemView.context)
             val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
             val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
+            val layout = when (columns.alignment) {
+                CENTER -> layout.stats_block_column_centered
+                LEFT -> R.layout.stats_block_column_left_aligned
+            }
             when {
                 tabSelected -> {
                     for (index in 0 until columnContainer.childCount) {
@@ -234,7 +241,7 @@ sealed class BlockListItemViewHolder(
                 else -> {
                     columnContainer.removeAllViewsInLayout()
                     for (index in 0 until columns.headers.size) {
-                        val item = inflater.inflate(R.layout.stats_block_column, columnContainer, false)
+                        val item = inflater.inflate(layout, columnContainer, false)
                         columnContainer.addView(
                                 item,
                                 LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1F)
@@ -420,21 +427,21 @@ sealed class BlockListItemViewHolder(
                     webView.layoutParams = params
                     itemView.layoutParams = wrapperParams
 
-                webView.webViewClient = object : WebViewClient() {
-                    override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError
-                    ) {
-                        super.onReceivedError(view, request, error)
-                        itemView.visibility = View.GONE
-                    }
+                    webView.webViewClient = object : WebViewClient() {
+                        override fun onReceivedError(
+                            view: WebView?,
+                            request: WebResourceRequest?,
+                            error: WebResourceError
+                        ) {
+                            super.onReceivedError(view, request, error)
+                            itemView.visibility = View.GONE
+                        }
 
-                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                        super.onReceivedSslError(view, handler, error)
-                        itemView.visibility = View.GONE
+                        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                            super.onReceivedSslError(view, handler, error)
+                            itemView.visibility = View.GONE
+                        }
                     }
-                }
                     webView.settings.javaScriptEnabled = true
                     webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     webView.loadData(htmlPage, "text/html", "UTF-8")

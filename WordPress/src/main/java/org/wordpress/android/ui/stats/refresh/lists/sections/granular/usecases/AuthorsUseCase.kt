@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.store.stats.time.AuthorsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewAuthors
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewUrl
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
@@ -22,11 +21,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.AVATAR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -34,30 +35,36 @@ private const val PAGE_SIZE = 6
 
 class AuthorsUseCase
 constructor(
-    private val statsGranularity: StatsGranularity,
+    statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
-    private val selectedDateProvider: SelectedDateProvider,
+    selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter
-) : StatefulUseCase<AuthorsModel, SelectedAuthor>(AUTHORS, mainDispatcher, SelectedAuthor()) {
+) : GranularStatefulUseCase<AuthorsModel, SelectedAuthor>(
+        AUTHORS,
+        mainDispatcher,
+        selectedDateProvider,
+        statsGranularity,
+        SelectedAuthor()
+) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
 
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
         val dbModel = authorsStore.getAuthors(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
-                selectedDateProvider.getSelectedDate(statsGranularity)
+                selectedDate
         )
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
         val response = authorsStore.fetchAuthors(
                 site,
                 PAGE_SIZE,
                 statsGranularity,
-                selectedDateProvider.getSelectedDate(statsGranularity),
+                selectedDate,
                 forced
         )
         val model = response.model
