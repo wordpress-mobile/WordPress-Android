@@ -75,6 +75,10 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
         updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
+    fun requestFocus() {
+        searchInput.requestFocus()
+    }
+
     private fun updateVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }

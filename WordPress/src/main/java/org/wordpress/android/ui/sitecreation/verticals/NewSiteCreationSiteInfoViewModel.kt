@@ -5,14 +5,28 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
+import kotlinx.coroutines.experimental.CoroutineScope
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
+import org.wordpress.android.modules.IO_DISPATCHER
+import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.NEXT
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState.SkipNextButtonState.SKIP
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
 
-class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
+private const val REQUEST_INPUT_FOCUS_DELAY: Int = 500
+
+class NewSiteCreationSiteInfoViewModel @Inject constructor(
+    @Named(IO_DISPATCHER) private val IO: CoroutineContext,
+    @Named(MAIN_DISPATCHER) private val MAIN: CoroutineContext
+) : ViewModel(), CoroutineScope {
     private var currentUiState: SiteInfoUiState by Delegates.observable(
             SiteInfoUiState(
                     siteTitle = "",
@@ -22,8 +36,16 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
         _uiState.value = newValue
     }
 
+    private val job = Job()
+    override val coroutineContext: CoroutineContext
+        get() = IO + job
+    private var isStarted = false
+
     private val _uiState: MutableLiveData<SiteInfoUiState> = MutableLiveData()
     val uiState: LiveData<SiteInfoUiState> = _uiState
+
+    private val _onTitleInputFocusRequested = SingleLiveEvent<Unit>()
+    val onTitleInputFocusRequested: LiveData<Unit> = _onTitleInputFocusRequested
 
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
@@ -36,6 +58,14 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
 
     init {
         _uiState.value = currentUiState
+    }
+
+    fun start() {
+        if (isStarted) {
+            return
+        }
+        isStarted = true
+        requestTitleInputFocus()
     }
 
     fun onHelpClicked() {
@@ -58,6 +88,15 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor() : ViewModel() {
         when (currentUiState.skipButtonState) {
             SKIP -> _skipBtnClicked.call()
             NEXT -> _nextBtnClicked.value = currentUiState
+        }
+    }
+
+    private fun requestTitleInputFocus() {
+        launch(IO) {
+            delay(REQUEST_INPUT_FOCUS_DELAY)
+            withContext(MAIN) {
+                _onTitleInputFocusRequested.call()
+            }
         }
     }
 
