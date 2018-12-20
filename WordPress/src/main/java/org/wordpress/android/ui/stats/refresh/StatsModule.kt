@@ -13,14 +13,15 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ClicksUseCase.ClicksUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.CountryViewsUseCase.CountryViewsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.AuthorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.DateUseCase.DateUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.OverviewUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.PostsAndPagesUseCase.PostsAndPagesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.ReferrersUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.SearchTermsUseCase.SearchTermsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.OverviewUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.VideoPlaysUseCase.VideoPlaysUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AllTimeStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase
@@ -90,7 +91,8 @@ class StatsModule {
         videoPlaysUseCaseFactory: VideoPlaysUseCaseFactory,
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory,
-        overviewUseCaseFactory: OverviewUseCaseFactory
+        overviewUseCaseFactory: OverviewUseCaseFactory,
+        dateUseCaseFactory: DateUseCaseFactory
     ): List<@JvmSuppressWildcards UseCaseFactory> {
         return listOf(
                 postsAndPagesUseCaseFactory,
@@ -100,7 +102,8 @@ class StatsModule {
                 videoPlaysUseCaseFactory,
                 searchTermsUseCaseFactory,
                 authorsUseCaseFactory,
-                overviewUseCaseFactory
+                overviewUseCaseFactory,
+                dateUseCaseFactory
         )
     }
 

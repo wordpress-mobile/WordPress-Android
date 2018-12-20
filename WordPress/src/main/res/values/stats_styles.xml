@@ -100,6 +100,9 @@
 
     <style name="StatsBlock">
         <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="StatsLoadingBlock" parent="StatsBlock">
         <item name="android:minHeight">96dp</item>
     </style>
 
@@ -125,6 +128,11 @@
 
     <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockBackground" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_10</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
