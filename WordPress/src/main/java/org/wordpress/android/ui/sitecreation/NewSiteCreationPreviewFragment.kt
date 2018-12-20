@@ -37,7 +37,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
      * We need to connect to the service, so the service knows when the app is in the background. The service
      * automatically shows system notifications when site creation is in progress and the app is in the background.
      */
-    private var mServiceEventConnection: ServiceEventConnection? = null
+    private var serviceEventConnection: ServiceEventConnection? = null
 
     private lateinit var viewModel: NewSitePreviewViewModel
 
@@ -66,12 +66,12 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     override fun onResume() {
         super.onResume()
-        mServiceEventConnection = ServiceEventConnection(activity!!, NewSiteCreationService::class.java, viewModel)
+        serviceEventConnection = ServiceEventConnection(context, NewSiteCreationService::class.java, viewModel)
     }
 
     override fun onPause() {
         super.onPause()
-        mServiceEventConnection?.disconnect(context, viewModel)
+        serviceEventConnection?.disconnect(context, viewModel)
     }
 
     @LayoutRes
