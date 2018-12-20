@@ -94,8 +94,7 @@ class NewSitePreviewViewModel @Inject constructor(
         }
         isStarted = true
         this.siteCreationState = siteCreationState
-        requireNotNull(siteCreationState.domain)
-        urlWithoutScheme = siteCreationState.domain!!
+        urlWithoutScheme = requireNotNull(siteCreationState.domain)
 
         updateUiState(SitePreviewFullscreenProgressUiState)
         startCreateSiteService()
@@ -181,12 +180,10 @@ class NewSitePreviewViewModel @Inject constructor(
             repeat(FETCH_SITE_NUMBER_OF_RETRIES) { attemptNumber ->
                 val onSiteFetched = fetchWpComSiteUseCase.fetchSite(remoteSiteId)
                 if (!onSiteFetched.isError) {
-                    val siteBySiteId = siteStore.getSiteBySiteId(remoteSiteId)
-                    if (siteBySiteId != null) {
-                        createSiteState = CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
-                    } else {
-                        throw IllegalStateException("Site successfully fetched but has not been found in the local db.")
+                    val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
+                        "Site successfully fetched but has not been found in the local db."
                     }
+                    createSiteState = CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
                     return@launch
                 }
                 delay((attemptNumber + 1) * FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS) // +1 -> starts from 0
