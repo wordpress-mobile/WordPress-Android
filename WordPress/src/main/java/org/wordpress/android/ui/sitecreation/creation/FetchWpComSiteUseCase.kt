@@ -13,6 +13,7 @@ import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.suspendCoroutine
 
 private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
+private const val DEFAULT_NUMBER_OF_RETRIES = 3
 
 /**
  * Transforms FETCH_SITE -> UPDATE_SITE fluxC request-response pair to a coroutine.
@@ -23,7 +24,10 @@ class FetchWpComSiteUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<OnSiteChanged>? = null
 
-    suspend fun fetchSite(remoteSiteId: Long, numberOfRetries: Int): OnSiteChanged {
+    suspend fun fetchSiteWithRetry(
+        remoteSiteId: Long,
+        numberOfRetries: Int = DEFAULT_NUMBER_OF_RETRIES
+    ): OnSiteChanged {
         repeat(numberOfRetries) { attemptNumber ->
             val onSiteFetched = fetchSite(remoteSiteId)
             if (!onSiteFetched.isError) {

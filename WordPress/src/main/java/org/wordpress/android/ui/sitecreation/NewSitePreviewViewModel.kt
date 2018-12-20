@@ -176,7 +176,7 @@ class NewSitePreviewViewModel @Inject constructor(
      */
     private fun fetchNewlyCreatedSiteModel(remoteSiteId: Long) {
         launch {
-            val onSiteFetched = fetchWpComSiteUseCase.fetchSite(remoteSiteId, FETCH_SITE_NUMBER_OF_RETRIES)
+            val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId, FETCH_SITE_NUMBER_OF_RETRIES)
             createSiteState = if (!onSiteFetched.isError) {
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
