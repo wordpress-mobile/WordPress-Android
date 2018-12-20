@@ -66,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
@@ -400,9 +401,16 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                                 SuggestDomainError suggestDomainError =
                                         new SuggestDomainError(error.apiError, error.message);
-                                SuggestDomainsResponsePayload payload =
-                                        new SuggestDomainsResponsePayload(query, suggestDomainError);
-                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                if (suggestDomainError.type == SuggestDomainErrorType.EMPTY_RESULTS) {
+                                    // Empty results is not an actual error, the API should return 200 for it
+                                    SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
+                                            Collections.<DomainSuggestionResponse>emptyList());
+                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                } else {
+                                    SuggestDomainsResponsePayload payload =
+                                            new SuggestDomainsResponsePayload(query, suggestDomainError);
+                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                }
                             }
                         }
                 );
