@@ -2006,7 +2006,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         return GutenbergEditorFragment.newInstance("", "",
-                                AppPrefs.isAztecEditorToolbarExpanded());
+                                AppPrefs.isAztecEditorToolbarExpanded(), mIsNewPost);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
