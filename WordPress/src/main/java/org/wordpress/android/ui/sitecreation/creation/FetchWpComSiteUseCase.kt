@@ -40,11 +40,11 @@ class FetchWpComSiteUseCase @Inject constructor(
     private suspend fun fetchSite(siteId: Long): OnSiteChanged {
         return suspendCoroutine { cont ->
             continuation = cont
-            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(createSiteModel(siteId)))
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(createWpComSiteModel(siteId)))
         }
     }
 
-    private fun createSiteModel(siteId: Long): SiteModel {
+    private fun createWpComSiteModel(siteId: Long): SiteModel {
         val siteModel = SiteModel()
         siteModel.siteId = siteId
         siteModel.setIsWPCom(true)
