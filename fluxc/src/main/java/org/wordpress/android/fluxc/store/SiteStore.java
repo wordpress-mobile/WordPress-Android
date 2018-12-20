@@ -134,7 +134,7 @@ public class SiteStore extends Store {
             this.suggestions = new ArrayList<>();
         }
 
-        public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
+        public SuggestDomainsResponsePayload(@NonNull String query, List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
         }
@@ -679,6 +679,7 @@ public class SiteStore extends Store {
     }
 
     public enum SuggestDomainErrorType {
+        EMPTY_RESULTS,
         EMPTY_QUERY,
         INVALID_MINIMUM_QUANTITY,
         INVALID_MAXIMUM_QUANTITY,
