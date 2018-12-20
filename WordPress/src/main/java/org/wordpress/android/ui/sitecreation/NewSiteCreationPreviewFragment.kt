@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.sitecreation
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -13,9 +15,11 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.TextView
+import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -30,6 +34,7 @@ import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_site_creation_data"
+private const val SLIDE_IN_ANIMATION_DURATION = 450L
 
 class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>(),
         PageFullyLoadedListener {
@@ -97,15 +102,14 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 .get(NewSitePreviewViewModel::class.java)
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
-                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
-
                 when (uiState) {
                     is SitePreviewContentUiState -> updateContentLayout(uiState)
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
+                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
@@ -166,6 +170,10 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private fun updateContentLayout(uiState: SitePreviewContentUiState) {
         uiState.data.apply {
             sitePreviewWebUrlTitle.text = createSpannableUrl(activity!!, shortUrl, subDomainIndices, domainIndices)
+        }
+        // The view is about to become visible
+        if (contentLayout.visibility == View.GONE) {
+            animateContentTransition()
         }
     }
 
@@ -279,6 +287,54 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private fun updateVisibility(view: View, visible: Boolean) {
         view.visibility = if (visible) View.VISIBLE else View.GONE
     }
+
+    private fun animateContentTransition() {
+        contentLayout.addOnLayoutChangeListener(object : OnLayoutChangeListener {
+            override fun onLayoutChange(
+                v: View?,
+                left: Int,
+                top: Int,
+                right: Int,
+                bottom: Int,
+                oldLeft: Int,
+                oldTop: Int,
+                oldRight: Int,
+                oldBottom: Int
+            ) {
+                if (contentLayout.measuredWidth > 0 && contentLayout.measuredHeight > 0) {
+                    contentLayout.removeOnLayoutChangeListener(this)
+                    val contentHeight = contentLayout.measuredHeight.toFloat()
+
+                    val webViewAnim = createWebViewContainerAnimator(contentHeight)
+                    val okContainerAnim = createOkButtonContainerAnimator(contentHeight)
+                    val titleAnim = createTitleAnimator()
+                    AnimatorSet().apply {
+                        duration = SLIDE_IN_ANIMATION_DURATION
+                        playTogether(webViewAnim, okContainerAnim, titleAnim)
+                        start()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun createWebViewContainerAnimator(contentHeight: Float): ObjectAnimator =
+            createSlidInFromBottomAnimator(webviewContainer, contentHeight)
+
+    private fun createOkButtonContainerAnimator(contentHeight: Float): ObjectAnimator =
+            createSlidInFromBottomAnimator(sitePreviewOkButtonContainer, contentHeight)
+
+    private fun createSlidInFromBottomAnimator(view: View, contentHeight: Float): ObjectAnimator {
+        return ObjectAnimator.ofFloat(
+                view,
+                "translationY",
+                // start below the bottom edge of the display
+                (contentHeight - view.top),
+                0f
+        )
+    }
+
+    private fun createTitleAnimator() = ObjectAnimator.ofFloat(sitePreviewTitle, "alpha", 0f, 1f)
 
     companion object {
         const val TAG = "site_creation_preview_fragment_tag"
