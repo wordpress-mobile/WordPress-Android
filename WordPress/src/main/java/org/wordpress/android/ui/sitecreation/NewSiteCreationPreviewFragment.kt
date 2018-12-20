@@ -129,11 +129,15 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
         })
-        viewModel.onOkButtonClicked.observe(this, Observer { newSiteLocalId ->
-            sitePreviewScreenListener.onSitePreviewScreenDismissed(newSiteLocalId)
+        viewModel.onOkButtonClicked.observe(this, Observer { createSiteState ->
+            createSiteState?.let {
+                sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
+            }
         })
-        viewModel.onCancelWizardClicked.observe(this, Observer {
-            sitePreviewScreenListener.onSitePreviewScreenDismissed(null)
+        viewModel.onCancelWizardClicked.observe(this, Observer { createSiteState ->
+            createSiteState?.let {
+                sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
+            }
         })
 
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)

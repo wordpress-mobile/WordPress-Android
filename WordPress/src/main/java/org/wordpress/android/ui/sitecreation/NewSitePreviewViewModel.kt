@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
@@ -54,7 +55,7 @@ class NewSitePreviewViewModel @Inject constructor(
     private lateinit var urlWithoutScheme: String
     private var lastReceivedServiceState: NewSiteCreationServiceState? = null
     private var serviceStateForRetry: NewSiteCreationServiceState? = null
-    private var newlyCreatedSiteLocalId: Int? = null
+    private var createSiteState: CreateSiteState = CreateSiteState.SiteNotCreated
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -71,11 +72,11 @@ class NewSitePreviewViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
-    private val _onCancelWizardClicked = SingleLiveEvent<Unit>()
-    val onCancelWizardClicked: LiveData<Unit> = _onCancelWizardClicked
+    private val _onCancelWizardClicked = SingleLiveEvent<CreateSiteState>()
+    val onCancelWizardClicked: LiveData<CreateSiteState> = _onCancelWizardClicked
 
-    private val _onOkButtonClicked = SingleLiveEvent<Int?>()
-    val onOkButtonClicked: LiveData<Int?> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<CreateSiteState>()
+    val onOkButtonClicked: LiveData<CreateSiteState> = _onOkButtonClicked
 
     init {
         dispatcher.register(fetchWpComSiteUseCase)
@@ -127,15 +128,11 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     fun onCancelWizardClicked() {
-        _onCancelWizardClicked.call()
+        _onCancelWizardClicked.value = createSiteState
     }
 
     fun onOkButtonClicked() {
-        /**
-         * newlyCreatedSiteLocalId might be null if the fetchSite request failed or haven't finished yet.
-         * The observer should handle this accordingly.
-         */
-        _onOkButtonClicked.value = newlyCreatedSiteLocalId
+        _onOkButtonClicked.value = createSiteState
     }
 
     private fun showFullscreenErrorWithDelay() {
@@ -165,7 +162,9 @@ class NewSitePreviewViewModel @Inject constructor(
             } // do nothing
             SUCCESS -> {
                 startPreLoadingWebView()
-                fetchNewlyCreatedSiteModel(event.payload as Long)
+                val remoteSiteId = event.payload as Long
+                createSiteState = SiteNotInLocalDb(remoteSiteId)
+                fetchNewlyCreatedSiteModel(remoteSiteId)
             }
             FAILURE -> {
                 serviceStateForRetry = event.payload as NewSiteCreationServiceState
@@ -184,7 +183,7 @@ class NewSitePreviewViewModel @Inject constructor(
                 if (!onSiteFetched.isError) {
                     val siteBySiteId = siteStore.getSiteBySiteId(remoteSiteId)
                     if (siteBySiteId != null) {
-                        newlyCreatedSiteLocalId = siteBySiteId.id
+                        createSiteState = CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
                     } else {
                         throw IllegalStateException("Site successfully fetched but has not been found in the local db.")
                     }
@@ -282,4 +281,22 @@ class NewSitePreviewViewModel @Inject constructor(
         val serviceData: NewSiteCreationServiceData,
         val previousState: NewSiteCreationServiceState?
     )
+
+    sealed class CreateSiteState {
+        /**
+         * CreateSite request haven't finished yet or failed.
+         */
+        object SiteNotCreated : CreateSiteState()
+        /**
+         * FetchSite request haven't finished yet or failed.
+         * Since we fetch the site without user awareness in background, the user may potentially leave the screen
+         * before the request is finished.
+         */
+        data class SiteNotInLocalDb(val remoteSiteId: Long) : CreateSiteState()
+
+        /**
+         * The site has been successfully created and stored into local db.
+         */
+        data class SiteCreationCompleted(val localSiteId: Int) : CreateSiteState()
+    }
 }

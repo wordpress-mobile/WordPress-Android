@@ -18,6 +18,10 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleEmpty
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleGeneral
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM.NewSiteCreationScreenTitle.ScreenTitleStepCount
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotCreated
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
@@ -61,11 +65,18 @@ class NewSiteCreationActivity : AppCompatActivity(),
     private fun observeVMState() {
         mainViewModel.navigationTargetObservable
                 .observe(this, Observer { target -> target?.let { showStep(target) } })
-        mainViewModel.wizardFinishedObservable.observe(this, Observer { newSiteLocalId ->
-            val intent = Intent()
-            intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, newSiteLocalId)
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+        mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
+            createSiteState?.let {
+                val intent = Intent()
+                val localSiteId = when (createSiteState) {
+                    // TODO will be handled correctly in #8822
+                    is SiteNotCreated, is SiteNotInLocalDb -> null
+                    is SiteCreationCompleted -> createSiteState.localSiteId
+                }
+                intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, localSiteId)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
         })
     }
 
@@ -81,8 +92,8 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.onDomainsScreenFinished(domain)
     }
 
-    override fun onSitePreviewScreenDismissed(newSiteLocalId: Int?) {
-        mainViewModel.onSitePreviewScreenFinished(newSiteLocalId)
+    override fun onSitePreviewScreenDismissed(createSiteState: CreateSiteState) {
+        mainViewModel.onSitePreviewScreenFinished(createSiteState)
     }
 
     override fun onSkipClicked() {
