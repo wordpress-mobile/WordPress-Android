@@ -36,7 +36,6 @@ import kotlin.coroutines.experimental.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
 private const val FETCH_SITE_NUMBER_OF_RETRIES = 5
-private const val FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS = 1000
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -177,16 +176,14 @@ class NewSitePreviewViewModel @Inject constructor(
      */
     private fun fetchNewlyCreatedSiteModel(remoteSiteId: Long) {
         launch {
-            repeat(FETCH_SITE_NUMBER_OF_RETRIES) { attemptNumber ->
-                val onSiteFetched = fetchWpComSiteUseCase.fetchSite(remoteSiteId)
-                if (!onSiteFetched.isError) {
-                    val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
-                        "Site successfully fetched but has not been found in the local db."
-                    }
-                    createSiteState = CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
-                    return@launch
+            val onSiteFetched = fetchWpComSiteUseCase.fetchSite(remoteSiteId, FETCH_SITE_NUMBER_OF_RETRIES)
+            createSiteState = if (!onSiteFetched.isError) {
+                val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
+                    "Site successfully fetched but has not been found in the local db."
                 }
-                delay((attemptNumber + 1) * FETCH_SITE_BASE_RETRY_DELAY_IN_MILLIS) // +1 -> starts from 0
+                CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
+            } else {
+                CreateSiteState.SiteNotInLocalDb(remoteSiteId)
             }
         }
     }
@@ -284,6 +281,7 @@ class NewSitePreviewViewModel @Inject constructor(
          * CreateSite request haven't finished yet or failed.
          */
         object SiteNotCreated : CreateSiteState()
+
         /**
          * FetchSite request haven't finished yet or failed.
          * Since we fetch the site without user awareness in background, the user may potentially leave the screen
