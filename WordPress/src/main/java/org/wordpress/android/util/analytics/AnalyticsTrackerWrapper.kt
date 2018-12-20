@@ -5,7 +5,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import javax.inject.Inject
 
 class AnalyticsTrackerWrapper
-@Inject constructor(){
+@Inject constructor() {
     fun track(stat: Stat) {
         AnalyticsTracker.track(stat)
     }
