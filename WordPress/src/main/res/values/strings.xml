@@ -1993,6 +1993,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_giphy">Choose from Giphy</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -2000,6 +2001,12 @@
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+
+    <string name="giphy_picker_search_hint">Search Giphy</string>
+    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="giphy_picker_empty_search_list">No media matching your search</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
