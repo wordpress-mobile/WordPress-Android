@@ -29,6 +29,7 @@ fun BarChart.draw(
     labelStart: TextView,
     labelEnd: TextView
 ) {
+    resetChart()
     val graphWidth = DisplayUtils.pxToDp(context, width)
     val columnNumber = (graphWidth / 24) - 1
     val cut = cutEntries(if (columnNumber > MIN_COLUMN_COUNT) columnNumber else MIN_COLUMN_COUNT, item)
@@ -40,12 +41,13 @@ fun BarChart.draw(
         )
     }
     val maxYValue = cut.maxBy { it.value }!!.value
-    val dataSet = if (item.entries.isNotEmpty() && item.entries.any { it.value > 0 }) {
+    val hasData = item.entries.isNotEmpty() && item.entries.any { it.value > 0 }
+    val dataSet = if (hasData) {
         buildDataSet(context, mappedEntries)
     } else {
         buildEmptyDataSet(context, cut.size)
     }
-    data = if (item.onBarSelected != null) {
+    data = if (hasData && item.onBarSelected != null) {
         BarData(dataSet, getHighlightDataSet(context, mappedEntries))
     } else {
         BarData(dataSet)
@@ -78,8 +80,10 @@ fun BarChart.draw(
         setDrawAxisLine(false)
         granularity = 1f
         axisMinimum = 0f
-        if (maxYValue < MIN_VALUE) {
-            axisMaximum = MIN_VALUE
+        axisMaximum = if (maxYValue < MIN_VALUE) {
+            MIN_VALUE
+        } else {
+            maxYValue.toFloat()
         }
         textColor = greyColor
         gridColor = lightGreyColor
@@ -163,14 +167,22 @@ private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
     )
     dataSet.formLineWidth = 0f
     dataSet.setDrawValues(false)
+    dataSet.isHighlightEnabled = false
+    dataSet.highLightAlpha = 255
     return dataSet
 }
 
 private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
     val dataSet = BarDataSet(cut, "Data")
-    dataSet.color = ContextCompat.getColor(
+    dataSet.color = ContextCompat.getColor(context, R.color.blue_wordpress)
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.blue_wordpress
+            ), ContextCompat.getColor(
             context,
-            color.blue_wordpress
+            R.color.blue_wordpress
+    )
     )
     dataSet.formLineWidth = 0f
     dataSet.setDrawValues(false)
@@ -189,9 +201,15 @@ private fun getHighlightDataSet(context: Context, cut: List<BarEntry>): BarDataS
         BarEntry(it.x, maxEntry.y, it.data)
     }
     val dataSet = BarDataSet(highlightedDataSet, "Highlight")
-    dataSet.color = ContextCompat.getColor(
+    dataSet.color = ContextCompat.getColor(context, R.color.transparent)
+    dataSet.setGradientColor(
+            ContextCompat.getColor(
+                    context,
+                    R.color.transparent
+            ), ContextCompat.getColor(
             context,
-            color.transparent
+            R.color.transparent
+    )
     )
     dataSet.formLineWidth = 0f
     dataSet.isHighlightEnabled = true
@@ -214,4 +232,13 @@ private fun cutEntries(
     ) else {
         item.entries
     }
+}
+
+private fun BarChart.resetChart() {
+    fitScreen()
+    data?.clearValues()
+    xAxis.valueFormatter = null
+    notifyDataSetChanged()
+    clear()
+    invalidate()
 }

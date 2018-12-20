@@ -102,7 +102,7 @@ constructor(
     }
 
     private fun onBarSelected(period: String?) {
-        if (period != null) {
+        if (period != null && period != "empty") {
             updateUiState { previousState -> previousState.copy(selectedDate = period) }
             selectedDateProvider.selectDate(
                     statsDateFormatter.parseStatsDate(statsGranularity, period),
