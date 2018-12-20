@@ -35,7 +35,6 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
-private const val FETCH_SITE_NUMBER_OF_RETRIES = 5
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -176,7 +175,7 @@ class NewSitePreviewViewModel @Inject constructor(
      */
     private fun fetchNewlyCreatedSiteModel(remoteSiteId: Long) {
         launch {
-            val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId, FETCH_SITE_NUMBER_OF_RETRIES)
+            val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
             createSiteState = if (!onSiteFetched.isError) {
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
