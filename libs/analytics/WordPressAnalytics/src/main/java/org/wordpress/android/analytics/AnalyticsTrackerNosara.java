@@ -883,6 +883,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_overview_bar_chart_tapped";
             case STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED:
                 return "stats_video_plays_view_more_tapped";
+            case STATS_VIDEO_PLAYS_VIDEO_TAPPED:
+                return "stats_video_plays_video_tapped";
             case STATS_SEARCH_TERMS_VIEW_MORE_TAPPED:
                 return "stats_search_terms_view_more_tapped";
             case STATS_AUTHORS_VIEW_MORE_TAPPED:
@@ -901,8 +903,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_authors_view_post_tapped";
             case STATS_CLICKS_ITEM_TAPPED:
                 return "stats_clicks_item_tapped";
-            case STATS_VIDEO_TAPPED:
-                return "stats_video_tapped";
             case STATS_SINGLE_POST_ACCESSED:
                 return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:

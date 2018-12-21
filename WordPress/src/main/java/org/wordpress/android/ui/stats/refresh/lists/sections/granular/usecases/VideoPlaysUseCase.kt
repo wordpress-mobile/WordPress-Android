@@ -104,7 +104,7 @@ constructor(
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_TAPPED, statsGranularity)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIDEO_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 
