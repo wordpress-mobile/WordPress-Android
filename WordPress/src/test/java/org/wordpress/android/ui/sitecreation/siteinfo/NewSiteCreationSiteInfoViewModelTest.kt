@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel.SiteInfoUiState
@@ -33,7 +34,7 @@ class NewSiteCreationSiteInfoViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = NewSiteCreationSiteInfoViewModel()
+        viewModel = NewSiteCreationSiteInfoViewModel(TEST_DISPATCHER, TEST_DISPATCHER)
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.skipBtnClicked.observeForever(onSkipClickedObserver)
         viewModel.nextBtnClicked.observeForever(onNextClickedObserver)

@@ -50,6 +50,7 @@ private const val EMPTY_STRING = ""
 private const val DUMMY_HINT = "dummyHint"
 private const val DUMMY_TITLE = "dummyTitle"
 private const val DUMMY_SUBTITLE = "dummySubtitle"
+private const val DUMMY_SLUG = "dummySlug"
 
 private const val FIRST_MODEL_QUERY = "success_1"
 private const val SECOND_MODEL_QUERY = "success_2"
@@ -75,17 +76,32 @@ private val FAILED_HEADER_PROMPT_FETCHED = OnSegmentPromptFetched(
 
 private val FIRST_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         FIRST_MODEL_QUERY,
-        listOf(VerticalModel(FIRST_MODEL_NAME, FIRST_MODEL_ID, isNewUserVertical = false)),
+        listOf(VerticalModel(
+                name = FIRST_MODEL_NAME,
+                verticalId = FIRST_MODEL_ID,
+                isUserInputVertical = false,
+                verticalSlug = DUMMY_SLUG
+        )),
         error = null
 )
 private val SECOND_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         SECOND_MODEL_QUERY,
-        listOf(VerticalModel(SECOND_MODEL_NAME, SECOND_MODEL_ID, isNewUserVertical = false)),
+        listOf(VerticalModel(
+                name = SECOND_MODEL_NAME,
+                verticalId = SECOND_MODEL_ID,
+                isUserInputVertical = false,
+                verticalSlug = DUMMY_SLUG
+        )),
         error = null
 )
 private val CUSTOM_CATEGORY_MODEL_ON_VERTICALS_FETCHED = OnVerticalsFetched(
         CUSTOM_CATEGORY_MODEL_QUERY,
-        listOf(VerticalModel(CUSTOM_CATEGORY_MODEL_NAME, CUSTOM_CATEGORY_MODEL_ID, isNewUserVertical = true)),
+        listOf(VerticalModel(
+                name = CUSTOM_CATEGORY_MODEL_NAME,
+                verticalId = CUSTOM_CATEGORY_MODEL_ID,
+                isUserInputVertical = true,
+                verticalSlug = DUMMY_SLUG
+        )),
         error = null
 )
 private val ERROR_ON_VERTICALS_FETCHED = OnVerticalsFetched(
