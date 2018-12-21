@@ -38,14 +38,9 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.layout
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.CENTER
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.LEFT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
@@ -59,6 +54,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.draw
+import org.wordpress.android.ui.stats.refresh.utils.drawColumns
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -205,7 +201,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+    class CenteredColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_columns_item
     ) {
@@ -214,54 +210,20 @@ sealed class BlockListItemViewHolder(
             columns: Columns,
             payloads: List<Any>
         ) {
-            val inflater = LayoutInflater.from(itemView.context)
-            val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
-            val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
-            val layout = when (columns.alignment) {
-                CENTER -> layout.stats_block_column_centered
-                LEFT -> R.layout.stats_block_column_left_aligned
-            }
-            when {
-                tabSelected -> {
-                    for (index in 0 until columnContainer.childCount) {
-                        val parent = columnContainer.getChildAt(index)
-                        val key = parent.findViewById<TextView>(R.id.key)
-                        val isSelected = columns.selectedColumn == index
-                        key.isSelected = isSelected
-                        val value = parent.findViewById<TextView>(R.id.value)
-                        value.isSelected = isSelected
-                    }
-                }
-                valuesChanged -> {
-                    for (index in 0 until columnContainer.childCount) {
-                        columnContainer.getChildAt(index).findViewById<TextView>(R.id.value)
-                                .text = columns.values[index]
-                    }
-                }
-                else -> {
-                    columnContainer.removeAllViewsInLayout()
-                    for (index in 0 until columns.headers.size) {
-                        val item = inflater.inflate(layout, columnContainer, false)
-                        val previousParams = item.layoutParams as LinearLayout.LayoutParams
-                        previousParams.weight = 1F
-                        previousParams.width = 0
-                        columnContainer.addView(
-                                item,
-                                previousParams
-                        )
-                        item.setOnClickListener {
-                            columns.onColumnSelected?.invoke(index)
-                        }
-                        val isSelected = columns.selectedColumn == null || columns.selectedColumn == index
-                        val key = item.findViewById<TextView>(R.id.key)
-                        key.setText(columns.headers[index])
-                        key.isSelected = isSelected
-                        val value = item.findViewById<TextView>(R.id.value)
-                        value.text = columns.values[index]
-                        value.isSelected = isSelected
-                    }
-                }
-            }
+            columnContainer.drawColumns(payloads, columns, R.layout.stats_block_column_centered)
+        }
+    }
+
+    class LeftColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_columns_left_item
+    ) {
+        private val columnContainer = itemView.findViewById<LinearLayout>(R.id.column_container)
+        fun bind(
+            columns: Columns,
+            payloads: List<Any>
+        ) {
+            columnContainer.drawColumns(payloads, columns, R.layout.stats_block_column_left_aligned)
         }
     }
 

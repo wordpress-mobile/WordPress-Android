@@ -3,8 +3,6 @@
               android:id="@+id/column_container"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:paddingEnd="@dimen/margin_extra_large"
-              android:paddingStart="@dimen/margin_extra_large">
+              android:orientation="horizontal">
 
 </LinearLayout>

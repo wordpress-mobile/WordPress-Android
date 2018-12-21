@@ -22,12 +22,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CENTERED_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LEFT_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -38,12 +39,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.BackgroundInformationViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.BarChartViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.CenteredColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.DividerViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.EmptyViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ExpandableItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.HeaderViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.InformationViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.LeftColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ListItemWithIconViewHolder
@@ -89,7 +91,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
-            COLUMNS -> ColumnsViewHolder(parent)
+            CENTERED_COLUMNS -> CenteredColumnsViewHolder(parent)
+            LEFT_COLUMNS -> LeftColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> BarChartViewHolder(parent)
             TABS -> TabsViewHolder(parent, imageManager)
@@ -115,7 +118,8 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
-            is ColumnsViewHolder -> holder.bind(item as Columns, payloads)
+            is CenteredColumnsViewHolder -> holder.bind(item as Columns, payloads)
+            is LeftColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(SELECTED_BAR_CHANGED))
             is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))

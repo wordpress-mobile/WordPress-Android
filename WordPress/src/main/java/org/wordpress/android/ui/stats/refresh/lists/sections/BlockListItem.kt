@@ -6,12 +6,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.IconStyle.NORMAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CENTERED_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LEFT_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -35,7 +36,8 @@ sealed class BlockListItem(val type: Type) {
         BACKGROUND_INFO,
         EMPTY,
         TEXT,
-        COLUMNS,
+        CENTERED_COLUMNS,
+        LEFT_COLUMNS,
         LINK,
         BAR_CHART,
         TABS,
@@ -94,7 +96,7 @@ sealed class BlockListItem(val type: Type) {
         val selectedColumn: Int? = null,
         val alignment: Alignment = CENTER,
         val onColumnSelected: ((position: Int) -> Unit)? = null
-    ) : BlockListItem(COLUMNS) {
+    ) : BlockListItem(if (alignment == CENTER) CENTERED_COLUMNS else LEFT_COLUMNS) {
         override val itemId: Int
             get() = headers.hashCode()
 
