@@ -242,9 +242,12 @@ sealed class BlockListItemViewHolder(
                     columnContainer.removeAllViewsInLayout()
                     for (index in 0 until columns.headers.size) {
                         val item = inflater.inflate(layout, columnContainer, false)
+                        val previousParams = item.layoutParams as LinearLayout.LayoutParams
+                        previousParams.weight = 1F
+                        previousParams.width = 0
                         columnContainer.addView(
                                 item,
-                                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1F)
+                                previousParams
                         )
                         item.setOnClickListener {
                             columns.onColumnSelected?.invoke(index)
