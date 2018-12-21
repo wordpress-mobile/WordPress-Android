@@ -39,6 +39,7 @@ class DateUseCaseTest : BaseUnitTest() {
                 resourceProvider,
                 Dispatchers.Unconfined
         )
+        whenever(selectedDateProvider.getCurrentDate()).thenReturn(selectedDate)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }
 

@@ -26,10 +26,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Divider
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ExpandableItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
@@ -90,22 +92,24 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private fun BlockList.assertNonExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(3)
+        assertThat(this.items).hasSize(4)
         assertTitle(this.items[0])
-        assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
-        return assertCategory(this.items[2], categoryName, categoryViews)
+        assertHeader(this.items[1])
+        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
+        return assertCategory(this.items[3], categoryName, categoryViews)
     }
 
     private fun BlockList.assertExpandedList(
         categoryName: String
     ): ExpandableItem {
-        assertThat(this.items).hasSize(6)
+        assertThat(this.items).hasSize(7)
         assertTitle(this.items[0])
-        assertSingleTag(this.items[1], firstTag.name, singleTagViews.toString())
-        val expandableItem = assertCategory(this.items[2], categoryName, categoryViews)
-        assertSingleTag(this.items[3], firstTag.name, null)
-        assertSingleTag(this.items[4], secondTag.name, null)
-        assertThat(this.items[5]).isEqualTo(Divider)
+        assertHeader(this.items[1])
+        assertSingleTag(this.items[2], firstTag.name, singleTagViews.toString())
+        val expandableItem = assertCategory(this.items[3], categoryName, categoryViews)
+        assertSingleTag(this.items[4], firstTag.name, null)
+        assertSingleTag(this.items[5], secondTag.name, null)
+        assertThat(this.items[6]).isEqualTo(Divider)
         return expandableItem
     }
 
@@ -125,10 +129,11 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
 
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         (result as BlockList).apply {
-            assertThat(this.items).hasSize(3)
+            assertThat(this.items).hasSize(4)
             assertTitle(this.items[0])
-            assertSingleTag(this.items[1], tagItem.name, singleTagViews.toString())
-            assertLink(this.items[2])
+            assertHeader(this.items[1])
+            assertSingleTag(this.items[2], tagItem.name, singleTagViews.toString())
+            assertLink(this.items[3])
         }
     }
 
@@ -170,6 +175,12 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
         assertThat((item as Title).textResource).isEqualTo(R.string.stats_insights_tags_and_categories)
+    }
+
+    private fun assertHeader(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_tags_and_categories_title_label)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_tags_and_categories_views_label)
     }
 
     private fun assertSingleTag(

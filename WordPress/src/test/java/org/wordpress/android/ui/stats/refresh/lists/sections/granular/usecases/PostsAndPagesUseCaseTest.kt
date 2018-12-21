@@ -27,10 +27,13 @@ import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewPostsAn
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.BLOCK_LIST
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.ERROR
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
@@ -130,11 +133,12 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(result is BlockList).isTrue()
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         val items = (result as BlockList).items
-        assertThat(items.size).isEqualTo(2)
+        assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
-        assertThat(items[1] is ListItemWithIcon).isTrue()
-        val item = items[1] as ListItemWithIcon
+        assertHeader(items[1])
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        val item = items[2] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_posts_grey_dark_24dp)
         assertThat(item.text).isEqualTo(post.title)
         assertThat(item.value).isEqualTo("10")
@@ -163,11 +167,12 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(result is BlockList).isTrue()
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         val items = (result as BlockList).items
-        assertThat(items.size).isEqualTo(2)
+        assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
-        assertThat(items[1] is ListItemWithIcon).isTrue()
-        val item = items[1] as ListItemWithIcon
+        assertHeader(items[1])
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        val item = items[2] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toString())
@@ -196,11 +201,12 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(result is BlockList).isTrue()
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         val items = (result as BlockList).items
-        assertThat(items.size).isEqualTo(2)
+        assertThat(items.size).isEqualTo(3)
         assertThat(items[0] is Title).isTrue()
         assertThat((items[0] as Title).textResource).isEqualTo(R.string.stats_posts_and_pages)
-        assertThat(items[1] is ListItemWithIcon).isTrue()
-        val item = items[1] as ListItemWithIcon
+        assertHeader(items[1])
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        val item = items[2] as ListItemWithIcon
         assertThat(item.icon).isEqualTo(R.drawable.ic_pages_grey_dark_24dp)
         assertThat(item.text).isEqualTo(title)
         assertThat(item.value).isEqualTo(views.toFormattedString())
@@ -228,11 +234,12 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(result is BlockList).isTrue()
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         val items = (result as BlockList).items
-        assertThat(items.size).isEqualTo(3)
-        assertThat(items[1] is ListItemWithIcon).isTrue()
+        assertThat(items.size).isEqualTo(4)
+        assertHeader(items[1])
         assertThat(items[2] is ListItemWithIcon).isTrue()
-        assertThat((items[1] as ListItemWithIcon).showDivider).isEqualTo(true)
-        assertThat((items[2] as ListItemWithIcon).showDivider).isEqualTo(false)
+        assertThat(items[3] is ListItemWithIcon).isTrue()
+        assertThat((items[2] as ListItemWithIcon).showDivider).isEqualTo(true)
+        assertThat((items[3] as ListItemWithIcon).showDivider).isEqualTo(false)
     }
 
     @Test
@@ -260,18 +267,24 @@ class PostsAndPagesUseCaseTest : BaseUnitTest() {
         assertThat(result is BlockList).isTrue()
         assertThat(result.type).isEqualTo(BLOCK_LIST)
         val items = (result as BlockList).items
-        assertThat(items.size).isEqualTo(3)
-        assertThat(items[1] is ListItemWithIcon).isTrue()
-        assertThat(items[2] is Link).isTrue()
+        assertThat(items.size).isEqualTo(4)
+        assertThat(items[2] is ListItemWithIcon).isTrue()
+        assertThat(items[3] is Link).isTrue()
 
         var navigationTarget: NavigationTarget? = null
         useCase.navigationTarget.observeForever { navigationTarget = it }
 
-        (items[2] as Link).navigateAction.click()
+        (items[3] as Link).navigateAction.click()
 
         assertThat(navigationTarget).isNotNull
         val viewPost = navigationTarget as ViewPostsAndPages
         assertThat(viewPost.statsGranularity).isEqualTo(statsGranularity)
+    }
+
+    private fun assertHeader(item: BlockListItem) {
+        assertThat(item.type).isEqualTo(HEADER)
+        assertThat((item as Header).leftLabel).isEqualTo(R.string.stats_posts_and_pages_title_label)
+        assertThat(item.rightLabel).isEqualTo(R.string.stats_posts_and_pages_views_label)
     }
 
     private suspend fun loadData(refresh: Boolean, forced: Boolean): StatsBlock {

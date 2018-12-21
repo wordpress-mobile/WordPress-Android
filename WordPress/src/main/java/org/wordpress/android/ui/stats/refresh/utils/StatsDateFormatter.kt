@@ -53,6 +53,10 @@ class StatsDateFormatter
         return printDate(inputFormat.parse(text))
     }
 
+    fun printStatsDate(date: Date): String {
+        return inputFormat.format(date)
+    }
+
     private fun printDate(date: Date): String {
         try {
             return outputFormat.format(date)
@@ -67,7 +71,9 @@ class StatsDateFormatter
             WEEKS -> {
                 val endCalendar = Calendar.getInstance()
                 endCalendar.time = date
-                // last day of this week
+                if (endCalendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                    endCalendar.time = dateToWeekDate(date)
+                }
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
@@ -109,13 +115,7 @@ class StatsDateFormatter
                 val sdf = SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT)
                 // Calculate the end of the week
                 val parsedDate = sdf.parse(date)
-                val calendar: Calendar = Calendar.getInstance()
-                calendar.time = parsedDate
-                // first day of this week
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-                // last day of this week
-                calendar.add(Calendar.DAY_OF_WEEK, +6)
-                calendar.time
+                dateToWeekDate(parsedDate)
             }
             MONTHS -> {
                 val sdf = SimpleDateFormat("yyyy-MM", Locale.ROOT)
@@ -138,6 +138,16 @@ class StatsDateFormatter
                 calendar.time
             }
         }
+    }
+
+    private fun dateToWeekDate(parsedDate: Date): Date {
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.time = parsedDate
+        // first day of this week
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        // last day of this week
+        calendar.add(Calendar.DAY_OF_WEEK, +6)
+        return calendar.time
     }
 
     fun todaysDateInStatsFormat(): String {

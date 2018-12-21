@@ -79,7 +79,7 @@ class OverviewMapperTest : BaseUnitTest() {
 
         val onColumnSelected: (Int) -> Unit = {}
 
-        val result = mapper.buildColumns(selectedItem, uiState, onColumnSelected)
+        val result = mapper.buildColumns(selectedItem, onColumnSelected, uiState.selectedPosition)
 
         assertThat(result.headers).containsExactly(
                 R.string.stats_views,

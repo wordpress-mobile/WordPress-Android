@@ -38,6 +38,7 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.id
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
@@ -202,7 +203,7 @@ sealed class BlockListItemViewHolder(
         }
     }
 
-    class ColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+    class CenteredColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             parent,
             R.layout.stats_block_columns_item
     ) {
@@ -211,42 +212,104 @@ sealed class BlockListItemViewHolder(
             columns: Columns,
             payloads: List<Any>
         ) {
-            val inflater = LayoutInflater.from(itemView.context)
+            val inflater = LayoutInflater.from(columnContainer.context)
             val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
             val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
             when {
                 tabSelected -> {
                     for (index in 0 until columnContainer.childCount) {
                         val parent = columnContainer.getChildAt(index)
-                        val key = parent.findViewById<TextView>(R.id.key)
+                        val key = parent.findViewById<TextView>(id.key)
                         val isSelected = columns.selectedColumn == index
                         key.isSelected = isSelected
-                        val value = parent.findViewById<TextView>(R.id.value)
+                        val value = parent.findViewById<TextView>(id.value)
                         value.isSelected = isSelected
                     }
                 }
                 valuesChanged -> {
                     for (index in 0 until columnContainer.childCount) {
-                        columnContainer.getChildAt(index).findViewById<TextView>(R.id.value)
+                        columnContainer.getChildAt(index).findViewById<TextView>(id.value)
                                 .text = columns.values[index]
                     }
                 }
                 else -> {
                     columnContainer.removeAllViewsInLayout()
                     for (index in 0 until columns.headers.size) {
-                        val item = inflater.inflate(R.layout.stats_block_column, columnContainer, false)
+                        val item = inflater.inflate(R.layout.stats_block_column_centered, columnContainer, false)
+                        val previousParams = item.layoutParams as LinearLayout.LayoutParams
+                        previousParams.weight = 1F
+                        previousParams.width = 0
                         columnContainer.addView(
                                 item,
-                                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1F)
+                                previousParams
                         )
                         item.setOnClickListener {
                             columns.onColumnSelected?.invoke(index)
                         }
                         val isSelected = columns.selectedColumn == null || columns.selectedColumn == index
-                        val key = item.findViewById<TextView>(R.id.key)
+                        val key = item.findViewById<TextView>(id.key)
                         key.setText(columns.headers[index])
                         key.isSelected = isSelected
-                        val value = item.findViewById<TextView>(R.id.value)
+                        val value = item.findViewById<TextView>(id.value)
+                        value.text = columns.values[index]
+                        value.isSelected = isSelected
+                    }
+                }
+            }
+        }
+    }
+
+    class FourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
+            parent,
+            R.layout.stats_block_four_columns_item
+    ) {
+        private val keys = listOf<TextView>(
+                itemView.findViewById(R.id.key1),
+                itemView.findViewById(R.id.key2),
+                itemView.findViewById(R.id.key3),
+                itemView.findViewById(R.id.key4)
+        )
+        private val values = listOf<TextView>(
+                itemView.findViewById(R.id.value1),
+                itemView.findViewById(R.id.value2),
+                itemView.findViewById(R.id.value3),
+                itemView.findViewById(R.id.value4)
+        )
+
+        fun bind(
+            columns: Columns,
+            payloads: List<Any>
+        ) {
+            val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
+            val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
+            when {
+                tabSelected -> {
+                    for (index in 0 until keys.size) {
+                        val key = keys[index]
+                        val isSelected = columns.selectedColumn == index
+                        key.isSelected = isSelected
+                        val value = values[index]
+                        value.isSelected = isSelected
+                    }
+                }
+                valuesChanged -> {
+                    for (index in 0 until values.size) {
+                        values[index].text = columns.values[index]
+                    }
+                }
+                else -> {
+                    for (index in 0 until keys.size) {
+                        val key = keys[index]
+                        val value = values[index]
+                        key.setOnClickListener {
+                            columns.onColumnSelected?.invoke(index)
+                        }
+                        value.setOnClickListener {
+                            columns.onColumnSelected?.invoke(index)
+                        }
+                        val isSelected = columns.selectedColumn == null || columns.selectedColumn == index
+                        key.setText(columns.headers[index])
+                        key.isSelected = isSelected
                         value.text = columns.values[index]
                         value.isSelected = isSelected
                     }
@@ -287,6 +350,7 @@ sealed class BlockListItemViewHolder(
         ) {
             if (!barSelected) {
                 GlobalScope.launch(Dispatchers.Main) {
+                    delay(50)
                     chart.draw(item, labelStart, labelEnd)
                 }
             }
@@ -354,7 +418,7 @@ sealed class BlockListItemViewHolder(
             text.setTextOrHide(header.textResource, header.text)
             expandButton.visibility = View.VISIBLE
             value.setTextOrHide(header.valueResource, header.value)
-            divider.setVisible(header.showDivider)
+            divider.setVisible(header.showDivider && !expandableItem.isExpanded)
 
             if (expandChanged) {
                 val rotationAngle = if (expandButton.rotation == 0F) 180 else 0
@@ -393,7 +457,7 @@ sealed class BlockListItemViewHolder(
                         " [" +
                         " ['Country', '${itemView.resources.getString(item.label)}'],${item.mapData}]);" +
                         " var options = {keepAspectRatio: true, region: 'world', colorAxis:" +
-                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: true};" +
+                        " { colors: [ '#FFF088', '#F24606' ] }, enableRegionInteractivity: false};" +
                         " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
                         " chart.draw(data, options);" +
                         " }" +
@@ -420,21 +484,21 @@ sealed class BlockListItemViewHolder(
                     webView.layoutParams = params
                     itemView.layoutParams = wrapperParams
 
-                webView.webViewClient = object : WebViewClient() {
-                    override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError
-                    ) {
-                        super.onReceivedError(view, request, error)
-                        itemView.visibility = View.GONE
-                    }
+                    webView.webViewClient = object : WebViewClient() {
+                        override fun onReceivedError(
+                            view: WebView?,
+                            request: WebResourceRequest?,
+                            error: WebResourceError
+                        ) {
+                            super.onReceivedError(view, request, error)
+                            itemView.visibility = View.GONE
+                        }
 
-                    override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                        super.onReceivedSslError(view, handler, error)
-                        itemView.visibility = View.GONE
+                        override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+                            super.onReceivedSslError(view, handler, error)
+                            itemView.visibility = View.GONE
+                        }
                     }
-                }
                     webView.settings.javaScriptEnabled = true
                     webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
                     webView.loadData(htmlPage, "text/html", "UTF-8")

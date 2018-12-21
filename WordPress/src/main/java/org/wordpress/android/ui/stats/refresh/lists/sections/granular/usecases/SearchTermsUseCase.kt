@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.SEARCH_TERMS
 import org.wordpress.android.fluxc.store.stats.time.SearchTermsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.NavigationTarget.ViewSearchTerms
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Empty
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
@@ -19,10 +18,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction.Companion.create
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import java.util.Date
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -32,31 +33,31 @@ private const val PAGE_SIZE = 6
 
 class SearchTermsUseCase
 constructor(
-    private val statsGranularity: StatsGranularity,
+    statsGranularity: StatsGranularity,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: SearchTermsStore,
-    private val selectedDateProvider: SelectedDateProvider,
+    selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher) {
+) : GranularStatelessUseCase<SearchTermsModel>(SEARCH_TERMS, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_search_terms))
 
-    override suspend fun loadCachedData(site: SiteModel) {
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
         val dbModel = store.getSearchTerms(
                 site,
                 statsGranularity,
                 PAGE_SIZE,
-                selectedDateProvider.getSelectedDate(statsGranularity)
+                selectedDate
         )
         dbModel?.let { onModel(it) }
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
         val response = store.fetchSearchTerms(
                 site,
                 PAGE_SIZE,
                 statsGranularity,
-                selectedDateProvider.getSelectedDate(statsGranularity),
+                selectedDate,
                 forced
         )
         val model = response.model
@@ -87,11 +88,13 @@ constructor(
             }
             if (hasEncryptedCount) {
                 items.addAll(mappedSearchTerms.take(mappedSearchTerms.size - 1))
-                items.add(ListItemWithIcon(
-                        textResource = R.string.stats_search_terms_unknown_search_terms,
-                        value = domainModel.unknownSearchCount.toFormattedString(),
-                        showDivider = false
-                ))
+                items.add(
+                        ListItemWithIcon(
+                                textResource = R.string.stats_search_terms_unknown_search_terms,
+                                value = domainModel.unknownSearchCount.toFormattedString(),
+                                showDivider = false
+                        )
+                )
             } else {
                 items.addAll(mappedSearchTerms)
             }

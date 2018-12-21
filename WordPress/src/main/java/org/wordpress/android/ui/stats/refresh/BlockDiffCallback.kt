@@ -13,12 +13,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Expan
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BACKGROUND_INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.COLUMNS
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CENTERED_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.DIVIDER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EMPTY
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.EXPANDABLE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LEFT_COLUMNS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
@@ -44,7 +45,8 @@ class BlockDiffCallback(
                 LIST_ITEM_WITH_ICON,
                 EXPANDABLE_ITEM,
                 TABS,
-                COLUMNS,
+                CENTERED_COLUMNS,
+                LEFT_COLUMNS,
                 BAR_CHART,
                 LIST_ITEM -> oldItem.itemId == newItem.itemId
                 LINK,

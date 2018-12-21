@@ -7,8 +7,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Alignment.LEFT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import javax.inject.Inject
@@ -35,8 +35,8 @@ class OverviewMapper
 
     fun buildColumns(
         selectedItem: PeriodData?,
-        uiState: UiState,
-        onColumnSelected: (position: Int) -> Unit
+        onColumnSelected: (position: Int) -> Unit,
+        selectedPosition: Int
     ): Columns {
         return Columns(
                 listOf(
@@ -51,19 +51,21 @@ class OverviewMapper
                         selectedItem?.likes?.toFormattedString() ?: "0",
                         selectedItem?.comments?.toFormattedString() ?: "0"
                 ),
-                uiState.selectedPosition,
+                selectedPosition,
+                LEFT,
                 onColumnSelected
         )
     }
 
     fun buildChart(
         domainModel: VisitsAndViewsModel,
-        uiState: UiState,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit
+        onBarSelected: (String?) -> Unit,
+        selectedPosition: Int,
+        selectedDate: String?
     ): BarChartItem {
         val chartItems = domainModel.dates.map {
-            val value = when (uiState.selectedPosition) {
+            val value = when (selectedPosition) {
                 0 -> it.views
                 1 -> it.visitors
                 2 -> it.likes
@@ -76,6 +78,6 @@ class OverviewMapper
                     value.toInt()
             )
         }
-        return BarChartItem(chartItems, selectedItem = uiState.selectedDate, onBarSelected = onBarSelected)
+        return BarChartItem(chartItems, selectedItem = selectedDate, onBarSelected = onBarSelected)
     }
 }

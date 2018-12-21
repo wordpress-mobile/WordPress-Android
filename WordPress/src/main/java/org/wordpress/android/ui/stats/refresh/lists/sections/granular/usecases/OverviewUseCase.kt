@@ -31,7 +31,11 @@ constructor(
     private val overviewMapper: OverviewMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper
-) : StatefulUseCase<VisitsAndViewsModel, UiState>(OVERVIEW, mainDispatcher, UiState()) {
+) : StatefulUseCase<VisitsAndViewsModel, UiState>(
+        OVERVIEW,
+        mainDispatcher,
+        UiState()
+) {
     override fun buildLoadingItem(): List<BlockListItem> =
             listOf(
                     Title(
@@ -71,29 +75,46 @@ constructor(
 
     override fun buildStatefulUiModel(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+        val selectedDate = uiState.selectedDate ?: domainModel.dates.lastOrNull()?.period
+        if (selectedDateProvider.getSelectedDate(statsGranularity) == null && selectedDate != null) {
+            selectedDateProvider.selectDate(
+                    statsDateFormatter.parseStatsDate(statsGranularity, selectedDate),
+                    statsGranularity
+            )
+        }
         val selectedItem = domainModel.dates.find { it.period == uiState.selectedDate }
                 ?: domainModel.dates.lastOrNull()
         items.add(
                 overviewMapper.buildTitle(
                         selectedItem?.period,
-                        uiState.selectedDate,
+                        selectedDate,
                         domainModel.period,
                         statsGranularity
                 )
         )
-        items.add(overviewMapper.buildChart(domainModel, uiState, statsGranularity, this::onBarSelected))
-        items.add(overviewMapper.buildColumns(selectedItem, uiState, this::onColumnSelected))
+        items.add(
+                overviewMapper.buildChart(
+                        domainModel,
+                        statsGranularity,
+                        this::onBarSelected,
+                        uiState.selectedPosition,
+                        selectedDate
+                )
+        )
+        items.add(overviewMapper.buildColumns(selectedItem, this::onColumnSelected, uiState.selectedPosition))
         return items
     }
 
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
-        updateUiState { previousState -> previousState.copy(selectedDate = period) }
-        period?.let {
+        if (period != null && period != "empty") {
+            updateUiState { previousState -> previousState.copy(selectedDate = period) }
             selectedDateProvider.selectDate(
                     statsDateFormatter.parseStatsDate(statsGranularity, period),
                     statsGranularity
             )
+        } else {
+            onUiState(null)
         }
     }
 

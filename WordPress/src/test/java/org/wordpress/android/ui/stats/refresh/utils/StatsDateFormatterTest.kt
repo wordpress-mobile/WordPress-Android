@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Calendar
 import java.util.Locale
 
 class StatsDateFormatterTest : BaseUnitTest() {
@@ -44,7 +45,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `prints a week date`() {
+    fun `prints a week date in string format`() {
         val unparsedDate = "2018W12W19"
         val result = "Dec 17 - Dec 23"
         whenever(
@@ -56,6 +57,24 @@ class StatsDateFormatterTest : BaseUnitTest() {
         ).thenReturn(result)
 
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
+
+        assertThat(parsedDate).isEqualTo("Dec 17 - Dec 23")
+    }
+
+    @Test
+    fun `prints a week date`() {
+        val calendar = Calendar.getInstance()
+        calendar.set(2018, Calendar.DECEMBER, 20)
+        val result = "Dec 17 - Dec 23"
+        whenever(
+                resourceProvider.getString(
+                        R.string.stats_from_to_dates_in_week_label,
+                        "Dec 17",
+                        "Dec 23"
+                )
+        ).thenReturn(result)
+
+        val parsedDate = statsDateFormatter.printGranularDate(calendar.time, WEEKS)
 
         assertThat(parsedDate).isEqualTo("Dec 17 - Dec 23")
     }

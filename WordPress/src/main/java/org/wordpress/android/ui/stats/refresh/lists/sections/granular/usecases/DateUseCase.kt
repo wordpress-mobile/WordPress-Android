@@ -6,9 +6,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.TimeStatsTypes.DATE
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BackgroundInformation
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -19,21 +19,28 @@ import javax.inject.Named
 
 class DateUseCase
 constructor(
-    private val statsGranularity: StatsGranularity,
-    private val selectedDateProvider: SelectedDateProvider,
+    statsGranularity: StatsGranularity,
+    selectedDateProvider: SelectedDateProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val resourceProvider: ResourceProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : StatelessUseCase<Date>(DATE, mainDispatcher) {
+) : GranularStatelessUseCase<Date>(DATE, mainDispatcher, selectedDateProvider, statsGranularity) {
     override fun buildLoadingItem(): List<BlockListItem> =
-            listOf(getUiModel(selectedDateProvider.getSelectedDate(statsGranularity)))
+            listOf(
+                    BackgroundInformation(
+                            text = statsDateFormatter.printGranularDate(
+                                    selectedDateProvider.getCurrentDate(),
+                                    statsGranularity
+                            )
+                    )
+            )
 
-    override suspend fun loadCachedData(site: SiteModel) {
-        onModel(selectedDateProvider.getSelectedDate(statsGranularity))
+    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel) {
+        onModel(selectedDate)
     }
 
-    override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
-        onModel(selectedDateProvider.getSelectedDate(statsGranularity))
+    override suspend fun fetchRemoteData(selectedDate: Date, site: SiteModel, forced: Boolean) {
+        onModel(selectedDate)
     }
 
     override fun buildUiModel(domainModel: Date): List<BlockListItem> {
