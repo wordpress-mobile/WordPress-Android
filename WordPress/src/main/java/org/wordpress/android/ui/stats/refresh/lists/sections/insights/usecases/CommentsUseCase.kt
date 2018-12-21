@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Navig
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -31,7 +33,8 @@ private const val PAGE_SIZE = 6
 class CommentsUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val insightsStore: InsightsStore
+    private val insightsStore: InsightsStore,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<CommentsModel, SelectedTabUiState>(COMMENTS, mainDispatcher, 0) {
     override suspend fun fetchRemoteData(site: SiteModel, forced: Boolean) {
         val response = insightsStore.fetchComments(site, PAGE_SIZE, forced)
@@ -120,6 +123,7 @@ class CommentsUseCase
     }
 
     private fun onLinkClick() {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
         navigateTo(ViewCommentsStats())
     }
 }

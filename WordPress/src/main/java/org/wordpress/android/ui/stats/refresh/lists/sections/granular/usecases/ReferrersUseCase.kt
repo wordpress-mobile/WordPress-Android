@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -26,6 +27,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.R
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import java.util.Date
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,7 +40,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val referrersStore: ReferrersStore,
     private val statsDateFormatter: StatsDateFormatter,
-    selectedDateProvider: SelectedDateProvider
+    selectedDateProvider: SelectedDateProvider,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
         REFERRERS,
         mainDispatcher,
@@ -124,6 +128,7 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewReferrers(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
@@ -134,7 +139,8 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val referrersStore: ReferrersStore,
         private val statsDateFormatter: StatsDateFormatter,
-        private val selectedDateProvider: SelectedDateProvider
+        private val selectedDateProvider: SelectedDateProvider,
+        private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 ReferrersUseCase(
@@ -142,7 +148,8 @@ constructor(
                         mainDispatcher,
                         referrersStore,
                         statsDateFormatter,
-                        selectedDateProvider
+                        selectedDateProvider,
+                        analyticsTracker
                 )
     }
 }

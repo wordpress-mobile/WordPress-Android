@@ -3,6 +3,10 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -17,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,7 +29,8 @@ class LatestPostSummaryUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val latestPostSummaryMapper: LatestPostSummaryMapper
+    private val latestPostSummaryMapper: LatestPostSummaryMapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
         val dbModel = insightsStore.getLatestPostInsights(site)
@@ -96,18 +102,22 @@ class LatestPostSummaryUseCase
     }
 
     private fun onAddNewPostClick() {
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
         navigateTo(AddNewPost())
     }
 
     private fun onViewMore(params: ViewMoreParams) {
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
         navigateTo(ViewPostDetailStats(params.postId, params.postTitle, params.postUrl))
     }
 
     private fun onSharePost(params: SharePostParams) {
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED)
         navigateTo(SharePost(params.postUrl, params.postTitle))
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 

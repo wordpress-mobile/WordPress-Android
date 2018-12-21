@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.design.widget.TabLayout.OnTabSelectedListener
+import android.support.design.widget.TabLayout.Tab
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
@@ -30,6 +32,8 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
+
+private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
 class StatsFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -63,6 +67,17 @@ class StatsFragment : DaggerFragment() {
     private fun initializeViews(activity: FragmentActivity) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabReselected(tab: Tab?) {
+            }
+
+            override fun onTabUnselected(tab: Tab?) {
+            }
+
+            override fun onTabSelected(tab: Tab) {
+                viewModel.onSectionSelected(statsSections[tab.position])
+            }
+        })
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
@@ -119,10 +134,6 @@ class StatsFragment : DaggerFragment() {
 }
 
 class StatsPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    companion object {
-        val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
-    }
-
     override fun getCount(): Int = statsSections.size
 
     override fun getItem(position: Int): Fragment {

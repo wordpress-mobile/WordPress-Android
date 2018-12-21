@@ -5,6 +5,12 @@ import android.arch.lifecycle.MutableLiveData
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.track
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
@@ -16,6 +22,7 @@ import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -102,6 +109,16 @@ class StatsViewModel
                 MONTHS -> monthStatsUseCase.refreshData(site)
                 YEARS -> yearStatsUseCase.refreshData(site)
             }
+        }
+    }
+
+    fun onSectionSelected(statsSection: StatsSection) {
+        when (statsSection) {
+            StatsSection.INSIGHTS -> track(STATS_INSIGHTS_ACCESSED)
+            StatsSection.DAYS -> track(STATS_PERIOD_DAYS_ACCESSED)
+            StatsSection.WEEKS -> track(STATS_PERIOD_WEEKS_ACCESSED)
+            StatsSection.MONTHS -> track(STATS_PERIOD_MONTHS_ACCESSED)
+            StatsSection.YEARS -> track(STATS_PERIOD_YEARS_ACCESSED)
         }
     }
 }

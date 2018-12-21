@@ -32,11 +32,13 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 class PublicizeUseCaseTest : BaseUnitTest() {
     @Mock lateinit var insightsStore: InsightsStore
     @Mock lateinit var site: SiteModel
     @Mock lateinit var serviceMapper: ServiceMapper
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: PublicizeUseCase
     private val pageSize = 5
     @Before
@@ -44,7 +46,8 @@ class PublicizeUseCaseTest : BaseUnitTest() {
         useCase = PublicizeUseCase(
                 Dispatchers.Unconfined,
                 insightsStore,
-                serviceMapper
+                serviceMapper,
+                tracker
         )
     }
 

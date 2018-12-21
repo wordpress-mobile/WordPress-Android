@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -28,6 +29,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.C
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
 import java.util.Date
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,7 +42,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: ClicksStore,
     selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : GranularStatefulUseCase<ClicksModel, SelectedClicksGroup>(
         CLICKS,
         mainDispatcher,
@@ -128,10 +132,12 @@ constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewClicks(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onItemClick(url: String) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_CLICKS_ITEM_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 
@@ -142,7 +148,8 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: ClicksStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 ClicksUseCase(
@@ -150,7 +157,8 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter
+                        statsDateFormatter,
+                        analyticsTracker
                 )
     }
 }

@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 class OverviewUseCaseTest : BaseUnitTest() {
@@ -39,6 +40,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock lateinit var columns: Columns
     @Mock lateinit var title: Title
     @Mock lateinit var barChartItem: BarChartItem
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var useCase: OverviewUseCase
     private val periodData = PeriodData("2018-10-08", 10, 15, 20, 25, 30, 35)
     private val modelPeriod = "2018-10-10"
@@ -54,7 +56,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
                 selectedDateProvider,
                 statsDateFormatter,
                 overviewMapper,
-                Dispatchers.Unconfined
+                Dispatchers.Unconfined,
+                analyticsTrackerWrapper
         )
         whenever(selectedDateProvider.getCurrentDate()).thenReturn(currentDate)
         whenever(overviewMapper.buildTitle(any(), any(), any(), any())).thenReturn(title)

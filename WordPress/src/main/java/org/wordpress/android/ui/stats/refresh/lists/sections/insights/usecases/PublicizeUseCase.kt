@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.PublicizeModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.NavigationAction
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.utils.ServiceMapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,7 +28,8 @@ class PublicizeUseCase
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val insightsStore: InsightsStore,
-    private val mapper: ServiceMapper
+    private val mapper: ServiceMapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<org.wordpress.android.fluxc.model.stats.PublicizeModel>(PUBLICIZE, mainDispatcher) {
     override suspend fun loadCachedData(site: SiteModel) {
         insightsStore.getPublicizeData(
@@ -75,6 +78,7 @@ class PublicizeUseCase
     }
 
     private fun onLinkClick() {
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_PUBLICIZE_VIEW_MORE_TAPPED)
         return navigateTo(ViewPublicizeStats())
     }
 }
