@@ -5,10 +5,17 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.stats.refresh.StatsViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.DaysListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.WeeksListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.YearsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightsListViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
+import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
@@ -76,6 +83,36 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(InsightsListViewModel.class)
+    abstract ViewModel insightsTabViewModel(InsightsListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DaysListViewModel.class)
+    abstract ViewModel daysTabViewModel(DaysListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WeeksListViewModel.class)
+    abstract ViewModel weeksTabViewModel(WeeksListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MonthsListViewModel.class)
+    abstract ViewModel monthsTabViewModel(MonthsListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(YearsListViewModel.class)
+    abstract ViewModel yearsTabViewModel(YearsListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StatsViewModel.class)
+    abstract ViewModel statsViewModel(StatsViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(HistoryViewModel.class)
     abstract ViewModel historyViewModel(HistoryViewModel viewModel);
 
@@ -83,6 +120,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostListViewModel.class)
     abstract ViewModel postListViewModel(PostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(GiphyPickerViewModel.class)
+    abstract ViewModel giphyPickerViewModel(GiphyPickerViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

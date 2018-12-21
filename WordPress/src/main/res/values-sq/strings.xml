@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-27 20:21:05+0000
+Translation-Revision-Date: 2018-12-06 11:39:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="menu_debug">Diagnostikoni Menunë</string>
+    <string name="preference_experimental">*EKSPERIMENTALE*</string>
+    <string name="site_settings_enable_gutenberg_summary">Ky është ende një version eksperimental i Gutenberg-ut</string>
+    <string name="site_settings_enable_gutenberg">Aktivizoje Gutenberg-un</string>
     <string name="change_password_dialog_message">Po ndryshohen fjalëkalimet…</string>
     <string name="change_password_dialog_hint">Fjalëkalimi juaj duhet të jetë e pakta gjashtë shenja i gjatë. Për ta bërë më të fuqishëm, përdorni shkronja me të mëdha dhe me të vogla, numra, dhe simbole të tilla si ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Fjalëkalimi u ndryshua me sukses</string>

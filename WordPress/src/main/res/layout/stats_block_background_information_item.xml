@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text"
+    style="@style/StatsBlockBackground"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/one_line_list_item_height"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:text="@string/unknown"/>

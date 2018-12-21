@@ -17,6 +17,7 @@ import org.wordpress.android.widgets.WPTextView
  * - Title describing cause for empty state (required)
  * - Subtitle detailing cause for empty state (optional)
  * - Button providing action to take (optional)
+ * - Bottom Image which can be used for attribution logos (optional)
  */
 class ActionableEmptyView : LinearLayout {
     lateinit var button: AppCompatButton
@@ -24,6 +25,12 @@ class ActionableEmptyView : LinearLayout {
     lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
+    /**
+     * Image shown at the bottom after the subtitle.
+     *
+     * This can be used for attribution logos. This is [View.GONE] by default.
+     */
+    lateinit var bottomImage: ImageView
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
         initView(context, attrs)
@@ -45,6 +52,7 @@ class ActionableEmptyView : LinearLayout {
         title = layout.findViewById(R.id.title)
         subtitle = layout.findViewById(R.id.subtitle)
         button = layout.findViewById(R.id.button)
+        bottomImage = layout.findViewById(R.id.bottom_image)
 
         attrs.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.ActionableEmptyView, 0, 0)
