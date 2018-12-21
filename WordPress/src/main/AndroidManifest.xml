@@ -506,6 +506,9 @@
             android:name=".ui.stockmedia.StockMediaPickerActivity"
             android:label=""
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.giphy.GiphyPickerActivity"
+            android:theme="@style/Calypso.NoActionBar" />
 
         <!-- Notifications activities -->
         <activity

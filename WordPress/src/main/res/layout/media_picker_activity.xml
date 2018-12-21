@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
-            tools:listitem="@layout/stock_media_picker_thumbnail"/>
+            tools:listitem="@layout/media_picker_thumbnail"/>
 
         <org.wordpress.android.ui.ActionableEmptyView
             android:id="@+id/actionable_empty_view"
@@ -47,7 +47,7 @@
             tools:visibility="visible" >
         </org.wordpress.android.ui.ActionableEmptyView>
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/container_selection_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 android:id="@+id/text_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
                 android:background="?android:selectableItemBackground"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_large"
@@ -75,7 +75,7 @@
                 android:id="@+id/text_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:background="?android:selectableItemBackground"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:padding="@dimen/margin_large"
@@ -85,7 +85,21 @@
                 android:textSize="@dimen/text_sz_large"
                 android:textStyle="bold"/>
 
-        </FrameLayout>
+            <ProgressBar
+                android:id="@+id/upload_progress"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:indeterminate="true"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/text_add"
+                app:layout_constraintEnd_toEndOf="@id/text_add"
+
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+        </android.support.constraint.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/progress"

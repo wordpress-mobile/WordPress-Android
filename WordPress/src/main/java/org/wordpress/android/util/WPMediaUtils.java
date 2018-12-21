@@ -420,29 +420,51 @@ public class WPMediaUtils {
         void doNext(Uri uri);
     }
 
-    public static boolean fetchMediaAndDoNext(Context context, Uri mediaUri, MediaFetchDoNext listener) {
-        if (!MediaUtils.isInMediaStore(mediaUri)) {
+    /**
+     * Downloads the {@code mediaUri} and returns the {@link Uri} for the downloaded file
+     * <p>
+     * If the {@code mediaUri} is already in the the local store, no download will be done and the given
+     * {@code mediaUri} will be returned instead. This may return null if the download fails.
+     * <p>
+     * The current thread is blocked until the download is finished.
+     *
+     * @return A local {@link Uri} or null if the download failed
+     */
+    public static @Nullable Uri fetchMedia(@NonNull Context context, @NonNull Uri mediaUri) {
+        if (MediaUtils.isInMediaStore(mediaUri)) {
+            return mediaUri;
+        }
+
+        try {
             // Do not download the file in async task. See
             // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
-            Uri downloadedUri = null;
-            try {
-                downloadedUri = MediaUtils.downloadExternalMedia(context, mediaUri);
-            } catch (IllegalStateException e) {
-                // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-                AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
-                                                                 + " See issue #5823");
-            }
-            if (downloadedUri != null) {
-                listener.doNext(downloadedUri);
-            } else {
-                ToastUtils.showToast(context, R.string.error_downloading_image,
-                                     ToastUtils.Duration.SHORT);
-                return false;
-            }
-        } else {
-            listener.doNext(mediaUri);
+            return MediaUtils.downloadExternalMedia(context, mediaUri);
+        } catch (IllegalStateException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
+            AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
+            CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
+                                                             + " See issue #5823");
+
+            return null;
         }
-        return true;
+    }
+
+    /**
+     * Downloads the given {@code mediaUri} and calls {@code listener} if successful
+     * <p>
+     * If the download fails, a {@link android.widget.Toast} will be shown.
+     *
+     * @return A {@link Boolean} indicating whether the download was successful
+     */
+    public static boolean fetchMediaAndDoNext(Context context, Uri mediaUri, MediaFetchDoNext listener) {
+        final Uri downloadedUri = fetchMedia(context, mediaUri);
+        if (downloadedUri != null) {
+            listener.doNext(downloadedUri);
+            return true;
+        } else {
+            ToastUtils.showToast(context, R.string.error_downloading_image,
+                    ToastUtils.Duration.SHORT);
+            return false;
+        }
     }
 }
