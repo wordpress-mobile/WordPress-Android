@@ -28,6 +28,6 @@
         android:layout_marginTop="@dimen/margin_medium"
         android:gravity="center"
         android:textColor="@color/wp_grey_darken_20"
-        android:textSize="@dimen/text_sz_medium"
+        android:textSize="@dimen/text_sz_large"
         tools:text="We’ll use your answer to add sections to your website."/>
 </LinearLayout>
