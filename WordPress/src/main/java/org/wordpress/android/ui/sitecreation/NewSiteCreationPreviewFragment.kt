@@ -17,6 +17,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
@@ -309,6 +310,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                     val okContainerAnim = createOkButtonContainerAnimator(contentHeight)
                     val titleAnim = createTitleAnimator()
                     AnimatorSet().apply {
+                        interpolator = DecelerateInterpolator()
                         duration = SLIDE_IN_ANIMATION_DURATION
                         playTogether(webViewAnim, okContainerAnim, titleAnim)
                         start()
