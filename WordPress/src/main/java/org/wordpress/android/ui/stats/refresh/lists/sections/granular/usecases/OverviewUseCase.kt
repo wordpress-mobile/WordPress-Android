@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -86,7 +87,7 @@ constructor(
     }
 
     private fun onBarSelected(period: String?) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED, statsGranularity)
         updateUiState { previousState -> previousState.copy(selectedDate = period) }
         period?.let {
             selectedDateProvider.selectDate(
@@ -97,7 +98,7 @@ constructor(
     }
 
     private fun onColumnSelected(position: Int) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_OVERVIEW_TYPE)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED, statsGranularity)
         updateUiState { previousState -> previousState.copy(selectedPosition = position) }
     }
 

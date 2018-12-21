@@ -123,7 +123,7 @@ class CommentsUseCase
     }
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_COMMENTS)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_COMMENTS_VIEW_MORE_TAPPED)
         navigateTo(ViewCommentsStats())
     }
 }

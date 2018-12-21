@@ -3,10 +3,10 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ADD_NEW_POST_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_SHARE_POST_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsLatestPostModel
 import org.wordpress.android.fluxc.store.InsightsStore
@@ -102,22 +102,22 @@ class LatestPostSummaryUseCase
     }
 
     private fun onAddNewPostClick() {
-        analyticsTracker.track(STATS_ADD_NEW_POST_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED)
         navigateTo(AddNewPost())
     }
 
     private fun onViewMore(params: ViewMoreParams) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_POST_DETAILS_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED)
         navigateTo(ViewPostDetailStats(params.postId, params.postTitle, params.postUrl))
     }
 
     private fun onSharePost(params: SharePostParams) {
-        analyticsTracker.track(STATS_SHARE_POST_TAPPED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED)
         navigateTo(SharePost(params.postUrl, params.postTitle))
     }
 
     private fun onLinkClicked(params: LinkClickParams) {
-        analyticsTracker.track(STATS_SINGLE_POST_ACCESSED)
+        analyticsTracker.track(STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED)
         navigateTo(ViewPost(params.postId, params.postUrl))
     }
 

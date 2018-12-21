@@ -4,7 +4,6 @@ import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_SINGLE_POST_ACCESSED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType.HOMEPAGE
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -110,7 +110,7 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_POSTS_AND_PAGES)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewPostsAndPages(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
@@ -119,7 +119,7 @@ constructor(
             POST -> ITEM_TYPE_POST
             PAGE, HOMEPAGE -> ITEM_TYPE_HOME_PAGE
         }
-        analyticsTracker.track(STATS_SINGLE_POST_ACCESSED)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_POSTS_AND_PAGES_ITEM_TAPPED, statsGranularity)
         navigateTo(ViewPost(params.postId, params.postUrl, type))
     }
 

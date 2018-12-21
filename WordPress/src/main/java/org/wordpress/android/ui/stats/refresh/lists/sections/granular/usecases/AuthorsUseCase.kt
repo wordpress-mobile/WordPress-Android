@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFac
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -123,12 +124,12 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_AUTHORS)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewAuthors(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onPostClicked(url: String) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_AUTHORS_POST)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 

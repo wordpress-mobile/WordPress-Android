@@ -26,6 +26,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFac
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ReferrersUseCase.SelectedGroup
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -120,7 +121,7 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_REFERRERS)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_REFERRERS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewReferrers(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 

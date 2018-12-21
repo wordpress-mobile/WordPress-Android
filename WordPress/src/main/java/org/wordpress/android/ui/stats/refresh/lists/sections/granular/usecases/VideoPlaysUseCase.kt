@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -98,12 +99,12 @@ constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_VIDEO_PLAYS)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewVideoPlays(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onItemClick(url: String) {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_VIDEO)
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 

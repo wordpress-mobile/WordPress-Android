@@ -78,7 +78,7 @@ class PublicizeUseCase
     }
 
     private fun onLinkClick() {
-        analyticsTracker.track(AnalyticsTracker.Stat.STATS_VIEW_ALL_PUBLICIZE)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_PUBLICIZE_VIEW_MORE_TAPPED)
         return navigateTo(ViewPublicizeStats())
     }
 }
