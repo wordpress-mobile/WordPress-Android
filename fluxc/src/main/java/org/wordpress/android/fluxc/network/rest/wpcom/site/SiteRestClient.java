@@ -66,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError;
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainError;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
@@ -373,7 +374,7 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
                                final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
-                               final int quantity) {
+                               final int quantity, final boolean includeVendorDot) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
@@ -381,6 +382,9 @@ public class SiteRestClient extends BaseWPComRestClient {
         params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
         params.put("quantity", String.valueOf(quantity));
+        if (includeVendorDot) {
+            params.put("vendor", "dot");
+        }
         final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
                 WPComGsonRequest.buildGetRequest(url, params,
                         new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
@@ -397,9 +401,16 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
                                 SuggestDomainError suggestDomainError =
                                         new SuggestDomainError(error.apiError, error.message);
-                                SuggestDomainsResponsePayload payload =
-                                        new SuggestDomainsResponsePayload(query, suggestDomainError);
-                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                if (suggestDomainError.type == SuggestDomainErrorType.EMPTY_RESULTS) {
+                                    // Empty results is not an actual error, the API should return 200 for it
+                                    SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
+                                            Collections.<DomainSuggestionResponse>emptyList());
+                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                } else {
+                                    SuggestDomainsResponsePayload payload =
+                                            new SuggestDomainsResponsePayload(query, suggestDomainError);
+                                    mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                                }
                             }
                         }
                 );
