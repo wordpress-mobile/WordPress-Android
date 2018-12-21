@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.61'
+    ext.kotlin_version = '1.2.71'
     ext.arch_components_version = '1.1.1'
 
     repositories {
@@ -27,6 +27,8 @@ allprojects {
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
+            // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
+
             maven {
                 // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
                 url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
@@ -36,14 +38,7 @@ allprojects {
                 url "$rootDir/libs/gutenberg-mobile/node_modules/jsc-android/dist"
             }
         } else {
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "https://unpkg.com/react-native@0.57.5/android"
-            }
-            maven {
-                // Local Maven repo containing AARs with JSC library built for Android
-                url "https://unpkg.com/jsc-android@224109.1.0/dist/"
-            }
+            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
         }
     }
 
@@ -96,5 +91,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'd5fef50c871c9d3a5f8b33283af715b74231904e'
+    fluxCVersion = '80b758e2ca36590aa57e452879aa4c24e35df832'
 }

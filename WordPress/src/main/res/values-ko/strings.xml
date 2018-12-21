@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-28 09:54:06+0000
+Translation-Revision-Date: 2018-12-11 08:54:06+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="menu_debug">디버그 메뉴</string>
+    <string name="preference_experimental">*실험 버전*</string>
+    <string name="site_settings_enable_gutenberg_summary">아직은 Gutenberg의 실험 버전입니다.</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg 활성화</string>
     <string name="change_password_dialog_message">비밀번호 변경 중…</string>
     <string name="change_password_dialog_hint">비밀번호는 6자 이상이어야 합니다. 더 강력한 비밀번호를 만들려면 대소문자, 숫자, ! \" ? $ % ^ &amp; ) 등의 기호를 사용하세요.</string>
     <string name="change_password_confirmation">비밀번호가 성공적으로 변경되었습니다.</string>

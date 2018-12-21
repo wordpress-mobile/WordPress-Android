@@ -787,6 +787,30 @@
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
     <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
+    <!-- Stats refresh -->
+    <string name="stats_no_data_yet">No data yet</string>
+    <string name="stats_empty_insights_title">No insights added yet</string>
+    <string name="stats_empty_insights_description">Customise your insights and get the low-down on your site’s performance</string>
+    <string name="stats_button_manage_insights">Manage insights</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_followers_email">Email</string>
+    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
+    <string name="stats_follower_label">Follower</string>
+    <string name="stats_follower_since_label">Since</string>
+    <string name="stats_comments_authors">Authors</string>
+    <string name="stats_comments_posts_and_pages">Posts and pages</string>
+    <string name="stats_comments_author_label">Author</string>
+    <string name="stats_comments_title_label">Title</string>
+    <string name="stats_comments_label">Comments</string>
+    <string name="stats_posts_and_pages_title_label">Title</string>
+    <string name="stats_posts_and_pages_views_label">Views</string>
+    <string name="stats_tags_and_categories_title_label">Title</string>
+    <string name="stats_tags_and_categories_views_label">Views</string>
+    <string name="stats_category_folded_name">%1$s | %2$s</string>
+    <string name="stats_publicize_service_label">Service</string>
+    <string name="stats_publicize_followers_label">Followers</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
+
     <!-- Jetpack install -->
     <string name="jetpack">Jetpack</string>
     <string name="install_jetpack">Install Jetpack</string>
@@ -968,11 +992,51 @@
     <string name="stats_insights_latest_post_no_title">(no title)</string>
     <string name="stats_insights_latest_post_summary">Latest Post Summary</string>
     <string name="stats_insights_latest_post_trend">It\'s been %1$s since %2$s was published. Here\'s how the post has performed so far…</string>
-    <string name="stats_insights_popular">Most popular day and hour</string>
+    <string name="stats_insights_popular">Most Popular Day and Hour</string>
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_most_popular_hour">Most popular hour</string>
     <string name="stats_insights_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
+    <string name="stats_insights_today_stats">Today\'s Stats</string>
+    <string name="stats_insights_most_popular_day_and_hour_label">Day/Hour</string>
+    <string name="stats_insights_most_popular_views_label">Views</string>
+
+    <!-- Stats refreshed insights -->
+    <string name="stats_insights_all_time_stats">All Time Stats</string>
+    <string name="stats_insights_tags_and_categories">Tags and Categories</string>
+    <string name="stats_insights_latest_post_empty">You haven\'t published any posts yet. Once you start publishing, your latest post\'s summary will appear here</string>
+    <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post</string>
+    <string name="stats_insights_latest_post_message">It’s been %1$s since %2$s was published. Here’s how the post performed so far</string>
+    <string name="stats_insights_create_post">Create post</string>
+    <string name="stats_insights_share_post">Share post</string>
+    <string name="stats_insights_view_more">View more</string>
+    <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_twitter">Twitter</string>
+    <string name="stats_insights_tumblr">Tumblr</string>
+    <string name="stats_insights_google_plus">Google+</string>
+    <string name="stats_insights_linkedin">LinkedIn</string>
+    <string name="stats_insights_path">Path</string>
+    <string name="stats_most_popular_percent_views">%1$d%%</string>
+
+    <string name="stats_posts_and_pages">Posts and Pages</string>
+    <string name="stats_referrers">Referrers</string>
+    <string name="stats_referrer_label">Referrer</string>
+    <string name="stats_referrer_views_label">Views</string>
+    <string name="stats_clicks">Clicks</string>
+    <string name="stats_clicks_link_label">Link</string>
+    <string name="stats_clicks_label">Clicks</string>
+    <string name="stats_countries">Countries</string>
+    <string name="stats_country_label">Country</string>
+    <string name="stats_country_views_label">Views</string>
+    <string name="stats_videos">Videos</string>
+    <string name="stats_videos_title_label">Title</string>
+    <string name="stats_videos_views_label">Views</string>
+    <string name="stats_search_terms">Search Terms</string>
+    <string name="stats_search_terms_label">Search Term</string>
+    <string name="stats_search_terms_views_label">Views</string>
+    <string name="stats_authors">Authors</string>
+    <string name="stats_author_label">Author</string>
+    <string name="stats_author_views_label">Views</string>
 
     <!-- invalid_url -->
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
@@ -1310,6 +1374,7 @@
     <string name="local_changes_discarded">Local changes discarded</string>
     <string name="local_changes_discarding">Discarding local changes</string>
     <string name="local_changes_discarding_error">There was an error in discarding your local changes. Please contact support for more assistance.</string>
+    <string name="local_changes_discarding_no_connection">A connection is required to perform this action. Please check your connection and try again.</string>
 
     <!-- message on post preview explaining what local changes, local drafts and drafts are -->
     <string name="local_changes_explainer">This post has local changes which haven\'t been published</string>
@@ -1993,6 +2058,7 @@
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_giphy">Choose from Giphy</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
@@ -2000,6 +2066,12 @@
     <string name="stock_media_picker_search_hint">Search free photo library</string>
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
+
+    <string name="giphy_picker_search_hint">Search Giphy</string>
+    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="giphy_picker_empty_search_list">No media matching your search</string>
+    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2254,7 +2326,7 @@
     <string name="site_creation_label_site_details_title">Step 3 of 4</string>
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
     <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
-    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
+    <string name="site_creation_label_domain_selection">Pick an available address to let people find you on the web.</string>
     <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_title_hint">Site title</string>

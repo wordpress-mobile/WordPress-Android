@@ -9,7 +9,6 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.withContext
-import org.apache.commons.lang3.StringUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
@@ -23,6 +22,8 @@ import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
+import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
+import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -38,6 +39,7 @@ import kotlin.properties.Delegates
 private const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
 private const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
 private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
+private const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
 private const val FETCH_DOMAINS_SIZE = 20
 
 private const val THROTTLE_DELAY: Int = 500
@@ -58,7 +60,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
 
-    private var currentQuery: String = ""
+    private var currentQuery: DomainSuggestionsQuery? = null
     private var listState: ListState<String> = ListState.Init()
     private var selectedDomain by Delegates.observable<String?>(null) { _, old, new ->
         if (old != new) {
@@ -93,7 +95,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         if (siteTitle == null || siteTitle.isBlank()) {
             resetUiState()
         } else {
-            updateQuery(siteTitle)
+            updateQueryInternal(TitleQuery(siteTitle))
         }
     }
 
@@ -113,10 +115,14 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
+        updateQueryInternal(UserQuery(query))
+    }
+
+    private fun updateQueryInternal(query: DomainSuggestionsQuery?) {
         currentQuery = query
         selectedDomain = null
         fetchDomainsJob?.cancel() // cancel any previous requests
-        if (query.isNotEmpty()) {
+        if (query != null && !query.value.isBlank()) {
             fetchDomains(query)
         } else {
             resetUiState()
@@ -124,20 +130,21 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun resetUiState() {
-        updateUiStateToContent("", ListState.Ready(emptyList()))
+        updateUiStateToContent(null, ListState.Ready(emptyList()))
     }
 
-    private fun fetchDomains(query: String) {
+    private fun fetchDomains(query: DomainSuggestionsQuery) {
         if (networkUtils.isNetworkAvailable()) {
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
                 val payload = SuggestDomainsPayload(
-                        query,
+                        query.value,
                         FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS,
                         FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS,
                         FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS,
-                        FETCH_DOMAINS_SIZE
+                        FETCH_DOMAINS_SIZE,
+                        FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR
                 )
                 val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(payload)
                 withContext(MAIN) {
@@ -149,7 +156,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private fun onDomainsFetched(query: String, event: OnSuggestedDomains) {
+    private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
         if (event.isError) {
             updateUiStateToContent(
                     query,
@@ -163,16 +170,17 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         }
     }
 
-    private fun updateUiStateToContent(query: String, state: ListState<String>) {
+    private fun updateUiStateToContent(query: DomainSuggestionsQuery?, state: ListState<String>) {
         listState = state
+        val isNonEmptyUserQuery = isNonEmptyUserQuery(query)
         updateUiState(
                 DomainsUiState(
                         headerUiState = createHeaderUiState(
-                                shouldShowHeader(query)
+                                !isNonEmptyUserQuery
                         ),
                         searchInputUiState = createSearchInputUiState(
-                                query,
-                                showProgress = state is Loading
+                                showProgress = state is Loading,
+                                showClearButton = isNonEmptyUserQuery
                         ),
                         contentState = createDomainsUiContentState(query, state),
                         createSiteButtonContainerVisibility = selectedDomain != null
@@ -184,15 +192,18 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
-    private fun createDomainsUiContentState(query: String, state: ListState<String>): DomainsUiContentState {
+    private fun createDomainsUiContentState(
+        query: DomainSuggestionsQuery?,
+        state: ListState<String>
+    ): DomainsUiContentState {
         val items = createSuggestionsUiStates(
-                onRetry = { updateQuery(query) },
+                onRetry = { updateQueryInternal(query) },
                 data = state.data,
                 errorFetchingSuggestions = state is Error,
                 errorResId = if (state is Error) state.errorMessageResId else null
         )
         return if (items.isEmpty()) {
-            if (query.isNotBlank() && (state is Success || state is Ready)) {
+            if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
                 DomainsUiContentState.Empty
             } else DomainsUiContentState.Initial
         } else {
@@ -229,10 +240,6 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         return items
     }
 
-    private fun shouldShowHeader(query: String): Boolean {
-        return StringUtils.isEmpty(query)
-    }
-
     private fun createHeaderUiState(
         isVisible: Boolean
     ): SiteCreationHeaderUiState? {
@@ -243,15 +250,18 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun createSearchInputUiState(
-        query: String,
-        showProgress: Boolean
+        showProgress: Boolean,
+        showClearButton: Boolean
     ): SiteCreationSearchInputUiState {
         return SiteCreationSearchInputUiState(
-                UiStringRes(R.string.new_site_creation_search_domain_input_hint),
-                showProgress,
-                showClearButton = !StringUtils.isEmpty(query)
+                hint = UiStringRes(R.string.new_site_creation_search_domain_input_hint),
+                showProgress = showProgress,
+                showClearButton = showClearButton
         )
     }
+
+    private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
+            query is UserQuery && !query.value.isBlank()
 
     data class DomainsUiState(
         val headerUiState: SiteCreationHeaderUiState?,
@@ -290,5 +300,20 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             @StringRes val messageResId: Int,
             @StringRes val retryButtonResId: Int
         ) : DomainsListItemUiState()
+    }
+
+    /**
+     * An organized way to separate user initiated searches from automatic searches so we can handle them differently.
+     */
+    private sealed class DomainSuggestionsQuery(val value: String) {
+        /**
+         * User initiated search.
+         */
+        class UserQuery(value: String) : DomainSuggestionsQuery(value)
+
+        /**
+         * Automatic search initiated for the site title.
+         */
+        class TitleQuery(value: String) : DomainSuggestionsQuery(value)
     }
 }

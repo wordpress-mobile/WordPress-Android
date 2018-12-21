@@ -247,7 +247,7 @@ class NewSiteCreationVerticalsViewModel @Inject constructor(
         } else {
             val lastItemIndex = data.size - 1
             data.forEachIndexed { index, model ->
-                if (model.isNewUserVertical) {
+                if (model.isUserInputVertical) {
                     val itemUiState = VerticalsCustomModelUiState(
                             model.verticalId,
                             model.name,

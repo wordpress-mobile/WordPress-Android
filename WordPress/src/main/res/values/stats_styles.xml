@@ -96,4 +96,96 @@
         <item name="android:indeterminateTint">@color/blue_medium</item>
     </style>
 
+    <!-- Stats Refresh -->
+
+    <style name="StatsBlock">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="StatsLoadingBlock" parent="StatsBlock">
+        <item name="android:minHeight">96dp</item>
+    </style>
+
+    <style name="StatsBlockLine">
+        <item name="android:layout_height">@dimen/one_line_list_item_height</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockItem" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockValue" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockBackground" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_darken_20</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+
+    <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/wp_grey</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/blue_wordpress</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="StatsBlockColumnHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/stats_block_column</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsBlockColumnValue" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/stats_block_column</item>
+        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/stats_block_column</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/stats_block_column</item>
+        <item name="android:textSize">@dimen/text_sz_post_content</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+    </style>
+
+    <style name="StatsGraphLabel">
+        <item name="android:textColor">@color/wp_grey</item>
+        <item name="android:textSize">@dimen/text_small</item>
+    </style>
 </resources>

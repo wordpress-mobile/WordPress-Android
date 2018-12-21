@@ -861,10 +861,54 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
+            case STATS_FOLLOWERS_VIEW_MORE_TAPPED:
+                return "stats_followers_view_more_tapped";
+            case STATS_COMMENTS_VIEW_MORE_TAPPED:
+                return "stats_comments_view_more_tapped";
+            case STATS_TAGS_AND_CATEGORIES_VIEW_MORE_TAPPED:
+                return "stats_tags_and_categories_view_more_tapped";
+            case STATS_PUBLICIZE_VIEW_MORE_TAPPED:
+                return "stats_publicize_view_more_tapped";
+            case STATS_POSTS_AND_PAGES_VIEW_MORE_TAPPED:
+                return "stats_posts_and_pages_view_more_tapped";
+            case STATS_POSTS_AND_PAGES_ITEM_TAPPED:
+                return "stats_posts_and_pages_item_tapped";
+            case STATS_REFERRERS_VIEW_MORE_TAPPED:
+                return "stats_referrers_view_more_tapped";
+            case STATS_CLICKS_VIEW_MORE_TAPPED:
+                return "stats_clicks_view_more_tapped";
+            case STATS_COUNTRIES_VIEW_MORE_TAPPED:
+                return "stats_countries_view_more_tapped";
+            case STATS_OVERVIEW_BAR_CHART_TAPPED:
+                return "stats_overview_bar_chart_tapped";
+            case STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED:
+                return "stats_video_plays_view_more_tapped";
+            case STATS_VIDEO_PLAYS_VIDEO_TAPPED:
+                return "stats_video_plays_video_tapped";
+            case STATS_SEARCH_TERMS_VIEW_MORE_TAPPED:
+                return "stats_search_terms_view_more_tapped";
+            case STATS_AUTHORS_VIEW_MORE_TAPPED:
+                return "stats_authors_view_more_tapped";
+            case STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED:
+                return "stats_latest_post_summary_add_new_post_tapped";
+            case STATS_LATEST_POST_SUMMARY_SHARE_POST_TAPPED:
+                return "stats_latest_post_summary_share_post_tapped";
+            case STATS_LATEST_POST_SUMMARY_VIEW_POST_DETAILS_TAPPED:
+                return "stats_latest_post_summary_view_post_details_tapped";
+            case STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED:
+                return "stats_latest_post_summary_post_item_tapped";
+            case STATS_TAGS_AND_CATEGORIES_VIEW_TAG_TAPPED:
+                return "stats_tags_and_categories_view_tag_tapped";
+            case STATS_AUTHORS_VIEW_POST_TAPPED:
+                return "stats_authors_view_post_tapped";
+            case STATS_CLICKS_ITEM_TAPPED:
+                return "stats_clicks_item_tapped";
             case STATS_SINGLE_POST_ACCESSED:
                 return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:
                 return "stats_bar_chart_tapped";
+            case STATS_OVERVIEW_TYPE_TAPPED:
+                return "stats_overview_type_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
             case STATS_WIDGET_ADDED:
@@ -1231,6 +1275,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stock_media_searched";
             case STOCK_MEDIA_UPLOADED:
                 return "stock_media_uploaded";
+            case GIPHY_PICKER_SEARCHED:
+                return "giphy_picker_searched";
+            case GIPHY_PICKER_ACCESSED:
+                return "giphy_picker_accessed";
+            case GIPHY_PICKER_DOWNLOADED:
+                return "giphy_picker_downloaded";
             case SHORTCUT_STATS_CLICKED:
                 return "shortcut_stats_clicked";
             case SHORTCUT_NOTIFICATIONS_CLICKED:
