@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-22 10:38:44+0000
+Translation-Revision-Date: 2018-12-06 18:25:54+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="menu_debug">Hata ayıklama menüsü</string>
+    <string name="preference_experimental">*DENEYSEL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Bu hala Gutenberg\'ün deneysel bir sürümü.</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg\'ü etkinleştir</string>
     <string name="change_password_dialog_message">Parola değiştiriliyor…</string>
     <string name="change_password_dialog_hint">Parolanız en az altı karakter uzunluğunda olmalı. Daha güçlü olması için küçük harf, büyük harf, numaralar ve ! \" ? $ % ^ &amp; ) gibi semboller kullanın.</string>
     <string name="change_password_confirmation">Parola başarıyla değiştirildi</string>

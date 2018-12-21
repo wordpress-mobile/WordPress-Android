@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.Fragment;
@@ -111,6 +112,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
+import org.wordpress.android.ui.giphy.GiphyPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -225,6 +227,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
+    private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
     private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
 
@@ -535,9 +538,11 @@ public class EditPostActivity extends AppCompatActivity implements
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-            Collections.sort(mMediaMarkedUploadingOnStartIds);
+            if (mShowAztecEditor) {
+                mMediaMarkedUploadingOnStartIds =
+                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+                Collections.sort(mMediaMarkedUploadingOnStartIds);
+            }
             mIsPage = mPost.isPage();
 
             EventBus.getDefault().postSticky(
@@ -998,6 +1003,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 ActivityLauncher.showStockMediaPickerForResult(
                         this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
+            case GIPHY:
+                ActivityLauncher.showGiphyPickerForResult(this, mSite, RequestCodes.GIPHY_PICKER);
+                break;
         }
     }
 
@@ -1043,7 +1051,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
+            viewHtmlModeMenuItem.setVisible(((mEditorFragment instanceof AztecEditorFragment)
+                                             || (mEditorFragment instanceof GutenbergEditorFragment)) && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
@@ -1057,23 +1066,7 @@ public class EditPostActivity extends AppCompatActivity implements
             settingsMenuItem.setVisible(showMenuItems);
         }
 
-        if (discardChanges != null) {
-            if (mPost != null && showMenuItems) {
-                boolean showDiscardChanges = mPost.isLocallyChanged();
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
-                        && ((AztecEditorFragment) mEditorFragment).canUndo()) {
-                        showDiscardChanges = true;
-                    } else {
-                        // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
-                    }
-                }
-                discardChanges.setVisible(showDiscardChanges);
-            } else {
-                discardChanges.setVisible(false);
-            }
-        }
+        showHideDiscardLocalChangesMenuOption(showMenuItems, discardChanges);
 
         // Set text of the save button in the ActionBar
         if (mPost != null) {
@@ -1085,6 +1078,35 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void showHideDiscardLocalChangesMenuOption(boolean showMenuItems, MenuItem discardChanges) {
+        if (discardChanges != null) {
+            if (mIsNewPost) {
+                // by "local changes" we mean changes that are only local (that is to say, are not in the remote yet).
+                // if this is a new Post, then there aren't any local changes to discard yet (everything is local).
+                discardChanges.setVisible(false);
+                return;
+            }
+
+            if (mPost != null && showMenuItems) {
+                // don't show Discard Local Changes option if it's a completely local draft
+                boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
+                        && ((AztecEditorFragment) mEditorFragment).canUndo()
+                            && !mPost.isLocalDraft()) {
+                        showDiscardChanges = true;
+                    } else {
+                        // we don't have history, so hide/show depending on the original post flag value
+                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+                    }
+                }
+                discardChanges.setVisible(showDiscardChanges);
+            } else {
+                discardChanges.setVisible(false);
+            }
+        }
     }
 
     @Override
@@ -1215,28 +1237,48 @@ public class EditPostActivity extends AppCompatActivity implements
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
-                            mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
-                                    : R.string.menu_visual_mode_done_snackbar,
-                            R.string.menu_undo_snackbar_action,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // switch back
-                                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                                }
-                            });
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+                        }
+                    });
+                } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                        }
+                    });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
-                AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
-                showDialogProgress(true);
-                mPostForUndo = mPost.clone();
-                mIsDiscardingChanges = true;
-                RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
-                mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
+                    AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
+                    showDialogProgress(true);
+                    mPostForUndo = mPost.clone();
+                    mIsDiscardingChanges = true;
+                    RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
+                    mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload));
+                } else {
+                    showDialogError(R.string.local_changes_discarding_no_connection,
+                            R.string.dialog_button_ok,
+                            TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG,
+                            false);
+                }
             }
         }
         return false;
+    }
+
+    private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
+        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+                mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
+                        : R.string.menu_visual_mode_done_snackbar,
+                R.string.menu_undo_snackbar_action,
+                onUndoClickListener);
     }
 
     private void refreshEditorContent() {
@@ -1244,11 +1286,12 @@ public class EditPostActivity extends AppCompatActivity implements
         fillContentEditorFields();
     }
 
-    private void showDialogError() {
+    private void showDialogError(@StringRes int resIdMessage, @StringRes int resIdPositiveButton, String tag,
+                                 boolean showCancel) {
         BasicFragmentDialog dialog = new BasicFragmentDialog();
-        dialog.initialize(TAG_DISCARDING_CHANGES_ERROR_DIALOG, "", getString(R.string.local_changes_discarding_error),
-                getString(R.string.contact_support), getString(R.string.cancel), null);
-        dialog.show(getSupportFragmentManager(), TAG_DISCARDING_CHANGES_ERROR_DIALOG);
+        dialog.initialize(tag, "", getString(resIdMessage),
+                getString(resIdPositiveButton), showCancel ? getString(R.string.cancel) : null, null);
+        dialog.show(getSupportFragmentManager(), tag);
     }
 
     private void showDialogProgress(boolean show) {
@@ -1501,6 +1544,7 @@ public class EditPostActivity extends AppCompatActivity implements
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
+            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
             case TAG_PUBLISH_CONFIRMATION_DIALOG:
             case TAG_REMOVE_FAILED_UPLOADS_DIALOG:
                 break;
@@ -1518,6 +1562,9 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
+            case TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG:
+                // no op
+                break;
             case TAG_DISCARDING_CHANGES_ERROR_DIALOG:
                 mZendeskHelper.createNewTicket(this, Origin.DISCARD_CHANGES, mSite);
                 break;
@@ -1584,9 +1631,11 @@ public class EditPostActivity extends AppCompatActivity implements
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
 
-        // update the list of uploading ids
-        mMediaMarkedUploadingOnStartIds =
-                AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+        if (mShowAztecEditor) {
+            // update the list of uploading ids
+            mMediaMarkedUploadingOnStartIds =
+                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
+        }
     }
 
     @Override
@@ -1992,7 +2041,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
                         return GutenbergEditorFragment.newInstance("", "",
-                                AppPrefs.isAztecEditorToolbarExpanded());
+                                AppPrefs.isAztecEditorToolbarExpanded(), mIsNewPost);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());
@@ -2379,7 +2428,7 @@ public class EditPostActivity extends AppCompatActivity implements
         if (mMediaInsertedOnCreation) {
             mMediaInsertedOnCreation = false;
             contentChanged = true;
-        } else if (compareCurrentMediaMarkedUploadingToOriginal(content)) {
+        } else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
             contentChanged = true;
         } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
@@ -2404,7 +2453,11 @@ public class EditPostActivity extends AppCompatActivity implements
       * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
       * URLs will have been replaced with the remote ones.
      */
-    private boolean compareCurrentMediaMarkedUploadingToOriginal(String newContent) {
+    private boolean isCurrentMediaMarkedUploadingDifferentToOriginal(String newContent) {
+        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
+        if (!mShowAztecEditor) {
+            return false;
+        }
         List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
         Collections.sort(currentUploadingMedia);
         return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
@@ -2777,6 +2830,27 @@ public class EditPostActivity extends AppCompatActivity implements
                         savePostAsync(null);
                     }
                     break;
+                case RequestCodes.GIPHY_PICKER:
+                    if (data.hasExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
+                        int[] localIds = data.getIntArrayExtra(GiphyPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
+                        ArrayList<MediaModel> mediaModels = new ArrayList<>();
+                        for (int localId : localIds) {
+                            mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
+                        }
+
+                        if (isModernEditor()) {
+                            startUploadService(mediaModels);
+                        }
+
+                        for (MediaModel mediaModel : mediaModels) {
+                            mediaModel.setLocalPostId(mPost.getId());
+                            mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
+
+                            MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
+                            mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
+                        }
+                    }
+                    break;
                 case RequestCodes.HISTORY_DETAIL:
                     if (data.hasExtra(KEY_REVISION)) {
                         mViewPager.setCurrentItem(PAGE_CONTENT);
@@ -2980,19 +3054,30 @@ public class EditPostActivity extends AppCompatActivity implements
      * Starts the upload service to upload selected media.
      */
     private void startUploadService(MediaModel media) {
-        // make sure we only pass items with the QUEUED state to the UploadService
-        if (!MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
-            return;
-        }
-
         final ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(media);
+        startUploadService(mediaList);
+    }
+
+    /**
+     * Start the {@link UploadService} to upload the given {@code mediaModels}.
+     *
+     * Only {@link MediaModel} objects that have {@code MediaUploadState.QUEUED} statuses will be uploaded. .
+     */
+    private void startUploadService(@NonNull List<MediaModel> mediaModels) {
+        // make sure we only pass items with the QUEUED state to the UploadService
+        final ArrayList<MediaModel> queuedMediaModels = new ArrayList<>();
+        for (MediaModel media : mediaModels) {
+            if (MediaUploadState.QUEUED.toString().equals(media.getUploadState())) {
+                queuedMediaModels.add(media);
+            }
+        }
+
         // before starting the service, we need to update the posts' contents so we are sure the service
         // can retrieve it from there on
         savePostAsync(new AfterSavePostListener() {
-            @Override
-            public void onPostSave() {
-                UploadService.uploadMediaFromEditor(EditPostActivity.this, mediaList);
+            @Override public void onPostSave() {
+                UploadService.uploadMediaFromEditor(EditPostActivity.this, queuedMediaModels);
             }
         });
     }
@@ -3541,7 +3626,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             } else {
                 if (mIsDiscardingChanges) {
-                    showDialogError();
+                    showDialogError(R.string.local_changes_discarding_error, R.string.contact_support,
+                            TAG_DISCARDING_CHANGES_ERROR_DIALOG,
+                            true);
                 }
 
                 mIsDiscardingChanges = false;
