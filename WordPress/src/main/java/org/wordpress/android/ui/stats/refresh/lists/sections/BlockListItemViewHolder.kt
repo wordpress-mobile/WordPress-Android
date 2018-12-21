@@ -350,6 +350,7 @@ sealed class BlockListItemViewHolder(
         ) {
             if (!barSelected) {
                 GlobalScope.launch(Dispatchers.Main) {
+                    delay(50)
                     chart.draw(item, labelStart, labelEnd)
                 }
             }
