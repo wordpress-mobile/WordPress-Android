@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
 private const val pageSize = 6
@@ -44,6 +45,7 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var statsDateFormatter: StatsDateFormatter
     @Mock lateinit var selectedDateProvider: SelectedDateProvider
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: VideoPlaysUseCase
     private val videoPlay = VideoPlays("post1", "Video 1", "group2.jpg", 100)
     @Before
@@ -53,7 +55,8 @@ class VideoPlaysUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 store,
                 selectedDateProvider,
-                statsDateFormatter
+                statsDateFormatter,
+                tracker
         )
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
     }

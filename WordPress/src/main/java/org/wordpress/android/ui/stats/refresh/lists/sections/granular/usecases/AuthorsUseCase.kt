@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -27,6 +28,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFac
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.AuthorsUseCase.SelectedAuthor
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -38,7 +41,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val authorsStore: AuthorsStore,
     private val selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatefulUseCase<AuthorsModel, SelectedAuthor>(AUTHORS, mainDispatcher, SelectedAuthor()) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_authors))
 
@@ -120,10 +124,12 @@ constructor(
     }
 
     private fun onViewMoreClicked(statsGranularity: StatsGranularity) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewAuthors(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onPostClicked(url: String) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_AUTHORS_VIEW_POST_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 
@@ -134,7 +140,8 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val authorsStore: AuthorsStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 AuthorsUseCase(
@@ -142,7 +149,8 @@ constructor(
                         mainDispatcher,
                         authorsStore,
                         selectedDateProvider,
-                        statsDateFormatter
+                        statsDateFormatter,
+                        analyticsTracker
                 )
     }
 }

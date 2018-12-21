@@ -35,6 +35,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -43,6 +44,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
     @Mock lateinit var statsUtilsWrapper: StatsUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var tracker: AnalyticsTrackerWrapper
     private lateinit var useCase: FollowersUseCase
     private val avatar = "avatar.jpg"
     private val user = "John Smith"
@@ -59,7 +61,8 @@ class FollowersUseCaseTest : BaseUnitTest() {
                 Dispatchers.Unconfined,
                 insightsStore,
                 statsUtilsWrapper,
-                resourceProvider
+                resourceProvider,
+                tracker
         )
         whenever(statsUtilsWrapper.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)

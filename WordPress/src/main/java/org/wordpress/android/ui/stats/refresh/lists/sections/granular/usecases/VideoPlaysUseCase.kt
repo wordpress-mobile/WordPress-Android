@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 
 import kotlinx.coroutines.experimental.CoroutineDispatcher
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.time.VideoPlaysModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -22,6 +23,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.UseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.toFormattedString
+import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,7 +36,8 @@ constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val store: VideoPlaysStore,
     private val selectedDateProvider: SelectedDateProvider,
-    private val statsDateFormatter: StatsDateFormatter
+    private val statsDateFormatter: StatsDateFormatter,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<VideoPlaysModel>(VIDEOS, mainDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(string.stats_videos))
 
@@ -95,10 +99,12 @@ constructor(
     }
 
     private fun onViewMoreClick(statsGranularity: StatsGranularity) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED, statsGranularity)
         navigateTo(ViewVideoPlays(statsGranularity, statsDateFormatter.todaysDateInStatsFormat()))
     }
 
     private fun onItemClick(url: String) {
+        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIDEO_PLAYS_VIDEO_TAPPED, statsGranularity)
         navigateTo(ViewUrl(url))
     }
 
@@ -107,7 +113,8 @@ constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         private val store: VideoPlaysStore,
         private val selectedDateProvider: SelectedDateProvider,
-        private val statsDateFormatter: StatsDateFormatter
+        private val statsDateFormatter: StatsDateFormatter,
+        private val analyticsTracker: AnalyticsTrackerWrapper
     ) : UseCaseFactory {
         override fun build(granularity: StatsGranularity) =
                 VideoPlaysUseCase(
@@ -115,7 +122,8 @@ constructor(
                         mainDispatcher,
                         store,
                         selectedDateProvider,
-                        statsDateFormatter
+                        statsDateFormatter,
+                        analyticsTracker
                 )
     }
 }
