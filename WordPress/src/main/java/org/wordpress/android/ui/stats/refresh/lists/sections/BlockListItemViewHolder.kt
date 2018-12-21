@@ -263,8 +263,19 @@ sealed class BlockListItemViewHolder(
             parent,
             R.layout.stats_block_four_columns_item
     ) {
-        private val keys = listOf<TextView>(itemView.findViewById(R.id.key1), itemView.findViewById(R.id.key2), itemView.findViewById(R.id.key3), itemView.findViewById(R.id.key4))
-        private val values = listOf<TextView>(itemView.findViewById(R.id.value1), itemView.findViewById(R.id.value2), itemView.findViewById(R.id.value3), itemView.findViewById(R.id.value4))
+        private val keys = listOf<TextView>(
+                itemView.findViewById(R.id.key1),
+                itemView.findViewById(R.id.key2),
+                itemView.findViewById(R.id.key3),
+                itemView.findViewById(R.id.key4)
+        )
+        private val values = listOf<TextView>(
+                itemView.findViewById(R.id.value1),
+                itemView.findViewById(R.id.value2),
+                itemView.findViewById(R.id.value3),
+                itemView.findViewById(R.id.value4)
+        )
+
         fun bind(
             columns: Columns,
             payloads: List<Any>
