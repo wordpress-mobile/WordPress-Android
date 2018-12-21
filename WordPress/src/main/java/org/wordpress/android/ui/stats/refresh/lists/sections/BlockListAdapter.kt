@@ -45,7 +45,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHo
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ExpandableItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.HeaderViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.InformationViewHolder
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.LeftColumnsViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.FourColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.LinkViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItemViewHolder.ListItemWithIconViewHolder
@@ -92,7 +92,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             CENTERED_COLUMNS -> CenteredColumnsViewHolder(parent)
-            LEFT_COLUMNS -> LeftColumnsViewHolder(parent)
+            LEFT_COLUMNS -> FourColumnsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> BarChartViewHolder(parent)
             TABS -> TabsViewHolder(parent, imageManager)
@@ -119,7 +119,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
             is CenteredColumnsViewHolder -> holder.bind(item as Columns, payloads)
-            is LeftColumnsViewHolder -> holder.bind(item as Columns, payloads)
+            is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem, payloads.contains(SELECTED_BAR_CHANGED))
             is TabsViewHolder -> holder.bind(item as TabsItem, payloads.contains(TAB_CHANGED))

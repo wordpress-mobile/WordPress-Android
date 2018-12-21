@@ -168,12 +168,20 @@
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="StatsBlockColumnSmallValue" parent="StatsBlockColumnValue">
+    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:textColor">@color/stats_block_column</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:paddingTop">@dimen/margin_medium</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_post_content</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
     </style>
 
     <style name="StatsGraphLabel">
