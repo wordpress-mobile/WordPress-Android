@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/link_wrapper"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/margin_extra_large"
+              android:orientation="vertical"
+              android:paddingEnd="@dimen/margin_extra_large"
+              android:paddingStart="@dimen/margin_extra_large">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stats_bar_chart_height"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:paddingEnd="15dp"
+        android:paddingStart="25dp">
+
+        <TextView
+            android:id="@+id/label_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/StatsGraphLabel"/>
+
+        <TextView
+            android:id="@+id/label_end"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            style="@style/StatsGraphLabel"/>
+    </LinearLayout>
+</LinearLayout>

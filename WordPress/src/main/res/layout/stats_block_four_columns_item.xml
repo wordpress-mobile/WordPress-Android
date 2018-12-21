@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:id="@+id/column_container"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="56dp">
+
+    <TextView
+        android:id="@+id/key1"
+        style="@style/StatsBlockColumnSmallHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_views"
+        app:layout_constraintBottom_toTopOf="@+id/value1"
+        app:layout_constraintEnd_toStartOf="@+id/key2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/key2"
+        style="@style/StatsBlockColumnSmallHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_visitors"
+        app:layout_constraintBottom_toTopOf="@+id/value2"
+        app:layout_constraintEnd_toStartOf="@+id/key3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/key1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/key3"
+        style="@style/StatsBlockColumnSmallHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_likes"
+        app:layout_constraintBottom_toTopOf="@+id/value3"
+        app:layout_constraintEnd_toStartOf="@+id/key4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/key2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/key4"
+        style="@style/StatsBlockColumnSmallHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_comments"
+        app:layout_constraintBottom_toTopOf="@+id/value4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@+id/key3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/value1"
+        style="@style/StatsBlockColumnSmallValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/key1"
+        app:layout_constraintTop_toBottomOf="@+id/key1"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="10"
+        />
+
+    <TextView
+        android:id="@+id/value2"
+        style="@style/StatsBlockColumnSmallValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/key2"
+        app:layout_constraintTop_toBottomOf="@+id/key2"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="15"
+        />
+
+    <TextView
+        android:id="@+id/value3"
+        style="@style/StatsBlockColumnSmallValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/key3"
+        app:layout_constraintTop_toBottomOf="@+id/key3"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="0"
+        />
+
+    <TextView
+        android:id="@+id/value4"
+        style="@style/StatsBlockColumnSmallValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/key4"
+        app:layout_constraintTop_toBottomOf="@+id/key4"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="5"
+        />
+</android.support.constraint.ConstraintLayout>

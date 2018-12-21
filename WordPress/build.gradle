@@ -179,7 +179,7 @@ dependencies {
     testImplementation 'org.robolectric:shadows-multidex:3.6.1'
     testImplementation 'org.mockito:mockito-core:2.20.1'
     testImplementation 'com.nhaarman:mockito-kotlin:1.6.0'
-    testImplementation 'org.assertj:assertj-core:2.9.1'
+    testImplementation 'org.assertj:assertj-core:3.11.1'
 
     androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.0'
     androidTestImplementation 'org.objenesis:objenesis:2.1'
@@ -239,6 +239,8 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.26.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.26.1'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 }
 
 configurations.all {

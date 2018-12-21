@@ -20,6 +20,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
@@ -103,10 +104,11 @@ import javax.inject.Named;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasServiceInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication implements HasServiceInjector {
+public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
@@ -128,6 +130,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     private static GoogleApiClient mCredentialsClient;
 
     @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
+    @Inject DispatchingAndroidInjector<Fragment> mSupportFragmentInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -715,6 +718,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Override
     public AndroidInjector<Service> serviceInjector() {
         return mServiceDispatchingAndroidInjector;
+    }
+
+    @Override public AndroidInjector<Fragment> supportFragmentInjector() {
+        return mSupportFragmentInjector;
     }
 
     /**
