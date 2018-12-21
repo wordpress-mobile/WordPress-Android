@@ -35,8 +35,10 @@ sealed class NewSiteCreationSegmentViewHolder(internal val parent: ViewGroup, @L
             title.text = uiState.title
             subtitle.text = uiState.subtitle
             imageManager.load(icon, IMAGE, uiState.iconUrl)
+            // TODO: Check with designers on how to handle this state
+            val iconColor = if (uiState.iconColor.isNotBlank()) uiState.iconColor else R.color.black.toString()
             try {
-                icon.setColorFilter(Color.parseColor(uiState.iconColor), PorterDuff.Mode.SRC_IN)
+                icon.setColorFilter(Color.parseColor(iconColor), PorterDuff.Mode.SRC_IN)
             } catch (e: IllegalArgumentException) {
                 AppLog.e(AppLog.T.SITE_CREATION, "Error parsing segment icon color: ${uiState.iconColor}")
             }
