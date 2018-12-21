@@ -21,7 +21,7 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
 
-private const val REQUEST_INPUT_FOCUS_DELAY: Int = 500
+private const val REQUEST_INPUT_FOCUS_DELAY: Long = 500L
 
 class NewSiteCreationSiteInfoViewModel @Inject constructor(
     @Named(IO_DISPATCHER) private val IO: CoroutineContext,
@@ -91,9 +91,9 @@ class NewSiteCreationSiteInfoViewModel @Inject constructor(
         }
     }
 
-    private fun requestTitleInputFocus() {
+    private fun requestTitleInputFocus(delayDuration: Long = REQUEST_INPUT_FOCUS_DELAY) {
         launch(IO) {
-            delay(REQUEST_INPUT_FOCUS_DELAY)
+            delay(delayDuration)
             withContext(MAIN) {
                 _onTitleInputFocusRequested.call()
             }
