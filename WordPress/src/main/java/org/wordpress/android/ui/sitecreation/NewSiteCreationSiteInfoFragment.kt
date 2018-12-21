@@ -4,11 +4,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatButton
 import android.text.Editable
 import android.text.TextWatcher
@@ -105,7 +107,15 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                     skipNextButton.apply {
                         setText(buttonState.text)
                         setTextColor(ContextCompat.getColor(nonNullActivity, buttonState.textColor))
-                        setBackgroundColor(ContextCompat.getColor(nonNullActivity, buttonState.backgroundColor))
+                        ViewCompat.setBackgroundTintList(
+                                this,
+                                ColorStateList.valueOf(
+                                        ContextCompat.getColor(
+                                                nonNullActivity,
+                                                buttonState.backgroundColor
+                                        )
+                                )
+                        )
                     }
                 }
             }
