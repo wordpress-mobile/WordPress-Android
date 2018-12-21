@@ -100,9 +100,24 @@ class VerticalStore @Inject constructor(
     class FetchVerticalsPayload(val searchQuery: String, val limit: Int = DEFAULT_FETCH_VERTICAL_LIMIT)
     class FetchSegmentPromptPayload(val segmentId: Long)
 
-    class FetchedSegmentsPayload(val segmentList: List<VerticalSegmentModel>) : Payload<FetchSegmentsError>()
-    class FetchedSegmentPromptPayload(val prompt: SegmentPromptModel?) : Payload<FetchSegmentPromptError>()
-    class FetchedVerticalsPayload(val verticalList: List<VerticalModel>) : Payload<FetchVerticalsError>()
+    class FetchedSegmentsPayload(val segmentList: List<VerticalSegmentModel>) : Payload<FetchSegmentsError>() {
+        constructor(error: FetchSegmentsError) : this(emptyList()) {
+            this.error = error
+        }
+    }
+
+    class FetchedSegmentPromptPayload internal constructor(val prompt: SegmentPromptModel?) :
+            Payload<FetchSegmentPromptError>() {
+        constructor(error: FetchSegmentPromptError) : this(null) {
+            this.error = error
+        }
+    }
+
+    class FetchedVerticalsPayload(val verticalList: List<VerticalModel>) : Payload<FetchVerticalsError>() {
+        constructor(error: FetchVerticalsError) : this(emptyList()) {
+            this.error = error
+        }
+    }
 
     class FetchSegmentsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
     class FetchVerticalsError(val type: VerticalErrorType, val message: String? = null) : Store.OnChangedError
