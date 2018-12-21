@@ -113,13 +113,15 @@ public class SiteStore extends Store {
         public boolean includeWordpressCom;
         public boolean includeDotBlogSubdomain;
         public int quantity;
+        public boolean includeVendorDot;
         public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
-                                     boolean includeDotBlogSubdomain, int quantity) {
+                                     boolean includeDotBlogSubdomain, int quantity, boolean includeVendorDot) {
             this.query = query;
             this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
             this.quantity = quantity;
+            this.includeVendorDot = includeVendorDot;
         }
     }
 
@@ -132,7 +134,7 @@ public class SiteStore extends Store {
             this.suggestions = new ArrayList<>();
         }
 
-        public SuggestDomainsResponsePayload(@NonNull String query, ArrayList<DomainSuggestionResponse> suggestions) {
+        public SuggestDomainsResponsePayload(@NonNull String query, List<DomainSuggestionResponse> suggestions) {
             this.query = query;
             this.suggestions = suggestions;
         }
@@ -677,6 +679,7 @@ public class SiteStore extends Store {
     }
 
     public enum SuggestDomainErrorType {
+        EMPTY_RESULTS,
         EMPTY_QUERY,
         INVALID_MINIMUM_QUANTITY,
         INVALID_MAXIMUM_QUANTITY,
@@ -1536,7 +1539,7 @@ public class SiteStore extends Store {
 
     private void suggestDomains(SuggestDomainsPayload payload) {
         mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
-                payload.includeDotBlogSubdomain, payload.quantity);
+                payload.includeDotBlogSubdomain, payload.quantity, payload.includeVendorDot);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {

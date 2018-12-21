@@ -32,8 +32,10 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
                        Type type, Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
-        // HTTP RFC requires a body (even empty) for all POST requests.
-        if (method == Method.POST && body == null) {
+        // HTTP RFC requires a body (even empty) for all POST requests. Volley will default to using the params
+        // for the body so only do this if params is null since this behavior is desirable for form-encoded
+        // POST requests.
+        if (method == Method.POST && body == null && (params == null || params.size() == 0)) {
             body = new HashMap<>();
         }
 
@@ -52,7 +54,11 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     @Override
     public String getBodyContentType() {
-        return PROTOCOL_CONTENT_TYPE;
+        if (mBody == null) {
+            return super.getBodyContentType();
+        } else {
+            return PROTOCOL_CONTENT_TYPE;
+        }
     }
 
     @Override

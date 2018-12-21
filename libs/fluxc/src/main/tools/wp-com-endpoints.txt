@@ -23,7 +23,9 @@
 /me/username/
 
 /notifications/
+/notifications/$note_id
 /notifications/seen/
+/notifications/read/
 
 /read/feed/
 /read/feed/$feed_url_or_id#long,String

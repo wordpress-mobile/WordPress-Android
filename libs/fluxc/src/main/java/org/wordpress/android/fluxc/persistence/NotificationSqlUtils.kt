@@ -78,7 +78,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
-        return emptyList()
     }
 
     @SuppressLint("WrongConstant")
@@ -114,7 +113,6 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .orderBy(NotificationModelTable.TIMESTAMP, order)
                 .asModel
                 .map { it.build(formattableContentMapper) }
-        return emptyList()
     }
 
     fun getNotificationByIdSet(idSet: NoteIdSet): NotificationModel? {
@@ -128,6 +126,15 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
                 .endGroup()
                 .endGroup().endWhere()
+                .asModel
+                .firstOrNull()?.build(formattableContentMapper)
+    }
+
+    fun getNotificationByRemoteId(remoteNoteId: Long): NotificationModel? {
+        return WellSql.select(NotificationModelBuilder::class.java)
+                .where()
+                .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
+                .endWhere()
                 .asModel
                 .firstOrNull()?.build(formattableContentMapper)
     }
