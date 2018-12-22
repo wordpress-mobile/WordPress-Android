@@ -84,10 +84,12 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                     mTaskCompleted.size()));
 
             if (mIsCompletedTaskListExpanded) {
+                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_top_white_card);
                 headerViewHolder.mChevron.setRotation(EXPANDED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_collapse_desc));
             } else {
+                headerViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_white_card);
                 headerViewHolder.mChevron.setRotation(COLLAPSED_CHEVRON_ROTATION);
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
@@ -283,8 +285,8 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         CompletedHeaderViewHolder(final View inflate) {
             super(inflate);
-            mChevron = inflate.findViewById(R.id.completed_tasks_list_chevron);
-            mTitle = inflate.findViewById(R.id.complete_tasks_header_label);
+            mChevron = inflate.findViewById(R.id.completed_tasks_header_chevron);
+            mTitle = inflate.findViewById(R.id.completed_tasks_header_title);
 
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
