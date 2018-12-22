@@ -99,6 +99,23 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
 
+        // When first list item...
+        if (position == 0) {
+            // Use rounded background when next item is header.
+            if (getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
+                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_white_card);
+            // Use top rounded background when next item is not header (i.e. middle or bottom).
+            } else {
+                taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_top_white_card);
+            }
+        // When last list item or next item is header, use bottom rounded background.
+        } else if (position == mTasks.size() - 1 || getItemViewType(position + 1) == VIEW_TYPE_COMPLETED_TASKS_HEADER) {
+            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_rounded_bottom_white_card);
+        // Otherwise, use middle unrounded background.
+        } else {
+            taskViewHolder.itemView.setBackgroundResource(R.drawable.bg_rectangle_white);
+        }
+
         QuickStartTask task = mTasks.get(position);
         boolean isEnabled = mTasksUncompleted.contains(task);
         taskViewHolder.mIcon.setEnabled(isEnabled);
@@ -299,12 +316,11 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
 
         private void toggleCompletedTasksList() {
-            ViewPropertyAnimator viewPropertyAnimator =
-                    mChevron.animate()
-                            .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION
-                                    : EXPANDED_CHEVRON_ROTATION)
-                            .setInterpolator(new LinearInterpolator())
-                            .setDuration(Duration.SHORT.toMillis(mContext));
+            ViewPropertyAnimator viewPropertyAnimator = mChevron
+                    .animate()
+                    .rotation(mIsCompletedTaskListExpanded ? COLLAPSED_CHEVRON_ROTATION : EXPANDED_CHEVRON_ROTATION)
+                    .setInterpolator(new LinearInterpolator())
+                    .setDuration(Duration.SHORT.toMillis(mContext));
 
             viewPropertyAnimator.setListener(new AnimatorListener() {
                 @Override
@@ -314,13 +330,19 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    int positionOfHeader = getAdapterPosition();
+                    int positionAfterHeader = positionOfHeader + 1;
+
                     if (mIsCompletedTaskListExpanded) {
                         mTasks.removeAll(mTaskCompleted);
-                        notifyItemRangeRemoved(getAdapterPosition() + 1, mTaskCompleted.size());
+                        notifyItemRangeRemoved(positionAfterHeader, mTaskCompleted.size());
                     } else {
                         mTasks.addAll(mTaskCompleted);
-                        notifyItemRangeInserted(getAdapterPosition() + 1, mTaskCompleted.size());
+                        notifyItemRangeInserted(positionAfterHeader, mTaskCompleted.size());
                     }
+
+                    // Update header background based after collapsed and expanded.
+                    notifyItemChanged(positionOfHeader);
                     mIsCompletedTaskListExpanded = !mIsCompletedTaskListExpanded;
                     itemView.setClickable(true);
                 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!--
+        Drawables of list items with card background for smaller than 600dp screen width devices.  All variants (top,
+        middle, and single) for small devices use bg_rectangle_white with flat white color and unrounded corners.
+    -->
+    <item name="bg_rectangle_rounded_bottom_white_card" type="drawable">@drawable/bg_rectangle_white</item>
+    <item name="bg_rectangle_rounded_top_white_card" type="drawable">@drawable/bg_rectangle_white</item>
+    <item name="bg_rectangle_rounded_white_card" type="drawable">@drawable/bg_rectangle_white</item>
+
+</resources>
