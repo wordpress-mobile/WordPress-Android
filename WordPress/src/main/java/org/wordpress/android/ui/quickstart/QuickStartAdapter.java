@@ -213,14 +213,12 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         mTasks.clear();
         mTasks.addAll(newList);
 
-        // update the position of items
         diffResult.dispatchUpdatesTo(this);
 
-        // trigger update of changed task and completed task counter
-        if (updatedTask != null) {
-            notifyItemChanged(mTasks.indexOf(updatedTask));
+        // Notify adapter of each task change individually.  Using notifyDataSetChanged() kills list changing animation.
+        for (QuickStartTask task : mTasks) {
+            notifyItemChanged(mTasks.indexOf(task));
         }
-        notifyItemChanged(mTasks.indexOf(null));
     }
 
     @Override
