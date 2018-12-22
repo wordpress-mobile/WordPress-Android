@@ -320,6 +320,7 @@
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
     <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>
 
+    <dimen name="quick_start_card_padding_horizontal">4dp</dimen>
     <dimen name="quick_start_card_width_maximum">512dp</dimen>
     <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
     <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>

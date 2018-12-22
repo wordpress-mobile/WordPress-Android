@@ -416,6 +416,14 @@
     </style>
 
     <!--Quick Start-->
+    <style name="QuickStartList">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="QuickStartListCard" parent="CardView">
+        <item name="cardElevation">0dp</item>
+    </style>
+
     <style name="QuickStartLayout">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:layout_height">wrap_content</item>
