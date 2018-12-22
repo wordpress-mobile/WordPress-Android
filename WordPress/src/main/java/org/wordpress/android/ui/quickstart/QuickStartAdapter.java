@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -94,6 +95,13 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
                 headerViewHolder.mChevron.setContentDescription(
                         mContext.getString(R.string.quick_start_completed_tasks_header_chevron_expand_desc));
             }
+
+            int topMargin = mTasksUncompleted.size() > 0
+                    ? mContext.getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
+                    : 0;
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, topMargin, 0, 0);
+            headerViewHolder.itemView.setLayoutParams(params);
             return;
         }
 
