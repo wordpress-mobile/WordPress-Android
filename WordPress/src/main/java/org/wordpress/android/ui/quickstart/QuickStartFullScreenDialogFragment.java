@@ -141,8 +141,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             int site = AppPrefs.getSelectedSite();
             mQuickStartAdapter.updateContent(
                     mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
-                    mQuickStartStore.getCompletedTasksByType(site, mTasksType),
-                    task);
+                    mQuickStartStore.getCompletedTasksByType(site, mTasksType));
         }
     }
 }

@@ -192,8 +192,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    void updateContent(List<QuickStartTask> tasksUncompleted,
-                       List<QuickStartTask> tasksCompleted, @Nullable QuickStartTask updatedTask) {
+    void updateContent(List<QuickStartTask> tasksUncompleted, List<QuickStartTask> tasksCompleted) {
         List<QuickStartTask> newList = new ArrayList<>(tasksUncompleted);
         if (!tasksCompleted.isEmpty()) {
             newList.add(null);
@@ -358,8 +357,7 @@ public class QuickStartAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     interface OnQuickStartAdapterActionListener {
-        void onTaskTapped(QuickStartTask task);
-
         void onSkipTaskTapped(QuickStartTask task);
+        void onTaskTapped(QuickStartTask task);
     }
 }
