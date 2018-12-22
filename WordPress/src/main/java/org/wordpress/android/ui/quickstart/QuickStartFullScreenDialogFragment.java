@@ -64,8 +64,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
             mTasksType = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
         }
 
-        RecyclerView listUncompleted = rootView.findViewById(R.id.list_uncompleted);
-        RecyclerView listCompleted = rootView.findViewById(R.id.list_completed);
+        RecyclerView list = rootView.findViewById(R.id.list);
         List<QuickStartTask> tasksUncompleted = new ArrayList<>();
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
@@ -88,38 +87,14 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         boolean isCompletedTasksListExpanded = savedInstanceState != null
                                                && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
-        if (tasksUncompleted.size() > 0) {
-            QuickStartAdapter quickStartAdapter = new QuickStartAdapter(
-                    requireContext(),
-                    tasksUncompleted,
-                    new ArrayList<QuickStartTask>(),
-                    isCompletedTasksListExpanded);
-            quickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
-            listUncompleted.setLayoutManager(new LinearLayoutManager(requireContext()));
-            listUncompleted.setAdapter(quickStartAdapter);
-        } else {
-            rootView.findViewById(R.id.list_uncompleted_container).setVisibility(View.GONE);
-        }
-
-        // View with list_margin_view ID only exists for default layout.
-        // Hide that view when completed or uncompleted tasks are zero.
-        if (rootView.findViewById(R.id.list_margin_view) != null
-            && (tasksUncompleted.size() == 0 || tasksCompleted.size() == 0)) {
-            rootView.findViewById(R.id.list_margin_view).setVisibility(View.GONE);
-        }
-
-        if (tasksCompleted.size() > 0) {
-            mQuickStartAdapter = new QuickStartAdapter(
-                    requireContext(),
-                    new ArrayList<QuickStartTask>(),
-                    tasksCompleted,
-                    isCompletedTasksListExpanded);
-            mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
-            listCompleted.setLayoutManager(new LinearLayoutManager(requireContext()));
-            listCompleted.setAdapter(mQuickStartAdapter);
-        } else {
-            rootView.findViewById(R.id.list_completed_container).setVisibility(View.GONE);
-        }
+        mQuickStartAdapter = new QuickStartAdapter(
+                requireContext(),
+                tasksUncompleted,
+                tasksCompleted,
+                isCompletedTasksListExpanded);
+        mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
+        list.setLayoutManager(new LinearLayoutManager(requireContext()));
+        list.setAdapter(mQuickStartAdapter);
 
         return rootView;
     }
