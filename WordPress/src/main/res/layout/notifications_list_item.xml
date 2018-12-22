@@ -62,8 +62,7 @@
                 android:layout_marginTop="35dp"
                 android:layout_width="@dimen/note_icon_sz"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                tools:text="@string/noticon_note" >
+                android:textSize="14sp" >
             </org.wordpress.android.widgets.NoticonTextView>
 
         </FrameLayout>
