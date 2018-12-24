@@ -159,8 +159,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun initCancelWizardButton() {
-        val retryBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
-        retryBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
+        val cancelBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
+        cancelBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
     }
 
     private fun initOkButton() {
