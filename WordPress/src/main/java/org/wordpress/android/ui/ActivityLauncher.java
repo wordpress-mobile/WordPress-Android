@@ -589,7 +589,7 @@ public class ActivityLauncher {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
+        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(activity);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PROMO, isPromo);
@@ -601,7 +601,7 @@ public class ActivityLauncher {
             return;
         }
 
-        Intent intent = new Intent(activity, EditPostActivity.class);
+        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(activity);
         intent.putExtra(WordPress.SITE, site);
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
@@ -611,14 +611,14 @@ public class ActivityLauncher {
     }
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(fragment.getContext());
         intent.putExtra(WordPress.SITE, page.getSite());
         intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
-        Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
+        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(fragment.getContext());
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PROMO, false);

@@ -408,7 +408,7 @@ class PostUploadNotifier {
         if (mediaList != null && !mediaList.isEmpty()) {
             ArrayList<MediaModel> mediaToIncludeInPost = new ArrayList<>(mediaList);
 
-            Intent writePostIntent = new Intent(mContext, EditPostActivity.class);
+            Intent writePostIntent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(mContext);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);

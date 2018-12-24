@@ -1,6 +1,10 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+
+import org.wordpress.android.ui.prefs.AppPrefs;
 
 public abstract class EditPostBaseActivity extends AppCompatActivity {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
@@ -47,4 +51,14 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
         STOCK_PHOTO_LIBRARY
     }
 
+    public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context) {
+        Intent intent;
+        if (AppPrefs.isGutenbergEditorEnabled()) {
+            // TODO: return the GutenbergEditPostActivity when it's ready
+            intent = new Intent(context, EditPostActivity.class);
+        } else {
+            intent = new Intent(context, EditPostActivity.class);
+        }
+        return intent;
+    }
 }

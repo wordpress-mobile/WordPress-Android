@@ -137,7 +137,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     ToastUtils.showToast(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error,
                                          ToastUtils.Duration.LONG);
                 } else {
-                    Intent shortcutIntent = new Intent(getApplicationContext(), EditPostActivity.class);
+                    Intent shortcutIntent =
+                            EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(getApplicationContext());
                     shortcutIntent.setAction(Intent.ACTION_MAIN);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
