@@ -29,7 +29,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -189,7 +188,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
-public class EditPostActivity extends AppCompatActivity implements
+public class EditPostActivity extends EditPostBaseActivity implements
         EditorFragmentActivity,
         EditorImageSettingsListener,
         EditorDragAndDropListener,
@@ -205,44 +204,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface {
-    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
-    public static final String EXTRA_IS_PAGE = "isPage";
-    public static final String EXTRA_IS_PROMO = "isPromo";
-    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
-    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
-    public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
-    public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
-    public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
-    public static final String EXTRA_INSERT_MEDIA = "insertMedia";
-    private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
-    private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
-    private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
-    private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_IS_DIALOG_PROGRESS_SHOWN = "stateKeyIsDialogProgressShown";
-    private static final String STATE_KEY_IS_DISCARDING_CHANGES = "stateKeyIsDiscardingChanges";
-    private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
-    private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
-    private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
-    private static final String STATE_KEY_REVISION = "stateKeyRevision";
-    private static final String TAG_DISCARDING_CHANGES_ERROR_DIALOG = "tag_discarding_changes_error_dialog";
-    private static final String TAG_DISCARDING_CHANGES_NO_NETWORK_DIALOG = "tag_discarding_changes_no_network_dialog";
-    private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
-    private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
 
-    private static final int PAGE_CONTENT = 0;
-    private static final int PAGE_SETTINGS = 1;
-    private static final int PAGE_PREVIEW = 2;
-    private static final int PAGE_HISTORY = 3;
-
-    private static final String PHOTO_PICKER_TAG = "photo_picker";
-    private static final String ASYNC_PROMO_DIALOG_TAG = "async_promo";
-
-    private static final String WHAT_IS_NEW_IN_MOBILE_URL =
-            "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/";
-    private static final int CHANGE_SAVE_DELAY = 500;
-    public static final int MAX_UNSAVED_POSTS = 50;
     private AztecImageLoader mAztecImageLoader;
 
     enum AddExistingdMediaSource {
