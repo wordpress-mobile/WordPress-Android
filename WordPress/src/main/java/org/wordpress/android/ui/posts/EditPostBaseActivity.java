@@ -42,7 +42,7 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
     protected static final int CHANGE_SAVE_DELAY = 500;
     public static final int MAX_UNSAVED_POSTS = 50;
 
-    protected enum AddExistingdMediaSource {
+    protected enum AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
         STOCK_PHOTO_LIBRARY
     }

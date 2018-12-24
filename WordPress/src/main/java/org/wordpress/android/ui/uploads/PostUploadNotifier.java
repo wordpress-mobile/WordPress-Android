@@ -22,6 +22,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -411,8 +412,8 @@ class PostUploadNotifier {
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
+            writePostIntent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, false);
+            writePostIntent.putExtra(EditPostBaseActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
             writePostIntent.setAction(String.valueOf(notificationId));
 
             PendingIntent actionPendingIntent =

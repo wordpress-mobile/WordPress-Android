@@ -207,11 +207,6 @@ public class EditPostActivity extends EditPostBaseActivity implements
 
     private AztecImageLoader mAztecImageLoader;
 
-    enum AddExistingdMediaSource {
-        WP_MEDIA_LIBRARY,
-        STOCK_PHOTO_LIBRARY
-    }
-
     private Handler mHandler;
     private int mDebounceCounter = 0;
     private boolean mShowAztecEditor;
@@ -2082,7 +2077,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
         return mMaxThumbWidth;
     }
 
-    private boolean addExistingMediaToEditor(@NonNull AddExistingdMediaSource source, long mediaId) {
+    private boolean addExistingMediaToEditor(@NonNull AddExistingMediaSource source, long mediaId) {
         MediaModel media = mMediaStore.getSiteMediaWithId(mSite, mediaId);
         if (media == null) {
             AppLog.w(T.MEDIA, "Cannot add null media to post");
@@ -2270,7 +2265,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
         long[] idsArray = getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS);
         ArrayList<Long> idsList = ListUtils.fromLongArray(idsArray);
         for (Long id : idsList) {
-            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+            addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
         }
         savePostAsync(null);
     }
@@ -2471,7 +2466,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
      * @param source where the media is being added from
      * @param media media being added
      */
-    private void trackAddMediaEvent(@NonNull AddExistingdMediaSource source, @NonNull MediaModel media) {
+    private void trackAddMediaEvent(@NonNull AddExistingMediaSource source, @NonNull MediaModel media) {
         switch (source) {
             case WP_MEDIA_LIBRARY:
                 if (media.isVideo()) {
@@ -2787,7 +2782,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
                         long[] mediaIds =
                                 data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
                         for (long id : mediaIds) {
-                            addExistingMediaToEditor(AddExistingdMediaSource.STOCK_PHOTO_LIBRARY, id);
+                            addExistingMediaToEditor(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, id);
                         }
                         savePostAsync(null);
                     }
@@ -2909,7 +2904,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
             showInsertMediaDialog(ids);
         } else {
             for (Long id : ids) {
-                addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+                addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
             }
             savePostAsync(null);
         }
@@ -2932,7 +2927,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
                         break;
                     case INDIVIDUALLY:
                         for (Long id : mediaIds) {
-                            addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, id);
+                            addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, id);
                         }
                         savePostAsync(null);
                         break;
@@ -3374,7 +3369,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
                 shouldFinishInit = false;
                 mMediaInsertedOnCreation = true;
                 for (MediaModel media : mediaList) {
-                    addExistingMediaToEditor(AddExistingdMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
+                    addExistingMediaToEditor(AddExistingMediaSource.WP_MEDIA_LIBRARY, media.getMediaId());
                 }
                 savePostAsync(new AfterSavePostListener() {
                     @Override

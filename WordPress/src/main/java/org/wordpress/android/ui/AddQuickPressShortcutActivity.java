@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -140,8 +141,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     shortcutIntent.setAction(Intent.ACTION_MAIN);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
-                    shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
+                    shortcutIntent.putExtra(EditPostBaseActivity.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
+                    shortcutIntent.putExtra(EditPostBaseActivity.EXTRA_IS_QUICKPRESS, true);
 
                     String shortcutName = quickPressShortcutName.getText().toString();
 

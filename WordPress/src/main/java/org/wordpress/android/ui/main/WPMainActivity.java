@@ -70,7 +70,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
-import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -686,7 +686,7 @@ public class WPMainActivity extends AppCompatActivity implements
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
                     return;
                 }
-                int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                int localId = data.getIntExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, 0);
                 final SiteModel site = getSelectedSite();
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
                 if (site != null && post != null) {

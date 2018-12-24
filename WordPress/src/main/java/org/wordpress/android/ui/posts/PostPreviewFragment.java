@@ -22,7 +22,7 @@ import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditPostBaseActivity.EXTRA_POST_LOCAL_ID;
 
 public class PostPreviewFragment extends Fragment {
     private SiteModel mSite;

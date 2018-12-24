@@ -44,7 +44,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostBaseActivity
 import org.wordpress.android.ui.posts.PostAdapterItem
 import org.wordpress.android.ui.posts.PostAdapterItemData
 import org.wordpress.android.ui.posts.PostAdapterItemUploadStatus
@@ -244,7 +244,7 @@ class PostListViewModel @Inject constructor(
     }
 
     fun handleEditPostResult(data: Intent?) {
-        val localPostId = data?.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+        val localPostId = data?.getIntExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, 0)
         if (localPostId == null || localPostId == 0) {
             return
         }

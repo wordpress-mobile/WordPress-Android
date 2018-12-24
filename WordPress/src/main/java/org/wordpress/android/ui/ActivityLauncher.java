@@ -52,6 +52,7 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.prefs.AccountSettingsActivity;
@@ -571,14 +572,14 @@ public class ActivityLauncher {
         }
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
+        intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, post.getId());
         intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
     public static void viewPagePreview(@NonNull Fragment fragment, @NonNull PageModel page) {
         Intent intent = new Intent(fragment.getContext(), PostPreviewActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         intent.putExtra(WordPress.SITE, page.getSite());
         fragment.startActivity(intent);
     }
@@ -590,8 +591,8 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditPostBaseActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -605,22 +606,22 @@ public class ActivityLauncher {
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
+        intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, post.getId());
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void editPageForResult(@NonNull Fragment fragment, @NonNull PageModel page) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, page.getSite());
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
     public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostBaseActivity.EXTRA_IS_PROMO, false);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 

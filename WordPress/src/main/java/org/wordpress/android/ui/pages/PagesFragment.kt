@@ -36,7 +36,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostBaseActivity
 import org.wordpress.android.ui.posts.GutenbergWarningFragmentDialog.GutenbergWarningDialogClickInterface
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -90,7 +90,7 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
+            val pageId = data.getLongExtra(EditPostBaseActivity.EXTRA_POST_REMOTE_ID, -1)
             if (pageId != -1L) {
                 onPageEditFinished(pageId)
             }

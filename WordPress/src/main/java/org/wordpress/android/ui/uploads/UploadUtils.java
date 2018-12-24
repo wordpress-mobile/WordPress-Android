@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AccessibilityUtils;
@@ -101,13 +102,13 @@ public class UploadUtils {
                                                      @NonNull final PostModel post,
                                                      @NonNull final SiteModel site,
                                                      View.OnClickListener publishPostListener) {
-        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+        boolean hasChanges = data.getBooleanExtra(EditPostBaseActivity.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
             return;
         }
 
-        boolean savedLocally = data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
+        boolean savedLocally = data.getBooleanExtra(EditPostBaseActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false);
         if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can't do anything
             ToastUtils.showToast(activity, R.string.error_publish_no_network,
@@ -115,7 +116,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
+        boolean hasFailedMedia = data.getBooleanExtra(EditPostBaseActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
                          new View.OnClickListener() {
@@ -395,8 +396,8 @@ public class UploadUtils {
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             writePostIntent.putExtra(WordPress.SITE, site);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                            writePostIntent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, false);
+                            writePostIntent.putExtra(EditPostBaseActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
                             activity.startActivity(writePostIntent);
                         }
                     });
