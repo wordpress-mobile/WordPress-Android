@@ -206,15 +206,16 @@ public class SitePickerActivity extends AppCompatActivity
             case RequestCodes.CREATE_SITE:
                 if (resultCode == RESULT_OK) {
                     debounceLoadSites();
-
                     if (data == null) {
                         data = new Intent();
                     }
-
-                    data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
-
-                    setResult(resultCode, data);
-                    finish();
+                    if (data.getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false)) {
+                        showSiteCreatedButNotFetchedSnackbar();
+                    } else {
+                        data.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE);
+                        setResult(resultCode, data);
+                        finish();
+                    }
                 }
                 break;
         }
@@ -302,7 +303,6 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void restoreSavedInstanceState(Bundle savedInstanceState) {
         boolean isInSearchMode = false;
-        boolean siteCreatedButNotFetched = false;
         String lastSearch = "";
 
         if (savedInstanceState != null) {
@@ -311,15 +311,9 @@ public class SitePickerActivity extends AppCompatActivity
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
-            siteCreatedButNotFetched = getIntent().getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false);
-            // Make sure we only handle this extra once
-            getIntent().removeExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED);
         }
 
         setNewAdapter(lastSearch, isInSearchMode);
-        if (siteCreatedButNotFetched) {
-            showSiteCreatedButNotFetchedSnackbar();
-        }
     }
 
     private void setupActionBar() {
