@@ -1729,10 +1729,6 @@
     <string name="previous_button" translatable="false">&lt;</string>
     <string name="next_button" translatable="false">&gt;</string>
 
-    <!-- Noticons -->
-    <string name="noticon_clock" translatable="false">\uf303</string>
-    <string name="noticon_note" translatable="false">\uf814</string>
-
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
     <string name="sharing_disabled">Sharing module disabled</string>
