@@ -312,19 +312,14 @@ public class SitePickerActivity extends AppCompatActivity
         } else if (getIntent() != null) {
             mCurrentLocalId = getIntent().getIntExtra(KEY_LOCAL_ID, 0);
             siteCreatedButNotFetched = getIntent().getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false);
+            // Make sure we only handle this extra once
+            getIntent().removeExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED);
         }
 
         setNewAdapter(lastSearch, isInSearchMode);
         if (siteCreatedButNotFetched) {
             showSiteCreatedButNotFetchedSnackbar();
         }
-    }
-
-    private void showSiteCreatedButNotFetchedSnackbar() {
-        int duration = AccessibilityUtils
-                .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
-        String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
-        WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
     }
 
     private void setupActionBar() {
@@ -698,5 +693,12 @@ public class SitePickerActivity extends AppCompatActivity
         dialogBuilder.setNegativeButton(getResources().getText(R.string.no), null);
         dialogBuilder.setCancelable(false);
         dialogBuilder.create().show();
+    }
+
+    private void showSiteCreatedButNotFetchedSnackbar() {
+        int duration = AccessibilityUtils
+                .getSnackbarDuration(this, getResources().getInteger(R.integer.site_creation_snackbar_duration));
+        String message = getString(R.string.site_created_but_not_fetched_snackbar_message);
+        WPDialogSnackbar.make(findViewById(R.id.coordinatorLayout), message, duration).show();
     }
 }
