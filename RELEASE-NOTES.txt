@@ -2,3 +2,4 @@
 * Adds support for .blog subdomains on new sites.
 * First version of the refreshed stats project - all tabs and all the blocks are completely rewritten in new design
 * Update the Notifications list layout for better readability
+* Update the Me tab layout for tablets and large devices
