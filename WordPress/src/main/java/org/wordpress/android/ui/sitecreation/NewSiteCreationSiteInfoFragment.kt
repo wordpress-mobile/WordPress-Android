@@ -13,9 +13,11 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatButton
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -94,6 +96,8 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
             // and false otherwise allowing users to input anything for a tagline except newlines, which mimics the web.
             keyCode == KeyEvent.KEYCODE_ENTER
         }
+        tagLineEditText.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        tagLineEditText.imeOptions = EditorInfo.IME_ACTION_DONE
     }
 
     private fun initViewModel() {
