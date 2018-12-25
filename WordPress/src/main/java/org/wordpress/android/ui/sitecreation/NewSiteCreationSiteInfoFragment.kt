@@ -14,6 +14,7 @@ import android.support.v4.view.ViewCompat
 import android.support.v7.widget.AppCompatButton
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.ViewGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -88,6 +89,11 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
         }
         addTextWatcher(siteTitleEditText) { viewModel.updateSiteTitle(it) }
         addTextWatcher(tagLineEditText) { viewModel.updateTagLine(it) }
+        tagLineEditText.setOnKeyListener { _, keyCode, _ ->
+            // Consume only Enter keyboard events.  The onKey method returns true if the listener has consumed the event
+            // and false otherwise allowing users to input anything for a tagline except newlines, which mimics the web.
+            keyCode == KeyEvent.KEYCODE_ENTER
+        }
     }
 
     private fun initViewModel() {
