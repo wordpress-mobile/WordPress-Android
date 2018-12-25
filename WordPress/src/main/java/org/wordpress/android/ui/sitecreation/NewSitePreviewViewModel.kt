@@ -20,6 +20,7 @@ import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreview
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewGenericErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.creation.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceData
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationServiceState
@@ -35,6 +36,7 @@ import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000
+private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000
 
 class NewSitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -188,6 +190,19 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     private fun startPreLoadingWebView() {
+        launch(IO) {
+            // Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
+            // happens first. This will give us some more time to fetch the newly created site.
+            delay(DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER)
+            // If the webview is still not loaded after some delay, we'll show the loading shimmer animation instead
+            // of the full screen progress, so the user is not blocked for taking actions.
+            withContext(MAIN) {
+                if (uiState.value !is SitePreviewContentUiState) {
+                    updateUiState(SitePreviewLoadingShimmerState(createSitePreviewData()))
+                }
+            }
+        }
+        // Load the newly created site in the webview
         _preloadPreview.postValue(UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true))
     }
 
@@ -198,25 +213,24 @@ class NewSitePreviewViewModel @Inject constructor(
          * In other words don't update it after a configuration change.
          */
         if (uiState.value !is SitePreviewContentUiState) {
-            val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
-            val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
-            val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
-            val domainIndices: Pair<Int, Int> = Pair(
-                    Math.min(subDomainIndices.second, urlWithoutScheme.length),
-                    urlWithoutScheme.length
-            )
-
-            updateUiState(
-                    SitePreviewContentUiState(
-                            SitePreviewData(
-                                    fullUrl,
-                                    urlWithoutScheme,
-                                    subDomainIndices,
-                                    domainIndices
-                            )
-                    )
-            )
+            updateUiState(SitePreviewContentUiState(createSitePreviewData()))
         }
+    }
+
+    private fun createSitePreviewData(): SitePreviewData {
+        val subDomain = UrlUtils.extractSubDomain(urlWithoutScheme)
+        val fullUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
+        val subDomainIndices: Pair<Int, Int> = Pair(0, subDomain.length)
+        val domainIndices: Pair<Int, Int> = Pair(
+                Math.min(subDomainIndices.second, urlWithoutScheme.length),
+                urlWithoutScheme.length
+        )
+        return SitePreviewData(
+                fullUrl,
+                urlWithoutScheme,
+                subDomainIndices,
+                domainIndices
+        )
     }
 
     private fun updateUiState(uiState: SitePreviewUiState) {
@@ -230,17 +244,31 @@ class NewSitePreviewViewModel @Inject constructor(
     sealed class SitePreviewUiState(
         val fullscreenProgressLayoutVisibility: Boolean,
         val contentLayoutVisibility: Boolean,
+        val webViewVisibility: Boolean,
+        val shimmerVisibility: Boolean,
         val fullscreenErrorLayoutVisibility: Boolean
     ) {
         data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = true,
+                webViewVisibility = true,
+                shimmerVisibility = false,
+                fullscreenErrorLayoutVisibility = false
+        )
+
+        data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(
+                fullscreenProgressLayoutVisibility = false,
+                contentLayoutVisibility = true,
+                webViewVisibility = false,
+                shimmerVisibility = true,
                 fullscreenErrorLayoutVisibility = false
         )
 
         object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = true,
                 contentLayoutVisibility = false,
+                webViewVisibility = false,
+                shimmerVisibility = false,
                 fullscreenErrorLayoutVisibility = false
         ) {
             const val loadingTextResId = R.string.notification_new_site_creation_creating_site_subtitle
@@ -254,6 +282,8 @@ class NewSitePreviewViewModel @Inject constructor(
         ) : SitePreviewUiState(
                 fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = false,
+                webViewVisibility = false,
+                shimmerVisibility = false,
                 fullscreenErrorLayoutVisibility = true
         ) {
             object SitePreviewGenericErrorUiState :

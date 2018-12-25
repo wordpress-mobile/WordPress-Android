@@ -24,9 +24,11 @@ import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewData
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
@@ -104,12 +106,15 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
                 when (uiState) {
-                    is SitePreviewContentUiState -> updateContentLayout(uiState)
+                    is SitePreviewContentUiState-> updateContentLayout(uiState.data)
+                    is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
                 updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
                 updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
+                updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
                 updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
@@ -168,8 +173,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         okBtn.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
-    private fun updateContentLayout(uiState: SitePreviewContentUiState) {
-        uiState.data.apply {
+    private fun updateContentLayout(sitePreviewData: SitePreviewData) {
+        sitePreviewData.apply {
             sitePreviewWebUrlTitle.text = createSpannableUrl(activity!!, shortUrl, subDomainIndices, domainIndices)
         }
         // The view is about to become visible
