@@ -242,34 +242,24 @@ class NewSitePreviewViewModel @Inject constructor(
     }
 
     sealed class SitePreviewUiState(
-        val fullscreenProgressLayoutVisibility: Boolean,
-        val contentLayoutVisibility: Boolean,
-        val webViewVisibility: Boolean,
-        val shimmerVisibility: Boolean,
-        val fullscreenErrorLayoutVisibility: Boolean
+        val fullscreenProgressLayoutVisibility: Boolean = false,
+        val contentLayoutVisibility: Boolean = false,
+        val webViewVisibility: Boolean = false,
+        val shimmerVisibility: Boolean = false,
+        val fullscreenErrorLayoutVisibility: Boolean = false
     ) {
         data class SitePreviewContentUiState(val data: SitePreviewData) : SitePreviewUiState(
-                fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = true,
-                webViewVisibility = true,
-                shimmerVisibility = false,
-                fullscreenErrorLayoutVisibility = false
+                webViewVisibility = true
         )
 
         data class SitePreviewLoadingShimmerState(val data: SitePreviewData) : SitePreviewUiState(
-                fullscreenProgressLayoutVisibility = false,
                 contentLayoutVisibility = true,
-                webViewVisibility = false,
-                shimmerVisibility = true,
-                fullscreenErrorLayoutVisibility = false
+                shimmerVisibility = true
         )
 
         object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
-                fullscreenProgressLayoutVisibility = true,
-                contentLayoutVisibility = false,
-                webViewVisibility = false,
-                shimmerVisibility = false,
-                fullscreenErrorLayoutVisibility = false
+                fullscreenProgressLayoutVisibility = true
         ) {
             const val loadingTextResId = R.string.notification_new_site_creation_creating_site_subtitle
         }
@@ -280,10 +270,6 @@ class NewSitePreviewViewModel @Inject constructor(
             val showContactSupport: Boolean = false,
             val showCancelWizardButton: Boolean = true
         ) : SitePreviewUiState(
-                fullscreenProgressLayoutVisibility = false,
-                contentLayoutVisibility = false,
-                webViewVisibility = false,
-                shimmerVisibility = false,
                 fullscreenErrorLayoutVisibility = true
         ) {
             object SitePreviewGenericErrorUiState :
