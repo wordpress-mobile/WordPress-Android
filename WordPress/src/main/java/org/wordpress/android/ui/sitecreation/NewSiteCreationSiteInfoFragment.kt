@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel
+import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteCreationListener>() {
@@ -63,7 +64,6 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        // TODO: Get the title from the main VM
         initSkipNextButton(rootView)
         siteTitleEditText = rootView.findViewById(R.id.site_info_site_title)
         tagLineEditText = rootView.findViewById(R.id.site_info_tag_line)
@@ -120,6 +120,10 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 }
             }
         })
+        viewModel.onTitleInputFocusRequested.observe(this, Observer {
+            siteTitleEditText.requestFocus()
+            ActivityUtils.showKeyboard(siteTitleEditText)
+        })
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_SITE_INFO)
         })
@@ -131,6 +135,7 @@ class NewSiteCreationSiteInfoFragment : NewSiteCreationBaseFormFragment<NewSiteC
                 siteInfoScreenListener.onSiteInfoFinished(uiState.siteTitle, uiState.tagLine)
             }
         })
+        viewModel.start()
     }
 
     override fun onHelp() {
