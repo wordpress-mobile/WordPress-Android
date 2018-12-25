@@ -358,7 +358,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 private class PreviewWebViewClient internal constructor(
     val pageLoadedListener: PageFullyLoadedListener,
     siteAddress: String
-) : URLFilteredWebViewClient(siteAddress) {
+) : URLFilteredWebViewClient(siteAddress, false) {
     interface PageFullyLoadedListener {
         fun onPageFullyLoaded()
     }
