@@ -68,13 +68,19 @@ class NewSiteCreationActivity : AppCompatActivity(),
         mainViewModel.wizardFinishedObservable.observe(this, Observer { createSiteState ->
             createSiteState?.let {
                 val intent = Intent()
-                val localSiteId = when (createSiteState) {
-                    // TODO will be handled correctly in #8822
-                    is SiteNotCreated, is SiteNotInLocalDb -> null
-                    is SiteCreationCompleted -> createSiteState.localSiteId
+                val (siteCreated, localSiteId) = when (createSiteState) {
+                    // site creation flow was canceled
+                    is SiteNotCreated -> Pair(false, null)
+                    is SiteNotInLocalDb -> {
+                        // Site was created, but we haven't been able to fetch it, let `SitePickerActivity` handle
+                        // this with a Snackbar message.
+                        intent.putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, true)
+                        Pair(true, null)
+                    }
+                    is SiteCreationCompleted -> Pair(true, createSiteState.localSiteId)
                 }
                 intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, localSiteId)
-                setResult(Activity.RESULT_OK, intent)
+                setResult(if (siteCreated) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
                 finish()
             }
         })
