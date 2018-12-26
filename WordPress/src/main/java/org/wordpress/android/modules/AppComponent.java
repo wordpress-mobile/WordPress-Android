@@ -85,6 +85,7 @@ import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostPreviewFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
+import org.wordpress.android.ui.posts.GutenbergEditPostActivity;
 import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
@@ -321,6 +322,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PublicizeButtonPrefsFragment object);
 
     void inject(EditPostActivity object);
+
+    void inject(GutenbergEditPostActivity object);
 
     void inject(EditPostSettingsFragment object);
 

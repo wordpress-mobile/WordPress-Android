@@ -54,8 +54,7 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
     public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context) {
         Intent intent;
         if (AppPrefs.isGutenbergEditorEnabled()) {
-            // TODO: return the GutenbergEditPostActivity when it's ready
-            intent = new Intent(context, EditPostActivity.class);
+            intent = new Intent(context, GutenbergEditPostActivity.class);
         } else {
             intent = new Intent(context, EditPostActivity.class);
         }

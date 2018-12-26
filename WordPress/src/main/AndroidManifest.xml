@@ -212,6 +212,19 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.posts.GutenbergEditPostActivity"
+            android:theme="@style/Calypso.ActionMode.Dark"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.posts.PostsListActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
         <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
         <activity-alias
             android:name=".ui.posts.PostsActivity"
