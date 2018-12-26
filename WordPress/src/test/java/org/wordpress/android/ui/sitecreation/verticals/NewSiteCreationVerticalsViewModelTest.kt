@@ -123,6 +123,7 @@ class NewSiteCreationVerticalsViewModelTest {
     @Mock private lateinit var verticalSelectedObserver: Observer<String?>
     @Mock private lateinit var skipBtnClickedObservable: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
+    @Mock private lateinit var onInputFocusRequestedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
 
     private lateinit var viewModel: NewSiteCreationVerticalsViewModel
@@ -142,6 +143,7 @@ class NewSiteCreationVerticalsViewModelTest {
         viewModel.verticalSelected.observeForever(verticalSelectedObserver)
         viewModel.skipBtnClicked.observeForever(skipBtnClickedObservable)
         viewModel.onHelpClicked.observeForever(onHelpClickedObserver)
+        viewModel.onInputFocusRequested.observeForever(onInputFocusRequestedObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -169,6 +171,13 @@ class NewSiteCreationVerticalsViewModelTest {
     fun verifyInputShownAfterPromptFetched() = testWithSuccessResponses {
         viewModel.start(SEGMENT_ID)
         verifyEmptySearchInputVisible(viewModel.uiState)
+    }
+
+    @Test
+    fun verifyInputRequestsFocusAfterPromptFetched() = testWithSuccessResponses {
+        viewModel.start(SEGMENT_ID)
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
+        verify(onInputFocusRequestedObserver).onChanged(captor.capture())
     }
 
     @Test
