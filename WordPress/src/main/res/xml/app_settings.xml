@@ -33,28 +33,27 @@
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
             android:key="@string/pref_key_send_usage"
+            android:icon="@drawable/ic_stats_grey_min_24dp"
             android:layout="@layout/wp_preference_layout"
-            android:title="@string/preference_collect_information"
-            android:icon="@drawable/ic_stats_grey_min_24dp"/>
+            android:title="@string/preference_collect_information"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/cookie_policy_learn_more_header"
+            app:button="@string/learn_more"
             app:caption="@string/cookie_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_info_outline_grey_min_24dp"/>
+            app:url="https://www.automattic.com/cookies"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/privacy_policy_learn_more_header"
-            app:caption="@string/privacy_policy_learn_more_caption"
             app:button="@string/privacy_policy_read"
-            app:url="https://www.automattic.com/privacy"
-            app:icon="@drawable/ic_user_circle_grey_min_24dp"/>
+            app:caption="@string/privacy_policy_learn_more_caption"
+            app:url="https://www.automattic.com/privacy"/>
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/third_party_policy_learn_more_header"
+            app:button="@string/learn_more"
             app:caption="@string/third_party_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"
-            app:icon="@drawable/ic_briefcase_grey_min_24dp"/>
+            app:url="https://www.automattic.com/cookies"/>
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
