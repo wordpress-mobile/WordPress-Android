@@ -196,11 +196,13 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         query: DomainSuggestionsQuery?,
         state: ListState<String>
     ): DomainsUiContentState {
+        // Only treat it as an error if the search is user initiated
+        val isError = isNonEmptyUserQuery(query) && state is Error
         val items = createSuggestionsUiStates(
                 onRetry = { updateQueryInternal(query) },
                 data = state.data,
-                errorFetchingSuggestions = state is Error,
-                errorResId = if (state is Error) state.errorMessageResId else null
+                errorFetchingSuggestions = isError,
+                errorResId = if (isError) (state as Error).errorMessageResId else null
         )
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
