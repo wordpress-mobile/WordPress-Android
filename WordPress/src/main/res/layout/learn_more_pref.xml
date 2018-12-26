@@ -53,4 +53,10 @@
         style="@style/Widget.AppCompat.Button.Borderless" >
     </Button>
 
+    <View
+        android:id="@+id/bottom_padding"
+        android:layout_height="@dimen/margin_extra_large"
+        android:layout_width="match_parent" >
+    </View>
+
 </LinearLayout>
