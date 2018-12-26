@@ -431,7 +431,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             endProgress();
 
             if (isPasswordInErrorMessage(event.error.message)) {
-                showErrorDialogAvatar(event.error.message);
+                showErrorDialogWithCloseButton(event.error.message);
             } else {
                 showErrorDialog(getString(R.string.signup_epilogue_error_generic));
             }
@@ -561,7 +561,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         @Override
                         public void onLoadFailed(@Nullable Exception e) {
                             AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
-                            showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
+                            showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar_view));
                         }
 
                         @Override
@@ -621,7 +621,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         dialog.show();
     }
 
-    protected void showErrorDialogAvatar(String message) {
+    protected void showErrorDialogWithCloseButton(String message) {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
@@ -669,7 +669,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             @Override
                             public void onError() {
                                 endProgress();
-                                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
+                                showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
