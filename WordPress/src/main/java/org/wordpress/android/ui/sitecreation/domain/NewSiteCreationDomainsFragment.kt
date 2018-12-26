@@ -137,6 +137,9 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.NEW_SITE_CREATION_DOMAINS)
         })
+        viewModel.onInputFocusRequested.observe(this, Observer {
+            searchInputWithHeader.requestInputFocusAndShowKeyboard()
+        })
         viewModel.start(getSiteTitleFromArguments())
     }
 
