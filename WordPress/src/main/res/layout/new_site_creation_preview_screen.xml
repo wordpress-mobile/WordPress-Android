@@ -76,6 +76,12 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="@dimen/margin_medium"
                     android:scrollbarStyle="insideInset"/>
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/sitePreviewWebViewShimmerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/wp_grey_lighten_30"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
