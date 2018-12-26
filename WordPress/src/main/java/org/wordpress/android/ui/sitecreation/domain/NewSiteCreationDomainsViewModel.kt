@@ -78,6 +78,9 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
+    private val _onInputFocusRequested = SingleLiveEvent<Unit>()
+    val onInputFocusRequested: LiveData<Unit> = _onInputFocusRequested
+
     init {
         dispatcher.register(fetchDomainsUseCase)
     }
@@ -98,6 +101,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         } else {
             updateQueryInternal(TitleQuery(siteTitle))
         }
+        // Show keyboard
+        _onInputFocusRequested.call()
     }
 
     fun createSiteBtnClicked() {
