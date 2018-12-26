@@ -429,7 +429,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             AppLog.e(T.API, "SignupEpilogueFragment.onAccountChanged: "
                             + event.error.type + " - " + event.error.message);
             endProgress();
-            showErrorDialog(getString(R.string.signup_epilogue_error_generic));
+
+            if (isPasswordInErrorMessage(event.error.message)) {
+                showErrorDialogAvatar(event.error.message);
+            } else {
+                showErrorDialog(getString(R.string.signup_epilogue_error_generic));
+            }
         // Wait to populate epilogue for email interface until account is fetched and email address
         // is available since flow is coming from magic link with no instance argument values.
         } else if (mIsEmailSignup && event.causeOfChange == AccountAction.FETCH_ACCOUNT
@@ -508,6 +513,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
      */
     private String createUsernameFromEmail() {
         return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isPasswordInErrorMessage(String message) {
+        String lowercaseMessage = message.toLowerCase();
+        String lowercasePassword = getString(R.string.password).toLowerCase();
+        return lowercaseMessage.contains(lowercasePassword);
     }
 
     protected void launchDialog() {
