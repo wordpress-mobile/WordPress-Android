@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.LocaleManager;
 
 public abstract class EditPostBaseActivity extends AppCompatActivity {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
@@ -59,5 +60,10 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
             intent = new Intent(context, EditPostActivity.class);
         }
         return intent;
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 }
