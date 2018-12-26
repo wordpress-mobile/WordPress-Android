@@ -516,8 +516,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     private boolean isPasswordInErrorMessage(String message) {
-        String lowercaseMessage = message.toLowerCase();
-        String lowercasePassword = getString(R.string.password).toLowerCase();
+        String lowercaseMessage = message.toLowerCase(Locale.getDefault());
+        String lowercasePassword = getString(R.string.password).toLowerCase(Locale.getDefault());
         return lowercaseMessage.contains(lowercasePassword);
     }
 
