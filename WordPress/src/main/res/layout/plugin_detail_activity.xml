@@ -276,7 +276,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            android:src="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
 
                     <View style="@style/PostSettingsDivider" />
@@ -293,7 +293,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            android:src="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
 
                     <View style="@style/PostSettingsDivider" />
@@ -310,7 +310,7 @@
                         <ImageView
                             style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                             android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            android:src="@drawable/ic_external_black_24dp" />
+                            android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>

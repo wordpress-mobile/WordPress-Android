@@ -466,7 +466,7 @@
                     android:id="@+id/my_site_view_site_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_external_black_24dp"/>
+                    android:src="@drawable/ic_external_white_24dp"/>
 
             </LinearLayout>
 
@@ -491,7 +491,7 @@
                     android:id="@+id/my_site_admin_icon_external"
                     style="@style/MySiteListRowSecondaryIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_external_black_24dp"/>
+                    android:src="@drawable/ic_external_white_24dp"/>
 
             </LinearLayout>
 
