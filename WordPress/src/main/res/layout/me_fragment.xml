@@ -141,7 +141,7 @@
                 <ImageView
                     android:id="@+id/me_account_settings_icon"
                     style="@style/MeListRowIcon"
-                    android:src="@drawable/ic_cog_grey_24dp"
+                    android:src="@drawable/ic_cog_white_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
