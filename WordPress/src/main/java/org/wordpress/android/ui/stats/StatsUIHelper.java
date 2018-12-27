@@ -266,7 +266,7 @@ class StatsUIHelper {
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
             chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp
-                                             : R.drawable.ic_chevron_down_blue_wordpress_24dp);
+                    : R.drawable.ic_chevron_down_white_24dp);
             float start = (isGroupExpanded ? 0.0f : 0.0f);
             float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(context) ? -1 : 1);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
@@ -276,8 +276,8 @@ class StatsUIHelper {
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp
-                                             : R.drawable.ic_chevron_right_blue_wordpress_24dp);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_white_24dp
+                    : R.drawable.ic_chevron_right_blue_wordpress_24dp);
         }
 
         chevron.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.blue_wordpress)));
