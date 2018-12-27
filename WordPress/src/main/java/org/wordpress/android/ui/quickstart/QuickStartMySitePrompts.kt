@@ -20,7 +20,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_view_site,
             R.string.quick_start_dialog_view_site_message_short,
-            R.drawable.ic_globe_grey_24dp,
+            R.drawable.ic_globe_white_24dp,
             R.string.quick_start_dialog_view_site_title,
             R.string.quick_start_dialog_view_site_message),
     CHOSE_THEME_TUTORIAL(
