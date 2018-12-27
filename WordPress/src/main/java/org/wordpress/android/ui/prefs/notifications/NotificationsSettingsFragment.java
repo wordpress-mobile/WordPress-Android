@@ -727,7 +727,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        Drawable drawableMail = context.getResources().getDrawable(R.drawable.ic_mail_grey_darken_24dp);
+        Drawable drawableMail = context.getResources().getDrawable(R.drawable.ic_mail_white_24dp);
         DrawableCompat.setTint(drawableMail, context.getResources().getColor(R.color.grey_darken_30));
         DrawableCompat.setTintMode(drawableMail, PorterDuff.Mode.SRC_IN);
 
