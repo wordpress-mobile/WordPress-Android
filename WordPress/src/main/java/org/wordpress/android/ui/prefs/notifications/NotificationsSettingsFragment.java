@@ -745,7 +745,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                     mOnSettingsChangedListener
             );
 
-            Drawable drawablePhone = context.getResources().getDrawable(R.drawable.ic_phone_grey_darken_24dp);
+            Drawable drawablePhone = context.getResources().getDrawable(R.drawable.ic_phone_white_24dp);
             DrawableCompat.setTint(drawablePhone, context.getResources().getColor(R.color.grey_darken_30));
             DrawableCompat.setTintMode(drawablePhone, PorterDuff.Mode.SRC_IN);
 

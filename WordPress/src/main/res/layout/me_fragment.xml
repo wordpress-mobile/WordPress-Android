@@ -160,7 +160,7 @@
                 <ImageView
                     android:id="@+id/me_app_settings_icon"
                     style="@style/MeListRowIcon"
-                    android:src="@drawable/ic_phone_grey_darken_24dp"
+                    android:src="@drawable/ic_phone_white_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
