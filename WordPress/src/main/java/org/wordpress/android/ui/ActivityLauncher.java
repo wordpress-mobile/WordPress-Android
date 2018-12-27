@@ -618,6 +618,13 @@ public class ActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
+    public static void editPageForResultOnGutenberg(@NonNull Fragment fragment, @NonNull PageModel page) {
+        Intent intent = new Intent(fragment.getContext(), GutenbergEditPostActivity.class);
+        intent.putExtra(WordPress.SITE, page.getSite());
+        intent.putExtra(EditPostBaseActivity.EXTRA_POST_LOCAL_ID, page.getPageId());
+        fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
     public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
         Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(fragment.getContext(), true, null);
         intent.putExtra(WordPress.SITE, site);

@@ -247,12 +247,16 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
             page?.let {
                 val post = postStore.getPostByLocalPostId(page.pageId)
                 val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
-                if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
-                    PostUtils.showGutenbergCompatibilityWarningDialog(
-                            getActivity(), fragmentManager, post, viewModel.site
-                    )
+                if ( isGutenbergContent && AppPrefs.isGutenbergEditorEnabled()) {
+                    ActivityLauncher.editPageForResultOnGutenberg(this, page);
                 } else {
-                    ActivityLauncher.editPageForResult(this, page)
+                    if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
+                        PostUtils.showGutenbergCompatibilityWarningDialog(
+                                getActivity(), fragmentManager, post, viewModel.site
+                        )
+                    } else {
+                        ActivityLauncher.editPageForResult(this, page)
+                    }
                 }
             }
         })
