@@ -52,7 +52,8 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
         STOCK_PHOTO_LIBRARY
     }
 
-    public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context, boolean isNewPost, PostModel post) {
+    public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context,
+                                                                    boolean isNewPost, PostModel post) {
         Intent intent;
         if (PostUtils.shouldShowGutenbergEditor(isNewPost, post)) {
             intent = new Intent(context, GutenbergEditPostActivity.class);

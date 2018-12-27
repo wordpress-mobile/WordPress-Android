@@ -626,7 +626,8 @@ public class ActivityLauncher {
     }
 
     public static void addNewPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site) {
-        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(fragment.getContext(), true, null);
+        Intent intent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(
+                fragment.getContext(), true, null);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostBaseActivity.EXTRA_IS_PROMO, false);

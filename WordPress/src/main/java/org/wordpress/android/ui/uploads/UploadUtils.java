@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -393,7 +392,8 @@ public class UploadUtils {
                             mediaListToInsertInPost.addAll(mediaList);
 
                             Intent writePostIntent =
-                                    EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(activity, true, null);
+                                    EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(
+                                            activity, true, null);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             writePostIntent.putExtra(WordPress.SITE, site);

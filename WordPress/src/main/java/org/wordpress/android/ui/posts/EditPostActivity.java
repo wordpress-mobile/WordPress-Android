@@ -202,7 +202,6 @@ public class EditPostActivity extends EditPostBaseActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface {
-
     private AztecImageLoader mAztecImageLoader;
 
     private Handler mHandler;

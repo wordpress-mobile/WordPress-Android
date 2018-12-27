@@ -29,7 +29,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
@@ -193,8 +192,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface {
-
-
     private Handler mHandler;
     private int mDebounceCounter = 0;
     private boolean mMediaInsertedOnCreation;
@@ -982,7 +979,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 // don't show Discard Local Changes option if it's a completely local draft
                 boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
 
-                //TODO: make "discardLocalChanges" functionality work the same on Gutenberg as it was on Aztec
+                // TODO: make "discardLocalChanges" functionality work the same on Gutenberg as it was on Aztec
 //                if (mEditorFragment instanceof AztecEditorFragment) {
 //                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
 //                        && ((AztecEditorFragment) mEditorFragment).canUndo()
@@ -1404,7 +1401,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     public void onLinkClicked(@NonNull String instanceTag) {
         switch (instanceTag) {
             case ASYNC_PROMO_DIALOG_TAG:
-                startActivity(ReleaseNotesActivity.createIntent(GutenbergEditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
+                startActivity(ReleaseNotesActivity.createIntent(
+                        GutenbergEditPostActivity.this, WHAT_IS_NEW_IN_MOBILE_URL,
                         null, mSite));
                 break;
             default:
@@ -1728,7 +1726,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 }
 
                 // TODO check whether we need this back once media upload for Gutenberg is in place
-                //definitelyDeleteBackspaceDeletedMediaItems();
+                // definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
                     if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
@@ -1864,7 +1862,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                     mEditorFragment = (EditorFragmentAbstract) fragment;
                     mEditorFragment.setImageLoader(mImageLoader);
 
-                    mEditorFragment.getTitleOrContentChanged().observe(GutenbergEditPostActivity.this, new Observer<Editable>() {
+                    mEditorFragment.getTitleOrContentChanged().observe(GutenbergEditPostActivity.this,
+                            new Observer<Editable>() {
                         @Override public void onChanged(@Nullable Editable editable) {
                             if (mHandler != null) {
                                 mHandler.removeCallbacks(mSave);
@@ -2198,12 +2197,11 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         if (mMediaInsertedOnCreation) {
             mMediaInsertedOnCreation = false;
             contentChanged = true;
-        }
         // TODO check if this is needed once media upload for Gutenberg is in place
-        /* else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
+        /* } else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
             contentChanged = true;
-        }*/
-        else {
+        */
+        } else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
         }
         if (contentChanged) {
@@ -2563,7 +2561,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                         ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                     }
                     break;
-                    //TODO: check if this is needed when media upload is in place for Gutenberg
+                    // TODO: check if this is needed when media upload is in place for Gutenberg
 //                case RequestCodes.MEDIA_SETTINGS:
 //                    if (mEditorFragment instanceof AztecEditorFragment) {
 //                        mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
@@ -3356,7 +3354,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
                     if (mViewPager != null) {
                         Snackbar.make(mViewPager, getString(R.string.local_changes_discarded),
-                                AccessibilityUtils.getSnackbarDuration(GutenbergEditPostActivity.this, Snackbar.LENGTH_LONG))
+                                AccessibilityUtils.getSnackbarDuration(GutenbergEditPostActivity.this,
+                                        Snackbar.LENGTH_LONG))
                                 .setAction(getString(R.string.undo), new OnClickListener() {
                                     @Override public void onClick(View view) {
                                         AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES_UNDO);

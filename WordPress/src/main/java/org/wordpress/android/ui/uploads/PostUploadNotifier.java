@@ -21,7 +21,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.ShareAndDismissNotificationReceiver;
 import org.wordpress.android.ui.pages.PagesActivity;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostBaseActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -408,7 +407,8 @@ class PostUploadNotifier {
         if (mediaList != null && !mediaList.isEmpty()) {
             ArrayList<MediaModel> mediaToIncludeInPost = new ArrayList<>(mediaList);
 
-            Intent writePostIntent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(mContext, true, null);
+            Intent writePostIntent = EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(
+                    mContext, true, null);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);
