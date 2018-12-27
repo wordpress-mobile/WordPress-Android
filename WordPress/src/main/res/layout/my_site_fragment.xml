@@ -197,7 +197,7 @@
                     android:id="@+id/my_site_stats_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_stats_alt_grey_24dp"/>
+                    android:src="@drawable/ic_stats_alt_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_stats_text_view"
