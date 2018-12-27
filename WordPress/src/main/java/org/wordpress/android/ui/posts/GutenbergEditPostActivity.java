@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -42,7 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -52,7 +50,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -121,8 +118,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
-import org.wordpress.android.ui.posts.services.AztecImageLoader;
-import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
@@ -160,17 +155,13 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
-import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.WPViewPager;
-import org.wordpress.aztec.AztecExceptionHandler;
-import org.wordpress.aztec.util.AztecLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -203,17 +194,13 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         PostDatePickerDialogFragment.OnPostDatePickerDialogListener,
         HistoryListFragment.HistoryItemClickInterface {
 
-    private AztecImageLoader mAztecImageLoader;
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
-    private boolean mShowAztecEditor;
     private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
-    private List<String> mAztecBackspaceDeletedMediaItemIds = new ArrayList<>();
-    private List<String> mMediaMarkedUploadingOnStartIds = new ArrayList<>();
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -271,7 +258,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     @Inject ShortcutUtils mShortcutUtils;
     @Inject QuickStartStore mQuickStartStore;
     @Inject ZendeskHelper mZendeskHelper;
-    @Inject ImageManager mImageManager;
 
     private SiteModel mSite;
 
@@ -279,7 +265,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     private ArrayList<Uri> mDroppedMediaUris;
 
     private boolean isModernEditor() {
-        return mShowNewEditor || mShowAztecEditor;
+        return mShowNewEditor;
     }
 
     private Runnable mFetchMediaRunnable = new Runnable() {
@@ -309,18 +295,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
-        // AppPrefs.setAztecEditorAvailable(true);
-        // AppPrefs.setAztecEditorEnabled(true);
-        mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
-
-        // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
-        if (mShowAztecEditor) {
-            View overlay = findViewById(R.id.view_overlay);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
-            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
-            overlay.setLayoutParams(layoutParams);
-        }
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -484,11 +459,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             mOriginalPost = mPost.clone();
             mOriginalPostHadLocalChangesOnOpen = mOriginalPost.isLocallyChanged();
             mPost = UploadService.updatePostWithCurrentlyCompletedUploads(mPost);
-            if (mShowAztecEditor) {
-                mMediaMarkedUploadingOnStartIds =
-                        AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-                Collections.sort(mMediaMarkedUploadingOnStartIds);
-            }
             mIsPage = mPost.isPage();
 
             EventBus.getDefault().postSticky(
@@ -504,6 +474,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         }
     }
 
+
+    // TODO: make this work on Gutenberg posts
     private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
         ArrayList<MediaModel> allMedia = new ArrayList<>();
         allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
@@ -513,9 +485,10 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
-                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
-                    mediaToDeleteAssociationFor.add(media);
-                }
+                // TODO: make a parallel `isMediaInPostBody` method in GutenbergEditorFragment
+//                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
+//                    mediaToDeleteAssociationFor.add(media);
+//                }
             }
 
             if (!mediaToDeleteAssociationFor.isEmpty()) {
@@ -528,30 +501,32 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
     // this method aims at recovering the current state of media items if they're inconsistent within the PostModel.
     private void resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued() {
-        boolean useAztec = AppPrefs.isAztecEditorEnabled();
-
-        if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost)) {
-            return;
-        }
-
-        String oldContent = mPost.getContent();
-        if (!AztecEditorFragment.hasMediaItemsMarkedUploading(this, oldContent)
-            // we need to make sure items marked failed are still failed or not as well
-            && !AztecEditorFragment.hasMediaItemsMarkedFailed(this, oldContent)) {
-            return;
-        }
-
-        String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
-
-        if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
-            mPost.setContent(newContent);
-
-            // we changed the post, so let’s mark this down
-            if (!mPost.isLocalDraft()) {
-                mPost.setIsLocallyChanged(true);
-            }
-            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
-        }
+        // TODO re-wire uploading states for media on Gutenberg when media upload functionality is ready in Gutenberg
+        // mobile
+//        boolean useAztec = AppPrefs.isAztecEditorEnabled();
+//
+//        if (!useAztec || UploadService.hasPendingOrInProgressMediaUploadsForPost(mPost)) {
+//            return;
+//        }
+//
+//        String oldContent = mPost.getContent();
+//        if (!AztecEditorFragment.hasMediaItemsMarkedUploading(this, oldContent)
+//            // we need to make sure items marked failed are still failed or not as well
+//            && !AztecEditorFragment.hasMediaItemsMarkedFailed(this, oldContent)) {
+//            return;
+//        }
+//
+//        String newContent = AztecEditorFragment.resetUploadingMediaToFailed(this, oldContent);
+//
+//        if (!TextUtils.isEmpty(oldContent) && newContent != null && oldContent.compareTo(newContent) != 0) {
+//            mPost.setContent(newContent);
+//
+//            // we changed the post, so let’s mark this down
+//            if (!mPost.isLocalDraft()) {
+//                mPost.setIsLocallyChanged(true);
+//            }
+//            mPost.setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(System.currentTimeMillis() / 1000));
+//        }
     }
 
     private Runnable mSave = new Runnable() {
@@ -625,14 +600,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         EventBus.getDefault().unregister(this);
     }
 
-    @Override protected void onStop() {
-        super.onStop();
-        if (mAztecImageLoader != null && isFinishing()) {
-            mAztecImageLoader.clearTargets();
-            mAztecImageLoader = null;
-        }
-    }
-
     @Override
     protected void onDestroy() {
         AnalyticsTracker.track(Stat.EDITOR_CLOSED);
@@ -643,9 +610,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         }
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            ((AztecEditorFragment) mEditorFragment).disableContentLogOnCrashes();
-        }
         super.onDestroy();
     }
 
@@ -803,9 +767,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
         mPhotoPickerFragment = (PhotoPickerFragment) getSupportFragmentManager().findFragmentByTag(PHOTO_PICKER_TAG);
         if (mPhotoPickerFragment == null) {
-            MediaBrowserType mediaBrowserType =
-                    mShowAztecEditor ? MediaBrowserType.AZTEC_EDITOR_PICKER : MediaBrowserType.EDITOR_PICKER;
-            mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, mediaBrowserType, getSite());
+            mPhotoPickerFragment = PhotoPickerFragment.newInstance(this, MediaBrowserType.EDITOR_PICKER, getSite());
             getSupportFragmentManager()
                     .beginTransaction()
                     .add(R.id.photo_fragment_container, mPhotoPickerFragment, PHOTO_PICKER_TAG)
@@ -853,10 +815,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
         // animate in the editor overlay
         showOverlay(true);
-
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            ((AztecEditorFragment) mEditorFragment).enableMediaMode(true);
-        }
     }
 
     private void hidePhotoPicker() {
@@ -867,10 +825,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         }
 
         hideOverlay();
-
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            ((AztecEditorFragment) mEditorFragment).enableMediaMode(false);
-        }
     }
 
     /*
@@ -997,8 +951,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         }
 
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(((mEditorFragment instanceof AztecEditorFragment)
-                                             || (mEditorFragment instanceof GutenbergEditorFragment)) && showMenuItems);
+            viewHtmlModeMenuItem.setVisible(showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
@@ -1038,16 +991,18 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             if (mPost != null && showMenuItems) {
                 // don't show Discard Local Changes option if it's a completely local draft
                 boolean showDiscardChanges = mPost.isLocallyChanged() && !mPost.isLocalDraft();
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
-                        && ((AztecEditorFragment) mEditorFragment).canUndo()
-                            && !mPost.isLocalDraft()) {
-                        showDiscardChanges = true;
-                    } else {
-                        // we don't have history, so hide/show depending on the original post flag value
-                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
-                    }
-                }
+
+                //TODO: make "discardLocalChanges" functionality work the same on Gutenberg as it was on Aztec
+//                if (mEditorFragment instanceof AztecEditorFragment) {
+//                    if (((AztecEditorFragment) mEditorFragment).hasHistory()
+//                        && ((AztecEditorFragment) mEditorFragment).canUndo()
+//                            && !mPost.isLocalDraft()) {
+//                        showDiscardChanges = true;
+//                    } else {
+//                        // we don't have history, so hide/show depending on the original post flag value
+//                        showDiscardChanges = mOriginalPostHadLocalChangesOnOpen;
+//                    }
+//                }
                 discardChanges.setVisible(showDiscardChanges);
             } else {
                 discardChanges.setVisible(false);
@@ -1126,13 +1081,13 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
         } else {
-            // Disable other action bar buttons while a media upload is in progress
-            // (unnecessary for Aztec since it supports progress reattachment)
-            if (!mShowAztecEditor
-                        && (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress())) {
-                ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
-                return false;
-            }
+            // TODO: check whether this check is necessary in Gutenberg
+//            // Disable other action bar buttons while a media upload is in progress
+//            // (unnecessary for Aztec since it supports progress reattachment)
+//            if (mEditorFragment.isUploadingMedia() || mEditorFragment.isActionInProgress()) {
+//                ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, Duration.SHORT);
+//                return false;
+//            }
 
             if (itemId == R.id.menu_history) {
                 AnalyticsTracker.track(Stat.REVISIONS_LIST_VIEWED);
@@ -1181,25 +1136,14 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 }
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    toggledHtmlModeSnackbar(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // switch back
-                            ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                        }
-                    });
-                } else if (mEditorFragment instanceof GutenbergEditorFragment) {
-                    ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-                    toggledHtmlModeSnackbar(new OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // switch back
-                            ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
-                        }
-                    });
-                }
+                ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                toggledHtmlModeSnackbar(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // switch back
+                        ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                    }
+                });
             } else if (itemId == R.id.menu_discard_changes) {
                 if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
                     AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
@@ -1417,67 +1361,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
     @Override
     public void initializeEditorFragment() {
-        if (mEditorFragment instanceof AztecEditorFragment) {
-            AztecEditorFragment aztecEditorFragment = (AztecEditorFragment) mEditorFragment;
-            aztecEditorFragment.setEditorImageSettingsListener(GutenbergEditPostActivity.this);
-            aztecEditorFragment.setMediaToolbarButtonClickListener(GutenbergEditPostActivity.this);
-
-            // Here we should set the max width for media, but the default size is already OK. No need
-            // to customize it further
-
-            Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                    this,
-                    org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                    aztecEditorFragment.getMaxMediaSize()
-            );
-            mAztecImageLoader = new AztecImageLoader(getBaseContext(), mImageManager, loadingImagePlaceholder);
-            aztecEditorFragment.setAztecImageLoader(mAztecImageLoader);
-            aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
-
-            Drawable loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
-                    this,
-                    org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
-                    aztecEditorFragment.getMaxMediaSize()
-            );
-            aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
-            aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
-
-            if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()) {
-                // Add the content reporting for wpcom blogs that are not private
-                aztecEditorFragment.enableContentLogOnCrashes(
-                        new AztecExceptionHandler.ExceptionHandlerHelper() {
-                            @Override
-                            public boolean shouldLog(Throwable throwable) {
-                                // Do not log private or password protected post
-                                return getPost() != null && TextUtils.isEmpty(getPost().getPassword())
-                                       && !PostStatus.PRIVATE.toString().equals(getPost().getStatus());
-                            }
-                        }
-                );
-            }
-            aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
-                @Override
-                public void log(String s) {
-                    // For now, we're wrapping up the actual log into a Crashlytics exception to reduce possibility
-                    // of information not travelling to Crashlytics (Crashlytics rolls logs up to 8
-                    // entries and 64kb max, and they only travel with the next crash happening, so logging an
-                    // Exception assures us to have this information sent in the next batch).
-                    // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
-                }
-
-                @Override
-                public void logException(Throwable throwable) {
-                    CrashlyticsUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
-                }
-
-                @Override
-                public void logException(Throwable throwable, String s) {
-                    CrashlyticsUtils.logException(
-                            new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
-                }
-            });
-        }
+        // no op
     }
 
     @Override
@@ -1576,12 +1460,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
         // update the original post object, so we'll know of new changes
         mOriginalPost = mPost.clone();
-
-        if (mShowAztecEditor) {
-            // update the list of uploading ids
-            mMediaMarkedUploadingOnStartIds =
-                    AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
-        }
     }
 
     @Override
@@ -1866,7 +1744,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                     saveResult(shouldSave && shouldSync, isDiscardable(), false);
                 }
 
-                definitelyDeleteBackspaceDeletedMediaItems();
+                // TODO check whether we need this back once media upload for Gutenberg is in place
+                //definitelyDeleteBackspaceDeletedMediaItems();
 
                 if (shouldSave) {
                     if (isNewPost() && PostStatus.fromPost(mPost) == PostStatus.PUBLISHED) {
@@ -2363,9 +2242,12 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         if (mMediaInsertedOnCreation) {
             mMediaInsertedOnCreation = false;
             contentChanged = true;
-        } else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
+        }
+        // TODO check if this is needed once media upload for Gutenberg is in place
+        /* else if (isCurrentMediaMarkedUploadingDifferentToOriginal(content)) {
             contentChanged = true;
-        } else {
+        }*/
+        else {
             contentChanged = mPost.getContent().compareTo(content) != 0;
         }
         if (contentChanged) {
@@ -2382,21 +2264,23 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         return titleChanged || contentChanged;
     }
 
-    /*
-      * for as long as the user is in the Editor, we check whether there are any differences in media items
-      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
-      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
-      * URLs will have been replaced with the remote ones.
-     */
-    private boolean isCurrentMediaMarkedUploadingDifferentToOriginal(String newContent) {
-        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
-        if (!mShowAztecEditor) {
-            return false;
-        }
-        List<String> currentUploadingMedia = AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
-        Collections.sort(currentUploadingMedia);
-        return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
-    }
+    // TODO check whether to re-install mechanism when media upload for Gutenberg is in place
+//    /*
+//      * for as long as the user is in the Editor, we check whether there are any differences in media items
+//      * being uploaded since they opened the Editor for this Post. If some items have finished, the current list
+//      * won't be equal and thus we'll know we need to save the Post content as it's changed, given the local
+//      * URLs will have been replaced with the remote ones.
+//     */
+//    private boolean isCurrentMediaMarkedUploadingDifferentToOriginal(String newContent) {
+//        // this method makes use of AztecEditorFragment methods. Make sure to only run if Aztec is the current editor.
+//        if (!mShowAztecEditor) {
+//            return false;
+//        }
+//        List<String> currentUploadingMedia =
+// AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, newContent);
+//        Collections.sort(currentUploadingMedia);
+//        return !mMediaMarkedUploadingOnStartIds.equals(currentUploadingMedia);
+//    }
 
     private void updateMediaFileOnServer(MediaFile mediaFile) {
         if (mediaFile == null) {
@@ -2749,12 +2633,13 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                         ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
                     }
                     break;
-                case RequestCodes.MEDIA_SETTINGS:
-                    if (mEditorFragment instanceof AztecEditorFragment) {
-                        mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                                                         Activity.RESULT_OK, data);
-                    }
-                    break;
+                    //TODO: check if this is needed when media upload is in place for Gutenberg
+//                case RequestCodes.MEDIA_SETTINGS:
+//                    if (mEditorFragment instanceof AztecEditorFragment) {
+//                        mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
+//                                                         Activity.RESULT_OK, data);
+//                    }
+//                    break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                     if (data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
                         long[] mediaIds =
@@ -3208,8 +3093,9 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
-            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+            //TODO: check if this is needed when media upload is in place for Gutenberg
+//            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
+//            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
             // passing false here as we need to keep the media item in case the user wants to undo
             cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
@@ -3223,6 +3109,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         }
     }
 
+    // TODO check whether we need this back once media upload for Gutenberg is in place
     /*
     * When the user deletes a media item that was being uploaded at that moment, we only cancel the
     * upload but keep the media item in FluxC DB because the user might have deleted it accidentally,
@@ -3230,25 +3117,25 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     * So, when the user exits then editor (and thus we lose the undo/redo history) we are safe to
     * physically delete from the FluxC DB those items that have been deleted by the user using backspace.
     * */
-    private void definitelyDeleteBackspaceDeletedMediaItems() {
-        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
-            if (!TextUtils.isEmpty(mediaId)) {
-                // make sure the MediaModel exists
-                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
-                if (mediaModel == null) {
-                    continue;
-                }
-
-                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
-                // simultaneously)
-                if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
-                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
-                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
-                }
-            }
-        }
-    }
+//    private void definitelyDeleteBackspaceDeletedMediaItems() {
+//        for (String mediaId : mAztecBackspaceDeletedMediaItemIds) {
+//            if (!TextUtils.isEmpty(mediaId)) {
+//                // make sure the MediaModel exists
+//                MediaModel mediaModel = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
+//                if (mediaModel == null) {
+//                    continue;
+//                }
+//
+//                // also make sure it's not being uploaded anywhere else (maybe on some other Post,
+//                // simultaneously)
+//                if (mediaModel.getUploadState() != null
+//                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
+//                    && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
+//                    mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public void onUndoMediaCheck(final String undoedContent) {
@@ -3256,31 +3143,34 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
         // These are the CANCELED ONES, so mark them FAILED now to retry.
 
-        List<MediaModel> currentlyUploadingMedia = UploadService.getPendingOrInProgressMediaUploadsForPost(mPost);
-        List<String> mediaMarkedUploading =
-                AztecEditorFragment.getMediaMarkedUploadingInPostContent(GutenbergEditPostActivity.this, undoedContent);
+        // TODO: check if we need this once media upload for Gutenberg is in place
 
-        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
-        // to see whether they're really being uploaded or not. If an item is not really being uploaded,
-        // mark that item failed
-        for (String mediaId : mediaMarkedUploading) {
-            boolean found = false;
-            for (MediaModel media : currentlyUploadingMedia) {
-                if (StringUtils.stringToInt(mediaId) == media.getId()) {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                if (mEditorFragment instanceof AztecEditorFragment) {
-                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
-                    // update the mediaIds list in UploadService
-                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
-                    ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
-                }
-            }
-        }
+//        List<MediaModel> currentlyUploadingMedia = UploadService.getPendingOrInProgressMediaUploadsForPost(mPost);
+//        List<String> mediaMarkedUploading =
+//                AztecEditorFragment
+// .getMediaMarkedUploadingInPostContent(GutenbergEditPostActivity.this, undoedContent);
+//
+//        // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
+//        // to see whether they're really being uploaded or not. If an item is not really being uploaded,
+//        // mark that item failed
+//        for (String mediaId : mediaMarkedUploading) {
+//            boolean found = false;
+//            for (MediaModel media : currentlyUploadingMedia) {
+//                if (StringUtils.stringToInt(mediaId) == media.getId()) {
+//                    found = true;
+//                    break;
+//                }
+//            }
+//
+//            if (!found) {
+//                if (mEditorFragment instanceof AztecEditorFragment) {
+//                    mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
+//                    // update the mediaIds list in UploadService
+//                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
+//                    ((AztecEditorFragment) mEditorFragment).setMediaToFailed(mediaId);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -3291,8 +3181,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
     @Override
     public void onVideoPressInfoRequested(final String videoId) {
-        String videoUrl = mMediaStore.
-                                             getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
+        String videoUrl = mMediaStore.getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
 
         if (videoUrl == null) {
             AppLog.w(T.EDITOR, "The editor wants more info about the following VideoPress code: " + videoId
@@ -3647,11 +3536,5 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     @Override
     public SiteModel getSite() {
         return mSite;
-    }
-
-
-    // External Access to the Image Loader
-    public AztecImageLoader getAztecImageLoader() {
-        return mAztecImageLoader;
     }
 }
