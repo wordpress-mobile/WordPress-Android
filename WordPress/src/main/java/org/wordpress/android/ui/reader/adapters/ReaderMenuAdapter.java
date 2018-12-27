@@ -88,7 +88,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
             case ITEM_NOTIFICATIONS_ON:
                 textRes = R.string.reader_btn_notifications_on;
                 colorRes = R.color.reader_notifications_on;
-                iconRes = R.drawable.ic_bell_grey_dark_24dp;
+                iconRes = R.drawable.ic_bell_white_24dp;
                 break;
             case ITEM_SHARE:
                 textRes = R.string.reader_btn_share;
