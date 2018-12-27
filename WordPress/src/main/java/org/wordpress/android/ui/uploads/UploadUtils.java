@@ -393,7 +393,7 @@ public class UploadUtils {
                             mediaListToInsertInPost.addAll(mediaList);
 
                             Intent writePostIntent =
-                                    EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(activity);
+                                    EditPostBaseActivity.getNormalOrGutenbergEditPostActivityIntent(activity, true, null);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             writePostIntent.putExtra(WordPress.SITE, site);

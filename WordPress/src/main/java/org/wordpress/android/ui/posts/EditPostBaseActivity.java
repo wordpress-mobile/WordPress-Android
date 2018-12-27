@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.util.LocaleManager;
 
 public abstract class EditPostBaseActivity extends AppCompatActivity {
@@ -52,9 +52,9 @@ public abstract class EditPostBaseActivity extends AppCompatActivity {
         STOCK_PHOTO_LIBRARY
     }
 
-    public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context) {
+    public static Intent getNormalOrGutenbergEditPostActivityIntent(Context context, boolean isNewPost, PostModel post) {
         Intent intent;
-        if (AppPrefs.isGutenbergEditorEnabled()) {
+        if (PostUtils.shouldShowGutenbergEditor(isNewPost, post)) {
             intent = new Intent(context, GutenbergEditPostActivity.class);
         } else {
             intent = new Intent(context, EditPostActivity.class);
