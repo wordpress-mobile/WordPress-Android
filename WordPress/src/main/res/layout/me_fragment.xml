@@ -179,7 +179,7 @@
                 <ImageView
                     android:id="@+id/me_notifications_icon"
                     style="@style/MeListRowIcon"
-                    android:src="@drawable/ic_bell_grey_darken_24dp"
+                    android:src="@drawable/ic_bell_white_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView

@@ -712,7 +712,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                 mOnSettingsChangedListener
         );
 
-        Drawable drawableBell = context.getResources().getDrawable(R.drawable.ic_bell_grey_darken_24dp);
+        Drawable drawableBell = context.getResources().getDrawable(R.drawable.ic_bell_white_24dp);
         DrawableCompat.setTint(drawableBell, context.getResources().getColor(R.color.grey_darken_30));
         DrawableCompat.setTintMode(drawableBell, PorterDuff.Mode.SRC_IN);
 
