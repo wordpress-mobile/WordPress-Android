@@ -151,7 +151,7 @@
                     android:id="@+id/my_site_quick_start_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_list_checkmark_grey_24dp"/>
+                    android:src="@drawable/ic_list_checkmark_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_quick_start_text"
