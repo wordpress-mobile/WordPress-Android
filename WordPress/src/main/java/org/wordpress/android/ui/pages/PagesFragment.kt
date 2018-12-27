@@ -246,8 +246,8 @@ class PagesFragment : Fragment(), GutenbergWarningDialogClickInterface {
         viewModel.editPage.observe(this, Observer { page ->
             page?.let {
                 val post = postStore.getPostByLocalPostId(page.pageId)
-                if ( PostUtils.shouldShowGutenbergEditor(false,  post)) {
-                    ActivityLauncher.editPageForResultOnGutenberg(this, page);
+                if (PostUtils.shouldShowGutenbergEditor(false, post)) {
+                    ActivityLauncher.editPageForResultOnGutenberg(this, page)
                 } else {
                     val isGutenbergContent = PostUtils.contentContainsGutenbergBlocks(post?.content)
                     if (isGutenbergContent && !AppPrefs.isGutenbergWarningDialogDisabled()) {
