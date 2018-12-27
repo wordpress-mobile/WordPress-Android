@@ -326,7 +326,7 @@
                     android:id="@+id/my_site_comments_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_comment_grey_24dp"/>
+                    android:src="@drawable/ic_comment_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_comments_text_view"
