@@ -35,7 +35,7 @@ class NewSiteCreationSiteInfoViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = NewSiteCreationSiteInfoViewModel(TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = NewSiteCreationSiteInfoViewModel(TEST_DISPATCHER)
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onTitleInputFocusRequested.observeForever(onTitleInputFocusRequestedObserver)
         viewModel.skipBtnClicked.observeForever(onSkipClickedObserver)
