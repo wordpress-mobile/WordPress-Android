@@ -197,7 +197,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
     private Handler mHandler;
     private int mDebounceCounter = 0;
-    private boolean mShowNewEditor;
     private boolean mMediaInsertedOnCreation;
 
     private List<String> mPendingVideoPressInfoRequests;
@@ -264,10 +263,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     // for keeping the media uri while asking for permissions
     private ArrayList<Uri> mDroppedMediaUris;
 
-    private boolean isModernEditor() {
-        return mShowNewEditor;
-    }
-
     private Runnable mFetchMediaRunnable = new Runnable() {
         @Override
         public void run() {
@@ -295,7 +290,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
 
         // Check whether to show the visual editor
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false);
-        mShowNewEditor = AppPrefs.isVisualEditorEnabled();
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -913,11 +907,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        if (isModernEditor()) {
-            inflater.inflate(R.menu.edit_post, menu);
-        } else {
-            inflater.inflate(R.menu.edit_post_legacy, menu);
-        }
+        inflater.inflate(R.menu.edit_post, menu);
 
         return true;
     }
@@ -1324,14 +1314,9 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         // Update post object from fragment fields
         boolean postTitleOrContentChanged = false;
         if (mEditorFragment != null) {
-            if (isModernEditor()) {
-                postTitleOrContentChanged =
-                        updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
-                                (String) mEditorFragment.getContent(mPost.getContent()));
-            } else {
-                // TODO: Remove when legacy editor is dropped
-                postTitleOrContentChanged = updatePostContent(isAutosave);
-            }
+            postTitleOrContentChanged =
+                    updatePostContentNewEditor(isAutosave, (String) mEditorFragment.getTitle(),
+                            (String) mEditorFragment.getContent(mPost.getContent()));
         }
 
         // only makes sense to change the publish date and locallychanged date if the Post was actaully changed
@@ -1539,7 +1524,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             savePostToDb();
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
-            UploadService.setLegacyMode(!isModernEditor());
+            UploadService.setLegacyMode(false);
             if (mIsFirstTimePublish) {
                 UploadService.uploadPostAndTrackAnalytics(GutenbergEditPostActivity.this, mPost);
             } else {
@@ -1578,10 +1563,8 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 // Changes have been made - save the post and ask for the post list to refresh
                 // We consider this being "manual save", it will replace some Android "spans" by an html
                 // or a shortcode replacement (for instance for images and galleries)
-                if (isModernEditor()) {
-                    // Update the post object directly, without re-fetching the fields from the EditorFragment
-                    updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
-                }
+                // Update the post object directly, without re-fetching the fields from the EditorFragment
+                updatePostContentNewEditor(false, mPost.getTitle(), mPost.getContent());
 
                 savePostToDb();
 
@@ -1949,25 +1932,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         return true;
     }
 
-    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
-        @Override
-        protected Spanned doInBackground(String... params) {
-            if (params.length < 1 || mPost == null) {
-                return null;
-            }
-
-            String content = StringUtils.notNullStr(params[0]);
-            return WPHtml.fromHtml(content, GutenbergEditPostActivity.this, mPost, getMaximumThumbnailWidthForEditor());
-        }
-
-        @Override
-        protected void onPostExecute(Spanned spanned) {
-            if (spanned != null) {
-                mEditorFragment.setContent(spanned);
-            }
-        }
-    }
-
     private String getUploadErrorHtml(String mediaId, String path) {
         return String.format(Locale.US,
                 "<span id=\"img_container_%s\" class=\"img_container failed\" data-failed=\"%s\">"
@@ -2027,18 +1991,11 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         if (mPost != null) {
             if (!TextUtils.isEmpty(mPost.getContent()) && !mHasSetPostContent) {
                 mHasSetPostContent = true;
-                if (mPost.isLocalDraft() && !isModernEditor()) {
-                    // TODO: Unnecessary for new editor, as all images are uploaded right away, even for local drafts
-                    // Load local post content in the background, as it may take time to generate images
-                    new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                                                mPost.getContent().replaceAll("\uFFFC", ""));
-                } else {
-                    // TODO: Might be able to drop .replaceAll() when legacy editor is removed
-                    String content = mPost.getContent().replaceAll("\uFFFC", "");
-                    // Prepare eventual legacy editor local draft for the new editor
-                    content = migrateLegacyDraft(content);
-                    mEditorFragment.setContent(content);
-                }
+                // TODO: Might be able to drop .replaceAll() when legacy editor is removed
+                String content = mPost.getContent().replaceAll("\uFFFC", "");
+                // Prepare eventual legacy editor local draft for the new editor
+                content = migrateLegacyDraft(content);
+                mEditorFragment.setContent(content);
             }
             if (!TextUtils.isEmpty(mPost.getTitle())) {
                 mEditorFragment.setTitle(mPost.getTitle());
@@ -2466,7 +2423,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             Uri optimizedMedia = WPMediaUtils.getOptimizedMedia(activity, path, isVideo);
             if (optimizedMedia != null) {
                 mediaUri = optimizedMedia;
-            } else if (isModernEditor()) {
+            } else {
                 // Fix for the rotation issue https://github.com/wordpress-mobile/WordPress-Android/issues/5737
                 if (!mSite.isWPCom()) {
                     // If it's not wpcom we must rotate the picture locally
@@ -2477,13 +2434,12 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 } else {
                     // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
                     // All the other editors read EXIF data
-                    if (mShowNewEditor) {
-                        Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
-                        if (rotatedMedia != null) {
-                            // The uri variable should remain the same since wpcom rotates the picture server side
-                            path = MediaUtils.getRealPathFromURI(activity, rotatedMedia);
-                        }
-                    }
+                    // TODO check if this is needed for GUtenberg once Gutenberg media upload is ready
+//                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
+//                    if (rotatedMedia != null) {
+//                        // The uri variable should remain the same since wpcom rotates the picture server side
+//                        path = MediaUtils.getRealPathFromURI(activity, rotatedMedia);
+//                    }
                 }
             }
 
@@ -2501,11 +2457,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (isModernEditor()) {
-                        addMediaVisualEditor(mediaUri, path);
-                    } else {
-                        addMediaLegacyEditor(mediaUri, isVideo);
-                    }
+                    addMediaVisualEditor(mediaUri, path);
                 }
             });
         }
@@ -2517,27 +2469,6 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
         if (media != null) {
             mEditorFragment.appendMediaFile(mediaFile, path, mImageLoader);
         }
-    }
-
-    private void addMediaLegacyEditor(Uri mediaUri, boolean isVideo) {
-        MediaModel mediaModel = buildMediaModel(mediaUri, getContentResolver().getType(mediaUri),
-                                                MediaUploadState.QUEUED);
-        if (mediaModel == null) {
-            ToastUtils.showToast(this, R.string.file_not_found, Duration.SHORT);
-            return;
-        }
-
-        if (isVideo) {
-            mediaModel.setTitle(getResources().getString(R.string.video));
-        } else {
-            mediaModel.setTitle(ImageUtils.getTitleForWPImageSpan(this, mediaUri.getEncodedPath()));
-        }
-        mediaModel.setLocalPostId(mPost.getId());
-
-        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(mediaModel));
-
-        MediaFile mediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel);
-        mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), mImageLoader);
     }
 
     private void addMediaItemGroupOrSingleItem(Intent data) {
@@ -2658,9 +2589,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                             mediaModels.add(mMediaStore.getMediaWithLocalId(localId));
                         }
 
-                        if (isModernEditor()) {
-                            startUploadService(mediaModels);
-                        }
+                        startUploadService(mediaModels);
 
                         for (MediaModel mediaModel : mediaModels) {
                             mediaModel.setLocalPostId(mPost.getId());
