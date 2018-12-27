@@ -91,7 +91,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/value"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_chevron_down_grey_dark_24dp"/>
+        app:srcCompat="@drawable/ic_chevron_down_white_24dp"/>
 
     <TextView
         android:id="@+id/subtext"
