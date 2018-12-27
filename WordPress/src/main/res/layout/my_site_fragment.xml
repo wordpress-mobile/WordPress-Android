@@ -308,7 +308,7 @@
                     android:id="@+id/my_site_media_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_media_grey_24dp"/>
+                    android:src="@drawable/ic_media_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_media_text_view"
