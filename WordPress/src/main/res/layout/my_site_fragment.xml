@@ -266,7 +266,7 @@
                     android:id="@+id/my_site_pages_icon"
                     style="@style/MySiteListRowIcon"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_pages_grey_24dp"/>
+                    android:src="@drawable/ic_pages_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_pages_text_view"
