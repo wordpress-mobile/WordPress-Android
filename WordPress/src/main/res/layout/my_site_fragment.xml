@@ -214,7 +214,7 @@
                 <ImageView
                     android:id="@+id/my_site_activity_log_icon"
                     style="@style/MySiteListRowIcon"
-                    android:src="@drawable/ic_history_alt_grey_24dp"
+                    android:src="@drawable/ic_history_alt_white_24dp"
                     android:importantForAccessibility="no"/>
 
                 <org.wordpress.android.widgets.WPTextView
