@@ -683,6 +683,7 @@ public class SiteStore extends Store {
         EMPTY_QUERY,
         INVALID_MINIMUM_QUANTITY,
         INVALID_MAXIMUM_QUANTITY,
+        INVALID_QUERY,
         GENERIC_ERROR;
 
         public static SuggestDomainErrorType fromString(final String string) {
