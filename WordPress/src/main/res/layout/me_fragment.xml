@@ -122,7 +122,7 @@
                 <ImageView
                     android:id="@+id/me_my_profile_icon"
                     style="@style/MeListRowIcon"
-                    android:src="@drawable/ic_user_grey_24dp"
+                    android:src="@drawable/ic_user_white_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.widgets.WPTextView
