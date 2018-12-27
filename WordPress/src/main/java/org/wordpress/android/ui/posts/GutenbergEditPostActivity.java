@@ -3019,7 +3019,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
     @Override
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            //TODO: check if this is needed when media upload is in place for Gutenberg
+            // TODO: check if this is needed when media upload is in place for Gutenberg
 //            mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
 //            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
             // passing false here as we need to keep the media item in case the user wants to undo
