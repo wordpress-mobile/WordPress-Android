@@ -44,8 +44,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
 
-    private static boolean mIsToolbarExpanded = false;
-
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
     private boolean mHtmlModeEnabled;
@@ -68,9 +66,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      boolean isExpanded,
                                                       boolean isNewPost) {
-        mIsToolbarExpanded = isExpanded;
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);

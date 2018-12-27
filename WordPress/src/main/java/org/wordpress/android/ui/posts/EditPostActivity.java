@@ -1990,8 +1990,7 @@ public class EditPostActivity extends EditPostBaseActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowGutenbergEditor) {
-                        return GutenbergEditorFragment.newInstance("", "",
-                                AppPrefs.isAztecEditorToolbarExpanded(), mIsNewPost);
+                        return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
                     } else if (mShowAztecEditor) {
                         return AztecEditorFragment.newInstance("", "",
                                                                AppPrefs.isAztecEditorToolbarExpanded());

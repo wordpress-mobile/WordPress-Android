@@ -1846,8 +1846,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    return GutenbergEditorFragment.newInstance("", "",
-                            AppPrefs.isAztecEditorToolbarExpanded(), mIsNewPost);
+                    return GutenbergEditorFragment.newInstance("", "", mIsNewPost);
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 case 3:
