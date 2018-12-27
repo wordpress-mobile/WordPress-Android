@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
@@ -157,7 +158,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
-        if (event.isError) {
+        // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
+        if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
             updateUiStateToContent(
                     query,
                     ListState.Error(
@@ -196,11 +198,13 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
         query: DomainSuggestionsQuery?,
         state: ListState<String>
     ): DomainsUiContentState {
+        // Only treat it as an error if the search is user initiated
+        val isError = isNonEmptyUserQuery(query) && state is Error
         val items = createSuggestionsUiStates(
                 onRetry = { updateQueryInternal(query) },
                 data = state.data,
-                errorFetchingSuggestions = state is Error,
-                errorResId = if (state is Error) state.errorMessageResId else null
+                errorFetchingSuggestions = isError,
+                errorResId = if (isError) (state as Error).errorMessageResId else null
         )
         return if (items.isEmpty()) {
             if (isNonEmptyUserQuery(query) && (state is Success || state is Ready)) {
