@@ -199,7 +199,7 @@
                 <ImageView
                     android:id="@+id/me_support_icon"
                     style="@style/MeListRowIcon"
-                    android:src="@drawable/ic_help_grey_24dp"
+                    android:src="@drawable/ic_help_white_24dp"
                     android:contentDescription="@null"/>
 
                 <org.wordpress.android.util.widgets.AutoResizeTextView
