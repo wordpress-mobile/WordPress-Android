@@ -12,6 +12,7 @@ import kotlinx.coroutines.experimental.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
@@ -157,7 +158,8 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     }
 
     private fun onDomainsFetched(query: DomainSuggestionsQuery, event: OnSuggestedDomains) {
-        if (event.isError) {
+        // We want to treat `INVALID_QUERY` as if it's an empty result, so we'll ignore it
+        if (event.isError && event.error.type != SuggestDomainErrorType.INVALID_QUERY) {
             updateUiStateToContent(
                     query,
                     ListState.Error(
