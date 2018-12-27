@@ -346,7 +346,7 @@
                             android:id="@+id/plugin_description_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_white_35dp" />
 
                     </RelativeLayout>
 
@@ -375,7 +375,7 @@
                             android:id="@+id/plugin_installation_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_white_35dp" />
 
                     </RelativeLayout>
 
@@ -404,7 +404,7 @@
                             android:id="@+id/plugin_whatsnew_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_white_35dp" />
 
                     </RelativeLayout>
 
@@ -433,7 +433,7 @@
                             android:id="@+id/plugin_faq_chevron"
                             style="@style/PluginCardViewSecondaryElement.ChevronImage"
                             android:contentDescription="@string/plugin_chevron_icon_content_description"
-                            android:src="@drawable/ic_chevron_down_grey_100_35dp" />
+                            android:src="@drawable/ic_chevron_down_white_35dp" />
 
                     </RelativeLayout>
                 </LinearLayout>
