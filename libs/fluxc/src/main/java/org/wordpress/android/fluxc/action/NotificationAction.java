@@ -30,7 +30,7 @@ public enum NotificationAction implements IAction {
     @Action(payloadType = MarkNotificationsSeenPayload.class)
     MARK_NOTIFICATIONS_SEEN, // Submit the time notifications were last seen
     @Action(payloadType = MarkNotificationsReadPayload.class)
-    MARK_NOTIFICATIONS_READ, // Mark notification as read by user
+    MARK_NOTIFICATIONS_READ, // Mark one or more notifications as read by user
 
     // Remote responses
     @Action(payloadType = RegisterDeviceResponsePayload.class)
@@ -44,7 +44,7 @@ public enum NotificationAction implements IAction {
     @Action(payloadType = MarkNotificationSeenResponsePayload.class)
     MARKED_NOTIFICATIONS_SEEN, // Response to submitting the time notifications were last seen
     @Action(payloadType = MarkNotificationsReadResponsePayload.class)
-    MARKED_NOTIFICATIONS_READ, // Response to marking a notification as read
+    MARKED_NOTIFICATIONS_READ, // Response to marking one or more notifications as read
 
     // Local actions
     @Action(payloadType = NotificationModel.class)
