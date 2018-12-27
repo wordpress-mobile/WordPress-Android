@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,8 +99,10 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 return convertView;
         }
 
+        int color = convertView.getContext().getResources().getColor(textColorRes);
         holder.mText.setText(textRes);
-        holder.mText.setTextColor(convertView.getContext().getResources().getColor(textColorRes));
+        holder.mText.setTextColor(color);
+        holder.mIcon.setImageTintList(ColorStateList.valueOf(color));
 
         if (iconRes != 0) {
             holder.mIcon.setImageResource(iconRes);
