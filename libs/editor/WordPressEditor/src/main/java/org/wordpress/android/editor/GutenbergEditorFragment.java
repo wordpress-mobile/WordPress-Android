@@ -5,7 +5,6 @@ import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -30,7 +29,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
-import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
@@ -38,8 +36,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButton
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View.OnTouchListener,
-        EditorMediaUploadListener,
-        IHistoryListener {
+        EditorMediaUploadListener {
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
@@ -50,9 +47,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private EditTextWithKeyBackListener mTitle;
     private SourceViewEditText mSource;
-
-    private Handler mInvalidateOptionsHandler;
-    private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
 
@@ -154,16 +148,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         setHasOptionsMenu(true);
 
-        mInvalidateOptionsHandler = new Handler();
-        mInvalidateOptionsRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded()) {
-                    getActivity().invalidateOptionsMenu();
-                }
-            }
-        };
-
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         if (mIsNewPost) {
@@ -263,28 +247,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return false;
-    }
-
-    @Override
-    public void onRedoEnabled() {
-        if (!isAdded()) {
-            return;
-        }
-
-        mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
-        mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
-    }
-
-    @Override
-    public void onUndoEnabled() {
-        if (!isAdded()) {
-            return;
-        }
-
-        mInvalidateOptionsHandler.removeCallbacks(mInvalidateOptionsRunnable);
-        mInvalidateOptionsHandler.postDelayed(mInvalidateOptionsRunnable,
-                                              getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     private ActionBar getActionBar() {
