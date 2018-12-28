@@ -630,7 +630,6 @@
     <style name="PluginCardViewSecondaryElement.ChevronImage" parent="PluginCardViewSecondaryElement.ExternalLinkImage">
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_centerVertical">false</item>
-        <item name="android:tint">@color/grey_100</item>
     </style>
 
     <style name="PluginDirectoryTitle">
