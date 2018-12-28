@@ -163,12 +163,12 @@ class StatsUIHelper {
             }
 
             // groupView is recycled, we need to reset it to the original state.
-            ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+            ViewGroup childContainer = groupView.findViewById(R.id.layout_child_container);
             if (childContainer != null) {
                 childContainer.setVisibility(View.GONE);
             }
             // Remove any other prev animations set on the chevron
-            final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+            final ImageView chevron = groupView.findViewById(R.id.stats_list_cell_chevron);
             if (chevron != null) {
                 chevron.clearAnimation();
                 chevron.setImageResource(R.drawable.ic_chevron_right_blue_wordpress_24dp);
@@ -207,7 +207,7 @@ class StatsUIHelper {
     }
 
     private static void hideChildViews(View groupView, int groupPosition, boolean animate) {
-        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        final ViewGroup childContainer = groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null) {
             return;
         }
@@ -244,7 +244,7 @@ class StatsUIHelper {
      */
     private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition,
                                         boolean animate) {
-        final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
+        final ImageView chevron = groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
         }
@@ -290,7 +290,7 @@ class StatsUIHelper {
             return;
         }
 
-        final ViewGroup childContainer = (ViewGroup) groupView.findViewById(R.id.layout_child_container);
+        final ViewGroup childContainer = groupView.findViewById(R.id.layout_child_container);
         if (childContainer == null) {
             return;
         }
