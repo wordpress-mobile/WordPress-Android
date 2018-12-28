@@ -21,12 +21,12 @@
             android:contentDescription="@string/show_more_desc"
             android:paddingEnd="@dimen/page_item_horizontal_padding"
             android:paddingStart="@dimen/page_item_horizontal_padding"
+            android:src="@drawable/ic_ellipsis_white_24dp"
             android:tint="@color/grey_darken_10"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_ellipsis_grey_darken_10_24dp"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/large_stretcher"
