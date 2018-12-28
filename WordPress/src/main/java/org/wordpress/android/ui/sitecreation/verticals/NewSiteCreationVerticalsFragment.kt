@@ -27,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsV
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsContentUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel.VerticalsUiState.VerticalsFullscreenProgressUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -51,6 +52,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     private lateinit var skipClickedListener: OnSkipClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -80,6 +82,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         errorLayout = rootView.findViewById(R.id.error_layout)
         searchInputWithHeader = SearchInputWithHeader(
+                uiHelpers = uiHelpers,
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
