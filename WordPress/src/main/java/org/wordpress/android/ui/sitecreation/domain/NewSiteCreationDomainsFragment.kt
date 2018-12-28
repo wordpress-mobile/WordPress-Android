@@ -128,7 +128,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
                 searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
@@ -147,12 +147,8 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
-        updateVisibility(emptyView, contentState.emptyViewVisibility)
+        uiHelpers.updateVisibility(emptyView, contentState.emptyViewVisibility)
         (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(contentState.items)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun getSiteTitleFromArguments(): String? {

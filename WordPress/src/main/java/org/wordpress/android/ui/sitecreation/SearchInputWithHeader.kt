@@ -64,24 +64,20 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
             headerLayout.animate().translationY(0f)
         }
         uiState?.let {
-            updateVisibility(headerLayout, true)
+            uiHelpers.updateVisibility(headerLayout, true)
             headerTitle.text = uiHelpers.getTextOfUiString(context, uiState.title)
             headerSubtitle.text = uiHelpers.getTextOfUiString(context, uiState.subtitle)
-        } ?: updateVisibility(headerLayout, false)
+        } ?: uiHelpers.updateVisibility(headerLayout, false)
     }
 
     fun updateSearchInput(context: Context, uiState: SiteCreationSearchInputUiState) {
         searchInput.hint = uiHelpers.getTextOfUiString(context, uiState.hint)
-        updateVisibility(progressBar, uiState.showProgress)
-        updateVisibility(clearAllButton, uiState.showClearButton)
+        uiHelpers.updateVisibility(progressBar, uiState.showProgress)
+        uiHelpers.updateVisibility(clearAllButton, uiState.showClearButton)
     }
 
     fun requestInputFocusAndShowKeyboard() {
         searchInput.requestFocus()
         ActivityUtils.showKeyboard(searchInput)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }

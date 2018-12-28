@@ -146,9 +146,9 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
-                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
-                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
 
                 when (uiState) {
                     is VerticalsContentUiState -> updateContentLayout(uiState)
@@ -176,7 +176,7 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
     }
 
     private fun updateContentLayout(uiState: VerticalsContentUiState) {
-        updateVisibility(skipButton, uiState.showSkipButton)
+        uiHelpers.updateVisibility(skipButton, uiState.showSkipButton)
         searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
         searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
         updateSuggestions(uiState.items)
@@ -200,10 +200,6 @@ class NewSiteCreationVerticalsFragment : NewSiteCreationBaseFormFragment<NewSite
 
     private fun updateSuggestions(suggestions: List<VerticalsListItemUiState>) {
         (recyclerView.adapter as NewSiteCreationVerticalsAdapter).update(suggestions)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     override fun getScreenTitle(): String {
