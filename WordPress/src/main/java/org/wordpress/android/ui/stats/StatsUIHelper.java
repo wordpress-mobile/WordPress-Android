@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.support.v4.view.ViewCompat;
@@ -248,27 +247,25 @@ class StatsUIHelper {
         if (chevron == null) {
             return;
         }
-
-        Context context = groupView.getContext();
-
         if (isGroupExpanded) {
-            chevron.setContentDescription(context.getString(R.string.stats_list_cell_chevron_collapse_desc));
+            chevron.setContentDescription(
+                    groupView.getContext().getString(R.string.stats_list_cell_chevron_collapse_desc));
             // change the background of the parent
             setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
         } else {
-            chevron.setContentDescription(context.getString(R.string.stats_list_cell_chevron_expand_desc));
+            chevron.setContentDescription(
+                    groupView.getContext().getString(R.string.stats_list_cell_chevron_expand_desc));
             setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0
                     : R.drawable.stats_list_item_background);
         }
 
         chevron.clearAnimation(); // Remove any other prev animations set on the chevron
-
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
             chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_white_24dp
                     : R.drawable.ic_chevron_down_white_24dp);
             float start = (isGroupExpanded ? 0.0f : 0.0f);
-            float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(context) ? -1 : 1);
+            float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(groupView.getContext()) ? -1 : 1);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);
@@ -279,8 +276,6 @@ class StatsUIHelper {
             chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_white_24dp
                     : R.drawable.ic_chevron_right_white_24dp);
         }
-
-        chevron.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.blue_wordpress)));
     }
 
     private static void showChildViews(ExpandableListAdapter mAdapter, LinearLayout mLinearLayout,
