@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.action.NotificationAction
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATION
 import org.wordpress.android.fluxc.action.NotificationAction.FETCH_NOTIFICATIONS
 import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_SEEN
-import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATION_READ
+import org.wordpress.android.fluxc.action.NotificationAction.MARK_NOTIFICATIONS_READ
 import org.wordpress.android.fluxc.action.NotificationAction.UPDATE_NOTIFICATION
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.notification.NotificationModel
@@ -118,12 +118,12 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
-    class MarkNotificationReadPayload(
-        val notification: NotificationModel
+    class MarkNotificationsReadPayload(
+        val notifications: List<NotificationModel>
     ) : Payload<BaseNetworkError>()
 
-    class MarkNotificationReadResponsePayload(
-        val notification: NotificationModel? = null,
+    class MarkNotificationsReadResponsePayload(
+        val notifications: List<NotificationModel>? = null,
         val success: Boolean = false
     ) : Payload<NotificationError>() {
         constructor(error: NotificationError) : this() { this.error = error }
@@ -166,8 +166,8 @@ constructor(
             NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
-            NotificationAction.MARK_NOTIFICATION_READ ->
-                markNotificationRead(action.payload as MarkNotificationReadPayload)
+            NotificationAction.MARK_NOTIFICATIONS_READ ->
+                markNotificationsRead(action.payload as MarkNotificationsReadPayload)
 
             // remote responses
             NotificationAction.REGISTERED_DEVICE ->
@@ -180,8 +180,8 @@ constructor(
                 handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
                 handleMarkedNotificationSeen(action.payload as MarkNotificationSeenResponsePayload)
-            NotificationAction.MARKED_NOTIFICATION_READ ->
-                handleMarkedNotificationRead(action.payload as MarkNotificationReadResponsePayload)
+            NotificationAction.MARKED_NOTIFICATIONS_READ ->
+                handleMarkedNotificationsRead(action.payload as MarkNotificationsReadResponsePayload)
 
             // local actions
             NotificationAction.UPDATE_NOTIFICATION -> updateNotification(action.payload as NotificationModel)
@@ -379,17 +379,17 @@ constructor(
         emitChange(onNotificationChanged)
     }
 
-    private fun markNotificationRead(payload: MarkNotificationReadPayload) {
-        notificationRestClient.markNotificationRead(payload.notification)
+    private fun markNotificationsRead(payload: MarkNotificationsReadPayload) {
+        notificationRestClient.markNotificationRead(payload.notifications)
     }
 
-    private fun handleMarkedNotificationRead(payload: MarkNotificationReadResponsePayload) {
+    private fun handleMarkedNotificationsRead(payload: MarkNotificationsReadResponsePayload) {
         // Update the notification in the database
         var rowsAffected = 0
         if (payload.success) {
-            payload.notification?.let {
+            payload.notifications?.forEach {
                 it.read = true // Just in case it wasn't set by the calling client
-                rowsAffected = notificationSqlUtils.insertOrUpdateNotification(it)
+                rowsAffected += notificationSqlUtils.insertOrUpdateNotification(it)
             }
         }
 
@@ -404,10 +404,10 @@ constructor(
                 success = true
             }
         }.apply {
-            payload.notification?.let {
+            payload.notifications?.forEach {
                 changedNotificationLocalIds.add(it.noteId)
             }
-            causeOfChange = MARK_NOTIFICATION_READ
+            causeOfChange = MARK_NOTIFICATIONS_READ
         }
         emitChange(onNotificationChanged)
     }
