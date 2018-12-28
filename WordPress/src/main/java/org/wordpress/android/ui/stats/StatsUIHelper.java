@@ -171,7 +171,7 @@ class StatsUIHelper {
             final ImageView chevron = groupView.findViewById(R.id.stats_list_cell_chevron);
             if (chevron != null) {
                 chevron.clearAnimation();
-                chevron.setImageResource(R.drawable.ic_chevron_right_blue_wordpress_24dp);
+                chevron.setImageResource(R.drawable.ic_chevron_right_white_24dp);
             }
 
             // add children if this group is expanded
@@ -265,7 +265,7 @@ class StatsUIHelper {
 
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_white_24dp
                     : R.drawable.ic_chevron_down_white_24dp);
             float start = (isGroupExpanded ? 0.0f : 0.0f);
             float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(context) ? -1 : 1);
@@ -277,7 +277,7 @@ class StatsUIHelper {
             chevron.startAnimation(rotate);
         } else {
             chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_white_24dp
-                    : R.drawable.ic_chevron_right_blue_wordpress_24dp);
+                    : R.drawable.ic_chevron_right_white_24dp);
         }
 
         chevron.setImageTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.blue_wordpress)));
