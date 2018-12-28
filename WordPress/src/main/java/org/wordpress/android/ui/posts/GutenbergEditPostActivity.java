@@ -2431,7 +2431,7 @@ public class GutenbergEditPostActivity extends EditPostBaseActivity implements
                 } else {
                     // It's a wpcom site. Just create a version of the picture rotated for the old visual editor
                     // All the other editors read EXIF data
-                    // TODO check if this is needed for GUtenberg once Gutenberg media upload is ready
+                    // TODO check if this is needed for Gutenberg once Gutenberg media upload is ready
 //                    Uri rotatedMedia = WPMediaUtils.fixOrientationIssue(activity, path, isVideo);
 //                    if (rotatedMedia != null) {
 //                        // The uri variable should remain the same since wpcom rotates the picture server side
