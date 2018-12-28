@@ -203,7 +203,6 @@ class NotificationRestClient constructor(
         // is marked read across all devices (just like WPAndroid)
         val params = mutableMapOf<String, String>()
         notifications.iterator().forEach { params["counts[${it.remoteNoteId}]"] = "9999" }
-//        val params = mapOf("counts[${notification.remoteNoteId}]" to "9999")
         val request = WPComGsonRequest.buildFormPostRequest(url, params, NotificationReadApiResponse::class.java,
                 { response: NotificationReadApiResponse ->
                     val payload = MarkNotificationsReadResponsePayload(notifications, response.success)
