@@ -1,6 +1,7 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -82,10 +83,12 @@ public class PostListButton extends LinearLayout {
             return;
         }
 
+        int color = getContext().getResources().getColor(getTextColorResId(buttonType));
         mButtonType = buttonType;
         mTextView.setText(getButtonTextResId(buttonType));
+        mTextView.setTextColor(color);
         mImageView.setImageResource(getButtonIconResId(buttonType));
-        mTextView.setTextColor(getContext().getResources().getColor(getTextColorResId(buttonType)));
+        mImageView.setImageTintList(ColorStateList.valueOf(color));
     }
 
     public static @StringRes
