@@ -143,7 +143,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_MORE:
                 return R.drawable.ic_ellipsis_white_24dp;
             case BUTTON_BACK:
-                return R.drawable.ic_chevron_left_blue_wordpress_18dp;
+                return R.drawable.ic_chevron_left_white_24dp;
             case BUTTON_RETRY:
                 return R.drawable.ic_refresh_red_18dp;
             default:
