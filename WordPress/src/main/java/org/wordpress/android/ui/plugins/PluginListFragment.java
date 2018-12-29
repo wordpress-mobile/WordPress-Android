@@ -275,7 +275,7 @@ public class PluginListFragment extends Fragment {
                 } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
                     colorResId = R.color.alert_green;
-                    drawableResId = R.drawable.ic_checkmark_green_24dp;
+                    drawableResId = R.drawable.ic_checkmark_white_24dp;
                 } else {
                     textResId = R.string.plugin_inactive;
                     colorResId = R.color.grey;
