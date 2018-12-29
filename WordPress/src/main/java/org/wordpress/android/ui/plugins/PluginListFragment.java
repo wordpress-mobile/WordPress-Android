@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -280,9 +281,11 @@ public class PluginListFragment extends Fragment {
                     colorResId = R.color.grey;
                     drawableResId = R.drawable.ic_cross_grey_600_24dp;
                 }
+                int color = getResources().getColor(colorResId);
                 holder.mStatusText.setText(textResId);
-                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusText.setTextColor(color);
                 holder.mStatusIcon.setImageResource(drawableResId);
+                holder.mStatusIcon.setImageTintList(ColorStateList.valueOf(color));
                 holder.mStatusText.setVisibility(View.VISIBLE);
                 holder.mStatusIcon.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
