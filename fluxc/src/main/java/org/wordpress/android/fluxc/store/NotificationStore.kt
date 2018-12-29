@@ -168,7 +168,7 @@ constructor(
             // remote actions
             NotificationAction.REGISTER_DEVICE -> registerDevice(action.payload as RegisterDevicePayload)
             NotificationAction.UNREGISTER_DEVICE -> unregisterDevice()
-            NotificationAction.FETCH_NOTIFICATIONS -> fetchNotifications()
+            NotificationAction.FETCH_NOTIFICATIONS -> synchronizeNotifications()
             NotificationAction.FETCH_NOTIFICATION -> fetchNotification(action.payload as FetchNotificationPayload)
             NotificationAction.MARK_NOTIFICATIONS_SEEN ->
                 markNotificationSeen(action.payload as MarkNotificationsSeenPayload)
@@ -314,9 +314,67 @@ constructor(
         }
     }
 
-    private fun fetchNotifications() {
-        // get a map of all the cached sites
-        notificationRestClient.fetchNotifications(siteStore)
+    /**
+     * Determines the optimal route for fetching new notifications and synchronizing the local database.
+     *
+     * No cached notifications in the database: skip fetching hashes and just fetch full notifications
+     * from the remote.
+     *
+     * Cached notifications exist: fetch only the notification id and note_hash from the remote API
+     * and use the smaller, faster results to build a list of notifications to be fetched, and delete
+     * notifications in the database that no longer exist.
+     */
+    private fun synchronizeNotifications() {
+        val cachedCount = notificationSqlUtils.getNotificationsCount()
+
+        if (cachedCount > 0) {
+            // Fetch only the hashes to determine which notifications need to be fully fetched, and which
+            // should be deleted
+            notificationRestClient.fetchNotificationHashes()
+        } else {
+            // Fetch all notifications from the remote
+            notificationRestClient.fetchNotifications(siteStore)
+        }
+    }
+
+    /**
+     * Use the condensed map of newly fetched notification ids and hashes to determine which notifications are missing
+     * from cache, require updates, or should be deleted.
+     */
+    private fun handleFetchNotificationHashesCompleted(payload: FetchNotificationHashesResponsePayload) {
+        if (payload.isError) {
+            // Unable to synchronize notifications with remote. Emit error event.
+            val onNotificationChanged = OnNotificationChanged(0).also {
+                it.error = payload.error
+                it.causeOfChange = FETCH_NOTIFICATIONS
+            }
+            emitChange(onNotificationChanged)
+            return
+        }
+
+        // Create a mutable copy of freshly fetched notifications map
+        val notifsToFetch = payload.hashesMap.toMutableMap()
+
+        // Pull cached notifications from the database and build a map of remoteNoteId to noteHash
+        val existingNotifsByRemoteIdMap = notificationSqlUtils
+                .getNotifications().associateBy { it.remoteNoteId }.toMap()
+
+        // Scrub the newly fetched list against the cached db records. Remove any entries for records that
+        // do not require an update from the remote API
+        existingNotifsByRemoteIdMap.entries.forEach { cached ->
+            // Compare new note_hash values against cached values. Delete from db if
+            // cached notification not present in new list
+            notifsToFetch[cached.key]?.let { newNoteHash ->
+                if (cached.value.noteHash == newNoteHash) {
+                    // Notifications are identical. No update needed, remove from
+                    // list of notifs to fetch
+                    notifsToFetch.remove(cached.key)
+                }
+            } ?: notificationSqlUtils.deleteNotificationByRemoteId(cached.key) // Delete notification from the db
+        }
+
+        // Fetch new and updated notifications from the remote api
+        notificationRestClient.fetchNotifications(siteStore, notifsToFetch.keys.toList())
     }
 
     private fun handleFetchNotificationsCompleted(payload: FetchNotificationsResponsePayload) {
@@ -325,7 +383,7 @@ constructor(
             OnNotificationChanged(0).also { it.error = payload.error }
         } else {
             // Clear out existing notifications on fetch.
-            notificationSqlUtils.deleteNotifications()
+            notificationSqlUtils.deleteAllNotifications()
 
             // Save notifications to the database
             val rowsAffected = payload.notifs.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
