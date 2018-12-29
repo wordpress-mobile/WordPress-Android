@@ -3,7 +3,7 @@
 
     <item android:id="@+id/menu_change_location"
           android:title="@string/change_location"
-          android:icon="@drawable/ic_location_on_grey_600_24dp"/>
+          android:icon="@drawable/ic_location_grey_600_24dp"/>
 
     <item android:id="@+id/menu_remove_location"
           android:title="@string/remove_location"
