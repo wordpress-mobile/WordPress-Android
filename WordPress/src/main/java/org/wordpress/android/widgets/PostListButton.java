@@ -139,7 +139,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_PUBLISH:
             case BUTTON_SYNC:
             case BUTTON_SUBMIT:
-                return R.drawable.ic_reader_blue_wordpress_18dp;
+                return R.drawable.ic_reader_white_24dp;
             case BUTTON_MORE:
                 return R.drawable.ic_ellipsis_blue_wordpress_18dp;
             case BUTTON_BACK:
