@@ -132,7 +132,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_PREVIEW:
                 return R.drawable.ic_external_white_24dp;
             case BUTTON_STATS:
-                return R.drawable.ic_stats_alt_blue_wordpress_18dp;
+                return R.drawable.ic_stats_alt_white_24dp;
             case BUTTON_TRASH:
                 return R.drawable.ic_trash_blue_wordpress_18dp;
             case BUTTON_DELETE:
