@@ -127,7 +127,7 @@ public class PostListButton extends LinearLayout {
     int getButtonIconResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
-                return R.drawable.ic_pencil_blue_wordpress_18dp;
+                return R.drawable.ic_pencil_white_24dp;
             case BUTTON_VIEW:
                 return R.drawable.ic_external_blue_wordpress_18dp;
             case BUTTON_PREVIEW:
