@@ -120,7 +120,7 @@
                             android:importantForAccessibility="no"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_arrow_left_grey"
+                            android:src="@drawable/ic_arrow_left_white_24dp"
                             style="@style/MySiteListRowIcon" >
                         </ImageView>
 
