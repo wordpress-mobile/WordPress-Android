@@ -234,7 +234,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             PAGE_READER -> R.drawable.ic_reader_white_24dp
             PAGE_NEW_POST -> R.drawable.ic_create_white_24dp
             PAGE_ME -> R.drawable.ic_user_circle_white_24dp
-            else -> R.drawable.ic_bell_white_32dp
+            else -> R.drawable.ic_bell_white_24dp
         }
     }
 
