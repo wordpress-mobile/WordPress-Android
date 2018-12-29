@@ -17,10 +17,11 @@ import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErr
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceRegistrationErrorType
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationError
 import org.wordpress.android.fluxc.store.NotificationStore.DeviceUnregistrationErrorType
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationHashesResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsResponsePayload
-import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsReadResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationSeenResponsePayload
+import org.wordpress.android.fluxc.store.NotificationStore.MarkNotificationsReadResponsePayload
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationAppKey
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationError
 import org.wordpress.android.fluxc.store.NotificationStore.NotificationErrorType
@@ -41,10 +42,13 @@ class NotificationRestClient constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     companion object {
-        const val NOTIFICATION_DEFAULT_FIELDS = "id,type,unread,body,subject,timestamp,meta,note_hash"
+        const val NOTIFICATION_DEFAULT_FIELDS = "id,type,read,body,subject,timestamp,meta,note_hash"
+        const val NOTIFICATION_SYNC_FIELDS = "id,note_hash"
         const val NOTIFICATION_DEFAULT_NUMBER = 200
         const val NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS = 20
     }
+
+    // region Device Registration
     fun registerDeviceForPushNotifications(
         gcmToken: String,
         appKey: NotificationAppKey,
@@ -98,6 +102,38 @@ class NotificationRestClient constructor(
                     val payload = UnregisterDeviceResponsePayload(DeviceUnregistrationError(
                             DeviceUnregistrationErrorType.GENERIC_ERROR, wpComError.message))
                     dispatcher.dispatch(NotificationActionBuilder.newUnregisteredDeviceAction(payload))
+                })
+        add(request)
+    }
+    // endregion
+
+    /**
+     * Requests a fresh batch of notifications from the api containing only the fields "id" and "note_hash".
+     *
+     * API endpoint:
+     * https://developer.wordpress.com/docs/api/1/get/notifications/
+     */
+    fun fetchNotificationHashes() {
+        val url = WPCOMREST.notifications.urlV1_1
+        val params = mapOf(
+                "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
+                "num_note_items" to NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS.toString(),
+                "fields" to NOTIFICATION_SYNC_FIELDS)
+        val request = WPComGsonRequest.buildGetRequest(url, params, NotificationHashesApiResponse::class.java,
+                { response: NotificationHashesApiResponse? ->
+                    // Create a map of remote id to note_hash
+                    val hashesMap: Map<Long, Long> =
+                            response?.notes?.map { it.id to it.note_hash }?.toMap() ?: emptyMap()
+                    val payload = FetchNotificationHashesResponsePayload(hashesMap)
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationHashesAction(payload))
+                },
+                { networkError ->
+                    val payload = FetchNotificationHashesResponsePayload().apply {
+                        error = NotificationError(
+                                NotificationErrorType.fromString(networkError.apiError),
+                                networkError.message)
+                    }
+                    dispatcher.dispatch(NotificationActionBuilder.newFetchedNotificationHashesAction(payload))
                 })
         add(request)
     }
