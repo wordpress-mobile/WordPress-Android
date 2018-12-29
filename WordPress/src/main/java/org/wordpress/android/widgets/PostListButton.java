@@ -145,7 +145,7 @@ public class PostListButton extends LinearLayout {
             case BUTTON_BACK:
                 return R.drawable.ic_chevron_left_white_24dp;
             case BUTTON_RETRY:
-                return R.drawable.ic_refresh_red_18dp;
+                return R.drawable.ic_refresh_white_24dp;
             default:
                 return 0;
         }
