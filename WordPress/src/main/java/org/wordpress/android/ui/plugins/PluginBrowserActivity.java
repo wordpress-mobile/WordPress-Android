@@ -435,7 +435,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 } else {
                     textResId = R.string.plugin_inactive;
                     colorResId = R.color.grey;
-                    drawableResId = R.drawable.ic_cross_grey_600_24dp;
+                    drawableResId = R.drawable.ic_cross_white_24dp;
                 }
                 int color = getResources().getColor(colorResId);
                 holder.mStatusText.setText(textResId);
