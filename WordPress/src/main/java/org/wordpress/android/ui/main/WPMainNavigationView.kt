@@ -230,7 +230,7 @@ class WPMainNavigationView @JvmOverloads constructor(
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
         return when (position) {
-            PAGE_MY_SITE -> R.drawable.ic_my_sites_white_32dp
+            PAGE_MY_SITE -> R.drawable.ic_my_sites_white_24dp
             PAGE_READER -> R.drawable.ic_reader_white_32dp
             PAGE_NEW_POST -> R.drawable.ic_create_white_24dp
             PAGE_ME -> R.drawable.ic_user_circle_white_24dp
