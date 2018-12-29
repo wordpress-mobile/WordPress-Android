@@ -107,6 +107,12 @@ constructor(
         constructor(error: NotificationError) : this() { this.error = error }
     }
 
+    class FetchNotificationHashesResponsePayload(
+        val hashesMap: Map<Long, Long> = emptyMap()
+    ) : Payload<NotificationError>() {
+        constructor(error: NotificationError) : this() { this.error = error }
+    }
+
     class MarkNotificationsSeenPayload(
         val lastSeenTime: Long
     ) : Payload<BaseNetworkError>()
@@ -176,6 +182,8 @@ constructor(
                 handleUnregisteredDevice(action.payload as UnregisterDeviceResponsePayload)
             NotificationAction.FETCHED_NOTIFICATIONS ->
                 handleFetchNotificationsCompleted(action.payload as FetchNotificationsResponsePayload)
+            NotificationAction.FETCHED_NOTIFICATION_HASHES ->
+                handleFetchNotificationHashesCompleted(action.payload as FetchNotificationHashesResponsePayload)
             NotificationAction.FETCHED_NOTIFICATION ->
                 handleFetchNotificationCompleted(action.payload as FetchNotificationResponsePayload)
             NotificationAction.MARKED_NOTIFICATIONS_SEEN ->
