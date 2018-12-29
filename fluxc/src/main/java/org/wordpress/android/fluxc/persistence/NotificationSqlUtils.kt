@@ -47,6 +47,11 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
         }
     }
 
+    /**
+     * @return The total records in the notification table.
+     */
+    fun getNotificationsCount() = WellSql.select(NotificationModelBuilder::class.java).asCursor.count
+
     @SuppressLint("WrongConstant")
     fun getNotifications(
         @SelectQuery.Order order: Int = ORDER_DESCENDING,
@@ -139,8 +144,15 @@ class NotificationSqlUtils @Inject constructor(private val formattableContentMap
                 .firstOrNull()?.build(formattableContentMapper)
     }
 
-    fun deleteNotifications(): Int {
+    fun deleteAllNotifications(): Int {
         return WellSql.delete(NotificationModelBuilder::class.java).execute()
+    }
+
+    fun deleteNotificationByRemoteId(remoteNoteId: Long): Int {
+        return WellSql.delete(NotificationModelBuilder::class.java)
+                .where().beginGroup()
+                .equals(NotificationModelTable.REMOTE_NOTE_ID, remoteNoteId)
+                .endGroup().endWhere().execute()
     }
 
     private fun NotificationModel.toBuilder(): NotificationModelBuilder {
