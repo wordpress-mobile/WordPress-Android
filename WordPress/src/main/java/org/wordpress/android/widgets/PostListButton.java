@@ -54,8 +54,8 @@ public class PostListButton extends LinearLayout {
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.post_list_button, this);
 
-        mImageView = (ImageView) findViewById(R.id.image);
-        mTextView = (TextView) findViewById(R.id.text);
+        mImageView = findViewById(R.id.image);
+        mTextView = findViewById(R.id.text);
 
         int buttonType = 0;
         if (attrs != null) {
@@ -85,10 +85,10 @@ public class PostListButton extends LinearLayout {
 
         int color = getContext().getResources().getColor(getTextColorResId(buttonType));
         mButtonType = buttonType;
-        mTextView.setText(getButtonTextResId(buttonType));
-        mTextView.setTextColor(color);
         mImageView.setImageResource(getButtonIconResId(buttonType));
         mImageView.setImageTintList(ColorStateList.valueOf(color));
+        mTextView.setText(getButtonTextResId(buttonType));
+        mTextView.setTextColor(color);
     }
 
     public static @StringRes
