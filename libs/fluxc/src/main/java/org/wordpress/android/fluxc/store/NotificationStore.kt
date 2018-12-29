@@ -382,9 +382,6 @@ constructor(
             // Notification error
             OnNotificationChanged(0).also { it.error = payload.error }
         } else {
-            // Clear out existing notifications on fetch.
-            notificationSqlUtils.deleteAllNotifications()
-
             // Save notifications to the database
             val rowsAffected = payload.notifs.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
 
