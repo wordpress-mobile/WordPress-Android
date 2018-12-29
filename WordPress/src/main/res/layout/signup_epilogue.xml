@@ -68,7 +68,7 @@
                             android:layout_height="match_parent"
                             android:layout_width="match_parent"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_gridicons_user_circle_100dp"
+                            android:src="@drawable/ic_user_circle_white_24dp"
                             android:tint="@color/grey_lighten_10"/>
 
                         <ImageButton
