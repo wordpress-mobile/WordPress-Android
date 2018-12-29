@@ -80,7 +80,7 @@
                             android:tint="@color/grey_lighten_10"
                             android:importantForAccessibility="no"
                             android:visibility="gone"
-                            android:src="@drawable/ic_add_grey_24dp"
+                            android:src="@drawable/ic_add_white_24dp"
                             tools:visibility="visible" >
                         </ImageButton>
 
