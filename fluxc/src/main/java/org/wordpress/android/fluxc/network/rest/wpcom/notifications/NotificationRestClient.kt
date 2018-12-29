@@ -142,13 +142,20 @@ class NotificationRestClient constructor(
      * Fetch the latest list of notifications.
      *
      * https://developer.wordpress.com/docs/api/1/get/notifications/
+     *
+     * @param siteStore A reference to [SiteStore] used for finding and populating the localSiteId property of
+     * [NotificationModel]
+     * @param remoteNoteIds Optional. A list of remote notification ids to be fetched from the remote api
      */
-    fun fetchNotifications(siteStore: SiteStore) {
+    fun fetchNotifications(siteStore: SiteStore, remoteNoteIds: List<Long>? = null) {
         val url = WPCOMREST.notifications.urlV1_1
-        val params = mapOf(
+        val params = mutableMapOf(
                 "number" to NOTIFICATION_DEFAULT_NUMBER.toString(),
                 "num_note_items" to NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS.toString(),
                 "fields" to NOTIFICATION_DEFAULT_FIELDS)
+
+        remoteNoteIds?.let { if (remoteNoteIds.isNotEmpty()) params["ids"] = remoteNoteIds.joinToString() }
+
         val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
                 { response: NotificationsApiResponse? ->
                     val lastSeenTime = response?.last_seen_time?.let {
