@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.getTextOfUiString
+import org.wordpress.android.util.ActivityUtils
 
 class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
     private val headerLayout = rootView.findViewById<ViewGroup>(R.id.header_layout)
@@ -73,6 +74,11 @@ class SearchInputWithHeader(rootView: View, onClear: () -> Unit) {
         searchInput.hint = getTextOfUiString(context, uiState.hint)
         updateVisibility(progressBar, uiState.showProgress)
         updateVisibility(clearAllButton, uiState.showClearButton)
+    }
+
+    fun requestInputFocusAndShowKeyboard() {
+        searchInput.requestFocus()
+        ActivityUtils.showKeyboard(searchInput)
     }
 
     private fun updateVisibility(view: View, visible: Boolean) {
