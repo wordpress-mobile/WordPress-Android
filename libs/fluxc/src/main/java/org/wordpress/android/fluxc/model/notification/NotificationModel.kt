@@ -8,7 +8,7 @@ data class NotificationModel(
     val noteId: Int = 0,
     val remoteNoteId: Long = 0L,
     var localSiteId: Int = 0,
-    val noteHash: Long = 0L,
+    var noteHash: Long = 0L,
     val type: Kind = NotificationModel.Kind.UNKNOWN,
     val subtype: Subkind? = NotificationModel.Subkind.NONE,
     var read: Boolean = false,
