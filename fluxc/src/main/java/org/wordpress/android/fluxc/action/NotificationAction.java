@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.notification.NotificationModel;
+import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationHashesResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationPayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationResponsePayload;
 import org.wordpress.android.fluxc.store.NotificationStore.FetchNotificationsPayload;
@@ -37,6 +38,8 @@ public enum NotificationAction implements IAction {
     REGISTERED_DEVICE, // Response to device registration received
     @Action(payloadType = UnregisterDeviceResponsePayload.class)
     UNREGISTERED_DEVICE, // Response to device unregistration
+    @Action(payloadType = FetchNotificationHashesResponsePayload.class)
+    FETCHED_NOTIFICATION_HASHES, // Response to an internal request to fetch notification hashes for synchronization
     @Action(payloadType = FetchNotificationsResponsePayload.class)
     FETCHED_NOTIFICATIONS, // Response to fetching notifications
     @Action(payloadType = FetchNotificationResponsePayload.class)

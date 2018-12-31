@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.persistence.NotificationSqlUtils.Notification
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @Config(manifest = Config.NONE)
 @RunWith(RobolectricTestRunner::class)
@@ -332,5 +333,52 @@ class NotificationSqlUtilsTest {
             assertEquals(it.remoteNoteId, noteId)
             assertEquals(it.localSiteId, site.id)
         }
+    }
+
+    @Test
+    fun testGetNotificationCount() {
+        // Insert notifications
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val notesList = apiResponse.notes?.map {
+            NotificationApiResponse.notificationResponseToNotificationModel(it, 0)
+        } ?: emptyList()
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(6, inserted)
+
+        // Get notifications
+        val count = notificationSqlUtils.getNotificationsCount()
+        assertEquals(6, count)
+    }
+
+    @Test
+    fun testDeleteNotificationByRemoteId() {
+        val noteId = 3616322875
+
+        // Insert notifications
+        val notificationSqlUtils = NotificationSqlUtils(FormattableContentMapper(Gson()))
+        val jsonString = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/notifications-api-response.json")
+        val apiResponse = NotificationTestUtils.parseNotificationsApiResponseFromJsonString(jsonString)
+        val site = SiteModel().apply { id = 153482281 }
+        val notesList = apiResponse.notes?.map {
+            val siteId = NotificationApiResponse.getRemoteSiteId(it)
+            NotificationApiResponse.notificationResponseToNotificationModel(it, siteId!!.toInt())
+        } ?: emptyList()
+        val inserted = notesList.sumBy { notificationSqlUtils.insertOrUpdateNotification(it) }
+        assertEquals(6, inserted)
+
+        // Fetch a single notification
+        val notification = notificationSqlUtils.getNotificationByRemoteId(noteId)
+        assertNotNull(notification)
+
+        // Delete notification by remoteNoteId
+        val rowsAffected = notificationSqlUtils.deleteNotificationByRemoteId(noteId)
+        assertEquals(rowsAffected, 1)
+
+        // Verify notification not in database
+        assertNull(notificationSqlUtils.getNotificationByRemoteId(noteId))
     }
 }
