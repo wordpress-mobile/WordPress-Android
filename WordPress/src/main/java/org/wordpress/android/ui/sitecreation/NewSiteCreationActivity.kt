@@ -54,7 +54,7 @@ class NewSiteCreationActivity : AppCompatActivity(),
 
         setContentView(R.layout.new_site_creation_activity)
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(NewSiteCreationMainVM::class.java)
-        mainViewModel.start()
+        mainViewModel.start(null, null)
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED)

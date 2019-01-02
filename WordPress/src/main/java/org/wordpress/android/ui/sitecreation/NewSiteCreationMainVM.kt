@@ -19,6 +19,16 @@ import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
+private val SITE_CREATION_STEPS =
+        // TODO we'll receive this from a server/Firebase config
+        listOf(
+                SiteCreationStep.fromString("site_creation_segments"),
+                SiteCreationStep.fromString("site_creation_verticals"),
+                SiteCreationStep.fromString("site_creation_site_info"),
+                SiteCreationStep.fromString("site_creation_domains"),
+                SiteCreationStep.fromString("site_creation_site_preview")
+        )
+
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
@@ -32,32 +42,33 @@ data class SiteCreationState(
 typealias NavigationTarget = WizardNavigationTarget<SiteCreationStep, SiteCreationState>
 
 class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
-    private val wizardManager: WizardManager<SiteCreationStep> = WizardManager(
-            // TODO we'll receive this from a server/Firebase config
-            listOf(
-                    SiteCreationStep.fromString("site_creation_segments"),
-                    SiteCreationStep.fromString("site_creation_verticals"),
-                    SiteCreationStep.fromString("site_creation_site_info"),
-                    SiteCreationStep.fromString("site_creation_domains"),
-                    SiteCreationStep.fromString("site_creation_site_preview")
-            )
-    )
     private var isStarted = false
-    private var siteCreationState = SiteCreationState()
+    private lateinit var wizardManager: WizardManager<SiteCreationStep>
+    private lateinit var siteCreationState: SiteCreationState
 
-    val navigationTargetObservable: SingleEventObservable<NavigationTarget> = SingleEventObservable(
-            Transformations.map(wizardManager.navigatorLiveData) {
-                WizardNavigationTarget(it, siteCreationState)
-            }
-    )
+    val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
+        SingleEventObservable(
+                Transformations.map(wizardManager.navigatorLiveData) {
+                    WizardNavigationTarget(it, siteCreationState)
+                }
+        )
+    }
 
     private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
 
-    fun start() {
+    fun start(siteCreationState: SiteCreationState?, currentStepIndex: Int?) {
         if (isStarted) return
+        this.siteCreationState = siteCreationState ?: SiteCreationState()
+        wizardManager = if (currentStepIndex != null) {
+            WizardManager(SITE_CREATION_STEPS, currentStepIndex)
+        } else {
+            WizardManager(SITE_CREATION_STEPS)
+        }
         isStarted = true
-        wizardManager.showNextStep()
+        if (currentStepIndex == null) {
+            wizardManager.showNextStep()
+        }
     }
 
     fun onSegmentSelected(segmentId: Long) {
