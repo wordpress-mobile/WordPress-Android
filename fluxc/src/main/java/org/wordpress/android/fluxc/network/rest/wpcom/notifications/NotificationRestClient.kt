@@ -154,7 +154,7 @@ class NotificationRestClient constructor(
                 "num_note_items" to NOTIFICATION_DEFAULT_NUM_NOTE_ITEMS.toString(),
                 "fields" to NOTIFICATION_DEFAULT_FIELDS)
 
-        remoteNoteIds?.let { if (remoteNoteIds.isNotEmpty()) params["ids"] = remoteNoteIds.joinToString() }
+        remoteNoteIds?.let { if (it.isNotEmpty()) params["ids"] = it.joinToString() }
 
         val request = WPComGsonRequest.buildGetRequest(url, params, NotificationsApiResponse::class.java,
                 { response: NotificationsApiResponse? ->
