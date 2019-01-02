@@ -1088,7 +1088,7 @@ public class MySiteFragment extends Fragment implements
 
     private void completeQuickStarTask(QuickStartTask quickStartTask) {
         if (getSelectedSite() != null) {
-            QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite());
+            QuickStartUtils.completeTask(mQuickStartStore, quickStartTask, mDispatcher, getSelectedSite(), getContext());
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
             if (quickStartTask == QuickStartTask.UPLOAD_SITE_ICON) {
