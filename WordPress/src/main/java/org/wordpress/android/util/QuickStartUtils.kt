@@ -1,6 +1,9 @@
 package org.wordpress.android.util
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
@@ -30,6 +33,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.quickstart.QuickStartReminderNotificationService
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
 class QuickStartUtils {
@@ -67,8 +71,10 @@ class QuickStartUtils {
                 val endOfHighlight = mutableSpannedMessage.getSpanEnd(foregroundColorSpan)
 
                 mutableSpannedMessage.removeSpan(foregroundColorSpan)
-                mutableSpannedMessage.setSpan(ForegroundColorSpan(highlightColor),
-                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                mutableSpannedMessage.setSpan(
+                        ForegroundColorSpan(highlightColor),
+                        startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
@@ -88,8 +94,10 @@ class QuickStartUtils {
                         mutableSpannedMessage.insert(startOfHighlight, "  ")
                     }
 
-                    mutableSpannedMessage.setSpan(ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    mutableSpannedMessage.setSpan(
+                            ImageSpan(icon), startOfHighlight, startOfHighlight + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                 }
             }
 
@@ -182,12 +190,16 @@ class QuickStartUtils {
             quickStartStore: QuickStartStore,
             task: QuickStartTask,
             dispatcher: Dispatcher,
-            site: SiteModel
+            site: SiteModel,
+            context: Context?
         ) {
             val siteId = site.id.toLong()
+            if (context != null) {
+                stopQuickStartReminderTimer(context)
+            }
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
-                    quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
+                    quickStartStore.hasDoneTask(siteId, task)) {
                 return
             }
 
@@ -197,6 +209,10 @@ class QuickStartUtils {
             if (isEveryQuickStartTaskDone(quickStartStore)) {
                 AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
+            } else {
+                if (context != null) {
+                    startQuickStartReminderTimer(context)
+                }
             }
         }
 
@@ -231,6 +247,28 @@ class QuickStartUtils {
                     Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 }
             }
+        }
+
+        fun startQuickStartReminderTimer(context: Context) {
+            val ONE_DAY = (24 * 60 * 60 * 1000).toLong()
+
+            val intent = Intent(context, QuickStartReminderNotificationService::class.java)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+            val pendingIntent = PendingIntent.getService(context, 555, intent, 0)
+
+            alarmManager.set(
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 60 * 1000),
+                    pendingIntent
+            )
+        }
+
+        fun stopQuickStartReminderTimer(context: Context) {
+            val intent = Intent(context, QuickStartReminderNotificationService::class.java)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+            val pendingIntent = PendingIntent.getBroadcast(context, 555, intent, 0)
+            alarmManager.cancel(pendingIntent)
         }
     }
 }
