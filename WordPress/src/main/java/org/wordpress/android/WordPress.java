@@ -808,15 +808,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
-                    // TODO move this code to WPMainActivity when an actual Note intent is received
-//                    Intent intent = activity.getIntent();
-//                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-//                        NotificationsUpdateServiceStarter.startService(getContext(),
-//                                getNoteIdFromNoteDetailActivityIntent(
-//                                        activity.getIntent()));
-//                    } else {
-//                        NotificationsUpdateServiceStarter.startService(getContext());
-//                    }
+                    NotificationsUpdateServiceStarter.startService(getContext());
                 }
 
                 // verify media is sanitized
@@ -837,16 +829,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 deferredInit();
             }
             mFirstActivityResumed = false;
-        }
-
-        // gets the note id from the extras that started this activity, so
-        // we can remember to re-set that to unread once the note fetch update takes place
-        private String getNoteIdFromNoteDetailActivityIntent(Intent intent) {
-            String noteId = "";
-            if (intent != null) {
-                noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
-            }
-            return noteId;
         }
     }
 
