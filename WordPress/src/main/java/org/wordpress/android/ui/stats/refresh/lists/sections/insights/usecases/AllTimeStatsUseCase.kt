@@ -51,7 +51,7 @@ class AllTimeStatsUseCase
         val hasVisitors = domainModel.visitors > 0
         val hasViewsBestDayTotal = domainModel.viewsBestDayTotal > 0
         if (!hasPosts && !hasViews && !hasVisitors && !hasViewsBestDayTotal) {
-            items.add(Empty)
+            items.add(Empty())
         } else {
             if (hasPosts) {
                 items.add(
