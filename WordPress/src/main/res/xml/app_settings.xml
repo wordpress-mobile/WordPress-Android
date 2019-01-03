@@ -60,7 +60,7 @@
             android:key="@string/pref_key_send_crash"
             android:icon="@drawable/ic_bug_grey_min_24dp"
             android:layout="@layout/wp_preference"
-            android:summary="@string/preference_crash_reports_caption"
+            android:summary="@string/preference_crash_reports_summary"
             android:title="@string/preference_crash_reports"/>
 
     </PreferenceScreen>

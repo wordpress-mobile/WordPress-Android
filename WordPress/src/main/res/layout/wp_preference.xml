@@ -48,7 +48,7 @@
             android:maxLines="4"
             android:textColor="@color/calypso_subtitle_text"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="@string/preference_crash_reports_caption">
+            tools:text="@string/preference_crash_reports_summary">
         </TextView>
 
     </RelativeLayout>
