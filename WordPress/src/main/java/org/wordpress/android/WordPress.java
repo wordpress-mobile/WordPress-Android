@@ -6,6 +6,10 @@ import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -269,6 +273,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(applicationLifecycleMonitor);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
@@ -724,6 +729,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mSupportFragmentInjector;
     }
 
+
     /**
      * Detect when the app goes to the background and come back to the foreground.
      * <p>
@@ -733,7 +739,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * This class also uses ActivityLifecycleCallbacks
      * to make sure to detect the send to background event and not other events.
      */
-    private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+    private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2,
+            LifecycleObserver {
         private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
 
         private Date mLastPingDate;
@@ -763,11 +770,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 case TRIM_MEMORY_RUNNING_LOW:
                     evictBitmaps = true;
                     break;
-                case TRIM_MEMORY_UI_HIDDEN:
-                    // See https://goo.gl/DuKVfX
-                    onAppGoesToBackground();
-                    break;
-                case TRIM_MEMORY_BACKGROUND:
                 default:
                     break;
             }
@@ -804,6 +806,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
         }
 
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
             if (sAppIsInTheBackground) {
@@ -841,6 +844,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
         private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
             // https://developer.android.com/reference/android/net/ConnectivityManager.html
