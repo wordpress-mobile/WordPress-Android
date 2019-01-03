@@ -18,12 +18,18 @@ import java.util.Set;
 public class URLFilteredWebViewClient extends WebViewClient {
     private Set<String> mAllowedURLs = new LinkedHashSet<>();
     private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+    private boolean mShouldDisplayLinksDisabledToast = true;
 
     public URLFilteredWebViewClient() {
     }
 
     public URLFilteredWebViewClient(String url) {
+        this(url, true);
+    }
+
+    public URLFilteredWebViewClient(String url, boolean shouldDisplayLinksDisabledToast) {
         mAllowedURLs.add(url);
+        mShouldDisplayLinksDisabledToast = shouldDisplayLinksDisabledToast;
     }
 
     public URLFilteredWebViewClient(Collection<String> urls) {
@@ -49,7 +55,7 @@ public class URLFilteredWebViewClient extends WebViewClient {
 
         if (isAllURLsAllowed() || mAllowedURLs.contains(url)) {
             view.loadUrl(url);
-        } else {
+        } else if (mShouldDisplayLinksDisabledToast) {
             // show "links are disabled" message.
             Context ctx = WordPress.getContext();
             Toast.makeText(ctx, ctx.getText(mLinksDisabledMessageResId), Toast.LENGTH_SHORT).show();

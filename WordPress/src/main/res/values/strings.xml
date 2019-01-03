@@ -2467,4 +2467,5 @@
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
     <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
+    <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
 </resources>

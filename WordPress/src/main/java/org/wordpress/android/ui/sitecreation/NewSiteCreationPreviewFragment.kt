@@ -20,16 +20,20 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
 import android.widget.TextView
+import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.android.synthetic.main.new_site_creation_preview_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewData
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenProgressUiState
+import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
@@ -51,9 +55,11 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
+    private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
@@ -90,6 +96,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
+        sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         initViewModel()
         initRetryButton()
@@ -104,13 +111,16 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {
                 when (uiState) {
-                    is SitePreviewContentUiState -> updateContentLayout(uiState)
+                    is SitePreviewContentUiState -> updateContentLayout(uiState.data)
+                    is SitePreviewLoadingShimmerState -> updateContentLayout(uiState.data)
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
-                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
+                uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
@@ -125,7 +135,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         viewModel.startCreateSiteService.observe(this, Observer { startServiceData ->
             startServiceData?.let {
                 NewSiteCreationService.createSite(
-                        activity!!,
+                        requireNotNull(activity),
                         startServiceData.previousState,
                         startServiceData.serviceData
                 )
@@ -144,6 +154,9 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
             }
         })
+        viewModel.toastMessage.observe(this, Observer {
+            it?.show(requireNotNull(activity))
+        })
 
         viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
     }
@@ -159,8 +172,8 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun initCancelWizardButton() {
-        val retryBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
-        retryBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
+        val cancelBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
+        cancelBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
     }
 
     private fun initOkButton() {
@@ -168,9 +181,14 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         okBtn.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
-    private fun updateContentLayout(uiState: SitePreviewContentUiState) {
-        uiState.data.apply {
-            sitePreviewWebUrlTitle.text = createSpannableUrl(activity!!, shortUrl, subDomainIndices, domainIndices)
+    private fun updateContentLayout(sitePreviewData: SitePreviewData) {
+        sitePreviewData.apply {
+            sitePreviewWebUrlTitle.text = createSpannableUrl(
+                    requireNotNull(activity),
+                    shortUrl,
+                    subDomainIndices,
+                    domainIndices
+            )
         }
         // The view is about to become visible
         if (contentLayout.visibility == View.GONE) {
@@ -188,11 +206,11 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         errorUiStateState.apply {
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
-            updateVisibility(
+            uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.contact_support),
                     errorUiStateState.showContactSupport
             )
-            updateVisibility(
+            uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.cancel_wizard_button),
                     errorUiStateState.showCancelWizardButton
             )
@@ -208,7 +226,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireNotNull(activity).application as WordPress).component().inject(this)
         if (savedInstanceState == null) {
             // we need to manually clear the NewSiteCreationService state so we don't for example receive sticky events
             // from the previous run of the SiteCreation flow.
@@ -285,10 +303,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         return arguments.getString(EXTRA_SCREEN_TITLE)
     }
 
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
     private fun animateContentTransition() {
         contentLayout.addOnLayoutChangeListener(object : OnLayoutChangeListener {
             override fun onLayoutChange(
@@ -358,7 +372,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 private class PreviewWebViewClient internal constructor(
     val pageLoadedListener: PageFullyLoadedListener,
     siteAddress: String
-) : URLFilteredWebViewClient(siteAddress) {
+) : URLFilteredWebViewClient(siteAddress, false) {
     interface PageFullyLoadedListener {
         fun onPageFullyLoaded()
     }
