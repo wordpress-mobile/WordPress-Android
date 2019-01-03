@@ -2,7 +2,7 @@ android_config: &android_config
   docker:
     - image: circleci/android:api-27-alpha
   environment:
-    GRADLE: "./gradlew --build-cache --stacktrace -PdisablePreDex -PjavaMaxHeapSize=2g"
+    GRADLE: "./gradlew --stacktrace -PdisablePreDex -PjavaMaxHeapSize=2g"
 
 copy_gradle_properties: &copy_gradle_properties
   run:
