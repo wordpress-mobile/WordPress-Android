@@ -21,6 +21,7 @@ import org.wordpress.android.ui.sitecreation.NewSiteCreationListener
 import org.wordpress.android.ui.sitecreation.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.SearchInputWithHeader
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 private const val KEY_LIST_STATE = "list_state"
@@ -38,6 +39,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var helpClickedListener: OnHelpClickedListener
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -58,6 +60,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
 
     override fun setupContent(rootView: ViewGroup) {
         searchInputWithHeader = SearchInputWithHeader(
+                uiHelpers = uiHelpers,
                 rootView = rootView,
                 onClear = { viewModel.onClearTextBtnClicked() }
         )
@@ -125,7 +128,7 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                 searchInputWithHeader.updateHeader(nonNullActivity, uiState.headerUiState)
                 searchInputWithHeader.updateSearchInput(nonNullActivity, uiState.searchInputUiState)
                 updateContentUiState(uiState.contentState)
-                updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
+                uiHelpers.updateVisibility(createSiteButtonContainer, uiState.createSiteButtonContainerVisibility)
             }
         })
         viewModel.clearBtnClicked.observe(this, Observer {
@@ -144,12 +147,8 @@ class NewSiteCreationDomainsFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
-        updateVisibility(emptyView, contentState.emptyViewVisibility)
+        uiHelpers.updateVisibility(emptyView, contentState.emptyViewVisibility)
         (recyclerView.adapter as NewSiteCreationDomainsAdapter).update(contentState.items)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun getSiteTitleFromArguments(): String? {

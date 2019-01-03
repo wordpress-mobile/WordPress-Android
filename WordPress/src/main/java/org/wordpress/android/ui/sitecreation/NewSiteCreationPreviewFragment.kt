@@ -33,6 +33,7 @@ import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel.SitePreview
 import org.wordpress.android.ui.sitecreation.PreviewWebViewClient.PageFullyLoadedListener
 import org.wordpress.android.ui.sitecreation.creation.NewSiteCreationService
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.URLFilteredWebViewClient
 import javax.inject.Inject
@@ -58,6 +59,7 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
     private lateinit var sitePreviewWebUrlTitle: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var uiHelpers: UiHelpers
 
     private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
@@ -114,11 +116,11 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
-                updateVisibility(contentLayout, uiState.contentLayoutVisibility)
-                updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
-                updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
-                updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
+                uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
+                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
@@ -204,11 +206,11 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
         errorUiStateState.apply {
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
             setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
-            updateVisibility(
+            uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.contact_support),
                     errorUiStateState.showContactSupport
             )
-            updateVisibility(
+            uiHelpers.updateVisibility(
                     fullscreenErrorLayout.findViewById(R.id.cancel_wizard_button),
                     errorUiStateState.showCancelWizardButton
             )
@@ -299,10 +301,6 @@ class NewSiteCreationPreviewFragment : NewSiteCreationBaseFormFragment<NewSiteCr
             throw IllegalStateException("Required argument screen title is missing.")
         }
         return arguments.getString(EXTRA_SCREEN_TITLE)
-    }
-
-    private fun updateVisibility(view: View, visible: Boolean) {
-        view.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun animateContentTransition() {
