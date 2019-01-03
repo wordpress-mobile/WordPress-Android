@@ -112,7 +112,8 @@ import dagger.android.support.HasSupportFragmentInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector {
+public class WordPress extends MultiDexApplication implements HasServiceInjector, HasSupportFragmentInjector,
+        LifecycleObserver {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
@@ -130,6 +131,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
+    private static ApplicationLifecycleMonitor mApplicationLifecycleMonitor;
 
     private static GoogleApiClient mCredentialsClient;
 
@@ -270,9 +272,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
                 BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
 
-        ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
-        registerComponentCallbacks(applicationLifecycleMonitor);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(applicationLifecycleMonitor);
+        MemoryAndConfigChangeMonitor memoryAndConfigChangeMonitor = new MemoryAndConfigChangeMonitor();
+        registerComponentCallbacks(memoryAndConfigChangeMonitor);
+
+        // initialize our ApplicationLifecycleMonitor, which is the App's LifecycleObserver implementation
+        mApplicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
 
@@ -391,14 +396,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
      * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
-    public void deferredInit(Activity activity) {
+    public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        if (isGooglePlayServicesAvailable(activity)) {
-            // Register for Cloud messaging
-            GCMRegistrationIntentService.enqueueWork(activity,
-                    new Intent(activity, GCMRegistrationIntentService.class));
-        }
+        // TODO: move this to WPMainActivity as the check needs to show a Dialog when not present
+//        if (isGooglePlayServicesAvailable(activity)) {
+//            // Register for Cloud messaging
+//            GCMRegistrationIntentService.enqueueWork(activity,
+//                    new Intent(activity, GCMRegistrationIntentService.class));
+//        }
 
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
@@ -728,17 +734,17 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return mSupportFragmentInjector;
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    void onAppComesFromBackground() {
+        mApplicationLifecycleMonitor.onAppComesFromBackground();
+    }
 
-    /**
-     * Detect when the app goes to the background and come back to the foreground.
-     * <p>
-     * Turns out that when your app has no more visible UI, a callback is triggered.
-     * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
-     * <p>
-     * This class also uses ActivityLifecycleCallbacks
-     * to make sure to detect the send to background event and not other events.
-     */
-    private class ApplicationLifecycleMonitor implements ComponentCallbacks2, LifecycleObserver {
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    void onAppGoesToBackground() {
+        mApplicationLifecycleMonitor.onAppGoesToBackground();
+    }
+
+    private class ApplicationLifecycleMonitor {
         private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
 
         private Date mLastPingDate;
@@ -746,36 +752,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
-
-        @Override
-        public void onConfigurationChanged(final Configuration newConfig) {
-            // Reapply locale on configuration change
-            LocaleManager.setLocale(getContext());
-        }
-
-        @Override
-        public void onLowMemory() {
-        }
-
-        @Override
-        public void onTrimMemory(final int level) {
-            boolean evictBitmaps = false;
-            switch (level) {
-                case TRIM_MEMORY_COMPLETE:
-                case TRIM_MEMORY_MODERATE:
-                case TRIM_MEMORY_RUNNING_MODERATE:
-                case TRIM_MEMORY_RUNNING_CRITICAL:
-                case TRIM_MEMORY_RUNNING_LOW:
-                    evictBitmaps = true;
-                    break;
-                default:
-                    break;
-            }
-
-            if (evictBitmaps && mBitmapCache != null) {
-                mBitmapCache.evictAll();
-            }
-        }
 
         private boolean isPushNotificationPingNeeded() {
             if (mLastPingDate == null) {
@@ -804,8 +780,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             }
         }
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        private void onAppGoesToBackground() {
+        public void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
             if (sAppIsInTheBackground) {
                 return;
@@ -842,8 +817,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
          * 1. the app starts (but it's not opened by a service or a broadcast receiver, i.e. an activity is resumed)
          * 2. the app was in background and is now foreground
          */
-        @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        private void onAppComesFromBackground(Activity activity) {
+        public void onAppComesFromBackground() {
             AppLog.i(T.UTILS, "App comes from background");
             if (!sAppIsInTheBackground) {
                 return;
@@ -857,7 +831,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (!mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = true;
                 registerReceiver(ConnectionChangeReceiver.getInstance(),
-                                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
@@ -865,14 +839,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
                 if (mAccountStore.hasAccessToken()) {
-                    Intent intent = activity.getIntent();
-                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-                        NotificationsUpdateServiceStarter.startService(getContext(),
-                                                                getNoteIdFromNoteDetailActivityIntent(
-                                                                        activity.getIntent()));
-                    } else {
-                        NotificationsUpdateServiceStarter.startService(getContext());
-                    }
+                    // TODO move this code to WPMainActivity when an actual Note intent is received
+//                    Intent intent = activity.getIntent();
+//                    if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
+//                        NotificationsUpdateServiceStarter.startService(getContext(),
+//                                getNoteIdFromNoteDetailActivityIntent(
+//                                        activity.getIntent()));
+//                    } else {
+//                        NotificationsUpdateServiceStarter.startService(getContext());
+//                    }
                 }
 
                 // verify media is sanitized
@@ -890,7 +865,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             sDeleteExpiredStats.runIfNotLimited();
 
             if (mFirstActivityResumed) {
-                deferredInit(activity);
+                deferredInit();
             }
             mFirstActivityResumed = false;
         }
@@ -903,6 +878,42 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             }
             return noteId;
+        }
+    }
+
+    /**
+     * Uses ComponentCallbacks2 is used for memory-related event handling and configuration changes
+     */
+    private class MemoryAndConfigChangeMonitor implements ComponentCallbacks2 {
+
+        @Override
+        public void onConfigurationChanged(final Configuration newConfig) {
+            // Reapply locale on configuration change
+            LocaleManager.setLocale(getContext());
+        }
+
+        @Override
+        public void onLowMemory() {
+        }
+
+        @Override
+        public void onTrimMemory(final int level) {
+            boolean evictBitmaps = false;
+            switch (level) {
+                case TRIM_MEMORY_COMPLETE:
+                case TRIM_MEMORY_MODERATE:
+                case TRIM_MEMORY_RUNNING_MODERATE:
+                case TRIM_MEMORY_RUNNING_CRITICAL:
+                case TRIM_MEMORY_RUNNING_LOW:
+                    evictBitmaps = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (evictBitmaps && mBitmapCache != null) {
+                mBitmapCache.evictAll();
+            }
         }
     }
 }
