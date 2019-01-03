@@ -40,7 +40,7 @@ class NewSiteCreationDomainsViewModelTest {
     @Mock lateinit var fetchDomainsUseCase: FetchDomainsUseCase
     @Mock private lateinit var uiStateObserver: Observer<DomainsUiState>
     @Mock private lateinit var createSiteBtnObserver: Observer<String>
-    @Mock private lateinit var clearBtnObserver: Observer<Void>
+    @Mock private lateinit var clearBtnObserver: Observer<Unit>
     @Mock private lateinit var onHelpClickedObserver: Observer<Unit>
     @Mock private lateinit var onInputFocusRequestedObserver: Observer<Unit>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
@@ -95,6 +95,33 @@ class NewSiteCreationDomainsViewModelTest {
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyVisibleItemsContentUiState(captor.secondValue)
+    }
+
+    @Test
+    fun verifyOnHelpClickedPropagated() = testWithSuccessResponse {
+        viewModel.onHelpClicked()
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
+        verify(onHelpClickedObserver).onChanged(captor.capture())
+        assertThat(captor.allValues.size, Is(1))
+    }
+
+    @Test
+    fun verifyOnClearBtnClickedPropagated() = testWithSuccessResponse {
+        viewModel.onClearTextBtnClicked()
+        val captor = ArgumentCaptor.forClass(Unit::class.java)
+        verify(clearBtnObserver).onChanged(captor.capture())
+        assertThat(captor.allValues.size, Is(1))
+    }
+
+    @Test
+    fun verifyCreateSiteBtnClickedPropagated() = testWithSuccessResponse {
+        val domainName = "test.domain"
+        viewModel.setSelectedDomainName(domainName)
+        viewModel.createSiteBtnClicked()
+        val captor = ArgumentCaptor.forClass(String::class.java)
+        verify(createSiteBtnObserver).onChanged(captor.capture())
+        assertThat(captor.allValues.size, Is(1))
+        assertThat(captor.firstValue, Is(domainName))
     }
 
     private fun verifyInitialContentUiState(uiState: DomainsUiState, showProgress: Boolean = false) {

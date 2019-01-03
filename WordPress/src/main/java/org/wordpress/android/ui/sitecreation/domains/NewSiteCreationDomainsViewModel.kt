@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.StringRes
+import android.support.annotation.VisibleForTesting
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
@@ -65,7 +66,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
     private val _createSiteBtnClicked = SingleLiveEvent<String>()
     val createSiteBtnClicked: LiveData<String> = _createSiteBtnClicked
 
-    private val _clearBtnClicked = SingleLiveEvent<Void>()
+    private val _clearBtnClicked = SingleLiveEvent<Unit>()
     val clearBtnClicked = _clearBtnClicked
 
     private val _onHelpClicked = SingleLiveEvent<Unit>()
@@ -227,7 +228,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                         showDivider = index != lastItemIndex,
                         checked = domainName == selectedDomain
                 )
-                itemUiState.onItemTapped = { selectedDomain = domainName }
+                itemUiState.onItemTapped = { setSelectedDomainName(domainName) }
                 items.add(itemUiState)
             }
         }
@@ -252,6 +253,11 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
                 showProgress = showProgress,
                 showClearButton = showClearButton
         )
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun setSelectedDomainName(domainName: String) {
+        selectedDomain = domainName
     }
 
     private fun isNonEmptyUserQuery(query: DomainSuggestionsQuery?): Boolean =
