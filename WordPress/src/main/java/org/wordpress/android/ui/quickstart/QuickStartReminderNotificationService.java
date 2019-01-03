@@ -32,10 +32,17 @@ public class QuickStartReminderNotificationService extends Service implements Se
         if (intent == null) {
             return START_NOT_STICKY;
         }
+        QuickStartDetails quickStartDetails = (QuickStartDetails) intent.getBundleExtra("b")
+                                                                         .getSerializable(QuickStartDetails.KEY);
+
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new NotificationCompat.Builder(this,
-                this.getString(R.string.notification_channel_normal_id)).setSmallIcon(android.R.drawable.stat_sys_upload).setContentText("test content").setOnlyAlertOnce(true)
-                                                                        .setSubText("test subcontent").build();
+                this.getString(R.string.notification_channel_normal_id))
+                .setSmallIcon(R.drawable.ic_my_sites_24dp)
+                .setContentTitle(this.getString(quickStartDetails.getTitleId()))
+                .setContentText(this.getString(quickStartDetails.getSubtitleId()))
+                .setOnlyAlertOnce(true)
+                .build();
 
 
         notificationManager.notify(111, notification);

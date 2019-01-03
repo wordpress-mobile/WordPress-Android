@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.text.Html
@@ -32,7 +33,10 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.quickstart.QuickStartDetails
 import org.wordpress.android.ui.quickstart.QuickStartReminderNotificationService
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 
@@ -194,13 +198,14 @@ class QuickStartUtils {
             context: Context?
         ) {
             val siteId = site.id.toLong()
-            if (context != null) {
-                stopQuickStartReminderTimer(context)
-            }
 
             if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
                     quickStartStore.hasDoneTask(siteId, task)) {
                 return
+            }
+
+            if (context != null) {
+                stopQuickStartReminderTimer(context)
             }
 
             quickStartStore.setDoneTask(siteId, task, true)
@@ -211,7 +216,10 @@ class QuickStartUtils {
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(site))
             } else {
                 if (context != null) {
-                    startQuickStartReminderTimer(context)
+                    val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
+                    if (nextTask != null) {
+                        startQuickStartReminderTimer(context, nextTask)
+                    }
                 }
             }
         }
@@ -249,16 +257,22 @@ class QuickStartUtils {
             }
         }
 
-        fun startQuickStartReminderTimer(context: Context) {
+        fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
             val ONE_DAY = (24 * 60 * 60 * 1000).toLong()
 
             val intent = Intent(context, QuickStartReminderNotificationService::class.java)
+            val bundle = Bundle();
+            bundle.putSerializable(QuickStartDetails.KEY, QuickStartDetails.getDetailsForTask(quickStartTask));
+            intent.putExtra("b", bundle)
+
+            intent.putExtra("yolo", QuickStartDetails.CHECK_STATS)
+            intent.putExtra("aaa", "bbb")
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            val pendingIntent = PendingIntent.getService(context, 555, intent, 0)
+            val pendingIntent = PendingIntent.getService(context, 723648247, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             alarmManager.set(
-                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 60 * 1000),
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1 * 10 * 1000),
                     pendingIntent
             )
         }
@@ -267,8 +281,35 @@ class QuickStartUtils {
             val intent = Intent(context, QuickStartReminderNotificationService::class.java)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            val pendingIntent = PendingIntent.getBroadcast(context, 555, intent, 0)
+            val pendingIntent = PendingIntent.getService(context, 555, intent, 0)
             alarmManager.cancel(pendingIntent)
+        }
+
+        fun getNextUncompletedQuickStartTask(
+            quickStartStore: QuickStartStore,
+            siteId: Long,
+            taskType: QuickStartTaskType
+        ): QuickStartTask? {
+            val uncompletedTasksOfPreferredType = quickStartStore.getUncompletedTasksByType(siteId, taskType)
+
+            var nextTask: QuickStartTask? = null
+
+            if (uncompletedTasksOfPreferredType.isEmpty()) {
+                val otherQuickStartTaskTypes = QuickStartTaskType.values()
+                        .filter { it != taskType && it != UNKNOWN }
+
+                otherQuickStartTaskTypes.forEach {
+                    val otherUncompletedTasks = quickStartStore.getUncompletedTasksByType(siteId, it)
+                    if (otherUncompletedTasks.isNotEmpty()) {
+                        nextTask = quickStartStore.getUncompletedTasksByType(siteId, it).first()
+                        return@forEach
+                    }
+                }
+            } else {
+                nextTask = uncompletedTasksOfPreferredType.first()
+            }
+
+            return nextTask
         }
     }
 }
