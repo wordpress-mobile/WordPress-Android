@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.models.networkresource.ListState
 import org.wordpress.android.models.networkresource.ListState.Error
 import org.wordpress.android.models.networkresource.ListState.Loading
@@ -36,12 +35,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.properties.Delegates
-
-const val FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS = true
-const val FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS = true
-const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS = false
-const val FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR = false
-const val FETCH_DOMAINS_SIZE = 20
 
 private const val THROTTLE_DELAY: Int = 500
 
@@ -144,15 +137,7 @@ class NewSiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val payload = SuggestDomainsPayload(
-                        query.value,
-                        FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS,
-                        FETCH_DOMAINS_SIZE,
-                        FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR
-                )
-                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(payload)
+                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value)
                 withContext(MAIN) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }

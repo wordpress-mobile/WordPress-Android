@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.firstValue
 import com.nhaarman.mockito_kotlin.secondValue
 import com.nhaarman.mockito_kotlin.times
@@ -70,7 +69,7 @@ class NewSiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(any()))
+            whenever(fetchDomainsUseCase.fetchDomains(MULTI_RESULT_DOMAIN_FETCH_QUERY.first))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
