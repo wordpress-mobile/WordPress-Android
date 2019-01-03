@@ -832,7 +832,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Uses ComponentCallbacks2 is used for memory-related event handling and configuration changes
      */
     private class MemoryAndConfigChangeMonitor implements ComponentCallbacks2 {
-
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
             // Reapply locale on configuration change
