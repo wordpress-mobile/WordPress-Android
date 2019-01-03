@@ -76,33 +76,47 @@ class NewSiteCreationDomainsViewModelTest {
     }
 
     @Test
-    fun verifyInitialEmptyQueryUiState() = testWithSuccessResponse {
+    fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
         viewModel.start(null)
-        val uiState = requireNotNull(viewModel.uiState.value)
-        assertThat(uiState.searchInputUiState.showProgress, Is(false))
+        verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
+    }
+
+    @Test
+    fun verifyMultiResultTitleQueryInitialUiState() = testWithSuccessResponse {
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyInitialContentUiState(requireNotNull(captor.firstValue), showProgress = true)
+    }
+
+    @Test
+    fun verifyMultiResultTitleQueryUiStateAfterResponse() = testWithSuccessResponse {
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.secondValue)
+    }
+
+    private fun verifyInitialContentUiState(uiState: DomainsUiState, showProgress: Boolean = false) {
+        assertThat(uiState.searchInputUiState.showProgress, Is(showProgress))
         assertThat(uiState.searchInputUiState.showClearButton, Is(false))
         assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Initial::class.java))
         assertThat(uiState.createSiteButtonContainerVisibility, Is(false))
     }
 
-    @Test
-    fun verifyInitialMultiResultQueryUiState() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        val initialUiState = captor.firstValue
-        assertThat(initialUiState.searchInputUiState.showProgress, Is(true))
-        assertThat(initialUiState.searchInputUiState.showClearButton, Is(false))
-        assertThat(initialUiState.contentState, instanceOf(DomainsUiContentState.Initial::class.java))
-        assertThat(initialUiState.createSiteButtonContainerVisibility, Is(false))
-
-        val stateAfterFetch = captor.secondValue
-        assertThat(stateAfterFetch.searchInputUiState.showProgress, Is(false))
-        assertThat(stateAfterFetch.searchInputUiState.showClearButton, Is(false))
-        assertThat(stateAfterFetch.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
-        assertThat(stateAfterFetch.contentState.emptyViewVisibility, Is(false))
-        assertThat(stateAfterFetch.contentState.items.size, Is(MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE))
-        assertThat(stateAfterFetch.createSiteButtonContainerVisibility, Is(false))
+    private fun verifyVisibleItemsContentUiState(
+        uiState: DomainsUiState,
+        showProgress: Boolean = false,
+        showClearButton: Boolean = false,
+        numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE,
+        createSiteButtonVisibility: Boolean = false
+    ) {
+        assertThat(uiState.searchInputUiState.showProgress, Is(showProgress))
+        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
+        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
+        assertThat(uiState.contentState.emptyViewVisibility, Is(numberOfItems == 0))
+        assertThat(uiState.contentState.items.size, Is(numberOfItems))
+        assertThat(uiState.createSiteButtonContainerVisibility, Is(createSiteButtonVisibility))
     }
 
     private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
