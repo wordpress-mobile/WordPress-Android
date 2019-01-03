@@ -18,7 +18,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnTaskTappedListener;
+import org.wordpress.android.ui.quickstart.QuickStartAdapter.OnQuickStartAdapterActionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,15 @@ import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskTy
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 
 public class QuickStartFullScreenDialogFragment extends Fragment implements FullScreenDialogContent,
-        OnTaskTappedListener {
+        OnQuickStartAdapterActionListener {
     private FullScreenDialogController mDialogController;
     private QuickStartAdapter mQuickStartAdapter;
 
     public static final String KEY_COMPLETED_TASKS_LIST_EXPANDED = "completed_tasks_list_expanded";
     public static final String EXTRA_TYPE = "EXTRA_TYPE";
     public static final String RESULT_TASK = "RESULT_TASK";
+
+    private QuickStartTaskType mTasksType = CUSTOMIZE;
 
     @Inject protected QuickStartStore mQuickStartStore;
 
@@ -57,10 +59,9 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.quick_start_dialog_fragment, container, false);
-        QuickStartTaskType type = CUSTOMIZE;
 
         if (getArguments() != null) {
-            type = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
+            mTasksType = (QuickStartTaskType) getArguments().getSerializable(EXTRA_TYPE);
         }
 
         RecyclerView list = rootView.findViewById(R.id.list);
@@ -68,7 +69,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         List<QuickStartTask> tasksCompleted = new ArrayList<>();
         int site = AppPrefs.getSelectedSite();
 
-        switch (Objects.requireNonNull(type)) {
+        switch (Objects.requireNonNull(mTasksType)) {
             case CUSTOMIZE:
                 tasksUncompleted.addAll(mQuickStartStore.getUncompletedTasksByType(site, CUSTOMIZE));
                 tasksCompleted.addAll(mQuickStartStore.getCompletedTasksByType(site, CUSTOMIZE));
@@ -84,10 +85,10 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         }
 
         boolean isCompletedTasksListExpanded = savedInstanceState != null
-                                              && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
+                                               && savedInstanceState.getBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED);
 
-        mQuickStartAdapter =
-                new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted, isCompletedTasksListExpanded);
+        mQuickStartAdapter = new QuickStartAdapter(requireContext(), tasksUncompleted, tasksCompleted,
+                isCompletedTasksListExpanded);
         mQuickStartAdapter.setOnTaskTappedListener(QuickStartFullScreenDialogFragment.this);
         list.setLayoutManager(new LinearLayoutManager(requireContext()));
         list.setAdapter(mQuickStartAdapter);
@@ -123,6 +124,19 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
         super.onSaveInstanceState(outState);
         if (mQuickStartAdapter != null) {
             outState.putBoolean(KEY_COMPLETED_TASKS_LIST_EXPANDED, mQuickStartAdapter.isCompletedTasksListExpanded());
+        }
+    }
+
+    @Override
+    public void onSkipTaskTapped(QuickStartTask task) {
+        // TODO: Quick Start - Add analytics for skipping task.
+        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite(), task, true);
+        if (mQuickStartAdapter != null) {
+            int site = AppPrefs.getSelectedSite();
+            mQuickStartAdapter.updateContent(
+                    mQuickStartStore.getUncompletedTasksByType(site, mTasksType),
+                    mQuickStartStore.getCompletedTasksByType(site, mTasksType),
+                    task);
         }
     }
 }
