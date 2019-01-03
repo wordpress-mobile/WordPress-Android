@@ -113,7 +113,7 @@ class NewSiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
         verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
