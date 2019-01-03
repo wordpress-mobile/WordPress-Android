@@ -120,6 +120,22 @@ class NewSiteCreationDomainsViewModelTest {
             }
 
     @Test
+    fun verifyUpdateMultiResultQueryInitialUiState() = testWithSuccessResponse {
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
+    }
+
+    @Test
+    fun verifyUpdateMultiResultQueryUiStateAfterResponse() = testWithSuccessResponse {
+        viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verifyVisibleItemsContentUiState(captor.secondValue, showClearButton = true)
+    }
+
+    @Test
     fun verifyOnHelpClickedPropagated() = testWithSuccessResponse {
         viewModel.onHelpClicked()
         val captor = ArgumentCaptor.forClass(Unit::class.java)
