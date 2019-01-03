@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-30 16:01:33+0000
+Translation-Revision-Date: 2018-12-05 17:51:56+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="menu_debug">Menu de depuração</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Essa é uma versão experimental do Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Ativar o Gutenberg</string>
+    <string name="change_password_dialog_message">Trocando de senha…</string>
+    <string name="change_password_dialog_hint">Sua senha deve ter pelo menos seis caracteres. Para que ela seja forte, use letras maiúsculas e minúsculas, números e sinais como  ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_confirmation">Senha alterada com sucesso</string>
+    <string name="change_password">Trocar senha</string>
+    <string name="support_identity_input_dialog_name_label">Nome</string>
+    <string name="history_no_title">(sem título)</string>
+    <string name="history_preview_html">Visualizar a versão HTML</string>
+    <string name="history_preview_visual">Visualizar a versão visual</string>
     <string name="history_detail_title">Revisão</string>
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Próximo</string>
@@ -1185,6 +1197,7 @@ Language: pt_BR
     <string name="detail_approve_manual">Exigir aprovação manual para todos os comentários.</string>
     <string name="days_quantity_other">%d dias</string>
     <string name="days_quantity_one">1 dia</string>
+    <string name="web_address">Endereço da web</string>
     <string name="primary_site">Site principal</string>
     <string name="pending_email_change_snackbar">Clique no link de verificação no e-mail enviado para %1$s para confirmar seu novo endereço</string>
     <string name="editor_toast_uploading_please_wait">Você está fazendo upload de mídia no momento. Aguarde até que o processo seja concluído.</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-26 09:11:48+0000
+Translation-Revision-Date: 2018-12-11 10:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="menu_debug">Menu de débogage</string>
+    <string name="preference_experimental">*EXPÉRIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Il s\'agit toujours d\'une version expérimentale de Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activer Gutenberg</string>
     <string name="change_password_dialog_message">Modification du mot de passe…</string>
     <string name="change_password_dialog_hint">Votre mot de passe doit contenir au moins 6 caractères. Pour le rendre plus dur à découvrir, utiliser des lettres majuscules et minuscules, des chiffres et des symboles comme ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Le mot de passe a bien été changé.</string>

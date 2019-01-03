@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-22 10:38:41+0000
+Translation-Revision-Date: 2018-12-04 13:01:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="menu_debug">Felsökningsmeny</string>
+    <string name="preference_experimental">*EXPERIMENTELL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Detta är fortfarande en experimentell version av Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Aktivera Gutenberg</string>
     <string name="change_password_dialog_message">Ändrar lösenord…</string>
     <string name="change_password_dialog_hint">Ditt lösenord bör innehålla minst sex tecken. Du kan göra det starkare genom att använda både stora och små bokstäver, siffror och olika symboler, såsom ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Lösenordet ändrat</string>

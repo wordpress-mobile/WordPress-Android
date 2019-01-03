@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-22 13:02:19+0000
+Translation-Revision-Date: 2018-12-04 19:55:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+    <string name="menu_debug">Menú de depuración</string>
+    <string name="preference_experimental">*EXPERIMENTAL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Esta es todavía una versión experimental de Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activar Gutenberg</string>
     <string name="change_password_dialog_message">Cambiando contraseña…</string>
     <string name="change_password_dialog_hint">Tu contraseña debe tener al menos seis caracteres de longitud. Para hacerla más fuerte, use letras mayúsculas y minúsculas, números y símbolos como! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Contraseña cambiada con éxito</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-26 16:06:22+0000
+Translation-Revision-Date: 2018-12-04 16:40:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="menu_debug">Meniu de depanare</string>
+    <string name="preference_experimental">*EXPERIMENTALĂ*</string>
+    <string name="site_settings_enable_gutenberg_summary">Aceasta este totuși o versiune experimentală pentru Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Activează Gutenberg</string>
     <string name="change_password_dialog_message">Schimb parola…</string>
     <string name="change_password_dialog_hint">Parola ar trebui să aibă cel puțin șase caractere. Pentru a o face mai puternică, folosește majuscule și minuscule, cifre și simboluri, cum ar fi ! \" ? $ % ^ &amp;amp; ).</string>
     <string name="change_password_confirmation">Parolă schimbată cu succes</string>

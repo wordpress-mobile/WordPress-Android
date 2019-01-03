@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-27 09:54:06+0000
+Translation-Revision-Date: 2018-12-11 06:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="menu_debug">תפריט איתור באגים</string>
+    <string name="preference_experimental">*ניסיוני*</string>
+    <string name="site_settings_enable_gutenberg_summary">זוהי גרסה ניסיונית של Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">הפעלת Gutenberg</string>
     <string name="change_password_dialog_message">מחליף סיסמה…</string>
     <string name="change_password_dialog_hint">על הסיסמה להיות באורך שישה תווים לפחות. כדי להפוך אותה קשה יותר לפיצוח, כדאי להשתמש באותיות קטנות וגדולות, מספרים וסמלים כגון ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">שינוי הסיסמה בוצע בהצלחה</string>

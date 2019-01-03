@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-27 11:54:06+0000
+Translation-Revision-Date: 2018-12-11 13:54:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="menu_debug">Debug-menu</string>
+    <string name="preference_experimental">*EXPERIMENTEEL*</string>
+    <string name="site_settings_enable_gutenberg_summary">Dit is nog een experimentele versie van Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">Gutenberg inschakelen</string>
     <string name="change_password_dialog_message">Wachtwoord wordt gewijzigd …</string>
     <string name="change_password_dialog_hint">Je wachtwoord moet tenminste zes tekens bevatten. Als je het wachtwoord sterker wilt maken, gebruik dan hoofdletters en kleine letters, cijfers en symbolen zoals ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Wachtwoord gewijzigd</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-11-28 10:54:06+0000
+Translation-Revision-Date: 2018-12-11 13:54:06+0000
 Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
 Generator: GlotPress/2.4.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="menu_debug">قائمة تصحيح الأخطاء</string>
+    <string name="preference_experimental">*تجريبي*</string>
+    <string name="site_settings_enable_gutenberg_summary">لا يزال هذا إصدارًا تجريبيًّا من Gutenberg</string>
+    <string name="site_settings_enable_gutenberg">تمكين Gutenberg</string>
     <string name="change_password_dialog_message">جارٍ تغيير كلمة المرور…</string>
     <string name="change_password_dialog_hint">ينبغي ألا يقل طول كلمة المرور الخاصة بك عن ستة أحرف. ولجعل كلمة المرور أقوى، استخدم أحرفًا كبيرة وصغيرة وأرقامًا ورموزًا مثل ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">تم تغيير كلمة المرور بنجاح</string>

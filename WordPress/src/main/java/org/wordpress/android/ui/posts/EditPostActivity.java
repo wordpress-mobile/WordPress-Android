@@ -1043,7 +1043,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
+            viewHtmlModeMenuItem.setVisible(((mEditorFragment instanceof AztecEditorFragment)
+                                             || (mEditorFragment instanceof GutenbergEditorFragment)) && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
@@ -1215,17 +1216,22 @@ public class EditPostActivity extends AppCompatActivity implements
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
-                            mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
-                                    : R.string.menu_visual_mode_done_snackbar,
-                            R.string.menu_undo_snackbar_action,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // switch back
-                                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                                }
-                            });
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+                        }
+                    });
+                } else if (mEditorFragment instanceof GutenbergEditorFragment) {
+                    ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                    toggledHtmlModeSnackbar(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // switch back
+                            ((GutenbergEditorFragment) mEditorFragment).onToggleHtmlMode();
+                        }
+                    });
                 }
             } else if (itemId == R.id.menu_discard_changes) {
                 AnalyticsTracker.track(Stat.EDITOR_DISCARDED_CHANGES);
@@ -1237,6 +1243,14 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         return false;
+    }
+
+    private void toggledHtmlModeSnackbar(View.OnClickListener onUndoClickListener) {
+        UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+                mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
+                        : R.string.menu_visual_mode_done_snackbar,
+                R.string.menu_undo_snackbar_action,
+                onUndoClickListener);
     }
 
     private void refreshEditorContent() {
