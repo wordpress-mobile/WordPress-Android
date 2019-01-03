@@ -59,11 +59,9 @@
             android:defaultValue="true"
             android:key="@string/pref_key_send_crash"
             android:icon="@drawable/ic_bug_grey_min_24dp"
-            android:layout="@layout/wp_preference_layout"
+            android:layout="@layout/wp_preference"
+            android:summary="@string/preference_crash_reports_caption"
             android:title="@string/preference_crash_reports"/>
-
-        <org.wordpress.android.ui.prefs.LearnMorePreference
-            app:caption="@string/preference_crash_reports_caption"/>
 
     </PreferenceScreen>
 
