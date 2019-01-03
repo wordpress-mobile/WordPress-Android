@@ -29,7 +29,8 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.hamcrest.CoreMatchers.`is` as Is
 
 private const val MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE = 20
-private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
+private val MULTI_RESULT_DOMAIN_FETCH_QUERY = Pair("multi_result_query", MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE)
+private val EMPTY_RESULT_DOMAIN_FETCH_QUERY = Pair("empty_result_query", 0)
 
 @RunWith(MockitoJUnitRunner::class)
 class NewSiteCreationDomainsViewModelTest {
@@ -69,7 +70,7 @@ class NewSiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(MULTI_RESULT_DOMAIN_FETCH_QUERY.first))
+            whenever(fetchDomainsUseCase.fetchDomains(queryResultSizePair.first))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
@@ -98,19 +99,38 @@ class NewSiteCreationDomainsViewModelTest {
     }
 
     @Test
+    fun verifyUpdateEmptyQueryInitialUiState() =
+            testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
+                viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(2)).onChanged(captor.capture())
+                verifyInitialContentUiState(captor.firstValue, showProgress = true, showClearButton = true)
+            }
+
+    @Test
+    fun verifyUpdateEmptyQueryUiStateAfterResponse() =
+            testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
+                viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
+                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+                verify(uiStateObserver, times(2)).onChanged(captor.capture())
+                verifyEmptyItemsContentUiState(
+                        captor.secondValue,
+                        showClearButton = true
+                )
+            }
+
+    @Test
     fun verifyOnHelpClickedPropagated() = testWithSuccessResponse {
         viewModel.onHelpClicked()
         val captor = ArgumentCaptor.forClass(Unit::class.java)
-        verify(onHelpClickedObserver).onChanged(captor.capture())
-        assertThat(captor.allValues.size, Is(1))
+        verify(onHelpClickedObserver, times(1)).onChanged(captor.capture())
     }
 
     @Test
     fun verifyOnClearBtnClickedPropagated() = testWithSuccessResponse {
         viewModel.onClearTextBtnClicked()
         val captor = ArgumentCaptor.forClass(Unit::class.java)
-        verify(clearBtnObserver).onChanged(captor.capture())
-        assertThat(captor.allValues.size, Is(1))
+        verify(clearBtnObserver, times(1)).onChanged(captor.capture())
     }
 
     @Test
@@ -119,31 +139,40 @@ class NewSiteCreationDomainsViewModelTest {
         viewModel.setSelectedDomainName(domainName)
         viewModel.createSiteBtnClicked()
         val captor = ArgumentCaptor.forClass(String::class.java)
-        verify(createSiteBtnObserver).onChanged(captor.capture())
-        assertThat(captor.allValues.size, Is(1))
+        verify(createSiteBtnObserver, times(1)).onChanged(captor.capture())
         assertThat(captor.firstValue, Is(domainName))
     }
 
-    private fun verifyInitialContentUiState(uiState: DomainsUiState, showProgress: Boolean = false) {
+    private fun verifyInitialContentUiState(
+        uiState: DomainsUiState,
+        showProgress: Boolean = false,
+        showClearButton: Boolean = false
+    ) {
         assertThat(uiState.searchInputUiState.showProgress, Is(showProgress))
-        assertThat(uiState.searchInputUiState.showClearButton, Is(false))
+        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
         assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Initial::class.java))
         assertThat(uiState.createSiteButtonContainerVisibility, Is(false))
     }
 
     private fun verifyVisibleItemsContentUiState(
         uiState: DomainsUiState,
-        showProgress: Boolean = false,
         showClearButton: Boolean = false,
-        numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE,
-        createSiteButtonVisibility: Boolean = false
+        numberOfItems: Int = MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE
     ) {
-        assertThat(uiState.searchInputUiState.showProgress, Is(showProgress))
+        assertThat(uiState.searchInputUiState.showProgress, Is(false))
         assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
         assertThat(uiState.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
-        assertThat(uiState.contentState.emptyViewVisibility, Is(numberOfItems == 0))
         assertThat(uiState.contentState.items.size, Is(numberOfItems))
-        assertThat(uiState.createSiteButtonContainerVisibility, Is(createSiteButtonVisibility))
+    }
+
+    private fun verifyEmptyItemsContentUiState(
+        uiState: DomainsUiState,
+        showClearButton: Boolean = false
+    ) {
+        assertThat(uiState.searchInputUiState.showProgress, Is(false))
+        assertThat(uiState.searchInputUiState.showClearButton, Is(showClearButton))
+        assertThat(uiState.contentState, instanceOf(DomainsUiContentState.Empty::class.java))
+        assertThat(uiState.contentState.items.size, Is(0))
     }
 
     private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
