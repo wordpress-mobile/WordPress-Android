@@ -45,6 +45,8 @@
         android:gravity="end|center_vertical"
         android:layout_gravity="end"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
         android:layout_width="wrap_content"
         android:textColor="@color/color_primary"
         android:visibility="gone"
