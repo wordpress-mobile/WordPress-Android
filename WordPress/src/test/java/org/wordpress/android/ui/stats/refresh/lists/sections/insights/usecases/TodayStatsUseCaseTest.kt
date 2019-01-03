@@ -103,7 +103,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
         (result as BlockList).apply {
             assertThat(this.items).hasSize(2)
             assertTitle(this.items[0])
-            assertThat(this.items[1]).isEqualTo(Empty)
+            assertThat(this.items[1]).isEqualTo(Empty())
         }
     }
 

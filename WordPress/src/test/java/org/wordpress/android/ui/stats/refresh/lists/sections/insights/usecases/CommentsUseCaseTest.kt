@@ -250,14 +250,14 @@ class CommentsUseCaseTest : BaseUnitTest() {
         assertThat(tabsItem.tabs[1]).isEqualTo(string.stats_comments_posts_and_pages)
         assertThat(tabsItem.selectedTabPosition).isEqualTo(position)
 
-        assertThat(this.items[2]).isEqualTo(Empty)
+        assertThat(this.items[2]).isEqualTo(Empty())
         return tabsItem
     }
 
     private fun BlockList.assertEmpty() {
         assertThat(this.items).hasSize(2)
         assertTitle(this.items[0])
-        assertThat(this.items[1]).isEqualTo(Empty)
+        assertThat(this.items[1]).isEqualTo(Empty())
     }
 
     private fun assertTitle(item: BlockListItem) {
