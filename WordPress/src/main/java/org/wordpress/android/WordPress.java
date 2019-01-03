@@ -272,7 +272,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         ApplicationLifecycleMonitor applicationLifecycleMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(applicationLifecycleMonitor);
-        registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(applicationLifecycleMonitor);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
@@ -739,8 +738,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * This class also uses ActivityLifecycleCallbacks
      * to make sure to detect the send to background event and not other events.
      */
-    private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2,
-            LifecycleObserver {
+    private class ApplicationLifecycleMonitor implements ComponentCallbacks2, LifecycleObserver {
         private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
 
         private Date mLastPingDate;
@@ -847,6 +845,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         private void onAppComesFromBackground(Activity activity) {
             AppLog.i(T.UTILS, "App comes from background");
+            if (!sAppIsInTheBackground) {
+                return;
+            }
+            sAppIsInTheBackground = false;
+
             // https://developer.android.com/reference/android/net/ConnectivityManager.html
             // Apps targeting Android 7.0 (API level 24) and higher do not receive this broadcast if they
             // declare the broadcast receiver in their manifest. Apps will still receive broadcasts if they
@@ -885,6 +888,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 mUpdateSelectedSite.runIfNotLimited();
             }
             sDeleteExpiredStats.runIfNotLimited();
+
+            if (mFirstActivityResumed) {
+                deferredInit(activity);
+            }
+            mFirstActivityResumed = false;
         }
 
         // gets the note id from the extras that started this activity, so
@@ -895,45 +903,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 noteId = intent.getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             }
             return noteId;
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-            if (sAppIsInTheBackground) {
-                // was in background before
-                onAppComesFromBackground(activity);
-            }
-
-            sAppIsInTheBackground = false;
-            if (mFirstActivityResumed) {
-                deferredInit(activity);
-            }
-            mFirstActivityResumed = false;
-        }
-
-        @Override
-        public void onActivityCreated(Activity arg0, Bundle arg1) {
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity arg0) {
-        }
-
-        @Override
-        public void onActivityPaused(Activity arg0) {
-            mLastPingDate = new Date();
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
-        }
-
-        @Override
-        public void onActivityStarted(Activity arg0) {
-        }
-
-        @Override
-        public void onActivityStopped(Activity arg0) {
         }
     }
 }
