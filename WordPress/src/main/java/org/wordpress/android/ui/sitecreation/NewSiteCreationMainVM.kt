@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.StringRes
 import kotlinx.android.parcel.Parcelize
@@ -19,6 +20,8 @@ import org.wordpress.android.viewmodel.SingleEventObservable
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
+private const val KEY_CURRENT_STEP = "key_current_step"
+private const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 private val SITE_CREATION_STEPS =
         // TODO we'll receive this from a server/Firebase config
         listOf(
@@ -57,18 +60,25 @@ class NewSiteCreationMainVM @Inject constructor() : ViewModel() {
     private val _wizardFinishedObservable = SingleLiveEvent<CreateSiteState>()
     val wizardFinishedObservable: LiveData<CreateSiteState> = _wizardFinishedObservable
 
-    fun start(siteCreationState: SiteCreationState?, currentStepIndex: Int?) {
+    fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
-        this.siteCreationState = siteCreationState ?: SiteCreationState()
-        wizardManager = if (currentStepIndex != null) {
-            WizardManager(SITE_CREATION_STEPS, currentStepIndex)
+        if (savedInstanceState == null) {
+            siteCreationState = SiteCreationState()
+            wizardManager = WizardManager(SITE_CREATION_STEPS)
         } else {
-            WizardManager(SITE_CREATION_STEPS)
+            val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
+            wizardManager = WizardManager(SITE_CREATION_STEPS, currentStepIndex)
+            siteCreationState = savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE)
         }
         isStarted = true
-        if (currentStepIndex == null) {
+        if (savedInstanceState == null) {
             wizardManager.showNextStep()
         }
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
+        outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }
 
     fun onSegmentSelected(segmentId: Long) {

@@ -8,6 +8,8 @@ class WizardManager<T : WizardStep>(
     private var currentStepIndex: Int = -1
 ) {
     val stepsCount = steps.size
+    val currentStep: Int
+        get() = currentStepIndex
 
     private val _navigatorLiveData = SingleLiveEvent<T>()
     val navigatorLiveData: LiveData<T> = _navigatorLiveData
