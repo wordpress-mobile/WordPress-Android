@@ -7,7 +7,7 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.sitecreation.NewSiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.NewSitePreviewViewModel;
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel;
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationSiteInfoViewModel;
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsViewModel;

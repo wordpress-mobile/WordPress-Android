@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.domain
+package org.wordpress.android.ui.sitecreation.domains
 
 import android.support.annotation.LayoutRes
 import android.support.v4.content.ContextCompat
@@ -11,9 +11,9 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
 
 sealed class NewSiteCreationDomainViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {

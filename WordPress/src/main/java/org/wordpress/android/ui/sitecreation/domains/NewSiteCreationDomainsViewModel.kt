@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.domain
+package org.wordpress.android.ui.sitecreation.domains
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
@@ -23,11 +23,11 @@ import org.wordpress.android.modules.IO_DISPATCHER
 import org.wordpress.android.modules.MAIN_DISPATCHER
 import org.wordpress.android.ui.sitecreation.SiteCreationHeaderUiState
 import org.wordpress.android.ui.sitecreation.SiteCreationSearchInputUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
 import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper

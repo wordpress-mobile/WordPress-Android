@@ -28,8 +28,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.creation.SitePreviewScreenListener
-import org.wordpress.android.ui.sitecreation.domain.DomainsScreenListener
-import org.wordpress.android.ui.sitecreation.domain.NewSiteCreationDomainsFragment
+import org.wordpress.android.ui.sitecreation.domains.DomainsScreenListener
+import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsFragment
 import org.wordpress.android.ui.sitecreation.segments.NewSiteCreationSegmentsFragment
 import org.wordpress.android.ui.sitecreation.segments.SegmentsScreenListener
 import org.wordpress.android.ui.sitecreation.verticals.NewSiteCreationVerticalsFragment
