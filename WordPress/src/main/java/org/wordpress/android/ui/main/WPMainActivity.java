@@ -468,7 +468,8 @@ public class WPMainActivity extends AppCompatActivity implements
                     boolean shouldShowKeyboard =
                             getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
                     NotificationsListFragment
-                            .openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
+                            .openNoteForReply(this, noteId, shouldShowKeyboard, null,
+                                    NotesAdapter.FILTERS.FILTER_ALL, true);
                 }
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");

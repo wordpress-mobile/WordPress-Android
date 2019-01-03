@@ -58,6 +58,8 @@ import de.greenrobot.event.EventBus;
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
+import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
+        .IS_TAPPED_ON_NOTIFICATION;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
@@ -292,7 +294,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNoteForReply(getActivity(), noteId, false, null, mNotesAdapter.getCurrentFilter());
+            openNoteForReply(getActivity(), noteId, false, null,
+                    mNotesAdapter.getCurrentFilter(), false);
         }
     };
 
@@ -310,7 +313,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                                         String noteId,
                                         boolean shouldShowKeyboard,
                                         String replyText,
-                                        NotesAdapter.FILTERS filter) {
+                                        NotesAdapter.FILTERS filter,
+                                        boolean isTappedFromPushNotification) {
         if (noteId == null || activity == null) {
             return;
         }
@@ -325,6 +329,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText);
         }
         detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter);
+        detailIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, isTappedFromPushNotification);
 
         openNoteForReplyWithParams(detailIntent, activity);
     }
