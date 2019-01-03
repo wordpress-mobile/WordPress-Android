@@ -2,6 +2,11 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.firstValue
+import com.nhaarman.mockito_kotlin.secondValue
+import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import kotlinx.coroutines.experimental.CoroutineScope
 import org.hamcrest.CoreMatchers.instanceOf
@@ -10,13 +15,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains
-import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.test
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState
 import org.wordpress.android.ui.sitecreation.domains.NewSiteCreationDomainsViewModel.DomainsUiState.DomainsUiContentState
@@ -65,7 +70,7 @@ class NewSiteCreationDomainsViewModelTest {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(fetchDomainsUseCase.fetchDomains(createSuggestDomainsPayload(queryResultSizePair.first)))
+            whenever(fetchDomainsUseCase.fetchDomains(any()))
                     .thenReturn(createSuccessfulOnSuggestedDomains(queryResultSizePair))
             block()
         }
@@ -81,14 +86,25 @@ class NewSiteCreationDomainsViewModelTest {
         assertThat(uiState.createSiteButtonContainerVisibility, Is(false))
     }
 
-    private fun createSuggestDomainsPayload(query: String) = SuggestDomainsPayload(
-            query,
-            FETCH_DOMAINS_SHOULD_ONLY_FETCH_WORDPRESS_COM_DOMAINS,
-            FETCH_DOMAINS_SHOULD_INCLUDE_WORDPRESS_COM_DOMAINS,
-            FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_SUB_DOMAINS,
-            FETCH_DOMAINS_SIZE,
-            FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR
-    )
+    @Test
+    fun verifyInitialMultiResultQueryUiState() = testWithSuccessResponse {
+        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
+        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
+        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        val initialUiState = captor.firstValue
+        assertThat(initialUiState.searchInputUiState.showProgress, Is(true))
+        assertThat(initialUiState.searchInputUiState.showClearButton, Is(false))
+        assertThat(initialUiState.contentState, instanceOf(DomainsUiContentState.Initial::class.java))
+        assertThat(initialUiState.createSiteButtonContainerVisibility, Is(false))
+
+        val stateAfterFetch = captor.secondValue
+        assertThat(stateAfterFetch.searchInputUiState.showProgress, Is(false))
+        assertThat(stateAfterFetch.searchInputUiState.showClearButton, Is(false))
+        assertThat(stateAfterFetch.contentState, instanceOf(DomainsUiContentState.VisibleItems::class.java))
+        assertThat(stateAfterFetch.contentState.emptyViewVisibility, Is(false))
+        assertThat(stateAfterFetch.contentState.items.size, Is(MULTI_RESULT_DOMAIN_FETCH_RESULT_SIZE))
+        assertThat(stateAfterFetch.createSiteButtonContainerVisibility, Is(false))
+    }
 
     private fun createSuccessfulOnSuggestedDomains(queryResultSizePair: Pair<String, Int>): OnSuggestedDomains {
         val suggestions = (0..(queryResultSizePair.second - 1)).map {
