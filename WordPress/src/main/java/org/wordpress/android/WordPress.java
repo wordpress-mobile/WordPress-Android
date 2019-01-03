@@ -399,13 +399,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public void deferredInit() {
         AppLog.i(T.UTILS, "Deferred Initialisation");
 
-        // TODO: move this to WPMainActivity as the check needs to show a Dialog when not present
-//        if (isGooglePlayServicesAvailable(activity)) {
-//            // Register for Cloud messaging
-//            GCMRegistrationIntentService.enqueueWork(activity,
-//                    new Intent(activity, GCMRegistrationIntentService.class));
-//        }
-
         // Refresh account informations
         if (mAccountStore.hasAccessToken()) {
             mDispatcher.dispatch(AccountActionBuilder.newFetchAccountAction());
@@ -481,30 +474,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                                                            null, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return sRestClientUtilsVersion0;
-    }
-
-    public boolean isGooglePlayServicesAvailable(Activity activity) {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
-        switch (connectionResult) {
-            // Success: return true
-            case ConnectionResult.SUCCESS:
-                return true;
-            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
-            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
-                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
-                if (dialog != null) {
-                    dialog.show();
-                }
-                // fall through
-            default:
-            case ConnectionResult.SERVICE_MISSING:
-            case ConnectionResult.SERVICE_DISABLED:
-            case ConnectionResult.SERVICE_INVALID:
-                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                                   + googleApiAvailability.getErrorString(connectionResult));
-        }
-        return false;
     }
 
     /**

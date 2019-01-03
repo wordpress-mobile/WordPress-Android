@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.main;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -292,6 +296,36 @@ public class WPMainActivity extends AppCompatActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         }
+
+        if (isGooglePlayServicesAvailable(this)) {
+            // Register for Cloud messaging
+            GCMRegistrationIntentService.enqueueWork(this,
+                    new Intent(this, GCMRegistrationIntentService.class));
+        }
+    }
+
+    public boolean isGooglePlayServicesAvailable(Activity activity) {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int connectionResult = googleApiAvailability.isGooglePlayServicesAvailable(activity);
+        switch (connectionResult) {
+            // Success: return true
+            case ConnectionResult.SUCCESS:
+                return true;
+            // Play Services unavailable, show an error dialog is the Play Services Lib needs an update
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+                Dialog dialog = googleApiAvailability.getErrorDialog(activity, connectionResult, 0);
+                if (dialog != null) {
+                    dialog.show();
+                }
+                // fall through
+            default:
+            case ConnectionResult.SERVICE_MISSING:
+            case ConnectionResult.SERVICE_DISABLED:
+            case ConnectionResult.SERVICE_INVALID:
+                AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
+                                   + googleApiAvailability.getErrorString(connectionResult));
+        }
+        return false;
     }
 
     private @Nullable String getAuthToken() {
